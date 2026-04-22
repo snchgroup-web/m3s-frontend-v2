@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Menu, X, LogOut, Globe, Home, DollarSign, Users, Briefcase, Package, Building2, FileText, Settings as AdminIcon } from 'lucide-react';
+import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Menu, X, LogOut, Globe, Settings, Home, DollarSign, Users, Briefcase, Package, Building2, FileText, Settings as AdminIcon } from 'lucide-react';
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const API_BASE = 'https://m3s-api-v2-39747051341.europe-west6.run.app';
+
+  // State
   const [language, setLanguage] = useState('FR');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [user, setUser] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [activeModule, setActiveModule] = useState('overview');
 
   // Translations
@@ -111,7 +115,7 @@ const Dashboard = () => {
 
   const t = translations[language];
 
-  // Mock data
+  // Mock data - Replace with real API calls
   const mockData = {
     financialTrend: [
       { month: 'Jan', revenue: 45000, expenses: 32000 },
@@ -137,7 +141,7 @@ const Dashboard = () => {
     }
   };
 
-  // Fetch data
+  // Fetch data from API
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -175,16 +179,6 @@ const Dashboard = () => {
     navigate('/login');
   };
 
-  const handleModuleClick = (module) => {
-    if (module.path === '/') {
-      setActiveModule('overview');
-      navigate('/');
-    } else {
-      setActiveModule(module.id);
-      navigate(module.path);
-    }
-  };
-
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
 
   const modules = [
@@ -197,6 +191,16 @@ const Dashboard = () => {
     { id: 'ged', icon: FileText, label: t.ged, color: 'bg-cyan-500', path: '/ged' },
     { id: 'admin', icon: AdminIcon, label: t.admin, color: 'bg-gray-500', path: '/administration' }
   ];
+
+  const handleModuleClick = (module) => {
+    if (module.path === '/') {
+      setActiveModule('overview');
+      navigate('/');
+    } else {
+      setActiveModule(module.id);
+      navigate(module.path);
+    }
+  };
 
   if (loading) {
     return (

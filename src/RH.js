@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
-import { Plus, Edit2, Trash2, Users, User, Heart, Users2, Briefcase } from 'lucide-react';
+import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import { Plus, Edit2, Trash2, Users, User, Heart, Users2 } from 'lucide-react';
 
 const RH = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -375,3 +375,4 @@ const RH = () => {
 };
 
 export default RH;
+
