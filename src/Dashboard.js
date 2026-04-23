@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Menu, X, LogOut, Globe, Settings, Home, DollarSign, Users, Briefcase, Package, Building2, FileText, Settings as AdminIcon } from 'lucide-react';
+import { Menu, X, LogOut, Globe, Home, DollarSign, Users, Briefcase, Package, Building2, FileText, Settings as AdminIcon } from 'lucide-react';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const API_BASE = 'https://m3s-api-v2-39747051341.europe-west6.run.app';
+  
 
   // State
   const [language, setLanguage] = useState('FR');
@@ -13,7 +13,6 @@ const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [activeModule, setActiveModule] = useState('overview');
 
   // Translations
@@ -171,7 +170,7 @@ const Dashboard = () => {
     };
 
     fetchDashboardData();
-  }, []);
+  }, [mockData]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
