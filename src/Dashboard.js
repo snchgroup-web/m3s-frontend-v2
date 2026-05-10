@@ -3,9 +3,34 @@ import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Menu, X, LogOut, Globe, Home, DollarSign, Users, Briefcase, Package, Building2, FileText, Settings as AdminIcon } from 'lucide-react';
 
+// Mock data - Replace with real API calls
+const mockData = {
+  financialTrend: [
+    { month: 'Jan', revenue: 45000, expenses: 32000 },
+    { month: 'Feb', revenue: 52000, expenses: 35000 },
+    { month: 'Mar', revenue: 48000, expenses: 33000 },
+    { month: 'Apr', revenue: 61000, expenses: 38000 },
+    { month: 'May', revenue: 55000, expenses: 36000 },
+    { month: 'Jun', revenue: 67000, expenses: 41000 }
+  ],
+  staffDistribution: [
+    { name: 'Employés', value: 12 },
+    { name: 'Bénévoles', value: 24 },
+    { name: 'Membres', value: 156 }
+  ],
+  moduleStats: {
+    finance: { revenue: 285000, expenses: 215000, balance: 70000 },
+    rh: { employees: 12, volunteers: 24, members: 156 },
+    crm: { prospects: 45, clients: 28, donations: 18 },
+    production: { orders: 52, completed: 38, pending: 14 },
+    actifs: { total: 1250000, depreciation: 125000 },
+    ged: { documents: 847, recent: 12 },
+    tasks: { total: 234, completed: 178, pending: 56 }
+  }
+};
+
 const Dashboard = () => {
   const navigate = useNavigate();
-  
 
   // State
   const [language, setLanguage] = useState('FR');
@@ -114,32 +139,6 @@ const Dashboard = () => {
 
   const t = translations[language];
 
-  // Mock data - Replace with real API calls
-  const mockData = {
-    financialTrend: [
-      { month: 'Jan', revenue: 45000, expenses: 32000 },
-      { month: 'Feb', revenue: 52000, expenses: 35000 },
-      { month: 'Mar', revenue: 48000, expenses: 33000 },
-      { month: 'Apr', revenue: 61000, expenses: 38000 },
-      { month: 'May', revenue: 55000, expenses: 36000 },
-      { month: 'Jun', revenue: 67000, expenses: 41000 }
-    ],
-    staffDistribution: [
-      { name: 'Employés', value: 12 },
-      { name: 'Bénévoles', value: 24 },
-      { name: 'Membres', value: 156 }
-    ],
-    moduleStats: {
-      finance: { revenue: 285000, expenses: 215000, balance: 70000 },
-      rh: { employees: 12, volunteers: 24, members: 156 },
-      crm: { prospects: 45, clients: 28, donations: 18 },
-      production: { orders: 52, completed: 38, pending: 14 },
-      actifs: { total: 1250000, depreciation: 125000 },
-      ged: { documents: 847, recent: 12 },
-      tasks: { total: 234, completed: 178, pending: 56 }
-    }
-  };
-
   // Fetch data from API
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -168,9 +167,8 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
-
     fetchDashboardData();
-  }, [mockData]);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
