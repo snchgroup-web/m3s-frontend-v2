@@ -72,6 +72,7 @@ const Dashboard = () => {
       kpi: 'KPI',
       lastUpdate: 'Dernière mise à jour',
       currency: 'CHF'
+      moduleStats: 'Statistiques par Module'	
     },
     EN: {
       dashboard: 'Dashboard',
@@ -102,10 +103,11 @@ const Dashboard = () => {
       total: 'Total',
       kpi: 'KPI',
       lastUpdate: 'Last Updated',
-      currency: 'CHF'
+      currency: 'CHF',
+      moduleStats: 'Module Statistics'
     },
     DE: {
-      dashboard: 'Armaturenbrett',
+      dashboard: 'Dashboard',
       welcome: 'Willkommen',
       overview: 'Übersicht',
       finance: 'Finanzen',
@@ -133,7 +135,8 @@ const Dashboard = () => {
       total: 'Gesamt',
       kpi: 'KPI',
       lastUpdate: 'Zuletzt aktualisiert',
-      currency: 'CHF'
+      currency: 'CHF',
+      moduleStats: 'Modulstatistiken'
     }
   };
 
@@ -334,7 +337,7 @@ const Dashboard = () => {
 
           {/* Module Stats */}
           <div className="bg-slate-800 rounded-lg p-6 shadow-lg border border-slate-700">
-            <h3 className="text-lg font-semibold mb-4">Statistiques par Module</h3>
+            <h3 className="text-lg font-semibold mb-4">{t.moduleStats}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition" onClick={() => handleModuleClick(modules[3])}>
                 <p className="text-sm text-slate-400">{t.crm}</p>
