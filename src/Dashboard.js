@@ -313,8 +313,8 @@ const Dashboard = () => {
                   <YAxis stroke="#94a3b8" />
                   <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
                   <Legend />
-                  <Line type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={2} />
-                  <Line type="monotone" dataKey="expenses" stroke="#ef4444" strokeWidth={2} />
+                  <Line type="monotone" dataKey="revenue" name={t.revenue} stroke="#10b981" strokeWidth={2} />
+		  <Line type="monotone" dataKey="expenses" name={t.expenses} stroke="#ef4444" strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
