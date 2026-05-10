@@ -29,7 +29,7 @@ const mockData = {
 };
 
 const Dashboard = () => {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [user, setUser] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -171,9 +171,20 @@ const Dashboard = () => {
             <h2 className="text-3xl font-bold">{t.dashboard}</h2>
             <p className="text-slate-400 text-sm mt-1">{t.welcome}, {user?.name}</p>
           </div>
-          <div className="text-right">
-            <p className="text-sm font-medium">{user?.name}</p>
-            <p className="text-xs text-slate-400">{user?.role}</p>
+          <div className="flex items-center space-x-4">
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="bg-slate-700 border border-slate-600 rounded px-3 py-2 text-sm hover:bg-slate-600"
+            >
+              <option value="FR">Français</option>
+              <option value="EN">English</option>
+              <option value="DE">Deutsch</option>
+            </select>
+            <div className="text-right">
+              <p className="text-sm font-medium">{user?.name}</p>
+              <p className="text-xs text-slate-400">{user?.role}</p>
+            </div>
           </div>
         </div>
       </div>
