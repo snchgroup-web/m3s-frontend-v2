@@ -1,7 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
+import { LanguageProvider } from './LanguageContext';
 import ProtectedRoute from './ProtectedRoute';
+import Layout from './Layout';
 import Login from './Login';
 import Dashboard from './Dashboard';
 import Finance from './Finance';
@@ -16,23 +18,99 @@ const App = () => {
   return (
     <Router>
       <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <LanguageProvider>
+          <Routes>
+            <Route path="/login" element={<Login />} />
 
-          {/* ÉTAPE 2 Routes */}
-          <Route path="/finance" element={<ProtectedRoute><Finance /></ProtectedRoute>} />
-          <Route path="/rh" element={<ProtectedRoute><RH /></ProtectedRoute>} />
-          <Route path="/administration" element={<ProtectedRoute><Administration /></ProtectedRoute>} />
+            {/* Routes avec Layout (sidebar sur toutes les pages) */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* ÉTAPE 3 Routes */}
-          <Route path="/crm" element={<ProtectedRoute><CRM /></ProtectedRoute>} />
-          <Route path="/production" element={<ProtectedRoute><Production /></ProtectedRoute>} />
-          <Route path="/actifs" element={<ProtectedRoute><Actifs /></ProtectedRoute>} />
-          <Route path="/ged" element={<ProtectedRoute><GED /></ProtectedRoute>} />
+            {/* ÉTAPE 2 Routes */}
+            <Route
+              path="/finance"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Finance />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/rh"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <RH />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/administration"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Administration />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            {/* ÉTAPE 3 Routes */}
+            <Route
+              path="/crm"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <CRM />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/production"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Production />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/actifs"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Actifs />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ged"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <GED />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </LanguageProvider>
       </AuthProvider>
     </Router>
   );
