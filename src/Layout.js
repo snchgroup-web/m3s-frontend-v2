@@ -103,15 +103,20 @@ const Layout = ({ children }) => {
 
         {/* Footer */}
         <div className="p-4 border-t border-slate-700 space-y-2">
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            className="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-sm hover:bg-slate-600"
-          >
-            <option value="FR">Français</option>
-            <option value="EN">English</option>
-            <option value="DE">Deutsch</option>
-          </select>
+          <div className="flex items-center space-x-2 px-3 py-2 text-sm">
+            <Globe size={18} />
+            {sidebarOpen && (
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="flex-1 bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm hover:bg-slate-600"
+              >
+                <option value="FR">Français</option>
+                <option value="EN">English</option>
+                <option value="DE">Deutsch</option>
+              </select>
+            )}
+          </div>
           <button onClick={handleLogout} className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-red-400 hover:bg-slate-700 rounded">
             <LogOut size={18} />
             {sidebarOpen && <span>{t.logout}</span>}
