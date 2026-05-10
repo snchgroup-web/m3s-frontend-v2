@@ -71,8 +71,8 @@ const Dashboard = () => {
       total: 'Total',
       kpi: 'KPI',
       lastUpdate: 'Dernière mise à jour',
-      currency: 'CHF'
-      moduleStats: 'Statistiques par Module'	
+      currency: 'CHF',
+      moduleStats: 'Statistiques par Module'
     },
     EN: {
       dashboard: 'Dashboard',
@@ -107,7 +107,7 @@ const Dashboard = () => {
       moduleStats: 'Module Statistics'
     },
     DE: {
-      dashboard: 'Dashboard',
+      dashboard: 'Armaturenbrett',
       welcome: 'Willkommen',
       overview: 'Übersicht',
       finance: 'Finanzen',
@@ -314,7 +314,7 @@ const Dashboard = () => {
                   <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
                   <Legend />
                   <Line type="monotone" dataKey="revenue" name={t.revenue} stroke="#10b981" strokeWidth={2} />
-		  <Line type="monotone" dataKey="expenses" name={t.expenses} stroke="#ef4444" strokeWidth={2} />
+                  <Line type="monotone" dataKey="expenses" name={t.expenses} stroke="#ef4444" strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
