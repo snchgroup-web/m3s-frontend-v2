@@ -1,34 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-// Mock data - Replace with real API calls
-const mockData = {
-  financialTrend: [
-    { month: 'Jan', revenue: 45000, expenses: 32000 },
-    { month: 'Feb', revenue: 52000, expenses: 35000 },
-    { month: 'Mar', revenue: 48000, expenses: 33000 },
-    { month: 'Apr', revenue: 61000, expenses: 38000 },
-    { month: 'May', revenue: 55000, expenses: 36000 },
-    { month: 'Jun', revenue: 67000, expenses: 41000 }
-  ],
-  staffDistribution: [
-    { name: 'Employés', value: 12 },
-    { name: 'Bénévoles', value: 24 },
-    { name: 'Membres', value: 156 }
-  ],
-  moduleStats: {
-    finance: { revenue: 285000, expenses: 215000, balance: 70000 },
-    rh: { employees: 12, volunteers: 24, members: 156 },
-    crm: { prospects: 45, clients: 28, donations: 18 },
-    production: { orders: 52, completed: 38, pending: 14 },
-    actifs: { total: 1250000, depreciation: 125000 },
-    ged: { documents: 847, recent: 12 },
-    tasks: { total: 234, completed: 178, pending: 56 }
-  }
-};
-
 const Dashboard = () => {
+  const navigate = useNavigate();
   const { language, setLanguage } = useLanguage();
   const [user, setUser] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
@@ -118,12 +94,40 @@ const Dashboard = () => {
 
   const t = translations[language];
 
+  // Mock data
+  const mockDataBase = {
+    financialTrend: [
+      { month: 'Jan', revenue: 45000, expenses: 32000 },
+      { month: 'Feb', revenue: 52000, expenses: 35000 },
+      { month: 'Mar', revenue: 48000, expenses: 33000 },
+      { month: 'Apr', revenue: 61000, expenses: 38000 },
+      { month: 'May', revenue: 55000, expenses: 36000 },
+      { month: 'Jun', revenue: 67000, expenses: 41000 }
+    ],
+    moduleStats: {
+      finance: { revenue: 285000, expenses: 215000, balance: 70000 },
+      rh: { employees: 12, volunteers: 24, members: 156 },
+      crm: { prospects: 45, clients: 28, donations: 18 },
+      production: { orders: 52, completed: 38, pending: 14 },
+      actifs: { total: 1250000, depreciation: 125000 },
+      ged: { documents: 847, recent: 12 },
+      tasks: { total: 234, completed: 178, pending: 56 }
+    }
+  };
+
+  // Create staff distribution with translated names
+  const getStaffDistribution = () => [
+    { name: t.employees, value: 12 },
+    { name: t.volunteers, value: 24 },
+    { name: t.members, value: 156 }
+  ];
+
   // Fetch data from API
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        setDashboardData(mockData);
+        setDashboardData(mockDataBase);
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
           setUser(JSON.parse(storedUser));
@@ -136,7 +140,7 @@ const Dashboard = () => {
         }
       } catch (err) {
         console.log('Using mock data');
-        setDashboardData(mockData);
+        setDashboardData(mockDataBase);
         setUser({
           name: 'Utilisateur M3S',
           role: 'Manager',
@@ -148,6 +152,10 @@ const Dashboard = () => {
     };
     fetchDashboardData();
   }, []);
+
+  const handleModuleClick = (path) => {
+    navigate(path);
+  };
 
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
 
@@ -239,8 +247,8 @@ const Dashboard = () => {
               <h3 className="text-lg font-semibold mb-4">{t.rh}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
-                  <Pie data={dashboardData?.staffDistribution || []} cx="50%" cy="50%" labelLine={false} label={({ name, value }) => `${name}: ${value}`} outerRadius={80} fill="#8884d8" dataKey="value">
-                    {(dashboardData?.staffDistribution || []).map((entry, index) => (
+                  <Pie data={getStaffDistribution()} cx="50%" cy="50%" labelLine={false} label={({ name, value }) => `${name}: ${value}`} outerRadius={80} fill="#8884d8" dataKey="value">
+                    {getStaffDistribution().map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
@@ -254,22 +262,22 @@ const Dashboard = () => {
           <div className="bg-slate-800 rounded-lg p-6 shadow-lg border border-slate-700">
             <h3 className="text-lg font-semibold mb-4">{t.moduleStats}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition">
+              <div className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition" onClick={() => handleModuleClick('/crm')}>
                 <p className="text-sm text-slate-400">{t.crm}</p>
                 <p className="text-2xl font-bold mt-2">{dashboardData?.moduleStats.crm.clients}</p>
                 <p className="text-xs text-slate-500 mt-1">{t.clients}</p>
               </div>
-              <div className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition">
+              <div className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition" onClick={() => handleModuleClick('/production')}>
                 <p className="text-sm text-slate-400">{t.production}</p>
                 <p className="text-2xl font-bold mt-2">{dashboardData?.moduleStats.production.orders}</p>
                 <p className="text-xs text-slate-500 mt-1">{t.orders}</p>
               </div>
-              <div className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition">
+              <div className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition" onClick={() => handleModuleClick('/ged')}>
                 <p className="text-sm text-slate-400">{t.ged}</p>
                 <p className="text-2xl font-bold mt-2">{dashboardData?.moduleStats.ged.documents}</p>
                 <p className="text-xs text-slate-500 mt-1">{t.documents}</p>
               </div>
-              <div className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition">
+              <div className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition" onClick={() => handleModuleClick('/actifs')}>
                 <p className="text-sm text-slate-400">{t.actifs}</p>
                 <p className="text-2xl font-bold mt-2">{dashboardData?.moduleStats.actifs.total.toLocaleString()}</p>
                 <p className="text-xs text-slate-500 mt-1">Valeur Totale</p>
