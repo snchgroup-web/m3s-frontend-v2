@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -94,8 +94,8 @@ const Dashboard = () => {
 
   const t = translations[language];
 
-  // Mock data
-  const mockDataBase = {
+  // Mock data - wrapped in useMemo for stable reference
+  const mockDataBase = useMemo(() => ({
     financialTrend: [
       { month: 'Jan', revenue: 45000, expenses: 32000 },
       { month: 'Feb', revenue: 52000, expenses: 35000 },
@@ -113,7 +113,7 @@ const Dashboard = () => {
       ged: { documents: 847, recent: 12 },
       tasks: { total: 234, completed: 178, pending: 56 }
     }
-  };
+  }), []);
 
   // Create staff distribution with translated names
   const getStaffDistribution = () => [
@@ -151,7 +151,7 @@ const Dashboard = () => {
       }
     };
     fetchDashboardData();
-  }, []);
+  }, [mockDataBase]);
 
   const handleModuleClick = (path) => {
     navigate(path);
