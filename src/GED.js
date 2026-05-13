@@ -91,7 +91,6 @@ const GED = () => {
     }
   };
 
-  const t = translations[language];
   const [activeTab, setActiveTab] = useState('overview');
   const [documents, setDocuments] = useState([]);
   const [dossiers, setDossiers] = useState([]);

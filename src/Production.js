@@ -100,7 +100,6 @@ const Production = () => {
     }
   };
 
-  const t = translations[language];
   const [activeTab, setActiveTab] = useState('overview');
   const [commandes, setCommandes] = useState([]);
   const [fournisseurs, setFournisseurs] = useState([]);

@@ -76,7 +76,6 @@ const Actifs = () => {
     }
   };
 
-  const t = translations[language];
   const [activeTab, setActiveTab] = useState('overview');
   const [immobilisations, setImmobilisations] = useState([]);
   const [showModal, setShowModal] = useState(false);
