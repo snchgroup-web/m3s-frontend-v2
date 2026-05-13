@@ -99,6 +99,86 @@ const RH = () => {
 
   const t = translations[language];
 
+  // Data translations for positions, departments, and roles
+  const dataTranslations = {
+    // Positions/Roles
+    positions: {
+      FR: {
+        'Développeur': 'Développeur',
+        'Responsable Finance': 'Responsable Finance',
+        'Manager': 'Manager',
+        'Responsable RH': 'Responsable RH',
+        'Bénévole IT': 'Bénévole IT',
+        'Bénévole Social': 'Bénévole Social',
+        'Bénévole Événements': 'Bénévole Événements',
+        'Membre': 'Membre',
+        'Membre Fondateur': 'Membre Fondateur'
+      },
+      EN: {
+        'Développeur': 'Developer',
+        'Responsable Finance': 'Finance Manager',
+        'Manager': 'Manager',
+        'Responsable RH': 'HR Manager',
+        'Bénévole IT': 'IT Volunteer',
+        'Bénévole Social': 'Social Volunteer',
+        'Bénévole Événements': 'Events Volunteer',
+        'Membre': 'Member',
+        'Membre Fondateur': 'Founding Member'
+      },
+      DE: {
+        'Développeur': 'Entwickler',
+        'Responsable Finance': 'Finanzleiter',
+        'Manager': 'Manager',
+        'Responsable RH': 'HR-Leiter',
+        'Bénévole IT': 'IT-Freiwilliger',
+        'Bénévole Social': 'Sozialfreiwilliger',
+        'Bénévole Événements': 'Veranstaltungsfreiwilliger',
+        'Membre': 'Mitglied',
+        'Membre Fondateur': 'Gründungsmitglied'
+      }
+    },
+    // Departments
+    departments: {
+      FR: {
+        'IT': 'IT',
+        'Finance': 'Finance',
+        'Gestion': 'Gestion',
+        'RH': 'RH',
+        'Social': 'Social',
+        'Événements': 'Événements',
+        'Général': 'Général'
+      },
+      EN: {
+        'IT': 'IT',
+        'Finance': 'Finance',
+        'Gestion': 'Management',
+        'RH': 'HR',
+        'Social': 'Social',
+        'Événements': 'Events',
+        'Général': 'General'
+      },
+      DE: {
+        'IT': 'IT',
+        'Finance': 'Finanzen',
+        'Gestion': 'Verwaltung',
+        'RH': 'Personalwesen',
+        'Social': 'Soziales',
+        'Événements': 'Veranstaltungen',
+        'Général': 'Allgemein'
+      }
+    },
+    // Category names (Employé, Bénévole, Membre in charts)
+    categories: {
+      FR: { 'Employés': 'Employés', 'Bénévoles': 'Bénévoles', 'Membres': 'Membres' },
+      EN: { 'Employés': 'Employees', 'Bénévoles': 'Volunteers', 'Membres': 'Members' },
+      DE: { 'Employés': 'Mitarbeiter', 'Bénévoles': 'Freiwillige', 'Membres': 'Mitglieder' }
+    }
+  };
+
+  const translatePosition = (position) => dataTranslations.positions[language]?.[position] || position;
+  const translateDepartment = (dept) => dataTranslations.departments[language]?.[dept] || dept;
+  const translateCategory = (category) => dataTranslations.categories[language]?.[category] || category;
+
   const [activeTab, setActiveTab] = useState('overview');
   const [employes, setEmployes] = useState([]);
   const [benevoles, setBenevoles] = useState([]);
@@ -148,9 +228,9 @@ const RH = () => {
 
   // Données pour charts
   const staffDistribution = [
-    { name: 'Employés', value: totalEmployes },
-    { name: 'Bénévoles', value: totalBenevoles },
-    { name: 'Membres', value: totalMembres },
+    { name: translateCategory('Employés'), nameKey: 'Employés', value: totalEmployes },
+    { name: translateCategory('Bénévoles'), nameKey: 'Bénévoles', value: totalBenevoles },
+    { name: translateCategory('Membres'), nameKey: 'Membres', value: totalMembres },
   ];
 
   const monthlyData = [
@@ -161,11 +241,11 @@ const RH = () => {
   ];
 
   const departementStats = [
-    { dept: 'IT', count: employes.filter(e => e.departement === 'IT').length + benevoles.filter(b => b.departement === 'IT').length },
-    { dept: 'Finance', count: employes.filter(e => e.departement === 'Finance').length },
-    { dept: 'RH', count: employes.filter(e => e.departement === 'RH').length },
-    { dept: 'Gestion', count: employes.filter(e => e.departement === 'Gestion').length },
-    { dept: 'Social', count: benevoles.filter(b => b.departement === 'Social').length },
+    { dept: translateDepartment('IT'), deptKey: 'IT', count: employes.filter(e => e.departement === 'IT').length + benevoles.filter(b => b.departement === 'IT').length },
+    { dept: translateDepartment('Finance'), deptKey: 'Finance', count: employes.filter(e => e.departement === 'Finance').length },
+    { dept: translateDepartment('RH'), deptKey: 'RH', count: employes.filter(e => e.departement === 'RH').length },
+    { dept: translateDepartment('Gestion'), deptKey: 'Gestion', count: employes.filter(e => e.departement === 'Gestion').length },
+    { dept: translateDepartment('Social'), deptKey: 'Social', count: benevoles.filter(b => b.departement === 'Social').length },
   ];
 
   // Gestion formulaire
@@ -253,8 +333,8 @@ const RH = () => {
                 <td className="px-4 py-2 text-slate-300 font-medium">{item.nom}</td>
                 <td className="px-4 py-2 text-slate-400 text-xs">{item.email}</td>
                 <td className="px-4 py-2 text-slate-400 text-xs">{item.telephone}</td>
-                <td className="px-4 py-2 text-slate-300">{item.poste}</td>
-                <td className="px-4 py-2 text-slate-400">{item.departement}</td>
+                <td className="px-4 py-2 text-slate-300">{translatePosition(item.poste)}</td>
+                <td className="px-4 py-2 text-slate-400">{translateDepartment(item.departement)}</td>
                 <td className="px-4 py-2">
                   <span className={`px-2 py-1 rounded text-xs font-semibold ${item.statut === 'Actif' ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'}`}>
                     {item.statut === 'Actif' ? t.actif : t.inactif}
@@ -436,11 +516,11 @@ const RH = () => {
                 <label className="block text-sm font-medium text-slate-300 mb-2">{t.departement}</label>
                 <select value={formData.departement} onChange={(e) => handleFormChange('departement', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
                   <option value="">Sélectionner</option>
-                  <option>IT</option>
-                  <option>Finance</option>
-                  <option>RH</option>
-                  <option>Gestion</option>
-                  <option>Social</option>
+                  <option value="IT">{translateDepartment('IT')}</option>
+                  <option value="Finance">{translateDepartment('Finance')}</option>
+                  <option value="RH">{translateDepartment('RH')}</option>
+                  <option value="Gestion">{translateDepartment('Gestion')}</option>
+                  <option value="Social">{translateDepartment('Social')}</option>
                 </select>
               </div>
 
