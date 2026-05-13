@@ -1,8 +1,94 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Plus, Edit2, Trash2, FileText, Folder, Download, Upload } from 'lucide-react';
+import { useLanguage } from './LanguageContext';
 
 const GED = () => {
+  const { language } = useLanguage();
+
+  // Translations
+  const translations = {
+    FR: {
+      title: 'Gestion Documentaire (GED)',
+      subtitle: 'Gestion des Documents et des Dossiers',
+      overview: 'Vue d\'ensemble',
+      documents: 'Documents',
+      dossiers: 'Dossiers',
+      totalDocuments: 'Total Documents',
+      totalDossiers: 'Total Dossiers',
+      storageTaille: 'Stockage Total',
+      documentsActifs: 'Documents Actifs',
+      documentsParType: 'Documents par Type',
+      tailleParDossier: 'Taille par Dossier',
+      nom: 'Nom',
+      type: 'Type',
+      dossier: 'Dossier',
+      dateCreation: 'Date de Création',
+      taille: 'Taille',
+      statut: 'Statut',
+      actions: 'Actions',
+      nombreDocs: 'Nombre de Docs',
+      nouvelDocument: 'Nouveau Document',
+      nouveauDossier: 'Nouveau Dossier',
+      creer: 'Créer',
+      annuler: 'Annuler',
+      remplirChamps: 'Veuillez remplir les champs obligatoires'
+    },
+    EN: {
+      title: 'Document Management (GED)',
+      subtitle: 'Documents and Folders Management',
+      overview: 'Overview',
+      documents: 'Documents',
+      dossiers: 'Folders',
+      totalDocuments: 'Total Documents',
+      totalDossiers: 'Total Folders',
+      storageTaille: 'Total Storage',
+      documentsActifs: 'Active Documents',
+      documentsParType: 'Documents by Type',
+      tailleParDossier: 'Size by Folder',
+      nom: 'Name',
+      type: 'Type',
+      dossier: 'Folder',
+      dateCreation: 'Creation Date',
+      taille: 'Size',
+      statut: 'Status',
+      actions: 'Actions',
+      nombreDocs: 'Number of Docs',
+      nouvelDocument: 'New Document',
+      nouveauDossier: 'New Folder',
+      creer: 'Create',
+      annuler: 'Cancel',
+      remplirChamps: 'Please fill in all required fields'
+    },
+    DE: {
+      title: 'Dokumentenverwaltung (GED)',
+      subtitle: 'Verwaltung von Dokumenten und Ordnern',
+      overview: 'Übersicht',
+      documents: 'Dokumente',
+      dossiers: 'Ordner',
+      totalDocuments: 'Gesamtdokumente',
+      totalDossiers: 'Gesamtordner',
+      storageTaille: 'Gesamtspeicher',
+      documentsActifs: 'Aktive Dokumente',
+      documentsParType: 'Dokumente nach Typ',
+      tailleParDossier: 'Größe nach Ordner',
+      nom: 'Name',
+      type: 'Typ',
+      dossier: 'Ordner',
+      dateCreation: 'Erstellungsdatum',
+      taille: 'Größe',
+      statut: 'Status',
+      actions: 'Aktionen',
+      nombreDocs: 'Anzahl der Dokumente',
+      nouvelDocument: 'Neues Dokument',
+      nouveauDossier: 'Neuer Ordner',
+      creer: 'Erstellen',
+      annuler: 'Abbrechen',
+      remplirChamps: 'Bitte füllen Sie alle erforderlichen Felder aus'
+    }
+  };
+
+  const t = translations[language];
 
   const [activeTab, setActiveTab] = useState('overview');
   const [documents, setDocuments] = useState([]);
@@ -62,7 +148,7 @@ const GED = () => {
  
   const handleSave = () => {
     if (!formData.nom) {
-      alert('Veuillez remplir les champs obligatoires');
+      alert(t.remplirChamps);
       return;
     }
  
@@ -102,8 +188,8 @@ const GED = () => {
       <div className="max-w-7xl mx-auto">
  
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">📄 Gestion Électronique Documents</h1>
-          <p className="text-slate-400">Archivage et Organisation des Documents</p>
+          <h1 className="text-4xl font-bold text-white mb-2">📄 {t.title}</h1>
+          <p className="text-slate-400">{t.subtitle}</p>
         </div>
  
         {/* KPIs */}
@@ -111,7 +197,7 @@ const GED = () => {
           <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-200 text-sm">Total Documents</p>
+                <p className="text-blue-200 text-sm">{t.totalDocuments}</p>
                 <p className="text-white text-2xl font-bold">{totalDocuments}</p>
               </div>
               <FileText size={32} className="text-blue-400" />
@@ -121,7 +207,7 @@ const GED = () => {
           <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-200 text-sm">Dossiers</p>
+                <p className="text-green-200 text-sm">{t.totalDossiers}</p>
                 <p className="text-white text-2xl font-bold">{totalDossiers}</p>
               </div>
               <Folder size={32} className="text-green-400" />
@@ -131,7 +217,7 @@ const GED = () => {
           <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-200 text-sm">Stockage Total</p>
+                <p className="text-purple-200 text-sm">{t.storageTaille}</p>
                 <p className="text-white text-2xl font-bold">{totalTaille} MB</p>
               </div>
               <Upload size={32} className="text-purple-400" />
@@ -141,7 +227,7 @@ const GED = () => {
           <div className="bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-6 border border-orange-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-orange-200 text-sm">Documents Actifs</p>
+                <p className="text-orange-200 text-sm">{t.documentsActifs}</p>
                 <p className="text-white text-2xl font-bold">{documentsActifs}</p>
               </div>
               <Download size={32} className="text-orange-400" />
@@ -151,16 +237,16 @@ const GED = () => {
  
         {/* Tabs */}
         <div className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
-          <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Vue d'ensemble</button>
-          <button onClick={() => setActiveTab('documents')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'documents' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Documents</button>
-          <button onClick={() => setActiveTab('dossiers')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'dossiers' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Dossiers</button>
+          <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.overview}</button>
+          <button onClick={() => setActiveTab('documents')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'documents' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.documents}</button>
+          <button onClick={() => setActiveTab('dossiers')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'dossiers' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.dossiers}</button>
         </div>
  
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">Documents par Type</h3>
+              <h3 className="text-white font-bold mb-4">{t.documentsParType}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={documentParType}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
@@ -173,7 +259,7 @@ const GED = () => {
             </div>
  
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">Taille par Dossier</h3>
+              <h3 className="text-white font-bold mb-4">{t.tailleParDossier}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={dossierStats} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
@@ -192,19 +278,19 @@ const GED = () => {
           <div>
             <div className="flex justify-end mb-4">
               <button onClick={() => { setEditingId(null); setModalType('document'); setFormData({ nom: '', type: 'PDF', dossier: '', dateCreation: new Date().toISOString().split('T')[0], taille: '', statut: 'Actif' }); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
-                <Plus size={20} /> Nouveau Document
+                <Plus size={20} /> {t.nouvelDocument}
               </button>
             </div>
             <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-slate-700">
                   <tr>
-                    <th className="px-4 py-2 text-left text-white font-bold">Nom</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Type</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Dossier</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Taille</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Date</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Actions</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.nom}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.type}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.dossier}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.taille}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.dateCreation}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -236,18 +322,18 @@ const GED = () => {
           <div>
             <div className="flex justify-end mb-4">
               <button onClick={() => { setEditingId(null); setModalType('dossier'); setFormData({ nom: '', type: 'PDF', dossier: '', dateCreation: new Date().toISOString().split('T')[0], taille: '', statut: 'Actif' }); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
-                <Plus size={20} /> Nouveau Dossier
+                <Plus size={20} /> {t.nouveauDossier}
               </button>
             </div>
             <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-slate-700">
                   <tr>
-                    <th className="px-4 py-2 text-left text-white font-bold">Nom Dossier</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Documents</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Taille</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Créé</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Actions</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.nom}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.nombreDocs}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.taille}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.dateCreation}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -278,7 +364,9 @@ const GED = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
-            <h2 className="text-2xl font-bold text-white mb-6">Nouvel Élément</h2>
+            <h2 className="text-2xl font-bold text-white mb-6">
+              {modalType === 'document' ? t.nouvelDocument : t.nouveauDossier}
+            </h2>
  
             <div className="space-y-4">
               <input type="text" placeholder="Nom" value={formData.nom} onChange={(e) => handleFormChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
@@ -291,8 +379,8 @@ const GED = () => {
             </div>
  
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">Annuler</button>
-              <button onClick={handleSave} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">Créer</button>
+              <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">{t.annuler}</button>
+              <button onClick={handleSave} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">{t.creer}</button>
             </div>
           </div>
         </div>

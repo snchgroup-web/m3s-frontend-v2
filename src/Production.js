@@ -1,8 +1,147 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Plus, Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck } from 'lucide-react';
+import { useLanguage } from './LanguageContext';
+
+// Month translations (stable constants)
+const monthTranslations = {
+  FR: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+  EN: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+  DE: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+};
+
+const shortMonths = ['Fév', 'Mar', 'Avr'];
 
 const Production = () => {
+  const { language } = useLanguage();
+
+  // Translations
+  const translations = {
+    FR: {
+      title: 'Production & Logistique',
+      subtitle: 'Commandes, Fournisseurs et Gestion des Stocks',
+      overview: 'Vue d\'ensemble',
+      commandes: 'Commandes',
+      fournisseurs: 'Fournisseurs',
+      stocks: 'Stocks',
+      totalCommandes: 'Total Commandes',
+      commandesLivrees: 'Commandes Livrées',
+      totalFournisseurs: 'Fournisseurs',
+      alertStocks: 'Stocks Bas',
+      commandesParMois: 'Commandes par Mois',
+      stocksParProduit: 'Stocks par Produit',
+      numero: 'Numéro',
+      client: 'Client',
+      produit: 'Produit',
+      quantite: 'Quantité',
+      statut: 'Statut',
+      date: 'Date',
+      actions: 'Actions',
+      seuil: 'Seuil',
+      unite: 'Unité',
+      categorie: 'Catégorie',
+      pays: 'Pays',
+      email: 'Email',
+      telephone: 'Téléphone',
+      nom: 'Nom',
+      nouvelleCommande: 'Nouvelle Commande',
+      nouveauFournisseur: 'Nouveau Fournisseur',
+      ajouterStock: 'Ajouter Stock',
+      ok: 'OK',
+      bas: 'BAS',
+      creer: 'Créer',
+      modifier: 'Modifier',
+      supprimer: 'Supprimer',
+      annuler: 'Annuler',
+      remplirChamps: 'Veuillez remplir les champs obligatoires'
+    },
+    EN: {
+      title: 'Production & Logistics',
+      subtitle: 'Orders, Suppliers and Stock Management',
+      overview: 'Overview',
+      commandes: 'Orders',
+      fournisseurs: 'Suppliers',
+      stocks: 'Stock',
+      totalCommandes: 'Total Orders',
+      commandesLivrees: 'Delivered Orders',
+      totalFournisseurs: 'Suppliers',
+      alertStocks: 'Low Stock',
+      commandesParMois: 'Orders by Month',
+      stocksParProduit: 'Stock by Product',
+      numero: 'Number',
+      client: 'Client',
+      produit: 'Product',
+      quantite: 'Quantity',
+      statut: 'Status',
+      date: 'Date',
+      actions: 'Actions',
+      seuil: 'Threshold',
+      unite: 'Unit',
+      categorie: 'Category',
+      pays: 'Country',
+      email: 'Email',
+      telephone: 'Phone',
+      nom: 'Name',
+      nouvelleCommande: 'New Order',
+      nouveauFournisseur: 'New Supplier',
+      ajouterStock: 'Add Stock',
+      ok: 'OK',
+      bas: 'LOW',
+      creer: 'Create',
+      modifier: 'Edit',
+      supprimer: 'Delete',
+      annuler: 'Cancel',
+      remplirChamps: 'Please fill in all required fields'
+    },
+    DE: {
+      title: 'Produktion & Logistik',
+      subtitle: 'Bestellungen, Lieferanten und Lagerverwaltung',
+      overview: 'Übersicht',
+      commandes: 'Bestellungen',
+      fournisseurs: 'Lieferanten',
+      stocks: 'Lagerbestand',
+      totalCommandes: 'Gesamtbestellungen',
+      commandesLivrees: 'Gelieferte Bestellungen',
+      totalFournisseurs: 'Lieferanten',
+      alertStocks: 'Niedriger Bestand',
+      commandesParMois: 'Bestellungen pro Monat',
+      stocksParProduit: 'Lagerbestand nach Produkt',
+      numero: 'Nummer',
+      client: 'Kunde',
+      produit: 'Produkt',
+      quantite: 'Menge',
+      statut: 'Status',
+      date: 'Datum',
+      actions: 'Aktionen',
+      seuil: 'Schwellenwert',
+      unite: 'Einheit',
+      categorie: 'Kategorie',
+      pays: 'Land',
+      email: 'E-Mail',
+      telephone: 'Telefon',
+      nom: 'Name',
+      nouvelleCommande: 'Neue Bestellung',
+      nouveauFournisseur: 'Neuer Lieferant',
+      ajouterStock: 'Bestand hinzufügen',
+      ok: 'OK',
+      bas: 'NIEDRIG',
+      creer: 'Erstellen',
+      modifier: 'Bearbeiten',
+      supprimer: 'Löschen',
+      annuler: 'Abbrechen',
+      remplirChamps: 'Bitte füllen Sie alle erforderlichen Felder aus'
+    }
+  };
+
+  const t = translations[language];
+
+  const getMonthName = useCallback((shortMonth) => {
+    const index = shortMonths.indexOf(shortMonth);
+    if (index !== -1) {
+      return monthTranslations[language][index + 1] || shortMonth;
+    }
+    return shortMonth;
+  }, [language]);
 
   const [activeTab, setActiveTab] = useState('overview');
   const [commandes, setCommandes] = useState([]);
@@ -65,7 +204,7 @@ const Production = () => {
  
   const handleSave = () => {
     if (!formData.numero || !formData.client) {
-      alert('Veuillez remplir les champs obligatoires');
+      alert(t.remplirChamps);
       return;
     }
  
@@ -112,8 +251,8 @@ const Production = () => {
       <div className="max-w-7xl mx-auto">
  
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">📦 Production & Logistique</h1>
-          <p className="text-slate-400">Commandes, Fournisseurs et Gestion des Stocks</p>
+          <h1 className="text-4xl font-bold text-white mb-2">📦 {t.title}</h1>
+          <p className="text-slate-400">{t.subtitle}</p>
         </div>
  
         {/* KPIs */}
@@ -121,7 +260,7 @@ const Production = () => {
           <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-200 text-sm">Commandes</p>
+                <p className="text-blue-200 text-sm">{t.totalCommandes}</p>
                 <p className="text-white text-2xl font-bold">{totalCommandes}</p>
               </div>
               <Package size={32} className="text-blue-400" />
@@ -131,7 +270,7 @@ const Production = () => {
           <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-200 text-sm">Livrées</p>
+                <p className="text-green-200 text-sm">{t.commandesLivrees}</p>
                 <p className="text-white text-2xl font-bold">{commandesLivrees}</p>
               </div>
               <CheckCircle size={32} className="text-green-400" />
@@ -141,7 +280,7 @@ const Production = () => {
           <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-200 text-sm">Fournisseurs</p>
+                <p className="text-purple-200 text-sm">{t.fournisseurs}</p>
                 <p className="text-white text-2xl font-bold">{totalFournisseurs}</p>
               </div>
               <Truck size={32} className="text-purple-400" />
@@ -151,7 +290,7 @@ const Production = () => {
           <div className={`bg-gradient-to-br ${stocksBas === 0 ? 'from-green-900 to-green-800' : 'from-orange-900 to-orange-800'} rounded-lg p-6 border ${stocksBas === 0 ? 'border-green-700' : 'border-orange-700'}`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`${stocksBas === 0 ? 'text-green-200' : 'text-orange-200'} text-sm`}>Stocks Bas</p>
+                <p className={`${stocksBas === 0 ? 'text-green-200' : 'text-orange-200'} text-sm`}>{t.alertStocks}</p>
                 <p className="text-white text-2xl font-bold">{stocksBas}</p>
               </div>
               <AlertCircle size={32} className={stocksBas === 0 ? 'text-green-400' : 'text-orange-400'} />
@@ -161,17 +300,17 @@ const Production = () => {
  
         {/* Tabs */}
         <div className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
-          <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Vue d'ensemble</button>
-          <button onClick={() => setActiveTab('commandes')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'commandes' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Commandes</button>
-          <button onClick={() => setActiveTab('fournisseurs')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'fournisseurs' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Fournisseurs</button>
-          <button onClick={() => setActiveTab('stocks')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'stocks' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Stocks</button>
+          <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.overview}</button>
+          <button onClick={() => setActiveTab('commandes')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'commandes' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.commandes}</button>
+          <button onClick={() => setActiveTab('fournisseurs')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'fournisseurs' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.fournisseurs}</button>
+          <button onClick={() => setActiveTab('stocks')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'stocks' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.stocks}</button>
         </div>
  
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">Commandes par Mois</h3>
+              <h3 className="text-white font-bold mb-4">{t.commandesParMois}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={commandesParMois}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
@@ -184,7 +323,7 @@ const Production = () => {
             </div>
  
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">Niveaux des Stocks</h3>
+              <h3 className="text-white font-bold mb-4">{t.stocksParProduit}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={stocksParProduit} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
@@ -205,19 +344,19 @@ const Production = () => {
           <div>
             <div className="flex justify-end mb-4">
               <button onClick={() => { setEditingId(null); setModalType('commande'); setFormData({ numero: '', client: '', produit: '', quantite: '', statut: 'En cours', date: new Date().toISOString().split('T')[0] }); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
-                <Plus size={20} /> Nouvelle Commande
+                <Plus size={20} /> {t.nouvelleCommande}
               </button>
             </div>
             <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-slate-700">
                   <tr>
-                    <th className="px-4 py-2 text-left text-white font-bold">N° Commande</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Client</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Produit</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Quantité</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Statut</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Actions</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.numero}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.client}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.produit}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.quantite}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -252,18 +391,18 @@ const Production = () => {
           <div>
             <div className="flex justify-end mb-4">
               <button onClick={() => { setEditingId(null); setModalType('fournisseur'); setFormData({ numero: '', client: '', produit: '', quantite: '', statut: 'En cours', date: new Date().toISOString().split('T')[0] }); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
-                <Plus size={20} /> Nouveau Fournisseur
+                <Plus size={20} /> {t.nouveauFournisseur}
               </button>
             </div>
             <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-slate-700">
                   <tr>
-                    <th className="px-4 py-2 text-left text-white font-bold">Nom</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Email</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Catégorie</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Pays</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Actions</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.nom}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.email}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.categorie}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.pays}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -293,18 +432,18 @@ const Production = () => {
           <div>
             <div className="flex justify-end mb-4">
               <button onClick={() => { setEditingId(null); setModalType('stock'); setFormData({ numero: '', client: '', produit: '', quantite: '', statut: 'En cours', date: new Date().toISOString().split('T')[0] }); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
-                <Plus size={20} /> Ajouter Stock
+                <Plus size={20} /> {t.ajouterStock}
               </button>
             </div>
             <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-slate-700">
                   <tr>
-                    <th className="px-4 py-2 text-left text-white font-bold">Produit</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Quantité</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Seuil</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Statut</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Actions</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.produit}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.quantite}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.seuil}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -315,7 +454,7 @@ const Production = () => {
                       <td className="px-4 py-2 text-slate-400">{s.seuil}</td>
                       <td className="px-4 py-2">
                         <span className={`px-2 py-1 rounded text-xs font-semibold ${s.quantite > s.seuil ? 'bg-green-900 text-green-200' : 'bg-orange-900 text-orange-200'}`}>
-                          {s.quantite > s.seuil ? 'OK' : 'BAS'}
+                          {s.quantite > s.seuil ? t.ok : t.bas}
                         </span>
                       </td>
                       <td className="px-4 py-2 flex gap-2">
@@ -339,7 +478,9 @@ const Production = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
-            <h2 className="text-2xl font-bold text-white mb-6">Nouveau Élément</h2>
+            <h2 className="text-2xl font-bold text-white mb-6">
+              {modalType === 'commande' ? t.nouvelleCommande : modalType === 'fournisseur' ? t.nouveauFournisseur : t.ajouterStock}
+            </h2>
  
             <div className="space-y-4">
               <input type="text" placeholder="Champ 1" value={formData.numero} onChange={(e) => handleFormChange('numero', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
@@ -348,8 +489,8 @@ const Production = () => {
             </div>
  
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">Annuler</button>
-              <button onClick={handleSave} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">Créer</button>
+              <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">{t.annuler}</button>
+              <button onClick={handleSave} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">{t.creer}</button>
             </div>
           </div>
         </div>
