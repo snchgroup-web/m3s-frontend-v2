@@ -1,16 +1,7 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Plus, Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
-
-// Month translations (stable constants)
-const monthTranslations = {
-  FR: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-  EN: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-  DE: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
-};
-
-const shortMonths = ['Fév', 'Mar', 'Avr'];
 
 const Production = () => {
   const { language } = useLanguage();
@@ -134,14 +125,6 @@ const Production = () => {
   };
 
   const t = translations[language];
-
-  const getMonthName = useCallback((shortMonth) => {
-    const index = shortMonths.indexOf(shortMonth);
-    if (index !== -1) {
-      return monthTranslations[language][index + 1] || shortMonth;
-    }
-    return shortMonth;
-  }, [language]);
 
   const [activeTab, setActiveTab] = useState('overview');
   const [commandes, setCommandes] = useState([]);
