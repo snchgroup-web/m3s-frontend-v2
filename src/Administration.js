@@ -158,6 +158,26 @@ const Admin = () => {
   };
 
   const t = translations[language];
+
+  // Data translations for audit actions and days
+  const dataTranslations = {
+    // Audit Actions
+    auditActions: {
+      FR: { 'LOGIN': 'Connexion', 'CREATE': 'Création', 'UPDATE': 'Modification', 'DELETE': 'Suppression', 'READ': 'Lecture', 'EXPORT': 'Exportation', 'LOGIN_FAILED': 'Échec Connexion' },
+      EN: { 'LOGIN': 'Login', 'CREATE': 'Create', 'UPDATE': 'Update', 'DELETE': 'Delete', 'READ': 'Read', 'EXPORT': 'Export', 'LOGIN_FAILED': 'Login Failed' },
+      DE: { 'LOGIN': 'Anmeldung', 'CREATE': 'Erstellen', 'UPDATE': 'Aktualisierung', 'DELETE': 'Löschung', 'READ': 'Lesen', 'EXPORT': 'Exportieren', 'LOGIN_FAILED': 'Anmeldung Fehlgeschlagen' }
+    },
+    // Days of Week
+    days: {
+      FR: { 'Lun': 'Lun', 'Mar': 'Mar', 'Mer': 'Mer', 'Jeu': 'Jeu', 'Ven': 'Ven' },
+      EN: { 'Lun': 'Mon', 'Mar': 'Tue', 'Mer': 'Wed', 'Jeu': 'Thu', 'Ven': 'Fri' },
+      DE: { 'Lun': 'Mo', 'Mar': 'Di', 'Mer': 'Mi', 'Jeu': 'Do', 'Ven': 'Fr' }
+    }
+  };
+
+  const translateAuditAction = (action) => dataTranslations.auditActions[language]?.[action] || action;
+  const translateDay = (day) => dataTranslations.days[language]?.[day] || day;
+
   const [activeTab, setActiveTab] = useState('overview');
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
@@ -223,19 +243,19 @@ const Admin = () => {
   }));
 
   const auditActivity = [
-    { action: 'LOGIN', count: auditLogs.filter(log => log.action === 'LOGIN').length },
-    { action: 'CREATE', count: auditLogs.filter(log => log.action === 'CREATE').length },
-    { action: 'UPDATE', count: auditLogs.filter(log => log.action === 'UPDATE').length },
-    { action: 'DELETE', count: auditLogs.filter(log => log.action === 'DELETE').length },
-    { action: 'READ', count: auditLogs.filter(log => log.action === 'READ').length },
+    { action: translateAuditAction('LOGIN'), actionKey: 'LOGIN', count: auditLogs.filter(log => log.action === 'LOGIN').length },
+    { action: translateAuditAction('CREATE'), actionKey: 'CREATE', count: auditLogs.filter(log => log.action === 'CREATE').length },
+    { action: translateAuditAction('UPDATE'), actionKey: 'UPDATE', count: auditLogs.filter(log => log.action === 'UPDATE').length },
+    { action: translateAuditAction('DELETE'), actionKey: 'DELETE', count: auditLogs.filter(log => log.action === 'DELETE').length },
+    { action: translateAuditAction('READ'), actionKey: 'READ', count: auditLogs.filter(log => log.action === 'READ').length },
   ];
 
   const dailyActivity = [
-    { jour: 'Lun', actions: 8 },
-    { jour: 'Mar', actions: 12 },
-    { jour: 'Mer', actions: 15 },
-    { jour: 'Jeu', actions: 10 },
-    { jour: 'Ven', actions: auditCount },
+    { jour: translateDay('Lun'), jourKey: 'Lun', actions: 8 },
+    { jour: translateDay('Mar'), jourKey: 'Mar', actions: 12 },
+    { jour: translateDay('Mer'), jourKey: 'Mer', actions: 15 },
+    { jour: translateDay('Jeu'), jourKey: 'Jeu', actions: 10 },
+    { jour: translateDay('Ven'), jourKey: 'Ven', actions: auditCount },
   ];
 
   // Gestion formulaires
@@ -526,7 +546,7 @@ const Admin = () => {
                 {auditLogs.map(log => (
                   <tr key={log.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                     <td className="px-4 py-2 text-slate-300">{log.utilisateur}</td>
-                    <td className="px-4 py-2 text-slate-400">{log.action}</td>
+                    <td className="px-4 py-2 text-slate-400">{translateAuditAction(log.action)}</td>
                     <td className="px-4 py-2 text-slate-400">{log.module}</td>
                     <td className="px-4 py-2 text-slate-400 text-xs">{log.timestamp}</td>
                     <td className="px-4 py-2">
