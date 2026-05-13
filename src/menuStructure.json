@@ -28,7 +28,7 @@
             "EN": "Institution",
             "DE": "Institution"
           },
-          "path": "/administration/institution"
+          "path": "/administration"
         },
         {
           "id": "activities",
@@ -37,7 +37,7 @@
             "EN": "Activities & Tasks",
             "DE": "Aktivitäten & Aufgaben"
           },
-          "path": "/administration/activities"
+          "path": "/administration"
         },
         {
           "id": "projects",
@@ -46,7 +46,7 @@
             "EN": "Project Phase",
             "DE": "Projektphase"
           },
-          "path": "/administration/projects"
+          "path": "/administration"
         },
         {
           "id": "communication",
@@ -55,7 +55,7 @@
             "EN": "Communication",
             "DE": "Kommunikation"
           },
-          "path": "/administration/communication"
+          "path": "/administration"
         }
       ]
     },
@@ -67,7 +67,7 @@
         "DE": "Finanzen"
       },
       "icon": "DollarSign",
-      "path": "/finances",
+      "path": "/finance",
       "children": [
         {
           "id": "recettes",
@@ -76,7 +76,7 @@
             "EN": "Revenue",
             "DE": "Einnahmen"
           },
-          "path": "/finances/recettes"
+          "path": "/finance"
         },
         {
           "id": "depenses",
@@ -85,7 +85,7 @@
             "EN": "Expenses",
             "DE": "Ausgaben"
           },
-          "path": "/finances/depenses"
+          "path": "/finance"
         },
         {
           "id": "budget",
@@ -94,7 +94,7 @@
             "EN": "Budget",
             "DE": "Budget"
           },
-          "path": "/finances/budget"
+          "path": "/finance"
         },
         {
           "id": "social",
@@ -103,7 +103,7 @@
             "EN": "Social",
             "DE": "Sozial"
           },
-          "path": "/finances/social"
+          "path": "/finance"
         },
         {
           "id": "immobilier",
@@ -112,7 +112,7 @@
             "EN": "Real Estate Finance",
             "DE": "Immobilienfinanzierung"
           },
-          "path": "/finances/immobilier"
+          "path": "/finance"
         },
         {
           "id": "fx-converter",
@@ -121,7 +121,7 @@
             "EN": "FX Converter",
             "DE": "FX-Umrechner"
           },
-          "path": "/finances/fx-converter"
+          "path": "/finance"
         }
       ]
     },
@@ -142,7 +142,7 @@
             "EN": "Teams & Profiles",
             "DE": "Teams & Profile"
           },
-          "path": "/rh/teams"
+          "path": "/rh"
         },
         {
           "id": "hours",
@@ -151,7 +151,7 @@
             "EN": "Hours & Activities",
             "DE": "Stunden & Aktivitäten"
           },
-          "path": "/rh/hours"
+          "path": "/rh"
         },
         {
           "id": "competences",
@@ -160,7 +160,7 @@
             "EN": "Skills",
             "DE": "Fähigkeiten"
           },
-          "path": "/rh/competences"
+          "path": "/rh"
         },
         {
           "id": "myaccount",
@@ -169,7 +169,7 @@
             "EN": "My Account",
             "DE": "Mein Konto"
           },
-          "path": "/rh/myaccount"
+          "path": "/rh"
         }
       ]
     },
@@ -181,7 +181,7 @@
         "DE": "Vertrieb & CRM"
       },
       "icon": "Briefcase",
-      "path": "/commercial",
+      "path": "/crm",
       "children": [
         {
           "id": "prospects-leads",
@@ -190,7 +190,7 @@
             "EN": "Prospects & Leads",
             "DE": "Interessenten & Leads"
           },
-          "path": "/commercial/prospects-leads"
+          "path": "/crm"
         },
         {
           "id": "clients",
@@ -199,7 +199,7 @@
             "EN": "Clients",
             "DE": "Kunden"
           },
-          "path": "/commercial/clients"
+          "path": "/crm"
         },
         {
           "id": "ventes",
@@ -208,7 +208,7 @@
             "EN": "Sales",
             "DE": "Verkauf"
           },
-          "path": "/commercial/ventes"
+          "path": "/crm"
         },
         {
           "id": "dons",
@@ -217,7 +217,7 @@
             "EN": "Donations",
             "DE": "Spenden"
           },
-          "path": "/commercial/dons"
+          "path": "/crm"
         },
         {
           "id": "beneficiaires",
@@ -226,7 +226,7 @@
             "EN": "Beneficiaries",
             "DE": "Begünstigte"
           },
-          "path": "/commercial/beneficiaires"
+          "path": "/crm"
         }
       ]
     },
@@ -247,7 +247,7 @@
             "EN": "Orders",
             "DE": "Bestellungen"
           },
-          "path": "/production/orders"
+          "path": "/production"
         },
         {
           "id": "manufacturing",
@@ -256,7 +256,7 @@
             "EN": "Manufacturing",
             "DE": "Herstellung"
           },
-          "path": "/production/manufacturing"
+          "path": "/production"
         },
         {
           "id": "suppliers",
@@ -265,7 +265,7 @@
             "EN": "Suppliers",
             "DE": "Lieferanten"
           },
-          "path": "/production/suppliers"
+          "path": "/production"
         }
       ]
     },
@@ -277,7 +277,7 @@
         "DE": "Anlagen & Vermögenswerte"
       },
       "icon": "Building2",
-      "path": "/stock",
+      "path": "/actifs",
       "children": [
         {
           "id": "inventory",
@@ -286,7 +286,7 @@
             "EN": "Inventory",
             "DE": "Bestand"
           },
-          "path": "/stock/inventory"
+          "path": "/actifs"
         },
         {
           "id": "immobilisations",
@@ -295,7 +295,7 @@
             "EN": "Fixed Assets",
             "DE": "Anlagevermögen"
           },
-          "path": "/stock/immobilisations"
+          "path": "/actifs"
         },
         {
           "id": "risques",
@@ -304,7 +304,7 @@
             "EN": "Risks",
             "DE": "Risiken"
           },
-          "path": "/stock/risques"
+          "path": "/actifs"
         }
       ]
     },
@@ -316,7 +316,7 @@
         "DE": "IT & Support"
       },
       "icon": "Zap",
-      "path": "/it-support",
+      "path": "/ged",
       "children": [
         {
           "id": "knowledge",
@@ -325,7 +325,7 @@
             "EN": "Monitoring & Knowledge Management",
             "DE": "Überwachung & Wissensmanagement"
           },
-          "path": "/it-support/knowledge"
+          "path": "/ged"
         },
         {
           "id": "ged",
@@ -334,7 +334,7 @@
             "EN": "Document Management",
             "DE": "Dokumentenverwaltung"
           },
-          "path": "/it-support/ged"
+          "path": "/ged"
         },
         {
           "id": "ai-digital",
@@ -343,7 +343,7 @@
             "EN": "AI & Digital",
             "DE": "KI & Digital"
           },
-          "path": "/it-support/ai-digital"
+          "path": "/ged"
         },
         {
           "id": "database",
@@ -352,7 +352,7 @@
             "EN": "Database Management",
             "DE": "Datenbankmanagement"
           },
-          "path": "/it-support/database"
+          "path": "/ged"
         },
         {
           "id": "user-guide",
@@ -361,7 +361,7 @@
             "EN": "User Guide",
             "DE": "Benutzerhandbuch"
           },
-          "path": "/it-support/user-guide"
+          "path": "/ged"
         },
         {
           "id": "tech-docs",
@@ -370,7 +370,7 @@
             "EN": "Technical Documentation",
             "DE": "Technische Dokumentation"
           },
-          "path": "/it-support/tech-docs"
+          "path": "/ged"
         },
         {
           "id": "help-support",
@@ -379,7 +379,7 @@
             "EN": "Help & Support",
             "DE": "Hilfe & Support"
           },
-          "path": "/it-support/help-support"
+          "path": "/ged"
         },
         {
           "id": "manual",
@@ -388,7 +388,7 @@
             "EN": "User Manual",
             "DE": "Benutzerhandbuch"
           },
-          "path": "/it-support/manual"
+          "path": "/ged"
         }
       ]
     }
