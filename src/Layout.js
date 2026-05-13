@@ -147,28 +147,24 @@ const Layout = ({ children }) => {
                 }`}
               >
                 {/* Icône */}
-                <div className="flex-shrink-0">
-                  {sidebarOpen ? (
-                    // Expanded: show chevron for expandable items
-                    item.children && item.children.length > 0 ? (
-                      expandedMenus[item.id] ? (
-                        <ChevronDown size={18} className="text-blue-400" />
+                <div className="flex-shrink-0 flex items-center space-x-2">
+                  {/* Module icon */}
+                  {item.icon && iconMap[item.icon] ? (
+                    React.createElement(iconMap[item.icon], {
+                      size: 18,
+                      className: "text-blue-400"
+                    })
+                  ) : null}
+
+                  {/* Chevron for expandable items */}
+                  {sidebarOpen && item.children && item.children.length > 0 && (
+                    <div className="flex-shrink-0">
+                      {expandedMenus[item.id] ? (
+                        <ChevronDown size={16} className="text-blue-400" />
                       ) : (
-                        <ChevronRight size={18} className="text-slate-400" />
-                      )
-                    ) : (
-                      <div className="w-4 h-4" />
-                    )
-                  ) : (
-                    // Collapsed: show module icon for identification
-                    item.icon && iconMap[item.icon] ? (
-                      React.createElement(iconMap[item.icon], {
-                        size: 20,
-                        className: "text-blue-400"
-                      })
-                    ) : (
-                      <div className="w-5 h-5" />
-                    )
+                        <ChevronRight size={16} className="text-slate-400" />
+                      )}
+                    </div>
                   )}
                 </div>
 
@@ -189,14 +185,7 @@ const Layout = ({ children }) => {
                       onClick={() => handleMenuItemClick(child.path)}
                       className="w-full flex items-center space-x-2 px-3 py-1.5 rounded text-xs hover:bg-slate-600 transition text-left text-slate-300 hover:text-white"
                     >
-                      {child.icon && iconMap[child.icon] ? (
-                        React.createElement(iconMap[child.icon], {
-                          size: 14,
-                          className: "text-blue-300"
-                        })
-                      ) : (
-                        <span className="text-blue-400">•</span>
-                      )}
+                      <span className="text-blue-400">•</span>
                       <span>{child.label[language] || child.label.FR}</span>
                     </button>
                   ))}

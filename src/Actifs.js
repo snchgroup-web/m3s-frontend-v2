@@ -87,7 +87,7 @@ const Actifs = () => {
 
   const t = translations[language];
 
-  // Data translations for asset types
+  // Data translations for asset types and names
   const dataTranslations = {
     assetTypes: {
       FR: {
@@ -108,11 +108,35 @@ const Actifs = () => {
         'Transport': 'Transport',
         'Mobilier': 'Möbel'
       }
+    },
+    assetNames: {
+      FR: {
+        'Bureau Principal Dakar': 'Bureau Principal Dakar',
+        'Serveur Principal': 'Serveur Principal',
+        'Parc Vehicules (5 véhicules)': 'Parc Vehicules (5 véhicules)',
+        'Mobilier Bureau': 'Mobilier Bureau',
+        'Équipements Réseau': 'Équipements Réseau'
+      },
+      EN: {
+        'Bureau Principal Dakar': 'Dakar Main Office',
+        'Serveur Principal': 'Main Server',
+        'Parc Vehicules (5 véhicules)': 'Vehicle Fleet (5 vehicles)',
+        'Mobilier Bureau': 'Office Furniture',
+        'Équipements Réseau': 'Network Equipment'
+      },
+      DE: {
+        'Bureau Principal Dakar': 'Dakar Hauptbüro',
+        'Serveur Principal': 'Hauptserver',
+        'Parc Vehicules (5 véhicules)': 'Fahrzeugflotte (5 Fahrzeuge)',
+        'Mobilier Bureau': 'Büromöbel',
+        'Équipements Réseau': 'Netzwerkausrüstung'
+      }
     }
   };
 
-  // Helper function to translate asset type
+  // Helper functions to translate
   const translateAssetType = (type) => dataTranslations.assetTypes[language]?.[type] || type;
+  const translateAssetName = (name) => dataTranslations.assetNames[language]?.[name] || name;
 
   const [activeTab, setActiveTab] = useState('overview');
   const [immobilisations, setImmobilisations] = useState([]);
@@ -301,7 +325,7 @@ const Actifs = () => {
                 <tbody>
                   {immobilisations.map(a => (
                     <tr key={a.id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                      <td className="px-4 py-2 text-slate-300 font-medium">{a.nom}</td>
+                      <td className="px-4 py-2 text-slate-300 font-medium">{translateAssetName(a.nom)}</td>
                       <td className="px-4 py-2 text-slate-400">{translateAssetType(a.type)}</td>
                       <td className="px-4 py-2 text-slate-400">{a.valeurAcquisition.toLocaleString()}</td>
                       <td className="px-4 py-2 text-green-400 font-bold">{a.valeurNette.toLocaleString()}</td>

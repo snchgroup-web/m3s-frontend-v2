@@ -124,12 +124,40 @@ const GED = () => {
         'Stratégie': 'Strategie',
         'Ressources': 'Ressourcen'
       }
+    },
+    // Document names
+    documentNames: {
+      FR: {
+        'Contrat Client SENELEC': 'Contrat Client SENELEC',
+        'Facture Janvier 2026': 'Facture Janvier 2026',
+        'Rapport Audit Q1': 'Rapport Audit Q1',
+        'Manuel Utilisateur': 'Manuel Utilisateur',
+        'Plan Stratégique 2026': 'Plan Stratégique 2026',
+        'Procédures RH': 'Procédures RH'
+      },
+      EN: {
+        'Contrat Client SENELEC': 'SENELEC Client Contract',
+        'Facture Janvier 2026': 'January 2026 Invoice',
+        'Rapport Audit Q1': 'Q1 Audit Report',
+        'Manuel Utilisateur': 'User Manual',
+        'Plan Stratégique 2026': '2026 Strategic Plan',
+        'Procédures RH': 'HR Procedures'
+      },
+      DE: {
+        'Contrat Client SENELEC': 'SENELEC-Kundenvertrag',
+        'Facture Janvier 2026': 'Rechnung Januar 2026',
+        'Rapport Audit Q1': 'Q1-Audit-Bericht',
+        'Manuel Utilisateur': 'Benutzerhandbuch',
+        'Plan Stratégique 2026': 'Strategischer Plan 2026',
+        'Procédures RH': 'Personalverfahren'
+      }
     }
   };
 
   // Helper functions
   const translateDocumentType = (type) => dataTranslations.documentTypes[language]?.[type] || type;
   const translateFolderName = (name) => dataTranslations.folderNames[language]?.[name] || name;
+  const translateDocumentName = (name) => dataTranslations.documentNames[language]?.[name] || name;
 
   const [activeTab, setActiveTab] = useState('overview');
   const [documents, setDocuments] = useState([]);
@@ -338,7 +366,7 @@ const GED = () => {
                 <tbody>
                   {documents.map(d => (
                     <tr key={d.id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                      <td className="px-4 py-2 text-slate-300 font-medium">{d.nom}</td>
+                      <td className="px-4 py-2 text-slate-300 font-medium">{translateDocumentName(d.nom)}</td>
                       <td className="px-4 py-2 text-slate-400">{translateDocumentType(d.type)}</td>
                       <td className="px-4 py-2 text-slate-400">{translateFolderName(d.dossier)}</td>
                       <td className="px-4 py-2 text-slate-400 text-xs">{d.taille}</td>
