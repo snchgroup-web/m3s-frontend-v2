@@ -12,6 +12,15 @@ const monthTranslations = {
 
 const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
 
+// Exchange rate: 1 CHF = 656 CFA
+const CHF_TO_CFA_RATE = 656;
+
+// Format currency with both CHF and CFA
+const formatDualCurrency = (chfAmount) => {
+  const cfaAmount = Math.round(chfAmount * CHF_TO_CFA_RATE);
+  return `${chfAmount.toLocaleString()} CHF / ${cfaAmount.toLocaleString()} CFA`;
+};
+
 const Finance = () => {
   const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState('overview');
@@ -252,7 +261,7 @@ const Finance = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-green-200 text-sm">{t.totalRecettes}</p>
-                <p className="text-white text-2xl font-bold">{totalRecettes.toLocaleString()} CHF</p>
+                <p className="text-white text-2xl font-bold">{formatDualCurrency(totalRecettes)}</p>
               </div>
               <TrendingUp size={32} className="text-green-400" />
             </div>
@@ -262,7 +271,7 @@ const Finance = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-red-200 text-sm">{t.totalDepenses}</p>
-                <p className="text-white text-2xl font-bold">{totalDepenses.toLocaleString()} CHF</p>
+                <p className="text-white text-2xl font-bold">{formatDualCurrency(totalDepenses)}</p>
               </div>
               <TrendingDown size={32} className="text-red-400" />
             </div>
@@ -272,7 +281,7 @@ const Finance = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className={`${solde >= 0 ? 'text-blue-200' : 'text-orange-200'} text-sm`}>{t.soldeNet}</p>
-                <p className="text-white text-2xl font-bold">{solde.toLocaleString()} CHF</p>
+                <p className="text-white text-2xl font-bold">{formatDualCurrency(solde)}</p>
               </div>
               <DollarSign size={32} className={solde >= 0 ? 'text-blue-400' : 'text-orange-400'} />
             </div>

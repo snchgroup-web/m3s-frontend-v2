@@ -12,6 +12,15 @@ const monthTranslations = {
 
 const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
+// Exchange rate: 1 CHF = 656 CFA
+const CHF_TO_CFA_RATE = 656;
+
+// Format currency with both CHF and CFA
+const formatDualCurrency = (chfAmount) => {
+  const cfaAmount = Math.round(chfAmount * CHF_TO_CFA_RATE);
+  return `${chfAmount.toLocaleString()} CHF / ${cfaAmount.toLocaleString()} CFA`;
+};
+
 // Mock data (stable constant, defined at module level)
 const mockDataBaseRaw = {
   financialTrend: [
@@ -228,17 +237,17 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-6 shadow-lg">
               <p className="text-green-100 text-sm font-medium">{t.revenue}</p>
-              <p className="text-3xl font-bold mt-2">{dashboardData?.moduleStats.finance.revenue.toLocaleString('fr-CH')} {t.currency}</p>
+              <p className="text-3xl font-bold mt-2">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue)}</p>
               <p className="text-green-200 text-xs mt-2">+12% ce mois</p>
             </div>
             <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-lg p-6 shadow-lg">
               <p className="text-red-100 text-sm font-medium">{t.expenses}</p>
-              <p className="text-3xl font-bold mt-2">{dashboardData?.moduleStats.finance.expenses.toLocaleString('fr-CH')} {t.currency}</p>
+              <p className="text-3xl font-bold mt-2">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses)}</p>
               <p className="text-red-200 text-xs mt-2">+5% ce mois</p>
             </div>
             <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-6 shadow-lg">
               <p className="text-blue-100 text-sm font-medium">{t.balance}</p>
-              <p className="text-3xl font-bold mt-2">{dashboardData?.moduleStats.finance.balance.toLocaleString('fr-CH')} {t.currency}</p>
+              <p className="text-3xl font-bold mt-2">{formatDualCurrency(dashboardData?.moduleStats.finance.balance)}</p>
               <p className="text-blue-200 text-xs mt-2">Solde positif</p>
             </div>
             <div className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-6 shadow-lg">
