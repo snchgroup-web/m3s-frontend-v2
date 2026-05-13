@@ -1,0 +1,407 @@
+{
+  "menu": [
+    {
+      "id": "dashboard",
+      "label": {
+        "FR": "Tableau de Bord",
+        "EN": "Dashboard",
+        "DE": "Dashboard"
+      },
+      "icon": "Home",
+      "path": "/",
+      "children": []
+    },
+    {
+      "id": "administration",
+      "label": {
+        "FR": "Administration",
+        "EN": "Administration",
+        "DE": "Verwaltung"
+      },
+      "icon": "Settings",
+      "path": "/administration",
+      "children": [
+        {
+          "id": "institution",
+          "label": {
+            "FR": "Institution",
+            "EN": "Institution",
+            "DE": "Institution"
+          },
+          "path": "/administration/institution"
+        },
+        {
+          "id": "activities",
+          "label": {
+            "FR": "Activités & Tâches",
+            "EN": "Activities & Tasks",
+            "DE": "Aktivitäten & Aufgaben"
+          },
+          "path": "/administration/activities"
+        },
+        {
+          "id": "projects",
+          "label": {
+            "FR": "Projet Phase",
+            "EN": "Project Phase",
+            "DE": "Projektphase"
+          },
+          "path": "/administration/projects"
+        },
+        {
+          "id": "communication",
+          "label": {
+            "FR": "Communication",
+            "EN": "Communication",
+            "DE": "Kommunikation"
+          },
+          "path": "/administration/communication"
+        }
+      ]
+    },
+    {
+      "id": "finances",
+      "label": {
+        "FR": "Finances",
+        "EN": "Finance",
+        "DE": "Finanzen"
+      },
+      "icon": "DollarSign",
+      "path": "/finances",
+      "children": [
+        {
+          "id": "recettes",
+          "label": {
+            "FR": "Recettes",
+            "EN": "Revenue",
+            "DE": "Einnahmen"
+          },
+          "path": "/finances/recettes"
+        },
+        {
+          "id": "depenses",
+          "label": {
+            "FR": "Dépenses",
+            "EN": "Expenses",
+            "DE": "Ausgaben"
+          },
+          "path": "/finances/depenses"
+        },
+        {
+          "id": "budget",
+          "label": {
+            "FR": "Budget",
+            "EN": "Budget",
+            "DE": "Budget"
+          },
+          "path": "/finances/budget"
+        },
+        {
+          "id": "social",
+          "label": {
+            "FR": "Social",
+            "EN": "Social",
+            "DE": "Sozial"
+          },
+          "path": "/finances/social"
+        },
+        {
+          "id": "immobilier",
+          "label": {
+            "FR": "Fin Immo",
+            "EN": "Real Estate Finance",
+            "DE": "Immobilienfinanzierung"
+          },
+          "path": "/finances/immobilier"
+        },
+        {
+          "id": "fx-converter",
+          "label": {
+            "FR": "Convertisseur FX",
+            "EN": "FX Converter",
+            "DE": "FX-Umrechner"
+          },
+          "path": "/finances/fx-converter"
+        }
+      ]
+    },
+    {
+      "id": "rh",
+      "label": {
+        "FR": "Ressources Humaines",
+        "EN": "Human Resources",
+        "DE": "Personalwesen"
+      },
+      "icon": "Users",
+      "path": "/rh",
+      "children": [
+        {
+          "id": "teams",
+          "label": {
+            "FR": "Teams & Profils",
+            "EN": "Teams & Profiles",
+            "DE": "Teams & Profile"
+          },
+          "path": "/rh/teams"
+        },
+        {
+          "id": "hours",
+          "label": {
+            "FR": "Heures & Activités",
+            "EN": "Hours & Activities",
+            "DE": "Stunden & Aktivitäten"
+          },
+          "path": "/rh/hours"
+        },
+        {
+          "id": "competences",
+          "label": {
+            "FR": "Compétences",
+            "EN": "Skills",
+            "DE": "Fähigkeiten"
+          },
+          "path": "/rh/competences"
+        },
+        {
+          "id": "myaccount",
+          "label": {
+            "FR": "Mon Compte",
+            "EN": "My Account",
+            "DE": "Mein Konto"
+          },
+          "path": "/rh/myaccount"
+        }
+      ]
+    },
+    {
+      "id": "commercial",
+      "label": {
+        "FR": "Commercial & CRM",
+        "EN": "Commercial & CRM",
+        "DE": "Kommerziell & CRM"
+      },
+      "icon": "Briefcase",
+      "path": "/commercial",
+      "children": [
+        {
+          "id": "prospects-leads",
+          "label": {
+            "FR": "Prospects & Leads",
+            "EN": "Prospects & Leads",
+            "DE": "Interessenten & Leads"
+          },
+          "path": "/commercial/prospects-leads"
+        },
+        {
+          "id": "clients",
+          "label": {
+            "FR": "Clients",
+            "EN": "Clients",
+            "DE": "Kunden"
+          },
+          "path": "/commercial/clients"
+        },
+        {
+          "id": "ventes",
+          "label": {
+            "FR": "Ventes",
+            "EN": "Sales",
+            "DE": "Verkauf"
+          },
+          "path": "/commercial/ventes"
+        },
+        {
+          "id": "dons",
+          "label": {
+            "FR": "Dons",
+            "EN": "Donations",
+            "DE": "Spenden"
+          },
+          "path": "/commercial/dons"
+        },
+        {
+          "id": "beneficiaires",
+          "label": {
+            "FR": "Bénéficiaires",
+            "EN": "Beneficiaries",
+            "DE": "Begünstigte"
+          },
+          "path": "/commercial/beneficiaires"
+        }
+      ]
+    },
+    {
+      "id": "production",
+      "label": {
+        "FR": "Production",
+        "EN": "Production",
+        "DE": "Produktion"
+      },
+      "icon": "Package",
+      "path": "/production",
+      "children": [
+        {
+          "id": "orders",
+          "label": {
+            "FR": "Commandes",
+            "EN": "Orders",
+            "DE": "Bestellungen"
+          },
+          "path": "/production/orders"
+        },
+        {
+          "id": "manufacturing",
+          "label": {
+            "FR": "Fabrication",
+            "EN": "Manufacturing",
+            "DE": "Herstellung"
+          },
+          "path": "/production/manufacturing"
+        },
+        {
+          "id": "suppliers",
+          "label": {
+            "FR": "Fournisseurs",
+            "EN": "Suppliers",
+            "DE": "Lieferanten"
+          },
+          "path": "/production/suppliers"
+        }
+      ]
+    },
+    {
+      "id": "stock",
+      "label": {
+        "FR": "Stock & Actifs",
+        "EN": "Stock & Assets",
+        "DE": "Bestand & Vermögenswerte"
+      },
+      "icon": "Building2",
+      "path": "/stock",
+      "children": [
+        {
+          "id": "inventory",
+          "label": {
+            "FR": "Inventaire",
+            "EN": "Inventory",
+            "DE": "Bestand"
+          },
+          "path": "/stock/inventory"
+        },
+        {
+          "id": "immobilisations",
+          "label": {
+            "FR": "Immobilisations",
+            "EN": "Fixed Assets",
+            "DE": "Anlagevermögen"
+          },
+          "path": "/stock/immobilisations"
+        },
+        {
+          "id": "risques",
+          "label": {
+            "FR": "Risques",
+            "EN": "Risks",
+            "DE": "Risiken"
+          },
+          "path": "/stock/risques"
+        }
+      ]
+    },
+    {
+      "id": "it-support",
+      "label": {
+        "FR": "IT & Support",
+        "EN": "IT & Support",
+        "DE": "IT & Support"
+      },
+      "icon": "Zap",
+      "path": "/it-support",
+      "children": [
+        {
+          "id": "knowledge",
+          "label": {
+            "FR": "Veille & Knowledge Management",
+            "EN": "Monitoring & Knowledge Management",
+            "DE": "Überwachung & Wissensmanagement"
+          },
+          "path": "/it-support/knowledge"
+        },
+        {
+          "id": "ged",
+          "label": {
+            "FR": "GED",
+            "EN": "Document Management",
+            "DE": "Dokumentenverwaltung"
+          },
+          "path": "/it-support/ged"
+        },
+        {
+          "id": "ai-digital",
+          "label": {
+            "FR": "IA & Digital",
+            "EN": "AI & Digital",
+            "DE": "KI & Digital"
+          },
+          "path": "/it-support/ai-digital"
+        },
+        {
+          "id": "database",
+          "label": {
+            "FR": "Gestion BDD",
+            "EN": "Database Management",
+            "DE": "Datenbankmanagement"
+          },
+          "path": "/it-support/database"
+        },
+        {
+          "id": "user-guide",
+          "label": {
+            "FR": "Guide Utilisateur",
+            "EN": "User Guide",
+            "DE": "Benutzerhandbuch"
+          },
+          "path": "/it-support/user-guide"
+        },
+        {
+          "id": "tech-docs",
+          "label": {
+            "FR": "Doc Technique",
+            "EN": "Technical Documentation",
+            "DE": "Technische Dokumentation"
+          },
+          "path": "/it-support/tech-docs"
+        },
+        {
+          "id": "help-support",
+          "label": {
+            "FR": "Aide & Support",
+            "EN": "Help & Support",
+            "DE": "Hilfe & Support"
+          },
+          "path": "/it-support/help-support"
+        },
+        {
+          "id": "manual",
+          "label": {
+            "FR": "Manuel d'Utilisation",
+            "EN": "User Manual",
+            "DE": "Benutzerhandbuch"
+          },
+          "path": "/it-support/manual"
+        }
+      ]
+    },
+    {
+      "id": "info",
+      "label": {
+        "FR": "Versions & Copyright",
+        "EN": "Versions & Copyright",
+        "DE": "Versionen & Copyright"
+      },
+      "icon": "Info",
+      "path": "/info",
+      "children": []
+    }
+  ]
+}

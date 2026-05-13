@@ -1,52 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
-import { Menu, X, LogOut, Globe, Home, DollarSign, Users, Briefcase, Package, Building2, FileText, Settings as AdminIcon } from 'lucide-react';
+import { Menu, X, LogOut, Globe, ChevronDown, ChevronRight, Maximize2, Minimize2 } from 'lucide-react';
+import menuData from './menuStructure.json';
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
   const { language, setLanguage } = useLanguage();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeModule, setActiveModule] = useState('overview');
+  const [expandedMenus, setExpandedMenus] = useState({});
+  const [expandAll, setExpandAll] = useState(false);
 
-  // Traductions
+  // Traductions UI
   const translations = {
     FR: {
-      overview: 'Aperçu',
-      finance: 'Finance',
-      rh: 'Ressources Humaines',
-      crm: 'CRM',
-      production: 'Production',
-      actifs: 'Actifs',
-      ged: 'GED',
-      admin: 'Administration',
-      logout: 'Déconnexion'
+      logout: 'Déconnexion',
+      expandAll: 'Déplier tout',
+      collapseAll: 'Replier tout'
     },
     EN: {
-      overview: 'Overview',
-      finance: 'Finance',
-      rh: 'Human Resources',
-      crm: 'CRM',
-      production: 'Production',
-      actifs: 'Assets',
-      ged: 'Document Management',
-      admin: 'Administration',
-      logout: 'Logout'
+      logout: 'Logout',
+      expandAll: 'Expand All',
+      collapseAll: 'Collapse All'
     },
     DE: {
-      overview: 'Übersicht',
-      finance: 'Finanzen',
-      rh: 'Personalwesen',
-      crm: 'CRM',
-      production: 'Produktion',
-      actifs: 'Vermögenswerte',
-      ged: 'Dokumentenverwaltung',
-      admin: 'Verwaltung',
-      logout: 'Abmelden'
+      logout: 'Abmelden',
+      expandAll: 'Alles erweitern',
+      collapseAll: 'Alles einklappen'
     }
   };
 
   const t = translations[language];
+
+  // Gérer l'expansion/réduction des menus
+  const toggleMenu = (menuId) => {
+    setExpandedMenus(prev => {
+      const newState = { ...prev };
+
+      // Fermer tous les autres menus (accordéon)
+      Object.keys(newState).forEach(key => {
+        if (key !== menuId) {
+          newState[key] = false;
+        }
+      });
+
+      // Toggle le menu actuel
+      newState[menuId] = !newState[menuId];
+      return newState;
+    });
+  };
+
+  // Expand/Collapse All
+  const toggleExpandAll = () => {
+    const newExpandAll = !expandAll;
+    setExpandAll(newExpandAll);
+
+    const newState = {};
+    menuData.menu.forEach(item => {
+      if (item.children && item.children.length > 0) {
+        newState[item.id] = newExpandAll;
+      }
+    });
+    setExpandedMenus(newState);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -54,32 +70,16 @@ const Layout = ({ children }) => {
     navigate('/login');
   };
 
-  const modules = [
-    { id: 'overview', icon: Home, label: t.overview, color: 'bg-blue-500', path: '/' },
-    { id: 'finance', icon: DollarSign, label: t.finance, color: 'bg-green-500', path: '/finance' },
-    { id: 'rh', icon: Users, label: t.rh, color: 'bg-purple-500', path: '/rh' },
-    { id: 'crm', icon: Briefcase, label: t.crm, color: 'bg-orange-500', path: '/crm' },
-    { id: 'production', icon: Package, label: t.production, color: 'bg-red-500', path: '/production' },
-    { id: 'actifs', icon: Building2, label: t.actifs, color: 'bg-indigo-500', path: '/actifs' },
-    { id: 'ged', icon: FileText, label: t.ged, color: 'bg-cyan-500', path: '/ged' },
-    { id: 'admin', icon: AdminIcon, label: t.admin, color: 'bg-gray-500', path: '/administration' }
-  ];
-
-  const handleModuleClick = (module) => {
-    if (module.path === '/') {
-      setActiveModule('overview');
-      navigate('/');
-    } else {
-      setActiveModule(module.id);
-      navigate(module.path);
-    }
+  const handleMenuItemClick = (path) => {
+    navigate(path);
   };
 
   return (
     <div className="flex h-screen bg-slate-900 text-gray-100">
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-slate-800 border-r border-slate-700 transition-all duration-300 flex flex-col`}>
-        {/* Logo */}
+      <div className={`${sidebarOpen ? 'w-72' : 'w-20'} bg-slate-800 border-r border-slate-700 transition-all duration-300 flex flex-col overflow-hidden`}>
+
+        {/* Header */}
         <div className="p-4 border-b border-slate-700 flex items-center justify-between">
           {sidebarOpen && <h1 className="text-xl font-bold text-blue-400">M3S v2.0</h1>}
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-slate-700 rounded">
@@ -87,17 +87,81 @@ const Layout = ({ children }) => {
           </button>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2">
-          {modules.map(mod => (
+        {/* Expand All Button */}
+        {sidebarOpen && (
+          <div className="p-2 border-b border-slate-700">
             <button
-              key={mod.id}
-              onClick={() => handleModuleClick(mod)}
-              className={`w-full flex items-center space-x-3 px-4 py-2 rounded hover:bg-slate-700 transition ${mod.id === activeModule ? 'bg-slate-700 border-l-4 border-blue-500' : ''}`}
+              onClick={toggleExpandAll}
+              className="w-full flex items-center justify-center space-x-2 px-3 py-2 text-xs bg-slate-700 hover:bg-slate-600 rounded transition"
+              title={expandAll ? t.collapseAll : t.expandAll}
             >
-              <mod.icon size={20} className={mod.color} />
-              {sidebarOpen && <span className="text-sm">{mod.label}</span>}
+              {expandAll ? (
+                <>
+                  <Minimize2 size={14} />
+                  <span>{t.collapseAll}</span>
+                </>
+              ) : (
+                <>
+                  <Maximize2 size={14} />
+                  <span>{t.expandAll}</span>
+                </>
+              )}
             </button>
+          </div>
+        )}
+
+        {/* Navigation */}
+        <nav className="flex-1 p-2 space-y-1 overflow-y-auto">
+          {menuData.menu.map(item => (
+            <div key={item.id}>
+              {/* Menu Item Principal */}
+              <button
+                onClick={() => {
+                  if (item.children && item.children.length > 0) {
+                    toggleMenu(item.id);
+                  } else {
+                    handleMenuItemClick(item.path);
+                  }
+                }}
+                className="w-full flex items-center space-x-3 px-4 py-2 rounded hover:bg-slate-700 transition text-left text-sm"
+              >
+                {/* Icône */}
+                <div className="flex-shrink-0">
+                  {item.children && item.children.length > 0 ? (
+                    expandedMenus[item.id] ? (
+                      <ChevronDown size={18} className="text-blue-400" />
+                    ) : (
+                      <ChevronRight size={18} className="text-slate-400" />
+                    )
+                  ) : (
+                    <div className="w-4 h-4" />
+                  )}
+                </div>
+
+                {/* Label */}
+                {sidebarOpen && (
+                  <span className="flex-1 font-medium">
+                    {item.label[language] || item.label.FR}
+                  </span>
+                )}
+              </button>
+
+              {/* Sous-menus */}
+              {sidebarOpen && expandedMenus[item.id] && item.children && item.children.length > 0 && (
+                <div className="ml-6 space-y-1 bg-slate-700 bg-opacity-30 rounded my-1 py-1 px-2">
+                  {item.children.map(child => (
+                    <button
+                      key={child.id}
+                      onClick={() => handleMenuItemClick(child.path)}
+                      className="w-full flex items-center space-x-2 px-3 py-1.5 rounded text-xs hover:bg-slate-600 transition text-left text-slate-300 hover:text-white"
+                    >
+                      <span className="text-blue-400">•</span>
+                      <span>{child.label[language] || child.label.FR}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
         </nav>
 
