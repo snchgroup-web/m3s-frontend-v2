@@ -3,6 +3,15 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 
+// Month translations (stable constants, defined at module level)
+const monthTranslations = {
+  FR: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+  EN: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+  DE: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+};
+
+const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
+
 const Finance = () => {
   const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState('overview');
@@ -112,15 +121,6 @@ const Finance = () => {
   };
 
   const t = translations[language];
-
-  // Month translations
-  const monthTranslations = {
-    FR: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-    EN: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-    DE: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
-  };
-
-  const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
 
   const getMonthName = useCallback((shortMonth) => {
     const index = shortMonths.indexOf(shortMonth);
