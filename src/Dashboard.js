@@ -94,8 +94,23 @@ const Dashboard = () => {
 
   const t = translations[language];
 
-  // Mock data - wrapped in useMemo for stable reference
-  const mockDataBase = useMemo(() => ({
+  // Month translations
+  const monthTranslations = {
+    FR: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+    EN: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    DE: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+  };
+
+  const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+  // Get translated month name
+  const getMonthName = (shortMonth) => {
+    const index = shortMonths.indexOf(shortMonth);
+    return monthTranslations[language][index] || shortMonth;
+  };
+
+  // Mock data base (without translations)
+  const mockDataBaseRaw = {
     financialTrend: [
       { month: 'Jan', revenue: 45000, expenses: 32000 },
       { month: 'Feb', revenue: 52000, expenses: 35000 },
@@ -113,7 +128,16 @@ const Dashboard = () => {
       ged: { documents: 847, recent: 12 },
       tasks: { total: 234, completed: 178, pending: 56 }
     }
-  }), []);
+  };
+
+  // Apply month translations
+  const mockDataBase = useMemo(() => ({
+    ...mockDataBaseRaw,
+    financialTrend: mockDataBaseRaw.financialTrend.map(item => ({
+      ...item,
+      month: getMonthName(item.month)
+    }))
+  }), [language]);
 
   // Create staff distribution with translated names
   const getStaffDistribution = () => [
