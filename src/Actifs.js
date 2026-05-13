@@ -1,80 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Plus, Edit2, Trash2, Building2, TrendingDown } from 'lucide-react';
-import { useLanguage } from './LanguageContext';
 
 const Actifs = () => {
-  const { language } = useLanguage();
-
-  // Translations
-  const translations = {
-    FR: {
-      title: 'Gestion des Actifs',
-      subtitle: 'Immobilisations et Dépréciations',
-      overview: 'Vue d\'ensemble',
-      immobilisations: 'Immobilisations',
-      valeurBrute: 'Valeur Brute',
-      valeurNette: 'Valeur Nette',
-      depreciations: 'Dépréciations',
-      tauxDepreciation: 'Taux Dépréc.',
-      valeurNetteparAnnee: 'Valeur Nette par Année',
-      actifParType: 'Actif par Type',
-      nom: 'Nom',
-      type: 'Type',
-      valeurAcquisition: 'Valeur Acquisition',
-      dateAcquisition: 'Date Acquisition',
-      dureeVie: 'Durée de Vie',
-      depreciation: 'Dépréciation',
-      actions: 'Actions',
-      creer: 'Créer',
-      modifier: 'Modifier',
-      annuler: 'Annuler'
-    },
-    EN: {
-      title: 'Asset Management',
-      subtitle: 'Fixed Assets and Depreciation',
-      overview: 'Overview',
-      immobilisations: 'Fixed Assets',
-      valeurBrute: 'Gross Value',
-      valeurNette: 'Net Value',
-      depreciations: 'Depreciation',
-      tauxDepreciation: 'Depreciation Rate',
-      valeurNetteparAnnee: 'Net Value per Year',
-      actifParType: 'Assets by Type',
-      nom: 'Name',
-      type: 'Type',
-      valeurAcquisition: 'Acquisition Value',
-      dateAcquisition: 'Acquisition Date',
-      dureeVie: 'Useful Life',
-      depreciation: 'Depreciation',
-      actions: 'Actions',
-      creer: 'Create',
-      modifier: 'Edit',
-      annuler: 'Cancel'
-    },
-    DE: {
-      title: 'Vermögensverwaltung',
-      subtitle: 'Anlagevermögen und Abschreibung',
-      overview: 'Übersicht',
-      immobilisations: 'Anlagevermögen',
-      valeurBrute: 'Bruttowert',
-      valeurNette: 'Nettowert',
-      depreciations: 'Abschreibung',
-      tauxDepreciation: 'Abschreibungssatz',
-      valeurNetteparAnnee: 'Nettowert pro Jahr',
-      actifParType: 'Vermögenswerte nach Typ',
-      nom: 'Name',
-      type: 'Typ',
-      valeurAcquisition: 'Anschaffungswert',
-      dateAcquisition: 'Anschaffungsdatum',
-      dureeVie: 'Nutzungsdauer',
-      depreciation: 'Abschreibung',
-      actions: 'Aktionen',
-      creer: 'Erstellen',
-      modifier: 'Bearbeiten',
-      annuler: 'Abbrechen'
-    }
-  };
 
   const [activeTab, setActiveTab] = useState('overview');
   const [immobilisations, setImmobilisations] = useState([]);
