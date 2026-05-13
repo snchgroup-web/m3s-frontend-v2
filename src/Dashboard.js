@@ -95,7 +95,7 @@ const Dashboard = () => {
       moduleStats: 'Module Statistics'
     },
     DE: {
-      dashboard: 'Armaturenbrett',
+      dashboard: 'Dashboard',
       welcome: 'Willkommen',
       finance: 'Finanzen',
       rh: 'Personalwesen',

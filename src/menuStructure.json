@@ -178,7 +178,7 @@
       "label": {
         "FR": "Commercial & CRM",
         "EN": "Commercial & CRM",
-        "DE": "Kommerziell & CRM"
+        "DE": "Vertrieb & CRM"
       },
       "icon": "Briefcase",
       "path": "/commercial",
@@ -274,7 +274,7 @@
       "label": {
         "FR": "Stock & Actifs",
         "EN": "Stock & Assets",
-        "DE": "Bestand & Vermögenswerte"
+        "DE": "Anlagen & Vermögenswerte"
       },
       "icon": "Building2",
       "path": "/stock",
@@ -391,17 +391,6 @@
           "path": "/it-support/manual"
         }
       ]
-    },
-    {
-      "id": "info",
-      "label": {
-        "FR": "Versions & Copyright",
-        "EN": "Versions & Copyright",
-        "DE": "Versionen & Copyright"
-      },
-      "icon": "Info",
-      "path": "/info",
-      "children": []
     }
   ]
 }

@@ -185,6 +185,14 @@ const Layout = ({ children }) => {
             <LogOut size={18} />
             {sidebarOpen && <span>{t.logout}</span>}
           </button>
+
+          {/* Version & Copyright */}
+          {sidebarOpen && (
+            <div className="text-xs text-slate-500 mt-4 pt-4 border-t border-slate-700 text-center">
+              <p>M3S ERP v2.0</p>
+              <p>© 2026 SENESWISS GROUP</p>
+            </div>
+          )}
         </div>
       </div>
 
