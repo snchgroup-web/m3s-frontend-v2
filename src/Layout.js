@@ -128,6 +128,8 @@ const Layout = ({ children }) => {
                   if (item.children && item.children.length > 0) {
                     toggleMenu(item.id);
                   } else {
+                    // Close all menus before navigating
+                    setExpandedMenus({});
                     handleMenuItemClick(item.path);
                   }
                 }}
