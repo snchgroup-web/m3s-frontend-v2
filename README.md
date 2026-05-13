@@ -1,75 +1,72 @@
-<<<<<<< HEAD
-# Getting Started with Create React App
+# M3S ERP v2.0
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Système de gestion d'entreprise avec 8 modules : Finance, Ressources Humaines, CRM, Production, Gestion des Actifs, Gestion Documentaire, Administration et Authentification.
 
-## Available Scripts
+## Fonctionnalités
 
-In the project directory, you can run:
+- **8 Modules complets** : Finance, RH, CRM, Production, Actifs, GED, Administration
+- **Multi-langue** : Support complet en Français (FR), Anglais (EN) et Allemand (DE)
+- **Traductions professionnelles** : Tous les textes UI traduits pour chaque module
+- **Authentification sécurisée** : Système de login avec contexte utilisateur
+- **Design moderne** : Interface utilisateur avec Tailwind CSS et dégradés
+- **Graphiques dynamiques** : Visualisations avec Recharts (BarChart, LineChart, PieChart)
+- **Gestion d'état** : Context API pour la gestion globale des langues et utilisateurs
 
-### `npm start`
+## Modules disponibles
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Finance
+Gestion des recettes, dépenses et taux de change avec historique mensuel et analyse des tendances.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Ressources Humaines
+Gestion des employés, bénévoles et membres avec statistiques par statut.
 
-### `npm test`
+### CRM
+Gestion des prospects, clients et suivi des donations avec visualisation des tendances.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Production
+Suivi des commandes avec statuts (En attente, En cours, Livrée) et historique.
 
-### `npm run build`
+### Gestion des Actifs
+Inventaire et valorisation des actifs avec calcul de dépréciation.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### GED (Gestion Électronique des Documents)
+Stockage et gestion centralisée des documents avec classification.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Administration
+Paramètres système et gestion générale de l'application.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Installation et lancement
 
-### `npm run eject`
+```bash
+npm install
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+L'application s'ouvrira à [http://localhost:3000](http://localhost:3000)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Build pour la production
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm run build
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+L'application est optimisée pour la production et prête à être déployée.
 
-## Learn More
+## Technologies utilisées
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- React 18+
+- React Router
+- Tailwind CSS
+- Recharts
+- Lucide Icons
+- Context API
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Déploiement
 
-### Code Splitting
+L'application est déployée sur Netlify avec CI/CD automatique sur chaque push vers la branche main.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Notes de développement
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-=======
-# m3s-frontend-v2
-M3S ERP v2.0 - 8 modules (Finance, RH, CRM, Production, Actifs, GED, Administration, Login)
->>>>>>> 9a59632c0e83809184d2d15738338f764e98e04e
+- Toutes les traductions sont centralisées dans des objets de traduction dans chaque module
+- Les hooks React utilisent les bonnes pratiques (useCallback, useMemo avec dépendances appropriées)
+- Le contexte utilisateur persiste via localStorage pour la session courante
