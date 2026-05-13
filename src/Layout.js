@@ -133,7 +133,12 @@ const Layout = ({ children }) => {
                     handleMenuItemClick(item.path);
                   }
                 }}
-                className="w-full flex items-center space-x-3 px-4 py-2 rounded hover:bg-slate-700 transition text-left text-sm"
+                title={!sidebarOpen ? (item.label[language] || item.label.FR) : undefined}
+                className={`flex items-center rounded hover:bg-slate-700 transition text-left text-sm ${
+                  sidebarOpen
+                    ? 'w-full space-x-3 px-4 py-2'
+                    : 'w-full justify-center py-3'
+                }`}
               >
                 {/* Icône */}
                 <div className="flex-shrink-0">
@@ -152,11 +157,11 @@ const Layout = ({ children }) => {
                     // Collapsed: show module icon for identification
                     item.icon && iconMap[item.icon] ? (
                       React.createElement(iconMap[item.icon], {
-                        size: 18,
+                        size: 20,
                         className: "text-blue-400"
                       })
                     ) : (
-                      <div className="w-4 h-4" />
+                      <div className="w-5 h-5" />
                     )
                   )}
                 </div>
