@@ -168,7 +168,7 @@ const Finance = () => {
     monthlyDataRaw.map(item => ({
       ...item,
       mois: getMonthName(item.mois)
-    })), [language, totalRecettes, totalDepenses]);
+    })), [monthlyDataRaw, getMonthName, language, totalRecettes, totalDepenses]);
 
   const handleFormChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));

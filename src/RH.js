@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { Plus, Edit2, Trash2, Users, User, Heart, Users2 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
@@ -98,23 +98,6 @@ const RH = () => {
   };
 
   const t = translations[language];
-
-  // Month translations
-  const monthTranslations = {
-    FR: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-    EN: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-    DE: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
-  };
-
-  const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
-
-  const getMonthName = (shortMonth) => {
-    const index = shortMonths.indexOf(shortMonth);
-    if (index !== -1) {
-      return monthTranslations[language][index] || shortMonth;
-    }
-    return shortMonth;
-  };
 
   const [activeTab, setActiveTab] = useState('overview');
   const [employes, setEmployes] = useState([]);

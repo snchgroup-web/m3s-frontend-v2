@@ -194,7 +194,7 @@ const CRM = () => {
     donsMensuelRaw.map(item => ({
       ...item,
       mois: getMonthName(item.mois)
-    })), [language, totalDons]);
+    })), [donsMensuelRaw, getMonthName, language]);
 
   const handleFormChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));

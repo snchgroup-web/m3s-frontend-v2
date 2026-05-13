@@ -137,7 +137,7 @@ const Dashboard = () => {
       ...item,
       month: getMonthName(item.month)
     }))
-  }), [language]);
+  }), [mockDataBaseRaw, getMonthName, language]);
 
   // Create staff distribution with translated names
   const getStaffDistribution = () => [
