@@ -1,8 +1,121 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { Plus, Edit2, Trash2, Users, User, Heart, Users2 } from 'lucide-react';
+import { useLanguage } from './LanguageContext';
 
 const RH = () => {
+  const { language } = useLanguage();
+
+  // Translations
+  const translations = {
+    FR: {
+      title: 'Ressources Humaines',
+      subtitle: 'Gestion des Employés, Bénévoles et Membres',
+      overview: 'Vue d\'ensemble',
+      employes: 'Employés',
+      benevoles: 'Bénévoles',
+      membres: 'Membres',
+      totalEmployes: 'Total Employés',
+      totalBenevoles: 'Total Bénévoles',
+      totalMembres: 'Total Membres',
+      totalPersonnes: 'Total Personnes',
+      distribution: 'Distribution du Personnel',
+      evolution: 'Évolution Mensuelle',
+      departements: 'Statistiques par Département',
+      nom: 'Nom',
+      email: 'Email',
+      telephone: 'Téléphone',
+      poste: 'Poste',
+      departement: 'Département',
+      statut: 'Statut',
+      actions: 'Actions',
+      ajouter: 'Ajouter',
+      actif: 'Actif',
+      inactif: 'Inactif',
+      modifier: 'Modifier',
+      creer: 'Créer',
+      annuler: 'Annuler',
+      dateEmbauche: 'Date d\'Embauche'
+    },
+    EN: {
+      title: 'Human Resources',
+      subtitle: 'Employee, Volunteer & Member Management',
+      overview: 'Overview',
+      employes: 'Employees',
+      benevoles: 'Volunteers',
+      membres: 'Members',
+      totalEmployes: 'Total Employees',
+      totalBenevoles: 'Total Volunteers',
+      totalMembres: 'Total Members',
+      totalPersonnes: 'Total People',
+      distribution: 'Staff Distribution',
+      evolution: 'Monthly Evolution',
+      departements: 'Department Statistics',
+      nom: 'Name',
+      email: 'Email',
+      telephone: 'Phone',
+      poste: 'Position',
+      departement: 'Department',
+      statut: 'Status',
+      actions: 'Actions',
+      ajouter: 'Add',
+      actif: 'Active',
+      inactif: 'Inactive',
+      modifier: 'Edit',
+      creer: 'Create',
+      annuler: 'Cancel',
+      dateEmbauche: 'Hire Date'
+    },
+    DE: {
+      title: 'Personalwesen',
+      subtitle: 'Verwaltung von Mitarbeitern, Freiwilligen und Mitgliedern',
+      overview: 'Übersicht',
+      employes: 'Mitarbeiter',
+      benevoles: 'Freiwillige',
+      membres: 'Mitglieder',
+      totalEmployes: 'Gesamtmitarbeiter',
+      totalBenevoles: 'Gesamtfreiwillige',
+      totalMembres: 'Gesamtmitglieder',
+      totalPersonnes: 'Gesamtpersonen',
+      distribution: 'Personalverteilung',
+      evolution: 'Monatliche Entwicklung',
+      departements: 'Abteilungsstatistiken',
+      nom: 'Name',
+      email: 'E-Mail',
+      telephone: 'Telefon',
+      poste: 'Position',
+      departement: 'Abteilung',
+      statut: 'Status',
+      actions: 'Aktionen',
+      ajouter: 'Hinzufügen',
+      actif: 'Aktiv',
+      inactif: 'Inaktiv',
+      modifier: 'Bearbeiten',
+      creer: 'Erstellen',
+      annuler: 'Abbrechen',
+      dateEmbauche: 'Einstellungsdatum'
+    }
+  };
+
+  const t = translations[language];
+
+  // Month translations
+  const monthTranslations = {
+    FR: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+    EN: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    DE: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+  };
+
+  const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
+
+  const getMonthName = (shortMonth) => {
+    const index = shortMonths.indexOf(shortMonth);
+    if (index !== -1) {
+      return monthTranslations[language][index] || shortMonth;
+    }
+    return shortMonth;
+  };
+
   const [activeTab, setActiveTab] = useState('overview');
   const [employes, setEmployes] = useState([]);
   const [benevoles, setBenevoles] = useState([]);
@@ -135,20 +248,20 @@ const RH = () => {
     <div>
       <div className="flex justify-end mb-4">
         <button onClick={() => onAdd(type)} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
-          <Plus size={20} /> Ajouter
+          <Plus size={20} /> {t.ajouter}
         </button>
       </div>
       <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-slate-700">
             <tr>
-              <th className="px-4 py-2 text-left text-white font-bold">Nom</th>
-              <th className="px-4 py-2 text-left text-white font-bold">Email</th>
-              <th className="px-4 py-2 text-left text-white font-bold">Téléphone</th>
-              <th className="px-4 py-2 text-left text-white font-bold">Poste</th>
-              <th className="px-4 py-2 text-left text-white font-bold">Département</th>
-              <th className="px-4 py-2 text-left text-white font-bold">Statut</th>
-              <th className="px-4 py-2 text-left text-white font-bold">Actions</th>
+              <th className="px-4 py-2 text-left text-white font-bold">{t.nom}</th>
+              <th className="px-4 py-2 text-left text-white font-bold">{t.email}</th>
+              <th className="px-4 py-2 text-left text-white font-bold">{t.telephone}</th>
+              <th className="px-4 py-2 text-left text-white font-bold">{t.poste}</th>
+              <th className="px-4 py-2 text-left text-white font-bold">{t.departement}</th>
+              <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
+              <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
             </tr>
           </thead>
           <tbody>
@@ -161,7 +274,7 @@ const RH = () => {
                 <td className="px-4 py-2 text-slate-400">{item.departement}</td>
                 <td className="px-4 py-2">
                   <span className={`px-2 py-1 rounded text-xs font-semibold ${item.statut === 'Actif' ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'}`}>
-                    {item.statut}
+                    {item.statut === 'Actif' ? t.actif : t.inactif}
                   </span>
                 </td>
                 <td className="px-4 py-2 flex gap-2">
@@ -185,8 +298,8 @@ const RH = () => {
       <div className="max-w-7xl mx-auto">
 
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">👥 Ressources Humaines</h1>
-          <p className="text-slate-400">Gestion des Employés, Bénévoles et Membres</p>
+          <h1 className="text-4xl font-bold text-white mb-2">👥 {t.title}</h1>
+          <p className="text-slate-400">{t.subtitle}</p>
         </div>
 
         {/* KPIs */}
@@ -194,7 +307,7 @@ const RH = () => {
           <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-200 text-sm">Total Employés</p>
+                <p className="text-blue-200 text-sm">{t.totalEmployes}</p>
                 <p className="text-white text-2xl font-bold">{totalEmployes}</p>
               </div>
               <User size={32} className="text-blue-400" />
@@ -204,7 +317,7 @@ const RH = () => {
           <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-200 text-sm">Bénévoles</p>
+                <p className="text-green-200 text-sm">{t.totalBenevoles}</p>
                 <p className="text-white text-2xl font-bold">{totalBenevoles}</p>
               </div>
               <Heart size={32} className="text-green-400" />
@@ -214,7 +327,7 @@ const RH = () => {
           <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-200 text-sm">Membres</p>
+                <p className="text-purple-200 text-sm">{t.totalMembres}</p>
                 <p className="text-white text-2xl font-bold">{totalMembres}</p>
               </div>
               <Users2 size={32} className="text-purple-400" />
@@ -224,7 +337,7 @@ const RH = () => {
           <div className="bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-6 border border-orange-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-orange-200 text-sm">Total Personnel</p>
+                <p className="text-orange-200 text-sm">{t.totalPersonnes}</p>
                 <p className="text-white text-2xl font-bold">{totalPersonnes}</p>
               </div>
               <Users size={32} className="text-orange-400" />
@@ -234,10 +347,10 @@ const RH = () => {
 
         {/* Tabs */}
         <div className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
-          <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Vue d'ensemble</button>
-          <button onClick={() => setActiveTab('employes')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'employes' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Employés ({totalEmployes})</button>
-          <button onClick={() => setActiveTab('benevoles')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'benevoles' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Bénévoles ({totalBenevoles})</button>
-          <button onClick={() => setActiveTab('membres')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'membres' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Membres ({totalMembres})</button>
+          <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.overview}</button>
+          <button onClick={() => setActiveTab('employes')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'employes' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.employes} ({totalEmployes})</button>
+          <button onClick={() => setActiveTab('benevoles')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'benevoles' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.benevoles} ({totalBenevoles})</button>
+          <button onClick={() => setActiveTab('membres')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'membres' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.membres} ({totalMembres})</button>
         </div>
 
         {/* Vue d'ensemble */}
@@ -245,7 +358,7 @@ const RH = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Distribution Personnel */}
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">Distribution Personnel</h3>
+              <h3 className="text-white font-bold mb-4">{t.distribution}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie data={staffDistribution} cx="50%" cy="50%" labelLine={false} label={({ name, value }) => `${name}: ${value}`} outerRadius={80} fill="#8884d8" dataKey="value">
@@ -260,7 +373,7 @@ const RH = () => {
 
             {/* Évolution Mensuelle */}
             <div className="lg:col-span-2 bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">Évolution Personnel par Mois</h3>
+              <h3 className="text-white font-bold mb-4">{t.evolution}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={monthlyData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
@@ -268,16 +381,16 @@ const RH = () => {
                   <YAxis stroke="#94a3b8" />
                   <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
                   <Legend />
-                  <Bar dataKey="employes" fill="#3b82f6" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="benevoles" fill="#10b981" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="membres" fill="#8b5cf6" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="employes" name={t.employes} fill="#3b82f6" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="benevoles" name={t.benevoles} fill="#10b981" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="membres" name={t.membres} fill="#8b5cf6" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
 
             {/* Statistiques par Département */}
             <div className="lg:col-span-3 bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">Personnel par Département</h3>
+              <h3 className="text-white font-bold mb-4">{t.departements}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={departementStats}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
@@ -312,32 +425,32 @@ const RH = () => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
             <h2 className="text-2xl font-bold text-white mb-6">
-              {editingId ? `Modifier ${modalType}` : `Nouveau ${modalType}`}
+              {editingId ? `${t.modifier} ${modalType}` : `${t.creer} ${modalType}`}
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Nom *</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.nom} *</label>
                 <input type="text" value={formData.nom} onChange={(e) => handleFormChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="Nom complet" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Email *</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.email} *</label>
                 <input type="email" value={formData.email} onChange={(e) => handleFormChange('email', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="email@example.com" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Téléphone</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.telephone}</label>
                 <input type="tel" value={formData.telephone} onChange={(e) => handleFormChange('telephone', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="+221 77 123 4567" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Poste</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.poste}</label>
                 <input type="text" value={formData.poste} onChange={(e) => handleFormChange('poste', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="ex: Développeur" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Département</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.departement}</label>
                 <select value={formData.departement} onChange={(e) => handleFormChange('departement', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
                   <option value="">Sélectionner</option>
                   <option>IT</option>
@@ -349,12 +462,12 @@ const RH = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Date d'embauche</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.dateEmbauche}</label>
                 <input type="date" value={formData.dateEmbauche} onChange={(e) => handleFormChange('dateEmbauche', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Statut</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.statut}</label>
                 <select value={formData.statut} onChange={(e) => handleFormChange('statut', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
                   <option>Actif</option>
                   <option>Inactif</option>
@@ -364,8 +477,8 @@ const RH = () => {
             </div>
 
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">Annuler</button>
-              <button onClick={handleSave} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">{editingId ? 'Modifier' : 'Créer'}</button>
+              <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">{t.annuler}</button>
+              <button onClick={handleSave} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">{editingId ? t.modifier : t.creer}</button>
             </div>
           </div>
         </div>

@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft } from 'lucide-react';
+import { useLanguage } from './LanguageContext';
 
 const Finance = () => {
+  const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState('overview');
   const [recettes, setRecettes] = useState([]);
   const [depenses, setDepenses] = useState([]);
@@ -17,6 +19,116 @@ const Finance = () => {
     date: new Date().toISOString().split('T')[0],
     categorie: ''
   });
+
+  // Translations
+  const translations = {
+    FR: {
+      title: 'Finances',
+      subtitle: 'Gestion des Recettes, Dépenses et Taux de Change',
+      totalRecettes: 'Total Recettes',
+      totalDepenses: 'Total Dépenses',
+      soldeNet: 'Solde Net',
+      tauxFX: 'Taux FX (CFA/CHF)',
+      overview: 'Vue d\'ensemble',
+      recettes: 'Recettes',
+      depenses: 'Dépenses',
+      fx: 'Historique FX',
+      tendance: 'Tendance Recettes vs Dépenses',
+      historiqueTaux: 'Historique Taux de Change (CFA/CHF)',
+      nouvelleRecette: 'Nouvelle Recette',
+      nouvelleDepense: 'Nouvelle Dépense',
+      description: 'Description',
+      montant: 'Montant',
+      devise: 'Devise',
+      categorie: 'Catégorie',
+      date: 'Date',
+      actions: 'Actions',
+      modifierRecette: 'Modifier recette',
+      modifierDepense: 'Modifier dépense',
+      creerRecette: 'Nouvelle recette',
+      creerDepense: 'Nouvelle dépense',
+      creer: 'Créer',
+      modifier: 'Modifier',
+      annuler: 'Annuler'
+    },
+    EN: {
+      title: 'Finance',
+      subtitle: 'Revenue, Expense & Foreign Exchange Management',
+      totalRecettes: 'Total Revenue',
+      totalDepenses: 'Total Expenses',
+      soldeNet: 'Net Balance',
+      tauxFX: 'FX Rate (CFA/CHF)',
+      overview: 'Overview',
+      recettes: 'Revenue',
+      depenses: 'Expenses',
+      fx: 'FX History',
+      tendance: 'Revenue vs Expense Trend',
+      historiqueTaux: 'Exchange Rate History (CFA/CHF)',
+      nouvelleRecette: 'New Revenue',
+      nouvelleDepense: 'New Expense',
+      description: 'Description',
+      montant: 'Amount',
+      devise: 'Currency',
+      categorie: 'Category',
+      date: 'Date',
+      actions: 'Actions',
+      modifierRecette: 'Edit revenue',
+      modifierDepense: 'Edit expense',
+      creerRecette: 'New revenue',
+      creerDepense: 'New expense',
+      creer: 'Create',
+      modifier: 'Edit',
+      annuler: 'Cancel'
+    },
+    DE: {
+      title: 'Finanzen',
+      subtitle: 'Verwaltung von Einnahmen, Ausgaben und Wechselkursen',
+      totalRecettes: 'Gesamteinnahmen',
+      totalDepenses: 'Gesamtausgaben',
+      soldeNet: 'Nettosaldo',
+      tauxFX: 'Wechselkurs (CFA/CHF)',
+      overview: 'Übersicht',
+      recettes: 'Einnahmen',
+      depenses: 'Ausgaben',
+      fx: 'Wechselkurshistorie',
+      tendance: 'Trend Einnahmen vs. Ausgaben',
+      historiqueTaux: 'Wechselkurshistorie (CFA/CHF)',
+      nouvelleRecette: 'Neue Einnahme',
+      nouvelleDepense: 'Neue Ausgabe',
+      description: 'Beschreibung',
+      montant: 'Betrag',
+      devise: 'Währung',
+      categorie: 'Kategorie',
+      date: 'Datum',
+      actions: 'Aktionen',
+      modifierRecette: 'Einnahme bearbeiten',
+      modifierDepense: 'Ausgabe bearbeiten',
+      creerRecette: 'Neue Einnahme',
+      creerDepense: 'Neue Ausgabe',
+      creer: 'Erstellen',
+      modifier: 'Bearbeiten',
+      annuler: 'Abbrechen'
+    }
+  };
+
+  const t = translations[language];
+
+  // Month translations
+  const monthTranslations = {
+    FR: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+    EN: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    DE: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+  };
+
+  const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
+
+  const getMonthName = (shortMonth) => {
+    const index = shortMonths.indexOf(shortMonth);
+    if (index !== -1) {
+      return monthTranslations[language][index] || shortMonth;
+    }
+    return shortMonth;
+  };
 
   useEffect(() => {
     setRecettes([
@@ -44,12 +156,19 @@ const Finance = () => {
   const totalDepenses = depenses.reduce((sum, d) => sum + d.montant, 0);
   const solde = totalRecettes - totalDepenses;
 
-  const monthlyData = [
+  // Memoized data with translations
+  const monthlyDataRaw = useMemo(() => [
     { mois: 'Jan', recettes: 5000, depenses: 3000 },
     { mois: 'Fév', recettes: 6500, depenses: 3500 },
     { mois: 'Mar', recettes: 7000, depenses: 4000 },
     { mois: 'Avr', recettes: totalRecettes, depenses: totalDepenses },
-  ];
+  ], [totalRecettes, totalDepenses]);
+
+  const monthlyData = useMemo(() =>
+    monthlyDataRaw.map(item => ({
+      ...item,
+      mois: getMonthName(item.mois)
+    })), [language, totalRecettes, totalDepenses]);
 
   const handleFormChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -107,15 +226,15 @@ const Finance = () => {
       <div className="max-w-7xl mx-auto">
 
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">📊 Finances</h1>
-          <p className="text-slate-400">Gestion des Recettes, Dépenses et Taux de Change</p>
+          <h1 className="text-4xl font-bold text-white mb-2">📊 {t.title}</h1>
+          <p className="text-slate-400">{t.subtitle}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-200 text-sm">Total Recettes</p>
+                <p className="text-green-200 text-sm">{t.totalRecettes}</p>
                 <p className="text-white text-2xl font-bold">{totalRecettes.toLocaleString()} CHF</p>
               </div>
               <TrendingUp size={32} className="text-green-400" />
@@ -125,7 +244,7 @@ const Finance = () => {
           <div className="bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-6 border border-red-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-red-200 text-sm">Total Dépenses</p>
+                <p className="text-red-200 text-sm">{t.totalDepenses}</p>
                 <p className="text-white text-2xl font-bold">{totalDepenses.toLocaleString()} CHF</p>
               </div>
               <TrendingDown size={32} className="text-red-400" />
@@ -135,7 +254,7 @@ const Finance = () => {
           <div className={`bg-gradient-to-br ${solde >= 0 ? 'from-blue-900 to-blue-800' : 'from-orange-900 to-orange-800'} rounded-lg p-6 border ${solde >= 0 ? 'border-blue-700' : 'border-orange-700'}`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`${solde >= 0 ? 'text-blue-200' : 'text-orange-200'} text-sm`}>Solde Net</p>
+                <p className={`${solde >= 0 ? 'text-blue-200' : 'text-orange-200'} text-sm`}>{t.soldeNet}</p>
                 <p className="text-white text-2xl font-bold">{solde.toLocaleString()} CHF</p>
               </div>
               <DollarSign size={32} className={solde >= 0 ? 'text-blue-400' : 'text-orange-400'} />
@@ -145,7 +264,7 @@ const Finance = () => {
           <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-200 text-sm">Taux FX (CFA/CHF)</p>
+                <p className="text-purple-200 text-sm">{t.tauxFX}</p>
                 <p className="text-white text-2xl font-bold">662 CFA</p>
               </div>
               <ArrowRightLeft size={32} className="text-purple-400" />
@@ -154,16 +273,16 @@ const Finance = () => {
         </div>
 
         <div className="flex gap-4 mb-6 border-b border-slate-700">
-          <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Vue d'ensemble</button>
-          <button onClick={() => setActiveTab('recettes')} className={`px-4 py-3 font-medium ${activeTab === 'recettes' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Recettes</button>
-          <button onClick={() => setActiveTab('depenses')} className={`px-4 py-3 font-medium ${activeTab === 'depenses' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Dépenses</button>
-          <button onClick={() => setActiveTab('fx')} className={`px-4 py-3 font-medium ${activeTab === 'fx' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Historique FX</button>
+          <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.overview}</button>
+          <button onClick={() => setActiveTab('recettes')} className={`px-4 py-3 font-medium ${activeTab === 'recettes' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.recettes}</button>
+          <button onClick={() => setActiveTab('depenses')} className={`px-4 py-3 font-medium ${activeTab === 'depenses' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.depenses}</button>
+          <button onClick={() => setActiveTab('fx')} className={`px-4 py-3 font-medium ${activeTab === 'fx' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.fx}</button>
         </div>
 
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">Tendance Recettes vs Dépenses</h3>
+              <h3 className="text-white font-bold mb-4">{t.tendance}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={monthlyData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
@@ -171,14 +290,14 @@ const Finance = () => {
                   <YAxis stroke="#94a3b8" />
                   <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
                   <Legend />
-                  <Bar dataKey="recettes" fill="#10b981" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="depenses" fill="#ef4444" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="recettes" name={t.recettes} fill="#10b981" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="depenses" name={t.depenses} fill="#ef4444" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
 
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">Historique Taux de Change (CFA/CHF)</h3>
+              <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={fxHistory}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
@@ -196,19 +315,19 @@ const Finance = () => {
           <div>
             <div className="flex justify-end mb-4">
               <button onClick={() => openNewModal('recette')} className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
-                <Plus size={20} /> Nouvelle Recette
+                <Plus size={20} /> {t.nouvelleRecette}
               </button>
             </div>
             <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
               <table className="w-full">
                 <thead className="bg-slate-700">
                   <tr>
-                    <th className="px-6 py-3 text-left text-white font-bold">Description</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">Montant</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">Devise</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">Catégorie</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">Date</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">Actions</th>
+                    <th className="px-6 py-3 text-left text-white font-bold">{t.description}</th>
+                    <th className="px-6 py-3 text-left text-white font-bold">{t.montant}</th>
+                    <th className="px-6 py-3 text-left text-white font-bold">{t.devise}</th>
+                    <th className="px-6 py-3 text-left text-white font-bold">{t.categorie}</th>
+                    <th className="px-6 py-3 text-left text-white font-bold">{t.date}</th>
+                    <th className="px-6 py-3 text-left text-white font-bold">{t.actions}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -239,19 +358,19 @@ const Finance = () => {
           <div>
             <div className="flex justify-end mb-4">
               <button onClick={() => openNewModal('depense')} className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition">
-                <Plus size={20} /> Nouvelle Dépense
+                <Plus size={20} /> {t.nouvelleDepense}
               </button>
             </div>
             <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
               <table className="w-full">
                 <thead className="bg-slate-700">
                   <tr>
-                    <th className="px-6 py-3 text-left text-white font-bold">Description</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">Montant</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">Devise</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">Catégorie</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">Date</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">Actions</th>
+                    <th className="px-6 py-3 text-left text-white font-bold">{t.description}</th>
+                    <th className="px-6 py-3 text-left text-white font-bold">{t.montant}</th>
+                    <th className="px-6 py-3 text-left text-white font-bold">{t.devise}</th>
+                    <th className="px-6 py-3 text-left text-white font-bold">{t.categorie}</th>
+                    <th className="px-6 py-3 text-left text-white font-bold">{t.date}</th>
+                    <th className="px-6 py-3 text-left text-white font-bold">{t.actions}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -280,7 +399,7 @@ const Finance = () => {
 
         {activeTab === 'fx' && (
           <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-            <h3 className="text-white font-bold mb-4">Historique Taux de Change</h3>
+            <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
             <ResponsiveContainer width="100%" height={400}>
               <LineChart data={fxHistory}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
@@ -299,12 +418,12 @@ const Finance = () => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
             <h2 className="text-2xl font-bold text-white mb-6">
-              {editingId ? `Modifier ${modalType}` : `Nouvelle ${modalType}`}
+              {editingId ? (modalType === 'recette' ? t.modifierRecette : t.modifierDepense) : (modalType === 'recette' ? t.creerRecette : t.creerDepense)}
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.description}</label>
                 <input
                   type="text"
                   value={formData.description}
@@ -315,7 +434,7 @@ const Finance = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Montant</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.montant}</label>
                 <input
                   type="number"
                   value={formData.montant}
@@ -326,7 +445,7 @@ const Finance = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Devise</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.devise}</label>
                 <select
                   value={formData.devise}
                   onChange={(e) => handleFormChange('devise', e.target.value)}
@@ -339,7 +458,7 @@ const Finance = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Catégorie</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.categorie}</label>
                 <input
                   type="text"
                   value={formData.categorie}
@@ -350,7 +469,7 @@ const Finance = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Date</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.date}</label>
                 <input
                   type="date"
                   value={formData.date}
@@ -365,13 +484,13 @@ const Finance = () => {
                 onClick={() => setShowModal(false)}
                 className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition"
               >
-                Annuler
+                {t.annuler}
               </button>
               <button
                 onClick={handleSave}
                 className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
               >
-                {editingId ? 'Modifier' : 'Créer'}
+                {editingId ? t.modifier : t.creer}
               </button>
             </div>
           </div>
