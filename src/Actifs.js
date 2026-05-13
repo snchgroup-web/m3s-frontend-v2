@@ -87,6 +87,33 @@ const Actifs = () => {
 
   const t = translations[language];
 
+  // Data translations for asset types
+  const dataTranslations = {
+    assetTypes: {
+      FR: {
+        'Immobilier': 'Immobilier',
+        'Informatique': 'Informatique',
+        'Transport': 'Transport',
+        'Mobilier': 'Mobilier'
+      },
+      EN: {
+        'Immobilier': 'Real Estate',
+        'Informatique': 'IT Equipment',
+        'Transport': 'Transport',
+        'Mobilier': 'Furniture'
+      },
+      DE: {
+        'Immobilier': 'Immobilien',
+        'Informatique': 'IT-Ausrüstung',
+        'Transport': 'Transport',
+        'Mobilier': 'Möbel'
+      }
+    }
+  };
+
+  // Helper function to translate asset type
+  const translateAssetType = (type) => dataTranslations.assetTypes[language]?.[type] || type;
+
   const [activeTab, setActiveTab] = useState('overview');
   const [immobilisations, setImmobilisations] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -125,10 +152,10 @@ const Actifs = () => {
   ];
  
   const actifParType = [
-    { type: 'Immobilier', count: immobilisations.filter(a => a.type === 'Immobilier').length, valeur: 500000 },
-    { type: 'Informatique', count: immobilisations.filter(a => a.type === 'Informatique').length, valeur: 125000 },
-    { type: 'Transport', count: immobilisations.filter(a => a.type === 'Transport').length, valeur: 200000 },
-    { type: 'Mobilier', count: immobilisations.filter(a => a.type === 'Mobilier').length, valeur: 100000 },
+    { type: translateAssetType('Immobilier'), typeKey: 'Immobilier', count: immobilisations.filter(a => a.type === 'Immobilier').length, valeur: 500000 },
+    { type: translateAssetType('Informatique'), typeKey: 'Informatique', count: immobilisations.filter(a => a.type === 'Informatique').length, valeur: 125000 },
+    { type: translateAssetType('Transport'), typeKey: 'Transport', count: immobilisations.filter(a => a.type === 'Transport').length, valeur: 200000 },
+    { type: translateAssetType('Mobilier'), typeKey: 'Mobilier', count: immobilisations.filter(a => a.type === 'Mobilier').length, valeur: 100000 },
   ];
  
   const handleFormChange = (field, value) => {
@@ -275,7 +302,7 @@ const Actifs = () => {
                   {immobilisations.map(a => (
                     <tr key={a.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                       <td className="px-4 py-2 text-slate-300 font-medium">{a.nom}</td>
-                      <td className="px-4 py-2 text-slate-400">{a.type}</td>
+                      <td className="px-4 py-2 text-slate-400">{translateAssetType(a.type)}</td>
                       <td className="px-4 py-2 text-slate-400">{a.valeurAcquisition.toLocaleString()}</td>
                       <td className="px-4 py-2 text-green-400 font-bold">{a.valeurNette.toLocaleString()}</td>
                       <td className="px-4 py-2 text-orange-400">{a.tauxDepreciation}%</td>
@@ -305,10 +332,10 @@ const Actifs = () => {
             <div className="space-y-4">
               <input type="text" placeholder="Nom" value={formData.nom} onChange={(e) => handleFormChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
               <select value={formData.type} onChange={(e) => handleFormChange('type', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
-                <option>Immobilier</option>
-                <option>Informatique</option>
-                <option>Transport</option>
-                <option>Mobilier</option>
+                <option value="Immobilier">{translateAssetType('Immobilier')}</option>
+                <option value="Informatique">{translateAssetType('Informatique')}</option>
+                <option value="Transport">{translateAssetType('Transport')}</option>
+                <option value="Mobilier">{translateAssetType('Mobilier')}</option>
               </select>
               <input type="number" placeholder="Valeur Acquisition" value={formData.valeurAcquisition} onChange={(e) => handleFormChange('valeurAcquisition', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
               <input type="date" value={formData.dateAcquisition} onChange={(e) => handleFormChange('dateAcquisition', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
