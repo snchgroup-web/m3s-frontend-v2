@@ -90,6 +90,47 @@ const GED = () => {
 
   const t = translations[language];
 
+  // Data translations
+  const dataTranslations = {
+    // Document types
+    documentTypes: {
+      FR: { 'PDF': 'PDF', 'Word': 'Word', 'Excel': 'Excel' },
+      EN: { 'PDF': 'PDF', 'Word': 'Word', 'Excel': 'Excel' },
+      DE: { 'PDF': 'PDF', 'Word': 'Word', 'Excel': 'Excel' }
+    },
+    // Folder names
+    folderNames: {
+      FR: {
+        'Contrats': 'Contrats',
+        'Factures': 'Factures',
+        'Rapports': 'Rapports',
+        'Documentation': 'Documentation',
+        'Stratégie': 'Stratégie',
+        'Ressources': 'Ressources'
+      },
+      EN: {
+        'Contrats': 'Contracts',
+        'Factures': 'Invoices',
+        'Rapports': 'Reports',
+        'Documentation': 'Documentation',
+        'Stratégie': 'Strategy',
+        'Ressources': 'Resources'
+      },
+      DE: {
+        'Contrats': 'Verträge',
+        'Factures': 'Rechnungen',
+        'Rapports': 'Berichte',
+        'Documentation': 'Dokumentation',
+        'Stratégie': 'Strategie',
+        'Ressources': 'Ressourcen'
+      }
+    }
+  };
+
+  // Helper functions
+  const translateDocumentType = (type) => dataTranslations.documentTypes[language]?.[type] || type;
+  const translateFolderName = (name) => dataTranslations.folderNames[language]?.[name] || name;
+
   const [activeTab, setActiveTab] = useState('overview');
   const [documents, setDocuments] = useState([]);
   const [dossiers, setDossiers] = useState([]);
@@ -131,13 +172,14 @@ const GED = () => {
   const documentsActifs = documents.filter(d => d.statut === 'Actif').length;
  
   const documentParType = [
-    { type: 'PDF', count: documents.filter(d => d.type === 'PDF').length },
-    { type: 'Excel', count: documents.filter(d => d.type === 'Excel').length },
-    { type: 'Word', count: documents.filter(d => d.type === 'Word').length },
+    { type: translateDocumentType('PDF'), typeKey: 'PDF', count: documents.filter(d => d.type === 'PDF').length },
+    { type: translateDocumentType('Excel'), typeKey: 'Excel', count: documents.filter(d => d.type === 'Excel').length },
+    { type: translateDocumentType('Word'), typeKey: 'Word', count: documents.filter(d => d.type === 'Word').length },
   ];
- 
+
   const dossierStats = dossiers.map(d => ({
-    nom: d.nom,
+    nom: translateFolderName(d.nom),
+    nomKey: d.nom,
     docs: d.nombreDocs,
     taille: parseInt(d.taille)
   }));
@@ -297,8 +339,8 @@ const GED = () => {
                   {documents.map(d => (
                     <tr key={d.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                       <td className="px-4 py-2 text-slate-300 font-medium">{d.nom}</td>
-                      <td className="px-4 py-2 text-slate-400">{d.type}</td>
-                      <td className="px-4 py-2 text-slate-400">{d.dossier}</td>
+                      <td className="px-4 py-2 text-slate-400">{translateDocumentType(d.type)}</td>
+                      <td className="px-4 py-2 text-slate-400">{translateFolderName(d.dossier)}</td>
                       <td className="px-4 py-2 text-slate-400 text-xs">{d.taille}</td>
                       <td className="px-4 py-2 text-slate-400 text-xs">{d.dateCreation}</td>
                       <td className="px-4 py-2 flex gap-2">
@@ -339,7 +381,7 @@ const GED = () => {
                 <tbody>
                   {dossiers.map(d => (
                     <tr key={d.id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                      <td className="px-4 py-2 text-slate-300 font-medium">{d.nom}</td>
+                      <td className="px-4 py-2 text-slate-300 font-medium">{translateFolderName(d.nom)}</td>
                       <td className="px-4 py-2 text-slate-400">{d.nombreDocs}</td>
                       <td className="px-4 py-2 text-slate-400">{d.taille}</td>
                       <td className="px-4 py-2 text-slate-400 text-xs">{d.dateCreation}</td>
@@ -371,9 +413,9 @@ const GED = () => {
             <div className="space-y-4">
               <input type="text" placeholder="Nom" value={formData.nom} onChange={(e) => handleFormChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
               <select value={formData.type} onChange={(e) => handleFormChange('type', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
-                <option>PDF</option>
-                <option>Word</option>
-                <option>Excel</option>
+                <option value="PDF">{translateDocumentType('PDF')}</option>
+                <option value="Word">{translateDocumentType('Word')}</option>
+                <option value="Excel">{translateDocumentType('Excel')}</option>
               </select>
               <input type="date" value={formData.dateCreation} onChange={(e) => handleFormChange('dateCreation', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
             </div>
