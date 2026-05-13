@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -104,10 +104,10 @@ const Dashboard = () => {
   const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
   // Get translated month name
-  const getMonthName = (shortMonth) => {
+  const getMonthName = useCallback((shortMonth) => {
     const index = shortMonths.indexOf(shortMonth);
     return monthTranslations[language][index] || shortMonth;
-  };
+  }, [language]);
 
   // Mock data base (without translations)
   const mockDataBaseRaw = {
@@ -137,7 +137,7 @@ const Dashboard = () => {
       ...item,
       month: getMonthName(item.month)
     }))
-  }), [mockDataBaseRaw, getMonthName, language]);
+  }), [mockDataBaseRaw, getMonthName]);
 
   // Create staff distribution with translated names
   const getStaffDistribution = () => [

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Plus, Edit2, Trash2, Users, TrendingUp, Gift, Target } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
@@ -133,13 +133,13 @@ const CRM = () => {
 
   const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
 
-  const getMonthName = (shortMonth) => {
+  const getMonthName = useCallback((shortMonth) => {
     const index = shortMonths.indexOf(shortMonth);
     if (index !== -1) {
       return monthTranslations[language][index] || shortMonth;
     }
     return shortMonth;
-  };
+  }, [language]);
 
   useEffect(() => {
     setProspects([
@@ -194,7 +194,7 @@ const CRM = () => {
     donsMensuelRaw.map(item => ({
       ...item,
       mois: getMonthName(item.mois)
-    })), [donsMensuelRaw, getMonthName, language]);
+    })), [donsMensuelRaw, getMonthName]);
 
   const handleFormChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
@@ -122,13 +122,13 @@ const Finance = () => {
 
   const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
 
-  const getMonthName = (shortMonth) => {
+  const getMonthName = useCallback((shortMonth) => {
     const index = shortMonths.indexOf(shortMonth);
     if (index !== -1) {
       return monthTranslations[language][index] || shortMonth;
     }
     return shortMonth;
-  };
+  }, [language]);
 
   useEffect(() => {
     setRecettes([
@@ -168,7 +168,7 @@ const Finance = () => {
     monthlyDataRaw.map(item => ({
       ...item,
       mois: getMonthName(item.mois)
-    })), [monthlyDataRaw, getMonthName, language, totalRecettes, totalDepenses]);
+    })), [monthlyDataRaw, getMonthName]);
 
   const handleFormChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
