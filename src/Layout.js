@@ -131,10 +131,11 @@ const Layout = ({ children }) => {
               {/* Menu Item Principal */}
               <button
                 onClick={() => {
-                  if (item.children && item.children.length > 0) {
+                  if (sidebarOpen && item.children && item.children.length > 0) {
+                    // Sidebar expanded: toggle menu for expandable items
                     toggleMenu(item.id);
                   } else {
-                    // Close all menus before navigating
+                    // Sidebar collapsed or leaf item: navigate
                     setExpandedMenus({});
                     handleMenuItemClick(item.path);
                   }
