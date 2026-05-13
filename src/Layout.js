@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
-import { Menu, X, LogOut, Globe, ChevronDown, ChevronRight, Maximize2, Minimize2 } from 'lucide-react';
+import {
+  Menu, X, LogOut, Globe, ChevronDown, ChevronRight, Maximize2, Minimize2,
+  Home, Settings, Users, DollarSign, Briefcase, Package, Building2, Zap
+} from 'lucide-react';
 import menuData from './menuStructure.json';
+
+// Mapping des icônes
+const iconMap = {
+  Home, Settings, Users, DollarSign, Briefcase, Package, Building2, Zap
+};
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
@@ -127,14 +135,27 @@ const Layout = ({ children }) => {
               >
                 {/* Icône */}
                 <div className="flex-shrink-0">
-                  {item.children && item.children.length > 0 ? (
-                    expandedMenus[item.id] ? (
-                      <ChevronDown size={18} className="text-blue-400" />
+                  {sidebarOpen ? (
+                    // Expanded: show chevron for expandable items
+                    item.children && item.children.length > 0 ? (
+                      expandedMenus[item.id] ? (
+                        <ChevronDown size={18} className="text-blue-400" />
+                      ) : (
+                        <ChevronRight size={18} className="text-slate-400" />
+                      )
                     ) : (
-                      <ChevronRight size={18} className="text-slate-400" />
+                      <div className="w-4 h-4" />
                     )
                   ) : (
-                    <div className="w-4 h-4" />
+                    // Collapsed: show module icon for identification
+                    item.icon && iconMap[item.icon] ? (
+                      React.createElement(iconMap[item.icon], {
+                        size: 18,
+                        className: "text-blue-400"
+                      })
+                    ) : (
+                      <div className="w-4 h-4" />
+                    )
                   )}
                 </div>
 
