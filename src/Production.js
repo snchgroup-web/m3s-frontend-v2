@@ -1,8 +1,106 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Plus, Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck } from 'lucide-react';
+import { useLanguage } from './LanguageContext';
 
 const Production = () => {
+  const { language } = useLanguage();
+
+  // Translations
+  const translations = {
+    FR: {
+      title: 'Production',
+      subtitle: 'Gestion des Commandes et Fournisseurs',
+      overview: 'Vue d\'ensemble',
+      commandes: 'Commandes',
+      fournisseurs: 'Fournisseurs',
+      stocks: 'Stocks',
+      totalCommandes: 'Total Commandes',
+      commandesLivrees: 'Commandes Livrées',
+      totalFournisseurs: 'Fournisseurs',
+      alertStocks: 'Stocks Bas',
+      commandesParMois: 'Commandes par Mois',
+      stocksParProduit: 'Stocks par Produit',
+      numero: 'Numéro',
+      client: 'Client',
+      produit: 'Produit',
+      quantite: 'Quantité',
+      statut: 'Statut',
+      date: 'Date',
+      actions: 'Actions',
+      seuil: 'Seuil',
+      unite: 'Unité',
+      categorie: 'Catégorie',
+      pays: 'Pays',
+      email: 'Email',
+      telephone: 'Téléphone',
+      creer: 'Créer',
+      modifier: 'Modifier',
+      annuler: 'Annuler'
+    },
+    EN: {
+      title: 'Production',
+      subtitle: 'Orders and Suppliers Management',
+      overview: 'Overview',
+      commandes: 'Orders',
+      fournisseurs: 'Suppliers',
+      stocks: 'Stock',
+      totalCommandes: 'Total Orders',
+      commandesLivrees: 'Delivered Orders',
+      totalFournisseurs: 'Suppliers',
+      alertStocks: 'Low Stock',
+      commandesParMois: 'Orders by Month',
+      stocksParProduit: 'Stock by Product',
+      numero: 'Number',
+      client: 'Client',
+      produit: 'Product',
+      quantite: 'Quantity',
+      statut: 'Status',
+      date: 'Date',
+      actions: 'Actions',
+      seuil: 'Threshold',
+      unite: 'Unit',
+      categorie: 'Category',
+      pays: 'Country',
+      email: 'Email',
+      telephone: 'Phone',
+      creer: 'Create',
+      modifier: 'Edit',
+      annuler: 'Cancel'
+    },
+    DE: {
+      title: 'Produktion',
+      subtitle: 'Verwaltung von Bestellungen und Lieferanten',
+      overview: 'Übersicht',
+      commandes: 'Bestellungen',
+      fournisseurs: 'Lieferanten',
+      stocks: 'Lagerbestand',
+      totalCommandes: 'Gesamtbestellungen',
+      commandesLivrees: 'Gelieferte Bestellungen',
+      totalFournisseurs: 'Lieferanten',
+      alertStocks: 'Niedriger Bestand',
+      commandesParMois: 'Bestellungen pro Monat',
+      stocksParProduit: 'Lagerbestand nach Produkt',
+      numero: 'Nummer',
+      client: 'Kunde',
+      produit: 'Produkt',
+      quantite: 'Menge',
+      statut: 'Status',
+      date: 'Datum',
+      actions: 'Aktionen',
+      seuil: 'Schwellenwert',
+      unite: 'Einheit',
+      categorie: 'Kategorie',
+      pays: 'Land',
+      email: 'E-Mail',
+      telephone: 'Telefon',
+      creer: 'Erstellen',
+      modifier: 'Bearbeiten',
+      annuler: 'Abbrechen'
+    }
+  };
+
+  const t = translations[language];
   const [activeTab, setActiveTab] = useState('overview');
   const [commandes, setCommandes] = useState([]);
   const [fournisseurs, setFournisseurs] = useState([]);
