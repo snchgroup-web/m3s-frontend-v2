@@ -189,16 +189,7 @@ const Layout = ({ children }) => {
                       onClick={() => handleMenuItemClick(child.path)}
                       className="w-full flex items-center space-x-2 px-3 py-1.5 rounded text-xs hover:bg-slate-600 transition text-left text-slate-300 hover:text-white"
                     >
-                      <div className="flex-shrink-0">
-                        {child.icon && iconMap[child.icon] ? (
-                          React.createElement(iconMap[child.icon], {
-                            size: 14,
-                            className: "text-blue-300"
-                          })
-                        ) : (
-                          <span className="text-blue-400">•</span>
-                        )}
-                      </div>
+                      <span className="text-blue-400">•</span>
                       <span>{child.label[language] || child.label.FR}</span>
                     </button>
                   ))}

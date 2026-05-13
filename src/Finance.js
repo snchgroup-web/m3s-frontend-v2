@@ -122,6 +122,23 @@ const Finance = () => {
 
   const t = translations[language];
 
+  // Data translations for categories and descriptions
+  const dataTranslations = {
+    descriptions: {
+      FR: { 'Vente produits': 'Vente produits', 'Donation': 'Donation', 'Services': 'Services', 'Loyer bureau': 'Loyer bureau', 'Salaires': 'Salaires', 'Fournitures': 'Fournitures' },
+      EN: { 'Vente produits': 'Product Sales', 'Donation': 'Donation', 'Services': 'Services', 'Loyer bureau': 'Office Rent', 'Salaires': 'Salaries', 'Fournitures': 'Supplies' },
+      DE: { 'Vente produits': 'Produktverkauf', 'Donation': 'Spende', 'Services': 'Dienstleistungen', 'Loyer bureau': 'Büromiete', 'Salaires': 'Gehälter', 'Fournitures': 'Materialien' }
+    },
+    categories: {
+      FR: { 'Ventes': 'Ventes', 'Dons': 'Dons', 'Services': 'Services', 'Immobilier': 'Immobilier', 'Paie': 'Paie', 'Opérationnel': 'Opérationnel' },
+      EN: { 'Ventes': 'Sales', 'Dons': 'Donations', 'Services': 'Services', 'Immobilier': 'Real Estate', 'Paie': 'Payroll', 'Opérationnel': 'Operations' },
+      DE: { 'Ventes': 'Verkauf', 'Dons': 'Spenden', 'Services': 'Dienstleistungen', 'Immobilier': 'Immobilien', 'Paie': 'Gehälter', 'Opérationnel': 'Betrieb' }
+    }
+  };
+
+  const translateDescription = (desc) => dataTranslations.descriptions[language]?.[desc] || desc;
+  const translateCategory = (cat) => dataTranslations.categories[language]?.[cat] || cat;
+
   const getMonthName = useCallback((shortMonth) => {
     const index = shortMonths.indexOf(shortMonth);
     if (index !== -1) {
@@ -333,10 +350,10 @@ const Finance = () => {
                 <tbody>
                   {recettes.map(r => (
                     <tr key={r.id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                      <td className="px-6 py-3 text-slate-300">{r.description}</td>
+                      <td className="px-6 py-3 text-slate-300">{translateDescription(r.description)}</td>
                       <td className="px-6 py-3 text-green-400 font-bold">{r.montant.toLocaleString()}</td>
                       <td className="px-6 py-3 text-slate-400">{r.devise}</td>
-                      <td className="px-6 py-3 text-slate-400">{r.categorie}</td>
+                      <td className="px-6 py-3 text-slate-400">{translateCategory(r.categorie)}</td>
                       <td className="px-6 py-3 text-slate-400">{r.date}</td>
                       <td className="px-6 py-3 flex gap-2">
                         <button onClick={() => handleEdit('recette', r)} className="p-1 hover:bg-slate-600 rounded">
@@ -376,10 +393,10 @@ const Finance = () => {
                 <tbody>
                   {depenses.map(d => (
                     <tr key={d.id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                      <td className="px-6 py-3 text-slate-300">{d.description}</td>
+                      <td className="px-6 py-3 text-slate-300">{translateDescription(d.description)}</td>
                       <td className="px-6 py-3 text-red-400 font-bold">{d.montant.toLocaleString()}</td>
                       <td className="px-6 py-3 text-slate-400">{d.devise}</td>
-                      <td className="px-6 py-3 text-slate-400">{d.categorie}</td>
+                      <td className="px-6 py-3 text-slate-400">{translateCategory(d.categorie)}</td>
                       <td className="px-6 py-3 text-slate-400">{d.date}</td>
                       <td className="px-6 py-3 flex gap-2">
                         <button onClick={() => handleEdit('depense', d)} className="p-1 hover:bg-slate-600 rounded">

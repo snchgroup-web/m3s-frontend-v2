@@ -178,12 +178,19 @@ const Admin = () => {
       FR: { 'Manager': 'Manager', 'Administrateur': 'Administrateur', 'Admin Finance': 'Admin Finance', 'Chef Projet': 'Chef Projet', 'Chef Opérations': 'Chef Opérations', 'Viewer': 'Viewer' },
       EN: { 'Manager': 'Manager', 'Administrateur': 'Administrator', 'Admin Finance': 'Finance Admin', 'Chef Projet': 'Project Manager', 'Chef Opérations': 'Operations Chief', 'Viewer': 'Viewer' },
       DE: { 'Manager': 'Manager', 'Administrateur': 'Administrator', 'Admin Finance': 'Finanzadministrator', 'Chef Projet': 'Projektmanager', 'Chef Opérations': 'Betriebsleiter', 'Viewer': 'Betrachter' }
+    },
+    // Role Descriptions
+    roleDescriptions: {
+      FR: { 'Accès complet à tous les modules': 'Accès complet à tous les modules', 'Gestion système et permissions': 'Gestion système et permissions', 'Gestion finances uniquement': 'Gestion finances uniquement', 'Coordination et suivi': 'Coordination et suivi', 'Gestion opérations': 'Gestion opérations', 'Lecture seule': 'Lecture seule' },
+      EN: { 'Accès complet à tous les modules': 'Full access to all modules', 'Gestion système et permissions': 'System management and permissions', 'Gestion finances uniquement': 'Finance management only', 'Coordination et suivi': 'Coordination and monitoring', 'Gestion opérations': 'Operations management', 'Lecture seule': 'Read-only access' },
+      DE: { 'Accès complet à tous les modules': 'Vollzugriff auf alle Module', 'Gestion système et permissions': 'Systemverwaltung und Berechtigungen', 'Gestion finances uniquement': 'Nur Finanzverwaltung', 'Coordination et suivi': 'Koordination und Überwachung', 'Gestion opérations': 'Betriebsverwaltung', 'Lecture seule': 'Nur Lesezugriff' }
     }
   };
 
   const translateAuditAction = (action) => dataTranslations.auditActions[language]?.[action] || action;
   const translateDay = (day) => dataTranslations.days[language]?.[day] || day;
   const translateRole = (role) => dataTranslations.roles[language]?.[role] || role;
+  const translateRoleDescription = (desc) => dataTranslations.roleDescriptions[language]?.[desc] || desc;
 
   const [activeTab, setActiveTab] = useState('overview');
   const [users, setUsers] = useState([]);
@@ -512,7 +519,7 @@ const Admin = () => {
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h4 className="text-white font-bold text-lg">{translateRole(r.nom)}</h4>
-                      <p className="text-slate-400 text-sm">{r.description}</p>
+                      <p className="text-slate-400 text-sm">{translateRoleDescription(r.description)}</p>
                     </div>
                     <div className="flex gap-2">
                       <button onClick={() => handleEditRole(r)} className="p-1 hover:bg-slate-700 rounded">
