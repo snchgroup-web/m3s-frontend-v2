@@ -126,6 +126,67 @@ const Production = () => {
 
   const t = translations[language];
 
+  // Data translations
+  const dataTranslations = {
+    // Status values
+    statuses: {
+      FR: { 'Livrée': 'Livrée', 'En cours': 'En cours', 'Préparation': 'Préparation' },
+      EN: { 'Livrée': 'Delivered', 'En cours': 'In Progress', 'Préparation': 'Preparation' },
+      DE: { 'Livrée': 'Geliefert', 'En cours': 'Laufend', 'Préparation': 'Vorbereitung' }
+    },
+    // Products
+    products: {
+      FR: {
+        'Licences IT': 'Licences IT',
+        'Matériel Informatique': 'Matériel Informatique',
+        'Fournitures Bureau': 'Fournitures Bureau',
+        'Consommables': 'Consommables',
+        'Solutions IT': 'Solutions IT',
+        'Formation': 'Formation',
+        'Consultation': 'Consultation',
+        'Implémentation': 'Implémentation'
+      },
+      EN: {
+        'Licences IT': 'IT Licenses',
+        'Matériel Informatique': 'IT Equipment',
+        'Fournitures Bureau': 'Office Supplies',
+        'Consommables': 'Consumables',
+        'Solutions IT': 'IT Solutions',
+        'Formation': 'Training',
+        'Consultation': 'Consulting',
+        'Implémentation': 'Implementation'
+      },
+      DE: {
+        'Licences IT': 'IT-Lizenzen',
+        'Matériel Informatique': 'IT-Ausrüstung',
+        'Fournitures Bureau': 'Bürobedarf',
+        'Consommables': 'Verbrauchsmaterial',
+        'Solutions IT': 'IT-Lösungen',
+        'Formation': 'Schulung',
+        'Consultation': 'Beratung',
+        'Implémentation': 'Implementierung'
+      }
+    },
+    // Months
+    months: {
+      FR: { 'Fév': 'Fév', 'Mar': 'Mar', 'Avr': 'Avr' },
+      EN: { 'Fév': 'Feb', 'Mar': 'Mar', 'Apr': 'Apr' },
+      DE: { 'Fév': 'Feb', 'Mar': 'Mär', 'Avr': 'Apr' }
+    },
+    // Categories
+    categories: {
+      FR: { 'Matériel': 'Matériel', 'Logiciels': 'Logiciels', 'Services': 'Services' },
+      EN: { 'Matériel': 'Hardware', 'Logiciels': 'Software', 'Services': 'Services' },
+      DE: { 'Matériel': 'Hardware', 'Logiciels': 'Software', 'Services': 'Dienstleistungen' }
+    }
+  };
+
+  // Helper function to translate data values
+  const translateStatus = (status) => dataTranslations.statuses[language]?.[status] || status;
+  const translateProduct = (product) => dataTranslations.products[language]?.[product] || product;
+  const translateMonth = (month) => dataTranslations.months[language]?.[month] || month;
+  const translateCategory = (category) => dataTranslations.categories[language]?.[category] || category;
+
   const [activeTab, setActiveTab] = useState('overview');
   const [commandes, setCommandes] = useState([]);
   const [fournisseurs, setFournisseurs] = useState([]);
@@ -170,13 +231,13 @@ const Production = () => {
   const stocksBas = stocks.filter(s => s.quantite <= s.seuil).length;
  
   const commandesParMois = [
-    { mois: 'Fév', commandes: 3 },
-    { mois: 'Mar', commandes: 5 },
-    { mois: 'Avr', commandes: totalCommandes },
+    { mois: translateMonth('Fév'), commandes: 3 },
+    { mois: translateMonth('Mar'), commandes: 5 },
+    { mois: translateMonth('Avr'), commandes: totalCommandes },
   ];
- 
+
   const stocksParProduit = stocks.map(s => ({
-    produit: s.produit,
+    produit: translateProduct(s.produit),
     quantite: s.quantite,
     seuil: s.seuil
   }));
@@ -347,11 +408,11 @@ const Production = () => {
                     <tr key={c.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                       <td className="px-4 py-2 text-slate-300 font-medium">{c.numero}</td>
                       <td className="px-4 py-2 text-slate-400">{c.client}</td>
-                      <td className="px-4 py-2 text-slate-400">{c.produit}</td>
+                      <td className="px-4 py-2 text-slate-400">{translateProduct(c.produit)}</td>
                       <td className="px-4 py-2 text-slate-400">{c.quantite}</td>
                       <td className="px-4 py-2">
                         <span className={`px-2 py-1 rounded text-xs font-semibold ${c.statut === 'Livrée' ? 'bg-green-900 text-green-200' : 'bg-blue-900 text-blue-200'}`}>
-                          {c.statut}
+                          {translateStatus(c.statut)}
                         </span>
                       </td>
                       <td className="px-4 py-2 flex gap-2">
@@ -393,7 +454,7 @@ const Production = () => {
                     <tr key={f.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                       <td className="px-4 py-2 text-slate-300 font-medium">{f.nom}</td>
                       <td className="px-4 py-2 text-slate-400 text-xs">{f.email}</td>
-                      <td className="px-4 py-2 text-slate-400">{f.categorie}</td>
+                      <td className="px-4 py-2 text-slate-400">{translateCategory(f.categorie)}</td>
                       <td className="px-4 py-2 text-slate-400">{f.pays}</td>
                       <td className="px-4 py-2 flex gap-2">
                         <button onClick={() => handleEdit('fournisseur', f)} className="p-1 hover:bg-slate-600 rounded">
@@ -432,7 +493,7 @@ const Production = () => {
                 <tbody>
                   {stocks.map(s => (
                     <tr key={s.id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                      <td className="px-4 py-2 text-slate-300 font-medium">{s.produit}</td>
+                      <td className="px-4 py-2 text-slate-300 font-medium">{translateProduct(s.produit)}</td>
                       <td className="px-4 py-2 text-slate-400">{s.quantite}</td>
                       <td className="px-4 py-2 text-slate-400">{s.seuil}</td>
                       <td className="px-4 py-2">
