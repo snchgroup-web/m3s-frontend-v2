@@ -159,7 +159,7 @@ const Admin = () => {
 
   const t = translations[language];
 
-  // Data translations for audit actions and days
+  // Data translations for audit actions, days, and roles
   const dataTranslations = {
     // Audit Actions
     auditActions: {
@@ -172,11 +172,18 @@ const Admin = () => {
       FR: { 'Lun': 'Lun', 'Mar': 'Mar', 'Mer': 'Mer', 'Jeu': 'Jeu', 'Ven': 'Ven' },
       EN: { 'Lun': 'Mon', 'Mar': 'Tue', 'Mer': 'Wed', 'Jeu': 'Thu', 'Ven': 'Fri' },
       DE: { 'Lun': 'Mo', 'Mar': 'Di', 'Mer': 'Mi', 'Jeu': 'Do', 'Ven': 'Fr' }
+    },
+    // Roles
+    roles: {
+      FR: { 'Manager': 'Manager', 'Administrateur': 'Administrateur', 'Admin Finance': 'Admin Finance', 'Chef Projet': 'Chef Projet', 'Chef Opérations': 'Chef Opérations', 'Viewer': 'Viewer' },
+      EN: { 'Manager': 'Manager', 'Administrateur': 'Administrator', 'Admin Finance': 'Finance Admin', 'Chef Projet': 'Project Manager', 'Chef Opérations': 'Operations Chief', 'Viewer': 'Viewer' },
+      DE: { 'Manager': 'Manager', 'Administrateur': 'Administrator', 'Admin Finance': 'Finanzadministrator', 'Chef Projet': 'Projektmanager', 'Chef Opérations': 'Betriebsleiter', 'Viewer': 'Betrachter' }
     }
   };
 
   const translateAuditAction = (action) => dataTranslations.auditActions[language]?.[action] || action;
   const translateDay = (day) => dataTranslations.days[language]?.[day] || day;
+  const translateRole = (role) => dataTranslations.roles[language]?.[role] || role;
 
   const [activeTab, setActiveTab] = useState('overview');
   const [users, setUsers] = useState([]);
@@ -238,7 +245,8 @@ const Admin = () => {
 
   // Données pour charts
   const roleDistribution = roles.map(r => ({
-    name: r.nom,
+    name: translateRole(r.nom),
+    nameKey: r.nom,
     count: users.filter(u => u.role === r.nom).length
   }));
 
@@ -467,7 +475,7 @@ const Admin = () => {
                     <tr key={u.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                       <td className="px-4 py-2 text-slate-300 font-medium">{u.nom}</td>
                       <td className="px-4 py-2 text-slate-400 text-xs">{u.email}</td>
-                      <td className="px-4 py-2 text-slate-300">{u.role}</td>
+                      <td className="px-4 py-2 text-slate-300">{translateRole(u.role)}</td>
                       <td className="px-4 py-2">
                         <span className={`px-2 py-1 rounded text-xs font-semibold ${u.statut === 'Actif' ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'}`}>
                           {u.statut === 'Actif' ? t.active : u.statut === 'Inactif' ? t.inactive : t.suspended}
@@ -503,7 +511,7 @@ const Admin = () => {
                 <div key={r.id} className="bg-slate-800 rounded-lg p-6 border border-slate-700">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h4 className="text-white font-bold text-lg">{r.nom}</h4>
+                      <h4 className="text-white font-bold text-lg">{translateRole(r.nom)}</h4>
                       <p className="text-slate-400 text-sm">{r.description}</p>
                     </div>
                     <div className="flex gap-2">
@@ -585,7 +593,7 @@ const Admin = () => {
                 <label className="block text-sm font-medium text-slate-300 mb-2">{t.role}</label>
                 <select value={userFormData.role} onChange={(e) => handleUserChange('role', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
                   {roles.map(r => (
-                    <option key={r.id} value={r.nom}>{r.nom}</option>
+                    <option key={r.id} value={r.nom}>{translateRole(r.nom)}</option>
                   ))}
                 </select>
               </div>

@@ -28,6 +28,7 @@
             "EN": "Institution",
             "DE": "Institution"
           },
+          "icon": "Building2",
           "path": "/administration"
         },
         {
@@ -37,6 +38,7 @@
             "EN": "Activities & Tasks",
             "DE": "Aktivitäten & Aufgaben"
           },
+          "icon": "Activity",
           "path": "/administration"
         },
         {
@@ -46,6 +48,7 @@
             "EN": "Project Phase",
             "DE": "Projektphase"
           },
+          "icon": "Briefcase",
           "path": "/administration"
         },
         {
@@ -55,6 +58,7 @@
             "EN": "Communication",
             "DE": "Kommunikation"
           },
+          "icon": "MessageSquare",
           "path": "/administration"
         }
       ]
@@ -142,6 +146,7 @@
             "EN": "Teams & Profiles",
             "DE": "Teams & Profile"
           },
+          "icon": "Users",
           "path": "/rh"
         },
         {
@@ -151,6 +156,7 @@
             "EN": "Hours & Activities",
             "DE": "Stunden & Aktivitäten"
           },
+          "icon": "Clock",
           "path": "/rh"
         },
         {
@@ -160,6 +166,7 @@
             "EN": "Skills",
             "DE": "Fähigkeiten"
           },
+          "icon": "Zap",
           "path": "/rh"
         },
         {
@@ -169,6 +176,7 @@
             "EN": "My Account",
             "DE": "Mein Konto"
           },
+          "icon": "User",
           "path": "/rh"
         }
       ]
@@ -190,6 +198,7 @@
             "EN": "Prospects & Leads",
             "DE": "Interessenten & Leads"
           },
+          "icon": "Target",
           "path": "/crm"
         },
         {
@@ -199,6 +208,7 @@
             "EN": "Clients",
             "DE": "Kunden"
           },
+          "icon": "Users",
           "path": "/crm"
         },
         {
@@ -208,6 +218,7 @@
             "EN": "Sales",
             "DE": "Verkauf"
           },
+          "icon": "TrendingUp",
           "path": "/crm"
         },
         {
@@ -217,6 +228,7 @@
             "EN": "Donations",
             "DE": "Spenden"
           },
+          "icon": "Heart",
           "path": "/crm"
         },
         {
@@ -226,6 +238,7 @@
             "EN": "Beneficiaries",
             "DE": "Begünstigte"
           },
+          "icon": "Smile",
           "path": "/crm"
         }
       ]
@@ -247,6 +260,7 @@
             "EN": "Orders",
             "DE": "Bestellungen"
           },
+          "icon": "ShoppingCart",
           "path": "/production"
         },
         {
@@ -256,6 +270,7 @@
             "EN": "Manufacturing",
             "DE": "Herstellung"
           },
+          "icon": "Wrench",
           "path": "/production"
         },
         {
@@ -265,6 +280,7 @@
             "EN": "Suppliers",
             "DE": "Lieferanten"
           },
+          "icon": "Truck",
           "path": "/production"
         }
       ]
@@ -286,6 +302,7 @@
             "EN": "Inventory",
             "DE": "Bestand"
           },
+          "icon": "Box",
           "path": "/actifs"
         },
         {
@@ -295,6 +312,7 @@
             "EN": "Fixed Assets",
             "DE": "Anlagevermögen"
           },
+          "icon": "Home",
           "path": "/actifs"
         },
         {
@@ -304,6 +322,7 @@
             "EN": "Risks",
             "DE": "Risiken"
           },
+          "icon": "AlertTriangle",
           "path": "/actifs"
         }
       ]
@@ -325,6 +344,7 @@
             "EN": "Monitoring & Knowledge Management",
             "DE": "Überwachung & Wissensmanagement"
           },
+          "icon": "Eye",
           "path": "/ged"
         },
         {
@@ -334,6 +354,7 @@
             "EN": "Document Management",
             "DE": "Dokumentenverwaltung"
           },
+          "icon": "FileText",
           "path": "/ged"
         },
         {
@@ -343,6 +364,7 @@
             "EN": "AI & Digital",
             "DE": "KI & Digital"
           },
+          "icon": "Brain",
           "path": "/ged"
         },
         {
@@ -352,6 +374,7 @@
             "EN": "Database Management",
             "DE": "Datenbankmanagement"
           },
+          "icon": "Database",
           "path": "/ged"
         },
         {
@@ -361,6 +384,7 @@
             "EN": "User Guide",
             "DE": "Benutzerhandbuch"
           },
+          "icon": "BookOpen",
           "path": "/ged"
         },
         {
@@ -370,6 +394,7 @@
             "EN": "Technical Documentation",
             "DE": "Technische Dokumentation"
           },
+          "icon": "Code",
           "path": "/ged"
         },
         {
@@ -379,6 +404,7 @@
             "EN": "Help & Support",
             "DE": "Hilfe & Support"
           },
+          "icon": "HelpCircle",
           "path": "/ged"
         },
         {
@@ -388,6 +414,7 @@
             "EN": "User Manual",
             "DE": "Benutzerhandbuch"
           },
+          "icon": "Book",
           "path": "/ged"
         }
       ]

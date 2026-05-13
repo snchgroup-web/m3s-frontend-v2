@@ -3,13 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import {
   Menu, X, LogOut, Globe, ChevronDown, ChevronRight, Maximize2, Minimize2,
-  Home, Settings, Users, DollarSign, Briefcase, Package, Building2, Zap
+  Home, Settings, Users, DollarSign, Briefcase, Package, Building2, Zap,
+  Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
+  Wrench, Truck, Box, AlertTriangle, Eye, FileText, Brain, Database, BookOpen,
+  Code, HelpCircle, Book
 } from 'lucide-react';
 import menuData from './menuStructure.json';
 
 // Mapping des icônes
 const iconMap = {
-  Home, Settings, Users, DollarSign, Briefcase, Package, Building2, Zap
+  Home, Settings, Users, DollarSign, Briefcase, Package, Building2, Zap,
+  Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
+  Wrench, Truck, Box, AlertTriangle, Eye, FileText, Brain, Database, BookOpen,
+  Code, HelpCircle, Book
 };
 
 const Layout = ({ children }) => {
@@ -134,7 +140,7 @@ const Layout = ({ children }) => {
                   }
                 }}
                 title={!sidebarOpen ? (item.label[language] || item.label.FR) : undefined}
-                className={`flex items-center rounded hover:bg-slate-700 transition text-left text-sm ${
+                className={`flex items-center rounded hover:bg-slate-700 transition text-left text-sm cursor-pointer ${
                   sidebarOpen
                     ? 'w-full space-x-3 px-4 py-2'
                     : 'w-full justify-center py-3'
@@ -183,7 +189,16 @@ const Layout = ({ children }) => {
                       onClick={() => handleMenuItemClick(child.path)}
                       className="w-full flex items-center space-x-2 px-3 py-1.5 rounded text-xs hover:bg-slate-600 transition text-left text-slate-300 hover:text-white"
                     >
-                      <span className="text-blue-400">•</span>
+                      <div className="flex-shrink-0">
+                        {child.icon && iconMap[child.icon] ? (
+                          React.createElement(iconMap[child.icon], {
+                            size: 14,
+                            className: "text-blue-300"
+                          })
+                        ) : (
+                          <span className="text-blue-400">•</span>
+                        )}
+                      </div>
                       <span>{child.label[language] || child.label.FR}</span>
                     </button>
                   ))}
