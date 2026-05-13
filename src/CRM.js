@@ -133,6 +133,29 @@ const CRM = () => {
 
   const t = translations[language];
 
+  // Data translations for statuses
+  const dataTranslations = {
+    prospectStatuses: {
+      FR: { 'Nouveau': 'Nouveau', 'Qualifié': 'Qualifié', 'Négociation': 'Négociation' },
+      EN: { 'Nouveau': 'New', 'Qualifié': 'Qualified', 'Négociation': 'Negotiation' },
+      DE: { 'Nouveau': 'Neu', 'Qualifié': 'Qualifiziert', 'Négociation': 'Verhandlung' }
+    },
+    clientStatuses: {
+      FR: { 'Actif': 'Actif', 'Inactif': 'Inactif' },
+      EN: { 'Actif': 'Active', 'Inactif': 'Inactive' },
+      DE: { 'Actif': 'Aktiv', 'Inactif': 'Inaktiv' }
+    },
+    donCategories: {
+      FR: { 'Donation': 'Donation', 'Fondation': 'Fondation', 'Particulier': 'Particulier', 'Partenariat': 'Partenariat', 'Public': 'Public' },
+      EN: { 'Donation': 'Donation', 'Fondation': 'Foundation', 'Particulier': 'Individual', 'Partenariat': 'Partnership', 'Public': 'Government' },
+      DE: { 'Donation': 'Spende', 'Fondation': 'Stiftung', 'Particulier': 'Einzelperson', 'Partenariat': 'Partnerschaft', 'Public': 'Regierung' }
+    }
+  };
+
+  const translateProspectStatus = (status) => dataTranslations.prospectStatuses[language]?.[status] || status;
+  const translateClientStatus = (status) => dataTranslations.clientStatuses[language]?.[status] || status;
+  const translateDonCategory = (category) => dataTranslations.donCategories[language]?.[category] || category;
+
   const getMonthName = useCallback((shortMonth) => {
     const index = shortMonths.indexOf(shortMonth);
     if (index !== -1) {
@@ -173,14 +196,14 @@ const CRM = () => {
   const tauxConversion = totalClients > 0 ? Math.round((totalClients / (totalProspects + totalClients)) * 100) : 0;
 
   const pipelineData = [
-    { nom: 'Nouveau', count: prospects.filter(p => p.statut === 'Nouveau').length },
-    { nom: 'Qualifié', count: prospectQualifies },
-    { nom: 'Négociation', count: prospects.filter(p => p.statut === 'Négociation').length },
+    { nom: translateProspectStatus('Nouveau'), nomKey: 'Nouveau', count: prospects.filter(p => p.statut === 'Nouveau').length },
+    { nom: translateProspectStatus('Qualifié'), nomKey: 'Qualifié', count: prospectQualifies },
+    { nom: translateProspectStatus('Négociation'), nomKey: 'Négociation', count: prospects.filter(p => p.statut === 'Négociation').length },
   ];
 
   const clientsStatut = [
-    { nom: 'Actifs', count: clients.filter(c => c.statut === 'Actif').length },
-    { nom: 'Inactifs', count: clients.filter(c => c.statut === 'Inactif').length },
+    { nom: translateClientStatus('Actif'), nomKey: 'Actif', count: clients.filter(c => c.statut === 'Actif').length },
+    { nom: translateClientStatus('Inactif'), nomKey: 'Inactif', count: clients.filter(c => c.statut === 'Inactif').length },
   ];
 
   const donsMensuelRaw = useMemo(() => [
@@ -270,7 +293,7 @@ const CRM = () => {
                   <>
                     <td className="px-4 py-2 text-slate-300 font-medium">{item.nom}</td>
                     <td className="px-4 py-2 text-slate-400 text-xs">{item.email}</td>
-                    <td className="px-4 py-2 text-slate-400">{item.statut}</td>
+                    <td className="px-4 py-2 text-slate-400">{translateProspectStatus(item.statut)}</td>
                     <td className="px-4 py-2 text-slate-400">{item.valeur.toLocaleString()} CHF</td>
                   </>
                 )}
@@ -278,14 +301,14 @@ const CRM = () => {
                   <>
                     <td className="px-4 py-2 text-slate-300 font-medium">{item.nom}</td>
                     <td className="px-4 py-2 text-slate-400 text-xs">{item.email}</td>
-                    <td className="px-4 py-2 text-slate-400">{item.statut}</td>
+                    <td className="px-4 py-2 text-slate-400">{translateClientStatus(item.statut)}</td>
                     <td className="px-4 py-2 text-green-400 font-bold">{item.valeurAnnuelle.toLocaleString()} CHF</td>
                   </>
                 )}
                 {type === 'don' && (
                   <>
                     <td className="px-4 py-2 text-slate-300 font-medium">{item.donateur}</td>
-                    <td className="px-4 py-2 text-slate-400">{item.categorie}</td>
+                    <td className="px-4 py-2 text-slate-400">{translateDonCategory(item.categorie)}</td>
                     <td className="px-4 py-2 text-slate-400">{item.devise}</td>
                     <td className="px-4 py-2 text-green-400 font-bold">{item.montant.toLocaleString()}</td>
                   </>

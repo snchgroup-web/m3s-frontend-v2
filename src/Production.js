@@ -178,6 +178,12 @@ const Production = () => {
       FR: { 'Matériel': 'Matériel', 'Logiciels': 'Logiciels', 'Services': 'Services' },
       EN: { 'Matériel': 'Hardware', 'Logiciels': 'Software', 'Services': 'Services' },
       DE: { 'Matériel': 'Hardware', 'Logiciels': 'Software', 'Services': 'Dienstleistungen' }
+    },
+    // Chart bar names
+    chartLabels: {
+      FR: { 'quantite': 'Quantité', 'seuil': 'Seuil' },
+      EN: { 'quantite': 'Quantity', 'seuil': 'Threshold' },
+      DE: { 'quantite': 'Menge', 'seuil': 'Schwellenwert' }
     }
   };
 
@@ -186,6 +192,7 @@ const Production = () => {
   const translateProduct = (product) => dataTranslations.products[language]?.[product] || product;
   const translateMonth = (month) => dataTranslations.months[language]?.[month] || month;
   const translateCategory = (category) => dataTranslations.categories[language]?.[category] || category;
+  const translateChartLabel = (label) => dataTranslations.chartLabels[language]?.[label] || label;
 
   const [activeTab, setActiveTab] = useState('overview');
   const [commandes, setCommandes] = useState([]);
@@ -375,8 +382,8 @@ const Production = () => {
                   <YAxis dataKey="produit" type="category" stroke="#94a3b8" width={100} />
                   <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
                   <Legend />
-                  <Bar dataKey="quantite" fill="#10b981" radius={[0, 8, 8, 0]} />
-                  <Bar dataKey="seuil" fill="#ef4444" radius={[0, 8, 8, 0]} />
+                  <Bar dataKey="quantite" name={translateChartLabel('quantite')} fill="#10b981" radius={[0, 8, 8, 0]} />
+                  <Bar dataKey="seuil" name={translateChartLabel('seuil')} fill="#ef4444" radius={[0, 8, 8, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
