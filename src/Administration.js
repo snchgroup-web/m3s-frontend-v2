@@ -1,8 +1,163 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Plus, Edit2, Trash2, Shield, Users, Lock, Activity, AlertCircle } from 'lucide-react';
+import { useLanguage } from './LanguageContext';
 
 const Admin = () => {
+  const { language } = useLanguage();
+
+  // Translations
+  const translations = {
+    FR: {
+      title: 'Administration',
+      subtitle: 'Gestion des Utilisateurs, Rôles et Audit Trail',
+      totalUsers: 'Total Utilisateurs',
+      activeUsers: 'Utilisateurs Actifs',
+      totalRoles: 'Total Rôles',
+      auditLogs: 'Audit Logs',
+      failedLogins: 'Connexions Échouées',
+      overview: 'Vue d\'ensemble',
+      users: 'Utilisateurs',
+      roles: 'Rôles',
+      audit: 'Audit Log',
+      roleDistribution: 'Distribution des Rôles',
+      activityByType: 'Activité par Type d\'Action',
+      dailyActivity: 'Activité Quotidienne (7 derniers jours)',
+      newUser: 'Nouvel Utilisateur',
+      editUser: 'Modifier Utilisateur',
+      newRole: 'Nouveau Rôle',
+      editRole: 'Modifier Rôle',
+      nom: 'Nom',
+      email: 'Email',
+      role: 'Rôle',
+      statut: 'Statut',
+      dateCreation: 'Date Création',
+      actions: 'Actions',
+      utilisateur: 'Utilisateur',
+      action: 'Action',
+      module: 'Module',
+      timestamp: 'Timestamp',
+      description: 'Description',
+      permissions: 'Permissions (séparées par virgule)',
+      nominRole: 'Nom du Rôle',
+      annuler: 'Annuler',
+      creer: 'Créer',
+      modifier: 'Modifier',
+      supprimer: 'Supprimer',
+      remplirChamps: 'Veuillez remplir les champs obligatoires',
+      active: 'Actif',
+      inactive: 'Inactif',
+      suspended: 'Suspendu',
+      success: 'Success',
+      failed: 'Failed',
+      userCount: 'Utilisateurs',
+      mon: 'Lun',
+      tue: 'Mar',
+      wed: 'Mer',
+      thu: 'Jeu',
+      fri: 'Ven'
+    },
+    EN: {
+      title: 'Administration',
+      subtitle: 'User Management, Roles and Audit Trail',
+      totalUsers: 'Total Users',
+      activeUsers: 'Active Users',
+      totalRoles: 'Total Roles',
+      auditLogs: 'Audit Logs',
+      failedLogins: 'Failed Logins',
+      overview: 'Overview',
+      users: 'Users',
+      roles: 'Roles',
+      audit: 'Audit Log',
+      roleDistribution: 'Role Distribution',
+      activityByType: 'Activity by Type',
+      dailyActivity: 'Daily Activity (Last 7 Days)',
+      newUser: 'New User',
+      editUser: 'Edit User',
+      newRole: 'New Role',
+      editRole: 'Edit Role',
+      nom: 'Name',
+      email: 'Email',
+      role: 'Role',
+      statut: 'Status',
+      dateCreation: 'Creation Date',
+      actions: 'Actions',
+      utilisateur: 'User',
+      action: 'Action',
+      module: 'Module',
+      timestamp: 'Timestamp',
+      description: 'Description',
+      permissions: 'Permissions (comma-separated)',
+      nominRole: 'Role Name',
+      annuler: 'Cancel',
+      creer: 'Create',
+      modifier: 'Edit',
+      supprimer: 'Delete',
+      remplirChamps: 'Please fill in all required fields',
+      active: 'Active',
+      inactive: 'Inactive',
+      suspended: 'Suspended',
+      success: 'Success',
+      failed: 'Failed',
+      userCount: 'Users',
+      mon: 'Mon',
+      tue: 'Tue',
+      wed: 'Wed',
+      thu: 'Thu',
+      fri: 'Fri'
+    },
+    DE: {
+      title: 'Verwaltung',
+      subtitle: 'Benutzerverwaltung, Rollen und Audit-Trail',
+      totalUsers: 'Gesamtbenutzer',
+      activeUsers: 'Aktive Benutzer',
+      totalRoles: 'Gesamtrollen',
+      auditLogs: 'Audit-Protokolle',
+      failedLogins: 'Fehlgeschlagene Anmeldungen',
+      overview: 'Übersicht',
+      users: 'Benutzer',
+      roles: 'Rollen',
+      audit: 'Audit-Protokoll',
+      roleDistribution: 'Rollenverteilung',
+      activityByType: 'Aktivität nach Typ',
+      dailyActivity: 'Tägliche Aktivität (letzte 7 Tage)',
+      newUser: 'Neuer Benutzer',
+      editUser: 'Benutzer bearbeiten',
+      newRole: 'Neue Rolle',
+      editRole: 'Rolle bearbeiten',
+      nom: 'Name',
+      email: 'Email',
+      role: 'Rolle',
+      statut: 'Status',
+      dateCreation: 'Erstellungsdatum',
+      actions: 'Aktionen',
+      utilisateur: 'Benutzer',
+      action: 'Aktion',
+      module: 'Modul',
+      timestamp: 'Zeitstempel',
+      description: 'Beschreibung',
+      permissions: 'Berechtigungen (kommagetrennt)',
+      nominRole: 'Rollenname',
+      annuler: 'Abbrechen',
+      creer: 'Erstellen',
+      modifier: 'Bearbeiten',
+      supprimer: 'Löschen',
+      remplirChamps: 'Bitte füllen Sie alle erforderlichen Felder aus',
+      active: 'Aktiv',
+      inactive: 'Inaktiv',
+      suspended: 'Gesperrt',
+      success: 'Erfolg',
+      failed: 'Fehler',
+      userCount: 'Benutzer',
+      mon: 'Mo',
+      tue: 'Di',
+      wed: 'Mi',
+      thu: 'Do',
+      fri: 'Fr'
+    }
+  };
+
+  const t = translations[language];
   const [activeTab, setActiveTab] = useState('overview');
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
@@ -94,7 +249,7 @@ const Admin = () => {
 
   const handleSaveUser = () => {
     if (!userFormData.nom || !userFormData.email) {
-      alert('Veuillez remplir les champs obligatoires');
+      alert(t.remplirChamps);
       return;
     }
 
@@ -111,7 +266,7 @@ const Admin = () => {
 
   const handleSaveRole = () => {
     if (!roleFormData.nom) {
-      alert('Veuillez remplir les champs obligatoires');
+      alert(t.remplirChamps);
       return;
     }
 
@@ -153,8 +308,8 @@ const Admin = () => {
       <div className="max-w-7xl mx-auto">
 
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">⚙️ Administration</h1>
-          <p className="text-slate-400">Gestion des Utilisateurs, Rôles et Audit Trail</p>
+          <h1 className="text-4xl font-bold text-white mb-2">⚙️ {t.title}</h1>
+          <p className="text-slate-400">{t.subtitle}</p>
         </div>
 
         {/* KPIs */}
@@ -162,7 +317,7 @@ const Admin = () => {
           <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-200 text-sm">Total Utilisateurs</p>
+                <p className="text-blue-200 text-sm">{t.totalUsers}</p>
                 <p className="text-white text-2xl font-bold">{totalUsers}</p>
               </div>
               <Users size={32} className="text-blue-400" />
@@ -172,7 +327,7 @@ const Admin = () => {
           <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-200 text-sm">Utilisateurs Actifs</p>
+                <p className="text-green-200 text-sm">{t.activeUsers}</p>
                 <p className="text-white text-2xl font-bold">{activeUsers}</p>
               </div>
               <AlertCircle size={32} className="text-green-400" />
@@ -182,7 +337,7 @@ const Admin = () => {
           <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-200 text-sm">Total Rôles</p>
+                <p className="text-purple-200 text-sm">{t.totalRoles}</p>
                 <p className="text-white text-2xl font-bold">{totalRoles}</p>
               </div>
               <Lock size={32} className="text-purple-400" />
@@ -192,7 +347,7 @@ const Admin = () => {
           <div className="bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-6 border border-orange-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-orange-200 text-sm">Audit Logs</p>
+                <p className="text-orange-200 text-sm">{t.auditLogs}</p>
                 <p className="text-white text-2xl font-bold">{auditCount}</p>
               </div>
               <Activity size={32} className="text-orange-400" />
@@ -202,7 +357,7 @@ const Admin = () => {
           <div className={`bg-gradient-to-br ${failedLogins === 0 ? 'from-green-900 to-green-800' : 'from-red-900 to-red-800'} rounded-lg p-6 border ${failedLogins === 0 ? 'border-green-700' : 'border-red-700'}`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`${failedLogins === 0 ? 'text-green-200' : 'text-red-200'} text-sm`}>Connexions Échouées</p>
+                <p className={`${failedLogins === 0 ? 'text-green-200' : 'text-red-200'} text-sm`}>{t.failedLogins}</p>
                 <p className="text-white text-2xl font-bold">{failedLogins}</p>
               </div>
               <Shield size={32} className={failedLogins === 0 ? 'text-green-400' : 'text-red-400'} />
@@ -212,10 +367,10 @@ const Admin = () => {
 
         {/* Tabs */}
         <div className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
-          <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Vue d'ensemble</button>
-          <button onClick={() => setActiveTab('users')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'users' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Utilisateurs ({totalUsers})</button>
-          <button onClick={() => setActiveTab('roles')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'roles' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Rôles ({totalRoles})</button>
-          <button onClick={() => setActiveTab('audit')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'audit' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>Audit Log</button>
+          <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.overview}</button>
+          <button onClick={() => setActiveTab('users')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'users' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.users} ({totalUsers})</button>
+          <button onClick={() => setActiveTab('roles')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'roles' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.roles} ({totalRoles})</button>
+          <button onClick={() => setActiveTab('audit')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'audit' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.audit}</button>
         </div>
 
         {/* Vue d'ensemble */}
@@ -223,7 +378,7 @@ const Admin = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Distribution des rôles */}
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">Distribution des Rôles</h3>
+              <h3 className="text-white font-bold mb-4">{t.roleDistribution}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie data={roleDistribution.filter(r => r.count > 0)} cx="50%" cy="50%" labelLine={false} label={({ name, count }) => `${name}: ${count}`} outerRadius={80} fill="#8884d8" dataKey="count">
@@ -238,7 +393,7 @@ const Admin = () => {
 
             {/* Activité par type d'action */}
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">Activité par Type d'Action</h3>
+              <h3 className="text-white font-bold mb-4">{t.activityByType}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={auditActivity}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
@@ -252,7 +407,7 @@ const Admin = () => {
 
             {/* Activité quotidienne */}
             <div className="lg:col-span-2 bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">Activité Quotidienne (7 derniers jours)</h3>
+              <h3 className="text-white font-bold mb-4">{t.dailyActivity}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={dailyActivity}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
@@ -272,19 +427,19 @@ const Admin = () => {
           <div>
             <div className="flex justify-end mb-4">
               <button onClick={() => { setEditingId(null); setUserFormData({ nom: '', email: '', role: 'Viewer', statut: 'Actif', dateCreation: new Date().toISOString().split('T')[0] }); setShowUserModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
-                <Plus size={20} /> Nouvel Utilisateur
+                <Plus size={20} /> {t.newUser}
               </button>
             </div>
             <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-slate-700">
                   <tr>
-                    <th className="px-4 py-2 text-left text-white font-bold">Nom</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Email</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Rôle</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Statut</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Date Création</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">Actions</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.nom}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.email}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.role}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.dateCreation}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -295,7 +450,7 @@ const Admin = () => {
                       <td className="px-4 py-2 text-slate-300">{u.role}</td>
                       <td className="px-4 py-2">
                         <span className={`px-2 py-1 rounded text-xs font-semibold ${u.statut === 'Actif' ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'}`}>
-                          {u.statut}
+                          {u.statut === 'Actif' ? t.active : u.statut === 'Inactif' ? t.inactive : t.suspended}
                         </span>
                       </td>
                       <td className="px-4 py-2 text-slate-400 text-xs">{u.dateCreation}</td>
@@ -320,7 +475,7 @@ const Admin = () => {
           <div>
             <div className="flex justify-end mb-4">
               <button onClick={() => { setEditingId(null); setRoleFormData({ nom: '', permissions: [], description: '' }); setShowRoleModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
-                <Plus size={20} /> Nouveau Rôle
+                <Plus size={20} /> {t.newRole}
               </button>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -347,7 +502,7 @@ const Admin = () => {
                       </span>
                     ))}
                   </div>
-                  <p className="text-slate-400 text-xs mt-4">Utilisateurs: {users.filter(u => u.role === r.nom).length}</p>
+                  <p className="text-slate-400 text-xs mt-4">{t.userCount}: {users.filter(u => u.role === r.nom).length}</p>
                 </div>
               ))}
             </div>
@@ -360,11 +515,11 @@ const Admin = () => {
             <table className="w-full text-sm">
               <thead className="bg-slate-700">
                 <tr>
-                  <th className="px-4 py-2 text-left text-white font-bold">Utilisateur</th>
-                  <th className="px-4 py-2 text-left text-white font-bold">Action</th>
-                  <th className="px-4 py-2 text-left text-white font-bold">Module</th>
-                  <th className="px-4 py-2 text-left text-white font-bold">Timestamp</th>
-                  <th className="px-4 py-2 text-left text-white font-bold">Statut</th>
+                  <th className="px-4 py-2 text-left text-white font-bold">{t.utilisateur}</th>
+                  <th className="px-4 py-2 text-left text-white font-bold">{t.action}</th>
+                  <th className="px-4 py-2 text-left text-white font-bold">{t.module}</th>
+                  <th className="px-4 py-2 text-left text-white font-bold">{t.timestamp}</th>
+                  <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
                 </tr>
               </thead>
               <tbody>
@@ -376,7 +531,7 @@ const Admin = () => {
                     <td className="px-4 py-2 text-slate-400 text-xs">{log.timestamp}</td>
                     <td className="px-4 py-2">
                       <span className={`px-2 py-1 rounded text-xs font-semibold ${log.statut === 'Success' ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'}`}>
-                        {log.statut}
+                        {log.statut === 'Success' ? t.success : t.failed}
                       </span>
                     </td>
                   </tr>
@@ -392,22 +547,22 @@ const Admin = () => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
             <h2 className="text-2xl font-bold text-white mb-6">
-              {editingId ? 'Modifier Utilisateur' : 'Nouvel Utilisateur'}
+              {editingId ? t.editUser : t.newUser}
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Nom *</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.nom} *</label>
                 <input type="text" value={userFormData.nom} onChange={(e) => handleUserChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="Nom complet" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Email *</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.email} *</label>
                 <input type="email" value={userFormData.email} onChange={(e) => handleUserChange('email', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="email@seneswiss.sn" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Rôle</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.role}</label>
                 <select value={userFormData.role} onChange={(e) => handleUserChange('role', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
                   {roles.map(r => (
                     <option key={r.id} value={r.nom}>{r.nom}</option>
@@ -416,18 +571,18 @@ const Admin = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Statut</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.statut}</label>
                 <select value={userFormData.statut} onChange={(e) => handleUserChange('statut', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
-                  <option>Actif</option>
-                  <option>Inactif</option>
-                  <option>Suspendu</option>
+                  <option>{t.active}</option>
+                  <option>{t.inactive}</option>
+                  <option>{t.suspended}</option>
                 </select>
               </div>
             </div>
 
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowUserModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">Annuler</button>
-              <button onClick={handleSaveUser} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">{editingId ? 'Modifier' : 'Créer'}</button>
+              <button onClick={() => setShowUserModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">{t.annuler}</button>
+              <button onClick={handleSaveUser} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">{editingId ? t.modifier : t.creer}</button>
             </div>
           </div>
         </div>
@@ -438,29 +593,29 @@ const Admin = () => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
             <h2 className="text-2xl font-bold text-white mb-6">
-              {editingId ? 'Modifier Rôle' : 'Nouveau Rôle'}
+              {editingId ? t.editRole : t.newRole}
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Nom du Rôle *</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.nominRole} *</label>
                 <input type="text" value={roleFormData.nom} onChange={(e) => handleRoleChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="ex: Manager" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.description}</label>
                 <textarea value={roleFormData.description} onChange={(e) => handleRoleChange('description', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="Description du rôle" rows="3" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Permissions (séparées par virgule)</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.permissions}</label>
                 <textarea value={roleFormData.permissions.join(', ')} onChange={(e) => handleRoleChange('permissions', e.target.value.split(',').map(p => p.trim()))} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="Read, Create, Update, Delete" rows="3" />
               </div>
             </div>
 
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowRoleModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">Annuler</button>
-              <button onClick={handleSaveRole} className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">{editingId ? 'Modifier' : 'Créer'}</button>
+              <button onClick={() => setShowRoleModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">{t.annuler}</button>
+              <button onClick={handleSaveRole} className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">{editingId ? t.modifier : t.creer}</button>
             </div>
           </div>
         </div>
