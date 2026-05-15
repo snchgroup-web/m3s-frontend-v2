@@ -484,6 +484,7 @@ const RH = () => {
         {activeTab === 'membres' && (
           <PersonnelTable data={membres} type="membre" onEdit={handleEdit} onDelete={handleDelete} onAdd={openNewModal} />
         )}
+        </div>
       </div>
 
       {/* Modal Créer/Éditer */}
@@ -549,8 +550,6 @@ const RH = () => {
           </div>
         </div>
       )}
-        </div>
-      </div>
     </>
   );
 };
