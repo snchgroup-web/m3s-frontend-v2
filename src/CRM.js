@@ -462,6 +462,7 @@ const CRM = () => {
         {activeTab === 'dons' && (
           <Table data={dons} type="don" onEdit={handleEdit} onDelete={handleDelete} columns={[t.donateur, t.categorie, t.devise, t.montant]} />
         )}
+        </div>
       </div>
 
       {/* Modal */}
@@ -544,8 +545,6 @@ const CRM = () => {
           </div>
         </div>
       )}
-    </div>
-    </div>
     </>
   );
 };
