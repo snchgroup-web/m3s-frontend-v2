@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Cloud, CloudRain, Sun, Flag } from 'lucide-react';
+import { Cloud, Sun } from 'lucide-react';
 
 const Header = ({ title, language }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -25,16 +24,12 @@ const Header = ({ title, language }) => {
     timeZone: 'Europe/Zurich'
   });
 
-  const dateFormatted = currentDate.toLocaleDateString('fr-FR', {
+  const dateFormatted = new Date().toLocaleDateString('fr-FR', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric'
   });
-
-  // Mock weather data
-  const dakarWeather = { temp: 28, condition: 'Ensoleillé', icon: Sun };
-  const zurichWeather = { temp: 18, condition: 'Nuageux', icon: Cloud };
 
   const CHF_TO_CFA = '656 CFA';
 
