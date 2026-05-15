@@ -33,13 +33,14 @@ const mockDataBaseRaw = {
     { month: 'Jun', revenue: 67000, expenses: 41000 }
   ],
   moduleStats: {
-    finance: { revenue: 285000, expenses: 215000, balance: 70000 },
+    finance: { revenue: 285000, expenses: 215000, balance: 70000, donations: 15000, financing: 25000 },
     rh: { employees: 12, volunteers: 24, members: 156 },
     crm: { prospects: 45, clients: 28, donations: 18 },
-    production: { orders: 52, completed: 38, pending: 14 },
+    production: { orders: 52, completed: 38, pending: 14, stocks: 342, articles: 127 },
     actifs: { total: 1250000, depreciation: 125000 },
     ged: { documents: 847, recent: 12 },
-    tasks: { total: 234, completed: 178, pending: 56 }
+    tasks: { total: 234, completed: 178, pending: 56 },
+    caseStudies: 12
   }
 };
 
@@ -71,6 +72,10 @@ const Dashboard = () => {
       clients: 'Clients',
       orders: 'Commandes',
       documents: 'Documents',
+      stocks: 'Stocks',
+      articles: 'Articles',
+      donations: 'Dons',
+      financing: 'Financements',
       month: 'Mois',
       total: 'Total',
       kpi: 'KPI',
@@ -97,6 +102,10 @@ const Dashboard = () => {
       clients: 'Clients',
       orders: 'Orders',
       documents: 'Documents',
+      stocks: 'Stocks',
+      articles: 'Articles',
+      donations: 'Donations',
+      financing: 'Financing',
       month: 'Month',
       total: 'Total',
       kpi: 'KPI',
@@ -123,6 +132,10 @@ const Dashboard = () => {
       clients: 'Kunden',
       orders: 'Bestellungen',
       documents: 'Dokumente',
+      stocks: 'Lagerbestände',
+      articles: 'Artikel',
+      donations: 'Spenden',
+      financing: 'Finanzierung',
       month: 'Monat',
       total: 'Gesamt',
       kpi: 'KPI',
@@ -213,36 +226,70 @@ const Dashboard = () => {
       <div className="overflow-auto">
         <div className="p-6 space-y-6">
           {/* KPI Cards - Reduced Size */}
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-4 shadow-lg">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
+            <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-3 shadow-lg">
               <p className="text-green-100 text-xs font-medium">{t.revenue}</p>
-              <p className="text-lg font-bold mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue)}</p>
-              <p className="text-green-200 text-xs mt-1">+12% ce mois</p>
+              <p className="text-base font-bold mt-1 truncate">{dashboardData?.moduleStats.finance.revenue.toLocaleString()}</p>
+              <p className="text-green-200 text-xs mt-1">CHF</p>
             </div>
-            <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-lg p-4 shadow-lg">
+            <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-lg p-3 shadow-lg">
               <p className="text-red-100 text-xs font-medium">{t.expenses}</p>
-              <p className="text-lg font-bold mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses)}</p>
-              <p className="text-red-200 text-xs mt-1">+5% ce mois</p>
+              <p className="text-base font-bold mt-1 truncate">{dashboardData?.moduleStats.finance.expenses.toLocaleString()}</p>
+              <p className="text-red-200 text-xs mt-1">CHF</p>
             </div>
-            <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-4 shadow-lg">
+            <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-3 shadow-lg">
               <p className="text-blue-100 text-xs font-medium">{t.balance}</p>
-              <p className="text-lg font-bold mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.balance)}</p>
-              <p className="text-blue-200 text-xs mt-1">Solde positif</p>
+              <p className="text-base font-bold mt-1 truncate">{dashboardData?.moduleStats.finance.balance.toLocaleString()}</p>
+              <p className="text-blue-200 text-xs mt-1">CHF</p>
             </div>
-            <div className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-4 shadow-lg">
-              <p className="text-purple-100 text-xs font-medium">Total Staff</p>
-              <p className="text-lg font-bold mt-1">{dashboardData?.moduleStats.rh.employees + dashboardData?.moduleStats.rh.volunteers + dashboardData?.moduleStats.rh.members}</p>
-              <p className="text-purple-200 text-xs mt-1">Tous les statuts</p>
+            <div className="bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-lg p-3 shadow-lg">
+              <p className="text-yellow-100 text-xs font-medium">{t.donations}</p>
+              <p className="text-base font-bold mt-1 truncate">{dashboardData?.moduleStats.finance.donations.toLocaleString()}</p>
+              <p className="text-yellow-200 text-xs mt-1">CHF</p>
             </div>
-            <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-lg p-4 shadow-lg">
-              <p className="text-indigo-100 text-xs font-medium">Documents</p>
-              <p className="text-lg font-bold mt-1">{dashboardData?.moduleStats.ged.documents}</p>
-              <p className="text-indigo-200 text-xs mt-1">En stock</p>
+            <div className="bg-gradient-to-br from-cyan-600 to-cyan-700 rounded-lg p-3 shadow-lg">
+              <p className="text-cyan-100 text-xs font-medium">{t.financing}</p>
+              <p className="text-base font-bold mt-1 truncate">{dashboardData?.moduleStats.finance.financing.toLocaleString()}</p>
+              <p className="text-cyan-200 text-xs mt-1">CHF</p>
             </div>
-            <div className="bg-gradient-to-br from-orange-600 to-orange-700 rounded-lg p-4 shadow-lg">
-              <p className="text-orange-100 text-xs font-medium">Tâches</p>
-              <p className="text-lg font-bold mt-1">{dashboardData?.moduleStats.tasks.pending}</p>
-              <p className="text-orange-200 text-xs mt-1">En attente</p>
+            <div className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-3 shadow-lg">
+              <p className="text-purple-100 text-xs font-medium">Staff</p>
+              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.rh.employees + dashboardData?.moduleStats.rh.volunteers + dashboardData?.moduleStats.rh.members}</p>
+              <p className="text-purple-200 text-xs mt-1">Total</p>
+            </div>
+            <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-lg p-3 shadow-lg">
+              <p className="text-indigo-100 text-xs font-medium">{t.documents}</p>
+              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.ged.documents}</p>
+              <p className="text-indigo-200 text-xs mt-1">Files</p>
+            </div>
+            <div className="bg-gradient-to-br from-orange-600 to-orange-700 rounded-lg p-3 shadow-lg">
+              <p className="text-orange-100 text-xs font-medium">Tasks</p>
+              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.tasks.pending}</p>
+              <p className="text-orange-200 text-xs mt-1">Pending</p>
+            </div>
+          </div>
+
+          {/* Additional Stats Row */}
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3">
+            <div className="bg-gradient-to-br from-rose-600 to-rose-700 rounded-lg p-3 shadow-lg">
+              <p className="text-rose-100 text-xs font-medium">Stocks</p>
+              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.production.stocks}</p>
+              <p className="text-rose-200 text-xs mt-1">{t.stocks}</p>
+            </div>
+            <div className="bg-gradient-to-br from-pink-600 to-pink-700 rounded-lg p-3 shadow-lg">
+              <p className="text-pink-100 text-xs font-medium">Articles</p>
+              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.production.articles}</p>
+              <p className="text-pink-200 text-xs mt-1">{t.articles}</p>
+            </div>
+            <div className="bg-gradient-to-br from-teal-600 to-teal-700 rounded-lg p-3 shadow-lg">
+              <p className="text-teal-100 text-xs font-medium">Clients</p>
+              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.crm.clients}</p>
+              <p className="text-teal-200 text-xs mt-1">Active</p>
+            </div>
+            <div className="bg-gradient-to-br from-lime-600 to-lime-700 rounded-lg p-3 shadow-lg">
+              <p className="text-lime-100 text-xs font-medium">Orders</p>
+              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.production.orders}</p>
+              <p className="text-lime-200 text-xs mt-1">Total</p>
             </div>
           </div>
 
