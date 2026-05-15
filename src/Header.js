@@ -4,6 +4,7 @@ import { Cloud, Sun, LayoutDashboard, Globe } from 'lucide-react';
 const Header = ({ title, icon, subtitle, language, setLanguage }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [userName, setUserName] = useState('Utilisateur M3S');
+  const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -15,20 +16,19 @@ const Header = ({ title, icon, subtitle, language, setLanguage }) => {
   // Get user name from localStorage
   useEffect(() => {
     try {
-      // Try to get user from localStorage
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
         const user = JSON.parse(storedUser);
-        // Check for 'name' property
-        if (user.name && user.name !== 'Utilisateur M3S') {
+        if (user.name) {
           setUserName(user.name);
+        }
+        if (user.role) {
+          setUserRole(user.role);
         }
       }
 
-      // Also check for token to see if user is logged in
       const token = localStorage.getItem('token');
       if (!token) {
-        // User not logged in, use default
         setUserName('Invité');
       }
     } catch (e) {
@@ -178,7 +178,7 @@ const Header = ({ title, icon, subtitle, language, setLanguage }) => {
           {/* Utilisateur */}
           <div className="text-right text-sm">
             <p className="text-white font-semibold">{userName}</p>
-            <p className="text-slate-400">{t.manager}</p>
+            <p className="text-slate-400">{userRole || t.manager}</p>
           </div>
         </div>
       </div>
