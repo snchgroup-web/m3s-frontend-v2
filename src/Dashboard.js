@@ -16,10 +16,13 @@ const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 // Exchange rate: 1 CHF = 656 CFA
 const CHF_TO_CFA_RATE = 656;
 
-// Format currency with both CHF and CFA
+// Format currency with both CHF and CFA - returns object for separate display
 const formatDualCurrency = (chfAmount) => {
   const cfaAmount = Math.round(chfAmount * CHF_TO_CFA_RATE);
-  return `${chfAmount.toLocaleString()} CHF / ${cfaAmount.toLocaleString()} CFA`;
+  return {
+    chf: chfAmount.toLocaleString(),
+    cfa: cfaAmount.toLocaleString()
+  };
 };
 
 // Mock data (stable constant, defined at module level)
@@ -235,23 +238,38 @@ const Dashboard = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
             <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-3 shadow-lg">
               <p className="text-green-100 text-xs font-medium">{t.revenue}</p>
-              <p className="text-sm font-bold mt-1 break-words">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue)}</p>
+              <div className="text-xs font-bold mt-1 leading-tight">
+                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).chf} CHF</p>
+                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).cfa} CFA</p>
+              </div>
             </div>
             <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-lg p-3 shadow-lg">
               <p className="text-red-100 text-xs font-medium">{t.expenses}</p>
-              <p className="text-sm font-bold mt-1 break-words">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses)}</p>
+              <div className="text-xs font-bold mt-1 leading-tight">
+                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).chf} CHF</p>
+                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).cfa} CFA</p>
+              </div>
             </div>
             <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-3 shadow-lg">
               <p className="text-blue-100 text-xs font-medium">{t.balance}</p>
-              <p className="text-sm font-bold mt-1 break-words">{formatDualCurrency(dashboardData?.moduleStats.finance.balance)}</p>
+              <div className="text-xs font-bold mt-1 leading-tight">
+                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.balance).chf} CHF</p>
+                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.balance).cfa} CFA</p>
+              </div>
             </div>
             <div className="bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-lg p-3 shadow-lg">
               <p className="text-yellow-100 text-xs font-medium">{t.donations}</p>
-              <p className="text-sm font-bold mt-1 break-words">{formatDualCurrency(dashboardData?.moduleStats.finance.donations)}</p>
+              <div className="text-xs font-bold mt-1 leading-tight">
+                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.donations).chf} CHF</p>
+                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.donations).cfa} CFA</p>
+              </div>
             </div>
             <div className="bg-gradient-to-br from-cyan-600 to-cyan-700 rounded-lg p-3 shadow-lg">
               <p className="text-cyan-100 text-xs font-medium">{t.financing}</p>
-              <p className="text-sm font-bold mt-1 break-words">{formatDualCurrency(dashboardData?.moduleStats.finance.financing)}</p>
+              <div className="text-xs font-bold mt-1 leading-tight">
+                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.financing).chf} CHF</p>
+                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.financing).cfa} CFA</p>
+              </div>
             </div>
             <div className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-3 shadow-lg">
               <p className="text-purple-100 text-xs font-medium">Staff</p>

@@ -16,10 +16,13 @@ const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
 // Exchange rate: 1 CHF = 656 CFA
 const CHF_TO_CFA_RATE = 656;
 
-// Format currency with both CHF and CFA
+// Format currency with both CHF and CFA - returns object for separate display
 const formatDualCurrency = (chfAmount) => {
   const cfaAmount = Math.round(chfAmount * CHF_TO_CFA_RATE);
-  return `${chfAmount.toLocaleString()} CHF / ${cfaAmount.toLocaleString()} CFA`;
+  return {
+    chf: chfAmount.toLocaleString(),
+    cfa: cfaAmount.toLocaleString()
+  };
 };
 
 const Finance = () => {
@@ -260,7 +263,10 @@ const Finance = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-green-200 text-xs">{t.totalRecettes}</p>
-                <p className="text-white text-lg font-bold">{formatDualCurrency(totalRecettes)}</p>
+                <div className="text-xs font-bold mt-1 leading-tight">
+                  <p className="text-white">{formatDualCurrency(totalRecettes).chf} CHF</p>
+                  <p className="text-white">{formatDualCurrency(totalRecettes).cfa} CFA</p>
+                </div>
               </div>
               <TrendingUp size={24} className="text-green-400" />
             </div>
@@ -270,7 +276,10 @@ const Finance = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-red-200 text-xs">{t.totalDepenses}</p>
-                <p className="text-white text-lg font-bold">{formatDualCurrency(totalDepenses)}</p>
+                <div className="text-xs font-bold mt-1 leading-tight">
+                  <p className="text-white">{formatDualCurrency(totalDepenses).chf} CHF</p>
+                  <p className="text-white">{formatDualCurrency(totalDepenses).cfa} CFA</p>
+                </div>
               </div>
               <TrendingDown size={24} className="text-red-400" />
             </div>
@@ -280,7 +289,10 @@ const Finance = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className={`${solde >= 0 ? 'text-blue-200' : 'text-orange-200'} text-xs`}>{t.soldeNet}</p>
-                <p className="text-white text-lg font-bold">{formatDualCurrency(solde)}</p>
+                <div className="text-xs font-bold mt-1 leading-tight">
+                  <p className="text-white">{formatDualCurrency(solde).chf} CHF</p>
+                  <p className="text-white">{formatDualCurrency(solde).cfa} CFA</p>
+                </div>
               </div>
               <DollarSign size={24} className={solde >= 0 ? 'text-blue-400' : 'text-orange-400'} />
             </div>
