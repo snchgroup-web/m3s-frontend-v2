@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import Header from './Header';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -205,55 +206,43 @@ const Dashboard = () => {
 
   return (
     <>
-      {/* Header */}
-      <div className="bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-600 p-6 sticky top-0 z-10">
-        <div className="flex justify-between items-center">
-          <div>
-            <h2 className="text-3xl font-bold">{t.dashboard}</h2>
-            <p className="text-slate-400 text-sm mt-1">{t.welcome}, {user?.name}</p>
-          </div>
-          <div className="flex items-center space-x-4">
-            <select
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
-              className="bg-slate-700 border border-slate-600 rounded px-3 py-2 text-sm hover:bg-slate-600"
-            >
-              <option value="FR">Français</option>
-              <option value="EN">English</option>
-              <option value="DE">Deutsch</option>
-            </select>
-            <div className="text-right">
-              <p className="text-sm font-medium">{user?.name}</p>
-              <p className="text-xs text-slate-400">{user?.role}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* New Header */}
+      <Header title={t.dashboard} language={language} />
 
       {/* Content */}
       <div className="overflow-auto">
         <div className="p-6 space-y-6">
-          {/* KPI Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-6 shadow-lg">
-              <p className="text-green-100 text-sm font-medium">{t.revenue}</p>
-              <p className="text-3xl font-bold mt-2">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue)}</p>
-              <p className="text-green-200 text-xs mt-2">+12% ce mois</p>
+          {/* KPI Cards - Reduced Size */}
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-4 shadow-lg">
+              <p className="text-green-100 text-xs font-medium">{t.revenue}</p>
+              <p className="text-lg font-bold mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue)}</p>
+              <p className="text-green-200 text-xs mt-1">+12% ce mois</p>
             </div>
-            <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-lg p-6 shadow-lg">
-              <p className="text-red-100 text-sm font-medium">{t.expenses}</p>
-              <p className="text-3xl font-bold mt-2">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses)}</p>
-              <p className="text-red-200 text-xs mt-2">+5% ce mois</p>
+            <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-lg p-4 shadow-lg">
+              <p className="text-red-100 text-xs font-medium">{t.expenses}</p>
+              <p className="text-lg font-bold mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses)}</p>
+              <p className="text-red-200 text-xs mt-1">+5% ce mois</p>
             </div>
-            <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-6 shadow-lg">
-              <p className="text-blue-100 text-sm font-medium">{t.balance}</p>
-              <p className="text-3xl font-bold mt-2">{formatDualCurrency(dashboardData?.moduleStats.finance.balance)}</p>
-              <p className="text-blue-200 text-xs mt-2">Solde positif</p>
+            <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-4 shadow-lg">
+              <p className="text-blue-100 text-xs font-medium">{t.balance}</p>
+              <p className="text-lg font-bold mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.balance)}</p>
+              <p className="text-blue-200 text-xs mt-1">Solde positif</p>
             </div>
-            <div className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-6 shadow-lg">
-              <p className="text-purple-100 text-sm font-medium">{t.total} {t.employees}</p>
-              <p className="text-3xl font-bold mt-2">{dashboardData?.moduleStats.rh.employees + dashboardData?.moduleStats.rh.volunteers + dashboardData?.moduleStats.rh.members}</p>
-              <p className="text-purple-200 text-xs mt-2">Tous les statuts</p>
+            <div className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-4 shadow-lg">
+              <p className="text-purple-100 text-xs font-medium">Total Staff</p>
+              <p className="text-lg font-bold mt-1">{dashboardData?.moduleStats.rh.employees + dashboardData?.moduleStats.rh.volunteers + dashboardData?.moduleStats.rh.members}</p>
+              <p className="text-purple-200 text-xs mt-1">Tous les statuts</p>
+            </div>
+            <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-lg p-4 shadow-lg">
+              <p className="text-indigo-100 text-xs font-medium">Documents</p>
+              <p className="text-lg font-bold mt-1">{dashboardData?.moduleStats.ged.documents}</p>
+              <p className="text-indigo-200 text-xs mt-1">En stock</p>
+            </div>
+            <div className="bg-gradient-to-br from-orange-600 to-orange-700 rounded-lg p-4 shadow-lg">
+              <p className="text-orange-100 text-xs font-medium">Tâches</p>
+              <p className="text-lg font-bold mt-1">{dashboardData?.moduleStats.tasks.pending}</p>
+              <p className="text-orange-200 text-xs mt-1">En attente</p>
             </div>
           </div>
 

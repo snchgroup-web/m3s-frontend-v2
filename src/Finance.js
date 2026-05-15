@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
+import Header from './Header';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -248,52 +249,50 @@ const Finance = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
-      <div className="max-w-7xl mx-auto">
+    <>
+      <Header title={t.title} language={language} />
 
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">📊 {t.title}</h1>
-          <p className="text-slate-400">{t.subtitle}</p>
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+        <div className="max-w-7xl mx-auto">
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-8">
+          <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-4 border border-green-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-200 text-sm">{t.totalRecettes}</p>
-                <p className="text-white text-2xl font-bold">{formatDualCurrency(totalRecettes)}</p>
+                <p className="text-green-200 text-xs">{t.totalRecettes}</p>
+                <p className="text-white text-lg font-bold">{formatDualCurrency(totalRecettes)}</p>
               </div>
-              <TrendingUp size={32} className="text-green-400" />
+              <TrendingUp size={24} className="text-green-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-6 border border-red-700">
+          <div className="bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-4 border border-red-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-red-200 text-sm">{t.totalDepenses}</p>
-                <p className="text-white text-2xl font-bold">{formatDualCurrency(totalDepenses)}</p>
+                <p className="text-red-200 text-xs">{t.totalDepenses}</p>
+                <p className="text-white text-lg font-bold">{formatDualCurrency(totalDepenses)}</p>
               </div>
-              <TrendingDown size={32} className="text-red-400" />
+              <TrendingDown size={24} className="text-red-400" />
             </div>
           </div>
 
-          <div className={`bg-gradient-to-br ${solde >= 0 ? 'from-blue-900 to-blue-800' : 'from-orange-900 to-orange-800'} rounded-lg p-6 border ${solde >= 0 ? 'border-blue-700' : 'border-orange-700'}`}>
+          <div className={`bg-gradient-to-br ${solde >= 0 ? 'from-blue-900 to-blue-800' : 'from-orange-900 to-orange-800'} rounded-lg p-4 border ${solde >= 0 ? 'border-blue-700' : 'border-orange-700'}`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`${solde >= 0 ? 'text-blue-200' : 'text-orange-200'} text-sm`}>{t.soldeNet}</p>
-                <p className="text-white text-2xl font-bold">{formatDualCurrency(solde)}</p>
+                <p className={`${solde >= 0 ? 'text-blue-200' : 'text-orange-200'} text-xs`}>{t.soldeNet}</p>
+                <p className="text-white text-lg font-bold">{formatDualCurrency(solde)}</p>
               </div>
-              <DollarSign size={32} className={solde >= 0 ? 'text-blue-400' : 'text-orange-400'} />
+              <DollarSign size={24} className={solde >= 0 ? 'text-blue-400' : 'text-orange-400'} />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
+          <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-4 border border-purple-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-200 text-sm">{t.tauxFX}</p>
-                <p className="text-white text-2xl font-bold">662 CFA</p>
+                <p className="text-purple-200 text-xs">{t.tauxFX}</p>
+                <p className="text-white text-lg font-bold">656 CFA</p>
               </div>
-              <ArrowRightLeft size={32} className="text-purple-400" />
+              <ArrowRightLeft size={24} className="text-purple-400" />
             </div>
           </div>
         </div>
@@ -523,6 +522,8 @@ const Finance = () => {
         </div>
       )}
     </div>
+      </div>
+    </>
   );
 };
 

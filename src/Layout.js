@@ -95,15 +95,29 @@ const Layout = ({ children }) => {
 
         {/* Header */}
         <div className="p-4 border-b border-slate-700 flex items-center justify-between">
-          {sidebarOpen && <h1 className="text-xl font-bold text-blue-400">M3S v2.0</h1>}
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-slate-700 rounded">
+          {sidebarOpen && (
+            <div className="flex flex-col space-y-1">
+              <div className="flex items-center space-x-2">
+                {/* Logo placeholder */}
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">2SG</span>
+                </div>
+                <div>
+                  <h1 className="text-sm font-bold text-blue-400">2SG</h1>
+                  <p className="text-xs text-slate-400">SeneSwiss Group</p>
+                </div>
+              </div>
+              <p className="text-xs text-slate-500">M3S - Management System</p>
+            </div>
+          )}
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-slate-700 rounded flex-shrink-0">
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
 
         {/* Expand All Button */}
         {sidebarOpen && (
-          <div className="p-2 border-b border-slate-700">
+          <div className="p-4 border-b border-slate-700">
             <button
               onClick={toggleExpandAll}
               className="w-full flex items-center justify-center space-x-2 px-3 py-2 text-xs bg-slate-700 hover:bg-slate-600 rounded transition"
@@ -131,13 +145,12 @@ const Layout = ({ children }) => {
               {/* Menu Item Principal */}
               <button
                 onClick={() => {
+                  // Always navigate to the main item's path
+                  setExpandedMenus({});
+                  handleMenuItemClick(item.path);
+                  // If item has children, optionally expand them for discovery
                   if (sidebarOpen && item.children && item.children.length > 0) {
-                    // Sidebar expanded: toggle menu for expandable items
-                    toggleMenu(item.id);
-                  } else {
-                    // Sidebar collapsed or leaf item: navigate
-                    setExpandedMenus({});
-                    handleMenuItemClick(item.path);
+                    setExpandedMenus({ [item.id]: true });
                   }
                 }}
                 title={!sidebarOpen ? (item.label[language] || item.label.FR) : undefined}
