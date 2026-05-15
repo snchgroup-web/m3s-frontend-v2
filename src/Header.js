@@ -18,21 +18,27 @@ const Header = ({ title, language }) => {
       sunny: 'Ensoleillé',
       zurich: 'Zurich',
       cloudy: 'Nuageux',
-      exchangeRate: '1 CHF = 656 CFA'
+      exchangeRate: '1 CHF = 656 CFA',
+      user: 'Utilisateur M3S',
+      manager: 'Manager'
     },
     EN: {
       dakar: 'Dakar',
       sunny: 'Sunny',
       zurich: 'Zurich',
       cloudy: 'Cloudy',
-      exchangeRate: '1 CHF = 656 CFA'
+      exchangeRate: '1 CHF = 656 CFA',
+      user: 'M3S User',
+      manager: 'Manager'
     },
     DE: {
       dakar: 'Dakar',
       sunny: 'Sonnig',
       zurich: 'Zurich',
       cloudy: 'Bewölkt',
-      exchangeRate: '1 CHF = 656 CFA'
+      exchangeRate: '1 CHF = 656 CFA',
+      user: 'M3S Benutzer',
+      manager: 'Manager'
     }
   };
 
@@ -59,57 +65,69 @@ const Header = ({ title, language }) => {
   });
 
   return (
-    <div className="bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-600 px-6 py-3">
-      {/* Header sur une seule ligne */}
+    <div className="bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-600 px-6 py-4">
+      {/* Header sur une seule ligne - Plus grand */}
       <div className="flex justify-between items-center">
         {/* Titre à gauche */}
-        <h1 className="text-xl font-bold text-white">{title}</h1>
+        <h1 className="text-2xl font-bold text-white">{title}</h1>
 
-        {/* Centre - Infos Dakar et Zurich */}
-        <div className="flex items-center space-x-3 text-xs">
-          {/* Dakar */}
-          <div className="flex items-center space-x-1 bg-slate-700/50 rounded px-2 py-1">
-            <span>🇸🇳</span>
-            <span className="text-slate-300 font-medium">{t.dakar}</span>
-            <span className="text-slate-400">{dakarTime}</span>
+        {/* Centre - Dakar, Date + Taux, Zurich */}
+        <div className="flex items-center space-x-4 text-xs">
+          {/* SENEGAL - Dakar */}
+          <div className="flex items-center space-x-2 bg-slate-700/50 rounded px-3 py-2">
+            <span className="text-xl">🇸🇳</span>
+            <div>
+              <p className="text-slate-300 font-semibold">{t.dakar}</p>
+              <p className="text-slate-400">{dakarTime}</p>
+            </div>
           </div>
 
           {/* Météo Dakar */}
-          <div className="flex items-center space-x-1 bg-slate-700/50 rounded px-2 py-1">
-            <Sun size={14} className="text-yellow-400" />
-            <span className="text-slate-300">28°C</span>
-            <span className="text-slate-400">{t.sunny}</span>
+          <div className="flex items-center space-x-1 bg-slate-700/50 rounded px-3 py-2">
+            <Sun size={16} className="text-yellow-400" />
+            <div>
+              <p className="text-slate-300 font-semibold">28°C</p>
+              <p className="text-slate-400">{t.sunny}</p>
+            </div>
           </div>
 
           {/* Séparateur */}
-          <div className="w-px h-4 bg-slate-600"></div>
+          <div className="w-px h-8 bg-slate-600"></div>
 
-          {/* Date & Taux */}
-          <div className="flex items-center space-x-1 bg-blue-600/30 rounded px-2 py-1 border border-blue-500/50">
-            <span className="text-blue-300 font-bold">{t.exchangeRate}</span>
+          {/* Date et Taux de Change - Centre */}
+          <div className="flex flex-col items-center space-y-1">
+            <div className="text-slate-300 font-semibold">{dateFormatted}</div>
+            <div className="bg-blue-600/30 rounded px-3 py-1 border border-blue-500/50">
+              <p className="text-blue-300 font-bold text-xs">{t.exchangeRate}</p>
+            </div>
           </div>
 
           {/* Séparateur */}
-          <div className="w-px h-4 bg-slate-600"></div>
+          <div className="w-px h-8 bg-slate-600"></div>
 
-          {/* Méteo Zurich */}
-          <div className="flex items-center space-x-1 bg-slate-700/50 rounded px-2 py-1">
-            <Cloud size={14} className="text-slate-400" />
-            <span className="text-slate-300">18°C</span>
-            <span className="text-slate-400">{t.cloudy}</span>
+          {/* Météo Zurich */}
+          <div className="flex items-center space-x-1 bg-slate-700/50 rounded px-3 py-2">
+            <Cloud size={16} className="text-slate-300" />
+            <div>
+              <p className="text-slate-300 font-semibold">18°C</p>
+              <p className="text-slate-400">{t.cloudy}</p>
+            </div>
           </div>
 
-          {/* Zurich */}
-          <div className="flex items-center space-x-1 bg-slate-700/50 rounded px-2 py-1">
-            <span>🇨🇭</span>
-            <span className="text-slate-300 font-medium">{t.zurich}</span>
-            <span className="text-slate-400">{zurichTime}</span>
+          {/* SUISSE - Zurich */}
+          <div className="flex items-center space-x-2 bg-slate-700/50 rounded px-3 py-2">
+            <span className="text-xl">🇨🇭</span>
+            <div>
+              <p className="text-slate-300 font-semibold">{t.zurich}</p>
+              <p className="text-slate-400">{zurichTime}</p>
+            </div>
           </div>
         </div>
 
-        {/* Date à droite */}
-        <div className="text-xs text-slate-300 text-right">
-          <p className="font-medium capitalize">{dateFormatted}</p>
+        {/* Utilisateur à droite */}
+        <div className="text-right text-sm">
+          <p className="text-white font-semibold">{t.user}</p>
+          <p className="text-slate-400">{t.manager}</p>
         </div>
       </div>
     </div>

@@ -80,13 +80,11 @@ const Layout = ({ children }) => {
           {sidebarOpen && (
             <div className="flex flex-col space-y-2">
               <div className="flex items-center space-x-2">
-                {/* Logo placeholder */}
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded flex items-center justify-center flex-shrink-0">
-                  <span className="text-white font-bold text-xs">2SG</span>
-                </div>
+                {/* Logo Image */}
+                <img src="/assets/logo-2sg.svg" alt="2SG Logo" className="w-10 h-10 rounded flex-shrink-0" />
                 <h1 className="text-sm font-bold text-blue-400">2SG - SeneSwiss Group</h1>
               </div>
-              <p className="text-xs text-slate-500 pl-10">M3S v2.0 - Management System</p>
+              <p className="text-xs text-slate-500 pl-12">M3S v2.0 - Management System</p>
             </div>
           )}
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-slate-700 rounded flex-shrink-0">
