@@ -90,7 +90,7 @@ const Header = ({ title, language, setLanguage }) => {
   });
 
   return (
-    <div className="bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-600 px-6 py-5">
+    <div className="bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-600 px-6 py-6">
       {/* Header sur une seule ligne - Plus grand */}
       <div className="flex justify-between items-center gap-6">
         {/* Titre à gauche */}
