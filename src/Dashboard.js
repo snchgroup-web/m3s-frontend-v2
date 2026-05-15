@@ -13,7 +13,14 @@ const monthTranslations = {
 
 const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
-// Exchange rate: 1 CHF = 656 CFA (not needed in Dashboard, using toLocaleString instead)
+// Exchange rate: 1 CHF = 656 CFA
+const CHF_TO_CFA_RATE = 656;
+
+// Format currency with both CHF and CFA
+const formatDualCurrency = (chfAmount) => {
+  const cfaAmount = Math.round(chfAmount * CHF_TO_CFA_RATE);
+  return `${chfAmount.toLocaleString()} CHF / ${cfaAmount.toLocaleString()} CFA`;
+};
 
 // Mock data (stable constant, defined at module level)
 const mockDataBaseRaw = {
@@ -69,6 +76,8 @@ const Dashboard = () => {
       articles: 'Articles',
       donations: 'Dons',
       financing: 'Financements',
+      files: 'Fichiers',
+      totalTasks: 'Tâches Totales',
       month: 'Mois',
       total: 'Total',
       kpi: 'KPI',
@@ -99,6 +108,8 @@ const Dashboard = () => {
       articles: 'Articles',
       donations: 'Donations',
       financing: 'Financing',
+      files: 'Files',
+      totalTasks: 'Total Tasks',
       month: 'Month',
       total: 'Total',
       kpi: 'KPI',
@@ -129,6 +140,8 @@ const Dashboard = () => {
       articles: 'Artikel',
       donations: 'Spenden',
       financing: 'Finanzierung',
+      files: 'Dateien',
+      totalTasks: 'Gesamtaufgaben',
       month: 'Monat',
       total: 'Gesamt',
       kpi: 'KPI',
@@ -222,28 +235,23 @@ const Dashboard = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
             <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-3 shadow-lg">
               <p className="text-green-100 text-xs font-medium">{t.revenue}</p>
-              <p className="text-base font-bold mt-1 truncate">{dashboardData?.moduleStats.finance.revenue.toLocaleString()}</p>
-              <p className="text-green-200 text-xs mt-1">CHF</p>
+              <p className="text-base font-bold mt-1 truncate">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue)}</p>
             </div>
             <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-lg p-3 shadow-lg">
               <p className="text-red-100 text-xs font-medium">{t.expenses}</p>
-              <p className="text-base font-bold mt-1 truncate">{dashboardData?.moduleStats.finance.expenses.toLocaleString()}</p>
-              <p className="text-red-200 text-xs mt-1">CHF</p>
+              <p className="text-base font-bold mt-1 truncate">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses)}</p>
             </div>
             <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-3 shadow-lg">
               <p className="text-blue-100 text-xs font-medium">{t.balance}</p>
-              <p className="text-base font-bold mt-1 truncate">{dashboardData?.moduleStats.finance.balance.toLocaleString()}</p>
-              <p className="text-blue-200 text-xs mt-1">CHF</p>
+              <p className="text-base font-bold mt-1 truncate">{formatDualCurrency(dashboardData?.moduleStats.finance.balance)}</p>
             </div>
             <div className="bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-lg p-3 shadow-lg">
               <p className="text-yellow-100 text-xs font-medium">{t.donations}</p>
-              <p className="text-base font-bold mt-1 truncate">{dashboardData?.moduleStats.finance.donations.toLocaleString()}</p>
-              <p className="text-yellow-200 text-xs mt-1">CHF</p>
+              <p className="text-base font-bold mt-1 truncate">{formatDualCurrency(dashboardData?.moduleStats.finance.donations)}</p>
             </div>
             <div className="bg-gradient-to-br from-cyan-600 to-cyan-700 rounded-lg p-3 shadow-lg">
               <p className="text-cyan-100 text-xs font-medium">{t.financing}</p>
-              <p className="text-base font-bold mt-1 truncate">{dashboardData?.moduleStats.finance.financing.toLocaleString()}</p>
-              <p className="text-cyan-200 text-xs mt-1">CHF</p>
+              <p className="text-base font-bold mt-1 truncate">{formatDualCurrency(dashboardData?.moduleStats.finance.financing)}</p>
             </div>
             <div className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-3 shadow-lg">
               <p className="text-purple-100 text-xs font-medium">Staff</p>
@@ -253,12 +261,12 @@ const Dashboard = () => {
             <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-lg p-3 shadow-lg">
               <p className="text-indigo-100 text-xs font-medium">{t.documents}</p>
               <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.ged.documents}</p>
-              <p className="text-indigo-200 text-xs mt-1">Files</p>
+              <p className="text-indigo-200 text-xs mt-1">{t.files}</p>
             </div>
             <div className="bg-gradient-to-br from-orange-600 to-orange-700 rounded-lg p-3 shadow-lg">
-              <p className="text-orange-100 text-xs font-medium">Tasks</p>
-              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.tasks.pending}</p>
-              <p className="text-orange-200 text-xs mt-1">Pending</p>
+              <p className="text-orange-100 text-xs font-medium">{t.totalTasks}</p>
+              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.tasks.total}</p>
+              <p className="text-orange-200 text-xs mt-1">{t.total}</p>
             </div>
           </div>
 
