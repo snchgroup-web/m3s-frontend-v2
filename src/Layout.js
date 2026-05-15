@@ -76,15 +76,15 @@ const Layout = ({ children }) => {
       <div className={`${sidebarOpen ? 'w-72' : 'w-20'} bg-slate-800 border-r border-slate-700 transition-all duration-300 flex flex-col overflow-hidden`}>
 
         {/* Header */}
-        <div className="px-4 py-5 min-h-[70px] border-b border-slate-700 flex items-center justify-between">
+        <div className="px-4 py-2 border-b border-slate-700 flex items-center justify-between">
           {sidebarOpen && (
-            <div className="flex flex-col space-y-2">
+            <div className="flex flex-col space-y-0">
               <div className="flex items-center space-x-2">
                 {/* Logo Image */}
-                <img src="/assets/logo-2sg.svg" alt="2SG Logo" className="w-10 h-10 rounded flex-shrink-0" />
-                <h1 className="text-sm font-bold text-blue-400">2SG - SeneSwiss Group</h1>
+                <img src="/assets/logo-2sg.svg" alt="2SG Logo" className="w-8 h-8 rounded flex-shrink-0" />
+                <h1 className="text-xs font-bold text-blue-400">2SG - SeneSwiss Group</h1>
               </div>
-              <p className="text-xs text-slate-500 pl-12">M3S v2.0 - Management System</p>
+              <p className="text-xs text-slate-500 pl-10">M3S v2.0</p>
             </div>
           )}
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-slate-700 rounded flex-shrink-0">
