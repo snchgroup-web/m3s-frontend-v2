@@ -338,54 +338,44 @@ const CRM = () => {
 
         {/* KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-          <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-blue-200 text-sm">{t.totalProspects}</p>
-                <p className="text-white text-2xl font-bold">{totalProspects}</p>
-              </div>
-              <Target size={32} className="text-blue-400" />
+          <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-400 text-xs font-medium">{t.totalProspects}</p>
+              <Target size={16} className="text-blue-400 group-hover:animate-pulse" />
             </div>
+            <p className="text-lg font-bold text-white leading-tight group-hover:text-blue-400 transition-colors">{totalProspects}</p>
           </div>
 
-          <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-green-200 text-sm">{t.clientsActifs}</p>
-                <p className="text-white text-2xl font-bold">{totalClients}</p>
-              </div>
-              <Users size={32} className="text-green-400" />
+          <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-green-500/10 hover:border-green-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-400 text-xs font-medium">{t.clientsActifs}</p>
+              <Users size={16} className="text-green-400 group-hover:animate-pulse" />
             </div>
+            <p className="text-lg font-bold text-white leading-tight group-hover:text-green-400 transition-colors">{totalClients}</p>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-purple-200 text-sm">{t.totalDons}</p>
-                <p className="text-white text-2xl font-bold">{totalDons.toLocaleString()}</p>
-              </div>
-              <Gift size={32} className="text-purple-400" />
+          <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-purple-500/10 hover:border-purple-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-400 text-xs font-medium">{t.totalDons}</p>
+              <Gift size={16} className="text-purple-400 group-hover:animate-pulse" />
             </div>
+            <p className="text-lg font-bold text-white leading-tight group-hover:text-purple-400 transition-colors">{totalDons.toLocaleString()}</p>
           </div>
 
-          <div className="bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-6 border border-orange-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-orange-200 text-sm">{t.tauxConversion}</p>
-                <p className="text-white text-2xl font-bold">{tauxConversion}%</p>
-              </div>
-              <TrendingUp size={32} className="text-orange-400" />
+          <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-orange-500/10 hover:border-orange-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-400 text-xs font-medium">{t.tauxConversion}</p>
+              <TrendingUp size={16} className="text-orange-400 group-hover:animate-pulse" />
             </div>
+            <p className="text-lg font-bold text-white leading-tight group-hover:text-orange-400 transition-colors">{tauxConversion}%</p>
           </div>
 
-          <div className="bg-gradient-to-br from-cyan-900 to-cyan-800 rounded-lg p-6 border border-cyan-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-cyan-200 text-sm">{t.prospectsQualifies}</p>
-                <p className="text-white text-2xl font-bold">{prospectQualifies}</p>
-              </div>
-              <TrendingUp size={32} className="text-cyan-400" />
+          <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-cyan-500/10 hover:border-cyan-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-400 text-xs font-medium">{t.prospectsQualifies}</p>
+              <TrendingUp size={16} className="text-cyan-400 group-hover:animate-pulse" />
             </div>
+            <p className="text-lg font-bold text-white leading-tight group-hover:text-cyan-400 transition-colors">{prospectQualifies}</p>
           </div>
         </div>
 

@@ -222,44 +222,36 @@ const Actifs = () => {
 
         {/* KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-blue-200 text-sm">{t.valueBrute}</p>
-                <p className="text-white text-2xl font-bold">{totalValeur.toLocaleString()}</p>
-              </div>
-              <Building2 size={32} className="text-blue-400" />
+          <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-400 text-xs font-medium">{t.valueBrute}</p>
+              <Building2 size={16} className="text-blue-400 group-hover:animate-pulse" />
             </div>
+            <p className="text-lg font-bold text-white leading-tight group-hover:text-blue-400 transition-colors">{totalValeur.toLocaleString()}</p>
           </div>
  
-          <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-green-200 text-sm">{t.valueNette}</p>
-                <p className="text-white text-2xl font-bold">{totalValeurNette.toLocaleString()}</p>
-              </div>
-              <Building2 size={32} className="text-green-400" />
+          <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-green-500/10 hover:border-green-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-400 text-xs font-medium">{t.valueNette}</p>
+              <Building2 size={16} className="text-green-400 group-hover:animate-pulse" />
             </div>
+            <p className="text-lg font-bold text-white leading-tight group-hover:text-green-400 transition-colors">{totalValeurNette.toLocaleString()}</p>
           </div>
  
-          <div className="bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-6 border border-red-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-red-200 text-sm">{t.depreciations}</p>
-                <p className="text-white text-2xl font-bold">{totalDepreciation.toLocaleString()}</p>
-              </div>
-              <TrendingDown size={32} className="text-red-400" />
+          <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-red-500/10 hover:border-red-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-400 text-xs font-medium">{t.depreciations}</p>
+              <TrendingDown size={16} className="text-red-400 group-hover:animate-pulse" />
             </div>
+            <p className="text-lg font-bold text-white leading-tight group-hover:text-red-400 transition-colors">{totalDepreciation.toLocaleString()}</p>
           </div>
  
-          <div className="bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-6 border border-orange-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-orange-200 text-sm">{t.tauxDeprec}</p>
-                <p className="text-white text-2xl font-bold">{tauxDepreciationMoyen}%</p>
-              </div>
-              <TrendingDown size={32} className="text-orange-400" />
+          <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-orange-500/10 hover:border-orange-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-400 text-xs font-medium">{t.tauxDeprec}</p>
+              <TrendingDown size={16} className="text-orange-400 group-hover:animate-pulse" />
             </div>
+            <p className="text-lg font-bold text-white leading-tight group-hover:text-orange-400 transition-colors">{tauxDepreciationMoyen}%</p>
           </div>
         </div>
  

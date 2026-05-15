@@ -251,7 +251,7 @@ const Dashboard = () => {
                 <span className="w-2 h-2 rounded-full bg-green-400 group-hover:animate-pulse"></span>
               </div>
               <p className="text-lg font-bold text-white leading-tight group-hover:text-green-400 transition-colors">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).chf} <span className="text-xs font-normal text-slate-400">CHF</span></p>
-              <p className="text-xs text-slate-500 mt-0.5">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).cfa} CFA</p>
+              <p className="text-lg font-bold text-white leading-tight group-hover:text-green-400 transition-colors mt-0.5">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).cfa} <span className="text-xs font-normal text-slate-400">CFA</span></p>
               <p className="text-xs text-slate-500 mt-1 border-t border-slate-700/50 pt-1">42 transactions</p>
             </div>
             <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-red-500/10 hover:border-red-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
@@ -260,7 +260,7 @@ const Dashboard = () => {
                 <span className="w-2 h-2 rounded-full bg-red-400 group-hover:animate-pulse"></span>
               </div>
               <p className="text-lg font-bold text-white leading-tight group-hover:text-red-400 transition-colors">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).chf} <span className="text-xs font-normal text-slate-400">CHF</span></p>
-              <p className="text-xs text-slate-500 mt-0.5">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).cfa} CFA</p>
+              <p className="text-lg font-bold text-white leading-tight group-hover:text-red-400 transition-colors mt-0.5">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).cfa} <span className="text-xs font-normal text-slate-400">CFA</span></p>
               <p className="text-xs text-slate-500 mt-1 border-t border-slate-700/50 pt-1">38 transactions</p>
             </div>
             <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
@@ -269,7 +269,7 @@ const Dashboard = () => {
                 <span className="w-2 h-2 rounded-full bg-blue-400 group-hover:animate-pulse"></span>
               </div>
               <p className="text-lg font-bold text-white leading-tight group-hover:text-blue-400 transition-colors">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).chf} <span className="text-xs font-normal text-slate-400">CHF</span></p>
-              <p className="text-xs text-slate-500 mt-0.5">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).cfa} CFA</p>
+              <p className="text-lg font-bold text-white leading-tight group-hover:text-blue-400 transition-colors mt-0.5">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).cfa} <span className="text-xs font-normal text-slate-400">CFA</span></p>
               <p className="text-xs text-slate-500 mt-1 border-t border-slate-700/50 pt-1">Net mensuel</p>
             </div>
             <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-amber-500/10 hover:border-amber-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
@@ -278,7 +278,7 @@ const Dashboard = () => {
                 <span className="w-2 h-2 rounded-full bg-amber-400 group-hover:animate-pulse"></span>
               </div>
               <p className="text-lg font-bold text-white leading-tight group-hover:text-amber-400 transition-colors">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).chf} <span className="text-xs font-normal text-slate-400">CHF</span></p>
-              <p className="text-xs text-slate-500 mt-0.5">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).cfa} CFA</p>
+              <p className="text-lg font-bold text-white leading-tight group-hover:text-amber-400 transition-colors mt-0.5">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).cfa} <span className="text-xs font-normal text-slate-400">CFA</span></p>
               <p className="text-xs text-slate-500 mt-1 border-t border-slate-700/50 pt-1">7 donateurs</p>
             </div>
             <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-cyan-500/10 hover:border-cyan-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
@@ -287,7 +287,7 @@ const Dashboard = () => {
                 <span className="w-2 h-2 rounded-full bg-cyan-400 group-hover:animate-pulse"></span>
               </div>
               <p className="text-lg font-bold text-white leading-tight group-hover:text-cyan-400 transition-colors">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).chf} <span className="text-xs font-normal text-slate-400">CHF</span></p>
-              <p className="text-xs text-slate-500 mt-0.5">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).cfa} CFA</p>
+              <p className="text-lg font-bold text-white leading-tight group-hover:text-cyan-400 transition-colors mt-0.5">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).cfa} <span className="text-xs font-normal text-slate-400">CFA</span></p>
               <p className="text-xs text-slate-500 mt-1 border-t border-slate-700/50 pt-1">3 projets</p>
             </div>
             <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-purple-500/10 hover:border-purple-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">

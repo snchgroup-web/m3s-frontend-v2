@@ -262,44 +262,36 @@ const GED = () => {
 
         {/* KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-blue-200 text-sm">{t.totalDocuments}</p>
-                <p className="text-white text-2xl font-bold">{totalDocuments}</p>
-              </div>
-              <FileText size={32} className="text-blue-400" />
+          <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-400 text-xs font-medium">{t.totalDocuments}</p>
+              <FileText size={16} className="text-blue-400 group-hover:animate-pulse" />
             </div>
+            <p className="text-lg font-bold text-white leading-tight group-hover:text-blue-400 transition-colors">{totalDocuments}</p>
           </div>
  
-          <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-green-200 text-sm">{t.totalDossiers}</p>
-                <p className="text-white text-2xl font-bold">{totalDossiers}</p>
-              </div>
-              <Folder size={32} className="text-green-400" />
+          <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-green-500/10 hover:border-green-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-400 text-xs font-medium">{t.totalDossiers}</p>
+              <Folder size={16} className="text-green-400 group-hover:animate-pulse" />
             </div>
+            <p className="text-lg font-bold text-white leading-tight group-hover:text-green-400 transition-colors">{totalDossiers}</p>
           </div>
  
-          <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-purple-200 text-sm">{t.storageTaille}</p>
-                <p className="text-white text-2xl font-bold">{totalTaille} MB</p>
-              </div>
-              <Upload size={32} className="text-purple-400" />
+          <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-purple-500/10 hover:border-purple-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-400 text-xs font-medium">{t.storageTaille}</p>
+              <Upload size={16} className="text-purple-400 group-hover:animate-pulse" />
             </div>
+            <p className="text-lg font-bold text-white leading-tight group-hover:text-purple-400 transition-colors">{totalTaille} MB</p>
           </div>
  
-          <div className="bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-6 border border-orange-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-orange-200 text-sm">{t.documentsActifs}</p>
-                <p className="text-white text-2xl font-bold">{documentsActifs}</p>
-              </div>
-              <Download size={32} className="text-orange-400" />
+          <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-orange-500/10 hover:border-orange-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-400 text-xs font-medium">{t.documentsActifs}</p>
+              <Download size={16} className="text-orange-400 group-hover:animate-pulse" />
             </div>
+            <p className="text-lg font-bold text-white leading-tight group-hover:text-orange-400 transition-colors">{documentsActifs}</p>
           </div>
         </div>
  
