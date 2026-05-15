@@ -7,8 +7,17 @@
     <meta name="description" content="M3S ERP v2.0" />
     <title>M3S v2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html.light-theme {
+        filter: invert(1) hue-rotate(180deg);
+      }
+      html.light-theme .preserve-colors,
+      html.light-theme video {
+        filter: invert(1) hue-rotate(180deg);
+      }
+    </style>
   </head>
-  <body>
+  <body class="bg-slate-900">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
   </body>
