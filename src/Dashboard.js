@@ -235,7 +235,7 @@ const Dashboard = () => {
   return (
     <>
       {/* New Header */}
-      <Header title={t.dashboard} language={language} setLanguage={setLanguage} />
+      <Header title={t.dashboard} icon="📊" language={language} setLanguage={setLanguage} />
 
       {/* Content */}
       <div className="overflow-auto">

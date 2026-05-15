@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Cloud, Sun, LayoutDashboard, Globe } from 'lucide-react';
 
-const Header = ({ title, language, setLanguage }) => {
+const Header = ({ title, icon, subtitle, language, setLanguage }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [userName, setUserName] = useState('Utilisateur M3S');
 
@@ -95,8 +95,15 @@ const Header = ({ title, language, setLanguage }) => {
       <div className="flex justify-between items-center gap-6">
         {/* Titre à gauche */}
         <div className="flex items-center gap-3">
-          <LayoutDashboard size={32} className="text-blue-400" />
-          <h1 className="text-4xl font-bold text-white">{title}</h1>
+          {icon ? (
+            <span className="text-3xl">{icon}</span>
+          ) : (
+            <LayoutDashboard size={32} className="text-blue-400" />
+          )}
+          <div>
+            <h1 className="text-4xl font-bold text-white">{title}</h1>
+            {subtitle && <p className="text-slate-400 text-sm">{subtitle}</p>}
+          </div>
         </div>
 
         {/* Centre - Dakar, Date + Taux, Zurich */}
