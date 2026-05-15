@@ -46,24 +46,6 @@ const Layout = ({ children }) => {
 
   const t = translations[language];
 
-  // Gérer l'expansion/réduction des menus
-  const toggleMenu = (menuId) => {
-    setExpandedMenus(prev => {
-      const newState = { ...prev };
-
-      // Fermer tous les autres menus (accordéon)
-      Object.keys(newState).forEach(key => {
-        if (key !== menuId) {
-          newState[key] = false;
-        }
-      });
-
-      // Toggle le menu actuel
-      newState[menuId] = !newState[menuId];
-      return newState;
-    });
-  };
-
   // Expand/Collapse All
   const toggleExpandAll = () => {
     const newExpandAll = !expandAll;

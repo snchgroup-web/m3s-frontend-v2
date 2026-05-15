@@ -13,14 +13,7 @@ const monthTranslations = {
 
 const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
-// Exchange rate: 1 CHF = 656 CFA
-const CHF_TO_CFA_RATE = 656;
-
-// Format currency with both CHF and CFA
-const formatDualCurrency = (chfAmount) => {
-  const cfaAmount = Math.round(chfAmount * CHF_TO_CFA_RATE);
-  return `${chfAmount.toLocaleString()} CHF / ${cfaAmount.toLocaleString()} CFA`;
-};
+// Exchange rate: 1 CHF = 656 CFA (not needed in Dashboard, using toLocaleString instead)
 
 // Mock data (stable constant, defined at module level)
 const mockDataBaseRaw = {
@@ -46,8 +39,7 @@ const mockDataBaseRaw = {
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { language, setLanguage } = useLanguage();
-  const [user, setUser] = useState(null);
+  const { language } = useLanguage();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
 
