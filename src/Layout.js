@@ -76,20 +76,17 @@ const Layout = ({ children }) => {
       <div className={`${sidebarOpen ? 'w-72' : 'w-20'} bg-slate-800 border-r border-slate-700 transition-all duration-300 flex flex-col overflow-hidden`}>
 
         {/* Header */}
-        <div className="p-4 border-b border-slate-700 flex items-center justify-between">
+        <div className="p-4 pb-3 border-b border-slate-700 flex items-center justify-between">
           {sidebarOpen && (
-            <div className="flex flex-col space-y-1">
+            <div className="flex flex-col space-y-2">
               <div className="flex items-center space-x-2">
                 {/* Logo placeholder */}
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">2SG</span>
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-bold text-xs">2SG</span>
                 </div>
-                <div>
-                  <h1 className="text-sm font-bold text-blue-400">2SG</h1>
-                  <p className="text-xs text-slate-400">SeneSwiss Group</p>
-                </div>
+                <h1 className="text-sm font-bold text-blue-400">2SG - SeneSwiss Group</h1>
               </div>
-              <p className="text-xs text-slate-500">M3S - Management System</p>
+              <p className="text-xs text-slate-500 pl-10">M3S v2.0 - Management System</p>
             </div>
           )}
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-slate-700 rounded flex-shrink-0">
@@ -99,7 +96,7 @@ const Layout = ({ children }) => {
 
         {/* Expand All Button */}
         {sidebarOpen && (
-          <div className="p-4 border-b border-slate-700">
+          <div className="p-4 pt-3 border-b border-slate-700">
             <button
               onClick={toggleExpandAll}
               className="w-full flex items-center justify-center space-x-2 px-3 py-2 text-xs bg-slate-700 hover:bg-slate-600 rounded transition"

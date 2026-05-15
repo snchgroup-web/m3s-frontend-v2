@@ -11,6 +11,33 @@ const Header = ({ title, language }) => {
     return () => clearInterval(timer);
   }, []);
 
+  // Traductions
+  const translations = {
+    FR: {
+      dakar: 'Dakar',
+      sunny: 'Ensoleillé',
+      zurich: 'Zurich',
+      cloudy: 'Nuageux',
+      exchangeRate: '1 CHF = 656 CFA'
+    },
+    EN: {
+      dakar: 'Dakar',
+      sunny: 'Sunny',
+      zurich: 'Zurich',
+      cloudy: 'Cloudy',
+      exchangeRate: '1 CHF = 656 CFA'
+    },
+    DE: {
+      dakar: 'Dakar',
+      sunny: 'Sonnig',
+      zurich: 'Zurich',
+      cloudy: 'Bewölkt',
+      exchangeRate: '1 CHF = 656 CFA'
+    }
+  };
+
+  const t = translations[language] || translations.FR;
+
   // Format times
   const dakarTime = currentTime.toLocaleTimeString('fr-FR', {
     hour: '2-digit',
@@ -24,79 +51,65 @@ const Header = ({ title, language }) => {
     timeZone: 'Europe/Zurich'
   });
 
-  const dateFormatted = new Date().toLocaleDateString('fr-FR', {
-    weekday: 'long',
+  const dateFormatted = new Date().toLocaleDateString(language === 'FR' ? 'fr-FR' : language === 'DE' ? 'de-DE' : 'en-GB', {
+    weekday: 'short',
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric'
   });
 
-  const CHF_TO_CFA = '656 CFA';
-
   return (
-    <div className="bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-600 px-6 py-4">
-      {/* Titre et utilisateur */}
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold text-white">{title}</h1>
-        <div className="text-right text-sm text-slate-300">
-          <p className="font-medium">Utilisateur M3S</p>
-          <p className="text-xs text-slate-400">Manager</p>
-        </div>
-      </div>
-
-      {/* Séparateur */}
-      <div className="border-t border-slate-600 my-3"></div>
-
-      {/* Infos Senegal - Suisse */}
+    <div className="bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-600 px-6 py-3">
+      {/* Header sur une seule ligne */}
       <div className="flex justify-between items-center">
-        {/* SENEGAL - Gauche */}
-        <div className="flex items-center space-x-4">
-          {/* Drapeau Senegal */}
-          <div className="flex items-center space-x-2 bg-slate-700/50 rounded px-3 py-2">
-            <span className="text-lg">🇸🇳</span>
-            <div className="text-xs">
-              <p className="text-slate-300 font-medium">Dakar</p>
-              <p className="text-slate-400">{dakarTime}</p>
-            </div>
+        {/* Titre à gauche */}
+        <h1 className="text-xl font-bold text-white">{title}</h1>
+
+        {/* Centre - Infos Dakar et Zurich */}
+        <div className="flex items-center space-x-3 text-xs">
+          {/* Dakar */}
+          <div className="flex items-center space-x-1 bg-slate-700/50 rounded px-2 py-1">
+            <span>🇸🇳</span>
+            <span className="text-slate-300 font-medium">{t.dakar}</span>
+            <span className="text-slate-400">{dakarTime}</span>
           </div>
 
           {/* Météo Dakar */}
-          <div className="flex items-center space-x-2 bg-slate-700/50 rounded px-3 py-2">
-            <Sun size={18} className="text-yellow-400" />
-            <div className="text-xs">
-              <p className="text-slate-300">28°C</p>
-              <p className="text-slate-400">Ensoleillé</p>
-            </div>
+          <div className="flex items-center space-x-1 bg-slate-700/50 rounded px-2 py-1">
+            <Sun size={14} className="text-yellow-400" />
+            <span className="text-slate-300">28°C</span>
+            <span className="text-slate-400">{t.sunny}</span>
+          </div>
+
+          {/* Séparateur */}
+          <div className="w-px h-4 bg-slate-600"></div>
+
+          {/* Date & Taux */}
+          <div className="flex items-center space-x-1 bg-blue-600/30 rounded px-2 py-1 border border-blue-500/50">
+            <span className="text-blue-300 font-bold">{t.exchangeRate}</span>
+          </div>
+
+          {/* Séparateur */}
+          <div className="w-px h-4 bg-slate-600"></div>
+
+          {/* Méteo Zurich */}
+          <div className="flex items-center space-x-1 bg-slate-700/50 rounded px-2 py-1">
+            <Cloud size={14} className="text-slate-400" />
+            <span className="text-slate-300">18°C</span>
+            <span className="text-slate-400">{t.cloudy}</span>
+          </div>
+
+          {/* Zurich */}
+          <div className="flex items-center space-x-1 bg-slate-700/50 rounded px-2 py-1">
+            <span>🇨🇭</span>
+            <span className="text-slate-300 font-medium">{t.zurich}</span>
+            <span className="text-slate-400">{zurichTime}</span>
           </div>
         </div>
 
-        {/* Centre - Date et Taux de Change */}
-        <div className="flex flex-col items-center space-y-2 text-xs">
-          <p className="text-slate-300 font-medium capitalize">{dateFormatted}</p>
-          <div className="bg-blue-600/30 rounded px-4 py-1 border border-blue-500/50">
-            <p className="text-blue-300 font-bold text-xs">1 CHF = {CHF_TO_CFA}</p>
-          </div>
-        </div>
-
-        {/* SUISSE - Droite */}
-        <div className="flex items-center space-x-4">
-          {/* Météo Zurich */}
-          <div className="flex items-center space-x-2 bg-slate-700/50 rounded px-3 py-2">
-            <Cloud size={18} className="text-slate-400" />
-            <div className="text-xs">
-              <p className="text-slate-300">18°C</p>
-              <p className="text-slate-400">Nuageux</p>
-            </div>
-          </div>
-
-          {/* Drapeau Suisse */}
-          <div className="flex items-center space-x-2 bg-slate-700/50 rounded px-3 py-2">
-            <span className="text-lg">🇨🇭</span>
-            <div className="text-xs">
-              <p className="text-slate-300 font-medium">Zurich</p>
-              <p className="text-slate-400">{zurichTime}</p>
-            </div>
-          </div>
+        {/* Date à droite */}
+        <div className="text-xs text-slate-300 text-right">
+          <p className="font-medium capitalize">{dateFormatted}</p>
         </div>
       </div>
     </div>
