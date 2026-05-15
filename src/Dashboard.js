@@ -223,115 +223,158 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full bg-gradient-to-br from-slate-900 to-slate-800">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-white text-lg">Chargement du tableau de bord...</p>
+      <>
+        <Header title={t.dashboard} icon="📊" language={language} setLanguage={setLanguage} />
+        <div className="flex items-center justify-center h-full bg-gradient-to-br from-slate-900 to-slate-800">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+            <p className="text-white text-lg">Chargement du tableau de bord...</p>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
     <>
       {/* New Header */}
-      <Header title={t.dashboard} language={language} setLanguage={setLanguage} />
+      <Header title={t.dashboard} icon="📊" language={language} setLanguage={setLanguage} />
 
       {/* Content */}
       <div className="overflow-auto">
         <div className="p-6 space-y-6">
-          {/* KPI Cards - Reduced Size */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
-            <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-3 shadow-lg">
-              <p className="text-green-100 text-xs font-medium">{t.revenue}</p>
-              <div className="text-sm font-bold mt-1 leading-tight">
-                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).chf} CHF</p>
-                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).cfa} CFA</p>
+          {/* KPI Cards - Clean Design */}
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-green-500/10 hover:border-green-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-slate-400 text-xs font-medium">{t.revenue}</p>
+                <span className="w-2 h-2 rounded-full bg-green-400 group-hover:animate-pulse"></span>
               </div>
+              <p className="text-lg font-bold text-white leading-tight group-hover:text-green-400 transition-colors">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).chf} <span className="text-xs font-normal text-slate-400">CHF</span></p>
+              <p className="text-lg font-bold text-white leading-tight group-hover:text-green-400 transition-colors mt-0.5">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).cfa} <span className="text-xs font-normal text-slate-400">CFA</span></p>
+              <p className="text-xs text-slate-500 mt-1 border-t border-slate-700/50 pt-1">42 transactions</p>
             </div>
-            <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-lg p-3 shadow-lg">
-              <p className="text-red-100 text-xs font-medium">{t.expenses}</p>
-              <div className="text-xs font-bold mt-1 leading-tight">
-                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).chf} CHF</p>
-                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).cfa} CFA</p>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-red-500/10 hover:border-red-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-slate-400 text-xs font-medium">{t.expenses}</p>
+                <span className="w-2 h-2 rounded-full bg-red-400 group-hover:animate-pulse"></span>
               </div>
+              <p className="text-lg font-bold text-white leading-tight group-hover:text-red-400 transition-colors">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).chf} <span className="text-xs font-normal text-slate-400">CHF</span></p>
+              <p className="text-lg font-bold text-white leading-tight group-hover:text-red-400 transition-colors mt-0.5">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).cfa} <span className="text-xs font-normal text-slate-400">CFA</span></p>
+              <p className="text-xs text-slate-500 mt-1 border-t border-slate-700/50 pt-1">38 transactions</p>
             </div>
-            <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-3 shadow-lg">
-              <p className="text-blue-100 text-xs font-medium">{t.balance}</p>
-              <div className="text-xs font-bold mt-1 leading-tight">
-                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.balance).chf} CHF</p>
-                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.balance).cfa} CFA</p>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-slate-400 text-xs font-medium">{t.balance}</p>
+                <span className="w-2 h-2 rounded-full bg-blue-400 group-hover:animate-pulse"></span>
               </div>
+              <p className="text-lg font-bold text-white leading-tight group-hover:text-blue-400 transition-colors">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).chf} <span className="text-xs font-normal text-slate-400">CHF</span></p>
+              <p className="text-lg font-bold text-white leading-tight group-hover:text-blue-400 transition-colors mt-0.5">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).cfa} <span className="text-xs font-normal text-slate-400">CFA</span></p>
+              <p className="text-xs text-slate-500 mt-1 border-t border-slate-700/50 pt-1">Net mensuel</p>
             </div>
-            <div className="bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-lg p-3 shadow-lg">
-              <p className="text-yellow-100 text-xs font-medium">{t.donations}</p>
-              <div className="text-xs font-bold mt-1 leading-tight">
-                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.donations).chf} CHF</p>
-                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.donations).cfa} CFA</p>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-amber-500/10 hover:border-amber-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-slate-400 text-xs font-medium">{t.donations}</p>
+                <span className="w-2 h-2 rounded-full bg-amber-400 group-hover:animate-pulse"></span>
               </div>
+              <p className="text-lg font-bold text-white leading-tight group-hover:text-amber-400 transition-colors">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).chf} <span className="text-xs font-normal text-slate-400">CHF</span></p>
+              <p className="text-lg font-bold text-white leading-tight group-hover:text-amber-400 transition-colors mt-0.5">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).cfa} <span className="text-xs font-normal text-slate-400">CFA</span></p>
+              <p className="text-xs text-slate-500 mt-1 border-t border-slate-700/50 pt-1">7 donateurs</p>
             </div>
-            <div className="bg-gradient-to-br from-cyan-600 to-cyan-700 rounded-lg p-3 shadow-lg">
-              <p className="text-cyan-100 text-xs font-medium">{t.financing}</p>
-              <div className="text-xs font-bold mt-1 leading-tight">
-                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.financing).chf} CHF</p>
-                <p>{formatDualCurrency(dashboardData?.moduleStats.finance.financing).cfa} CFA</p>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-cyan-500/10 hover:border-cyan-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-slate-400 text-xs font-medium">{t.financing}</p>
+                <span className="w-2 h-2 rounded-full bg-cyan-400 group-hover:animate-pulse"></span>
               </div>
+              <p className="text-lg font-bold text-white leading-tight group-hover:text-cyan-400 transition-colors">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).chf} <span className="text-xs font-normal text-slate-400">CHF</span></p>
+              <p className="text-lg font-bold text-white leading-tight group-hover:text-cyan-400 transition-colors mt-0.5">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).cfa} <span className="text-xs font-normal text-slate-400">CFA</span></p>
+              <p className="text-xs text-slate-500 mt-1 border-t border-slate-700/50 pt-1">3 projets</p>
             </div>
-            <div className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-3 shadow-lg">
-              <p className="text-purple-100 text-xs font-medium">Staff</p>
-              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.rh.employees + dashboardData?.moduleStats.rh.volunteers + dashboardData?.moduleStats.rh.members}</p>
-              <p className="text-purple-200 text-xs mt-1">Total</p>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-purple-500/10 hover:border-purple-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-slate-400 text-xs font-medium">Staff</p>
+                <span className="w-2 h-2 rounded-full bg-purple-400 group-hover:animate-pulse"></span>
+              </div>
+              <p className="text-lg font-bold text-white group-hover:text-purple-400 transition-colors">{dashboardData?.moduleStats.rh.employees + dashboardData?.moduleStats.rh.volunteers + dashboardData?.moduleStats.rh.members}</p>
+              <p className="text-xs text-slate-500 mt-0.5">Total</p>
+              <p className="text-xs text-slate-500 mt-1 border-t border-slate-700/50 pt-1">{dashboardData?.moduleStats.rh.employees} employés</p>
             </div>
-            <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-lg p-3 shadow-lg">
-              <p className="text-indigo-100 text-xs font-medium">{t.documents}</p>
-              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.ged.documents}</p>
-              <p className="text-indigo-200 text-xs mt-1">{t.files}</p>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-indigo-500/10 hover:border-indigo-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-slate-400 text-xs font-medium">{t.documents}</p>
+                <span className="w-2 h-2 rounded-full bg-indigo-400 group-hover:animate-pulse"></span>
+              </div>
+              <p className="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">{dashboardData?.moduleStats.ged.documents}</p>
+              <p className="text-xs text-slate-500 mt-0.5">{t.files}</p>
+              <p className="text-xs text-slate-500 mt-1 border-t border-slate-700/50 pt-1">{dashboardData?.moduleStats.ged.recent} récents</p>
             </div>
-            <div className="bg-gradient-to-br from-orange-600 to-orange-700 rounded-lg p-3 shadow-lg">
-              <p className="text-orange-100 text-xs font-medium">{t.tasks}</p>
-              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.tasks.total}</p>
-              <p className="text-orange-200 text-xs mt-1">{t.total}</p>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-orange-500/10 hover:border-orange-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-slate-400 text-xs font-medium">{t.tasks}</p>
+                <span className="w-2 h-2 rounded-full bg-orange-400 group-hover:animate-pulse"></span>
+              </div>
+              <p className="text-lg font-bold text-white group-hover:text-orange-400 transition-colors">{dashboardData?.moduleStats.tasks.total}</p>
+              <p className="text-xs text-slate-500 mt-0.5">{t.total}</p>
+              <p className="text-xs text-slate-500 mt-1 border-t border-slate-700/50 pt-1">{dashboardData?.moduleStats.tasks.completed} terminées</p>
             </div>
           </div>
 
           {/* Additional Stats Row */}
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-            <div className="bg-gradient-to-br from-rose-600 to-rose-700 rounded-lg p-3 shadow-lg">
-              <p className="text-rose-100 text-xs font-medium">Stocks</p>
-              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.production.stocks}</p>
-              <p className="text-rose-200 text-xs mt-1">{t.stocks}</p>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-rose-500/10 hover:border-rose-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-slate-400 text-xs font-medium">Stocks</p>
+                <span className="w-2 h-2 rounded-full bg-rose-400 group-hover:animate-pulse"></span>
+              </div>
+              <p className="text-lg font-bold text-white group-hover:text-rose-400 transition-colors">{dashboardData?.moduleStats.production.stocks}</p>
+              <p className="text-xs text-slate-500 mt-0.5">{t.stocks}</p>
             </div>
-            <div className="bg-gradient-to-br from-pink-600 to-pink-700 rounded-lg p-3 shadow-lg">
-              <p className="text-pink-100 text-xs font-medium">Articles</p>
-              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.production.articles}</p>
-              <p className="text-pink-200 text-xs mt-1">{t.articles}</p>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-pink-500/10 hover:border-pink-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-slate-400 text-xs font-medium">Articles</p>
+                <span className="w-2 h-2 rounded-full bg-pink-400 group-hover:animate-pulse"></span>
+              </div>
+              <p className="text-lg font-bold text-white group-hover:text-pink-400 transition-colors">{dashboardData?.moduleStats.production.articles}</p>
+              <p className="text-xs text-slate-500 mt-0.5">{t.articles}</p>
             </div>
-            <div className="bg-gradient-to-br from-teal-600 to-teal-700 rounded-lg p-3 shadow-lg">
-              <p className="text-teal-100 text-xs font-medium">Clients</p>
-              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.crm.clients}</p>
-              <p className="text-teal-200 text-xs mt-1">Active</p>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-teal-500/10 hover:border-teal-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-slate-400 text-xs font-medium">Clients</p>
+                <span className="w-2 h-2 rounded-full bg-teal-400 group-hover:animate-pulse"></span>
+              </div>
+              <p className="text-lg font-bold text-white group-hover:text-teal-400 transition-colors">{dashboardData?.moduleStats.crm.clients}</p>
+              <p className="text-xs text-slate-500 mt-0.5">Actifs</p>
             </div>
-            <div className="bg-gradient-to-br from-lime-600 to-lime-700 rounded-lg p-3 shadow-lg">
-              <p className="text-lime-100 text-xs font-medium">{t.orders}</p>
-              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.production.orders}</p>
-              <p className="text-lime-200 text-xs mt-1">{t.total}</p>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-lime-500/10 hover:border-lime-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-slate-400 text-xs font-medium">{t.orders}</p>
+                <span className="w-2 h-2 rounded-full bg-lime-400 group-hover:animate-pulse"></span>
+              </div>
+              <p className="text-lg font-bold text-white group-hover:text-lime-400 transition-colors">{dashboardData?.moduleStats.production.orders}</p>
+              <p className="text-xs text-slate-500 mt-0.5">{t.total}</p>
             </div>
-            <div className="bg-gradient-to-br from-violet-600 to-violet-700 rounded-lg p-3 shadow-lg">
-              <p className="text-violet-100 text-xs font-medium">{t.beneficiaries}</p>
-              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.rh.beneficiaries}</p>
-              <p className="text-violet-200 text-xs mt-1">Personnes</p>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-violet-500/10 hover:border-violet-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-slate-400 text-xs font-medium">{t.beneficiaries}</p>
+                <span className="w-2 h-2 rounded-full bg-violet-400 group-hover:animate-pulse"></span>
+              </div>
+              <p className="text-lg font-bold text-white group-hover:text-violet-400 transition-colors">{dashboardData?.moduleStats.rh.beneficiaries}</p>
+              <p className="text-xs text-slate-500 mt-0.5">Personnes</p>
             </div>
-            <div className="bg-gradient-to-br from-sky-600 to-sky-700 rounded-lg p-3 shadow-lg">
-              <p className="text-sky-100 text-xs font-medium">{t.suppliers}</p>
-              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.crm.suppliers}</p>
-              <p className="text-sky-200 text-xs mt-1">{t.total}</p>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm hover:shadow-lg hover:shadow-sky-500/10 hover:border-sky-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default group">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-slate-400 text-xs font-medium">{t.suppliers}</p>
+                <span className="w-2 h-2 rounded-full bg-sky-400 group-hover:animate-pulse"></span>
+              </div>
+              <p className="text-lg font-bold text-white group-hover:text-sky-400 transition-colors">{dashboardData?.moduleStats.crm.suppliers}</p>
+              <p className="text-xs text-slate-500 mt-0.5">{t.total}</p>
             </div>
           </div>
 
           {/* Charts Row 1 */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Financial Trend */}
-            <div className="lg:col-span-2 bg-slate-800 rounded-lg p-6 shadow-lg border border-slate-700">
+            <div className="lg:col-span-2 bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-700">
               <h3 className="text-lg font-semibold mb-4">{t.finance} - {t.month}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={dashboardData?.financialTrend || []}>
@@ -347,7 +390,7 @@ const Dashboard = () => {
             </div>
 
             {/* Staff Distribution */}
-            <div className="bg-slate-800 rounded-lg p-6 shadow-lg border border-slate-700">
+            <div className="bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-700">
               <h3 className="text-lg font-semibold mb-4">{t.rh}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
@@ -363,27 +406,27 @@ const Dashboard = () => {
           </div>
 
           {/* Module Stats */}
-          <div className="bg-slate-800 rounded-lg p-6 shadow-lg border border-slate-700">
+          <div className="bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-700">
             <h3 className="text-lg font-semibold mb-4">{t.moduleStats}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition" onClick={() => handleModuleClick('/crm')}>
-                <p className="text-sm text-slate-400">{t.crm}</p>
-                <p className="text-2xl font-bold mt-2">{dashboardData?.moduleStats.crm.clients}</p>
+              <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 cursor-pointer hover:shadow-lg hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-1 transition-all duration-300 group" onClick={() => handleModuleClick('/crm')}>
+                <p className="text-sm text-slate-400 group-hover:text-blue-400 transition-colors">{t.crm}</p>
+                <p className="text-2xl font-bold mt-2 group-hover:text-blue-400 transition-colors">{dashboardData?.moduleStats.crm.clients}</p>
                 <p className="text-xs text-slate-500 mt-1">{t.clients}</p>
               </div>
-              <div className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition" onClick={() => handleModuleClick('/production')}>
-                <p className="text-sm text-slate-400">{t.production}</p>
-                <p className="text-2xl font-bold mt-2">{dashboardData?.moduleStats.production.orders}</p>
+              <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 cursor-pointer hover:shadow-lg hover:shadow-green-500/10 hover:border-green-500/40 hover:-translate-y-1 transition-all duration-300 group" onClick={() => handleModuleClick('/production')}>
+                <p className="text-sm text-slate-400 group-hover:text-green-400 transition-colors">{t.production}</p>
+                <p className="text-2xl font-bold mt-2 group-hover:text-green-400 transition-colors">{dashboardData?.moduleStats.production.orders}</p>
                 <p className="text-xs text-slate-500 mt-1">{t.orders}</p>
               </div>
-              <div className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition" onClick={() => handleModuleClick('/ged')}>
-                <p className="text-sm text-slate-400">{t.ged}</p>
-                <p className="text-2xl font-bold mt-2">{dashboardData?.moduleStats.ged.documents}</p>
+              <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 cursor-pointer hover:shadow-lg hover:shadow-indigo-500/10 hover:border-indigo-500/40 hover:-translate-y-1 transition-all duration-300 group" onClick={() => handleModuleClick('/ged')}>
+                <p className="text-sm text-slate-400 group-hover:text-indigo-400 transition-colors">{t.ged}</p>
+                <p className="text-2xl font-bold mt-2 group-hover:text-indigo-400 transition-colors">{dashboardData?.moduleStats.ged.documents}</p>
                 <p className="text-xs text-slate-500 mt-1">{t.documents}</p>
               </div>
-              <div className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition" onClick={() => handleModuleClick('/actifs')}>
-                <p className="text-sm text-slate-400">{t.actifs}</p>
-                <p className="text-2xl font-bold mt-2">{dashboardData?.moduleStats.actifs.total.toLocaleString()}</p>
+              <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 cursor-pointer hover:shadow-lg hover:shadow-amber-500/10 hover:border-amber-500/40 hover:-translate-y-1 transition-all duration-300 group" onClick={() => handleModuleClick('/actifs')}>
+                <p className="text-sm text-slate-400 group-hover:text-amber-400 transition-colors">{t.actifs}</p>
+                <p className="text-2xl font-bold mt-2 group-hover:text-amber-400 transition-colors">{dashboardData?.moduleStats.actifs.total.toLocaleString()}</p>
                 <p className="text-xs text-slate-500 mt-1">Valeur Totale</p>
               </div>
             </div>

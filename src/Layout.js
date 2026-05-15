@@ -126,12 +126,17 @@ const Layout = ({ children }) => {
               {/* Menu Item Principal */}
               <button
                 onClick={() => {
-                  // Always navigate to the main item's path
-                  setExpandedMenus({});
                   handleMenuItemClick(item.path);
-                  // If item has children, optionally expand them for discovery
                   if (sidebarOpen && item.children && item.children.length > 0) {
-                    setExpandedMenus({ [item.id]: true });
+                    if (expandedMenus[item.id]) {
+                      const newState = { ...expandedMenus };
+                      delete newState[item.id];
+                      setExpandedMenus(newState);
+                    } else {
+                      setExpandedMenus({ [item.id]: true });
+                    }
+                  } else {
+                    setExpandedMenus({});
                   }
                 }}
                 title={!sidebarOpen ? (item.label[language] || item.label.FR) : undefined}
