@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Plus, Edit2, Trash2, Building2, TrendingDown } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
+import Header from './Header';
 
 const Actifs = () => {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
 
   // Translations
   const translations = {
@@ -214,8 +215,10 @@ const Actifs = () => {
   };
  
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
-      <div className="max-w-7xl mx-auto">
+    <>
+      <Header title={t.title} language={language} setLanguage={setLanguage} />
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+        <div className="max-w-7xl mx-auto">
  
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">🏢 {t.title}</h1>
@@ -345,8 +348,9 @@ const Actifs = () => {
             </div>
           </div>
         )}
+        </div>
       </div>
- 
+
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -372,8 +376,8 @@ const Actifs = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
- 
+
 export default Actifs;

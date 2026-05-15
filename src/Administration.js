@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Plus, Edit2, Trash2, Shield, Users, Lock, Activity, AlertCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
+import Header from './Header';
 
 const Admin = () => {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
 
   // Translations
   const translations = {
@@ -339,8 +340,10 @@ const Admin = () => {
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
-      <div className="max-w-7xl mx-auto">
+    <>
+      <Header title={t.title} language={language} setLanguage={setLanguage} />
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+        <div className="max-w-7xl mx-auto">
 
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">⚙️ {t.title}</h1>
@@ -575,6 +578,7 @@ const Admin = () => {
             </table>
           </div>
         )}
+        </div>
       </div>
 
       {/* Modal Utilisateur */}
@@ -655,7 +659,7 @@ const Admin = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

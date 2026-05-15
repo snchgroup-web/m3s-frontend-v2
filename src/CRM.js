@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Plus, Edit2, Trash2, Users, TrendingUp, Gift, Target } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
+import Header from './Header';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -13,7 +14,7 @@ const monthTranslations = {
 const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
 
 const CRM = () => {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [activeTab, setActiveTab] = useState('overview');
   const [prospects, setProspects] = useState([]);
   const [clients, setClients] = useState([]);
@@ -330,8 +331,10 @@ const CRM = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
-      <div className="max-w-7xl mx-auto">
+    <>
+      <Header title={t.title} language={language} setLanguage={setLanguage} />
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+        <div className="max-w-7xl mx-auto">
 
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">💼 {t.title}</h1>
@@ -541,7 +544,9 @@ const CRM = () => {
           </div>
         </div>
       )}
-    </div>
+        </div>
+      </div>
+    </>
   );
 };
 
