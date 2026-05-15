@@ -65,7 +65,7 @@ const Header = ({ title, language }) => {
   });
 
   return (
-    <div className="bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-600 px-6 py-4">
+    <div className="bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-600 px-6 py-5">
       {/* Header sur une seule ligne - Plus grand */}
       <div className="flex justify-between items-center">
         {/* Titre à gauche */}
@@ -75,7 +75,7 @@ const Header = ({ title, language }) => {
         <div className="flex items-center space-x-4 text-xs">
           {/* SENEGAL - Dakar */}
           <div className="flex items-center space-x-2 bg-slate-700/50 rounded px-3 py-2">
-            <span className="text-xl">🇸🇳</span>
+            <span className="text-2xl">🇸🇳</span>
             <div>
               <p className="text-slate-300 font-semibold">{t.dakar}</p>
               <p className="text-slate-400">{dakarTime}</p>
@@ -116,7 +116,7 @@ const Header = ({ title, language }) => {
 
           {/* SUISSE - Zurich */}
           <div className="flex items-center space-x-2 bg-slate-700/50 rounded px-3 py-2">
-            <span className="text-xl">🇨🇭</span>
+            <span className="text-2xl">🇨🇭</span>
             <div>
               <p className="text-slate-300 font-semibold">{t.zurich}</p>
               <p className="text-slate-400">{zurichTime}</p>

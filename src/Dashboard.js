@@ -235,23 +235,23 @@ const Dashboard = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
             <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-3 shadow-lg">
               <p className="text-green-100 text-xs font-medium">{t.revenue}</p>
-              <p className="text-base font-bold mt-1 truncate">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue)}</p>
+              <p className="text-sm font-bold mt-1 break-words">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue)}</p>
             </div>
             <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-lg p-3 shadow-lg">
               <p className="text-red-100 text-xs font-medium">{t.expenses}</p>
-              <p className="text-base font-bold mt-1 truncate">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses)}</p>
+              <p className="text-sm font-bold mt-1 break-words">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses)}</p>
             </div>
             <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-3 shadow-lg">
               <p className="text-blue-100 text-xs font-medium">{t.balance}</p>
-              <p className="text-base font-bold mt-1 truncate">{formatDualCurrency(dashboardData?.moduleStats.finance.balance)}</p>
+              <p className="text-sm font-bold mt-1 break-words">{formatDualCurrency(dashboardData?.moduleStats.finance.balance)}</p>
             </div>
             <div className="bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-lg p-3 shadow-lg">
               <p className="text-yellow-100 text-xs font-medium">{t.donations}</p>
-              <p className="text-base font-bold mt-1 truncate">{formatDualCurrency(dashboardData?.moduleStats.finance.donations)}</p>
+              <p className="text-sm font-bold mt-1 break-words">{formatDualCurrency(dashboardData?.moduleStats.finance.donations)}</p>
             </div>
             <div className="bg-gradient-to-br from-cyan-600 to-cyan-700 rounded-lg p-3 shadow-lg">
               <p className="text-cyan-100 text-xs font-medium">{t.financing}</p>
-              <p className="text-base font-bold mt-1 truncate">{formatDualCurrency(dashboardData?.moduleStats.finance.financing)}</p>
+              <p className="text-sm font-bold mt-1 break-words">{formatDualCurrency(dashboardData?.moduleStats.finance.financing)}</p>
             </div>
             <div className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-3 shadow-lg">
               <p className="text-purple-100 text-xs font-medium">Staff</p>
