@@ -76,7 +76,7 @@ const Layout = ({ children }) => {
       <div className={`${sidebarOpen ? 'w-72' : 'w-20'} bg-slate-800 border-r border-slate-700 transition-all duration-300 flex flex-col overflow-hidden`}>
 
         {/* Header */}
-        <div className="px-4 py-6 border-b border-slate-700 flex items-center justify-between">
+        <div className="px-4 py-5 border-b border-slate-700 flex items-center justify-between">
           {sidebarOpen && (
             <div className="flex flex-col space-y-1 items-center text-center flex-1">
               <div className="flex items-center space-x-2 justify-center">
