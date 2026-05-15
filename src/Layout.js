@@ -76,9 +76,9 @@ const Layout = ({ children }) => {
       <div className={`${sidebarOpen ? 'w-72' : 'w-20'} bg-slate-800 border-r border-slate-700 transition-all duration-300 flex flex-col overflow-hidden`}>
 
         {/* Header */}
-        <div className="px-4 py-6 border-b border-slate-700 flex items-center justify-center">
+        <div className="px-4 py-6 border-b border-slate-700 flex items-center justify-between">
           {sidebarOpen && (
-            <div className="flex flex-col space-y-1 items-center text-center">
+            <div className="flex flex-col space-y-1 items-center text-center flex-1">
               <div className="flex items-center space-x-2 justify-center">
                 {/* Logo Image */}
                 <img src="/assets/logo-2sg.svg" alt="2SG Logo" className="w-8 h-8 rounded flex-shrink-0" />
@@ -87,6 +87,13 @@ const Layout = ({ children }) => {
               <p className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">M3S v2.0 - Management System - SeneSwiss</p>
             </div>
           )}
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 hover:bg-slate-700 rounded flex-shrink-0"
+            title={sidebarOpen ? "Masquer menu" : "Afficher menu"}
+          >
+            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
 
         {/* Expand All Button + Toggle Menu */}
