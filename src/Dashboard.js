@@ -40,6 +40,7 @@ const mockDataBaseRaw = {
 const Dashboard = () => {
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const [user, setUser] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
 
