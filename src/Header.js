@@ -14,14 +14,25 @@ const Header = ({ title, language, setLanguage }) => {
 
   // Get user name from localStorage
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      try {
+    try {
+      // Try to get user from localStorage
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
         const user = JSON.parse(storedUser);
-        if (user.name) setUserName(user.name);
-      } catch (e) {
-        // Use default if parsing fails
+        // Check for 'name' property
+        if (user.name && user.name !== 'Utilisateur M3S') {
+          setUserName(user.name);
+        }
       }
+
+      // Also check for token to see if user is logged in
+      const token = localStorage.getItem('token');
+      if (!token) {
+        // User not logged in, use default
+        setUserName('Invité');
+      }
+    } catch (e) {
+      console.error('Error retrieving user info:', e);
     }
   }, []);
 
@@ -79,7 +90,7 @@ const Header = ({ title, language, setLanguage }) => {
   });
 
   return (
-    <div className="bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-600 px-6 py-4">
+    <div className="bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-600 px-6 py-5">
       {/* Header sur une seule ligne - Plus grand */}
       <div className="flex justify-between items-center gap-6">
         {/* Titre à gauche */}
