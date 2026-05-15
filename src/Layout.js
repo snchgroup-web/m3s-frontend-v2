@@ -81,10 +81,10 @@ const Layout = ({ children }) => {
             <div className="flex flex-col space-y-1 items-center text-center flex-1">
               <div className="flex items-center space-x-2 justify-center">
                 {/* Logo Image */}
-                <img src="/assets/logo-2sg.svg" alt="2SG Logo" className="w-8 h-8 rounded flex-shrink-0" />
-                <h1 className="text-base font-bold text-blue-400 whitespace-nowrap">2SG - SeneSwiss Group</h1>
+                <img src="/assets/logo-new.png" alt="2SG Logo" className="preserve-colors w-10 h-10 rounded-full flex-shrink-0" />
+                <h1 className="text-base font-bold text-blue-400 whitespace-nowrap">2SG-SeneSwiss Group</h1>
               </div>
-              <p className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">M3S v2.0 - Management System - SeneSwiss</p>
+              <p className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">M3S v2.0 - Management System SeneSwiss</p>
             </div>
           )}
           <button

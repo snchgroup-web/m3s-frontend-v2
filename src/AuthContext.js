@@ -4,7 +4,10 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -25,13 +28,11 @@ export const AuthProvider = ({ children }) => {
         const account = demoAccounts[email];
         const fakeToken = `fake_jwt_${Date.now()}_${Math.random()}`;
         
+        const userData = { email, name: account.name, role: account.role };
         setToken(fakeToken);
         localStorage.setItem('token', fakeToken);
-        setUser({
-          email,
-          name: account.name,
-          role: account.role
-        });
+        localStorage.setItem('user', JSON.stringify(userData));
+        setUser(userData);
 
         return { success: true };
       } else {
@@ -50,6 +51,7 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
   };
 
   const isAuthenticated = !!token;

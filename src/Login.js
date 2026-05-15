@@ -41,9 +41,7 @@ const Login = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-block p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg mb-4">
-            <Lock size={32} className="text-white" />
-          </div>
+          <img src="/assets/logo-new.png" alt="2SG Logo" className="w-20 h-20 rounded-full mx-auto mb-4" />
           <h1 className="text-4xl font-bold text-white mb-2">M3S v2.0</h1>
           <p className="text-slate-400">ERP Hybride - SENESWISS GROUP</p>
         </div>

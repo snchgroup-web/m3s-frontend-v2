@@ -1,9 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Cloud, Sun, LayoutDashboard, Globe } from 'lucide-react';
+import { Sun, LayoutDashboard, Globe, Moon } from 'lucide-react';
 
 const Header = ({ title, language, setLanguage }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [userName, setUserName] = useState('Utilisateur M3S');
+  const [isLightMode, setIsLightMode] = useState(() => {
+    return localStorage.getItem('theme') === 'light';
+  });
+
+  useEffect(() => {
+    if (isLightMode) {
+      document.documentElement.classList.add('light-theme');
+      localStorage.setItem('theme', 'light');
+    } else {
+      document.documentElement.classList.remove('light-theme');
+      localStorage.setItem('theme', 'dark');
+    }
+  }, [isLightMode]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -103,19 +116,10 @@ const Header = ({ title, language, setLanguage }) => {
         <div className="flex items-center space-x-4 text-xs">
           {/* SENEGAL - Dakar */}
           <div className="flex items-center space-x-2 bg-slate-700/50 rounded px-3 py-2">
-            <span className="text-2xl">🇸🇳</span>
+            <img src="/assets/flag-sn.png" alt="Senegal" className="preserve-colors w-8 h-5 object-cover rounded" />
             <div>
               <p className="text-slate-300 font-semibold">{t.dakar}</p>
               <p className="text-slate-400">{dakarTime}</p>
-            </div>
-          </div>
-
-          {/* Météo Dakar */}
-          <div className="flex items-center space-x-1 bg-slate-700/50 rounded px-3 py-2">
-            <Sun size={16} className="text-yellow-400" />
-            <div>
-              <p className="text-slate-300 font-semibold">28°C</p>
-              <p className="text-slate-400">{t.sunny}</p>
             </div>
           </div>
 
@@ -133,18 +137,9 @@ const Header = ({ title, language, setLanguage }) => {
           {/* Séparateur */}
           <div className="w-px h-8 bg-slate-600"></div>
 
-          {/* Météo Zurich */}
-          <div className="flex items-center space-x-1 bg-slate-700/50 rounded px-3 py-2">
-            <Cloud size={16} className="text-slate-300" />
-            <div>
-              <p className="text-slate-300 font-semibold">18°C</p>
-              <p className="text-slate-400">{t.cloudy}</p>
-            </div>
-          </div>
-
           {/* SUISSE - Zurich */}
           <div className="flex items-center space-x-2 bg-slate-700/50 rounded px-3 py-2">
-            <span className="text-2xl">🇨🇭</span>
+            <img src="/assets/flag-ch.png" alt="Suisse" className="preserve-colors w-8 h-5 object-cover rounded" />
             <div>
               <p className="text-slate-300 font-semibold">{t.zurich}</p>
               <p className="text-slate-400">{zurichTime}</p>
@@ -154,6 +149,15 @@ const Header = ({ title, language, setLanguage }) => {
 
         {/* Utilisateur et Langue à droite */}
         <div className="flex items-center gap-4">
+          {/* Bouton Thème */}
+          <button
+            onClick={() => setIsLightMode(!isLightMode)}
+            className="p-1.5 rounded-full bg-slate-700 border border-slate-600 text-slate-300 hover:bg-slate-600 transition-colors"
+            title={isLightMode ? "Passer en mode sombre" : "Passer en mode clair"}
+          >
+            {isLightMode ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
+
           {/* Sélecteur de Langue */}
           <div className="flex items-center gap-2">
             <Globe size={18} className="text-slate-400" />
