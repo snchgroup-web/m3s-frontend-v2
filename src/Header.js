@@ -1,14 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Cloud, Sun } from 'lucide-react';
+import { Cloud, Sun, LayoutDashboard, Globe } from 'lucide-react';
 
-const Header = ({ title, language }) => {
+const Header = ({ title, language, setLanguage }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [userName, setUserName] = useState('Utilisateur M3S');
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Get user name from localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        if (user.name) setUserName(user.name);
+      } catch (e) {
+        // Use default if parsing fails
+      }
+    }
   }, []);
 
   // Traductions
@@ -19,8 +33,8 @@ const Header = ({ title, language }) => {
       zurich: 'Zurich',
       cloudy: 'Nuageux',
       exchangeRate: '1 CHF = 656 CFA',
-      user: 'Utilisateur M3S',
-      manager: 'Manager'
+      manager: 'Manager',
+      language: 'Langue'
     },
     EN: {
       dakar: 'Dakar',
@@ -28,8 +42,8 @@ const Header = ({ title, language }) => {
       zurich: 'Zurich',
       cloudy: 'Cloudy',
       exchangeRate: '1 CHF = 656 CFA',
-      user: 'M3S User',
-      manager: 'Manager'
+      manager: 'Manager',
+      language: 'Language'
     },
     DE: {
       dakar: 'Dakar',
@@ -37,8 +51,8 @@ const Header = ({ title, language }) => {
       zurich: 'Zurich',
       cloudy: 'Bewölkt',
       exchangeRate: '1 CHF = 656 CFA',
-      user: 'M3S Benutzer',
-      manager: 'Manager'
+      manager: 'Manager',
+      language: 'Sprache'
     }
   };
 
@@ -67,9 +81,12 @@ const Header = ({ title, language }) => {
   return (
     <div className="bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-600 px-6 py-4">
       {/* Header sur une seule ligne - Plus grand */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center gap-6">
         {/* Titre à gauche */}
-        <h1 className="text-2xl font-bold text-white">{title}</h1>
+        <div className="flex items-center gap-3">
+          <LayoutDashboard size={32} className="text-blue-400" />
+          <h1 className="text-4xl font-bold text-white">{title}</h1>
+        </div>
 
         {/* Centre - Dakar, Date + Taux, Zurich */}
         <div className="flex items-center space-x-4 text-xs">
@@ -124,10 +141,27 @@ const Header = ({ title, language }) => {
           </div>
         </div>
 
-        {/* Utilisateur à droite */}
-        <div className="text-right text-sm">
-          <p className="text-white font-semibold">{t.user}</p>
-          <p className="text-slate-400">{t.manager}</p>
+        {/* Utilisateur et Langue à droite */}
+        <div className="flex items-center gap-4">
+          {/* Sélecteur de Langue */}
+          <div className="flex items-center gap-2">
+            <Globe size={18} className="text-slate-400" />
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-xs text-slate-300 hover:bg-slate-600 focus:outline-none focus:border-blue-500"
+            >
+              <option value="FR">FR</option>
+              <option value="EN">EN</option>
+              <option value="DE">DE</option>
+            </select>
+          </div>
+
+          {/* Utilisateur */}
+          <div className="text-right text-sm">
+            <p className="text-white font-semibold">{userName}</p>
+            <p className="text-slate-400">{t.manager}</p>
+          </div>
         </div>
       </div>
     </div>

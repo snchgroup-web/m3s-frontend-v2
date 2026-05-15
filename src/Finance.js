@@ -26,7 +26,7 @@ const formatDualCurrency = (chfAmount) => {
 };
 
 const Finance = () => {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [activeTab, setActiveTab] = useState('overview');
   const [recettes, setRecettes] = useState([]);
   const [depenses, setDepenses] = useState([]);
@@ -253,7 +253,7 @@ const Finance = () => {
 
   return (
     <>
-      <Header title={t.title} language={language} />
+      <Header title={t.title} language={language} setLanguage={setLanguage} />
 
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
         <div className="max-w-7xl mx-auto">
@@ -263,7 +263,7 @@ const Finance = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-green-200 text-xs">{t.totalRecettes}</p>
-                <div className="text-xs font-bold mt-1 leading-tight">
+                <div className="text-sm font-bold mt-1 leading-tight">
                   <p className="text-white">{formatDualCurrency(totalRecettes).chf} CHF</p>
                   <p className="text-white">{formatDualCurrency(totalRecettes).cfa} CFA</p>
                 </div>

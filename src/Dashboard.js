@@ -37,8 +37,8 @@ const mockDataBaseRaw = {
   ],
   moduleStats: {
     finance: { revenue: 285000, expenses: 215000, balance: 70000, donations: 15000, financing: 25000 },
-    rh: { employees: 12, volunteers: 24, members: 156 },
-    crm: { prospects: 45, clients: 28, donations: 18 },
+    rh: { employees: 12, volunteers: 24, members: 156, beneficiaries: 89 },
+    crm: { prospects: 45, clients: 28, donations: 18, suppliers: 34 },
     production: { orders: 52, completed: 38, pending: 14, stocks: 342, articles: 127 },
     actifs: { total: 1250000, depreciation: 125000 },
     ged: { documents: 847, recent: 12 },
@@ -49,7 +49,7 @@ const mockDataBaseRaw = {
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [, setUser] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -75,12 +75,15 @@ const Dashboard = () => {
       clients: 'Clients',
       orders: 'Commandes',
       documents: 'Documents',
-      stocks: 'Stocks',
+      stocks: 'Quantité en Stock',
       articles: 'Articles',
       donations: 'Dons',
       financing: 'Financements',
       files: 'Fichiers',
-      totalTasks: 'Tâches Totales',
+      tasks: 'Tâches',
+      beneficiaries: 'Bénéficiaires',
+      suppliers: 'Fournisseurs',
+      orders: 'Commandes',
       month: 'Mois',
       total: 'Total',
       kpi: 'KPI',
@@ -107,12 +110,15 @@ const Dashboard = () => {
       clients: 'Clients',
       orders: 'Orders',
       documents: 'Documents',
-      stocks: 'Stocks',
+      stocks: 'Stock Quantity',
       articles: 'Articles',
       donations: 'Donations',
       financing: 'Financing',
       files: 'Files',
-      totalTasks: 'Total Tasks',
+      tasks: 'Tasks',
+      beneficiaries: 'Beneficiaries',
+      suppliers: 'Suppliers',
+      orders: 'Orders',
       month: 'Month',
       total: 'Total',
       kpi: 'KPI',
@@ -139,12 +145,15 @@ const Dashboard = () => {
       clients: 'Kunden',
       orders: 'Bestellungen',
       documents: 'Dokumente',
-      stocks: 'Lagerbestände',
+      stocks: 'Lagermenge',
       articles: 'Artikel',
       donations: 'Spenden',
       financing: 'Finanzierung',
       files: 'Dateien',
-      totalTasks: 'Gesamtaufgaben',
+      tasks: 'Aufgaben',
+      beneficiaries: 'Begünstigte',
+      suppliers: 'Lieferanten',
+      orders: 'Bestellungen',
       month: 'Monat',
       total: 'Gesamt',
       kpi: 'KPI',
@@ -229,7 +238,7 @@ const Dashboard = () => {
   return (
     <>
       {/* New Header */}
-      <Header title={t.dashboard} language={language} />
+      <Header title={t.dashboard} language={language} setLanguage={setLanguage} />
 
       {/* Content */}
       <div className="overflow-auto">
@@ -238,7 +247,7 @@ const Dashboard = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
             <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-3 shadow-lg">
               <p className="text-green-100 text-xs font-medium">{t.revenue}</p>
-              <div className="text-xs font-bold mt-1 leading-tight">
+              <div className="text-sm font-bold mt-1 leading-tight">
                 <p>{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).chf} CHF</p>
                 <p>{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).cfa} CFA</p>
               </div>
@@ -282,14 +291,14 @@ const Dashboard = () => {
               <p className="text-indigo-200 text-xs mt-1">{t.files}</p>
             </div>
             <div className="bg-gradient-to-br from-orange-600 to-orange-700 rounded-lg p-3 shadow-lg">
-              <p className="text-orange-100 text-xs font-medium">{t.totalTasks}</p>
+              <p className="text-orange-100 text-xs font-medium">{t.tasks}</p>
               <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.tasks.total}</p>
               <p className="text-orange-200 text-xs mt-1">{t.total}</p>
             </div>
           </div>
 
           {/* Additional Stats Row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
             <div className="bg-gradient-to-br from-rose-600 to-rose-700 rounded-lg p-3 shadow-lg">
               <p className="text-rose-100 text-xs font-medium">Stocks</p>
               <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.production.stocks}</p>
@@ -306,9 +315,19 @@ const Dashboard = () => {
               <p className="text-teal-200 text-xs mt-1">Active</p>
             </div>
             <div className="bg-gradient-to-br from-lime-600 to-lime-700 rounded-lg p-3 shadow-lg">
-              <p className="text-lime-100 text-xs font-medium">Orders</p>
+              <p className="text-lime-100 text-xs font-medium">{t.orders}</p>
               <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.production.orders}</p>
-              <p className="text-lime-200 text-xs mt-1">Total</p>
+              <p className="text-lime-200 text-xs mt-1">{t.total}</p>
+            </div>
+            <div className="bg-gradient-to-br from-violet-600 to-violet-700 rounded-lg p-3 shadow-lg">
+              <p className="text-violet-100 text-xs font-medium">{t.beneficiaries}</p>
+              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.rh.beneficiaries}</p>
+              <p className="text-violet-200 text-xs mt-1">Personnes</p>
+            </div>
+            <div className="bg-gradient-to-br from-sky-600 to-sky-700 rounded-lg p-3 shadow-lg">
+              <p className="text-sky-100 text-xs font-medium">{t.suppliers}</p>
+              <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.crm.suppliers}</p>
+              <p className="text-sky-200 text-xs mt-1">{t.total}</p>
             </div>
           </div>
 
