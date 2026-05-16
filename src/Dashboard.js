@@ -88,7 +88,15 @@ const Dashboard = () => {
       kpi: 'KPI',
       lastUpdate: 'Dernière mise à jour',
       currency: 'CHF',
-      moduleStats: 'Statistiques par Module'
+      moduleStats: 'Statistiques par Module',
+      transactions: 'transactions',
+      netMonthly: 'Net mensuel',
+      donors: 'donateurs',
+      projects: 'projets',
+      employees_staff: 'employés',
+      quantity: 'Quantité en Stock',
+      active: 'Actifs',
+      persons: 'Personnes'
     },
     EN: {
       dashboard: 'Dashboard',
@@ -122,7 +130,15 @@ const Dashboard = () => {
       kpi: 'KPI',
       lastUpdate: 'Last Updated',
       currency: 'CHF',
-      moduleStats: 'Module Statistics'
+      moduleStats: 'Module Statistics',
+      transactions: 'transactions',
+      netMonthly: 'Net monthly',
+      donors: 'donors',
+      projects: 'projects',
+      employees_staff: 'employees',
+      quantity: 'Stock Quantity',
+      active: 'Active',
+      persons: 'Persons'
     },
     DE: {
       dashboard: 'Dashboard',
@@ -148,6 +164,14 @@ const Dashboard = () => {
       donations: 'Spenden',
       financing: 'Finanzierung',
       files: 'Dateien',
+      transactions: 'Transaktionen',
+      netMonthly: 'Netto monatlich',
+      donors: 'Spender',
+      projects: 'Projekte',
+      employees_staff: 'Mitarbeiter',
+      quantity: 'Lagermenge',
+      active: 'Aktiv',
+      persons: 'Personen',
       tasks: 'Aufgaben',
       beneficiaries: 'Begünstigte',
       suppliers: 'Lieferanten',
@@ -240,15 +264,6 @@ const Dashboard = () => {
       {/* Content */}
       <div className="overflow-auto">
         <div className="p-6 space-y-6">
-          {/* Page Title */}
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
-              <span className="text-xl">📊</span>
-            </div>
-            <h2 className="text-3xl font-bold text-white">{t.dashboard}</h2>
-            <p className="text-slate-400 ml-auto">{t.moduleStats}</p>
-          </div>
-
           {/* KPI Cards Row 1 */}
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {/* Recettes */}
@@ -257,11 +272,10 @@ const Dashboard = () => {
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.revenue}</p>
               </div>
-              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).chf}</p>
-              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).cfa}</p>
-              <p className="text-slate-500 text-xs">CHF / CFA</p>
+              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).chf} CHF</p>
+              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).cfa} CFA</p>
               <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">42 transactions</p>
+              <p className="text-slate-500 text-xs">42 {t.transactions}</p>
             </div>
 
             {/* Dépenses */}
@@ -270,11 +284,10 @@ const Dashboard = () => {
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.expenses}</p>
               </div>
-              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).chf}</p>
-              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).cfa}</p>
-              <p className="text-slate-500 text-xs">CHF / CFA</p>
+              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).chf} CHF</p>
+              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).cfa} CFA</p>
               <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">38 transactions</p>
+              <p className="text-slate-500 text-xs">38 {t.transactions}</p>
             </div>
 
             {/* Solde */}
@@ -283,11 +296,10 @@ const Dashboard = () => {
                 <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.balance}</p>
               </div>
-              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).chf}</p>
-              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).cfa}</p>
-              <p className="text-slate-500 text-xs">CHF / CFA</p>
+              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).chf} CHF</p>
+              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).cfa} CFA</p>
               <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">Net mensuel</p>
+              <p className="text-slate-500 text-xs">{t.netMonthly}</p>
             </div>
 
             {/* Dons */}
@@ -296,11 +308,10 @@ const Dashboard = () => {
                 <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.donations}</p>
               </div>
-              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).chf}</p>
-              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).cfa}</p>
-              <p className="text-slate-500 text-xs">CHF / CFA</p>
+              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).chf} CHF</p>
+              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).cfa} CFA</p>
               <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">7 donateurs</p>
+              <p className="text-slate-500 text-xs">7 {t.donors}</p>
             </div>
 
             {/* Financements */}
@@ -309,11 +320,10 @@ const Dashboard = () => {
                 <div className="w-3 h-3 bg-cyan-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.financing}</p>
               </div>
-              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).chf}</p>
-              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).cfa}</p>
-              <p className="text-slate-500 text-xs">CHF / CFA</p>
+              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).chf} CHF</p>
+              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).cfa} CFA</p>
               <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">3 projects</p>
+              <p className="text-slate-500 text-xs">3 {t.projects}</p>
             </div>
 
             {/* Staff */}
@@ -323,9 +333,9 @@ const Dashboard = () => {
                 <p className="text-slate-300 text-sm font-medium">Staff</p>
               </div>
               <p className="text-white text-lg font-bold">{dashboardData?.moduleStats.rh.employees + dashboardData?.moduleStats.rh.volunteers + dashboardData?.moduleStats.rh.members}</p>
-              <p className="text-slate-500 text-xs">Total</p>
+              <p className="text-slate-500 text-xs">{t.total}</p>
               <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">12 employés</p>
+              <p className="text-slate-500 text-xs">12 {t.employees_staff}</p>
             </div>
           </div>
 
@@ -339,7 +349,7 @@ const Dashboard = () => {
               </div>
               <p className="text-white text-lg font-bold">{dashboardData?.moduleStats.production.stocks}</p>
               <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{t.stocks}</p>
+              <p className="text-slate-500 text-xs">{t.quantity}</p>
             </div>
 
             {/* Articles */}
@@ -361,7 +371,7 @@ const Dashboard = () => {
               </div>
               <p className="text-white text-lg font-bold">{dashboardData?.moduleStats.crm.clients}</p>
               <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">Actifs</p>
+              <p className="text-slate-500 text-xs">{t.active}</p>
             </div>
 
             {/* Commandes */}
@@ -383,7 +393,7 @@ const Dashboard = () => {
               </div>
               <p className="text-white text-lg font-bold">{dashboardData?.moduleStats.rh.beneficiaries}</p>
               <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">Personnes</p>
+              <p className="text-slate-500 text-xs">{t.persons}</p>
             </div>
 
             {/* Fournisseurs */}
