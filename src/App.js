@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
 import { LanguageProvider } from './LanguageContext';
+import { ThemeProvider } from './ThemeContext';
 import ProtectedRoute from './ProtectedRoute';
 import Layout from './Layout';
 import Login from './Login';
@@ -19,7 +20,8 @@ const App = () => {
     <Router>
       <AuthProvider>
         <LanguageProvider>
-          <Routes>
+          <ThemeProvider>
+            <Routes>
             <Route path="/login" element={<Login />} />
 
             {/* Routes avec Layout (sidebar sur toutes les pages) */}
@@ -109,7 +111,8 @@ const App = () => {
             />
 
             <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+            </Routes>
+          </ThemeProvider>
         </LanguageProvider>
       </AuthProvider>
     </Router>

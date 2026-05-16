@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Cloud, Sun, LayoutDashboard, Globe } from 'lucide-react';
+import { Cloud, Sun, LayoutDashboard, Globe, Moon } from 'lucide-react';
+import { useTheme } from './ThemeContext';
 
 const Header = ({ title, language, setLanguage }) => {
+  const { isDarkMode, toggleTheme } = useTheme();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [userName, setUserName] = useState('Utilisateur M3S');
 
@@ -154,6 +156,19 @@ const Header = ({ title, language, setLanguage }) => {
 
         {/* Utilisateur et Langue à droite */}
         <div className="flex items-center gap-4">
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 hover:bg-slate-600 rounded transition"
+            title={isDarkMode ? "Mode Clair" : "Mode Sombre"}
+          >
+            {isDarkMode ? (
+              <Sun size={18} className="text-yellow-400" />
+            ) : (
+              <Moon size={18} className="text-slate-300" />
+            )}
+          </button>
+
           {/* Sélecteur de Langue */}
           <div className="flex items-center gap-2">
             <Globe size={18} className="text-slate-400" />
