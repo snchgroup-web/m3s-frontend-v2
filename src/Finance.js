@@ -25,7 +25,7 @@ const formatDualCurrency = (chfAmount) => {
 };
 
 const Finance = () => {
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState('overview');
   const [recettes, setRecettes] = useState([]);
   const [depenses, setDepenses] = useState([]);

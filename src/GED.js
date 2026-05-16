@@ -4,7 +4,7 @@ import { Plus, Edit2, Trash2, FileText, Folder, Download, Upload } from 'lucide-
 import { useLanguage } from './LanguageContext';
 
 const GED = () => {
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
 
   // Translations
   const translations = {

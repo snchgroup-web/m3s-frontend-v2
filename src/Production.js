@@ -4,7 +4,7 @@ import { Plus, Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck } from 'l
 import { useLanguage } from './LanguageContext';
 
 const Production = () => {
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
 
   // Translations
   const translations = {

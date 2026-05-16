@@ -13,7 +13,7 @@ const monthTranslations = {
 const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
 
 const CRM = () => {
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState('overview');
   const [prospects, setProspects] = useState([]);
   const [clients, setClients] = useState([]);

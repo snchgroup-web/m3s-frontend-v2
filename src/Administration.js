@@ -4,7 +4,7 @@ import { Plus, Edit2, Trash2, Shield, Users, Lock, Activity, AlertCircle } from 
 import { useLanguage } from './LanguageContext';
 
 const Admin = () => {
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
 
   // Translations
   const translations = {

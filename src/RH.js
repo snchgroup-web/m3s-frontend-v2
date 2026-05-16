@@ -4,7 +4,7 @@ import { Plus, Edit2, Trash2, Users, User, Heart, Users2 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 
 const RH = () => {
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
 
   // Translations
   const translations = {
