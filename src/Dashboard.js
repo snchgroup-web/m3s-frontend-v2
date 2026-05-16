@@ -253,68 +253,79 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {/* Recettes */}
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-green-500 hover:shadow-green-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-slate-600 group-hover:bg-green-500 rounded-full transition-colors"></div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.revenue}</p>
               </div>
-              <p className="text-white text-xl font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).chf} CHF</p>
-              <p className="text-slate-400 text-xs mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).cfa} CFA</p>
-              <p className="text-slate-500 text-xs mt-2">42 transactions</p>
+              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).chf}</p>
+              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).cfa}</p>
+              <p className="text-slate-500 text-xs">CHF / CFA</p>
+              <div className="border-t border-slate-700 my-2"></div>
+              <p className="text-slate-500 text-xs">42 transactions</p>
             </div>
 
             {/* Dépenses */}
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-red-500 hover:shadow-red-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-slate-600 group-hover:bg-red-500 rounded-full transition-colors"></div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.expenses}</p>
               </div>
-              <p className="text-white text-xl font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).chf} CHF</p>
-              <p className="text-slate-400 text-xs mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).cfa} CFA</p>
-              <p className="text-slate-500 text-xs mt-2">38 transactions</p>
+              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).chf}</p>
+              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).cfa}</p>
+              <p className="text-slate-500 text-xs">CHF / CFA</p>
+              <div className="border-t border-slate-700 my-2"></div>
+              <p className="text-slate-500 text-xs">38 transactions</p>
             </div>
 
             {/* Solde */}
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-blue-500 hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-slate-600 group-hover:bg-blue-500 rounded-full transition-colors"></div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.balance}</p>
               </div>
-              <p className="text-white text-xl font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).chf} CHF</p>
-              <p className="text-slate-400 text-xs mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).cfa} CFA</p>
-              <p className="text-slate-500 text-xs mt-2">Net mensuel</p>
+              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).chf}</p>
+              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).cfa}</p>
+              <p className="text-slate-500 text-xs">CHF / CFA</p>
+              <div className="border-t border-slate-700 my-2"></div>
+              <p className="text-slate-500 text-xs">Net mensuel</p>
             </div>
 
             {/* Dons */}
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-yellow-500 hover:shadow-yellow-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-slate-600 group-hover:bg-yellow-500 rounded-full transition-colors"></div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.donations}</p>
               </div>
-              <p className="text-white text-xl font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).chf} CHF</p>
-              <p className="text-slate-400 text-xs mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).cfa} CFA</p>
-              <p className="text-slate-500 text-xs mt-2">7 donateurs</p>
+              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).chf}</p>
+              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).cfa}</p>
+              <p className="text-slate-500 text-xs">CHF / CFA</p>
+              <div className="border-t border-slate-700 my-2"></div>
+              <p className="text-slate-500 text-xs">7 donateurs</p>
             </div>
 
             {/* Financements */}
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-cyan-500 hover:shadow-cyan-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-slate-600 group-hover:bg-cyan-500 rounded-full transition-colors"></div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-3 h-3 bg-cyan-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.financing}</p>
               </div>
-              <p className="text-white text-xl font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).chf} CHF</p>
-              <p className="text-slate-400 text-xs mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).cfa} CFA</p>
-              <p className="text-slate-500 text-xs mt-2">3 projects</p>
+              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).chf}</p>
+              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).cfa}</p>
+              <p className="text-slate-500 text-xs">CHF / CFA</p>
+              <div className="border-t border-slate-700 my-2"></div>
+              <p className="text-slate-500 text-xs">3 projects</p>
             </div>
 
             {/* Staff */}
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-purple-500 hover:shadow-purple-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-slate-600 group-hover:bg-purple-500 rounded-full transition-colors"></div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">Staff</p>
               </div>
-              <p className="text-white text-xl font-bold">{dashboardData?.moduleStats.rh.employees + dashboardData?.moduleStats.rh.volunteers + dashboardData?.moduleStats.rh.members}</p>
-              <p className="text-slate-400 text-xs mt-1">Total</p>
-              <p className="text-slate-500 text-xs mt-2">12 employés</p>
+              <p className="text-white text-lg font-bold">{dashboardData?.moduleStats.rh.employees + dashboardData?.moduleStats.rh.volunteers + dashboardData?.moduleStats.rh.members}</p>
+              <p className="text-slate-500 text-xs">Total</p>
+              <div className="border-t border-slate-700 my-2"></div>
+              <p className="text-slate-500 text-xs">12 employés</p>
             </div>
           </div>
 
@@ -322,62 +333,68 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {/* Stocks */}
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-red-400 hover:shadow-red-400/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-slate-600 group-hover:bg-red-400 rounded-full transition-colors"></div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-3 h-3 bg-red-400 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">Stocks</p>
               </div>
-              <p className="text-white text-xl font-bold">{dashboardData?.moduleStats.production.stocks}</p>
-              <p className="text-slate-400 text-xs mt-1">{t.stocks}</p>
+              <p className="text-white text-lg font-bold">{dashboardData?.moduleStats.production.stocks}</p>
+              <div className="border-t border-slate-700 my-2"></div>
+              <p className="text-slate-500 text-xs">{t.stocks}</p>
             </div>
 
             {/* Articles */}
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-pink-500 hover:shadow-pink-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-slate-600 group-hover:bg-pink-500 rounded-full transition-colors"></div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-3 h-3 bg-pink-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">Articles</p>
               </div>
-              <p className="text-white text-xl font-bold">{dashboardData?.moduleStats.production.articles}</p>
-              <p className="text-slate-400 text-xs mt-1">{t.articles}</p>
+              <p className="text-white text-lg font-bold">{dashboardData?.moduleStats.production.articles}</p>
+              <div className="border-t border-slate-700 my-2"></div>
+              <p className="text-slate-500 text-xs">{t.articles}</p>
             </div>
 
             {/* Clients */}
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-teal-400 hover:shadow-teal-400/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-slate-600 group-hover:bg-teal-400 rounded-full transition-colors"></div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-3 h-3 bg-teal-400 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">Clients</p>
               </div>
-              <p className="text-white text-xl font-bold">{dashboardData?.moduleStats.crm.clients}</p>
-              <p className="text-slate-400 text-xs mt-1">Actifs</p>
+              <p className="text-white text-lg font-bold">{dashboardData?.moduleStats.crm.clients}</p>
+              <div className="border-t border-slate-700 my-2"></div>
+              <p className="text-slate-500 text-xs">Actifs</p>
             </div>
 
             {/* Commandes */}
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-lime-500 hover:shadow-lime-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-slate-600 group-hover:bg-lime-500 rounded-full transition-colors"></div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-3 h-3 bg-lime-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.orders}</p>
               </div>
-              <p className="text-white text-xl font-bold">{dashboardData?.moduleStats.production.orders}</p>
-              <p className="text-slate-400 text-xs mt-1">{t.total}</p>
+              <p className="text-white text-lg font-bold">{dashboardData?.moduleStats.production.orders}</p>
+              <div className="border-t border-slate-700 my-2"></div>
+              <p className="text-slate-500 text-xs">{t.total}</p>
             </div>
 
             {/* Bénéficiaires */}
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-violet-500 hover:shadow-violet-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-slate-600 group-hover:bg-violet-500 rounded-full transition-colors"></div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-3 h-3 bg-violet-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.beneficiaries}</p>
               </div>
-              <p className="text-white text-xl font-bold">{dashboardData?.moduleStats.rh.beneficiaries}</p>
-              <p className="text-slate-400 text-xs mt-1">Personnes</p>
+              <p className="text-white text-lg font-bold">{dashboardData?.moduleStats.rh.beneficiaries}</p>
+              <div className="border-t border-slate-700 my-2"></div>
+              <p className="text-slate-500 text-xs">Personnes</p>
             </div>
 
             {/* Fournisseurs */}
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-sky-400 hover:shadow-sky-400/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-slate-600 group-hover:bg-sky-400 rounded-full transition-colors"></div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-3 h-3 bg-sky-400 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.suppliers}</p>
               </div>
-              <p className="text-white text-xl font-bold">{dashboardData?.moduleStats.crm.suppliers}</p>
-              <p className="text-slate-400 text-xs mt-1">{t.total}</p>
+              <p className="text-white text-lg font-bold">{dashboardData?.moduleStats.crm.suppliers}</p>
+              <div className="border-t border-slate-700 my-2"></div>
+              <p className="text-slate-500 text-xs">{t.total}</p>
             </div>
           </div>
 

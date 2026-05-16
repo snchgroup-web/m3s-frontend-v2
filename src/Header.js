@@ -95,8 +95,13 @@ const Header = ({ title, language, setLanguage }) => {
     <div className="bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-600 px-6 py-6">
       {/* Header sur une seule ligne - Plus grand */}
       <div className="flex justify-between items-center gap-6">
-        {/* Espace vide à gauche */}
-        <div className="flex-shrink-0 w-32"></div>
+        {/* Titre à gauche */}
+        <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+            <span className="text-lg">📊</span>
+          </div>
+          <h1 className="text-2xl font-bold text-white">{title}</h1>
+        </div>
 
         {/* Centre - Dakar, Date + Taux, Zurich */}
         <div className="flex items-center space-x-4 text-xs">
