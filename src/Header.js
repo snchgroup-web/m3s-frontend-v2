@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Cloud, Sun, LayoutDashboard, Globe, Moon } from 'lucide-react';
+import { Cloud, Sun, Globe, Moon } from 'lucide-react';
 import { useTheme } from './ThemeContext';
 
 const Header = ({ title, language, setLanguage }) => {
@@ -95,11 +95,8 @@ const Header = ({ title, language, setLanguage }) => {
     <div className="bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-600 px-6 py-6">
       {/* Header sur une seule ligne - Plus grand */}
       <div className="flex justify-between items-center gap-6">
-        {/* Titre à gauche */}
-        <div className="flex items-center gap-3">
-          <LayoutDashboard size={32} className="text-blue-400" />
-          <h1 className="text-4xl font-bold text-white">{title}</h1>
-        </div>
+        {/* Espace vide à gauche */}
+        <div className="flex-shrink-0 w-32"></div>
 
         {/* Centre - Dakar, Date + Taux, Zurich */}
         <div className="flex items-center space-x-4 text-xs">
