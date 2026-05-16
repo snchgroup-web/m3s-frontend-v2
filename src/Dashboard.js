@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { DollarSign, TrendingDown, Banknote, Gift, Zap, Users, FileText, CheckSquare, Package, Box, Users2, Users3, Truck } from 'lucide-react';
+import { DollarSign, TrendingDown, Banknote, Gift, Zap, Users, FileText, CheckSquare, Package, Box, Users2, Heart, Truck } from 'lucide-react';
 import Header from './Header';
 
 // Month translations (stable constants, defined at module level)
@@ -359,7 +359,7 @@ const Dashboard = () => {
                 <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.rh.beneficiaries}</p>
                 <p className="text-violet-200 text-xs mt-1">Personnes</p>
               </div>
-              <Users3 size={20} className="text-violet-100 ml-2 flex-shrink-0" />
+              <Heart size={20} className="text-violet-100 ml-2 flex-shrink-0" />
             </div>
             <div className="bg-gradient-to-br from-sky-600 to-sky-700 rounded-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-between">
               <div className="flex-1">
