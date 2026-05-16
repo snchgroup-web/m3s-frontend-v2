@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { DollarSign, TrendingDown, Banknote, Gift, Zap, Users, FileText, CheckSquare, Package, Box, Users2, Heart, Truck } from 'lucide-react';
 import Header from './Header';
 
 // Month translations (stable constants, defined at module level)
@@ -241,133 +240,144 @@ const Dashboard = () => {
       {/* Content */}
       <div className="overflow-auto">
         <div className="p-6 space-y-6">
-          {/* KPI Cards - Reduced Size */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
-            <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-green-100 text-xs font-medium">{t.revenue}</p>
-                <div className="text-xs font-bold mt-1 leading-tight">
-                  <p>{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).chf} CHF</p>
-                  <p className="text-green-200">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).cfa} CFA</p>
-                </div>
-              </div>
-              <DollarSign size={24} className="text-green-100 ml-2 flex-shrink-0" />
+          {/* Page Title */}
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
+              <span className="text-xl">📊</span>
             </div>
-            <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-red-100 text-xs font-medium">{t.expenses}</p>
-                <div className="text-xs font-bold mt-1 leading-tight">
-                  <p>{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).chf} CHF</p>
-                  <p className="text-red-200">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).cfa} CFA</p>
-                </div>
+            <h2 className="text-3xl font-bold text-white">{t.dashboard}</h2>
+            <p className="text-slate-400 ml-auto">{t.moduleStats}</p>
+          </div>
+
+          {/* KPI Cards Row 1 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {/* Recettes */}
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-green-500 hover:shadow-green-500/20 transition-all duration-300 cursor-pointer group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-3 h-3 bg-slate-600 group-hover:bg-green-500 rounded-full transition-colors"></div>
+                <p className="text-slate-300 text-sm font-medium">{t.revenue}</p>
               </div>
-              <TrendingDown size={24} className="text-red-100 ml-2 flex-shrink-0" />
+              <p className="text-white text-xl font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).chf} CHF</p>
+              <p className="text-slate-400 text-xs mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).cfa} CFA</p>
+              <p className="text-slate-500 text-xs mt-2">42 transactions</p>
             </div>
-            <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-blue-100 text-xs font-medium">{t.balance}</p>
-                <div className="text-xs font-bold mt-1 leading-tight">
-                  <p>{formatDualCurrency(dashboardData?.moduleStats.finance.balance).chf} CHF</p>
-                  <p className="text-blue-200">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).cfa} CFA</p>
-                </div>
+
+            {/* Dépenses */}
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-red-500 hover:shadow-red-500/20 transition-all duration-300 cursor-pointer group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-3 h-3 bg-slate-600 group-hover:bg-red-500 rounded-full transition-colors"></div>
+                <p className="text-slate-300 text-sm font-medium">{t.expenses}</p>
               </div>
-              <Banknote size={24} className="text-blue-100 ml-2 flex-shrink-0" />
+              <p className="text-white text-xl font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).chf} CHF</p>
+              <p className="text-slate-400 text-xs mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).cfa} CFA</p>
+              <p className="text-slate-500 text-xs mt-2">38 transactions</p>
             </div>
-            <div className="bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-yellow-100 text-xs font-medium">{t.donations}</p>
-                <div className="text-xs font-bold mt-1 leading-tight">
-                  <p>{formatDualCurrency(dashboardData?.moduleStats.finance.donations).chf} CHF</p>
-                  <p className="text-yellow-200">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).cfa} CFA</p>
-                </div>
+
+            {/* Solde */}
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-blue-500 hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-3 h-3 bg-slate-600 group-hover:bg-blue-500 rounded-full transition-colors"></div>
+                <p className="text-slate-300 text-sm font-medium">{t.balance}</p>
               </div>
-              <Gift size={24} className="text-yellow-100 ml-2 flex-shrink-0" />
+              <p className="text-white text-xl font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).chf} CHF</p>
+              <p className="text-slate-400 text-xs mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).cfa} CFA</p>
+              <p className="text-slate-500 text-xs mt-2">Net mensuel</p>
             </div>
-            <div className="bg-gradient-to-br from-cyan-600 to-cyan-700 rounded-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-cyan-100 text-xs font-medium">{t.financing}</p>
-                <div className="text-xs font-bold mt-1 leading-tight">
-                  <p>{formatDualCurrency(dashboardData?.moduleStats.finance.financing).chf} CHF</p>
-                  <p className="text-cyan-200">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).cfa} CFA</p>
-                </div>
+
+            {/* Dons */}
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-yellow-500 hover:shadow-yellow-500/20 transition-all duration-300 cursor-pointer group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-3 h-3 bg-slate-600 group-hover:bg-yellow-500 rounded-full transition-colors"></div>
+                <p className="text-slate-300 text-sm font-medium">{t.donations}</p>
               </div>
-              <Zap size={24} className="text-cyan-100 ml-2 flex-shrink-0" />
+              <p className="text-white text-xl font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).chf} CHF</p>
+              <p className="text-slate-400 text-xs mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).cfa} CFA</p>
+              <p className="text-slate-500 text-xs mt-2">7 donateurs</p>
             </div>
-            <div className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-purple-100 text-xs font-medium">Staff</p>
-                <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.rh.employees + dashboardData?.moduleStats.rh.volunteers + dashboardData?.moduleStats.rh.members}</p>
-                <p className="text-purple-200 text-xs mt-1">Total</p>
+
+            {/* Financements */}
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-cyan-500 hover:shadow-cyan-500/20 transition-all duration-300 cursor-pointer group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-3 h-3 bg-slate-600 group-hover:bg-cyan-500 rounded-full transition-colors"></div>
+                <p className="text-slate-300 text-sm font-medium">{t.financing}</p>
               </div>
-              <Users size={24} className="text-purple-100 ml-2 flex-shrink-0" />
+              <p className="text-white text-xl font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).chf} CHF</p>
+              <p className="text-slate-400 text-xs mt-1">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).cfa} CFA</p>
+              <p className="text-slate-500 text-xs mt-2">3 projects</p>
             </div>
-            <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-indigo-100 text-xs font-medium">{t.documents}</p>
-                <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.ged.documents}</p>
-                <p className="text-indigo-200 text-xs mt-1">{t.files}</p>
+
+            {/* Staff */}
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-purple-500 hover:shadow-purple-500/20 transition-all duration-300 cursor-pointer group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-3 h-3 bg-slate-600 group-hover:bg-purple-500 rounded-full transition-colors"></div>
+                <p className="text-slate-300 text-sm font-medium">Staff</p>
               </div>
-              <FileText size={24} className="text-indigo-100 ml-2 flex-shrink-0" />
-            </div>
-            <div className="bg-gradient-to-br from-orange-600 to-orange-700 rounded-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-orange-100 text-xs font-medium">{t.tasks}</p>
-                <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.tasks.total}</p>
-                <p className="text-orange-200 text-xs mt-1">{t.total}</p>
-              </div>
-              <CheckSquare size={24} className="text-orange-100 ml-2 flex-shrink-0" />
+              <p className="text-white text-xl font-bold">{dashboardData?.moduleStats.rh.employees + dashboardData?.moduleStats.rh.volunteers + dashboardData?.moduleStats.rh.members}</p>
+              <p className="text-slate-400 text-xs mt-1">Total</p>
+              <p className="text-slate-500 text-xs mt-2">12 employés</p>
             </div>
           </div>
 
           {/* Additional Stats Row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-            <div className="bg-gradient-to-br from-rose-600 to-rose-700 rounded-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-rose-100 text-xs font-medium">Stocks</p>
-                <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.production.stocks}</p>
-                <p className="text-rose-200 text-xs mt-1">{t.stocks}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {/* Stocks */}
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-red-400 hover:shadow-red-400/20 transition-all duration-300 cursor-pointer group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-3 h-3 bg-slate-600 group-hover:bg-red-400 rounded-full transition-colors"></div>
+                <p className="text-slate-300 text-sm font-medium">Stocks</p>
               </div>
-              <Box size={20} className="text-rose-100 ml-2 flex-shrink-0" />
+              <p className="text-white text-xl font-bold">{dashboardData?.moduleStats.production.stocks}</p>
+              <p className="text-slate-400 text-xs mt-1">{t.stocks}</p>
             </div>
-            <div className="bg-gradient-to-br from-pink-600 to-pink-700 rounded-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-pink-100 text-xs font-medium">Articles</p>
-                <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.production.articles}</p>
-                <p className="text-pink-200 text-xs mt-1">{t.articles}</p>
+
+            {/* Articles */}
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-pink-500 hover:shadow-pink-500/20 transition-all duration-300 cursor-pointer group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-3 h-3 bg-slate-600 group-hover:bg-pink-500 rounded-full transition-colors"></div>
+                <p className="text-slate-300 text-sm font-medium">Articles</p>
               </div>
-              <Package size={20} className="text-pink-100 ml-2 flex-shrink-0" />
+              <p className="text-white text-xl font-bold">{dashboardData?.moduleStats.production.articles}</p>
+              <p className="text-slate-400 text-xs mt-1">{t.articles}</p>
             </div>
-            <div className="bg-gradient-to-br from-teal-600 to-teal-700 rounded-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-teal-100 text-xs font-medium">Clients</p>
-                <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.crm.clients}</p>
-                <p className="text-teal-200 text-xs mt-1">Active</p>
+
+            {/* Clients */}
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-teal-400 hover:shadow-teal-400/20 transition-all duration-300 cursor-pointer group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-3 h-3 bg-slate-600 group-hover:bg-teal-400 rounded-full transition-colors"></div>
+                <p className="text-slate-300 text-sm font-medium">Clients</p>
               </div>
-              <Users2 size={20} className="text-teal-100 ml-2 flex-shrink-0" />
+              <p className="text-white text-xl font-bold">{dashboardData?.moduleStats.crm.clients}</p>
+              <p className="text-slate-400 text-xs mt-1">Actifs</p>
             </div>
-            <div className="bg-gradient-to-br from-lime-600 to-lime-700 rounded-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-lime-100 text-xs font-medium">{t.orders}</p>
-                <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.production.orders}</p>
-                <p className="text-lime-200 text-xs mt-1">{t.total}</p>
+
+            {/* Commandes */}
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-lime-500 hover:shadow-lime-500/20 transition-all duration-300 cursor-pointer group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-3 h-3 bg-slate-600 group-hover:bg-lime-500 rounded-full transition-colors"></div>
+                <p className="text-slate-300 text-sm font-medium">{t.orders}</p>
               </div>
-              <Truck size={20} className="text-lime-100 ml-2 flex-shrink-0" />
+              <p className="text-white text-xl font-bold">{dashboardData?.moduleStats.production.orders}</p>
+              <p className="text-slate-400 text-xs mt-1">{t.total}</p>
             </div>
-            <div className="bg-gradient-to-br from-violet-600 to-violet-700 rounded-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-violet-100 text-xs font-medium">{t.beneficiaries}</p>
-                <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.rh.beneficiaries}</p>
-                <p className="text-violet-200 text-xs mt-1">Personnes</p>
+
+            {/* Bénéficiaires */}
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-violet-500 hover:shadow-violet-500/20 transition-all duration-300 cursor-pointer group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-3 h-3 bg-slate-600 group-hover:bg-violet-500 rounded-full transition-colors"></div>
+                <p className="text-slate-300 text-sm font-medium">{t.beneficiaries}</p>
               </div>
-              <Heart size={20} className="text-violet-100 ml-2 flex-shrink-0" />
+              <p className="text-white text-xl font-bold">{dashboardData?.moduleStats.rh.beneficiaries}</p>
+              <p className="text-slate-400 text-xs mt-1">Personnes</p>
             </div>
-            <div className="bg-gradient-to-br from-sky-600 to-sky-700 rounded-lg p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-sky-100 text-xs font-medium">{t.suppliers}</p>
-                <p className="text-base font-bold mt-1">{dashboardData?.moduleStats.crm.suppliers}</p>
-                <p className="text-sky-200 text-xs mt-1">{t.total}</p>
+
+            {/* Fournisseurs */}
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-sky-400 hover:shadow-sky-400/20 transition-all duration-300 cursor-pointer group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-3 h-3 bg-slate-600 group-hover:bg-sky-400 rounded-full transition-colors"></div>
+                <p className="text-slate-300 text-sm font-medium">{t.suppliers}</p>
               </div>
-              <Truck size={20} className="text-sky-100 ml-2 flex-shrink-0" />
+              <p className="text-white text-xl font-bold">{dashboardData?.moduleStats.crm.suppliers}</p>
+              <p className="text-slate-400 text-xs mt-1">{t.total}</p>
             </div>
           </div>
 
