@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Plus, Edit2, Trash2, Users, TrendingUp, Gift, Target } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
-import Header from './Header';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -332,7 +331,6 @@ const CRM = () => {
 
   return (
     <>
-      <Header title={t.title} language={language} setLanguage={setLanguage} />
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
         <div className="max-w-7xl mx-auto">
 
