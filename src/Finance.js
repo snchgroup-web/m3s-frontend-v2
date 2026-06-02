@@ -160,25 +160,61 @@ const Finance = () => {
   }, [language]);
 
   useEffect(() => {
-    setRecettes([
-      { id: 1, description: 'Vente produits', montant: 5000, devise: 'CHF', date: '2026-04-01', categorie: 'Ventes' },
-      { id: 2, description: 'Donation', montant: 2000, devise: 'CFA', date: '2026-04-05', categorie: 'Dons' },
-      { id: 3, description: 'Services', montant: 3500, devise: 'CHF', date: '2026-04-10', categorie: 'Services' },
-    ]);
+    const loadData = async () => {
+      try {
+        const apiUrl = process.env.REACT_APP_API_URL || 'https://web-production-1e53c.up.railway.app/api';
 
-    setDepenses([
-      { id: 1, description: 'Loyer bureau', montant: 1500, devise: 'CHF', date: '2026-04-01', categorie: 'Immobilier' },
-      { id: 2, description: 'Salaires', montant: 8000, devise: 'CHF', date: '2026-04-05', categorie: 'Paie' },
-      { id: 3, description: 'Fournitures', montant: 500, devise: 'CFA', date: '2026-04-08', categorie: 'Opérationnel' },
-    ]);
+        // Charger les expenses
+        const expRes = await fetch(`${apiUrl}/finance/expenses?limit=100`);
+        const expData = await expRes.json();
+        if (expData.success && expData.data) {
+          setDepenses(expData.data.map((d, idx) => ({
+            id: idx,
+            description: d.description || 'N/A',
+            montant: parseFloat(d.amount) || 0,
+            devise: 'CHF',
+            date: d.created_at ? d.created_at.split('T')[0] : '2026-04-01',
+            categorie: d.category || 'Autre'
+          })));
+        }
 
-    setFxHistory([
-      { date: '2026-04-01', rate: 656 },
-      { date: '2026-04-05', rate: 658 },
-      { date: '2026-04-10', rate: 655 },
-      { date: '2026-04-15', rate: 660 },
-      { date: '2026-04-20', rate: 662 },
-    ]);
+        // Charger les recettes
+        const recRes = await fetch(`${apiUrl}/finance/income?limit=100`);
+        const recData = await recRes.json();
+        if (recData.success && recData.data) {
+          setRecettes(recData.data.map((r, idx) => ({
+            id: idx,
+            description: r.description || 'N/A',
+            montant: parseFloat(r.amount) || 0,
+            devise: 'CHF',
+            date: r.created_at ? r.created_at.split('T')[0] : '2026-04-01',
+            categorie: r.category || 'Autre'
+          })));
+        }
+
+        setFxHistory([
+          { date: '2026-04-01', rate: 656 },
+          { date: '2026-04-05', rate: 658 },
+          { date: '2026-04-10', rate: 655 },
+          { date: '2026-04-15', rate: 660 },
+          { date: '2026-04-20', rate: 662 },
+        ]);
+      } catch (error) {
+        console.error('Erreur chargement données:', error);
+        // Fallback mock data si API échoue
+        setRecettes([
+          { id: 1, description: 'Vente produits', montant: 5000, devise: 'CHF', date: '2026-04-01', categorie: 'Ventes' },
+          { id: 2, description: 'Donation', montant: 2000, devise: 'CFA', date: '2026-04-05', categorie: 'Dons' },
+          { id: 3, description: 'Services', montant: 3500, devise: 'CHF', date: '2026-04-10', categorie: 'Services' },
+        ]);
+        setDepenses([
+          { id: 1, description: 'Loyer bureau', montant: 1500, devise: 'CHF', date: '2026-04-01', categorie: 'Immobilier' },
+          { id: 2, description: 'Salaires', montant: 8000, devise: 'CHF', date: '2026-04-05', categorie: 'Paie' },
+          { id: 3, description: 'Fournitures', montant: 500, devise: 'CFA', date: '2026-04-08', categorie: 'Opérationnel' },
+        ]);
+      }
+    };
+    loadData();
   }, []);
 
   const totalRecettes = recettes.reduce((sum, r) => sum + r.montant, 0);
