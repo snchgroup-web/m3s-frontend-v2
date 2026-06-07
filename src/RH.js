@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { Plus, Edit2, Trash2, Users, User, Heart, Users2 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
+import { api } from './api';
 
 const RH = () => {
   const { language } = useLanguage();
@@ -196,21 +197,56 @@ const RH = () => {
     statut: 'Actif'
   });
 
-  // Données de démo
+  // Charger les données depuis BigQuery API
   useEffect(() => {
-    setEmployes([
-      { id: 1, nom: 'Jean Dupont', email: 'jean.dupont@seneswiss.sn', telephone: '+221 77 123 4567', poste: 'Développeur', departement: 'IT', dateEmbauche: '2024-01-15', statut: 'Actif' },
-      { id: 2, nom: 'Marie Sall', email: 'marie.sall@seneswiss.sn', telephone: '+221 77 234 5678', poste: 'Responsable Finance', departement: 'Finance', dateEmbauche: '2023-06-01', statut: 'Actif' },
-      { id: 3, nom: 'Pierre Ndiaye', email: 'pierre.ndiaye@seneswiss.sn', telephone: '+221 77 345 6789', poste: 'Manager', departement: 'Gestion', dateEmbauche: '2022-03-10', statut: 'Actif' },
-      { id: 4, nom: 'Sophie Ba', email: 'sophie.ba@seneswiss.sn', telephone: '+221 77 456 7890', poste: 'Responsable RH', departement: 'RH', dateEmbauche: '2023-09-01', statut: 'Actif' },
-    ]);
+    const loadData = async () => {
+      try {
+        // Charger les employés depuis l'API /api/users (table utilisateurs)
+        const response = await api.getUsers(100, 0);
+        console.log('🔍 RH API Response:', response);
 
+        if (response?.data && Array.isArray(response.data)) {
+          // Mapper les données BigQuery vers le format du composant
+          const mappedEmployes = response.data.map(emp => ({
+            id: emp.id || emp.user_id,
+            nom: emp.full_name || `${emp.prenom} ${emp.nom}`,
+            email: emp.email_pro || emp.email_work,
+            telephone: emp.telephone || emp.phone,
+            poste: emp.poste || emp.position || 'N/A',
+            departement: 'IT', // À déterminer depuis les données
+            dateEmbauche: emp.created_at ? emp.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
+            statut: emp.active ? 'Actif' : 'Inactif'
+          }));
+          setEmployes(mappedEmployes);
+          console.log('✅ RH Employees loaded:', mappedEmployes.length, 'rows');
+        } else {
+          // Fallback aux mock data si l'API échoue
+          console.log('⚠️ API response is empty, using fallback data');
+          setEmployes([
+            { id: 1, nom: 'Jean Dupont', email: 'jean.dupont@seneswiss.sn', telephone: '+221 77 123 4567', poste: 'Développeur', departement: 'IT', dateEmbauche: '2024-01-15', statut: 'Actif' },
+            { id: 2, nom: 'Marie Sall', email: 'marie.sall@seneswiss.sn', telephone: '+221 77 234 5678', poste: 'Responsable Finance', departement: 'Finance', dateEmbauche: '2023-06-01', statut: 'Actif' },
+          ]);
+        }
+      } catch (error) {
+        console.log('❌ RH error:', error);
+        // Fallback mock data
+        setEmployes([
+          { id: 1, nom: 'Jean Dupont', email: 'jean.dupont@seneswiss.sn', telephone: '+221 77 123 4567', poste: 'Développeur', departement: 'IT', dateEmbauche: '2024-01-15', statut: 'Actif' },
+          { id: 2, nom: 'Marie Sall', email: 'marie.sall@seneswiss.sn', telephone: '+221 77 234 5678', poste: 'Responsable Finance', departement: 'Finance', dateEmbauche: '2023-06-01', statut: 'Actif' },
+        ]);
+      }
+    };
+
+    loadData();
+
+    // Mock data pour Bénévoles (À remplacer avec API si nécessaire)
     setBenevoles([
       { id: 1, nom: 'Abdoulaye Diop', email: 'abdoulaye@example.com', telephone: '+221 77 567 8901', poste: 'Bénévole IT', departement: 'IT', dateEmbauche: '2024-02-01', statut: 'Actif' },
       { id: 2, nom: 'Fatoumata Cisse', email: 'fatoumata@example.com', telephone: '+221 77 678 9012', poste: 'Bénévole Social', departement: 'Social', dateEmbauche: '2023-10-15', statut: 'Actif' },
       { id: 3, nom: 'Ousmane Toure', email: 'ousmane@example.com', telephone: '+221 77 789 0123', poste: 'Bénévole Événements', departement: 'Événements', dateEmbauche: '2024-01-20', statut: 'Inactif' },
     ]);
 
+    // Mock data pour Membres (À remplacer avec API si nécessaire)
     setMembres([
       { id: 1, nom: 'Assane Seck', email: 'assane@seneswiss.sn', telephone: '+221 77 890 1234', poste: 'Membre', departement: 'Général', dateEmbauche: '2020-05-10', statut: 'Actif' },
       { id: 2, nom: 'Hawa Diallo', email: 'hawa@seneswiss.sn', telephone: '+221 77 901 2345', poste: 'Membre Fondateur', departement: 'Général', dateEmbauche: '2019-01-01', statut: 'Actif' },
