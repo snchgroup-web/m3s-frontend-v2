@@ -304,6 +304,37 @@ const Finance = () => {
       mois: getMonthName(item.mois)
     })), [monthlyDataRaw, getMonthName]);
 
+  // Transform 350 FX rates into yearly data for chart
+  const fxYearlyData = useMemo(() => {
+    if (!fxHistory || fxHistory.length === 0) return [];
+
+    const yearlyMap = {};
+    fxHistory.forEach(item => {
+      try {
+        const dateStr = item.date || '';
+        const year = dateStr.substring(0, 4);
+        const rate = parseFloat(item.rate) || 0;
+
+        if (!yearlyMap[year]) {
+          yearlyMap[year] = { rates: [], year };
+        }
+        if (rate > 0) {
+          yearlyMap[year].rates.push(rate);
+        }
+      } catch (e) {
+        // Skip malformed dates
+      }
+    });
+
+    // Calculate average per year
+    return Object.values(yearlyMap)
+      .map(data => ({
+        année: data.year,
+        'Taux Moyen': parseFloat((data.rates.reduce((a, b) => a + b, 0) / data.rates.length).toFixed(2))
+      }))
+      .sort((a, b) => a.année - b.année);
+  }, [fxHistory]);
+
   const handleFormChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -488,12 +519,12 @@ const Finance = () => {
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
               <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={fxHistory.slice(-5)}>
+                <LineChart data={fxYearlyData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-                  <XAxis dataKey="date" stroke="#94a3b8" />
+                  <XAxis dataKey="année" stroke="#94a3b8" />
                   <YAxis stroke="#94a3b8" />
                   <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
-                  <Line type="monotone" dataKey="rate" stroke="#8b5cf6" strokeWidth={2} dot={{ fill: '#8b5cf6' }} />
+                  <Line type="monotone" dataKey="Taux Moyen" stroke="#a78bfa" strokeWidth={3} dot={{ fill: '#a78bfa', r: 6 }} activeDot={{ r: 8 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
