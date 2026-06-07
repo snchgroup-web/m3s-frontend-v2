@@ -59,6 +59,30 @@ export const api = {
     }
   },
 
+  // Finance - Historique des taux de change (FX History)
+  getFxHistory: async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/finance/fx-history`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    } catch (erreur) {
+      console.error(`❌ FX History API Error:`, erreur.message);
+      // Retourner structure vide au lieu de throw
+      return { success: false, data: [], error: erreur.message };
+    }
+  },
+
+  // Generic GET method for any API endpoint
+  get: async (endpoint) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}${endpoint}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    } catch (erreur) {
+      handleError(erreur, endpoint);
+    }
+  },
+
   // ============================================================================
   // APPELS API DOCUMENTS (GED - Gestion Électronique des Documents)
   // ============================================================================

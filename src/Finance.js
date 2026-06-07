@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft } from 'lucide-react';
+import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Search } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
+import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -30,9 +31,20 @@ const Finance = () => {
   const [recettes, setRecettes] = useState([]);
   const [depenses, setDepenses] = useState([]);
   const [fxHistory, setFxHistory] = useState([]);
+  const [searchFx, setSearchFx] = useState('');
+  const [filterDevise, setFilterDevise] = useState('');
+  const [showFxModal, setShowFxModal] = useState(false);
+  const [editingFxId, setEditingFxId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('recette');
   const [editingId, setEditingId] = useState(null);
+  const [fxFormData, setFxFormData] = useState({
+    devise_from: 'CHF',
+    devise_to: 'CFA',
+    rate: '',
+    date: new Date().toISOString().split('T')[0],
+    source: 'Manual'
+  });
   const [formData, setFormData] = useState({
     description: '',
     montant: '',
@@ -70,7 +82,16 @@ const Finance = () => {
       creerDepense: 'Nouvelle dépense',
       creer: 'Créer',
       modifier: 'Modifier',
-      annuler: 'Annuler'
+      annuler: 'Annuler',
+      deviseBase: 'Devise Source',
+      deviseCible: 'Devise Cible',
+      taux: 'Taux',
+      source: 'Source',
+      nouveauTaux: 'Ajouter Taux',
+      modifierTaux: 'Modifier Taux',
+      rechercher: 'Rechercher...',
+      filtreDevise: 'Filtrer par devise',
+      id: 'ID'
     },
     EN: {
       title: 'Finance',
@@ -99,7 +120,16 @@ const Finance = () => {
       creerDepense: 'New expense',
       creer: 'Create',
       modifier: 'Edit',
-      annuler: 'Cancel'
+      annuler: 'Cancel',
+      deviseBase: 'Base Currency',
+      deviseCible: 'Target Currency',
+      taux: 'Rate',
+      source: 'Source',
+      nouveauTaux: 'Add Exchange Rate',
+      modifierTaux: 'Edit Rate',
+      rechercher: 'Search...',
+      filtreDevise: 'Filter by currency',
+      id: 'ID'
     },
     DE: {
       title: 'Finanzen',
@@ -128,11 +158,67 @@ const Finance = () => {
       creerDepense: 'Neue Ausgabe',
       creer: 'Erstellen',
       modifier: 'Bearbeiten',
-      annuler: 'Abbrechen'
+      annuler: 'Abbrechen',
+      deviseBase: 'Basiswährung',
+      deviseCible: 'Zielwährung',
+      taux: 'Wechselkurs',
+      source: 'Quelle',
+      nouveauTaux: 'Wechselkurs hinzufügen',
+      modifierTaux: 'Wechselkurs bearbeiten',
+      rechercher: 'Suche...',
+      filtreDevise: 'Nach Währung filtern',
+      id: 'ID'
     }
   };
 
   const t = translations[language];
+
+  // Phase 2: Load real data from BigQuery via API
+  useEffect(() => {
+    const fetchFinanceData = async () => {
+      try {
+        console.log('Fetching real finance data from API...');
+        const [expensesRes, incomeRes] = await Promise.all([
+          api.getExpenses(100, 0),
+          api.getIncome(100, 0)
+        ]);
+
+        // Format expenses data
+        const expensesData = Array.isArray(expensesRes?.data) ? expensesRes.data : [];
+        const formattedExpenses = expensesData.map(item => ({
+          id: item.id,
+          description: item.description || item.name || 'Transaction',
+          montant: parseFloat(item.montant || item.amount) || 0,
+          categorie: item.category || item.categorie || 'Opérationnel',
+          date: item.date_created || item.created_at || new Date().toISOString().split('T')[0],
+          devise: 'CHF',
+          status: item.status || item.statut || 'completed'
+        }));
+
+        // Format income data
+        const incomeData = Array.isArray(incomeRes?.data) ? incomeRes.data : [];
+        const formattedIncome = incomeData.map(item => ({
+          id: item.id,
+          description: item.description || item.name || 'Transaction',
+          montant: parseFloat(item.montant || item.amount) || 0,
+          categorie: item.category || item.categorie || 'Ventes',
+          date: item.date_created || item.created_at || new Date().toISOString().split('T')[0],
+          devise: 'CHF',
+          status: item.status || item.statut || 'completed'
+        }));
+
+        console.log(`Loaded ${formattedExpenses.length} expenses and ${formattedIncome.length} income from BigQuery`);
+        setDepenses(formattedExpenses);
+        setRecettes(formattedIncome);
+      } catch (error) {
+        console.error('Error fetching finance data:', error);
+        setDepenses([]);
+        setRecettes([]);
+      }
+    };
+
+    fetchFinanceData();
+  }, []);
 
   // Data translations for categories and descriptions
   const dataTranslations = {
@@ -159,62 +245,45 @@ const Finance = () => {
     return shortMonth;
   }, [language]);
 
+  // Load FX history from BigQuery
   useEffect(() => {
-    const loadData = async () => {
+    const loadFxHistory = async () => {
       try {
-        const apiUrl = process.env.REACT_APP_API_URL || 'https://web-production-1e53c.up.railway.app/api';
+        const response = await api.getFxHistory();
+        console.log('🔍 FX API Response:', response);
 
-        // Charger les expenses
-        const expRes = await fetch(`${apiUrl}/finance/expenses?limit=100`);
-        const expData = await expRes.json();
-        if (expData.success && expData.data) {
-          setDepenses(expData.data.map((d, idx) => ({
-            id: idx,
-            description: d.description || 'N/A',
-            montant: parseFloat(d.amount) || 0,
-            devise: 'CHF',
-            date: d.created_at ? d.created_at.split('T')[0] : '2026-04-01',
-            categorie: d.category || 'Autre'
-          })));
+        if (response?.data && Array.isArray(response.data)) {
+          const dataArray = response.data;
+
+          if (dataArray.length > 0) {
+            // Map BigQuery data to display format
+            const mappedData = dataArray.map(item => ({
+              id: item.id,
+              date: item.date,
+              rate: parseFloat(item.rate || 0),
+              devise_from: item.devise_from,
+              devise_to: item.devise_to,
+              taux_buy: parseFloat(item.taux_buy || 0),
+              taux_sell: parseFloat(item.taux_sell || 0),
+              source: item.source,
+              active: item.active
+            }));
+            setFxHistory(mappedData);
+            console.log('✅ FX History loaded:', mappedData.length, 'rows');
+          } else {
+            console.log('⚠️ Response data is empty:', dataArray);
+            setFxHistory([]);
+          }
+        } else {
+          console.log('⚠️ Invalid response structure:', response);
+          setFxHistory([]);
         }
-
-        // Charger les recettes
-        const recRes = await fetch(`${apiUrl}/finance/income?limit=100`);
-        const recData = await recRes.json();
-        if (recData.success && recData.data) {
-          setRecettes(recData.data.map((r, idx) => ({
-            id: idx,
-            description: r.description || 'N/A',
-            montant: parseFloat(r.amount) || 0,
-            devise: 'CHF',
-            date: r.created_at ? r.created_at.split('T')[0] : '2026-04-01',
-            categorie: r.category || 'Autre'
-          })));
-        }
-
-        setFxHistory([
-          { date: '2026-04-01', rate: 656 },
-          { date: '2026-04-05', rate: 658 },
-          { date: '2026-04-10', rate: 655 },
-          { date: '2026-04-15', rate: 660 },
-          { date: '2026-04-20', rate: 662 },
-        ]);
       } catch (error) {
-        console.error('Erreur chargement données:', error);
-        // Fallback mock data si API échoue
-        setRecettes([
-          { id: 1, description: 'Vente produits', montant: 5000, devise: 'CHF', date: '2026-04-01', categorie: 'Ventes' },
-          { id: 2, description: 'Donation', montant: 2000, devise: 'CFA', date: '2026-04-05', categorie: 'Dons' },
-          { id: 3, description: 'Services', montant: 3500, devise: 'CHF', date: '2026-04-10', categorie: 'Services' },
-        ]);
-        setDepenses([
-          { id: 1, description: 'Loyer bureau', montant: 1500, devise: 'CHF', date: '2026-04-01', categorie: 'Immobilier' },
-          { id: 2, description: 'Salaires', montant: 8000, devise: 'CHF', date: '2026-04-05', categorie: 'Paie' },
-          { id: 3, description: 'Fournitures', montant: 500, devise: 'CFA', date: '2026-04-08', categorie: 'Opérationnel' },
-        ]);
+        console.log('❌ FX History error:', error);
+        setFxHistory([]);
       }
     };
-    loadData();
+    loadFxHistory();
   }, []);
 
   const totalRecettes = recettes.reduce((sum, r) => sum + r.montant, 0);
@@ -247,13 +316,13 @@ const Finance = () => {
 
     if (modalType === 'recette') {
       if (editingId) {
-        setRecettes(recettes.map(r => r.id === editingId ? { ...formData, id: editingId } : r));
+        setRecettes(recettes.map(r => r.id === editingId ? { ...formData, id: editingId, montant: parseFloat(formData.montant) } : r));
       } else {
         setRecettes([...recettes, { ...formData, id: Date.now(), montant: parseFloat(formData.montant) }]);
       }
     } else {
       if (editingId) {
-        setDepenses(depenses.map(d => d.id === editingId ? { ...formData, id: editingId } : d));
+        setDepenses(depenses.map(d => d.id === editingId ? { ...formData, id: editingId, montant: parseFloat(formData.montant) } : d));
       } else {
         setDepenses([...depenses, { ...formData, id: Date.now(), montant: parseFloat(formData.montant) }]);
       }
@@ -286,9 +355,53 @@ const Finance = () => {
     setShowModal(true);
   };
 
+  // FX Functions
+  const handleFxFormChange = (field, value) => {
+    setFxFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleFxSave = () => {
+    if (!fxFormData.devise_from || !fxFormData.devise_to || !fxFormData.rate) {
+      alert('Please fill all fields');
+      return;
+    }
+
+    if (editingFxId) {
+      setFxHistory(fxHistory.map(fx => fx.id === editingFxId ? { ...fxFormData, id: editingFxId, rate: parseFloat(fxFormData.rate) } : fx));
+    } else {
+      setFxHistory([...fxHistory, { ...fxFormData, id: `FX-${Date.now()}`, rate: parseFloat(fxFormData.rate) }]);
+    }
+
+    setShowFxModal(false);
+    setEditingFxId(null);
+    setFxFormData({ devise_from: 'CHF', devise_to: 'CFA', rate: '', date: new Date().toISOString().split('T')[0], source: 'Manual' });
+  };
+
+  const handleFxEdit = (fx) => {
+    setEditingFxId(fx.id);
+    setFxFormData(fx);
+    setShowFxModal(true);
+  };
+
+  const handleFxDelete = (id) => {
+    setFxHistory(fxHistory.filter(fx => fx.id !== id));
+  };
+
+  const openNewFxModal = () => {
+    setEditingFxId(null);
+    setFxFormData({ devise_from: 'CHF', devise_to: 'CFA', rate: '', date: new Date().toISOString().split('T')[0], source: 'Manual' });
+    setShowFxModal(true);
+  };
+
+  const filteredFxHistory = useMemo(() =>
+    fxHistory.filter(fx => {
+      const matchesSearch = fx.id?.toString().includes(searchFx) || fx.source?.toLowerCase().includes(searchFx.toLowerCase());
+      const matchesDevise = !filterDevise || fx.devise_from?.includes(filterDevise) || fx.devise_to?.includes(filterDevise);
+      return matchesSearch && matchesDevise;
+    }), [fxHistory, searchFx, filterDevise]);
+
   return (
     <>
-
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
         <div className="max-w-7xl mx-auto">
 
@@ -304,7 +417,7 @@ const Finance = () => {
                 <p className="text-green-200 text-xs">{t.totalRecettes}</p>
                 <div className="text-sm font-bold mt-1 leading-tight">
                   <p className="text-white">{formatDualCurrency(totalRecettes).chf} CHF</p>
-                  <p className="text-white">{formatDualCurrency(totalRecettes).cfa} CFA</p>
+                  <p className="text-white text-xs">{formatDualCurrency(totalRecettes).cfa} CFA</p>
                 </div>
               </div>
               <TrendingUp size={24} className="text-green-400" />
@@ -317,7 +430,7 @@ const Finance = () => {
                 <p className="text-red-200 text-xs">{t.totalDepenses}</p>
                 <div className="text-xs font-bold mt-1 leading-tight">
                   <p className="text-white">{formatDualCurrency(totalDepenses).chf} CHF</p>
-                  <p className="text-white">{formatDualCurrency(totalDepenses).cfa} CFA</p>
+                  <p className="text-white text-xs">{formatDualCurrency(totalDepenses).cfa} CFA</p>
                 </div>
               </div>
               <TrendingDown size={24} className="text-red-400" />
@@ -330,7 +443,7 @@ const Finance = () => {
                 <p className={`${solde >= 0 ? 'text-blue-200' : 'text-orange-200'} text-xs`}>{t.soldeNet}</p>
                 <div className="text-xs font-bold mt-1 leading-tight">
                   <p className="text-white">{formatDualCurrency(solde).chf} CHF</p>
-                  <p className="text-white">{formatDualCurrency(solde).cfa} CFA</p>
+                  <p className="text-white text-xs">{formatDualCurrency(solde).cfa} CFA</p>
                 </div>
               </div>
               <DollarSign size={24} className={solde >= 0 ? 'text-blue-400' : 'text-orange-400'} />
@@ -375,7 +488,7 @@ const Finance = () => {
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
               <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={fxHistory}>
+                <LineChart data={fxHistory.slice(-5)}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
                   <XAxis dataKey="date" stroke="#94a3b8" />
                   <YAxis stroke="#94a3b8" />
@@ -474,105 +587,175 @@ const Finance = () => {
         )}
 
         {activeTab === 'fx' && (
-          <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-            <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
-            <ResponsiveContainer width="100%" height={400}>
-              <LineChart data={fxHistory}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-                <XAxis dataKey="date" stroke="#94a3b8" />
-                <YAxis stroke="#94a3b8" />
-                <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
-                <Legend />
-                <Line type="monotone" dataKey="rate" stroke="#8b5cf6" strokeWidth={3} dot={{ fill: '#8b5cf6', r: 6 }} />
-              </LineChart>
-            </ResponsiveContainer>
+          <div>
+            <div className="mb-4 flex gap-4 items-center">
+              <div className="flex-1 relative">
+                <Search size={18} className="absolute left-3 top-3 text-slate-500" />
+                <input
+                  type="text"
+                  placeholder={t.rechercher}
+                  value={searchFx}
+                  onChange={(e) => setSearchFx(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
+                />
+              </div>
+              <select
+                value={filterDevise}
+                onChange={(e) => setFilterDevise(e.target.value)}
+                className="px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
+              >
+                <option value="">{t.filtreDevise}</option>
+                <option value="CHF">CHF</option>
+                <option value="CFA">CFA</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+              </select>
+              <button onClick={openNewFxModal} className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
+                <Plus size={20} /> {t.nouveauTaux}
+              </button>
+            </div>
+
+            <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-700">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-white font-bold">{t.id}</th>
+                    <th className="px-4 py-3 text-left text-white font-bold">{t.date}</th>
+                    <th className="px-4 py-3 text-left text-white font-bold">{t.deviseBase}</th>
+                    <th className="px-4 py-3 text-left text-white font-bold">{t.deviseCible}</th>
+                    <th className="px-4 py-3 text-left text-white font-bold">{t.taux}</th>
+                    <th className="px-4 py-3 text-left text-white font-bold">{t.source}</th>
+                    <th className="px-4 py-3 text-left text-white font-bold">{t.actions}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredFxHistory.length > 0 ? (
+                    filteredFxHistory.map(fx => (
+                      <tr key={fx.id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                        <td className="px-4 py-3 text-slate-300 text-xs">{fx.id}</td>
+                        <td className="px-4 py-3 text-slate-300">{fx.date}</td>
+                        <td className="px-4 py-3 text-blue-400 font-bold">{fx.devise_from}</td>
+                        <td className="px-4 py-3 text-green-400 font-bold">{fx.devise_to}</td>
+                        <td className="px-4 py-3 text-purple-400 font-bold">{parseFloat(fx.rate).toFixed(2)}</td>
+                        <td className="px-4 py-3 text-slate-400">{fx.source}</td>
+                        <td className="px-4 py-3 flex gap-2">
+                          <button onClick={() => handleFxEdit(fx)} className="p-1 hover:bg-slate-600 rounded">
+                            <Edit2 size={16} className="text-blue-400" />
+                          </button>
+                          <button onClick={() => handleFxDelete(fx.id)} className="p-1 hover:bg-slate-600 rounded">
+                            <Trash2 size={16} className="text-red-400" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="7" className="px-6 py-8 text-center text-slate-400">
+                        {fxHistory.length === 0 ? 'No FX data loaded. Loading from BigQuery...' : 'No results found'}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-slate-400 text-sm mt-4">Total taux: {filteredFxHistory.length}</p>
           </div>
         )}
-      </div>
 
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
-            <h2 className="text-2xl font-bold text-white mb-6">
-              {editingId ? (modalType === 'recette' ? t.modifierRecette : t.modifierDepense) : (modalType === 'recette' ? t.creerRecette : t.creerDepense)}
-            </h2>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.description}</label>
+        {showModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-slate-800 rounded-lg p-6 max-w-md w-full border border-slate-700">
+              <h2 className="text-white font-bold mb-4">{editingId ? (modalType === 'recette' ? t.modifierRecette : t.modifierDepense) : (modalType === 'recette' ? t.creerRecette : t.creerDepense)}</h2>
+              <div className="space-y-4">
                 <input
                   type="text"
+                  placeholder={t.description}
                   value={formData.description}
                   onChange={(e) => handleFormChange('description', e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500"
-                  placeholder="ex: Vente produits"
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
                 />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.montant}</label>
                 <input
                   type="number"
+                  placeholder={t.montant}
                   value={formData.montant}
                   onChange={(e) => handleFormChange('montant', e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500"
-                  placeholder="0"
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
                 />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.devise}</label>
-                <select
-                  value={formData.devise}
-                  onChange={(e) => handleFormChange('devise', e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500"
-                >
+                <select value={formData.devise} onChange={(e) => handleFormChange('devise', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
                   <option>CHF</option>
                   <option>CFA</option>
-                  <option>EUR</option>
                 </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.categorie}</label>
                 <input
                   type="text"
+                  placeholder={t.categorie}
                   value={formData.categorie}
                   onChange={(e) => handleFormChange('categorie', e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500"
-                  placeholder="ex: Ventes"
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
                 />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.date}</label>
                 <input
                   type="date"
                   value={formData.date}
                   onChange={(e) => handleFormChange('date', e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
                 />
+                <div className="flex gap-4 justify-end">
+                  <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg">{t.annuler}</button>
+                  <button onClick={handleSave} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">{t.creer}</button>
+                </div>
               </div>
             </div>
+          </div>
+        )}
 
-            <div className="flex gap-3 mt-6">
-              <button
-                onClick={() => setShowModal(false)}
-                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition"
-              >
-                {t.annuler}
-              </button>
-              <button
-                onClick={handleSave}
-                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
-              >
-                {editingId ? t.modifier : t.creer}
-              </button>
+        {showFxModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-slate-800 rounded-lg p-6 max-w-md w-full border border-slate-700">
+              <h2 className="text-white font-bold mb-4">{editingFxId ? t.modifierTaux : t.nouveauTaux}</h2>
+              <div className="space-y-4">
+                <select value={fxFormData.devise_from} onChange={(e) => handleFxFormChange('devise_from', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                  <option>CHF</option>
+                  <option>CFA</option>
+                  <option>USD</option>
+                  <option>EUR</option>
+                </select>
+                <select value={fxFormData.devise_to} onChange={(e) => handleFxFormChange('devise_to', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                  <option>CFA</option>
+                  <option>CHF</option>
+                  <option>USD</option>
+                  <option>EUR</option>
+                </select>
+                <input
+                  type="number"
+                  step="0.01"
+                  placeholder={t.taux}
+                  value={fxFormData.rate}
+                  onChange={(e) => handleFxFormChange('rate', e.target.value)}
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
+                />
+                <input
+                  type="date"
+                  value={fxFormData.date}
+                  onChange={(e) => handleFxFormChange('date', e.target.value)}
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
+                />
+                <input
+                  type="text"
+                  placeholder={t.source}
+                  value={fxFormData.source}
+                  onChange={(e) => handleFxFormChange('source', e.target.value)}
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
+                />
+                <div className="flex gap-4 justify-end">
+                  <button onClick={() => setShowFxModal(false)} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg">{t.annuler}</button>
+                  <button onClick={handleFxSave} className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg">{t.creer}</button>
+                </div>
+              </div>
             </div>
           </div>
+        )}
+
         </div>
-      )}
-    </div>
+      </div>
     </>
   );
 };
