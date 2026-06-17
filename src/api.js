@@ -11,6 +11,19 @@
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+const apiFetch = (url, options = {}) => fetch(url, {
+  ...options,
+  headers: {
+    ...getAuthHeaders(),
+    ...(options.headers || {})
+  }
+});
+
 // Gestion des erreurs centralisée
 const handleError = (erreur, endpoint) => {
   console.error(`Erreur API [${endpoint}]:`, erreur);
@@ -25,7 +38,7 @@ export const api = {
   // Finance - Tableau de bord
   getFinanceDashboard: async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/finance/dashboard`);
+      const res = await apiFetch(`${API_BASE_URL}/finance/dashboard`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (erreur) {
@@ -36,7 +49,7 @@ export const api = {
   // Finance - Dépenses
   getExpenses: async (limite = 100, decalage = 0) => {
     try {
-      const res = await fetch(
+      const res = await apiFetch(
         `${API_BASE_URL}/finance/expenses?limit=${limite}&offset=${decalage}`
       );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -49,7 +62,7 @@ export const api = {
   // Finance - Revenus/Recettes
   getIncome: async (limite = 100, decalage = 0) => {
     try {
-      const res = await fetch(
+      const res = await apiFetch(
         `${API_BASE_URL}/finance/income?limit=${limite}&offset=${decalage}`
       );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -62,7 +75,7 @@ export const api = {
   // Finance - Historique des taux de change (FX History)
   getFxHistory: async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/finance/fx-history`);
+      const res = await apiFetch(`${API_BASE_URL}/finance/fx-history`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (erreur) {
@@ -75,7 +88,7 @@ export const api = {
   // Generic GET method for any API endpoint
   get: async (endpoint) => {
     try {
-      const res = await fetch(`${API_BASE_URL}${endpoint}`);
+      const res = await apiFetch(`${API_BASE_URL}${endpoint}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (erreur) {
@@ -93,7 +106,7 @@ export const api = {
       let url = `${API_BASE_URL}/documents?limit=${limite}&offset=${decalage}`;
       if (type) url += `&type=${type}`;
 
-      const res = await fetch(url);
+      const res = await apiFetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (erreur) {
@@ -104,7 +117,7 @@ export const api = {
   // Documents - Nombre total
   getDocumentsCount: async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/documents/count`);
+      const res = await apiFetch(`${API_BASE_URL}/documents/count`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (erreur) {
@@ -119,7 +132,7 @@ export const api = {
   // Inventaire - Liste
   getInventory: async (limite = 100, decalage = 0) => {
     try {
-      const res = await fetch(
+      const res = await apiFetch(
         `${API_BASE_URL}/inventory?limit=${limite}&offset=${decalage}`
       );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -132,7 +145,7 @@ export const api = {
   // Inventaire - Nombre total
   getInventoryCount: async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/inventory/count`);
+      const res = await apiFetch(`${API_BASE_URL}/inventory/count`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (erreur) {
@@ -150,7 +163,7 @@ export const api = {
       let url = `${API_BASE_URL}/tasks?limit=${limite}&offset=${decalage}`;
       if (statut) url += `&status=${statut}`;
 
-      const res = await fetch(url);
+      const res = await apiFetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (erreur) {
@@ -161,7 +174,7 @@ export const api = {
   // Tâches - Nombre total
   getTasksCount: async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/tasks/count`);
+      const res = await apiFetch(`${API_BASE_URL}/tasks/count`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (erreur) {
@@ -176,7 +189,7 @@ export const api = {
   // Utilisateurs - Liste
   getUsers: async (limite = 100, decalage = 0) => {
     try {
-      const res = await fetch(
+      const res = await apiFetch(
         `${API_BASE_URL}/users?limit=${limite}&offset=${decalage}`
       );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -193,7 +206,7 @@ export const api = {
   // Taux de change - Liste
   getFXRates: async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/fx-rates`);
+      const res = await apiFetch(`${API_BASE_URL}/fx-rates`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (erreur) {
@@ -208,7 +221,7 @@ export const api = {
   // Vérification de santé
   getHealth: async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/health`);
+      const res = await apiFetch(`${API_BASE_URL}/health`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (erreur) {
@@ -219,7 +232,7 @@ export const api = {
   // Info API (liste tous les endpoints)
   getInfo: async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/info`);
+      const res = await apiFetch(`${API_BASE_URL}/info`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (erreur) {

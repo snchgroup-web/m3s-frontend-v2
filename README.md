@@ -44,6 +44,14 @@ npm start
 
 L'application s'ouvrira à [http://localhost:3000](http://localhost:3000)
 
+## Authentification
+
+En développement local, copier `.env.example` vers `.env.local` et garder `REACT_APP_ENABLE_DEMO_AUTH=true` pour utiliser les comptes de démonstration.
+
+En production, `REACT_APP_ENABLE_DEMO_AUTH=false` force l'application à utiliser `POST /api/auth/login` sur le backend configuré par `REACT_APP_API_URL`.
+
+Après connexion backend, le frontend envoie automatiquement le token `Authorization: Bearer ...` sur les appels API.
+
 ## Build pour la production
 
 ```bash

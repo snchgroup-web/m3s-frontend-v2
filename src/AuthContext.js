@@ -1,14 +1,26 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+
+const readStoredUser = () => {
+  try {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  } catch {
+    localStorage.removeItem('user');
+    return null;
+  }
+};
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(readStoredUser);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const demoAuthEnabled = process.env.REACT_APP_ENABLE_DEMO_AUTH === 'true';
 
-  // Comptes de démo locaux
+  // Comptes de démonstration locaux, uniquement pour le développement.
   const demoAccounts = {
     'cheikh@seneswiss.sn': { password: 'manager123', name: 'Cheikh', role: 'Manager' },
     'chantal@seneswiss.sn': { password: 'finance123', name: 'Chantal', role: 'Admin Finance' },
@@ -20,27 +32,52 @@ export const AuthProvider = ({ children }) => {
     setError('');
 
     try {
-      // Vérifier les comptes de démo localement
-      if (demoAccounts[email] && demoAccounts[email].password === password) {
-        const account = demoAccounts[email];
-        const fakeToken = `fake_jwt_${Date.now()}_${Math.random()}`;
-        
-        setToken(fakeToken);
-        localStorage.setItem('token', fakeToken);
-        setUser({
-          email,
-          name: account.name,
-          role: account.role
+      if (!demoAuthEnabled) {
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
         });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          const message = result.error || 'Email ou mot de passe incorrect';
+          setError(message);
+          return { success: false, error: message };
+        }
+
+        setToken(result.token);
+        setUser(result.user);
+        localStorage.setItem('token', result.token);
+        localStorage.setItem('user', JSON.stringify(result.user));
 
         return { success: true };
-      } else {
-        setError('Email ou mot de passe incorrect');
-        return { success: false, error: 'Email ou mot de passe incorrect' };
       }
-    } catch (err) {
-      setError('Erreur de connexion');
-      return { success: false, error: 'Erreur de connexion' };
+
+      const account = demoAccounts[email];
+      if (!account || account.password !== password) {
+        const message = 'Email ou mot de passe incorrect';
+        setError(message);
+        return { success: false, error: message };
+      }
+
+      const fakeToken = `demo_session_${Date.now()}_${Math.random()}`;
+      const sessionUser = {
+        email,
+        name: account.name,
+        role: account.role
+      };
+
+      setToken(fakeToken);
+      setUser(sessionUser);
+      localStorage.setItem('token', fakeToken);
+      localStorage.setItem('user', JSON.stringify(sessionUser));
+
+      return { success: true };
+    } catch {
+      const message = 'Erreur de connexion';
+      setError(message);
+      return { success: false, error: message };
     } finally {
       setLoading(false);
     }
@@ -50,12 +87,13 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
   };
 
-  const isAuthenticated = !!token;
+  const isAuthenticated = Boolean(token && user);
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout, error, loading, isAuthenticated }}>
+    <AuthContext.Provider value={{ token, user, login, logout, error, loading, isAuthenticated, demoAuthEnabled }}>
       {children}
     </AuthContext.Provider>
   );
