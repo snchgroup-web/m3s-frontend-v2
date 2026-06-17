@@ -1,14 +1,30 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AlertCircle, Lock, Mail } from 'lucide-react';
 import { useAuth } from './AuthContext';
-import { Lock, Mail, AlertCircle } from 'lucide-react';
+
+const demoAccounts = [
+  { email: 'cheikh@seneswiss.sn', password: 'manager123', name: 'Cheikh', role: 'Manager' },
+  { email: 'chantal@seneswiss.sn', password: 'finance123', name: 'Chantal', role: 'Admin Finance' },
+  { email: 'pape@seneswiss.sn', password: 'admin123', name: 'Pape', role: 'Administrateur' }
+];
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login, error, loading } = useAuth();
+  const { login, error, loading, demoAuthEnabled } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [localError, setLocalError] = useState('');
+
+  const submitLogin = async (loginEmail, loginPassword) => {
+    const result = await login(loginEmail, loginPassword);
+
+    if (result.success) {
+      navigate('/');
+    } else {
+      setLocalError(result.error || 'Erreur de connexion');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,22 +35,14 @@ const Login = () => {
       return;
     }
 
-    const result = await login(email, password);
-
-    if (result.success) {
-      navigate('/');
-    } else {
-      setLocalError(result.error || 'Erreur de connexion');
-    }
+    await submitLogin(email, password);
   };
 
-  const demoLogin = async (demoEmail, demoPassword) => {
-    setEmail(demoEmail);
-    setPassword(demoPassword);
-    const result = await login(demoEmail, demoPassword);
-    if (result.success) {
-      navigate('/');
-    }
+  const demoLogin = async (account) => {
+    setLocalError('');
+    setEmail(account.email);
+    setPassword(account.password);
+    await submitLogin(account.email, account.password);
   };
 
   return (
@@ -61,7 +69,7 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-2">
-                Adresse Email
+                Adresse email
               </label>
               <div className="relative">
                 <Mail size={18} className="absolute left-3 top-3 text-slate-500" />
@@ -100,37 +108,34 @@ const Login = () => {
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-slate-700">
-            <p className="text-xs text-slate-400 mb-3 text-center">Comptes de démonstration:</p>
-            <div className="space-y-2">
-              <button
-                onClick={() => demoLogin('cheikh@seneswiss.sn', 'manager123')}
-                disabled={loading}
-                className="w-full text-left px-3 py-2 text-sm bg-slate-700 hover:bg-slate-600 rounded transition text-slate-300 disabled:opacity-50"
-              >
-                <span className="font-medium text-blue-400">Cheikh</span> (Manager)
-              </button>
-              <button
-                onClick={() => demoLogin('chantal@seneswiss.sn', 'finance123')}
-                disabled={loading}
-                className="w-full text-left px-3 py-2 text-sm bg-slate-700 hover:bg-slate-600 rounded transition text-slate-300 disabled:opacity-50"
-              >
-                <span className="font-medium text-blue-400">Chantal</span> (Admin Finance)
-              </button>
-              <button
-                onClick={() => demoLogin('pape@seneswiss.sn', 'admin123')}
-                disabled={loading}
-                className="w-full text-left px-3 py-2 text-sm bg-slate-700 hover:bg-slate-600 rounded transition text-slate-300 disabled:opacity-50"
-              >
-                <span className="font-medium text-blue-400">Pape</span> (Administrateur)
-              </button>
+          {demoAuthEnabled ? (
+            <div className="mt-6 pt-6 border-t border-slate-700">
+              <p className="text-xs text-slate-400 mb-3 text-center">Comptes de démonstration locaux :</p>
+              <div className="space-y-2">
+                {demoAccounts.map((account) => (
+                  <button
+                    key={account.email}
+                    onClick={() => demoLogin(account)}
+                    disabled={loading}
+                    className="w-full text-left px-3 py-2 text-sm bg-slate-700 hover:bg-slate-600 rounded transition text-slate-300 disabled:opacity-50"
+                  >
+                    <span className="font-medium text-blue-400">{account.name}</span> ({account.role})
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="mt-6 pt-6 border-t border-slate-700">
+              <p className="text-xs text-amber-300 text-center">
+                Connexion backend requise. Le mode démonstration local est désactivé.
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="mt-8 text-center text-slate-500 text-xs">
-          <p>Accès sécurisé avec JWT</p>
-          <p className="mt-1">API: europe-west6.run.app</p>
+          <p>{demoAuthEnabled ? 'Mode démonstration local' : 'Accès sécurisé par backend'}</p>
+          <p className="mt-1">API: {process.env.REACT_APP_API_URL || 'http://localhost:3001/api'}</p>
         </div>
       </div>
     </div>

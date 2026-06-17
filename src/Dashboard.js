@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Header from './Header';
+import api from './api';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -15,6 +16,20 @@ const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
 // Exchange rate: 1 CHF = 656 CFA
 const CHF_TO_CFA_RATE = 656;
+
+const numberFromApi = (value, fallback = 0) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
+
+const withApiFallback = async (request, fallback = null) => {
+  try {
+    return await request();
+  } catch (error) {
+    console.warn('Dashboard API fallback:', error.message);
+    return fallback;
+  }
+};
 
 // Format currency with both CHF and CFA - returns object for separate display
 const formatDualCurrency = (chfAmount) => {
@@ -208,12 +223,56 @@ const Dashboard = () => {
     { name: t.members, value: 156 }
   ];
 
-  // Fetch data from API
+  // Fetch data from API, with stable mock fallback when the backend is unavailable.
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        setDashboardData(mockDataBase);
+
+        const [financeDashboard, documentsCount, inventoryCount, tasksCount, users] = await Promise.all([
+          withApiFallback(() => api.getFinanceDashboard()),
+          withApiFallback(() => api.getDocumentsCount()),
+          withApiFallback(() => api.getInventoryCount()),
+          withApiFallback(() => api.getTasksCount()),
+          withApiFallback(() => api.getUsers(100, 0))
+        ]);
+
+        const totalIncome = numberFromApi(financeDashboard?.data?.total_income, mockDataBase.moduleStats.finance.revenue);
+        const totalExpenses = numberFromApi(financeDashboard?.data?.total_expenses, mockDataBase.moduleStats.finance.expenses);
+        const inventoryTotal = numberFromApi(inventoryCount?.total, mockDataBase.moduleStats.production.stocks);
+        const documentsTotal = numberFromApi(documentsCount?.total, mockDataBase.moduleStats.ged.documents);
+        const tasksTotal = numberFromApi(tasksCount?.total, mockDataBase.moduleStats.tasks.total);
+        const userRows = Array.isArray(users?.data) ? users.data : [];
+
+        setDashboardData({
+          ...mockDataBase,
+          moduleStats: {
+            ...mockDataBase.moduleStats,
+            finance: {
+              ...mockDataBase.moduleStats.finance,
+              revenue: totalIncome,
+              expenses: totalExpenses,
+              balance: totalIncome - totalExpenses
+            },
+            production: {
+              ...mockDataBase.moduleStats.production,
+              stocks: inventoryTotal
+            },
+            ged: {
+              ...mockDataBase.moduleStats.ged,
+              documents: documentsTotal
+            },
+            tasks: {
+              ...mockDataBase.moduleStats.tasks,
+              total: tasksTotal
+            },
+            rh: {
+              ...mockDataBase.moduleStats.rh,
+              employees: userRows.length || mockDataBase.moduleStats.rh.employees
+            }
+          }
+        });
+
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
           setUser(JSON.parse(storedUser));
@@ -225,7 +284,7 @@ const Dashboard = () => {
           });
         }
       } catch (err) {
-        console.log('Using mock data');
+        console.warn('Using dashboard mock data:', err.message);
         setDashboardData(mockDataBase);
         setUser({
           name: 'Utilisateur M3S',
