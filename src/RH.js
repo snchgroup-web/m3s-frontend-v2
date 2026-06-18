@@ -463,9 +463,9 @@ const RH = () => {
         {/* Tabs */}
         <div className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
           <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.overview}</button>
+          <button onClick={() => setActiveTab('membres')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'membres' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.membres} ({totalMembres})</button>
           <button onClick={() => setActiveTab('employes')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'employes' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.employes} ({totalEmployes})</button>
           <button onClick={() => setActiveTab('benevoles')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'benevoles' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.benevoles} ({totalBenevoles})</button>
-          <button onClick={() => setActiveTab('membres')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'membres' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.membres} ({totalMembres})</button>
         </div>
 
         {/* Vue d'ensemble */}
