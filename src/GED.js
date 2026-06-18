@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Plus, Edit2, Trash2, FileText, Folder, Download, Upload } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
@@ -8,6 +8,7 @@ import api from './api';
 const GED = () => {
   const { language } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Translations
   const translations = {
@@ -181,8 +182,15 @@ const GED = () => {
     const tab = new URLSearchParams(location.search).get('tab');
     if (['overview', 'documents', 'dossiers'].includes(tab)) {
       setActiveTab(tab);
+    } else {
+      setActiveTab('documents');
     }
   }, [location.search]);
+
+  const selectTab = (tab) => {
+    setActiveTab(tab);
+    navigate(`/ged?tab=${tab}`);
+  };
  
   useEffect(() => {
     const loadDocuments = async () => {
@@ -356,9 +364,9 @@ const GED = () => {
  
         {/* Tabs */}
         <div className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
-          <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.overview}</button>
-          <button onClick={() => setActiveTab('documents')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'documents' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.documents}</button>
-          <button onClick={() => setActiveTab('dossiers')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'dossiers' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.dossiers}</button>
+          <button onClick={() => selectTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.overview}</button>
+          <button onClick={() => selectTab('documents')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'documents' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.documents}</button>
+          <button onClick={() => selectTab('dossiers')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'dossiers' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.dossiers}</button>
         </div>
  
         {/* Vue d'ensemble */}
