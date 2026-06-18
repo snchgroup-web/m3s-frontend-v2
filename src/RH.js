@@ -28,6 +28,7 @@ const RH = () => {
       telephone: 'Téléphone',
       poste: 'Poste',
       departement: 'Département',
+      typeMembre: 'Type',
       statut: 'Statut',
       actions: 'Actions',
       ajouter: 'Ajouter',
@@ -57,6 +58,7 @@ const RH = () => {
       telephone: 'Phone',
       poste: 'Position',
       departement: 'Department',
+      typeMembre: 'Type',
       statut: 'Status',
       actions: 'Actions',
       ajouter: 'Add',
@@ -86,6 +88,7 @@ const RH = () => {
       telephone: 'Telefon',
       poste: 'Position',
       departement: 'Abteilung',
+      typeMembre: 'Typ',
       statut: 'Status',
       actions: 'Aktionen',
       ajouter: 'Hinzufügen',
@@ -214,6 +217,7 @@ const RH = () => {
             telephone: emp.telephone || emp.phone,
             poste: emp.poste || emp.position || emp.role || 'N/A',
             departement: emp.department || emp.departement || emp.team || 'N/A',
+            typeMembre: emp.type_membre || emp.member_type || emp.profil || emp.status || emp.role || 'N/A',
             dateEmbauche: emp.created_at ? emp.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
             statut: emp.status === 'Inactif' || emp.active === false ? 'Inactif' : 'Actif'
           }));
@@ -359,6 +363,7 @@ const RH = () => {
               <th className="px-4 py-2 text-left text-white font-bold">{t.telephone}</th>
               <th className="px-4 py-2 text-left text-white font-bold">{t.poste}</th>
               <th className="px-4 py-2 text-left text-white font-bold">{t.departement}</th>
+              <th className="px-4 py-2 text-left text-white font-bold">{t.typeMembre}</th>
               <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
               <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
             </tr>
@@ -371,6 +376,7 @@ const RH = () => {
                 <td className="px-4 py-2 text-slate-400 text-xs">{item.telephone}</td>
                 <td className="px-4 py-2 text-slate-300">{translatePosition(item.poste)}</td>
                 <td className="px-4 py-2 text-slate-400">{translateDepartment(item.departement)}</td>
+                <td className="px-4 py-2 text-slate-400">{item.typeMembre || 'N/A'}</td>
                 <td className="px-4 py-2">
                   <span className={`px-2 py-1 rounded text-xs font-semibold ${item.statut === 'Actif' ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'}`}>
                     {item.statut === 'Actif' ? t.actif : t.inactif}
