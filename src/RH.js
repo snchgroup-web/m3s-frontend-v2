@@ -14,8 +14,11 @@ const RH = () => {
       subtitle: 'Gestion des Employés, Bénévoles et Membres',
       overview: 'Vue d\'ensemble',
       employes: 'Employés',
+      employe: 'Employé',
       benevoles: 'Bénévoles',
+      benevole: 'Bénévole',
       membres: 'Membres',
+      membre: 'Membre',
       totalEmployes: 'Total Employés',
       totalBenevoles: 'Total Bénévoles',
       totalMembres: 'Total Membres',
@@ -30,8 +33,8 @@ const RH = () => {
       poste: 'Poste',
       departement: 'Team / Département',
       matricule: 'Matricule',
-      role: 'Role',
-      typeMembre: 'Type',
+      role: 'Rôle',
+      typeMembre: 'Type membre',
       statut: 'Statut',
       actions: 'Actions',
       ajouter: 'Ajouter',
@@ -40,15 +43,19 @@ const RH = () => {
       modifier: 'Modifier',
       creer: 'Créer',
       annuler: 'Annuler',
-      dateEmbauche: 'Date d\'Embauche'
+      dateEmbauche: 'Date d\'Embauche',
+      selectionner: 'Sélectionner'
     },
     EN: {
       title: 'Human Resources',
       subtitle: 'Employee, Volunteer & Member Management',
       overview: 'Overview',
       employes: 'Employees',
+      employe: 'Employee',
       benevoles: 'Volunteers',
+      benevole: 'Volunteer',
       membres: 'Members',
+      membre: 'Member',
       totalEmployes: 'Total Employees',
       totalBenevoles: 'Total Volunteers',
       totalMembres: 'Total Members',
@@ -64,7 +71,7 @@ const RH = () => {
       departement: 'Team / Department',
       matricule: 'Employee ID',
       role: 'Role',
-      typeMembre: 'Type',
+      typeMembre: 'Member type',
       statut: 'Status',
       actions: 'Actions',
       ajouter: 'Add',
@@ -73,15 +80,19 @@ const RH = () => {
       modifier: 'Edit',
       creer: 'Create',
       annuler: 'Cancel',
-      dateEmbauche: 'Hire Date'
+      dateEmbauche: 'Hire Date',
+      selectionner: 'Select'
     },
     DE: {
       title: 'Personalwesen',
       subtitle: 'Verwaltung von Mitarbeitern, Freiwilligen und Mitgliedern',
       overview: 'Übersicht',
       employes: 'Mitarbeiter',
+      employe: 'Mitarbeiter',
       benevoles: 'Freiwillige',
+      benevole: 'Freiwillige',
       membres: 'Mitglieder',
+      membre: 'Mitglied',
       totalEmployes: 'Gesamtmitarbeiter',
       totalBenevoles: 'Gesamtfreiwillige',
       totalMembres: 'Gesamtmitglieder',
@@ -97,7 +108,7 @@ const RH = () => {
       departement: 'Team / Abteilung',
       matricule: 'Personalnummer',
       role: 'Rolle',
-      typeMembre: 'Typ',
+      typeMembre: 'Mitgliedstyp',
       statut: 'Status',
       actions: 'Aktionen',
       ajouter: 'Hinzufügen',
@@ -106,7 +117,8 @@ const RH = () => {
       modifier: 'Bearbeiten',
       creer: 'Erstellen',
       annuler: 'Abbrechen',
-      dateEmbauche: 'Einstellungsdatum'
+      dateEmbauche: 'Einstellungsdatum',
+      selectionner: 'Auswählen'
     }
   };
 
@@ -202,6 +214,11 @@ const RH = () => {
     if (id.includes('cheikh') || id.includes('chantal') || name.includes('cheikh') || name.includes('chantal')) return 'Fondateur';
     const raw = String(person.type_membre || person.member_type || '').trim().toLowerCase();
     return raw === 'fondateur' ? 'Fondateur' : 'Associ\u00e9';
+  };
+  const getTypeLabel = (type) => {
+    if (type === 'membre') return t.membre;
+    if (type === 'benevole') return t.benevole;
+    return t.employe;
   };
 
   const [activeTab, setActiveTab] = useState('overview');
@@ -547,7 +564,7 @@ const RH = () => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-slate-800 rounded-lg p-8 max-w-2xl w-full border border-slate-700 max-h-[90vh] overflow-y-auto">
             <h2 className="text-2xl font-bold text-white mb-6">
-              {editingId ? `${t.modifier} ${modalType}` : `${t.creer} ${modalType}`}
+              {editingId ? `${t.modifier} ${getTypeLabel(modalType)}` : `${t.creer} ${getTypeLabel(modalType)}`}
             </h2>
 
             <div className="space-y-4">
@@ -579,7 +596,7 @@ const RH = () => {
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">{t.departement}</label>
                 <select value={formData.departement} onChange={(e) => handleFormChange('departement', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
-                  <option value="">Sélectionner</option>
+                  <option value="">{t.selectionner}</option>
                   <option value="IT">{translateDepartment('IT')}</option>
                   <option value="Finance">{translateDepartment('Finance')}</option>
                   <option value="RH">{translateDepartment('RH')}</option>
