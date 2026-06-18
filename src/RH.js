@@ -209,13 +209,13 @@ const RH = () => {
           // Mapper les données BigQuery vers le format du composant
           const mappedEmployes = response.data.map(emp => ({
             id: emp.id || emp.user_id,
-            nom: emp.full_name || `${emp.prenom} ${emp.nom}`,
-            email: emp.email_pro || emp.email_work,
+            nom: emp.name || emp.full_name || `${emp.prenom || ''} ${emp.nom || ''}`.trim() || 'N/A',
+            email: emp.email || emp.email_pro || emp.email_work,
             telephone: emp.telephone || emp.phone,
-            poste: emp.poste || emp.position || 'N/A',
-            departement: 'IT', // À déterminer depuis les données
+            poste: emp.poste || emp.position || emp.role || 'N/A',
+            departement: emp.department || emp.departement || emp.team || 'N/A',
             dateEmbauche: emp.created_at ? emp.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
-            statut: emp.active ? 'Actif' : 'Inactif'
+            statut: emp.status === 'Inactif' || emp.active === false ? 'Inactif' : 'Actif'
           }));
           setEmployes(mappedEmployes);
           console.log('✅ RH Employees loaded:', mappedEmployes.length, 'rows');

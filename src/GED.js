@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Plus, Edit2, Trash2, FileText, Folder, Download, Upload } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
+import api from './api';
 
 const GED = () => {
   const { language } = useLanguage();
@@ -175,6 +176,44 @@ const GED = () => {
   });
  
   useEffect(() => {
+    const loadDocuments = async () => {
+      try {
+        const response = await api.getDocuments(100, 0);
+        if (!response?.data || !Array.isArray(response.data)) return;
+
+        const mappedDocuments = response.data.map(doc => ({
+          id: doc.id,
+          nom: doc.name || doc.title || doc.id || 'N/A',
+          type: doc.type || 'Document',
+          dossier: doc.folder || 'General',
+          dateCreation: doc.created_at ? doc.created_at.split('T')[0] : '',
+          taille: doc.size || '0 MB',
+          statut: doc.status || 'Actif'
+        }));
+
+        const folders = new Map();
+        mappedDocuments.forEach(doc => {
+          const folderName = doc.dossier || 'General';
+          const current = folders.get(folderName) || {
+            id: folderName,
+            nom: folderName,
+            dateCreation: '',
+            nombreDocs: 0,
+            taille: '0 MB'
+          };
+          current.nombreDocs += 1;
+          folders.set(folderName, current);
+        });
+
+        setDocuments(mappedDocuments);
+        setDossiers(Array.from(folders.values()));
+      } catch (error) {
+        console.warn('GED API fallback:', error.message);
+      }
+    };
+
+    loadDocuments();
+
     setDocuments([
       { id: 1, nom: 'Contrat Client SENELEC', type: 'PDF', dossier: 'Contrats', dateCreation: '2026-03-15', taille: '2.5 MB', statut: 'Actif' },
       { id: 2, nom: 'Facture Janvier 2026', type: 'Excel', dossier: 'Factures', dateCreation: '2026-02-01', taille: '0.8 MB', statut: 'Actif' },
@@ -196,7 +235,7 @@ const GED = () => {
  
   const totalDocuments = documents.length;
   const totalDossiers = dossiers.length;
-  const totalTaille = (45 + 120 + 65 + 180 + 25 + 85);
+  const totalTaille = dossiers.reduce((sum, dossier) => sum + (parseInt(dossier.taille, 10) || 0), 0);
   const documentsActifs = documents.filter(d => d.statut === 'Actif').length;
  
   const documentParType = [
