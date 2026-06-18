@@ -16,13 +16,29 @@ const getAuthHeaders = () => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-const apiFetch = (url, options = {}) => fetch(url, {
-  ...options,
-  headers: {
-    ...getAuthHeaders(),
-    ...(options.headers || {})
+const clearExpiredSession = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  if (window.location.pathname !== '/login') {
+    window.location.href = '/login';
   }
-});
+};
+
+const apiFetch = async (url, options = {}) => {
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      ...getAuthHeaders(),
+      ...(options.headers || {})
+    }
+  });
+
+  if (response.status === 401 || response.status === 403) {
+    clearExpiredSession();
+  }
+
+  return response;
+};
 
 // Gestion des erreurs centralisée
 const handleError = (erreur, endpoint) => {
