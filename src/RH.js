@@ -191,6 +191,18 @@ const RH = () => {
   const translatePosition = (position) => dataTranslations.positions[language]?.[position] || position;
   const translateDepartment = (dept) => dataTranslations.departments[language]?.[dept] || dept;
   const translateCategory = (category) => dataTranslations.categories[language]?.[category] || category;
+  const normalizeRole = (value) => {
+    const text = String(value || '').trim().toLowerCase();
+    if (text === 'admin' || text === 'administrator' || text === 'administrateur') return 'Admin';
+    return 'Utilisateur';
+  };
+  const normalizeMemberType = (person) => {
+    const id = String(person.id || '').toLowerCase();
+    const name = String(person.name || `${person.prenom || ''} ${person.nom || ''}`).toLowerCase();
+    if (id.includes('cheikh') || id.includes('chantal') || name.includes('cheikh') || name.includes('chantal')) return 'Fondateur';
+    const raw = String(person.type_membre || person.member_type || '').trim().toLowerCase();
+    return raw === 'fondateur' ? 'Fondateur' : 'Associ\u00e9';
+  };
 
   const [activeTab, setActiveTab] = useState('overview');
   const [employes, setEmployes] = useState([]);
@@ -213,67 +225,46 @@ const RH = () => {
     statut: 'Actif'
   });
 
-  // Charger les données depuis BigQuery API
+  // Charger les donnees RH depuis l'API et les sources provisoires validees.
   useEffect(() => {
     const loadData = async () => {
+      setEmployes([
+        { id: 'EMP-001', nom: 'Jean Dupont', email: 'jean.dupont@seneswiss.sn', telephone: '+221 77 123 4567', poste: 'D\u00e9veloppeur', departement: 'IT', role: 'Utilisateur', typeMembre: '', dateEmbauche: '2024-01-15', statut: 'Actif' },
+        { id: 'EMP-002', nom: 'Marie Sall', email: 'marie.sall@seneswiss.sn', telephone: '+221 77 234 5678', poste: 'Responsable Finance', departement: 'Finance', role: 'Utilisateur', typeMembre: '', dateEmbauche: '2023-06-01', statut: 'Actif' },
+      ]);
+      setBenevoles([]);
+
       try {
-        // Charger les employés depuis l'API /api/users (table utilisateurs)
         const response = await api.getUsers(100, 0);
-        console.log('🔍 RH API Response:', response);
+        console.log('RH API Response:', response);
 
         if (response?.data && Array.isArray(response.data)) {
-          // Mapper les données BigQuery vers le format du composant
           const mappedMembres = response.data.map(emp => ({
             id: emp.id || emp.user_id,
             nom: emp.name || emp.full_name || `${emp.prenom || ''} ${emp.nom || ''}`.trim() || 'N/A',
             email: emp.email || emp.email_pro || emp.email_work,
             emailPerso: emp.email_perso || emp.email_perso_raw || '',
-            telephone: emp.telephone || emp.phone,
+            telephone: emp.telephone || emp.phone || '',
             poste: emp.poste || emp.position || 'Membre',
-            departement: emp.department || emp.departement || emp.team || 'N/A',
+            departement: emp.team || emp.departement || emp.department || 'N/A',
             matricule: emp.matricule || emp.employee_id || '',
-            role: emp.role || emp.profil || 'Utilisateur',
-            typeMembre: emp.type_membre || emp.member_type || 'Associé',
+            role: normalizeRole(emp.role || emp.profil || emp.access_role),
+            typeMembre: normalizeMemberType(emp),
             dateEmbauche: emp.created_at ? emp.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
             statut: emp.status === 'Inactif' || emp.active === false ? 'Inactif' : 'Actif'
           }));
           setMembres(mappedMembres);
           console.log('RH members loaded:', mappedMembres.length, 'rows');
         } else {
-          // Fallback aux mock data si l'API échoue
-          console.log('⚠️ API response is empty, using fallback data');
-          setEmployes([
-            { id: 1, nom: 'Jean Dupont', email: 'jean.dupont@seneswiss.sn', telephone: '+221 77 123 4567', poste: 'Développeur', departement: 'IT', dateEmbauche: '2024-01-15', statut: 'Actif' },
-            { id: 2, nom: 'Marie Sall', email: 'marie.sall@seneswiss.sn', telephone: '+221 77 234 5678', poste: 'Responsable Finance', departement: 'Finance', dateEmbauche: '2023-06-01', statut: 'Actif' },
-          ]);
+          setMembres([]);
         }
       } catch (error) {
-        console.log('❌ RH error:', error);
-        // Fallback mock data
-        setEmployes([
-          { id: 1, nom: 'Jean Dupont', email: 'jean.dupont@seneswiss.sn', telephone: '+221 77 123 4567', poste: 'Développeur', departement: 'IT', dateEmbauche: '2024-01-15', statut: 'Actif' },
-          { id: 2, nom: 'Marie Sall', email: 'marie.sall@seneswiss.sn', telephone: '+221 77 234 5678', poste: 'Responsable Finance', departement: 'Finance', dateEmbauche: '2023-06-01', statut: 'Actif' },
-        ]);
+        console.log('RH error:', error);
+        setMembres([]);
       }
     };
 
     loadData();
-
-    // Mock data pour Bénévoles (À remplacer avec API si nécessaire)
-    setBenevoles([
-      { id: 1, nom: 'Abdoulaye Diop', email: 'abdoulaye@example.com', telephone: '+221 77 567 8901', poste: 'Bénévole IT', departement: 'IT', dateEmbauche: '2024-02-01', statut: 'Actif' },
-      { id: 2, nom: 'Fatoumata Cisse', email: 'fatoumata@example.com', telephone: '+221 77 678 9012', poste: 'Bénévole Social', departement: 'Social', dateEmbauche: '2023-10-15', statut: 'Actif' },
-      { id: 3, nom: 'Ousmane Toure', email: 'ousmane@example.com', telephone: '+221 77 789 0123', poste: 'Bénévole Événements', departement: 'Événements', dateEmbauche: '2024-01-20', statut: 'Inactif' },
-    ]);
-
-    // Mock data pour Membres (À remplacer avec API si nécessaire)
-    setMembres([
-      { id: 1, nom: 'Assane Seck', email: 'assane@seneswiss.sn', telephone: '+221 77 890 1234', poste: 'Membre', departement: 'Général', dateEmbauche: '2020-05-10', statut: 'Actif' },
-      { id: 2, nom: 'Hawa Diallo', email: 'hawa@seneswiss.sn', telephone: '+221 77 901 2345', poste: 'Membre Fondateur', departement: 'Général', dateEmbauche: '2019-01-01', statut: 'Actif' },
-      { id: 3, nom: 'Moussa Fall', email: 'moussa@seneswiss.sn', telephone: '+221 77 012 3456', poste: 'Membre', departement: 'Général', dateEmbauche: '2021-03-15', statut: 'Actif' },
-      { id: 4, nom: 'Awa Niang', email: 'awa@seneswiss.sn', telephone: '+221 77 123 0456', poste: 'Membre', departement: 'Général', dateEmbauche: '2022-08-20', statut: 'Actif' },
-      { id: 5, nom: 'Cheikh Sarr', email: 'cheikh.s@seneswiss.sn', telephone: '+221 77 234 0567', poste: 'Membre', departement: 'Général', dateEmbauche: '2023-11-01', statut: 'Actif' },
-    ]);
   }, []);
 
   // Calculs KPIs
@@ -643,4 +634,3 @@ const RH = () => {
 };
 
 export default RH;
-
