@@ -25,9 +25,12 @@ const RH = () => {
       departements: 'Statistiques par Département',
       nom: 'Nom',
       email: 'Email',
+      emailPerso: 'Email perso',
       telephone: 'Téléphone',
       poste: 'Poste',
       departement: 'Département',
+      matricule: 'Matricule',
+      role: 'Role',
       typeMembre: 'Type',
       statut: 'Statut',
       actions: 'Actions',
@@ -55,9 +58,12 @@ const RH = () => {
       departements: 'Department Statistics',
       nom: 'Name',
       email: 'Email',
+      emailPerso: 'Personal email',
       telephone: 'Phone',
       poste: 'Position',
       departement: 'Department',
+      matricule: 'Employee ID',
+      role: 'Role',
       typeMembre: 'Type',
       statut: 'Status',
       actions: 'Actions',
@@ -85,9 +91,12 @@ const RH = () => {
       departements: 'Abteilungsstatistiken',
       nom: 'Name',
       email: 'E-Mail',
+      emailPerso: 'Private E-Mail',
       telephone: 'Telefon',
       poste: 'Position',
       departement: 'Abteilung',
+      matricule: 'Personalnummer',
+      role: 'Rolle',
       typeMembre: 'Typ',
       statut: 'Status',
       actions: 'Aktionen',
@@ -193,9 +202,13 @@ const RH = () => {
   const [formData, setFormData] = useState({
     nom: '',
     email: '',
+    emailPerso: '',
     telephone: '',
     poste: '',
     departement: '',
+    matricule: '',
+    role: 'Utilisateur',
+    typeMembre: 'Associé',
     dateEmbauche: new Date().toISOString().split('T')[0],
     statut: 'Actif'
   });
@@ -214,10 +227,13 @@ const RH = () => {
             id: emp.id || emp.user_id,
             nom: emp.name || emp.full_name || `${emp.prenom || ''} ${emp.nom || ''}`.trim() || 'N/A',
             email: emp.email || emp.email_pro || emp.email_work,
+            emailPerso: emp.email_perso || emp.email_perso_raw || '',
             telephone: emp.telephone || emp.phone,
             poste: emp.poste || emp.position || 'Membre',
             departement: emp.department || emp.departement || emp.team || 'N/A',
-            typeMembre: emp.type_membre || emp.member_type || 'Associe',
+            matricule: emp.matricule || emp.employee_id || '',
+            role: emp.role || emp.profil || 'Utilisateur',
+            typeMembre: emp.type_membre || emp.member_type || 'Associé',
             dateEmbauche: emp.created_at ? emp.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
             statut: emp.status === 'Inactif' || emp.active === false ? 'Inactif' : 'Actif'
           }));
@@ -321,7 +337,7 @@ const RH = () => {
 
     setShowModal(false);
     setEditingId(null);
-    setFormData({ nom: '', email: '', telephone: '', poste: '', departement: '', dateEmbauche: new Date().toISOString().split('T')[0], statut: 'Actif' });
+    setFormData({ nom: '', email: '', emailPerso: '', telephone: '', poste: '', departement: '', matricule: '', role: 'Utilisateur', typeMembre: 'Associé', dateEmbauche: new Date().toISOString().split('T')[0], statut: 'Actif' });
   };
 
   const handleEdit = (type, item) => {
@@ -340,7 +356,7 @@ const RH = () => {
   const openNewModal = (type) => {
     setModalType(type);
     setEditingId(null);
-    setFormData({ nom: '', email: '', telephone: '', poste: '', departement: '', dateEmbauche: new Date().toISOString().split('T')[0], statut: 'Actif' });
+    setFormData({ nom: '', email: '', emailPerso: '', telephone: '', poste: '', departement: '', matricule: '', role: 'Utilisateur', typeMembre: type === 'membre' ? 'Associé' : '', dateEmbauche: new Date().toISOString().split('T')[0], statut: 'Actif' });
     setShowModal(true);
   };
 
@@ -363,6 +379,7 @@ const RH = () => {
               <th className="px-4 py-2 text-left text-white font-bold">{t.telephone}</th>
               <th className="px-4 py-2 text-left text-white font-bold">{t.poste}</th>
               <th className="px-4 py-2 text-left text-white font-bold">{t.departement}</th>
+              <th className="px-4 py-2 text-left text-white font-bold">{t.role}</th>
               <th className="px-4 py-2 text-left text-white font-bold">{t.typeMembre}</th>
               <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
               <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
@@ -376,6 +393,7 @@ const RH = () => {
                 <td className="px-4 py-2 text-slate-400 text-xs">{item.telephone}</td>
                 <td className="px-4 py-2 text-slate-300">{translatePosition(item.poste)}</td>
                 <td className="px-4 py-2 text-slate-400">{translateDepartment(item.departement)}</td>
+                <td className="px-4 py-2 text-slate-400">{item.role || 'N/A'}</td>
                 <td className="px-4 py-2 text-slate-400">{item.typeMembre || 'N/A'}</td>
                 <td className="px-4 py-2">
                   <span className={`px-2 py-1 rounded text-xs font-semibold ${item.statut === 'Actif' ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'}`}>
@@ -530,7 +548,7 @@ const RH = () => {
       {/* Modal Créer/Éditer */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
+          <div className="bg-slate-800 rounded-lg p-8 max-w-2xl w-full border border-slate-700 max-h-[90vh] overflow-y-auto">
             <h2 className="text-2xl font-bold text-white mb-6">
               {editingId ? `${t.modifier} ${modalType}` : `${t.creer} ${modalType}`}
             </h2>
@@ -544,6 +562,11 @@ const RH = () => {
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">{t.email} *</label>
                 <input type="email" value={formData.email} onChange={(e) => handleFormChange('email', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="email@example.com" />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.emailPerso}</label>
+                <input type="email" value={formData.emailPerso || ''} onChange={(e) => handleFormChange('emailPerso', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="email personnel" />
               </div>
 
               <div>
@@ -565,8 +588,33 @@ const RH = () => {
                   <option value="RH">{translateDepartment('RH')}</option>
                   <option value="Gestion">{translateDepartment('Gestion')}</option>
                   <option value="Social">{translateDepartment('Social')}</option>
+                  <option value="TZH">TZH</option>
+                  <option value="TSN">TSN</option>
                 </select>
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.matricule}</label>
+                <input type="text" value={formData.matricule || ''} onChange={(e) => handleFormChange('matricule', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="TZH001A" />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.role}</label>
+                <select value={formData.role || 'Utilisateur'} onChange={(e) => handleFormChange('role', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                  <option value="Utilisateur">Utilisateur</option>
+                  <option value="Admin">Admin</option>
+                </select>
+              </div>
+
+              {modalType === 'membre' && (
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">{t.typeMembre}</label>
+                  <select value={formData.typeMembre || 'Associé'} onChange={(e) => handleFormChange('typeMembre', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                    <option value="Fondateur">Fondateur</option>
+                    <option value="Associé">Associé</option>
+                  </select>
+                </div>
+              )}
 
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">{t.dateEmbauche}</label>
