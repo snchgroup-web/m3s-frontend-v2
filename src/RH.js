@@ -28,7 +28,7 @@ const RH = () => {
       emailPerso: 'Email perso',
       telephone: 'Téléphone',
       poste: 'Poste',
-      departement: 'Département',
+      departement: 'Team / Département',
       matricule: 'Matricule',
       role: 'Role',
       typeMembre: 'Type',
@@ -61,7 +61,7 @@ const RH = () => {
       emailPerso: 'Personal email',
       telephone: 'Phone',
       poste: 'Position',
-      departement: 'Department',
+      departement: 'Team / Department',
       matricule: 'Employee ID',
       role: 'Role',
       typeMembre: 'Type',
@@ -94,7 +94,7 @@ const RH = () => {
       emailPerso: 'Private E-Mail',
       telephone: 'Telefon',
       poste: 'Position',
-      departement: 'Abteilung',
+      departement: 'Team / Abteilung',
       matricule: 'Personalnummer',
       role: 'Rolle',
       typeMembre: 'Typ',
@@ -306,23 +306,29 @@ const RH = () => {
       return;
     }
 
+    const normalizedData = {
+      ...formData,
+      role: normalizeRole(formData.role),
+      typeMembre: modalType === 'membre' ? (formData.typeMembre || 'Associé') : ''
+    };
+
     if (modalType === 'employe') {
       if (editingId) {
-        setEmployes(employes.map(e => e.id === editingId ? { ...formData, id: editingId } : e));
+        setEmployes(employes.map(e => e.id === editingId ? { ...normalizedData, id: editingId } : e));
       } else {
-        setEmployes([...employes, { ...formData, id: Date.now() }]);
+        setEmployes([...employes, { ...normalizedData, id: Date.now() }]);
       }
     } else if (modalType === 'benevole') {
       if (editingId) {
-        setBenevoles(benevoles.map(b => b.id === editingId ? { ...formData, id: editingId } : b));
+        setBenevoles(benevoles.map(b => b.id === editingId ? { ...normalizedData, id: editingId } : b));
       } else {
-        setBenevoles([...benevoles, { ...formData, id: Date.now() }]);
+        setBenevoles([...benevoles, { ...normalizedData, id: Date.now() }]);
       }
     } else {
       if (editingId) {
-        setMembres(membres.map(m => m.id === editingId ? { ...formData, id: editingId } : m));
+        setMembres(membres.map(m => m.id === editingId ? { ...normalizedData, id: editingId } : m));
       } else {
-        setMembres([...membres, { ...formData, id: Date.now() }]);
+        setMembres([...membres, { ...normalizedData, id: Date.now() }]);
       }
     }
 
@@ -371,7 +377,7 @@ const RH = () => {
               <th className="px-4 py-2 text-left text-white font-bold">{t.poste}</th>
               <th className="px-4 py-2 text-left text-white font-bold">{t.departement}</th>
               <th className="px-4 py-2 text-left text-white font-bold">{t.role}</th>
-              <th className="px-4 py-2 text-left text-white font-bold">{t.typeMembre}</th>
+              {type === 'membre' && <th className="px-4 py-2 text-left text-white font-bold">{t.typeMembre}</th>}
               <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
               <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
             </tr>
@@ -385,7 +391,7 @@ const RH = () => {
                 <td className="px-4 py-2 text-slate-300">{translatePosition(item.poste)}</td>
                 <td className="px-4 py-2 text-slate-400">{translateDepartment(item.departement)}</td>
                 <td className="px-4 py-2 text-slate-400">{item.role || 'N/A'}</td>
-                <td className="px-4 py-2 text-slate-400">{item.typeMembre || 'N/A'}</td>
+                {type === 'membre' && <td className="px-4 py-2 text-slate-400">{item.typeMembre || 'N/A'}</td>}
                 <td className="px-4 py-2">
                   <span className={`px-2 py-1 rounded text-xs font-semibold ${item.statut === 'Actif' ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'}`}>
                     {item.statut === 'Actif' ? t.actif : t.inactif}
