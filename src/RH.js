@@ -210,19 +210,19 @@ const RH = () => {
 
         if (response?.data && Array.isArray(response.data)) {
           // Mapper les données BigQuery vers le format du composant
-          const mappedEmployes = response.data.map(emp => ({
+          const mappedMembres = response.data.map(emp => ({
             id: emp.id || emp.user_id,
             nom: emp.name || emp.full_name || `${emp.prenom || ''} ${emp.nom || ''}`.trim() || 'N/A',
             email: emp.email || emp.email_pro || emp.email_work,
             telephone: emp.telephone || emp.phone,
-            poste: emp.poste || emp.position || emp.role || 'N/A',
+            poste: emp.poste || emp.position || 'Membre',
             departement: emp.department || emp.departement || emp.team || 'N/A',
-            typeMembre: emp.type_membre || emp.member_type || emp.profil || emp.status || emp.role || 'N/A',
+            typeMembre: emp.type_membre || emp.member_type || 'Associe',
             dateEmbauche: emp.created_at ? emp.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
             statut: emp.status === 'Inactif' || emp.active === false ? 'Inactif' : 'Actif'
           }));
-          setEmployes(mappedEmployes);
-          console.log('✅ RH Employees loaded:', mappedEmployes.length, 'rows');
+          setMembres(mappedMembres);
+          console.log('RH members loaded:', mappedMembres.length, 'rows');
         } else {
           // Fallback aux mock data si l'API échoue
           console.log('⚠️ API response is empty, using fallback data');
