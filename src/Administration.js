@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Plus, Edit2, Trash2, Shield, Users, Lock, Activity, AlertCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
+import api from './api';
 
 const Admin = () => {
   const { language } = useLanguage();
+  const location = useLocation();
 
   // Translations
   const translations = {
@@ -20,6 +23,7 @@ const Admin = () => {
       users: 'Utilisateurs',
       roles: 'Rôles',
       audit: 'Audit Log',
+      tasks: 'Activites & Taches',
       roleDistribution: 'Distribution des Rôles',
       activityByType: 'Activité par Type d\'Action',
       dailyActivity: 'Activité Quotidienne (7 derniers jours)',
@@ -51,6 +55,10 @@ const Admin = () => {
       success: 'Success',
       failed: 'Failed',
       userCount: 'Utilisateurs',
+      titleTask: 'Tache',
+      responsable: 'Responsable',
+      priorite: 'Priorite',
+      progression: 'Progression',
       mon: 'Lun',
       tue: 'Mar',
       wed: 'Mer',
@@ -69,6 +77,7 @@ const Admin = () => {
       users: 'Users',
       roles: 'Roles',
       audit: 'Audit Log',
+      tasks: 'Activities & Tasks',
       roleDistribution: 'Role Distribution',
       activityByType: 'Activity by Type',
       dailyActivity: 'Daily Activity (Last 7 Days)',
@@ -100,6 +109,10 @@ const Admin = () => {
       success: 'Success',
       failed: 'Failed',
       userCount: 'Users',
+      titleTask: 'Task',
+      responsable: 'Owner',
+      priorite: 'Priority',
+      progression: 'Progress',
       mon: 'Mon',
       tue: 'Tue',
       wed: 'Wed',
@@ -118,6 +131,7 @@ const Admin = () => {
       users: 'Benutzer',
       roles: 'Rollen',
       audit: 'Audit-Protokoll',
+      tasks: 'Aktivitaten & Aufgaben',
       roleDistribution: 'Rollenverteilung',
       activityByType: 'Aktivität nach Typ',
       dailyActivity: 'Tägliche Aktivität (letzte 7 Tage)',
@@ -149,6 +163,10 @@ const Admin = () => {
       success: 'Erfolg',
       failed: 'Fehler',
       userCount: 'Benutzer',
+      titleTask: 'Aufgabe',
+      responsable: 'Verantwortlich',
+      priorite: 'Prioritat',
+      progression: 'Fortschritt',
       mon: 'Mo',
       tue: 'Di',
       wed: 'Mi',
@@ -196,6 +214,7 @@ const Admin = () => {
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [showUserModal, setShowUserModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -211,6 +230,27 @@ const Admin = () => {
     permissions: [],
     description: ''
   });
+
+  useEffect(() => {
+    const tab = new URLSearchParams(location.search).get('tab');
+    if (['overview', 'users', 'roles', 'audit', 'tasks'].includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [location.search]);
+
+  useEffect(() => {
+    const loadTasks = async () => {
+      try {
+        const response = await api.getTasks(100, 0);
+        setTasks(Array.isArray(response?.data) ? response.data : []);
+      } catch (error) {
+        console.error('Erreur chargement taches:', error);
+        setTasks([]);
+      }
+    };
+
+    loadTasks();
+  }, []);
 
   // Données de démo
   useEffect(() => {
@@ -404,6 +444,7 @@ const Admin = () => {
         {/* Tabs */}
         <div className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
           <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.overview}</button>
+          <button onClick={() => setActiveTab('tasks')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'tasks' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.tasks} ({tasks.length})</button>
           <button onClick={() => setActiveTab('users')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'users' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.users} ({totalUsers})</button>
           <button onClick={() => setActiveTab('roles')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'roles' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.roles} ({totalRoles})</button>
           <button onClick={() => setActiveTab('audit')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'audit' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.audit}</button>
@@ -455,6 +496,35 @@ const Admin = () => {
                 </LineChart>
               </ResponsiveContainer>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'tasks' && (
+          <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-700">
+                <tr>
+                  <th className="px-4 py-2 text-left text-white font-bold">{t.titleTask}</th>
+                  <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
+                  <th className="px-4 py-2 text-left text-white font-bold">{t.priorite}</th>
+                  <th className="px-4 py-2 text-left text-white font-bold">{t.responsable}</th>
+                  <th className="px-4 py-2 text-left text-white font-bold">{t.module}</th>
+                  <th className="px-4 py-2 text-left text-white font-bold">{t.progression}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tasks.map(task => (
+                  <tr key={task.id || task.source_id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                    <td className="px-4 py-2 text-slate-300 font-medium">{task.titre || task.title}</td>
+                    <td className="px-4 py-2 text-slate-400">{task.statut || task.status}</td>
+                    <td className="px-4 py-2 text-slate-400">{task.priorite || task.priority}</td>
+                    <td className="px-4 py-2 text-slate-400">{task.responsable}</td>
+                    <td className="px-4 py-2 text-slate-400">{task.module}</td>
+                    <td className="px-4 py-2 text-blue-400 font-bold">{Number(task.progression || 0)}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
 

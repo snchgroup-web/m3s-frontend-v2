@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Search } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
@@ -27,10 +28,12 @@ const formatDualCurrency = (chfAmount) => {
 
 const Finance = () => {
   const { language } = useLanguage();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('overview');
   const [recettes, setRecettes] = useState([]);
   const [depenses, setDepenses] = useState([]);
   const [fxHistory, setFxHistory] = useState([]);
+  const [tauxDuJour, setTauxDuJour] = useState({});
   const [searchFx, setSearchFx] = useState('');
   const [filterDevise, setFilterDevise] = useState('');
   const [showFxModal, setShowFxModal] = useState(false);
@@ -173,6 +176,13 @@ const Finance = () => {
 
   const t = translations[language];
 
+  useEffect(() => {
+    const tab = new URLSearchParams(location.search).get('tab');
+    if (['overview', 'recettes', 'depenses', 'fx'].includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [location.search]);
+
   // Phase 2: Load real data from BigQuery via API
   useEffect(() => {
     const fetchFinanceData = async () => {
@@ -255,18 +265,17 @@ const Finance = () => {
         if (response?.data && Array.isArray(response.data)) {
           const dataArray = response.data;
 
+          setTauxDuJour(response.taux_du_jour || {});
+
           if (dataArray.length > 0) {
-            // Map BigQuery data to display format
             const mappedData = dataArray.map(item => ({
-              id: item.id,
-              date: item.date,
-              rate: parseFloat(item.rate || 0),
-              devise_from: item.devise_from,
-              devise_to: item.devise_to,
-              taux_buy: parseFloat(item.taux_buy || 0),
-              taux_sell: parseFloat(item.taux_sell || 0),
-              source: item.source,
-              active: item.active
+              id: item.source_id || item.id,
+              date: item.date_taux?.value || item.date_updated?.value || item.date || '',
+              rate: parseFloat(item.taux || item.rate || 0),
+              devise_from: item.devise_base || item.source_currency || item.devise_from,
+              devise_to: item.devise_cible || item.target_currency || item.devise_to,
+              source: item.source_taux || item.source,
+              commentaire: item.commentaire || ''
             }));
             setFxHistory(mappedData);
             console.log('✅ FX History loaded:', mappedData.length, 'rows');
@@ -289,6 +298,7 @@ const Finance = () => {
   const totalRecettes = recettes.reduce((sum, r) => sum + r.montant, 0);
   const totalDepenses = depenses.reduce((sum, d) => sum + d.montant, 0);
   const solde = totalRecettes - totalDepenses;
+  const tauxChfCfa = tauxDuJour.CHF_CFA || fxHistory.find(fx => fx.devise_from === 'CHF' && fx.devise_to === 'CFA')?.rate || CHF_TO_CFA_RATE;
 
   // Memoized data with translations
   const monthlyDataRaw = useMemo(() => [
@@ -485,7 +495,7 @@ const Finance = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-purple-200 text-xs">{t.tauxFX}</p>
-                <p className="text-white text-lg font-bold">656 CFA</p>
+                <p className="text-white text-lg font-bold">{Number(tauxChfCfa).toLocaleString()} CFA</p>
               </div>
               <ArrowRightLeft size={24} className="text-purple-400" />
             </div>
@@ -667,7 +677,7 @@ const Finance = () => {
                         <td className="px-4 py-3 text-slate-300">{fx.date}</td>
                         <td className="px-4 py-3 text-blue-400 font-bold">{fx.devise_from}</td>
                         <td className="px-4 py-3 text-green-400 font-bold">{fx.devise_to}</td>
-                        <td className="px-4 py-3 text-purple-400 font-bold">{parseFloat(fx.rate).toFixed(2)}</td>
+                        <td className="px-4 py-3 text-purple-400 font-bold">{parseFloat(fx.rate).toLocaleString(undefined, { maximumFractionDigits: fx.rate < 1 ? 6 : 2 })}</td>
                         <td className="px-4 py-3 text-slate-400">{fx.source}</td>
                         <td className="px-4 py-3 flex gap-2">
                           <button onClick={() => handleFxEdit(fx)} className="p-1 hover:bg-slate-600 rounded">

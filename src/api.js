@@ -75,7 +75,7 @@ export const api = {
   // Finance - Historique des taux de change (FX History)
   getFxHistory: async () => {
     try {
-      const res = await apiFetch(`${API_BASE_URL}/finance/fx-history`);
+      const res = await apiFetch(`${API_BASE_URL}/fx-rates`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (erreur) {

@@ -29,7 +29,7 @@
             "DE": "Institution"
           },
           "icon": "Building2",
-          "path": "/administration"
+          "path": "/administration?tab=tasks"
         },
         {
           "id": "activities",
@@ -80,7 +80,7 @@
             "EN": "Revenue",
             "DE": "Einnahmen"
           },
-          "path": "/finance"
+          "path": "/finance?tab=fx"
         },
         {
           "id": "depenses",
@@ -303,7 +303,7 @@
             "DE": "Bestand"
           },
           "icon": "Box",
-          "path": "/actifs"
+          "path": "/actifs?tab=inventory"
         },
         {
           "id": "immobilisations",
@@ -313,7 +313,7 @@
             "DE": "Anlagevermögen"
           },
           "icon": "Home",
-          "path": "/actifs"
+          "path": "/actifs?tab=immobilisations"
         },
         {
           "id": "risques",
