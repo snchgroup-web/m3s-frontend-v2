@@ -162,7 +162,7 @@ const GED = () => {
   const translateFolderName = (name) => dataTranslations.folderNames[language]?.[name] || name;
   const translateDocumentName = (name) => dataTranslations.documentNames[language]?.[name] || name;
 
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('documents');
   const [documents, setDocuments] = useState([]);
   const [dossiers, setDossiers] = useState([]);
   const [showModal, setShowModal] = useState(false);

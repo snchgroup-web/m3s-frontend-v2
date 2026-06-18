@@ -335,7 +335,7 @@
         "DE": "IT & Support"
       },
       "icon": "Zap",
-      "path": "/ged",
+      "path": "/ged?tab=documents",
       "children": [
         {
           "id": "knowledge",
