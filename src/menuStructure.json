@@ -98,7 +98,7 @@
             "EN": "Budget",
             "DE": "Budget"
           },
-          "path": "/finance?tab=fx"
+          "path": "/finance"
         },
         {
           "id": "social",
@@ -125,7 +125,7 @@
             "EN": "FX Converter",
             "DE": "FX-Umrechner"
           },
-          "path": "/finance"
+          "path": "/finance?tab=fx"
         }
       ]
     },
@@ -345,7 +345,7 @@
             "DE": "Überwachung & Wissensmanagement"
           },
           "icon": "Eye",
-          "path": "/ged?tab=documents"
+          "path": "/ged"
         },
         {
           "id": "ged",
@@ -355,7 +355,7 @@
             "DE": "Dokumentenverwaltung"
           },
           "icon": "FileText",
-          "path": "/ged"
+          "path": "/ged?tab=documents"
         },
         {
           "id": "ai-digital",
