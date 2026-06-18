@@ -36,7 +36,10 @@ const GED = () => {
       nouveauDossier: 'Nouveau Dossier',
       creer: 'Créer',
       annuler: 'Annuler',
-      remplirChamps: 'Veuillez remplir les champs obligatoires'
+      remplirChamps: 'Veuillez remplir les champs obligatoires',
+      nonRenseigne: 'Non renseigné',
+      nomDocument: 'Nom du document',
+      nomDossier: 'Nom du dossier'
     },
     EN: {
       title: 'Document Management (GED)',
@@ -62,7 +65,10 @@ const GED = () => {
       nouveauDossier: 'New Folder',
       creer: 'Create',
       annuler: 'Cancel',
-      remplirChamps: 'Please fill in all required fields'
+      remplirChamps: 'Please fill in all required fields',
+      nonRenseigne: 'Not provided',
+      nomDocument: 'Document name',
+      nomDossier: 'Folder name'
     },
     DE: {
       title: 'Dokumentenverwaltung (GED)',
@@ -88,7 +94,10 @@ const GED = () => {
       nouveauDossier: 'Neuer Ordner',
       creer: 'Erstellen',
       annuler: 'Abbrechen',
-      remplirChamps: 'Bitte füllen Sie alle erforderlichen Felder aus'
+      remplirChamps: 'Bitte füllen Sie alle erforderlichen Felder aus',
+      nonRenseigne: 'Nicht angegeben',
+      nomDocument: 'Dokumentname',
+      nomDossier: 'Ordnername'
     }
   };
 
@@ -98,9 +107,9 @@ const GED = () => {
   const dataTranslations = {
     // Document types
     documentTypes: {
-      FR: { 'PDF': 'PDF', 'Word': 'Word', 'Excel': 'Excel' },
-      EN: { 'PDF': 'PDF', 'Word': 'Word', 'Excel': 'Excel' },
-      DE: { 'PDF': 'PDF', 'Word': 'Word', 'Excel': 'Excel' }
+      FR: { 'PDF': 'PDF', 'Word': 'Word', 'Excel': 'Excel', 'XLSX': 'Excel', 'JS': 'JS', 'JSX': 'JSX', 'MD': 'Markdown', 'Document': 'Document' },
+      EN: { 'PDF': 'PDF', 'Word': 'Word', 'Excel': 'Excel', 'XLSX': 'Excel', 'JS': 'JS', 'JSX': 'JSX', 'MD': 'Markdown', 'Document': 'Document' },
+      DE: { 'PDF': 'PDF', 'Word': 'Word', 'Excel': 'Excel', 'XLSX': 'Excel', 'JS': 'JS', 'JSX': 'JSX', 'MD': 'Markdown', 'Document': 'Dokument' }
     },
     // Folder names
     folderNames: {
@@ -110,7 +119,10 @@ const GED = () => {
         'Rapports': 'Rapports',
         'Documentation': 'Documentation',
         'Stratégie': 'Stratégie',
-        'Ressources': 'Ressources'
+        'Ressources': 'Ressources',
+        'General': 'Général',
+        'Autre': 'Autre',
+        'Bases de Données': 'Bases de Données'
       },
       EN: {
         'Contrats': 'Contracts',
@@ -118,7 +130,10 @@ const GED = () => {
         'Rapports': 'Reports',
         'Documentation': 'Documentation',
         'Stratégie': 'Strategy',
-        'Ressources': 'Resources'
+        'Ressources': 'Resources',
+        'General': 'General',
+        'Autre': 'Other',
+        'Bases de Données': 'Databases'
       },
       DE: {
         'Contrats': 'Verträge',
@@ -126,7 +141,10 @@ const GED = () => {
         'Rapports': 'Berichte',
         'Documentation': 'Dokumentation',
         'Stratégie': 'Strategie',
-        'Ressources': 'Ressourcen'
+        'Ressources': 'Ressourcen',
+        'General': 'Allgemein',
+        'Autre': 'Andere',
+        'Bases de Données': 'Datenbanken'
       }
     },
     // Document names
@@ -162,6 +180,14 @@ const GED = () => {
   const translateDocumentType = (type) => dataTranslations.documentTypes[language]?.[type] || type;
   const translateFolderName = (name) => dataTranslations.folderNames[language]?.[name] || name;
   const translateDocumentName = (name) => dataTranslations.documentNames[language]?.[name] || name;
+  const formatValue = (value) => {
+    const text = String(value || '').trim();
+    return text && text !== 'N/A' ? text : t.nonRenseigne;
+  };
+  const formatSize = (value) => {
+    const text = String(value || '').trim();
+    return text && text !== '0' ? text : '0 MB';
+  };
 
   const [activeTab, setActiveTab] = useState('documents');
   const [documents, setDocuments] = useState([]);
@@ -200,9 +226,9 @@ const GED = () => {
 
         const mappedDocuments = response.data.map(doc => ({
           id: doc.id,
-          nom: doc.name || doc.title || doc.id || 'N/A',
-          type: doc.type || 'Document',
-          dossier: doc.folder || 'General',
+          nom: doc.name || doc.title || doc.id || '',
+          type: doc.type || doc.extension || 'Document',
+          dossier: doc.folder || doc.category || 'General',
           dateCreation: doc.created_at ? doc.created_at.split('T')[0] : '',
           taille: doc.size || '0 MB',
           statut: doc.status || 'Actif'
@@ -423,11 +449,11 @@ const GED = () => {
                 <tbody>
                   {documents.map(d => (
                     <tr key={d.id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                      <td className="px-4 py-2 text-slate-300 font-medium">{translateDocumentName(d.nom)}</td>
-                      <td className="px-4 py-2 text-slate-400">{translateDocumentType(d.type)}</td>
-                      <td className="px-4 py-2 text-slate-400">{translateFolderName(d.dossier)}</td>
-                      <td className="px-4 py-2 text-slate-400 text-xs">{d.taille}</td>
-                      <td className="px-4 py-2 text-slate-400 text-xs">{d.dateCreation}</td>
+                      <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(translateDocumentName(d.nom))}</td>
+                      <td className="px-4 py-2 text-slate-400">{formatValue(translateDocumentType(d.type))}</td>
+                      <td className="px-4 py-2 text-slate-400">{formatValue(translateFolderName(d.dossier))}</td>
+                      <td className="px-4 py-2 text-slate-400 text-xs">{formatSize(d.taille)}</td>
+                      <td className="px-4 py-2 text-slate-400 text-xs">{formatValue(d.dateCreation)}</td>
                       <td className="px-4 py-2 flex gap-2">
                         <button onClick={() => handleEdit('document', d)} className="p-1 hover:bg-slate-600 rounded">
                           <Edit2 size={16} className="text-blue-400" />
@@ -466,10 +492,10 @@ const GED = () => {
                 <tbody>
                   {dossiers.map(d => (
                     <tr key={d.id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                      <td className="px-4 py-2 text-slate-300 font-medium">{translateFolderName(d.nom)}</td>
+                      <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(translateFolderName(d.nom))}</td>
                       <td className="px-4 py-2 text-slate-400">{d.nombreDocs}</td>
-                      <td className="px-4 py-2 text-slate-400">{d.taille}</td>
-                      <td className="px-4 py-2 text-slate-400 text-xs">{d.dateCreation}</td>
+                      <td className="px-4 py-2 text-slate-400">{formatSize(d.taille)}</td>
+                      <td className="px-4 py-2 text-slate-400 text-xs">{formatValue(d.dateCreation)}</td>
                       <td className="px-4 py-2 flex gap-2">
                         <button onClick={() => handleEdit('dossier', d)} className="p-1 hover:bg-slate-600 rounded">
                           <Edit2 size={16} className="text-blue-400" />
@@ -497,7 +523,7 @@ const GED = () => {
             </h2>
  
             <div className="space-y-4">
-              <input type="text" placeholder="Nom" value={formData.nom} onChange={(e) => handleFormChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+              <input type="text" placeholder={modalType === 'document' ? t.nomDocument : t.nomDossier} value={formData.nom} onChange={(e) => handleFormChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
               <select value={formData.type} onChange={(e) => handleFormChange('type', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
                 <option value="PDF">{translateDocumentType('PDF')}</option>
                 <option value="Word">{translateDocumentType('Word')}</option>
