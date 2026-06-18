@@ -40,11 +40,13 @@ const RH = () => {
       ajouter: 'Ajouter',
       actif: 'Actif',
       inactif: 'Inactif',
+      conge: 'Congé',
       modifier: 'Modifier',
       creer: 'Créer',
       annuler: 'Annuler',
       dateEmbauche: 'Date d\'Embauche',
-      selectionner: 'Sélectionner'
+      selectionner: 'Sélectionner',
+      nonRenseigne: 'Non renseigné'
     },
     EN: {
       title: 'Human Resources',
@@ -77,11 +79,13 @@ const RH = () => {
       ajouter: 'Add',
       actif: 'Active',
       inactif: 'Inactive',
+      conge: 'Leave',
       modifier: 'Edit',
       creer: 'Create',
       annuler: 'Cancel',
       dateEmbauche: 'Hire Date',
-      selectionner: 'Select'
+      selectionner: 'Select',
+      nonRenseigne: 'Not provided'
     },
     DE: {
       title: 'Personalwesen',
@@ -114,11 +118,13 @@ const RH = () => {
       ajouter: 'Hinzufügen',
       actif: 'Aktiv',
       inactif: 'Inaktiv',
+      conge: 'Urlaub',
       modifier: 'Bearbeiten',
       creer: 'Erstellen',
       annuler: 'Abbrechen',
       dateEmbauche: 'Einstellungsdatum',
-      selectionner: 'Auswählen'
+      selectionner: 'Auswählen',
+      nonRenseigne: 'Nicht angegeben'
     }
   };
 
@@ -208,12 +214,33 @@ const RH = () => {
     if (text === 'admin' || text === 'administrator' || text === 'administrateur') return 'Admin';
     return 'Utilisateur';
   };
+  const normalizeStatus = (value) => {
+    const text = String(value || '').trim().toLowerCase();
+    if (['inactif', 'inactive', 'false', '0'].includes(text)) return 'Inactif';
+    if (['conge', 'congé', 'leave'].includes(text)) return 'Congé';
+    return 'Actif';
+  };
   const normalizeMemberType = (person) => {
     const id = String(person.id || '').toLowerCase();
     const name = String(person.name || `${person.prenom || ''} ${person.nom || ''}`).toLowerCase();
     if (id.includes('cheikh') || id.includes('chantal') || name.includes('cheikh') || name.includes('chantal')) return 'Fondateur';
     const raw = String(person.type_membre || person.member_type || '').trim().toLowerCase();
     return raw === 'fondateur' ? 'Fondateur' : 'Associ\u00e9';
+  };
+  const formatValue = (value) => {
+    const text = String(value || '').trim();
+    return text && text !== 'N/A' ? text : t.nonRenseigne;
+  };
+  const getStatusLabel = (status) => {
+    const normalized = normalizeStatus(status);
+    if (normalized === 'Congé') return t.conge;
+    return normalized === 'Actif' ? t.actif : t.inactif;
+  };
+  const getStatusClass = (status) => {
+    const normalized = normalizeStatus(status);
+    if (normalized === 'Actif') return 'bg-green-900 text-green-200';
+    if (normalized === 'Congé') return 'bg-amber-900 text-amber-200';
+    return 'bg-red-900 text-red-200';
   };
   const getTypeLabel = (type) => {
     if (type === 'membre') return t.membre;
@@ -268,7 +295,7 @@ const RH = () => {
             role: normalizeRole(emp.role || emp.profil || emp.access_role),
             typeMembre: normalizeMemberType(emp),
             dateEmbauche: emp.created_at ? emp.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
-            statut: emp.status === 'Inactif' || emp.active === false ? 'Inactif' : 'Actif'
+            statut: emp.active === false ? 'Inactif' : normalizeStatus(emp.status)
           }));
           setMembres(mappedMembres);
           console.log('RH members loaded:', mappedMembres.length, 'rows');
@@ -326,6 +353,7 @@ const RH = () => {
     const normalizedData = {
       ...formData,
       role: normalizeRole(formData.role),
+      statut: normalizeStatus(formData.statut),
       typeMembre: modalType === 'membre' ? (formData.typeMembre || 'Associé') : ''
     };
 
@@ -404,14 +432,14 @@ const RH = () => {
               <tr key={item.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                 <td className="px-4 py-2 text-slate-300 font-medium">{item.nom}</td>
                 <td className="px-4 py-2 text-slate-400 text-xs">{item.email}</td>
-                <td className="px-4 py-2 text-slate-400 text-xs">{item.telephone}</td>
+                <td className="px-4 py-2 text-slate-400 text-xs">{formatValue(item.telephone)}</td>
                 <td className="px-4 py-2 text-slate-300">{translatePosition(item.poste)}</td>
-                <td className="px-4 py-2 text-slate-400">{translateDepartment(item.departement)}</td>
-                <td className="px-4 py-2 text-slate-400">{item.role || 'N/A'}</td>
-                {type === 'membre' && <td className="px-4 py-2 text-slate-400">{item.typeMembre || 'N/A'}</td>}
+                <td className="px-4 py-2 text-slate-400">{formatValue(translateDepartment(item.departement))}</td>
+                <td className="px-4 py-2 text-slate-400">{formatValue(item.role)}</td>
+                {type === 'membre' && <td className="px-4 py-2 text-slate-400">{formatValue(item.typeMembre)}</td>}
                 <td className="px-4 py-2">
-                  <span className={`px-2 py-1 rounded text-xs font-semibold ${item.statut === 'Actif' ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'}`}>
-                    {item.statut === 'Actif' ? t.actif : t.inactif}
+                  <span className={`px-2 py-1 rounded text-xs font-semibold ${getStatusClass(item.statut)}`}>
+                    {getStatusLabel(item.statut)}
                   </span>
                 </td>
                 <td className="px-4 py-2 flex gap-2">
@@ -638,9 +666,9 @@ const RH = () => {
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">{t.statut}</label>
                 <select value={formData.statut} onChange={(e) => handleFormChange('statut', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
-                  <option>Actif</option>
-                  <option>Inactif</option>
-                  <option>Congé</option>
+                  <option value="Actif">{t.actif}</option>
+                  <option value="Inactif">{t.inactif}</option>
+                  <option value="Congé">{t.conge}</option>
                 </select>
               </div>
             </div>
