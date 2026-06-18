@@ -80,7 +80,7 @@
             "EN": "Revenue",
             "DE": "Einnahmen"
           },
-          "path": "/finance?tab=fx"
+          "path": "/finance?tab=recettes"
         },
         {
           "id": "depenses",
@@ -89,7 +89,7 @@
             "EN": "Expenses",
             "DE": "Ausgaben"
           },
-          "path": "/finance"
+          "path": "/finance?tab=depenses"
         },
         {
           "id": "budget",
@@ -98,7 +98,7 @@
             "EN": "Budget",
             "DE": "Budget"
           },
-          "path": "/finance"
+          "path": "/finance?tab=fx"
         },
         {
           "id": "social",
@@ -345,7 +345,7 @@
             "DE": "Überwachung & Wissensmanagement"
           },
           "icon": "Eye",
-          "path": "/ged"
+          "path": "/ged?tab=documents"
         },
         {
           "id": "ged",

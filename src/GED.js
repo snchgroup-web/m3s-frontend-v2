@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Plus, Edit2, Trash2, FileText, Folder, Download, Upload } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
@@ -6,6 +7,7 @@ import api from './api';
 
 const GED = () => {
   const { language } = useLanguage();
+  const location = useLocation();
 
   // Translations
   const translations = {
@@ -174,11 +176,18 @@ const GED = () => {
     taille: '',
     statut: 'Actif'
   });
+
+  useEffect(() => {
+    const tab = new URLSearchParams(location.search).get('tab');
+    if (['overview', 'documents', 'dossiers'].includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [location.search]);
  
   useEffect(() => {
     const loadDocuments = async () => {
       try {
-        const response = await api.getDocuments(100, 0);
+        const response = await api.getDocuments(250, 0);
         if (!response?.data || !Array.isArray(response.data)) return;
 
         const mappedDocuments = response.data.map(doc => ({
