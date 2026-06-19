@@ -27,8 +27,9 @@ const CRM = () => {
     telephone: '',
     statut: 'Nouveau',
     montant: '',
+    devise: 'CHF',
     date: new Date().toISOString().split('T')[0],
-    categorie: ''
+    categorie: 'Donation'
   });
 
   // Translations
@@ -63,7 +64,11 @@ const CRM = () => {
       annuler: 'Annuler',
       donateur: 'Donateur',
       valeur: 'Valeur',
-      valeurAnnuelle: 'Valeur Annuelle'
+      valeurAnnuelle: 'Valeur Annuelle',
+      prospect: 'Prospect',
+      client: 'Client',
+      don: 'Don',
+      remplirChamps: 'Veuillez remplir les champs obligatoires'
     },
     EN: {
       title: 'Sales & CRM',
@@ -95,7 +100,11 @@ const CRM = () => {
       annuler: 'Cancel',
       donateur: 'Donor',
       valeur: 'Value',
-      valeurAnnuelle: 'Annual Value'
+      valeurAnnuelle: 'Annual Value',
+      prospect: 'Prospect',
+      client: 'Client',
+      don: 'Donation',
+      remplirChamps: 'Please fill in all required fields'
     },
     DE: {
       title: 'Marketing & CRM',
@@ -127,7 +136,11 @@ const CRM = () => {
       annuler: 'Abbrechen',
       donateur: 'Spender',
       valeur: 'Wert',
-      valeurAnnuelle: 'Jahreswert'
+      valeurAnnuelle: 'Jahreswert',
+      prospect: 'Interessent',
+      client: 'Kunde',
+      don: 'Spende',
+      remplirChamps: 'Bitte füllen Sie alle erforderlichen Felder aus'
     }
   };
 
@@ -152,9 +165,71 @@ const CRM = () => {
     }
   };
 
-  const translateProspectStatus = (status) => dataTranslations.prospectStatuses[language]?.[status] || status;
-  const translateClientStatus = (status) => dataTranslations.clientStatuses[language]?.[status] || status;
-  const translateDonCategory = (category) => dataTranslations.donCategories[language]?.[category] || category;
+  const normalizeLookupKey = (value) => String(value || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+  const prospectStatusKeys = {
+    'NOUVEAU': 'Nouveau',
+    'NEW': 'Nouveau',
+    'NEU': 'Nouveau',
+    'QUALIFIE': 'Qualifié',
+    'QUALIFIED': 'Qualifié',
+    'QUALIFIZIERT': 'Qualifié',
+    'NEGOCIATION': 'Négociation',
+    'NEGOTIATION': 'Négociation',
+    'VERHANDLUNG': 'Négociation'
+  };
+  const clientStatusKeys = {
+    'ACTIF': 'Actif',
+    'ACTIVE': 'Actif',
+    'AKTIV': 'Actif',
+    'INACTIF': 'Inactif',
+    'INACTIVE': 'Inactif',
+    'INAKTIV': 'Inactif'
+  };
+  const donCategoryKeys = {
+    'DONATION': 'Donation',
+    'FONDATION': 'Fondation',
+    'FOUNDATION': 'Fondation',
+    'STIFTUNG': 'Fondation',
+    'PARTICULIER': 'Particulier',
+    'INDIVIDUAL': 'Particulier',
+    'EINZELPERSON': 'Particulier',
+    'PARTENARIAT': 'Partenariat',
+    'PARTNERSHIP': 'Partenariat',
+    'PARTNERSCHAFT': 'Partenariat',
+    'PUBLIC': 'Public',
+    'GOVERNMENT': 'Public',
+    'REGIERUNG': 'Public'
+  };
+  const normalizeProspectStatus = (status) => prospectStatusKeys[normalizeLookupKey(status)] || status;
+  const normalizeClientStatus = (status) => clientStatusKeys[normalizeLookupKey(status)] || status;
+  const normalizeDonCategory = (category) => donCategoryKeys[normalizeLookupKey(category)] || category;
+  const translateProspectStatus = (status) => {
+    const normalized = normalizeProspectStatus(status);
+    return dataTranslations.prospectStatuses[language]?.[normalized] || status;
+  };
+  const translateClientStatus = (status) => {
+    const normalized = normalizeClientStatus(status);
+    return dataTranslations.clientStatuses[language]?.[normalized] || status;
+  };
+  const translateDonCategory = (category) => {
+    const normalized = normalizeDonCategory(category);
+    return dataTranslations.donCategories[language]?.[normalized] || category;
+  };
+  const getTypeLabel = (type) => {
+    if (type === 'client') return t.client;
+    if (type === 'don') return t.don;
+    return t.prospect;
+  };
+  const getDefaultFormData = (type = 'prospect') => ({
+    nom: '',
+    email: '',
+    telephone: '',
+    statut: type === 'client' ? 'Actif' : 'Nouveau',
+    montant: '',
+    devise: 'CHF',
+    date: new Date().toISOString().split('T')[0],
+    categorie: 'Donation'
+  });
 
   const getMonthName = useCallback((shortMonth) => {
     const index = shortMonths.indexOf(shortMonth);
@@ -224,40 +299,73 @@ const CRM = () => {
   };
 
   const handleSave = () => {
-    if (!formData.nom || !formData.email) {
-      alert('Veuillez remplir les champs obligatoires');
+    if (modalType !== 'don' && (!formData.nom || !formData.email)) {
+      alert(t.remplirChamps);
+      return;
+    }
+    if (modalType === 'don' && (!formData.nom || !formData.montant)) {
+      alert(t.remplirChamps);
       return;
     }
 
     if (modalType === 'prospect') {
+      const prospectData = {
+        nom: formData.nom,
+        email: formData.email,
+        telephone: formData.telephone,
+        statut: normalizeProspectStatus(formData.statut),
+        dateContact: formData.date,
+        valeur: parseFloat(formData.montant) || 0
+      };
       if (editingId) {
-        setProspects(prospects.map(p => p.id === editingId ? { ...formData, id: editingId } : p));
+        setProspects(prospects.map(p => p.id === editingId ? { ...prospectData, id: editingId } : p));
       } else {
-        setProspects([...prospects, { ...formData, id: Date.now() }]);
+        setProspects([...prospects, { ...prospectData, id: Date.now() }]);
       }
     } else if (modalType === 'client') {
+      const clientData = {
+        nom: formData.nom,
+        email: formData.email,
+        telephone: formData.telephone,
+        statut: normalizeClientStatus(formData.statut),
+        dateDebut: formData.date,
+        valeurAnnuelle: parseFloat(formData.montant) || 0
+      };
       if (editingId) {
-        setClients(clients.map(c => c.id === editingId ? { ...formData, id: editingId } : c));
+        setClients(clients.map(c => c.id === editingId ? { ...clientData, id: editingId } : c));
       } else {
-        setClients([...clients, { ...formData, id: Date.now() }]);
+        setClients([...clients, { ...clientData, id: Date.now() }]);
       }
     } else {
+      const donData = {
+        donateur: formData.nom,
+        montant: parseFloat(formData.montant) || 0,
+        devise: formData.devise || 'CHF',
+        date: formData.date,
+        categorie: normalizeDonCategory(formData.categorie)
+      };
       if (editingId) {
-        setDons(dons.map(d => d.id === editingId ? { ...formData, id: editingId, montant: parseFloat(formData.montant) } : d));
+        setDons(dons.map(d => d.id === editingId ? { ...donData, id: editingId } : d));
       } else {
-        setDons([...dons, { ...formData, id: Date.now(), montant: parseFloat(formData.montant) }]);
+        setDons([...dons, { ...donData, id: Date.now() }]);
       }
     }
 
     setShowModal(false);
     setEditingId(null);
-    setFormData({ nom: '', email: '', telephone: '', statut: 'Nouveau', montant: '', date: new Date().toISOString().split('T')[0], categorie: '' });
+    setFormData(getDefaultFormData(modalType));
   };
 
   const handleEdit = (type, item) => {
     setModalType(type);
     setEditingId(item.id);
-    setFormData(item);
+    if (type === 'don') {
+      setFormData({ ...getDefaultFormData(type), nom: item.donateur, montant: item.montant, devise: item.devise, date: item.date, categorie: item.categorie });
+    } else if (type === 'client') {
+      setFormData({ ...getDefaultFormData(type), ...item, montant: item.valeurAnnuelle, date: item.dateDebut });
+    } else {
+      setFormData({ ...getDefaultFormData(type), ...item, montant: item.valeur, date: item.dateContact });
+    }
     setShowModal(true);
   };
 
@@ -272,7 +380,7 @@ const CRM = () => {
   const Table = ({ data, type, onEdit, onDelete, onAdd, columns }) => (
     <div>
       <div className="flex justify-end mb-4">
-        <button onClick={() => { setEditingId(null); setFormData({ nom: '', email: '', telephone: '', statut: 'Nouveau', montant: '', date: new Date().toISOString().split('T')[0], categorie: '' }); setModalType(type); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
+        <button onClick={() => { setEditingId(null); setFormData(getDefaultFormData(type)); setModalType(type); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
           <Plus size={20} /> {t.ajouter}
         </button>
       </div>
@@ -294,7 +402,7 @@ const CRM = () => {
                     <td className="px-4 py-2 text-slate-300 font-medium">{item.nom}</td>
                     <td className="px-4 py-2 text-slate-400 text-xs">{item.email}</td>
                     <td className="px-4 py-2 text-slate-400">{translateProspectStatus(item.statut)}</td>
-                    <td className="px-4 py-2 text-slate-400">{item.valeur.toLocaleString()} CHF</td>
+                    <td className="px-4 py-2 text-slate-400">{Number(item.valeur || 0).toLocaleString()} CHF</td>
                   </>
                 )}
                 {type === 'client' && (
@@ -302,7 +410,7 @@ const CRM = () => {
                     <td className="px-4 py-2 text-slate-300 font-medium">{item.nom}</td>
                     <td className="px-4 py-2 text-slate-400 text-xs">{item.email}</td>
                     <td className="px-4 py-2 text-slate-400">{translateClientStatus(item.statut)}</td>
-                    <td className="px-4 py-2 text-green-400 font-bold">{item.valeurAnnuelle.toLocaleString()} CHF</td>
+                    <td className="px-4 py-2 text-green-400 font-bold">{Number(item.valeurAnnuelle || 0).toLocaleString()} CHF</td>
                   </>
                 )}
                 {type === 'don' && (
@@ -310,7 +418,7 @@ const CRM = () => {
                     <td className="px-4 py-2 text-slate-300 font-medium">{item.donateur}</td>
                     <td className="px-4 py-2 text-slate-400">{translateDonCategory(item.categorie)}</td>
                     <td className="px-4 py-2 text-slate-400">{item.devise}</td>
-                    <td className="px-4 py-2 text-green-400 font-bold">{item.montant.toLocaleString()}</td>
+                    <td className="px-4 py-2 text-green-400 font-bold">{Number(item.montant || 0).toLocaleString()}</td>
                   </>
                 )}
                 <td className="px-4 py-2 flex gap-2">
@@ -468,24 +576,28 @@ const CRM = () => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
             <h2 className="text-2xl font-bold text-white mb-6">
-              {editingId ? `${t.modifier} ${modalType}` : `${t.creer} ${modalType}`}
+              {editingId ? `${t.modifier} ${getTypeLabel(modalType)}` : `${t.creer} ${getTypeLabel(modalType)}`}
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.nom} *</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{modalType === 'don' ? t.donateur : t.nom} *</label>
                 <input type="text" value={formData.nom} onChange={(e) => handleFormChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.email}</label>
-                <input type="email" value={formData.email} onChange={(e) => handleFormChange('email', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
-              </div>
+              {modalType !== 'don' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">{t.email} *</label>
+                    <input type="email" value={formData.email} onChange={(e) => handleFormChange('email', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.telephone}</label>
-                <input type="tel" value={formData.telephone} onChange={(e) => handleFormChange('telephone', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">{t.telephone}</label>
+                    <input type="tel" value={formData.telephone} onChange={(e) => handleFormChange('telephone', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                  </div>
+                </>
+              )}
 
               {modalType !== 'don' && (
                 <div>
@@ -493,17 +605,24 @@ const CRM = () => {
                   <select value={formData.statut} onChange={(e) => handleFormChange('statut', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
                     {modalType === 'prospect' ? (
                       <>
-                        <option>Nouveau</option>
-                        <option>Qualifié</option>
-                        <option>Négociation</option>
+                        <option value="Nouveau">{translateProspectStatus('Nouveau')}</option>
+                        <option value="Qualifié">{translateProspectStatus('Qualifié')}</option>
+                        <option value="Négociation">{translateProspectStatus('Négociation')}</option>
                       </>
                     ) : (
                       <>
-                        <option>Actif</option>
-                        <option>Inactif</option>
+                        <option value="Actif">{translateClientStatus('Actif')}</option>
+                        <option value="Inactif">{translateClientStatus('Inactif')}</option>
                       </>
                     )}
                   </select>
+                </div>
+              )}
+
+              {modalType !== 'don' && (
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">{modalType === 'client' ? t.valeurAnnuelle : t.valeur}</label>
+                  <input type="number" value={formData.montant} onChange={(e) => handleFormChange('montant', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
                 </div>
               )}
 
@@ -525,7 +644,13 @@ const CRM = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-slate-300 mb-2">{t.categorie}</label>
-                    <input type="text" value={formData.categorie} onChange={(e) => handleFormChange('categorie', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="Donation, Fondation, etc" />
+                    <select value={formData.categorie} onChange={(e) => handleFormChange('categorie', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                      <option value="Donation">{translateDonCategory('Donation')}</option>
+                      <option value="Fondation">{translateDonCategory('Fondation')}</option>
+                      <option value="Particulier">{translateDonCategory('Particulier')}</option>
+                      <option value="Partenariat">{translateDonCategory('Partenariat')}</option>
+                      <option value="Public">{translateDonCategory('Public')}</option>
+                    </select>
                   </div>
                 </>
               )}
