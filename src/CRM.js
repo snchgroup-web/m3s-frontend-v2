@@ -5,6 +5,7 @@ import { Plus, Edit2, Trash2, Users, TrendingUp, Gift, Target } from 'lucide-rea
 import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
+import TableControls from './TableControls';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -397,56 +398,59 @@ const CRM = () => {
           <Plus size={20} /> {t.ajouter}
         </button>
       </div>
-      <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-700">
-            <tr>
-              {columns.map((col, i) => (
-                <th key={i} className="px-4 py-2 text-left text-white font-bold">{col}</th>
-              ))}
-              <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map(item => (
-              <tr key={item.id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                {type === 'prospect' && (
-                  <>
-                    <td className="px-4 py-2 text-slate-300 font-medium">{item.nom}</td>
-                    <td className="px-4 py-2 text-slate-400 text-xs">{item.email}</td>
-                    <td className="px-4 py-2 text-slate-400">{translateProspectStatus(item.statut)}</td>
-                    <td className="px-4 py-2 text-slate-400">{Number(item.valeur || 0).toLocaleString()} CHF</td>
-                  </>
-                )}
-                {type === 'client' && (
-                  <>
-                    <td className="px-4 py-2 text-slate-300 font-medium">{item.nom}</td>
-                    <td className="px-4 py-2 text-slate-400 text-xs">{item.email}</td>
-                    <td className="px-4 py-2 text-slate-400">{translateClientStatus(item.statut)}</td>
-                    <td className="px-4 py-2 text-green-400 font-bold">{Number(item.valeurAnnuelle || 0).toLocaleString()} CHF</td>
-                  </>
-                )}
-                {type === 'don' && (
-                  <>
-                    <td className="px-4 py-2 text-slate-300 font-medium">{item.donateur}</td>
-                    <td className="px-4 py-2 text-slate-400">{translateDonCategory(item.categorie)}</td>
-                    <td className="px-4 py-2 text-slate-400">{item.devise}</td>
-                    <td className="px-4 py-2 text-green-400 font-bold">{Number(item.montant || 0).toLocaleString()}</td>
-                  </>
-                )}
-                <td className="px-4 py-2 flex gap-2">
-                  <button onClick={() => handleEdit(type, item)} className="p-1 hover:bg-slate-600 rounded">
-                    <Edit2 size={16} className="text-blue-400" />
-                  </button>
-                  <button onClick={() => handleDelete(type, item.id)} className="p-1 hover:bg-slate-600 rounded">
-                    <Trash2 size={16} className="text-red-400" />
-                  </button>
-                </td>
+      <TableControls
+        rows={data}
+        renderTable={(visibleRows) => (
+          <table className="min-w-full text-sm">
+            <thead className="sticky top-0 z-10 bg-slate-700">
+              <tr>
+                {columns.map((col, i) => (
+                  <th key={i} className="px-4 py-2 text-left text-white font-bold">{col}</th>
+                ))}
+                <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {visibleRows.map(item => (
+                <tr key={item.id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                  {type === 'prospect' && (
+                    <>
+                      <td className="px-4 py-2 text-slate-300 font-medium">{item.nom}</td>
+                      <td className="px-4 py-2 text-slate-400 text-xs">{item.email}</td>
+                      <td className="px-4 py-2 text-slate-400">{translateProspectStatus(item.statut)}</td>
+                      <td className="px-4 py-2 text-slate-400">{Number(item.valeur || 0).toLocaleString()} CHF</td>
+                    </>
+                  )}
+                  {type === 'client' && (
+                    <>
+                      <td className="px-4 py-2 text-slate-300 font-medium">{item.nom}</td>
+                      <td className="px-4 py-2 text-slate-400 text-xs">{item.email}</td>
+                      <td className="px-4 py-2 text-slate-400">{translateClientStatus(item.statut)}</td>
+                      <td className="px-4 py-2 text-green-400 font-bold">{Number(item.valeurAnnuelle || 0).toLocaleString()} CHF</td>
+                    </>
+                  )}
+                  {type === 'don' && (
+                    <>
+                      <td className="px-4 py-2 text-slate-300 font-medium">{item.donateur}</td>
+                      <td className="px-4 py-2 text-slate-400">{translateDonCategory(item.categorie)}</td>
+                      <td className="px-4 py-2 text-slate-400">{item.devise}</td>
+                      <td className="px-4 py-2 text-green-400 font-bold">{Number(item.montant || 0).toLocaleString()}</td>
+                    </>
+                  )}
+                  <td className="px-4 py-2 flex gap-2">
+                    <button onClick={() => handleEdit(type, item)} className="p-1 hover:bg-slate-600 rounded">
+                      <Edit2 size={16} className="text-blue-400" />
+                    </button>
+                    <button onClick={() => handleDelete(type, item.id)} className="p-1 hover:bg-slate-600 rounded">
+                      <Trash2 size={16} className="text-red-400" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      />
     </div>
   );
 

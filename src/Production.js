@@ -5,6 +5,7 @@ import { Plus, Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck } from 'l
 import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
+import TableControls from './TableControls';
 
 const Production = () => {
   const { language } = useLanguage();
@@ -494,9 +495,9 @@ const Production = () => {
                 <Plus size={20} /> {t.nouvelleCommande}
               </button>
             </div>
-            <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-              <table className="w-full text-sm">
-                <thead className="bg-slate-700">
+            <TableControls rows={commandes} renderTable={(visibleRows) => (
+              <table className="min-w-full text-sm">
+                <thead className="sticky top-0 z-10 bg-slate-700">
                   <tr>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.numero}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.client}</th>
@@ -507,7 +508,7 @@ const Production = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {commandes.map(c => (
+                  {visibleRows.map(c => (
                     <tr key={c.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                       <td className="px-4 py-2 text-slate-300 font-medium">{c.numero}</td>
                       <td className="px-4 py-2 text-slate-400">{c.client}</td>
@@ -530,7 +531,7 @@ const Production = () => {
                   ))}
                 </tbody>
               </table>
-            </div>
+            )} />
           </div>
         )}
  
@@ -541,9 +542,9 @@ const Production = () => {
                 <Plus size={20} /> {t.nouveauFournisseur}
               </button>
             </div>
-            <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-              <table className="w-full text-sm">
-                <thead className="bg-slate-700">
+            <TableControls rows={fournisseurs} renderTable={(visibleRows) => (
+              <table className="min-w-full text-sm">
+                <thead className="sticky top-0 z-10 bg-slate-700">
                   <tr>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.nom}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.email}</th>
@@ -553,7 +554,7 @@ const Production = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {fournisseurs.map(f => (
+                  {visibleRows.map(f => (
                     <tr key={f.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                       <td className="px-4 py-2 text-slate-300 font-medium">{f.nom}</td>
                       <td className="px-4 py-2 text-slate-400 text-xs">{f.email}</td>
@@ -571,7 +572,7 @@ const Production = () => {
                   ))}
                 </tbody>
               </table>
-            </div>
+            )} />
           </div>
         )}
  
@@ -582,9 +583,9 @@ const Production = () => {
                 <Plus size={20} /> {t.ajouterStock}
               </button>
             </div>
-            <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-              <table className="w-full text-sm">
-                <thead className="bg-slate-700">
+            <TableControls rows={stocks} renderTable={(visibleRows) => (
+              <table className="min-w-full text-sm">
+                <thead className="sticky top-0 z-10 bg-slate-700">
                   <tr>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.produit}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.quantite}</th>
@@ -594,7 +595,7 @@ const Production = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {stocks.map(s => (
+                  {visibleRows.map(s => (
                     <tr key={s.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                       <td className="px-4 py-2 text-slate-300 font-medium">{translateProduct(s.produit)}</td>
                       <td className="px-4 py-2 text-slate-400">{s.quantite}</td>
@@ -616,7 +617,7 @@ const Production = () => {
                   ))}
                 </tbody>
               </table>
-            </div>
+            )} />
           </div>
         )}
 

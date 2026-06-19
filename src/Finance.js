@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Search } from 'lucide-react';
+import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
+import TableControls from './TableControls';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -36,7 +37,6 @@ const Finance = () => {
   const [depenses, setDepenses] = useState([]);
   const [fxHistory, setFxHistory] = useState([]);
   const [tauxDuJour, setTauxDuJour] = useState({});
-  const [searchFx, setSearchFx] = useState('');
   const [filterDevise, setFilterDevise] = useState('');
   const [showFxModal, setShowFxModal] = useState(false);
   const [editingFxId, setEditingFxId] = useState(null);
@@ -443,10 +443,9 @@ const Finance = () => {
 
   const filteredFxHistory = useMemo(() =>
     fxHistory.filter(fx => {
-      const matchesSearch = fx.id?.toString().includes(searchFx) || fx.source?.toLowerCase().includes(searchFx.toLowerCase());
       const matchesDevise = !filterDevise || fx.devise_from?.includes(filterDevise) || fx.devise_to?.includes(filterDevise);
-      return matchesSearch && matchesDevise;
-    }), [fxHistory, searchFx, filterDevise]);
+      return matchesDevise;
+    }), [fxHistory, filterDevise]);
 
   return (
     <>
@@ -561,39 +560,42 @@ const Finance = () => {
                 <Plus size={20} /> {t.nouvelleRecette}
               </button>
             </div>
-            <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-              <table className="w-full">
-                <thead className="bg-slate-700">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-white font-bold">{t.description}</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">{t.montant}</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">{t.devise}</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">{t.categorie}</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">{t.date}</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">{t.actions}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recettes.map(r => (
-                    <tr key={r.id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                      <td className="px-6 py-3 text-slate-300">{translateDescription(r.description)}</td>
-                      <td className="px-6 py-3 text-green-400 font-bold">{r.montant.toLocaleString()}</td>
-                      <td className="px-6 py-3 text-slate-400">{r.devise}</td>
-                      <td className="px-6 py-3 text-slate-400">{translateCategory(r.categorie)}</td>
-                      <td className="px-6 py-3 text-slate-400">{r.date}</td>
-                      <td className="px-6 py-3 flex gap-2">
-                        <button onClick={() => handleEdit('recette', r)} className="p-1 hover:bg-slate-600 rounded">
-                          <Edit2 size={18} className="text-blue-400" />
-                        </button>
-                        <button onClick={() => handleDelete('recette', r.id)} className="p-1 hover:bg-slate-600 rounded">
-                          <Trash2 size={18} className="text-red-400" />
-                        </button>
-                      </td>
+            <TableControls
+              rows={recettes}
+              renderTable={(visibleRows) => (
+                <table className="min-w-full">
+                  <thead className="sticky top-0 z-10 bg-slate-700">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-white font-bold">{t.description}</th>
+                      <th className="px-6 py-3 text-left text-white font-bold">{t.montant}</th>
+                      <th className="px-6 py-3 text-left text-white font-bold">{t.devise}</th>
+                      <th className="px-6 py-3 text-left text-white font-bold">{t.categorie}</th>
+                      <th className="px-6 py-3 text-left text-white font-bold">{t.date}</th>
+                      <th className="px-6 py-3 text-left text-white font-bold">{t.actions}</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {visibleRows.map(r => (
+                      <tr key={r.id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                        <td className="px-6 py-3 text-slate-300">{translateDescription(r.description)}</td>
+                        <td className="px-6 py-3 text-green-400 font-bold">{r.montant.toLocaleString()}</td>
+                        <td className="px-6 py-3 text-slate-400">{r.devise}</td>
+                        <td className="px-6 py-3 text-slate-400">{translateCategory(r.categorie)}</td>
+                        <td className="px-6 py-3 text-slate-400">{r.date}</td>
+                        <td className="px-6 py-3 flex gap-2">
+                          <button onClick={() => handleEdit('recette', r)} className="p-1 hover:bg-slate-600 rounded">
+                            <Edit2 size={18} className="text-blue-400" />
+                          </button>
+                          <button onClick={() => handleDelete('recette', r.id)} className="p-1 hover:bg-slate-600 rounded">
+                            <Trash2 size={18} className="text-red-400" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            />
           </div>
         )}
 
@@ -604,55 +606,48 @@ const Finance = () => {
                 <Plus size={20} /> {t.nouvelleDepense}
               </button>
             </div>
-            <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-              <table className="w-full">
-                <thead className="bg-slate-700">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-white font-bold">{t.description}</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">{t.montant}</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">{t.devise}</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">{t.categorie}</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">{t.date}</th>
-                    <th className="px-6 py-3 text-left text-white font-bold">{t.actions}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {depenses.map(d => (
-                    <tr key={d.id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                      <td className="px-6 py-3 text-slate-300">{translateDescription(d.description)}</td>
-                      <td className="px-6 py-3 text-red-400 font-bold">{d.montant.toLocaleString()}</td>
-                      <td className="px-6 py-3 text-slate-400">{d.devise}</td>
-                      <td className="px-6 py-3 text-slate-400">{translateCategory(d.categorie)}</td>
-                      <td className="px-6 py-3 text-slate-400">{d.date}</td>
-                      <td className="px-6 py-3 flex gap-2">
-                        <button onClick={() => handleEdit('depense', d)} className="p-1 hover:bg-slate-600 rounded">
-                          <Edit2 size={18} className="text-blue-400" />
-                        </button>
-                        <button onClick={() => handleDelete('depense', d.id)} className="p-1 hover:bg-slate-600 rounded">
-                          <Trash2 size={18} className="text-red-400" />
-                        </button>
-                      </td>
+            <TableControls
+              rows={depenses}
+              renderTable={(visibleRows) => (
+                <table className="min-w-full">
+                  <thead className="sticky top-0 z-10 bg-slate-700">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-white font-bold">{t.description}</th>
+                      <th className="px-6 py-3 text-left text-white font-bold">{t.montant}</th>
+                      <th className="px-6 py-3 text-left text-white font-bold">{t.devise}</th>
+                      <th className="px-6 py-3 text-left text-white font-bold">{t.categorie}</th>
+                      <th className="px-6 py-3 text-left text-white font-bold">{t.date}</th>
+                      <th className="px-6 py-3 text-left text-white font-bold">{t.actions}</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {visibleRows.map(d => (
+                      <tr key={d.id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                        <td className="px-6 py-3 text-slate-300">{translateDescription(d.description)}</td>
+                        <td className="px-6 py-3 text-red-400 font-bold">{d.montant.toLocaleString()}</td>
+                        <td className="px-6 py-3 text-slate-400">{d.devise}</td>
+                        <td className="px-6 py-3 text-slate-400">{translateCategory(d.categorie)}</td>
+                        <td className="px-6 py-3 text-slate-400">{d.date}</td>
+                        <td className="px-6 py-3 flex gap-2">
+                          <button onClick={() => handleEdit('depense', d)} className="p-1 hover:bg-slate-600 rounded">
+                            <Edit2 size={18} className="text-blue-400" />
+                          </button>
+                          <button onClick={() => handleDelete('depense', d.id)} className="p-1 hover:bg-slate-600 rounded">
+                            <Trash2 size={18} className="text-red-400" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            />
           </div>
         )}
 
         {activeTab === 'fx' && (
           <div>
-            <div className="mb-4 flex gap-4 items-center">
-              <div className="flex-1 relative">
-                <Search size={18} className="absolute left-3 top-3 text-slate-500" />
-                <input
-                  type="text"
-                  placeholder={t.rechercher}
-                  value={searchFx}
-                  onChange={(e) => setSearchFx(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
-                />
-              </div>
+            <div className="mb-4 flex justify-end gap-4">
               <select
                 value={filterDevise}
                 onChange={(e) => setFilterDevise(e.target.value)}
@@ -668,23 +663,23 @@ const Finance = () => {
                 <Plus size={20} /> {t.nouveauTaux}
               </button>
             </div>
-
-            <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-              <table className="w-full text-sm">
-                <thead className="bg-slate-700">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-white font-bold">{t.id}</th>
-                    <th className="px-4 py-3 text-left text-white font-bold">{t.date}</th>
-                    <th className="px-4 py-3 text-left text-white font-bold">{t.deviseBase}</th>
-                    <th className="px-4 py-3 text-left text-white font-bold">{t.deviseCible}</th>
-                    <th className="px-4 py-3 text-left text-white font-bold">{t.taux}</th>
-                    <th className="px-4 py-3 text-left text-white font-bold">{t.source}</th>
-                    <th className="px-4 py-3 text-left text-white font-bold">{t.actions}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredFxHistory.length > 0 ? (
-                    filteredFxHistory.map(fx => (
+            <TableControls
+              rows={filteredFxHistory}
+              renderTable={(visibleRows) => (
+                <table className="min-w-full text-sm">
+                  <thead className="sticky top-0 z-10 bg-slate-700">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-white font-bold">{t.id}</th>
+                      <th className="px-4 py-3 text-left text-white font-bold">{t.date}</th>
+                      <th className="px-4 py-3 text-left text-white font-bold">{t.deviseBase}</th>
+                      <th className="px-4 py-3 text-left text-white font-bold">{t.deviseCible}</th>
+                      <th className="px-4 py-3 text-left text-white font-bold">{t.taux}</th>
+                      <th className="px-4 py-3 text-left text-white font-bold">{t.source}</th>
+                      <th className="px-4 py-3 text-left text-white font-bold">{t.actions}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {visibleRows.map(fx => (
                       <tr key={fx.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                         <td className="px-4 py-3 text-slate-300 text-xs">{fx.id}</td>
                         <td className="px-4 py-3 text-slate-300">{fx.date}</td>
@@ -701,18 +696,11 @@ const Finance = () => {
                           </button>
                         </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="7" className="px-6 py-8 text-center text-slate-400">
-                        {fxHistory.length === 0 ? 'No FX data loaded. Loading from BigQuery...' : 'No results found'}
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-            <p className="text-slate-400 text-sm mt-4">Total taux: {filteredFxHistory.length}</p>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            />
           </div>
         )}
 

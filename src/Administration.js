@@ -5,6 +5,7 @@ import { Plus, Edit2, Trash2, Shield, Users, Lock, Activity, AlertCircle } from 
 import { useLanguage } from './LanguageContext';
 import api from './api';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
+import TableControls from './TableControls';
 
 const Admin = () => {
   const { language } = useLanguage();
@@ -726,9 +727,9 @@ const Admin = () => {
                 <Plus size={20} /> {t.nouvelleTache}
               </button>
             </div>
-            <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-              <table className="w-full text-sm">
-                <thead className="bg-slate-700">
+            <TableControls rows={tasks} renderTable={(visibleRows) => (
+              <table className="min-w-full text-sm">
+                <thead className="sticky top-0 z-10 bg-slate-700">
                   <tr>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.titleTask}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
@@ -740,7 +741,7 @@ const Admin = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {tasks.map(task => (
+                  {visibleRows.map(task => (
                     <tr key={task.id || task.source_id} className="border-t border-slate-700 hover:bg-slate-700/50">
                       <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(task.titre || task.title)}</td>
                       <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskStatus(task.statut || task.status))}</td>
@@ -760,7 +761,7 @@ const Admin = () => {
                   ))}
                 </tbody>
               </table>
-            </div>
+            )} />
           </div>
         )}
 

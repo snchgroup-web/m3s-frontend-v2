@@ -6,6 +6,7 @@ import { useLanguage } from './LanguageContext';
 import api from './api';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
+import TableControls from './TableControls';
 
 const GED = () => {
   const { language } = useLanguage();
@@ -442,9 +443,9 @@ const GED = () => {
                 <Plus size={20} /> {t.nouvelDocument}
               </button>
             </div>
-            <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-              <table className="w-full text-sm">
-                <thead className="bg-slate-700">
+            <TableControls rows={documents} renderTable={(visibleRows) => (
+              <table className="min-w-full text-sm">
+                <thead className="sticky top-0 z-10 bg-slate-700">
                   <tr>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.nom}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.type}</th>
@@ -455,7 +456,7 @@ const GED = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {documents.map(d => (
+                  {visibleRows.map(d => (
                     <tr key={d.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                       <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(translateDocumentName(d.nom))}</td>
                       <td className="px-4 py-2 text-slate-400">{formatValue(translateDocumentType(d.type))}</td>
@@ -474,7 +475,7 @@ const GED = () => {
                   ))}
                 </tbody>
               </table>
-            </div>
+            )} />
           </div>
         )}
  
@@ -486,9 +487,9 @@ const GED = () => {
                 <Plus size={20} /> {t.nouveauDossier}
               </button>
             </div>
-            <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-              <table className="w-full text-sm">
-                <thead className="bg-slate-700">
+            <TableControls rows={dossiers} renderTable={(visibleRows) => (
+              <table className="min-w-full text-sm">
+                <thead className="sticky top-0 z-10 bg-slate-700">
                   <tr>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.nom}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.nombreDocs}</th>
@@ -498,7 +499,7 @@ const GED = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {dossiers.map(d => (
+                  {visibleRows.map(d => (
                     <tr key={d.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                       <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(translateFolderName(d.nom))}</td>
                       <td className="px-4 py-2 text-slate-400">{d.nombreDocs}</td>
@@ -516,7 +517,7 @@ const GED = () => {
                   ))}
                 </tbody>
               </table>
-            </div>
+            )} />
           </div>
         )}
 

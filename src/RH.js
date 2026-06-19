@@ -6,6 +6,7 @@ import { useLanguage } from './LanguageContext';
 import { api } from './api';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
+import TableControls from './TableControls';
 
 const RH = () => {
   const { language } = useLanguage();
@@ -425,49 +426,52 @@ const RH = () => {
           <Plus size={20} /> {t.ajouter}
         </button>
       </div>
-      <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-700">
-            <tr>
-              <th className="px-4 py-2 text-left text-white font-bold">{t.nom}</th>
-              <th className="px-4 py-2 text-left text-white font-bold">{t.email}</th>
-              <th className="px-4 py-2 text-left text-white font-bold">{t.telephone}</th>
-              <th className="px-4 py-2 text-left text-white font-bold">{t.poste}</th>
-              <th className="px-4 py-2 text-left text-white font-bold">{t.departement}</th>
-              <th className="px-4 py-2 text-left text-white font-bold">{t.role}</th>
-              {type === 'membre' && <th className="px-4 py-2 text-left text-white font-bold">{t.typeMembre}</th>}
-              <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
-              <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map(item => (
-              <tr key={item.id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                <td className="px-4 py-2 text-slate-300 font-medium">{item.nom}</td>
-                <td className="px-4 py-2 text-slate-400 text-xs">{item.email}</td>
-                <td className="px-4 py-2 text-slate-400 text-xs">{formatValue(item.telephone)}</td>
-                <td className="px-4 py-2 text-slate-300">{translatePosition(item.poste)}</td>
-                <td className="px-4 py-2 text-slate-400">{formatValue(translateDepartment(item.departement))}</td>
-                <td className="px-4 py-2 text-slate-400">{formatValue(item.role)}</td>
-                {type === 'membre' && <td className="px-4 py-2 text-slate-400">{formatValue(item.typeMembre)}</td>}
-                <td className="px-4 py-2">
-                  <span className={`px-2 py-1 rounded text-xs font-semibold ${getStatusClass(item.statut)}`}>
-                    {getStatusLabel(item.statut)}
-                  </span>
-                </td>
-                <td className="px-4 py-2 flex gap-2">
-                  <button onClick={() => onEdit(type, item)} className="p-1 hover:bg-slate-600 rounded">
-                    <Edit2 size={16} className="text-blue-400" />
-                  </button>
-                  <button onClick={() => onDelete(type, item.id)} className="p-1 hover:bg-slate-600 rounded">
-                    <Trash2 size={16} className="text-red-400" />
-                  </button>
-                </td>
+      <TableControls
+        rows={data}
+        renderTable={(visibleRows) => (
+          <table className="min-w-full text-sm">
+            <thead className="sticky top-0 z-10 bg-slate-700">
+              <tr>
+                <th className="px-4 py-2 text-left text-white font-bold">{t.nom}</th>
+                <th className="px-4 py-2 text-left text-white font-bold">{t.email}</th>
+                <th className="px-4 py-2 text-left text-white font-bold">{t.telephone}</th>
+                <th className="px-4 py-2 text-left text-white font-bold">{t.poste}</th>
+                <th className="px-4 py-2 text-left text-white font-bold">{t.departement}</th>
+                <th className="px-4 py-2 text-left text-white font-bold">{t.role}</th>
+                {type === 'membre' && <th className="px-4 py-2 text-left text-white font-bold">{t.typeMembre}</th>}
+                <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
+                <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {visibleRows.map(item => (
+                <tr key={item.id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                  <td className="px-4 py-2 text-slate-300 font-medium">{item.nom}</td>
+                  <td className="px-4 py-2 text-slate-400 text-xs">{item.email}</td>
+                  <td className="px-4 py-2 text-slate-400 text-xs">{formatValue(item.telephone)}</td>
+                  <td className="px-4 py-2 text-slate-300">{translatePosition(item.poste)}</td>
+                  <td className="px-4 py-2 text-slate-400">{formatValue(translateDepartment(item.departement))}</td>
+                  <td className="px-4 py-2 text-slate-400">{formatValue(item.role)}</td>
+                  {type === 'membre' && <td className="px-4 py-2 text-slate-400">{formatValue(item.typeMembre)}</td>}
+                  <td className="px-4 py-2">
+                    <span className={`px-2 py-1 rounded text-xs font-semibold ${getStatusClass(item.statut)}`}>
+                      {getStatusLabel(item.statut)}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2 flex gap-2">
+                    <button onClick={() => onEdit(type, item)} className="p-1 hover:bg-slate-600 rounded">
+                      <Edit2 size={16} className="text-blue-400" />
+                    </button>
+                    <button onClick={() => onDelete(type, item.id)} className="p-1 hover:bg-slate-600 rounded">
+                      <Trash2 size={16} className="text-red-400" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      />
     </div>
   );
 

@@ -6,6 +6,7 @@ import { useLanguage } from './LanguageContext';
 import api from './api';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
+import TableControls from './TableControls';
 
 const Actifs = () => {
   const { language } = useLanguage();
@@ -259,9 +260,9 @@ const Actifs = () => {
           />
 
           {activeTab === 'inventory' && (
-            <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-              <table className="w-full text-sm">
-                <thead className="bg-slate-700">
+            <TableControls rows={inventaire} renderTable={(visibleRows) => (
+              <table className="min-w-full text-sm">
+                <thead className="sticky top-0 z-10 bg-slate-700">
                   <tr>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.article}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.categorie}</th>
@@ -273,7 +274,7 @@ const Actifs = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {inventaire.map(item => (
+                  {visibleRows.map(item => (
                     <tr key={item.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                       <td className="px-4 py-2 text-slate-300 font-medium">{item.article}</td>
                       <td className="px-4 py-2 text-slate-400">{item.categorie}</td>
@@ -286,7 +287,7 @@ const Actifs = () => {
                   ))}
                 </tbody>
               </table>
-            </div>
+            )} />
           )}
 
           {activeTab === 'overview' && (
@@ -325,9 +326,9 @@ const Actifs = () => {
                   <Plus size={20} /> {t.nouvelActif}
                 </button>
               </div>
-              <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-                <table className="w-full text-sm">
-                  <thead className="bg-slate-700">
+              <TableControls rows={immobilisations} renderTable={(visibleRows) => (
+                <table className="min-w-full text-sm">
+                  <thead className="sticky top-0 z-10 bg-slate-700">
                     <tr>
                       <th className="px-4 py-2 text-left text-white font-bold">{t.nom}</th>
                       <th className="px-4 py-2 text-left text-white font-bold">{t.type}</th>
@@ -337,7 +338,7 @@ const Actifs = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {immobilisations.map(item => (
+                    {visibleRows.map(item => (
                       <tr key={item.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                         <td className="px-4 py-2 text-slate-300 font-medium">{item.nom}</td>
                         <td className="px-4 py-2 text-slate-400">{item.type}</td>
@@ -348,10 +349,10 @@ const Actifs = () => {
                     ))}
                   </tbody>
                 </table>
+              )} />
                 <div className="px-4 py-3 border-t border-slate-700 text-sm text-slate-400">
                   Depreciations: {totalDepreciation.toLocaleString()}
                 </div>
-              </div>
             </div>
           )}
 
