@@ -276,6 +276,8 @@ const RH = () => {
     const tab = new URLSearchParams(location.search).get('tab');
     if (['overview', 'membres', 'employes', 'benevoles', 'teams', 'hours', 'competences', 'myaccount'].includes(tab)) {
       setActiveTab(tab);
+    } else {
+      setActiveTab('overview');
     }
   }, [location.search]);
 

@@ -121,6 +121,8 @@ const Actifs = () => {
     const tab = new URLSearchParams(location.search).get('tab');
     if (['inventory', 'overview', 'immobilisations', 'risques'].includes(tab)) {
       setActiveTab(tab);
+    } else {
+      setActiveTab('overview');
     }
   }, [location.search]);
 

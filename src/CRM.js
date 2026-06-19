@@ -39,6 +39,8 @@ const CRM = () => {
     const tab = new URLSearchParams(location.search).get('tab');
     if (['overview', 'prospects', 'clients', 'dons', 'ventes', 'beneficiaires'].includes(tab)) {
       setActiveTab(tab);
+    } else {
+      setActiveTab('overview');
     }
   }, [location.search]);
 

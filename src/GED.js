@@ -210,7 +210,7 @@ const GED = () => {
     if (['overview', 'documents', 'dossiers', 'knowledge', 'ai-digital', 'database', 'user-guide', 'tech-docs', 'help-support', 'manual'].includes(tab)) {
       setActiveTab(tab);
     } else {
-      setActiveTab('documents');
+      setActiveTab('overview');
     }
   }, [location.search]);
 

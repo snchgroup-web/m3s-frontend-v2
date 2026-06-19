@@ -57,6 +57,7 @@ export const ModuleChildTabs = ({ moduleId, language, activeTab, onSelect }) => 
 export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs = [] }) => {
   const mergedTabs = [];
   const seen = new Set();
+  const explicitTabs = new Map(tabs.map(tab => [tab.tab, tab]));
 
   const addTab = (tab) => {
     if (!tab?.tab || seen.has(tab.tab)) return;
@@ -64,8 +65,14 @@ export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs =
     mergedTabs.push(tab);
   };
 
+  const overviewTab = explicitTabs.get('overview');
+  if (overviewTab) addTab(overviewTab);
+
+  getModuleChildTabs(moduleId, language).forEach(childTab => {
+    addTab(explicitTabs.get(childTab.tab) || childTab);
+  });
+
   tabs.forEach(addTab);
-  getModuleChildTabs(moduleId, language).forEach(addTab);
 
   if (!mergedTabs.length) return null;
 

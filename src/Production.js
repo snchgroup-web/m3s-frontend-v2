@@ -267,6 +267,8 @@ const Production = () => {
     const tab = new URLSearchParams(location.search).get('tab');
     if (['overview', 'commandes', 'fournisseurs', 'stocks', 'manufacturing'].includes(tab)) {
       setActiveTab(tab);
+    } else {
+      setActiveTab('overview');
     }
   }, [location.search]);
 

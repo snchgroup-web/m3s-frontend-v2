@@ -184,6 +184,8 @@ const Finance = () => {
     const tab = new URLSearchParams(location.search).get('tab');
     if (['overview', 'recettes', 'depenses', 'fx', 'budget', 'social', 'immobilier'].includes(tab)) {
       setActiveTab(tab);
+    } else {
+      setActiveTab('overview');
     }
   }, [location.search]);
 

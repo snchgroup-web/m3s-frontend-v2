@@ -384,6 +384,8 @@ const Admin = () => {
     const tab = new URLSearchParams(location.search).get('tab');
     if (['overview', 'tasks', 'institution', 'projects', 'communication'].includes(tab)) {
       setActiveTab(tab);
+    } else {
+      setActiveTab('overview');
     }
   }, [location.search]);
 
