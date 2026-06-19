@@ -205,6 +205,72 @@ const Admin = () => {
       FR: { 'Accès complet à tous les modules': 'Accès complet à tous les modules', 'Gestion système et permissions': 'Gestion système et permissions', 'Gestion finances uniquement': 'Gestion finances uniquement', 'Coordination et suivi': 'Coordination et suivi', 'Gestion opérations': 'Gestion opérations', 'Lecture seule': 'Lecture seule' },
       EN: { 'Accès complet à tous les modules': 'Full access to all modules', 'Gestion système et permissions': 'System management and permissions', 'Gestion finances uniquement': 'Finance management only', 'Coordination et suivi': 'Coordination and monitoring', 'Gestion opérations': 'Operations management', 'Lecture seule': 'Read-only access' },
       DE: { 'Accès complet à tous les modules': 'Vollzugriff auf alle Module', 'Gestion système et permissions': 'Systemverwaltung und Berechtigungen', 'Gestion finances uniquement': 'Nur Finanzverwaltung', 'Coordination et suivi': 'Koordination und Überwachung', 'Gestion opérations': 'Betriebsverwaltung', 'Lecture seule': 'Nur Lesezugriff' }
+    },
+    taskStatuses: {
+      FR: { 'Terminé': 'Terminé', 'En cours': 'En cours', 'À faire': 'À faire', 'A faire': 'À faire', 'Bloqué': 'Bloqué', 'Annulé': 'Annulé' },
+      EN: { 'Terminé': 'Done', 'En cours': 'In progress', 'À faire': 'To do', 'A faire': 'To do', 'Bloqué': 'Blocked', 'Annulé': 'Cancelled' },
+      DE: { 'Terminé': 'Erledigt', 'En cours': 'In Bearbeitung', 'À faire': 'Zu erledigen', 'A faire': 'Zu erledigen', 'Bloqué': 'Blockiert', 'Annulé': 'Abgebrochen' }
+    },
+    taskPriorities: {
+      FR: { 'Haute': 'Haute', 'Moyenne': 'Moyenne', 'Basse': 'Basse', 'Urgente': 'Urgente' },
+      EN: { 'Haute': 'High', 'Moyenne': 'Medium', 'Basse': 'Low', 'Urgente': 'Urgent' },
+      DE: { 'Haute': 'Hoch', 'Moyenne': 'Mittel', 'Basse': 'Niedrig', 'Urgente': 'Dringend' }
+    },
+    taskModules: {
+      FR: {
+        'DOCUMENTS': 'Documents',
+        'RECETTES': 'Recettes',
+        'DEPENSES': 'Dépenses',
+        'FINANCE': 'Finance',
+        'FINANCES': 'Finances',
+        'SOCIAL': 'Social',
+        'IMMO': 'Immo',
+        'STOCKS': 'Stocks',
+        'ACTIFS': 'Actifs',
+        'TACHES': 'Tâches',
+        'RH': 'RH',
+        'GED': 'GED',
+        'CRM': 'CRM',
+        'PRODUCTION': 'Production',
+        'FX': 'Convertisseur FX',
+        'ADMINISTRATION': 'Administration'
+      },
+      EN: {
+        'DOCUMENTS': 'Documents',
+        'RECETTES': 'Income',
+        'DEPENSES': 'Expenses',
+        'FINANCE': 'Finance',
+        'FINANCES': 'Finance',
+        'SOCIAL': 'Social',
+        'IMMO': 'Real estate',
+        'STOCKS': 'Stock',
+        'ACTIFS': 'Assets',
+        'TACHES': 'Tasks',
+        'RH': 'HR',
+        'GED': 'Document management',
+        'CRM': 'CRM',
+        'PRODUCTION': 'Production',
+        'FX': 'FX converter',
+        'ADMINISTRATION': 'Administration'
+      },
+      DE: {
+        'DOCUMENTS': 'Dokumente',
+        'RECETTES': 'Einnahmen',
+        'DEPENSES': 'Ausgaben',
+        'FINANCE': 'Finanzen',
+        'FINANCES': 'Finanzen',
+        'SOCIAL': 'Soziales',
+        'IMMO': 'Immobilien',
+        'STOCKS': 'Bestände',
+        'ACTIFS': 'Aktiva',
+        'TACHES': 'Aufgaben',
+        'RH': 'Personal',
+        'GED': 'Dokumentenverwaltung',
+        'CRM': 'CRM',
+        'PRODUCTION': 'Produktion',
+        'FX': 'FX-Konverter',
+        'ADMINISTRATION': 'Verwaltung'
+      }
     }
   };
 
@@ -212,6 +278,32 @@ const Admin = () => {
   const translateDay = (day) => dataTranslations.days[language]?.[day] || day;
   const translateRole = (role) => dataTranslations.roles[language]?.[role] || role;
   const translateRoleDescription = (desc) => dataTranslations.roleDescriptions[language]?.[desc] || desc;
+  const normalizeLookupKey = (value) => String(value || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+  const taskStatusKeys = {
+    'TERMINE': 'Terminé',
+    'EN COURS': 'En cours',
+    'A FAIRE': 'À faire',
+    'BLOQUE': 'Bloqué',
+    'ANNULE': 'Annulé'
+  };
+  const taskPriorityKeys = {
+    'HAUTE': 'Haute',
+    'MOYENNE': 'Moyenne',
+    'BASSE': 'Basse',
+    'URGENTE': 'Urgente'
+  };
+  const translateTaskStatus = (status) => {
+    const canonical = taskStatusKeys[normalizeLookupKey(status)] || status;
+    return dataTranslations.taskStatuses[language]?.[canonical] || status;
+  };
+  const translateTaskPriority = (priority) => {
+    const canonical = taskPriorityKeys[normalizeLookupKey(priority)] || priority;
+    return dataTranslations.taskPriorities[language]?.[canonical] || priority;
+  };
+  const translateTaskModule = (module) => {
+    const key = normalizeLookupKey(module);
+    return dataTranslations.taskModules[language]?.[key] || module;
+  };
   const formatValue = (value) => {
     const text = String(value || '').trim();
     return text && text !== 'N/A' ? text : t.nonRenseigne;
@@ -546,10 +638,10 @@ const Admin = () => {
                 {tasks.map(task => (
                   <tr key={task.id || task.source_id} className="border-t border-slate-700 hover:bg-slate-700/50">
                     <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(task.titre || task.title)}</td>
-                    <td className="px-4 py-2 text-slate-400">{formatValue(task.statut || task.status)}</td>
-                    <td className="px-4 py-2 text-slate-400">{formatValue(task.priorite || task.priority)}</td>
+                    <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskStatus(task.statut || task.status))}</td>
+                    <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskPriority(task.priorite || task.priority))}</td>
                     <td className="px-4 py-2 text-slate-400">{formatValue(task.responsable)}</td>
-                    <td className="px-4 py-2 text-slate-400">{formatValue(task.module)}</td>
+                    <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskModule(task.module))}</td>
                     <td className="px-4 py-2 text-blue-400 font-bold">{Number(task.progression || 0)}%</td>
                   </tr>
                 ))}
