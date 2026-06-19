@@ -70,6 +70,7 @@ const Finance = () => {
       tauxFXCol: 'Taux FX',
       devise: 'Devise',
       categorie: 'Catégorie',
+      choisirCategorie: 'Sélectionner une catégorie',
       ref: 'Ref.',
       agent: 'Agent',
       team: 'Team',
@@ -117,6 +118,7 @@ const Finance = () => {
       tauxFXCol: 'FX Rate',
       devise: 'Currency',
       categorie: 'Category',
+      choisirCategorie: 'Select a category',
       ref: 'Ref.',
       agent: 'Agent',
       team: 'Team',
@@ -164,6 +166,7 @@ const Finance = () => {
       tauxFXCol: 'Wechselkurs',
       devise: 'Währung',
       categorie: 'Kategorie',
+      choisirCategorie: 'Kategorie auswählen',
       ref: 'Ref.',
       agent: 'Agent',
       team: 'Team',
@@ -261,6 +264,15 @@ const Finance = () => {
 
   const formatCell = (value) => value || '-';
   const formatAmount = (value) => toNumber(value).toLocaleString();
+  const formatDateForDisplay = (value) => {
+    const isoDate = cleanDate(value);
+    const match = isoDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!match) return isoDate;
+    const [, year, month, day] = match;
+    if (language === 'FR') return `${day}-${month}-${year}`;
+    if (language === 'DE') return `${day}.${month}.${year}`;
+    return `${month}/${day}/${year}`;
+  };
 
   const getHistoricalCfaPerChf = useCallback((operationDate) => {
     const comparableDate = (value) => {
@@ -484,6 +496,15 @@ const Finance = () => {
     const key = normalizeCategoryKey(cat);
     return supplementalCategoryTranslations[language]?.[key] || dataTranslations.categories[language]?.[cat] || formatUnknownCategory(cat);
   };
+
+  const categoryOptions = useMemo(() => {
+    const defaults = modalType === 'recette'
+      ? ['Ventes', 'Recettes', 'Dons', 'Donation', 'Services', 'Immobilier', 'Fin Immo', 'Social', 'Participation']
+      : ['Depenses', 'Operationnel', 'Immobilier', 'Investissement Immo', 'Paie', 'Salaires', 'Social', 'Aide Sociale', 'Transport', 'Fournitures', 'Services'];
+    const sourceRows = modalType === 'recette' ? recettes : depenses;
+    const existing = sourceRows.map((row) => row.categorie).filter(Boolean);
+    return [...new Set([...defaults, ...existing, formData.categorie].filter(Boolean))];
+  }, [modalType, recettes, depenses, formData.categorie]);
 
   const getMonthName = useCallback((shortMonth) => {
     const index = shortMonths.indexOf(shortMonth);
@@ -830,9 +851,15 @@ const Finance = () => {
                   </thead>
                   <tbody>
                     {visibleRows.map(r => (
-                      <tr key={r.id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                      <tr
+                        key={r.id}
+                        onClick={() => handleEdit('recette', r)}
+                        onKeyDown={(event) => event.key === 'Enter' && handleEdit('recette', r)}
+                        tabIndex={0}
+                        className="border-t border-slate-700 hover:bg-slate-700/50 cursor-pointer focus:outline-none focus:bg-slate-700/70"
+                      >
                         <td className="px-4 py-3 text-slate-400">{formatCell(r.ref)}</td>
-                        <td className="px-6 py-3 text-slate-400">{r.date}</td>
+                        <td className="px-6 py-3 text-slate-400 whitespace-nowrap">{formatDateForDisplay(r.date)}</td>
                         <td className="px-6 py-3 text-slate-300">{translateDescription(r.description)}</td>
                         <td className="px-4 py-3 text-green-400 font-bold">{formatAmount(r.montantChf)}</td>
                         <td className="px-4 py-3 text-green-300 font-bold">{formatAmount(r.montantCfa)}</td>
@@ -843,10 +870,10 @@ const Finance = () => {
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(r.departement)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(r.phaseProjet)}</td>
                         <td className="px-6 py-3 flex gap-2">
-                          <button onClick={() => handleEdit('recette', r)} className="p-1 hover:bg-slate-600 rounded">
+                          <button onClick={(event) => { event.stopPropagation(); handleEdit('recette', r); }} className="p-1 hover:bg-slate-600 rounded">
                             <Edit2 size={18} className="text-blue-400" />
                           </button>
-                          <button onClick={() => handleDelete('recette', r.id)} className="p-1 hover:bg-slate-600 rounded">
+                          <button onClick={(event) => { event.stopPropagation(); handleDelete('recette', r.id); }} className="p-1 hover:bg-slate-600 rounded">
                             <Trash2 size={18} className="text-red-400" />
                           </button>
                         </td>
@@ -888,9 +915,15 @@ const Finance = () => {
                   </thead>
                   <tbody>
                     {visibleRows.map(d => (
-                      <tr key={d.id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                      <tr
+                        key={d.id}
+                        onClick={() => handleEdit('depense', d)}
+                        onKeyDown={(event) => event.key === 'Enter' && handleEdit('depense', d)}
+                        tabIndex={0}
+                        className="border-t border-slate-700 hover:bg-slate-700/50 cursor-pointer focus:outline-none focus:bg-slate-700/70"
+                      >
                         <td className="px-4 py-3 text-slate-400">{formatCell(d.ref)}</td>
-                        <td className="px-6 py-3 text-slate-400">{d.date}</td>
+                        <td className="px-6 py-3 text-slate-400 whitespace-nowrap">{formatDateForDisplay(d.date)}</td>
                         <td className="px-6 py-3 text-slate-300">{translateDescription(d.description)}</td>
                         <td className="px-4 py-3 text-red-400 font-bold">{formatAmount(d.montantChf)}</td>
                         <td className="px-4 py-3 text-red-300 font-bold">{formatAmount(d.montantCfa)}</td>
@@ -901,10 +934,10 @@ const Finance = () => {
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.departement)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.phaseProjet)}</td>
                         <td className="px-6 py-3 flex gap-2">
-                          <button onClick={() => handleEdit('depense', d)} className="p-1 hover:bg-slate-600 rounded">
+                          <button onClick={(event) => { event.stopPropagation(); handleEdit('depense', d); }} className="p-1 hover:bg-slate-600 rounded">
                             <Edit2 size={18} className="text-blue-400" />
                           </button>
-                          <button onClick={() => handleDelete('depense', d.id)} className="p-1 hover:bg-slate-600 rounded">
+                          <button onClick={(event) => { event.stopPropagation(); handleDelete('depense', d.id); }} className="p-1 hover:bg-slate-600 rounded">
                             <Trash2 size={18} className="text-red-400" />
                           </button>
                         </td>
@@ -954,7 +987,7 @@ const Finance = () => {
                     {visibleRows.map(fx => (
                       <tr key={fx.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                         <td className="px-4 py-3 text-slate-300 text-xs">{fx.id}</td>
-                        <td className="px-4 py-3 text-slate-300">{fx.date}</td>
+                        <td className="px-4 py-3 text-slate-300 whitespace-nowrap">{formatDateForDisplay(fx.date)}</td>
                         <td className="px-4 py-3 text-blue-400 font-bold">{fx.devise_from}</td>
                         <td className="px-4 py-3 text-green-400 font-bold">{fx.devise_to}</td>
                         <td className="px-4 py-3 text-purple-400 font-bold">{parseFloat(fx.rate).toLocaleString(undefined, { maximumFractionDigits: fx.rate < 1 ? 6 : 2 })}</td>
@@ -1001,13 +1034,16 @@ const Finance = () => {
                   <option>CHF</option>
                   <option>CFA</option>
                 </select>
-                <input
-                  type="text"
-                  placeholder={t.categorie}
+                <select
                   value={formData.categorie}
                   onChange={(e) => handleFormChange('categorie', e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
-                />
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
+                >
+                  <option value="">{t.choisirCategorie}</option>
+                  {categoryOptions.map((category) => (
+                    <option key={category} value={category}>{translateCategory(category)}</option>
+                  ))}
+                </select>
                 <LocalizedDateInput
                   value={formData.date}
                   onChange={(date) => handleFormChange('date', date)}
