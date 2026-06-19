@@ -22,14 +22,14 @@
       "path": "/administration",
       "children": [
         {
-          "id": "institution",
+          "id": "overview",
           "label": {
-            "FR": "Institution",
-            "EN": "Institution",
-            "DE": "Institution"
+            "FR": "Vue d'ensemble",
+            "EN": "Overview",
+            "DE": "Übersicht"
           },
-          "icon": "Building2",
-          "path": "/administration?tab=tasks"
+          "icon": "Home",
+          "path": "/administration?tab=overview"
         },
         {
           "id": "activities",
@@ -39,27 +39,37 @@
             "DE": "Aktivitäten & Aufgaben"
           },
           "icon": "Activity",
-          "path": "/administration"
+          "path": "/administration?tab=tasks"
         },
         {
-          "id": "projects",
+          "id": "users",
           "label": {
-            "FR": "Projet Phase",
-            "EN": "Project Phase",
-            "DE": "Projektphase"
+            "FR": "Utilisateurs",
+            "EN": "Users",
+            "DE": "Benutzer"
           },
-          "icon": "Briefcase",
-          "path": "/administration"
+          "icon": "Users",
+          "path": "/administration?tab=users"
         },
         {
-          "id": "communication",
+          "id": "roles",
           "label": {
-            "FR": "Communication",
-            "EN": "Communication",
-            "DE": "Kommunikation"
+            "FR": "Rôles",
+            "EN": "Roles",
+            "DE": "Rollen"
           },
-          "icon": "MessageSquare",
-          "path": "/administration"
+          "icon": "Settings",
+          "path": "/administration?tab=roles"
+        },
+        {
+          "id": "audit",
+          "label": {
+            "FR": "Audit Log",
+            "EN": "Audit Log",
+            "DE": "Audit-Protokoll"
+          },
+          "icon": "Activity",
+          "path": "/administration?tab=audit"
         }
       ]
     },
@@ -73,6 +83,15 @@
       "icon": "DollarSign",
       "path": "/finance",
       "children": [
+        {
+          "id": "overview",
+          "label": {
+            "FR": "Vue d'ensemble",
+            "EN": "Overview",
+            "DE": "Übersicht"
+          },
+          "path": "/finance?tab=overview"
+        },
         {
           "id": "recettes",
           "label": {
@@ -90,33 +109,6 @@
             "DE": "Ausgaben"
           },
           "path": "/finance?tab=depenses"
-        },
-        {
-          "id": "budget",
-          "label": {
-            "FR": "Budget",
-            "EN": "Budget",
-            "DE": "Budget"
-          },
-          "path": "/finance"
-        },
-        {
-          "id": "social",
-          "label": {
-            "FR": "Social",
-            "EN": "Social",
-            "DE": "Sozial"
-          },
-          "path": "/finance"
-        },
-        {
-          "id": "immobilier",
-          "label": {
-            "FR": "Fin Immo",
-            "EN": "Real Estate Finance",
-            "DE": "Immobilienfinanzierung"
-          },
-          "path": "/finance"
         },
         {
           "id": "fx-converter",
@@ -140,44 +132,44 @@
       "path": "/rh",
       "children": [
         {
-          "id": "teams",
+          "id": "overview",
           "label": {
-            "FR": "Teams & Profils",
-            "EN": "Teams & Profiles",
-            "DE": "Teams & Profile"
+            "FR": "Vue d'ensemble",
+            "EN": "Overview",
+            "DE": "Übersicht"
+          },
+          "icon": "Home",
+          "path": "/rh?tab=overview"
+        },
+        {
+          "id": "membres",
+          "label": {
+            "FR": "Membres",
+            "EN": "Members",
+            "DE": "Mitglieder"
           },
           "icon": "Users",
-          "path": "/rh"
+          "path": "/rh?tab=membres"
         },
         {
-          "id": "hours",
+          "id": "employes",
           "label": {
-            "FR": "Heures & Activités",
-            "EN": "Hours & Activities",
-            "DE": "Stunden & Aktivitäten"
-          },
-          "icon": "Clock",
-          "path": "/rh"
-        },
-        {
-          "id": "competences",
-          "label": {
-            "FR": "Compétences",
-            "EN": "Skills",
-            "DE": "Fähigkeiten"
-          },
-          "icon": "Zap",
-          "path": "/rh"
-        },
-        {
-          "id": "myaccount",
-          "label": {
-            "FR": "Mon Compte",
-            "EN": "My Account",
-            "DE": "Mein Konto"
+            "FR": "Employés",
+            "EN": "Employees",
+            "DE": "Mitarbeiter"
           },
           "icon": "User",
-          "path": "/rh"
+          "path": "/rh?tab=employes"
+        },
+        {
+          "id": "benevoles",
+          "label": {
+            "FR": "Bénévoles",
+            "EN": "Volunteers",
+            "DE": "Freiwillige"
+          },
+          "icon": "Heart",
+          "path": "/rh?tab=benevoles"
         }
       ]
     },
@@ -192,14 +184,24 @@
       "path": "/crm",
       "children": [
         {
-          "id": "prospects-leads",
+          "id": "overview",
           "label": {
-            "FR": "Prospects & Leads",
-            "EN": "Prospects & Leads",
-            "DE": "Interessenten & Leads"
+            "FR": "Vue d'ensemble",
+            "EN": "Overview",
+            "DE": "Übersicht"
+          },
+          "icon": "Home",
+          "path": "/crm?tab=overview"
+        },
+        {
+          "id": "prospects",
+          "label": {
+            "FR": "Prospects",
+            "EN": "Prospects",
+            "DE": "Interessenten"
           },
           "icon": "Target",
-          "path": "/crm"
+          "path": "/crm?tab=prospects"
         },
         {
           "id": "clients",
@@ -209,17 +211,7 @@
             "DE": "Kunden"
           },
           "icon": "Users",
-          "path": "/crm"
-        },
-        {
-          "id": "ventes",
-          "label": {
-            "FR": "Ventes",
-            "EN": "Sales",
-            "DE": "Verkauf"
-          },
-          "icon": "TrendingUp",
-          "path": "/crm"
+          "path": "/crm?tab=clients"
         },
         {
           "id": "dons",
@@ -229,17 +221,7 @@
             "DE": "Spenden"
           },
           "icon": "Heart",
-          "path": "/crm"
-        },
-        {
-          "id": "beneficiaires",
-          "label": {
-            "FR": "Bénéficiaires",
-            "EN": "Beneficiaries",
-            "DE": "Begünstigte"
-          },
-          "icon": "Smile",
-          "path": "/crm"
+          "path": "/crm?tab=dons"
         }
       ]
     },
@@ -254,34 +236,44 @@
       "path": "/production",
       "children": [
         {
-          "id": "orders",
+          "id": "overview",
+          "label": {
+            "FR": "Vue d'ensemble",
+            "EN": "Overview",
+            "DE": "Übersicht"
+          },
+          "icon": "Home",
+          "path": "/production?tab=overview"
+        },
+        {
+          "id": "commandes",
           "label": {
             "FR": "Commandes",
             "EN": "Orders",
             "DE": "Bestellungen"
           },
           "icon": "ShoppingCart",
-          "path": "/production"
+          "path": "/production?tab=commandes"
         },
         {
-          "id": "manufacturing",
-          "label": {
-            "FR": "Fabrication",
-            "EN": "Manufacturing",
-            "DE": "Herstellung"
-          },
-          "icon": "Wrench",
-          "path": "/production"
-        },
-        {
-          "id": "suppliers",
+          "id": "fournisseurs",
           "label": {
             "FR": "Fournisseurs",
             "EN": "Suppliers",
             "DE": "Lieferanten"
           },
           "icon": "Truck",
-          "path": "/production"
+          "path": "/production?tab=fournisseurs"
+        },
+        {
+          "id": "stocks",
+          "label": {
+            "FR": "Stocks",
+            "EN": "Stocks",
+            "DE": "Bestand"
+          },
+          "icon": "Box",
+          "path": "/production?tab=stocks"
         }
       ]
     },
@@ -306,24 +298,24 @@
           "path": "/actifs?tab=inventory"
         },
         {
+          "id": "overview",
+          "label": {
+            "FR": "Vue d'ensemble",
+            "EN": "Overview",
+            "DE": "Übersicht"
+          },
+          "icon": "Home",
+          "path": "/actifs?tab=overview"
+        },
+        {
           "id": "immobilisations",
           "label": {
             "FR": "Immobilisations",
             "EN": "Fixed Assets",
             "DE": "Anlagevermögen"
           },
-          "icon": "Home",
+          "icon": "Building2",
           "path": "/actifs?tab=immobilisations"
-        },
-        {
-          "id": "risques",
-          "label": {
-            "FR": "Risques",
-            "EN": "Risks",
-            "DE": "Risiken"
-          },
-          "icon": "AlertTriangle",
-          "path": "/actifs"
         }
       ]
     },
@@ -338,84 +330,34 @@
       "path": "/ged?tab=documents",
       "children": [
         {
-          "id": "knowledge",
+          "id": "overview",
           "label": {
-            "FR": "Veille & Knowledge Management",
-            "EN": "Monitoring & Knowledge Management",
-            "DE": "Überwachung & Wissensmanagement"
+            "FR": "Vue d'ensemble",
+            "EN": "Overview",
+            "DE": "Übersicht"
           },
-          "icon": "Eye",
-          "path": "/ged"
+          "icon": "Home",
+          "path": "/ged?tab=overview"
         },
         {
-          "id": "ged",
+          "id": "documents",
           "label": {
-            "FR": "GED",
-            "EN": "Document Management",
-            "DE": "Dokumentenverwaltung"
+            "FR": "Documents",
+            "EN": "Documents",
+            "DE": "Dokumente"
           },
           "icon": "FileText",
           "path": "/ged?tab=documents"
         },
         {
-          "id": "ai-digital",
+          "id": "dossiers",
           "label": {
-            "FR": "IA & Digital",
-            "EN": "AI & Digital",
-            "DE": "KI & Digital"
-          },
-          "icon": "Brain",
-          "path": "/ged"
-        },
-        {
-          "id": "database",
-          "label": {
-            "FR": "Gestion BDD",
-            "EN": "Database Management",
-            "DE": "Datenbankmanagement"
-          },
-          "icon": "Database",
-          "path": "/ged"
-        },
-        {
-          "id": "user-guide",
-          "label": {
-            "FR": "Guide Utilisateur",
-            "EN": "User Guide",
-            "DE": "Benutzerhandbuch"
+            "FR": "Dossiers",
+            "EN": "Folders",
+            "DE": "Ordner"
           },
           "icon": "BookOpen",
-          "path": "/ged"
-        },
-        {
-          "id": "tech-docs",
-          "label": {
-            "FR": "Doc Technique",
-            "EN": "Technical Documentation",
-            "DE": "Technische Dokumentation"
-          },
-          "icon": "Code",
-          "path": "/ged"
-        },
-        {
-          "id": "help-support",
-          "label": {
-            "FR": "Aide & Support",
-            "EN": "Help & Support",
-            "DE": "Hilfe & Support"
-          },
-          "icon": "HelpCircle",
-          "path": "/ged"
-        },
-        {
-          "id": "manual",
-          "label": {
-            "FR": "Manuel d'Utilisation",
-            "EN": "User Manual",
-            "DE": "Benutzerhandbuch"
-          },
-          "icon": "Book",
-          "path": "/ged"
+          "path": "/ged?tab=dossiers"
         }
       ]
     }

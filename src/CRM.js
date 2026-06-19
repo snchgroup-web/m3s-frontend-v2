@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Plus, Edit2, Trash2, Users, TrendingUp, Gift, Target } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
@@ -14,6 +15,7 @@ const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
 
 const CRM = () => {
   const { language } = useLanguage();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('overview');
   const [prospects, setProspects] = useState([]);
   const [clients, setClients] = useState([]);
@@ -31,6 +33,13 @@ const CRM = () => {
     date: new Date().toISOString().split('T')[0],
     categorie: 'Donation'
   });
+
+  useEffect(() => {
+    const tab = new URLSearchParams(location.search).get('tab');
+    if (['overview', 'prospects', 'clients', 'dons'].includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [location.search]);
 
   // Translations
   const translations = {

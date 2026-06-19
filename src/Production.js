@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Plus, Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 
 const Production = () => {
   const { language } = useLanguage();
+  const location = useLocation();
 
   // Translations
   const translations = {
@@ -259,7 +261,14 @@ const Production = () => {
   const [modalType, setModalType] = useState('commande');
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState(getDefaultFormData('commande'));
- 
+
+  useEffect(() => {
+    const tab = new URLSearchParams(location.search).get('tab');
+    if (['overview', 'commandes', 'fournisseurs', 'stocks'].includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [location.search]);
+
   useEffect(() => {
     setCommandes([
       { id: 1, numero: 'CMD-001', client: 'SENELEC', produit: 'Solutions IT', quantite: 10, statut: 'Livrée', date: '2026-04-01' },

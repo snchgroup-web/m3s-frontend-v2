@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { Plus, Edit2, Trash2, Users, User, Heart, Users2 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
@@ -6,6 +7,7 @@ import { api } from './api';
 
 const RH = () => {
   const { language } = useLanguage();
+  const location = useLocation();
 
   // Translations
   const translations = {
@@ -268,6 +270,13 @@ const RH = () => {
     dateEmbauche: new Date().toISOString().split('T')[0],
     statut: 'Actif'
   });
+
+  useEffect(() => {
+    const tab = new URLSearchParams(location.search).get('tab');
+    if (['overview', 'membres', 'employes', 'benevoles'].includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [location.search]);
 
   // Charger les donnees RH depuis l'API et les sources provisoires validees.
   useEffect(() => {

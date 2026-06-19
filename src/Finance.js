@@ -94,7 +94,8 @@ const Finance = () => {
       modifierTaux: 'Modifier Taux',
       rechercher: 'Rechercher...',
       filtreDevise: 'Filtrer par devise',
-      id: 'ID'
+      id: 'ID',
+      remplirChamps: 'Veuillez remplir les champs obligatoires'
     },
     EN: {
       title: 'Finance',
@@ -132,7 +133,8 @@ const Finance = () => {
       modifierTaux: 'Edit Rate',
       rechercher: 'Search...',
       filtreDevise: 'Filter by currency',
-      id: 'ID'
+      id: 'ID',
+      remplirChamps: 'Please fill in all required fields'
     },
     DE: {
       title: 'Finanzen',
@@ -170,7 +172,8 @@ const Finance = () => {
       modifierTaux: 'Wechselkurs bearbeiten',
       rechercher: 'Suche...',
       filtreDevise: 'Nach Währung filtern',
-      id: 'ID'
+      id: 'ID',
+      remplirChamps: 'Bitte füllen Sie alle erforderlichen Felder aus'
     }
   };
 
