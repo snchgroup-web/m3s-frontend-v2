@@ -204,8 +204,12 @@ const Finance = () => {
 
   const cleanDate = (value) => {
     if (!value) return new Date().toISOString().split('T')[0];
-    if (typeof value === 'object' && value.value) return String(value.value).split('T')[0];
-    return String(value).split('T')[0];
+    const rawValue = typeof value === 'object' && value.value ? value.value : value;
+    const datePart = String(rawValue).trim().match(/^\d{4}-\d{2}-\d{2}/)?.[0];
+    if (datePart) return datePart;
+    const parsedDate = new Date(rawValue);
+    if (!Number.isNaN(parsedDate.getTime())) return parsedDate.toISOString().split('T')[0];
+    return String(rawValue).split(/[T\s]/)[0];
   };
 
   const toNumber = (value, fallback = 0) => {
@@ -261,8 +265,7 @@ const Finance = () => {
   const getHistoricalCfaPerChf = useCallback((operationDate) => {
     const comparableDate = (value) => {
       if (!value) return '';
-      if (typeof value === 'object' && value.value) return String(value.value).substring(0, 10);
-      return String(value).substring(0, 10);
+      return cleanDate(value);
     };
     const targetDate = comparableDate(operationDate);
     const candidates = fxHistory
@@ -505,7 +508,7 @@ const Finance = () => {
           if (dataArray.length > 0) {
             const mappedData = dataArray.map(item => ({
               id: item.source_id || item.id,
-              date: item.date_taux?.value || item.date_updated?.value || item.date || '',
+              date: cleanDate(item.date_taux || item.date_updated || item.date),
               rate: parseFloat(item.taux || item.rate || 0),
               devise_from: item.devise_base || item.source_currency || item.devise_from,
               devise_to: item.devise_cible || item.target_currency || item.devise_to,
@@ -695,7 +698,7 @@ const Finance = () => {
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="mx-auto w-full max-w-[1800px]">
 
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">💰 {t.title}</h1>
@@ -808,7 +811,7 @@ const Finance = () => {
             <TableControls
               rows={recettesAffichees}
               renderTable={(visibleRows) => (
-                <table className="min-w-[1500px]">
+                <table className="min-w-[1900px] text-sm">
                   <thead className="sticky top-0 z-10 bg-slate-700">
                     <tr>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.ref}</th>
@@ -866,7 +869,7 @@ const Finance = () => {
             <TableControls
               rows={depensesAffichees}
               renderTable={(visibleRows) => (
-                <table className="min-w-[1500px]">
+                <table className="min-w-[1900px] text-sm">
                   <thead className="sticky top-0 z-10 bg-slate-700">
                     <tr>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.ref}</th>
