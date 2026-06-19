@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const LanguageContext = createContext();
+const htmlLangByLanguage = { FR: 'fr', EN: 'en', DE: 'de' };
 
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState(() => {
@@ -11,6 +12,7 @@ export const LanguageProvider = ({ children }) => {
   // Sauvegarde la langue dans localStorage chaque fois qu'elle change
   useEffect(() => {
     localStorage.setItem('language', language);
+    document.documentElement.lang = htmlLangByLanguage[language] || 'fr';
   }, [language]);
 
   return (

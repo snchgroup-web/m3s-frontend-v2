@@ -749,6 +749,7 @@ const Finance = () => {
                 />
                 <input
                   type="date"
+                  lang={language.toLowerCase()}
                   value={formData.date}
                   onChange={(e) => handleFormChange('date', e.target.value)}
                   className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
@@ -789,6 +790,7 @@ const Finance = () => {
                 />
                 <input
                   type="date"
+                  lang={language.toLowerCase()}
                   value={fxFormData.date}
                   onChange={(e) => handleFxFormChange('date', e.target.value)}
                   className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
