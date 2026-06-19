@@ -38,6 +38,7 @@ const Production = () => {
       nouvelleCommande: 'Nouvelle Commande',
       nouveauFournisseur: 'Nouveau Fournisseur',
       ajouterStock: 'Ajouter Stock',
+      nomFournisseur: 'Nom du fournisseur',
       ok: 'OK',
       bas: 'BAS',
       creer: 'Créer',
@@ -76,6 +77,7 @@ const Production = () => {
       nouvelleCommande: 'New Order',
       nouveauFournisseur: 'New Supplier',
       ajouterStock: 'Add Stock',
+      nomFournisseur: 'Supplier name',
       ok: 'OK',
       bas: 'LOW',
       creer: 'Create',
@@ -114,6 +116,7 @@ const Production = () => {
       nouvelleCommande: 'Neue Bestellung',
       nouveauFournisseur: 'Neuer Lieferant',
       ajouterStock: 'Bestand hinzufügen',
+      nomFournisseur: 'Lieferantenname',
       ok: 'OK',
       bas: 'NIEDRIG',
       creer: 'Erstellen',
@@ -179,6 +182,11 @@ const Production = () => {
       EN: { 'Matériel': 'Hardware', 'Logiciels': 'Software', 'Services': 'Services' },
       DE: { 'Matériel': 'Hardware', 'Logiciels': 'Software', 'Services': 'Dienstleistungen' }
     },
+    countries: {
+      FR: { 'Sénégal': 'Sénégal', 'France': 'France', 'Suisse': 'Suisse' },
+      EN: { 'Sénégal': 'Senegal', 'France': 'France', 'Suisse': 'Switzerland' },
+      DE: { 'Sénégal': 'Senegal', 'France': 'Frankreich', 'Suisse': 'Schweiz' }
+    },
     // Chart bar names
     chartLabels: {
       FR: { 'quantite': 'Quantité', 'seuil': 'Seuil' },
@@ -198,6 +206,13 @@ const Production = () => {
     'PREPARATION': 'Préparation',
     'VORBEREITUNG': 'Préparation'
   };
+  const countryKeys = {
+    'SENEGAL': 'Sénégal',
+    'FRANCE': 'France',
+    'SUISSE': 'Suisse',
+    'SWITZERLAND': 'Suisse',
+    'SCHWEIZ': 'Suisse'
+  };
   const normalizeStatus = (status) => statusKeys[normalizeLookupKey(status)] || status;
   const translateStatus = (status) => {
     const normalized = normalizeStatus(status);
@@ -212,7 +227,29 @@ const Production = () => {
   const translateProduct = (product) => dataTranslations.products[language]?.[product] || product;
   const translateMonth = (month) => dataTranslations.months[language]?.[month] || month;
   const translateCategory = (category) => dataTranslations.categories[language]?.[category] || category;
+  const normalizeCountry = (country) => countryKeys[normalizeLookupKey(country)] || country;
+  const translateCountry = (country) => {
+    const normalized = normalizeCountry(country);
+    return dataTranslations.countries[language]?.[normalized] || country;
+  };
   const translateChartLabel = (label) => dataTranslations.chartLabels[language]?.[label] || label;
+  const getDefaultFormData = (type = 'commande') => ({
+    numero: '',
+    client: '',
+    produit: '',
+    quantite: '',
+    nom: '',
+    email: '',
+    telephone: '',
+    categorie: 'Services',
+    pays: 'Sénégal',
+    seuil: '',
+    unite: 'Unité',
+    statut: 'En cours',
+    date: new Date().toISOString().split('T')[0],
+    ...(type === 'stock' ? { produit: 'Licences IT', quantite: '', seuil: '', unite: 'Unité' } : {}),
+    ...(type === 'fournisseur' ? { categorie: 'Services', pays: 'Sénégal' } : {})
+  });
 
   const [activeTab, setActiveTab] = useState('overview');
   const [commandes, setCommandes] = useState([]);
@@ -221,14 +258,7 @@ const Production = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('commande');
   const [editingId, setEditingId] = useState(null);
-  const [formData, setFormData] = useState({
-    numero: '',
-    client: '',
-    produit: '',
-    quantite: '',
-    statut: 'En cours',
-    date: new Date().toISOString().split('T')[0]
-  });
+  const [formData, setFormData] = useState(getDefaultFormData('commande'));
  
   useEffect(() => {
     setCommandes([
@@ -274,7 +304,15 @@ const Production = () => {
   };
  
   const handleSave = () => {
-    if (!formData.numero || !formData.client) {
+    if (modalType === 'commande' && (!formData.numero || !formData.client || !formData.produit || !formData.quantite)) {
+      alert(t.remplirChamps);
+      return;
+    }
+    if (modalType === 'fournisseur' && (!formData.nom || !formData.email)) {
+      alert(t.remplirChamps);
+      return;
+    }
+    if (modalType === 'stock' && (!formData.produit || !formData.quantite || !formData.seuil)) {
       alert(t.remplirChamps);
       return;
     }
@@ -291,28 +329,41 @@ const Production = () => {
         setCommandes([...commandes, { ...normalizedData, id: Date.now() }]);
       }
     } else if (modalType === 'fournisseur') {
+      const fournisseurData = {
+        nom: formData.nom,
+        email: formData.email,
+        telephone: formData.telephone,
+        categorie: formData.categorie,
+        pays: normalizeCountry(formData.pays)
+      };
       if (editingId) {
-        setFournisseurs(fournisseurs.map(f => f.id === editingId ? { ...formData, id: editingId } : f));
+        setFournisseurs(fournisseurs.map(f => f.id === editingId ? { ...fournisseurData, id: editingId } : f));
       } else {
-        setFournisseurs([...fournisseurs, { ...formData, id: Date.now() }]);
+        setFournisseurs([...fournisseurs, { ...fournisseurData, id: Date.now() }]);
       }
     } else {
+      const stockData = {
+        produit: formData.produit,
+        quantite: parseInt(formData.quantite, 10) || 0,
+        seuil: parseInt(formData.seuil, 10) || 0,
+        unite: formData.unite
+      };
       if (editingId) {
-        setStocks(stocks.map(s => s.id === editingId ? { ...formData, id: editingId, quantite: parseInt(formData.quantite) } : s));
+        setStocks(stocks.map(s => s.id === editingId ? { ...stockData, id: editingId } : s));
       } else {
-        setStocks([...stocks, { ...formData, id: Date.now(), quantite: parseInt(formData.quantite) }]);
+        setStocks([...stocks, { ...stockData, id: Date.now() }]);
       }
     }
  
     setShowModal(false);
     setEditingId(null);
-    setFormData({ numero: '', client: '', produit: '', quantite: '', statut: 'En cours', date: new Date().toISOString().split('T')[0] });
+    setFormData(getDefaultFormData(modalType));
   };
  
   const handleEdit = (type, item) => {
     setModalType(type);
     setEditingId(item.id);
-    setFormData(item);
+    setFormData({ ...getDefaultFormData(type), ...item });
     setShowModal(true);
   };
  
@@ -420,7 +471,7 @@ const Production = () => {
         {activeTab === 'commandes' && (
           <div>
             <div className="flex justify-end mb-4">
-              <button onClick={() => { setEditingId(null); setModalType('commande'); setFormData({ numero: '', client: '', produit: '', quantite: '', statut: 'En cours', date: new Date().toISOString().split('T')[0] }); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
+              <button onClick={() => { setEditingId(null); setModalType('commande'); setFormData(getDefaultFormData('commande')); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
                 <Plus size={20} /> {t.nouvelleCommande}
               </button>
             </div>
@@ -467,7 +518,7 @@ const Production = () => {
         {activeTab === 'fournisseurs' && (
           <div>
             <div className="flex justify-end mb-4">
-              <button onClick={() => { setEditingId(null); setModalType('fournisseur'); setFormData({ numero: '', client: '', produit: '', quantite: '', statut: 'En cours', date: new Date().toISOString().split('T')[0] }); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
+              <button onClick={() => { setEditingId(null); setModalType('fournisseur'); setFormData(getDefaultFormData('fournisseur')); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
                 <Plus size={20} /> {t.nouveauFournisseur}
               </button>
             </div>
@@ -488,7 +539,7 @@ const Production = () => {
                       <td className="px-4 py-2 text-slate-300 font-medium">{f.nom}</td>
                       <td className="px-4 py-2 text-slate-400 text-xs">{f.email}</td>
                       <td className="px-4 py-2 text-slate-400">{translateCategory(f.categorie)}</td>
-                      <td className="px-4 py-2 text-slate-400">{f.pays}</td>
+                      <td className="px-4 py-2 text-slate-400">{translateCountry(f.pays)}</td>
                       <td className="px-4 py-2 flex gap-2">
                         <button onClick={() => handleEdit('fournisseur', f)} className="p-1 hover:bg-slate-600 rounded">
                           <Edit2 size={16} className="text-blue-400" />
@@ -508,7 +559,7 @@ const Production = () => {
         {activeTab === 'stocks' && (
           <div>
             <div className="flex justify-end mb-4">
-              <button onClick={() => { setEditingId(null); setModalType('stock'); setFormData({ numero: '', client: '', produit: '', quantite: '', statut: 'En cours', date: new Date().toISOString().split('T')[0] }); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
+              <button onClick={() => { setEditingId(null); setModalType('stock'); setFormData(getDefaultFormData('stock')); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
                 <Plus size={20} /> {t.ajouterStock}
               </button>
             </div>
@@ -561,9 +612,47 @@ const Production = () => {
             </h2>
  
             <div className="space-y-4">
-              <input type="text" placeholder="Champ 1" value={formData.numero} onChange={(e) => handleFormChange('numero', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
-              <input type="text" placeholder="Champ 2" value={formData.client} onChange={(e) => handleFormChange('client', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
-              <input type="date" value={formData.date} onChange={(e) => handleFormChange('date', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+              {modalType === 'commande' && (
+                <>
+                  <input type="text" placeholder={t.numero} value={formData.numero} onChange={(e) => handleFormChange('numero', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                  <input type="text" placeholder={t.client} value={formData.client} onChange={(e) => handleFormChange('client', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                  <input type="text" placeholder={t.produit} value={formData.produit} onChange={(e) => handleFormChange('produit', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                  <input type="number" placeholder={t.quantite} value={formData.quantite} onChange={(e) => handleFormChange('quantite', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                  <select value={formData.statut} onChange={(e) => handleFormChange('statut', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                    <option value="En cours">{translateStatus('En cours')}</option>
+                    <option value="Préparation">{translateStatus('Préparation')}</option>
+                    <option value="Livrée">{translateStatus('Livrée')}</option>
+                  </select>
+                  <input type="date" value={formData.date} onChange={(e) => handleFormChange('date', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                </>
+              )}
+
+              {modalType === 'fournisseur' && (
+                <>
+                  <input type="text" placeholder={t.nomFournisseur} value={formData.nom} onChange={(e) => handleFormChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                  <input type="email" placeholder={t.email} value={formData.email} onChange={(e) => handleFormChange('email', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                  <input type="tel" placeholder={t.telephone} value={formData.telephone} onChange={(e) => handleFormChange('telephone', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                  <select value={formData.categorie} onChange={(e) => handleFormChange('categorie', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                    <option value="Matériel">{translateCategory('Matériel')}</option>
+                    <option value="Logiciels">{translateCategory('Logiciels')}</option>
+                    <option value="Services">{translateCategory('Services')}</option>
+                  </select>
+                  <select value={formData.pays} onChange={(e) => handleFormChange('pays', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                    <option value="Sénégal">{translateCountry('Sénégal')}</option>
+                    <option value="France">{translateCountry('France')}</option>
+                    <option value="Suisse">{translateCountry('Suisse')}</option>
+                  </select>
+                </>
+              )}
+
+              {modalType === 'stock' && (
+                <>
+                  <input type="text" placeholder={t.produit} value={formData.produit} onChange={(e) => handleFormChange('produit', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                  <input type="number" placeholder={t.quantite} value={formData.quantite} onChange={(e) => handleFormChange('quantite', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                  <input type="number" placeholder={t.seuil} value={formData.seuil} onChange={(e) => handleFormChange('seuil', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                  <input type="text" placeholder={t.unite} value={formData.unite} onChange={(e) => handleFormChange('unite', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                </>
+              )}
             </div>
  
             <div className="flex gap-3 mt-6">
