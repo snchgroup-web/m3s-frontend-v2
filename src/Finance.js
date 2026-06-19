@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft } from 'lucide-react';
+import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
@@ -24,6 +24,9 @@ const Finance = () => {
   const [recettes, setRecettes] = useState([]);
   const [depenses, setDepenses] = useState([]);
   const [fxHistory, setFxHistory] = useState([]);
+  const [immoTransactions, setImmoTransactions] = useState([]);
+  const [immoSummary, setImmoSummary] = useState({});
+  const [immoError, setImmoError] = useState('');
   const [tauxDuJour, setTauxDuJour] = useState({});
   const [filterDevise, setFilterDevise] = useState('');
   const [showFxModal, setShowFxModal] = useState(false);
@@ -94,7 +97,23 @@ const Finance = () => {
       rechercher: 'Rechercher...',
       filtreDevise: 'Filtrer par devise',
       id: 'ID',
-      remplirChamps: 'Veuillez remplir les champs obligatoires'
+      remplirChamps: 'Veuillez remplir les champs obligatoires',
+      immoTitle: 'Financement Immo — Terrain Lac Rose',
+      immoSubtitle: 'Investissements et remboursements immobiliers depuis 2019',
+      totalInvesti: 'Total investi réalisé',
+      montantsHistoriques: 'Montants CFA historiques',
+      equivalentTauxJour: 'Équivalent au taux du jour',
+      remboursementsDirects: 'Remboursements directs',
+      remboursementsTotal: 'Remboursé Cheikh au total',
+      soldeOuvert: 'Solde ouvert',
+      partCheikh: 'Part Cheikh',
+      investissementsAnnee: 'Investissements par année',
+      historiqueImmo: 'Historique des transactions IMMO',
+      typeOperation: 'Type opération',
+      perimetre: 'Périmètre',
+      projet: 'Projet',
+      statut: 'Statut',
+      aucuneDonneeImmo: 'Les données Fin Immo seront disponibles après l’import BigQuery.'
     },
     EN: {
       title: 'Finance',
@@ -142,7 +161,23 @@ const Finance = () => {
       rechercher: 'Search...',
       filtreDevise: 'Filter by currency',
       id: 'ID',
-      remplirChamps: 'Please fill in all required fields'
+      remplirChamps: 'Please fill in all required fields',
+      immoTitle: 'Real Estate Financing — Lac Rose Land',
+      immoSubtitle: 'Real estate investments and reimbursements since 2019',
+      totalInvesti: 'Total invested to date',
+      montantsHistoriques: 'Historical CFA amounts',
+      equivalentTauxJour: 'Equivalent at today’s rate',
+      remboursementsDirects: 'Direct reimbursements',
+      remboursementsTotal: 'Total reimbursed to Cheikh',
+      soldeOuvert: 'Outstanding balance',
+      partCheikh: 'Cheikh’s share',
+      investissementsAnnee: 'Investments by year',
+      historiqueImmo: 'IMMO transaction history',
+      typeOperation: 'Operation type',
+      perimetre: 'Scope',
+      projet: 'Project',
+      statut: 'Status',
+      aucuneDonneeImmo: 'Real Estate Finance data will be available after the BigQuery import.'
     },
     DE: {
       title: 'Finanzen',
@@ -190,7 +225,23 @@ const Finance = () => {
       rechercher: 'Suche...',
       filtreDevise: 'Nach Währung filtern',
       id: 'ID',
-      remplirChamps: 'Bitte füllen Sie alle erforderlichen Felder aus'
+      remplirChamps: 'Bitte füllen Sie alle erforderlichen Felder aus',
+      immoTitle: 'Immobilienfinanzierung — Grundstück Lac Rose',
+      immoSubtitle: 'Immobilieninvestitionen und Rückzahlungen seit 2019',
+      totalInvesti: 'Bisher investiert',
+      montantsHistoriques: 'Historische CFA-Beträge',
+      equivalentTauxJour: 'Gegenwert zum heutigen Kurs',
+      remboursementsDirects: 'Direkte Rückzahlungen',
+      remboursementsTotal: 'Insgesamt an Cheikh zurückgezahlt',
+      soldeOuvert: 'Offener Saldo',
+      partCheikh: 'Anteil Cheikh',
+      investissementsAnnee: 'Investitionen pro Jahr',
+      historiqueImmo: 'IMMO-Transaktionsverlauf',
+      typeOperation: 'Vorgangsart',
+      perimetre: 'Bereich',
+      projet: 'Projekt',
+      statut: 'Status',
+      aucuneDonneeImmo: 'Die Daten zur Immobilienfinanzierung sind nach dem BigQuery-Import verfügbar.'
     }
   };
 
@@ -436,7 +487,19 @@ const Finance = () => {
       'ETUDES PLANS': 'Études & Plans',
       'MARCHANDISES': 'Marchandises',
       'SHIPPING FRET': 'Shipping / Fret',
-      'ABONNEMENT': 'Abonnement'
+      'ABONNEMENT': 'Abonnement',
+      'FRAIS ADMINISTRATIFS': 'Frais administratifs',
+      'CLOTURE PORTAIL': 'Clôture / Portail',
+      'GROS OEUVRES': 'Gros œuvres',
+      'SECONDS OEUVRES': 'Seconds œuvres',
+      'SOLAIRE ENERGIE': 'Solaire / Énergie',
+      'EQUIPEMENTS': 'Équipements',
+      'NOTAIRE DOMAINES': 'Notaire / Domaines',
+      'FINITIONS': 'Finitions',
+      'EXPERTISE DEVIS': 'Expertise / Devis',
+      'PLOMBERIE': 'Plomberie',
+      'ELECTRICITE': 'Électricité',
+      'AUTRE': 'Autre'
     },
     EN: {
       'VENTES': 'Sales',
@@ -487,7 +550,19 @@ const Finance = () => {
       'ETUDES PLANS': 'Studies & Plans',
       'MARCHANDISES': 'Merchandise',
       'SHIPPING FRET': 'Shipping / Freight',
-      'ABONNEMENT': 'Subscription'
+      'ABONNEMENT': 'Subscription',
+      'FRAIS ADMINISTRATIFS': 'Administrative Fees',
+      'CLOTURE PORTAIL': 'Fence / Gate',
+      'GROS OEUVRES': 'Structural Works',
+      'SECONDS OEUVRES': 'Finishing Works',
+      'SOLAIRE ENERGIE': 'Solar / Energy',
+      'EQUIPEMENTS': 'Equipment',
+      'NOTAIRE DOMAINES': 'Notary / Land Registry',
+      'FINITIONS': 'Finishes',
+      'EXPERTISE DEVIS': 'Survey / Quotation',
+      'PLOMBERIE': 'Plumbing',
+      'ELECTRICITE': 'Electricity',
+      'AUTRE': 'Other'
     },
     DE: {
       'VENTES': 'Verkauf',
@@ -538,7 +613,19 @@ const Finance = () => {
       'ETUDES PLANS': 'Studien & Pläne',
       'MARCHANDISES': 'Waren',
       'SHIPPING FRET': 'Versand / Fracht',
-      'ABONNEMENT': 'Abonnement'
+      'ABONNEMENT': 'Abonnement',
+      'FRAIS ADMINISTRATIFS': 'Verwaltungskosten',
+      'CLOTURE PORTAIL': 'Zaun / Tor',
+      'GROS OEUVRES': 'Rohbauarbeiten',
+      'SECONDS OEUVRES': 'Ausbauarbeiten',
+      'SOLAIRE ENERGIE': 'Solar / Energie',
+      'EQUIPEMENTS': 'Ausrüstung',
+      'NOTAIRE DOMAINES': 'Notar / Grundbuch',
+      'FINITIONS': 'Endarbeiten',
+      'EXPERTISE DEVIS': 'Gutachten / Angebot',
+      'PLOMBERIE': 'Sanitärarbeiten',
+      'ELECTRICITE': 'Elektrizität',
+      'AUTRE': 'Andere'
     }
   };
   const normalizeCategoryKey = (value) =>
@@ -560,7 +647,22 @@ const Finance = () => {
       'DYNAMISATION': 'Dynamisation',
       'IT': 'IT',
       'FINANCE': 'Finance',
-      'ADMINISTRATION': 'Administration'
+      'ADMINISTRATION': 'Administration',
+      'AVANCE': 'Avance',
+      'REMBOURSEMENT': 'Remboursement',
+      'AJUSTEMENT': 'Ajustement',
+      'INFORMATION': 'Information',
+      'REPORT': 'Report',
+      'IMMOBILIER': 'Immobilier',
+      'PERSONNEL': 'Personnel',
+      'REMBOURSE': 'Remboursé',
+      'PAYE': 'Payé',
+      'PARTIEL': 'Partiel',
+      'EN COURS': 'En cours',
+      'INFO': 'Information',
+      'REPORTE': 'Reporté',
+      'PLANIFIE': 'Planifié',
+      'HORS PERIMETRE IMMO': 'Hors périmètre IMMO'
     },
     EN: {
       'NON RENSEIGNE': 'Not provided',
@@ -570,7 +672,22 @@ const Finance = () => {
       'DYNAMISATION': 'Activation',
       'IT': 'IT',
       'FINANCE': 'Finance',
-      'ADMINISTRATION': 'Administration'
+      'ADMINISTRATION': 'Administration',
+      'AVANCE': 'Advance',
+      'REMBOURSEMENT': 'Reimbursement',
+      'AJUSTEMENT': 'Adjustment',
+      'INFORMATION': 'Information',
+      'REPORT': 'Deferred',
+      'IMMOBILIER': 'Real Estate',
+      'PERSONNEL': 'Personal',
+      'REMBOURSE': 'Reimbursed',
+      'PAYE': 'Paid',
+      'PARTIEL': 'Partial',
+      'EN COURS': 'In progress',
+      'INFO': 'Information',
+      'REPORTE': 'Deferred',
+      'PLANIFIE': 'Planned',
+      'HORS PERIMETRE IMMO': 'Outside IMMO scope'
     },
     DE: {
       'NON RENSEIGNE': 'Nicht angegeben',
@@ -580,7 +697,22 @@ const Finance = () => {
       'DYNAMISATION': 'Aktivierung',
       'IT': 'IT',
       'FINANCE': 'Finanzen',
-      'ADMINISTRATION': 'Administration'
+      'ADMINISTRATION': 'Administration',
+      'AVANCE': 'Vorauszahlung',
+      'REMBOURSEMENT': 'Rückzahlung',
+      'AJUSTEMENT': 'Anpassung',
+      'INFORMATION': 'Information',
+      'REPORT': 'Verschoben',
+      'IMMOBILIER': 'Immobilien',
+      'PERSONNEL': 'Persönlich',
+      'REMBOURSE': 'Zurückgezahlt',
+      'PAYE': 'Bezahlt',
+      'PARTIEL': 'Teilweise',
+      'EN COURS': 'In Bearbeitung',
+      'INFO': 'Information',
+      'REPORTE': 'Verschoben',
+      'PLANIFIE': 'Geplant',
+      'HORS PERIMETRE IMMO': 'Außerhalb des IMMO-Bereichs'
     }
   };
   const translateStandardValue = (value) => {
@@ -650,6 +782,34 @@ const Finance = () => {
     loadFxHistory();
   }, []);
 
+  useEffect(() => {
+    const loadRealEstateFinance = async () => {
+      try {
+        const response = await api.getRealEstateFinance(200, 0);
+        const rows = Array.isArray(response?.data) ? response.data : [];
+        setImmoTransactions(rows.map((item) => ({
+          ...item,
+          id: item.source_id,
+          date: cleanDate(item.date_operation),
+          montantChf: toNumber(item.montant_chf),
+          montantCfa: toNumber(item.montant_cfa),
+          tauxFx: item.taux_fx === null ? null : toNumber(item.taux_fx),
+          partCheikhChf: toNumber(item.part_cheikh_chf),
+          remboursementCheikhChf: toNumber(item.remboursement_cheikh_chf),
+          estPlanifie: Boolean(item.est_planifie)
+        })));
+        setImmoSummary(response?.summary || {});
+        setImmoError('');
+      } catch (error) {
+        console.error('Real Estate Finance error:', error);
+        setImmoTransactions([]);
+        setImmoSummary({});
+        setImmoError(error.message);
+      }
+    };
+    loadRealEstateFinance();
+  }, []);
+
   const recettesAffichees = useMemo(() => recettes.map(applyHistoricalFx), [recettes, applyHistoricalFx]);
   const depensesAffichees = useMemo(() => depenses.map(applyHistoricalFx), [depenses, applyHistoricalFx]);
 
@@ -704,6 +864,18 @@ const Finance = () => {
       }))
       .sort((a, b) => a.année - b.année);
   }, [fxHistory]);
+
+  const immoYearlyData = useMemo(() => {
+    const yearly = immoTransactions.reduce((acc, item) => {
+      if (item.estPlanifie || !['Avance', 'Information'].includes(item.type_operation)) return acc;
+      const year = item.date.slice(0, 4);
+      acc[year] = (acc[year] || 0) + item.montantChf;
+      return acc;
+    }, {});
+    return Object.entries(yearly)
+      .map(([annee, montant]) => ({ annee, montant }))
+      .sort((a, b) => a.annee.localeCompare(b.annee));
+  }, [immoTransactions]);
 
   const handleFormChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -811,6 +983,21 @@ const Finance = () => {
       const matchesDevise = !filterDevise || fx.devise_from?.includes(filterDevise) || fx.devise_to?.includes(filterDevise);
       return matchesDevise;
     }), [fxHistory, filterDevise]);
+
+  const immoInvestiChf = toNumber(immoSummary.investissements_realises_chf);
+  const immoInvestiCfa = toNumber(immoSummary.investissements_realises_cfa);
+  const immoRemboursementsDirects = toNumber(immoSummary.remboursements_directs_chf);
+  const immoRemboursementsTotal = toNumber(immoSummary.remboursements_total_chf);
+  const immoPartCheikh = toNumber(immoSummary.part_cheikh_chf);
+  const immoSoldeOuvert = toNumber(immoSummary.solde_ouvert_cheikh_chf);
+  const immoEquivalentTauxJour = tauxChfCfa ? Math.round(immoInvestiChf * tauxChfCfa) : null;
+  const immoStatusClass = (status) => {
+    const key = normalizeCategoryKey(status);
+    if (['REMBOURSE', 'PAYE'].includes(key)) return 'bg-green-900/50 text-green-300';
+    if (['PARTIEL', 'EN COURS'].includes(key)) return 'bg-orange-900/50 text-orange-300';
+    if (['PLANIFIE', 'REPORTE'].includes(key)) return 'bg-blue-900/50 text-blue-300';
+    return 'bg-slate-700 text-slate-300';
+  };
 
   return (
     <>
@@ -1105,7 +1292,116 @@ const Finance = () => {
           </div>
         )}
 
-        <ChildTabPlaceholder moduleId="finances" language={language} activeTab={activeTab} handledTabs={['overview', 'recettes', 'depenses', 'fx']} />
+        {activeTab === 'immobilier' && (
+          <div className="space-y-6">
+            {immoTransactions.length === 0 ? (
+              <div className="bg-slate-800 border border-slate-700 rounded-lg p-8 text-center">
+                <Building2 size={36} className="mx-auto mb-3 text-orange-400" />
+                <p className="text-white font-semibold">{t.aucuneDonneeImmo}</p>
+                {immoError && <p className="mt-2 text-sm text-slate-400">{immoError}</p>}
+              </div>
+            ) : (
+              <>
+                <section className="bg-blue-950 border border-blue-800 rounded-lg p-6">
+                  <div className="flex items-start gap-3 mb-5">
+                    <Building2 size={28} className="text-orange-400 mt-1" />
+                    <div>
+                      <h2 className="text-xl font-bold text-white">{t.immoTitle}</h2>
+                      <p className="text-sm text-blue-200">{t.immoSubtitle}</p>
+                    </div>
+                  </div>
+                  <div className="mb-6">
+                    <p className="text-sm text-blue-200">{t.totalInvesti}</p>
+                    <p className="text-3xl font-bold text-orange-400">{formatAmount(immoInvestiChf)} CHF</p>
+                    <p className="text-sm text-slate-300">{formatAmount(immoInvestiCfa)} CFA · {t.montantsHistoriques}</p>
+                    {immoEquivalentTauxJour !== null && (
+                      <p className="text-xs text-slate-400">≈ {formatAmount(immoEquivalentTauxJour)} CFA · {t.equivalentTauxJour}</p>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 border-t border-blue-800 md:divide-x divide-blue-800">
+                    <div className="py-4 md:pr-6">
+                      <p className="text-2xl font-bold text-white">{formatAmount(immoRemboursementsDirects)} CHF</p>
+                      <p className="text-sm text-blue-200">{t.remboursementsDirects}</p>
+                      <p className="text-xs text-slate-400 mt-1">{t.remboursementsTotal}: {formatAmount(immoRemboursementsTotal)} CHF</p>
+                    </div>
+                    <div className="py-4 md:px-6">
+                      <p className="text-2xl font-bold text-white">{formatAmount(immoSoldeOuvert)} CHF</p>
+                      <p className="text-sm text-blue-200">{t.soldeOuvert}</p>
+                    </div>
+                    <div className="py-4 md:pl-6">
+                      <p className="text-2xl font-bold text-white">{formatAmount(immoPartCheikh)} CHF</p>
+                      <p className="text-sm text-blue-200">{t.partCheikh}</p>
+                    </div>
+                  </div>
+                </section>
+
+                <div className="grid grid-cols-1 xl:grid-cols-[minmax(360px,0.75fr)_minmax(0,1.75fr)] gap-6">
+                  <section className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                    <h3 className="text-white font-bold mb-4">{t.investissementsAnnee}</h3>
+                    <ResponsiveContainer width="100%" height={360}>
+                      <BarChart data={immoYearlyData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
+                        <XAxis dataKey="annee" stroke="#94a3b8" />
+                        <YAxis stroke="#94a3b8" />
+                        <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} formatter={(value) => [`${formatAmount(value)} CHF`, t.totalInvesti]} />
+                        <Bar dataKey="montant" fill="#f59e0b" radius={[6, 6, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </section>
+
+                  <section className="bg-slate-800 rounded-lg p-6 border border-slate-700 min-w-0">
+                    <h3 className="text-white font-bold mb-4">{t.historiqueImmo}</h3>
+                    <TableControls
+                      rows={immoTransactions}
+                      renderTable={(visibleRows) => (
+                        <table className="min-w-[1800px] text-sm">
+                          <thead className="sticky top-0 z-10 bg-slate-700">
+                            <tr>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.date}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.description}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.montantCHF}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.montantCFA}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.tauxFXCol}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.partCheikh}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.remboursementsTotal}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.typeOperation}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.categorie}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.projet}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.statut}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {visibleRows.map((item) => (
+                              <tr key={item.id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                                <td className="px-4 py-3 text-slate-300 whitespace-nowrap">{formatDateForDisplay(item.date)}</td>
+                                <td className="px-4 py-3 text-white font-medium max-w-[360px]">{item.designation}</td>
+                                <td className="px-4 py-3 text-orange-300 font-semibold whitespace-nowrap">{formatAmount(item.montantChf)} CHF</td>
+                                <td className="px-4 py-3 text-slate-300 whitespace-nowrap">{formatAmount(item.montantCfa)} CFA</td>
+                                <td className="px-4 py-3 text-purple-300">{item.tauxFx ? item.tauxFx.toLocaleString(undefined, { maximumFractionDigits: 3 }) : '-'}</td>
+                                <td className="px-4 py-3 text-blue-300 whitespace-nowrap">{formatAmount(item.partCheikhChf)} CHF</td>
+                                <td className="px-4 py-3 text-green-300 whitespace-nowrap">{formatAmount(item.remboursementCheikhChf)} CHF</td>
+                                <td className="px-4 py-3 text-slate-300">{translateStandardValue(item.type_operation)}</td>
+                                <td className="px-4 py-3 text-slate-300">{translateCategory(item.categorie)}</td>
+                                <td className="px-4 py-3 text-slate-300">{translateStandardValue(item.projet)}</td>
+                                <td className="px-4 py-3">
+                                  <span className={`inline-flex px-2 py-1 rounded text-xs font-medium whitespace-nowrap ${immoStatusClass(item.statut)}`}>
+                                    {translateStandardValue(item.statut)}
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )}
+                    />
+                  </section>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        <ChildTabPlaceholder moduleId="finances" language={language} activeTab={activeTab} handledTabs={['overview', 'recettes', 'depenses', 'fx', 'immobilier']} />
 
         {showModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

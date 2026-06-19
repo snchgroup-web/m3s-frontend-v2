@@ -88,6 +88,19 @@ export const api = {
     }
   },
 
+  // Finance - Financement immobilier
+  getRealEstateFinance: async (limite = 200, decalage = 0) => {
+    try {
+      const res = await apiFetch(
+        `${API_BASE_URL}/finance/real-estate?limit=${limite}&offset=${decalage}`
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    } catch (erreur) {
+      handleError(erreur, '/finance/real-estate');
+    }
+  },
+
   // Finance - Historique des taux de change (FX History)
   getFxHistory: async () => {
     try {
