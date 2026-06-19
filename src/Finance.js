@@ -227,7 +227,8 @@ const Finance = () => {
 
   const normalizeFinanceRow = useCallback((item, type, fallbackCategory, index = 0) => {
     const deviseOrigine = String(item.devise_origine || item.devise || item.currency || 'CHF').toUpperCase();
-    const tauxFx = toNumber(item.taux_fx ?? item.taux ?? item.fx_rate, CHF_TO_CFA_RATE);
+    const rawTauxFx = item.taux_fx ?? item.taux ?? item.fx_rate;
+    const tauxFx = toNumber(rawTauxFx, CHF_TO_CFA_RATE);
     const rawAmount = item.montant_origine ?? item.amount_original ?? item.montant ?? item.amount ?? item.montant_chf ?? item.amount_chf ?? item.montant_cfa ?? item.amount_cfa ?? 0;
     const montantOrigine = toNumber(rawAmount);
     const montantChf = toNumber(
@@ -250,20 +251,66 @@ const Finance = () => {
       montantChf,
       montantCfa,
       tauxFx,
+      hasExplicitTauxFx: rawTauxFx !== undefined && rawTauxFx !== null && rawTauxFx !== '',
       dateTauxFx: cleanDate(item.date_taux_fx || item.date_taux || item.date_updated || item.created_at),
       sourceTauxFx: item.source_taux_fx || item.source_taux || item.source || 'Standard',
       categorie: item.category || item.categorie || fallbackCategory,
       date: cleanDate(item.date_document || item.date_created || item.created_at || item.date),
-      agent: item.agent || item.agent_name || item.responsable || 'Non renseigne',
-      team: item.team || item.team_name || item.bu || 'Non renseigne',
-      departement: item.departement || item.department || 'Non renseigne',
-      phaseProjet: item.phase_projet || item.phaseProjet || item.project_phase || 'Conception',
+      agent: item.agent || item.agent_name || item.responsable || item.owner || item.created_by || 'Non renseigne',
+      team: item.team || item.team_name || item.equipe || item.bu || item.business_unit || 'Non renseigne',
+      departement: item.departement || item.department || item.department_name || item.service || 'Non renseigne',
+      phaseProjet: item.phase_projet || item.phaseProjet || item.project_phase || item.phase || 'Conception',
       status: item.status || item.statut || 'completed'
     };
   }, []);
 
   const formatCell = (value) => value || '-';
   const formatAmount = (value) => toNumber(value).toLocaleString();
+
+  const getHistoricalCfaPerChf = useCallback((operationDate) => {
+    const comparableDate = (value) => {
+      if (!value) return '';
+      if (typeof value === 'object' && value.value) return String(value.value).substring(0, 10);
+      return String(value).substring(0, 10);
+    };
+    const targetDate = comparableDate(operationDate);
+    const candidates = fxHistory
+      .map((fx) => {
+        const from = String(fx.devise_from || '').toUpperCase();
+        const to = String(fx.devise_to || '').toUpperCase();
+        const rate = toNumber(fx.rate);
+        const date = comparableDate(fx.date);
+
+        if (!date || !rate) return null;
+        if (from === 'CHF' && to === 'CFA') return { ...fx, date, cfaPerChf: rate };
+        if (from === 'CFA' && to === 'CHF') return { ...fx, date, cfaPerChf: 1 / rate };
+        return null;
+      })
+      .filter(Boolean)
+      .filter((fx) => !targetDate || fx.date <= targetDate)
+      .sort((a, b) => b.date.localeCompare(a.date));
+
+    return candidates[0] || null;
+  }, [fxHistory]);
+
+  const applyHistoricalFx = useCallback((row) => {
+    const historicalRate = row.hasExplicitTauxFx ? null : getHistoricalCfaPerChf(row.date);
+    const tauxFx = row.hasExplicitTauxFx ? row.tauxFx : toNumber(historicalRate?.cfaPerChf, row.tauxFx || CHF_TO_CFA_RATE);
+    const montantOrigine = toNumber(row.montantOrigine ?? row.montant);
+    const deviseOrigine = String(row.deviseOrigine || row.devise || 'CHF').toUpperCase();
+    const montantChf = deviseOrigine === 'CFA' ? montantOrigine / tauxFx : montantOrigine;
+    const montantCfa = deviseOrigine === 'CFA' ? montantOrigine : montantOrigine * tauxFx;
+
+    return {
+      ...row,
+      tauxFx,
+      montant: montantChf,
+      montantChf,
+      montantCfa,
+      dateTauxFx: row.hasExplicitTauxFx ? row.dateTauxFx : historicalRate?.date || row.dateTauxFx,
+      sourceTauxFx: row.hasExplicitTauxFx ? row.sourceTauxFx : historicalRate?.source || row.sourceTauxFx
+    };
+  }, [getHistoricalCfaPerChf]);
 
   // Phase 2: Load real data from BigQuery via API
   useEffect(() => {
@@ -402,6 +449,42 @@ const Finance = () => {
       .toUpperCase();
   const formatUnknownCategory = (cat) =>
     String(cat || '').replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const standardValueTranslations = {
+    FR: {
+      'NON RENSEIGNE': 'Non renseigne',
+      'CONCEPTION': 'Conception',
+      'MISE EN PLACE': 'Mise en Place',
+      'CONSOLIDATION': 'Consolidation',
+      'DYNAMISATION': 'Dynamisation',
+      'IT': 'IT',
+      'FINANCE': 'Finance',
+      'ADMINISTRATION': 'Administration'
+    },
+    EN: {
+      'NON RENSEIGNE': 'Not provided',
+      'CONCEPTION': 'Design',
+      'MISE EN PLACE': 'Implementation',
+      'CONSOLIDATION': 'Consolidation',
+      'DYNAMISATION': 'Activation',
+      'IT': 'IT',
+      'FINANCE': 'Finance',
+      'ADMINISTRATION': 'Administration'
+    },
+    DE: {
+      'NON RENSEIGNE': 'Nicht angegeben',
+      'CONCEPTION': 'Konzeption',
+      'MISE EN PLACE': 'Umsetzung',
+      'CONSOLIDATION': 'Konsolidierung',
+      'DYNAMISATION': 'Aktivierung',
+      'IT': 'IT',
+      'FINANCE': 'Finanzen',
+      'ADMINISTRATION': 'Administration'
+    }
+  };
+  const translateStandardValue = (value) => {
+    const key = normalizeCategoryKey(value);
+    return standardValueTranslations[language]?.[key] || formatUnknownCategory(value);
+  };
   const translateDescription = (desc) => dataTranslations.descriptions[language]?.[desc] || desc;
   const translateCategory = (cat) => {
     const key = normalizeCategoryKey(cat);
@@ -456,10 +539,14 @@ const Finance = () => {
     loadFxHistory();
   }, []);
 
-  const totalRecettes = recettes.reduce((sum, r) => sum + toNumber(r.montantChf ?? r.montant), 0);
-  const totalDepenses = depenses.reduce((sum, d) => sum + toNumber(d.montantChf ?? d.montant), 0);
+  const recettesAffichees = useMemo(() => recettes.map(applyHistoricalFx), [recettes, applyHistoricalFx]);
+  const depensesAffichees = useMemo(() => depenses.map(applyHistoricalFx), [depenses, applyHistoricalFx]);
+
+  const totalRecettes = recettesAffichees.reduce((sum, r) => sum + toNumber(r.montantChf ?? r.montant), 0);
+  const totalDepenses = depensesAffichees.reduce((sum, d) => sum + toNumber(d.montantChf ?? d.montant), 0);
   const solde = totalRecettes - totalDepenses;
-  const tauxChfCfa = tauxDuJour.CHF_CFA || fxHistory.find(fx => fx.devise_from === 'CHF' && fx.devise_to === 'CFA')?.rate || CHF_TO_CFA_RATE;
+  const latestHistoricalFx = getHistoricalCfaPerChf(new Date().toISOString().split('T')[0]);
+  const tauxChfCfa = tauxDuJour.CHF_CFA || latestHistoricalFx?.cfaPerChf || CHF_TO_CFA_RATE;
 
   // Memoized data with translations
   const monthlyDataRaw = useMemo(() => [
@@ -727,12 +814,13 @@ const Finance = () => {
               </button>
             </div>
             <TableControls
-              rows={recettes}
+              rows={recettesAffichees}
               renderTable={(visibleRows) => (
                 <table className="min-w-[1500px]">
                   <thead className="sticky top-0 z-10 bg-slate-700">
                     <tr>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.ref}</th>
+                      <th className="px-6 py-3 text-left text-white font-bold">{t.date}</th>
                       <th className="px-6 py-3 text-left text-white font-bold">{t.description}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.montantCHF}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.montantCFA}</th>
@@ -742,7 +830,6 @@ const Finance = () => {
                       <th className="px-4 py-3 text-left text-white font-bold">{t.team}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.departement}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.phaseProjet}</th>
-                      <th className="px-6 py-3 text-left text-white font-bold">{t.date}</th>
                       <th className="px-6 py-3 text-left text-white font-bold">{t.actions}</th>
                     </tr>
                   </thead>
@@ -750,16 +837,16 @@ const Finance = () => {
                     {visibleRows.map(r => (
                       <tr key={r.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                         <td className="px-4 py-3 text-slate-400">{formatCell(r.ref)}</td>
+                        <td className="px-6 py-3 text-slate-400">{r.date}</td>
                         <td className="px-6 py-3 text-slate-300">{translateDescription(r.description)}</td>
                         <td className="px-4 py-3 text-green-400 font-bold">{formatAmount(r.montantChf)}</td>
                         <td className="px-4 py-3 text-green-300 font-bold">{formatAmount(r.montantCfa)}</td>
                         <td className="px-4 py-3 text-purple-300">{formatAmount(r.tauxFx)}</td>
                         <td className="px-6 py-3 text-slate-400">{translateCategory(r.categorie)}</td>
                         <td className="px-4 py-3 text-slate-400">{formatCell(r.agent)}</td>
-                        <td className="px-4 py-3 text-slate-400">{formatCell(r.team)}</td>
-                        <td className="px-4 py-3 text-slate-400">{formatCell(r.departement)}</td>
-                        <td className="px-4 py-3 text-slate-400">{formatCell(r.phaseProjet)}</td>
-                        <td className="px-6 py-3 text-slate-400">{r.date}</td>
+                        <td className="px-4 py-3 text-slate-400">{translateStandardValue(r.team)}</td>
+                        <td className="px-4 py-3 text-slate-400">{translateStandardValue(r.departement)}</td>
+                        <td className="px-4 py-3 text-slate-400">{translateStandardValue(r.phaseProjet)}</td>
                         <td className="px-6 py-3 flex gap-2">
                           <button onClick={() => handleEdit('recette', r)} className="p-1 hover:bg-slate-600 rounded">
                             <Edit2 size={18} className="text-blue-400" />
@@ -785,12 +872,13 @@ const Finance = () => {
               </button>
             </div>
             <TableControls
-              rows={depenses}
+              rows={depensesAffichees}
               renderTable={(visibleRows) => (
                 <table className="min-w-[1500px]">
                   <thead className="sticky top-0 z-10 bg-slate-700">
                     <tr>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.ref}</th>
+                      <th className="px-6 py-3 text-left text-white font-bold">{t.date}</th>
                       <th className="px-6 py-3 text-left text-white font-bold">{t.description}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.montantCHF}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.montantCFA}</th>
@@ -800,7 +888,6 @@ const Finance = () => {
                       <th className="px-4 py-3 text-left text-white font-bold">{t.team}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.departement}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.phaseProjet}</th>
-                      <th className="px-6 py-3 text-left text-white font-bold">{t.date}</th>
                       <th className="px-6 py-3 text-left text-white font-bold">{t.actions}</th>
                     </tr>
                   </thead>
@@ -808,16 +895,16 @@ const Finance = () => {
                     {visibleRows.map(d => (
                       <tr key={d.id} className="border-t border-slate-700 hover:bg-slate-700/50">
                         <td className="px-4 py-3 text-slate-400">{formatCell(d.ref)}</td>
+                        <td className="px-6 py-3 text-slate-400">{d.date}</td>
                         <td className="px-6 py-3 text-slate-300">{translateDescription(d.description)}</td>
                         <td className="px-4 py-3 text-red-400 font-bold">{formatAmount(d.montantChf)}</td>
                         <td className="px-4 py-3 text-red-300 font-bold">{formatAmount(d.montantCfa)}</td>
                         <td className="px-4 py-3 text-purple-300">{formatAmount(d.tauxFx)}</td>
                         <td className="px-6 py-3 text-slate-400">{translateCategory(d.categorie)}</td>
                         <td className="px-4 py-3 text-slate-400">{formatCell(d.agent)}</td>
-                        <td className="px-4 py-3 text-slate-400">{formatCell(d.team)}</td>
-                        <td className="px-4 py-3 text-slate-400">{formatCell(d.departement)}</td>
-                        <td className="px-4 py-3 text-slate-400">{formatCell(d.phaseProjet)}</td>
-                        <td className="px-6 py-3 text-slate-400">{d.date}</td>
+                        <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.team)}</td>
+                        <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.departement)}</td>
+                        <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.phaseProjet)}</td>
                         <td className="px-6 py-3 flex gap-2">
                           <button onClick={() => handleEdit('depense', d)} className="p-1 hover:bg-slate-600 rounded">
                             <Edit2 size={18} className="text-blue-400" />
