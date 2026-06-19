@@ -29,7 +29,7 @@
             "DE": "Institution"
           },
           "icon": "Building2",
-          "path": "/administration?tab=tasks"
+          "path": "/administration?tab=institution"
         },
         {
           "id": "activities",
@@ -39,7 +39,7 @@
             "DE": "Aktivitäten & Aufgaben"
           },
           "icon": "Activity",
-          "path": "/administration"
+          "path": "/administration?tab=tasks"
         },
         {
           "id": "projects",
@@ -49,7 +49,7 @@
             "DE": "Projektphase"
           },
           "icon": "Briefcase",
-          "path": "/administration"
+          "path": "/administration?tab=projects"
         },
         {
           "id": "communication",
@@ -59,7 +59,7 @@
             "DE": "Kommunikation"
           },
           "icon": "MessageSquare",
-          "path": "/administration"
+          "path": "/administration?tab=communication"
         }
       ]
     },
@@ -98,7 +98,7 @@
             "EN": "Budget",
             "DE": "Budget"
           },
-          "path": "/finance"
+          "path": "/finance?tab=budget"
         },
         {
           "id": "social",
@@ -107,7 +107,7 @@
             "EN": "Social",
             "DE": "Sozial"
           },
-          "path": "/finance"
+          "path": "/finance?tab=social"
         },
         {
           "id": "immobilier",
@@ -116,7 +116,7 @@
             "EN": "Real Estate Finance",
             "DE": "Immobilienfinanzierung"
           },
-          "path": "/finance"
+          "path": "/finance?tab=immobilier"
         },
         {
           "id": "fx-converter",
@@ -147,7 +147,7 @@
             "DE": "Teams & Profile"
           },
           "icon": "Users",
-          "path": "/rh"
+          "path": "/rh?tab=teams"
         },
         {
           "id": "hours",
@@ -157,7 +157,7 @@
             "DE": "Stunden & Aktivitäten"
           },
           "icon": "Clock",
-          "path": "/rh"
+          "path": "/rh?tab=hours"
         },
         {
           "id": "competences",
@@ -167,7 +167,7 @@
             "DE": "Fähigkeiten"
           },
           "icon": "Zap",
-          "path": "/rh"
+          "path": "/rh?tab=competences"
         },
         {
           "id": "myaccount",
@@ -177,7 +177,7 @@
             "DE": "Mein Konto"
           },
           "icon": "User",
-          "path": "/rh"
+          "path": "/rh?tab=myaccount"
         }
       ]
     },
@@ -199,7 +199,7 @@
             "DE": "Interessenten & Leads"
           },
           "icon": "Target",
-          "path": "/crm"
+          "path": "/crm?tab=prospects"
         },
         {
           "id": "clients",
@@ -209,7 +209,7 @@
             "DE": "Kunden"
           },
           "icon": "Users",
-          "path": "/crm"
+          "path": "/crm?tab=clients"
         },
         {
           "id": "ventes",
@@ -219,7 +219,7 @@
             "DE": "Verkauf"
           },
           "icon": "TrendingUp",
-          "path": "/crm"
+          "path": "/crm?tab=ventes"
         },
         {
           "id": "dons",
@@ -229,7 +229,7 @@
             "DE": "Spenden"
           },
           "icon": "Heart",
-          "path": "/crm"
+          "path": "/crm?tab=dons"
         },
         {
           "id": "beneficiaires",
@@ -239,7 +239,7 @@
             "DE": "Begünstigte"
           },
           "icon": "Smile",
-          "path": "/crm"
+          "path": "/crm?tab=beneficiaires"
         }
       ]
     },
@@ -261,7 +261,7 @@
             "DE": "Bestellungen"
           },
           "icon": "ShoppingCart",
-          "path": "/production"
+          "path": "/production?tab=commandes"
         },
         {
           "id": "manufacturing",
@@ -271,7 +271,7 @@
             "DE": "Herstellung"
           },
           "icon": "Wrench",
-          "path": "/production"
+          "path": "/production?tab=manufacturing"
         },
         {
           "id": "suppliers",
@@ -281,7 +281,7 @@
             "DE": "Lieferanten"
           },
           "icon": "Truck",
-          "path": "/production"
+          "path": "/production?tab=fournisseurs"
         }
       ]
     },
@@ -323,7 +323,7 @@
             "DE": "Risiken"
           },
           "icon": "AlertTriangle",
-          "path": "/actifs"
+          "path": "/actifs?tab=risques"
         }
       ]
     },
@@ -345,7 +345,7 @@
             "DE": "Überwachung & Wissensmanagement"
           },
           "icon": "Eye",
-          "path": "/ged"
+          "path": "/ged?tab=knowledge"
         },
         {
           "id": "ged",
@@ -365,7 +365,7 @@
             "DE": "KI & Digital"
           },
           "icon": "Brain",
-          "path": "/ged"
+          "path": "/ged?tab=ai-digital"
         },
         {
           "id": "database",
@@ -375,7 +375,7 @@
             "DE": "Datenbankmanagement"
           },
           "icon": "Database",
-          "path": "/ged"
+          "path": "/ged?tab=database"
         },
         {
           "id": "user-guide",
@@ -385,7 +385,7 @@
             "DE": "Benutzerhandbuch"
           },
           "icon": "BookOpen",
-          "path": "/ged"
+          "path": "/ged?tab=user-guide"
         },
         {
           "id": "tech-docs",
@@ -395,7 +395,7 @@
             "DE": "Technische Dokumentation"
           },
           "icon": "Code",
-          "path": "/ged"
+          "path": "/ged?tab=tech-docs"
         },
         {
           "id": "help-support",
@@ -405,7 +405,7 @@
             "DE": "Hilfe & Support"
           },
           "icon": "HelpCircle",
-          "path": "/ged"
+          "path": "/ged?tab=help-support"
         },
         {
           "id": "manual",
@@ -415,7 +415,7 @@
             "DE": "Benutzerhandbuch"
           },
           "icon": "Book",
-          "path": "/ged"
+          "path": "/ged?tab=manual"
         }
       ]
     }

@@ -4,6 +4,7 @@ import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Too
 import { Building2, Plus, TrendingDown } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
+import { ModuleChildTabs, ChildTabPlaceholder } from './moduleTabs';
 
 const Actifs = () => {
   const { language } = useLanguage();
@@ -118,7 +119,7 @@ const Actifs = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['inventory', 'overview', 'immobilisations'].includes(tab)) {
+    if (['inventory', 'overview', 'immobilisations', 'risques'].includes(tab)) {
       setActiveTab(tab);
     }
   }, [location.search]);
@@ -248,6 +249,8 @@ const Actifs = () => {
             <button onClick={() => setActiveTab('immobilisations')} className={`px-4 py-3 font-medium ${activeTab === 'immobilisations' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.immobilisations}</button>
           </div>
 
+          <ModuleChildTabs moduleId="stock" language={language} activeTab={activeTab} onSelect={setActiveTab} />
+
           {activeTab === 'inventory' && (
             <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
               <table className="w-full text-sm">
@@ -344,6 +347,8 @@ const Actifs = () => {
               </div>
             </div>
           )}
+
+          <ChildTabPlaceholder moduleId="stock" language={language} activeTab={activeTab} handledTabs={['inventory', 'overview', 'immobilisations']} />
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Plus, Edit2, Trash2, Users, TrendingUp, Gift, Target } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
+import { ModuleChildTabs, ChildTabPlaceholder } from './moduleTabs';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -36,7 +37,7 @@ const CRM = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'prospects', 'clients', 'dons'].includes(tab)) {
+    if (['overview', 'prospects', 'clients', 'dons', 'ventes', 'beneficiaires'].includes(tab)) {
       setActiveTab(tab);
     }
   }, [location.search]);
@@ -517,6 +518,8 @@ const CRM = () => {
           <button onClick={() => setActiveTab('dons')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'dons' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.dons}</button>
         </div>
 
+        <ModuleChildTabs moduleId="commercial" language={language} activeTab={activeTab} onSelect={setActiveTab} />
+
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -577,6 +580,8 @@ const CRM = () => {
         {activeTab === 'dons' && (
           <Table data={dons} type="don" onEdit={handleEdit} onDelete={handleDelete} columns={[t.donateur, t.categorie, t.devise, t.montant]} />
         )}
+
+        <ChildTabPlaceholder moduleId="commercial" language={language} activeTab={activeTab} handledTabs={['overview', 'prospects', 'clients', 'dons']} />
         </div>
       </div>
 

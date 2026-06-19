@@ -4,6 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Plus, Edit2, Trash2, FileText, Folder, Download, Upload } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
+import { ModuleChildTabs, ChildTabPlaceholder } from './moduleTabs';
 
 const GED = () => {
   const { language } = useLanguage();
@@ -206,7 +207,7 @@ const GED = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'documents', 'dossiers'].includes(tab)) {
+    if (['overview', 'documents', 'dossiers', 'knowledge', 'ai-digital', 'database', 'user-guide', 'tech-docs', 'help-support', 'manual'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('documents');
@@ -394,6 +395,8 @@ const GED = () => {
           <button onClick={() => selectTab('documents')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'documents' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.documents}</button>
           <button onClick={() => selectTab('dossiers')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'dossiers' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.dossiers}</button>
         </div>
+
+        <ModuleChildTabs moduleId="it-support" language={language} activeTab={activeTab} onSelect={selectTab} />
  
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
@@ -511,6 +514,8 @@ const GED = () => {
             </div>
           </div>
         )}
+
+        <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'documents', 'dossiers']} />
         </div>
       </div>
 

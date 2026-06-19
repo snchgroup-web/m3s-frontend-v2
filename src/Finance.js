@@ -4,6 +4,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Search } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
+import { ModuleChildTabs, ChildTabPlaceholder } from './moduleTabs';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -181,7 +182,7 @@ const Finance = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'recettes', 'depenses', 'fx'].includes(tab)) {
+    if (['overview', 'recettes', 'depenses', 'fx', 'budget', 'social', 'immobilier'].includes(tab)) {
       setActiveTab(tab);
     }
   }, [location.search]);
@@ -512,6 +513,8 @@ const Finance = () => {
           <button onClick={() => setActiveTab('fx')} className={`px-4 py-3 font-medium ${activeTab === 'fx' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.fx}</button>
         </div>
 
+        <ModuleChildTabs moduleId="finances" language={language} activeTab={activeTab} onSelect={setActiveTab} />
+
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
@@ -705,6 +708,8 @@ const Finance = () => {
             <p className="text-slate-400 text-sm mt-4">Total taux: {filteredFxHistory.length}</p>
           </div>
         )}
+
+        <ChildTabPlaceholder moduleId="finances" language={language} activeTab={activeTab} handledTabs={['overview', 'recettes', 'depenses', 'fx']} />
 
         {showModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

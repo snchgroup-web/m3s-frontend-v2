@@ -4,6 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Plus, Edit2, Trash2, Shield, Users, Lock, Activity, AlertCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
+import { ModuleChildTabs, ChildTabPlaceholder } from './moduleTabs';
 
 const Admin = () => {
   const { language } = useLanguage();
@@ -65,6 +66,10 @@ const Admin = () => {
       wed: 'Mer',
       thu: 'Jeu',
       fri: 'Ven'
+      , institution: 'Institution',
+      projetsPhases: 'Projets / Phases',
+      communication: 'Communication',
+      tachesTerminees: 'Tâches terminées'
     },
     EN: {
       title: 'Administration',
@@ -120,6 +125,10 @@ const Admin = () => {
       wed: 'Wed',
       thu: 'Thu',
       fri: 'Fri'
+      , institution: 'Institution',
+      projetsPhases: 'Projects / Phases',
+      communication: 'Communication',
+      tachesTerminees: 'Completed tasks'
     },
     DE: {
       title: 'Verwaltung',
@@ -175,6 +184,10 @@ const Admin = () => {
       wed: 'Mi',
       thu: 'Do',
       fri: 'Fr'
+      , institution: 'Institution',
+      projetsPhases: 'Projekte / Phasen',
+      communication: 'Kommunikation',
+      tachesTerminees: 'Abgeschlossene Aufgaben'
     }
   };
 
@@ -350,7 +363,7 @@ const Admin = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'users', 'roles', 'audit', 'tasks'].includes(tab)) {
+    if (['overview', 'tasks', 'institution', 'projects', 'communication'].includes(tab)) {
       setActiveTab(tab);
     }
   }, [location.search]);
@@ -401,11 +414,8 @@ const Admin = () => {
   }, []);
 
   // Calculs KPIs
-  const totalUsers = users.length;
-  const activeUsers = users.filter(u => u.statut === 'Actif').length;
-  const totalRoles = roles.length;
   const auditCount = auditLogs.length;
-  const failedLogins = auditLogs.filter(log => log.statut === 'Failed').length;
+  const completedTasks = tasks.filter(task => normalizeLookupKey(task.statut || task.status) === 'TERMINE').length;
 
   // Données pour charts
   const roleDistribution = roles.map(r => ({
@@ -498,6 +508,21 @@ const Admin = () => {
     setRoles(roles.filter(r => r.id !== id));
   };
 
+  const handleAddTask = () => {
+    setTasks([
+      {
+        id: Date.now(),
+        titre: 'Nouvelle tache',
+        statut: 'En cours',
+        priorite: 'Moyenne',
+        responsable: '',
+        module: 'ADMINISTRATION',
+        progression: 0
+      },
+      ...tasks
+    ]);
+  };
+
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
 
   return (
@@ -515,8 +540,8 @@ const Admin = () => {
           <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-200 text-sm">{t.totalUsers}</p>
-                <p className="text-white text-2xl font-bold">{totalUsers}</p>
+                <p className="text-blue-200 text-sm">{t.institution}</p>
+                <p className="text-white text-2xl font-bold">1</p>
               </div>
               <Users size={32} className="text-blue-400" />
             </div>
@@ -525,8 +550,8 @@ const Admin = () => {
           <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-200 text-sm">{t.activeUsers}</p>
-                <p className="text-white text-2xl font-bold">{activeUsers}</p>
+                <p className="text-green-200 text-sm">{t.tasks}</p>
+                <p className="text-white text-2xl font-bold">{tasks.length}</p>
               </div>
               <AlertCircle size={32} className="text-green-400" />
             </div>
@@ -535,8 +560,8 @@ const Admin = () => {
           <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-200 text-sm">{t.totalRoles}</p>
-                <p className="text-white text-2xl font-bold">{totalRoles}</p>
+                <p className="text-purple-200 text-sm">{t.tachesTerminees}</p>
+                <p className="text-white text-2xl font-bold">{completedTasks}</p>
               </div>
               <Lock size={32} className="text-purple-400" />
             </div>
@@ -545,20 +570,20 @@ const Admin = () => {
           <div className="bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-6 border border-orange-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-orange-200 text-sm">{t.auditLogs}</p>
-                <p className="text-white text-2xl font-bold">{auditCount}</p>
+                <p className="text-orange-200 text-sm">{t.projetsPhases}</p>
+                <p className="text-white text-2xl font-bold">0</p>
               </div>
               <Activity size={32} className="text-orange-400" />
             </div>
           </div>
 
-          <div className={`bg-gradient-to-br ${failedLogins === 0 ? 'from-green-900 to-green-800' : 'from-red-900 to-red-800'} rounded-lg p-6 border ${failedLogins === 0 ? 'border-green-700' : 'border-red-700'}`}>
+          <div className="bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-6 border border-red-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className={`${failedLogins === 0 ? 'text-green-200' : 'text-red-200'} text-sm`}>{t.failedLogins}</p>
-                <p className="text-white text-2xl font-bold">{failedLogins}</p>
+                <p className="text-red-200 text-sm">{t.communication}</p>
+                <p className="text-white text-2xl font-bold">0</p>
               </div>
-              <Shield size={32} className={failedLogins === 0 ? 'text-green-400' : 'text-red-400'} />
+              <Shield size={32} className="text-red-400" />
             </div>
           </div>
         </div>
@@ -567,10 +592,9 @@ const Admin = () => {
         <div className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
           <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.overview}</button>
           <button onClick={() => setActiveTab('tasks')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'tasks' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.tasks} ({tasks.length})</button>
-          <button onClick={() => setActiveTab('users')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'users' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.users} ({totalUsers})</button>
-          <button onClick={() => setActiveTab('roles')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'roles' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.roles} ({totalRoles})</button>
-          <button onClick={() => setActiveTab('audit')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'audit' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.audit}</button>
         </div>
+
+        <ModuleChildTabs moduleId="administration" language={language} activeTab={activeTab} onSelect={setActiveTab} />
 
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
@@ -622,31 +646,38 @@ const Admin = () => {
         )}
 
         {activeTab === 'tasks' && (
-          <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-slate-700">
-                <tr>
-                  <th className="px-4 py-2 text-left text-white font-bold">{t.titleTask}</th>
-                  <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
-                  <th className="px-4 py-2 text-left text-white font-bold">{t.priorite}</th>
-                  <th className="px-4 py-2 text-left text-white font-bold">{t.responsable}</th>
-                  <th className="px-4 py-2 text-left text-white font-bold">{t.module}</th>
-                  <th className="px-4 py-2 text-left text-white font-bold">{t.progression}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tasks.map(task => (
-                  <tr key={task.id || task.source_id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                    <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(task.titre || task.title)}</td>
-                    <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskStatus(task.statut || task.status))}</td>
-                    <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskPriority(task.priorite || task.priority))}</td>
-                    <td className="px-4 py-2 text-slate-400">{formatValue(task.responsable)}</td>
-                    <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskModule(task.module))}</td>
-                    <td className="px-4 py-2 text-blue-400 font-bold">{Number(task.progression || 0)}%</td>
+          <div>
+            <div className="flex justify-end mb-4">
+              <button onClick={handleAddTask} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
+                <Plus size={20} /> {t.creer}
+              </button>
+            </div>
+            <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-700">
+                  <tr>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.titleTask}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.priorite}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.responsable}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.module}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.progression}</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {tasks.map(task => (
+                    <tr key={task.id || task.source_id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                      <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(task.titre || task.title)}</td>
+                      <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskStatus(task.statut || task.status))}</td>
+                      <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskPriority(task.priorite || task.priority))}</td>
+                      <td className="px-4 py-2 text-slate-400">{formatValue(task.responsable)}</td>
+                      <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskModule(task.module))}</td>
+                      <td className="px-4 py-2 text-blue-400 font-bold">{Number(task.progression || 0)}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
@@ -768,6 +799,8 @@ const Admin = () => {
             </table>
           </div>
         )}
+
+        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} handledTabs={['overview', 'tasks']} />
         </div>
       </div>
 

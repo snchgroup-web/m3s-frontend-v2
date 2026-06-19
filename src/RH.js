@@ -4,6 +4,7 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarC
 import { Plus, Edit2, Trash2, Users, User, Heart, Users2 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { api } from './api';
+import { ModuleChildTabs, ChildTabPlaceholder } from './moduleTabs';
 
 const RH = () => {
   const { language } = useLanguage();
@@ -273,7 +274,7 @@ const RH = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'membres', 'employes', 'benevoles'].includes(tab)) {
+    if (['overview', 'membres', 'employes', 'benevoles', 'teams', 'hours', 'competences', 'myaccount'].includes(tab)) {
       setActiveTab(tab);
     }
   }, [location.search]);
@@ -528,6 +529,8 @@ const RH = () => {
           <button onClick={() => setActiveTab('benevoles')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'benevoles' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.benevoles} ({totalBenevoles})</button>
         </div>
 
+        <ModuleChildTabs moduleId="rh" language={language} activeTab={activeTab} onSelect={setActiveTab} />
+
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -593,6 +596,8 @@ const RH = () => {
         {activeTab === 'membres' && (
           <PersonnelTable data={membres} type="membre" onEdit={handleEdit} onDelete={handleDelete} onAdd={openNewModal} />
         )}
+
+        <ChildTabPlaceholder moduleId="rh" language={language} activeTab={activeTab} handledTabs={['overview', 'membres', 'employes', 'benevoles']} />
         </div>
       </div>
 
