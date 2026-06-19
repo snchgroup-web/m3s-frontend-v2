@@ -4,7 +4,7 @@ import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Too
 import { Building2, Plus, TrendingDown } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
-import { ModuleChildTabs, ChildTabPlaceholder } from './moduleTabs';
+import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 
 const Actifs = () => {
   const { language } = useLanguage();
@@ -243,13 +243,17 @@ const Actifs = () => {
             </div>
           </div>
 
-          <div className="flex gap-4 mb-6 border-b border-slate-700">
-            <button onClick={() => setActiveTab('inventory')} className={`px-4 py-3 font-medium ${activeTab === 'inventory' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.inventory} ({inventaire.length})</button>
-            <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.overview}</button>
-            <button onClick={() => setActiveTab('immobilisations')} className={`px-4 py-3 font-medium ${activeTab === 'immobilisations' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.immobilisations}</button>
-          </div>
-
-          <ModuleChildTabs moduleId="stock" language={language} activeTab={activeTab} onSelect={setActiveTab} />
+          <ModulePageTabs
+            moduleId="stock"
+            language={language}
+            activeTab={activeTab}
+            onSelect={setActiveTab}
+            tabs={[
+              { tab: 'overview', label: t.overview },
+              { tab: 'inventory', label: `${t.inventory} (${inventaire.length})` },
+              { tab: 'immobilisations', label: t.immobilisations }
+            ]}
+          />
 
           {activeTab === 'inventory' && (
             <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">

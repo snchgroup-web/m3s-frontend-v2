@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Plus, Edit2, Trash2, Users, TrendingUp, Gift, Target } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
-import { ModuleChildTabs, ChildTabPlaceholder } from './moduleTabs';
+import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -510,15 +510,18 @@ const CRM = () => {
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
-          <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.overview}</button>
-          <button onClick={() => setActiveTab('prospects')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'prospects' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.prospects} ({totalProspects})</button>
-          <button onClick={() => setActiveTab('clients')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'clients' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.clients} ({totalClients})</button>
-          <button onClick={() => setActiveTab('dons')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'dons' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.dons}</button>
-        </div>
-
-        <ModuleChildTabs moduleId="commercial" language={language} activeTab={activeTab} onSelect={setActiveTab} />
+        <ModulePageTabs
+          moduleId="commercial"
+          language={language}
+          activeTab={activeTab}
+          onSelect={setActiveTab}
+          tabs={[
+            { tab: 'overview', label: t.overview },
+            { tab: 'prospects', label: `${t.prospects} (${totalProspects})` },
+            { tab: 'clients', label: `${t.clients} (${totalClients})` },
+            { tab: 'dons', label: t.dons }
+          ]}
+        />
 
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (

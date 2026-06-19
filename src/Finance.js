@@ -4,7 +4,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Search } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
-import { ModuleChildTabs, ChildTabPlaceholder } from './moduleTabs';
+import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -506,14 +506,18 @@ const Finance = () => {
           </div>
         </div>
 
-        <div className="flex gap-4 mb-6 border-b border-slate-700">
-          <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.overview}</button>
-          <button onClick={() => setActiveTab('recettes')} className={`px-4 py-3 font-medium ${activeTab === 'recettes' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.recettes}</button>
-          <button onClick={() => setActiveTab('depenses')} className={`px-4 py-3 font-medium ${activeTab === 'depenses' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.depenses}</button>
-          <button onClick={() => setActiveTab('fx')} className={`px-4 py-3 font-medium ${activeTab === 'fx' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.fx}</button>
-        </div>
-
-        <ModuleChildTabs moduleId="finances" language={language} activeTab={activeTab} onSelect={setActiveTab} />
+        <ModulePageTabs
+          moduleId="finances"
+          language={language}
+          activeTab={activeTab}
+          onSelect={setActiveTab}
+          tabs={[
+            { tab: 'overview', label: t.overview },
+            { tab: 'recettes', label: t.recettes },
+            { tab: 'depenses', label: t.depenses },
+            { tab: 'fx', label: t.fx }
+          ]}
+        />
 
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

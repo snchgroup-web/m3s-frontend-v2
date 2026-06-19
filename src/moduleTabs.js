@@ -54,6 +54,36 @@ export const ModuleChildTabs = ({ moduleId, language, activeTab, onSelect }) => 
   );
 };
 
+export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs = [] }) => {
+  const mergedTabs = [];
+  const seen = new Set();
+
+  const addTab = (tab) => {
+    if (!tab?.tab || seen.has(tab.tab)) return;
+    seen.add(tab.tab);
+    mergedTabs.push(tab);
+  };
+
+  tabs.forEach(addTab);
+  getModuleChildTabs(moduleId, language).forEach(addTab);
+
+  if (!mergedTabs.length) return null;
+
+  return (
+    <div className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
+      {mergedTabs.map(tab => (
+        <button
+          key={tab.id || tab.tab}
+          onClick={() => onSelect(tab.tab)}
+          className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === tab.tab ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  );
+};
+
 export const ChildTabPlaceholder = ({ moduleId, language, activeTab, handledTabs = [] }) => {
   if (handledTabs.includes(activeTab)) return null;
 

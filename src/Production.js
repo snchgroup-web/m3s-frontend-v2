@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Plus, Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
-import { ModuleChildTabs, ChildTabPlaceholder } from './moduleTabs';
+import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 
 const Production = () => {
   const { language } = useLanguage();
@@ -437,14 +437,18 @@ const Production = () => {
         </div>
  
         {/* Tabs */}
-        <div className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
-          <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.overview}</button>
-          <button onClick={() => setActiveTab('commandes')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'commandes' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.commandes}</button>
-          <button onClick={() => setActiveTab('fournisseurs')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'fournisseurs' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.fournisseurs}</button>
-          <button onClick={() => setActiveTab('stocks')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'stocks' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.stocks}</button>
-        </div>
-
-        <ModuleChildTabs moduleId="production" language={language} activeTab={activeTab} onSelect={setActiveTab} />
+        <ModulePageTabs
+          moduleId="production"
+          language={language}
+          activeTab={activeTab}
+          onSelect={setActiveTab}
+          tabs={[
+            { tab: 'overview', label: t.overview },
+            { tab: 'commandes', label: t.commandes },
+            { tab: 'fournisseurs', label: t.fournisseurs },
+            { tab: 'stocks', label: t.stocks }
+          ]}
+        />
  
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (

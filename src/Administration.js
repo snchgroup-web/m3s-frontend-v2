@@ -4,7 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Plus, Edit2, Trash2, Shield, Users, Lock, Activity, AlertCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
-import { ChildTabPlaceholder } from './moduleTabs';
+import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 
 const Admin = () => {
   const { language } = useLanguage();
@@ -654,14 +654,19 @@ const Admin = () => {
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
-          <button onClick={() => setActiveTab('overview')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.overview}</button>
-          <button onClick={() => setActiveTab('institution')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'institution' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.institution}</button>
-          <button onClick={() => setActiveTab('tasks')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'tasks' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.tasks} ({tasks.length})</button>
-          <button onClick={() => setActiveTab('projects')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'projects' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.projetsPhases}</button>
-          <button onClick={() => setActiveTab('communication')} className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === 'communication' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}>{t.communication}</button>
-        </div>
+        <ModulePageTabs
+          moduleId="administration"
+          language={language}
+          activeTab={activeTab}
+          onSelect={setActiveTab}
+          tabs={[
+            { tab: 'overview', label: t.overview },
+            { tab: 'institution', label: t.institution },
+            { tab: 'tasks', label: `${t.tasks} (${tasks.length})` },
+            { tab: 'projects', label: t.projetsPhases },
+            { tab: 'communication', label: t.communication }
+          ]}
+        />
 
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
