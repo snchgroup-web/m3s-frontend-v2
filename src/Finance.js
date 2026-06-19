@@ -402,9 +402,41 @@ const Finance = () => {
       'DEPENSES': 'Depenses',
       'SOCIAL': 'Social',
       'AIDE SOCIALE': 'Aide Sociale',
+      'AIDE SOCIALE MENAGE': 'Aide sociale Ménage',
+      'SOUTIEN MENAGE': 'Soutien Ménage',
+      'SOUTIEN FAMILLE': 'Soutien Famille',
+      'COMMERCE EQUITABLE': 'Commerce équitable',
       'PARTICIPATION': 'Participation',
       'TRANSPORT': 'Transport',
-      'FOURNITURES': 'Fournitures'
+      'FOURNITURES': 'Fournitures',
+      'FINANCEMENT': 'Financement',
+      'FINANCEMENT APPORTS COTISATIONS': 'Financement (apports & cotisations)',
+      'VENTE DE MARCHANDISES': 'Vente de marchandises',
+      'VENTE DE SERVICES': 'Vente de services',
+      'DON EN NATURE': 'Don en nature',
+      'DONS EN NATURE': 'Dons en nature',
+      'DON MATERIEL': 'Don matériel',
+      'REMBOURSEMENT CAUTION LOYER': 'Remboursement caution loyer',
+      'REMBOURSEMENT INVESTISSEMENT IMMO': 'Remboursement investissement Immo',
+      'REMBOURSEMENTS INVESTISSEMENT IMMO': 'Remboursements investissement Immo',
+      'MATERIEL': 'Matériel',
+      'ADMINISTRATIVE': 'Administrative',
+      'LOGISTIQUE': 'Logistique',
+      'ACHAT TERRAIN': 'Achat terrain',
+      'CHANTIER': 'Chantier',
+      'CHANTIER TRAVAUX': 'Chantier & Travaux',
+      'BIEN IMMO': 'Bien immobilier',
+      'BIEN IMMOBILIER': 'Bien immobilier',
+      'FORMALITES': 'Formalités',
+      'VOYAGES': 'Voyages',
+      'ALIMENTATION': 'Alimentation',
+      'BUREAUTIQUE': 'Bureautique',
+      'CARBURANT': 'Carburant',
+      'CADEAUX': 'Cadeaux',
+      'ETUDES PLANS': 'Études & Plans',
+      'MARCHANDISES': 'Marchandises',
+      'SHIPPING FRET': 'Shipping / Fret',
+      'ABONNEMENT': 'Abonnement'
     },
     EN: {
       'VENTES': 'Sales',
@@ -421,9 +453,41 @@ const Finance = () => {
       'DEPENSES': 'Expenses',
       'SOCIAL': 'Social',
       'AIDE SOCIALE': 'Social Aid',
+      'AIDE SOCIALE MENAGE': 'Household Social Aid',
+      'SOUTIEN MENAGE': 'Household Support',
+      'SOUTIEN FAMILLE': 'Family Support',
+      'COMMERCE EQUITABLE': 'Fair Trade',
       'PARTICIPATION': 'Participation',
       'TRANSPORT': 'Transport',
-      'FOURNITURES': 'Supplies'
+      'FOURNITURES': 'Supplies',
+      'FINANCEMENT': 'Financing',
+      'FINANCEMENT APPORTS COTISATIONS': 'Financing (contributions & fees)',
+      'VENTE DE MARCHANDISES': 'Merchandise Sales',
+      'VENTE DE SERVICES': 'Service Sales',
+      'DON EN NATURE': 'Gift in Kind',
+      'DONS EN NATURE': 'Gifts in Kind',
+      'DON MATERIEL': 'Material Donation',
+      'REMBOURSEMENT CAUTION LOYER': 'Rent Deposit Refund',
+      'REMBOURSEMENT INVESTISSEMENT IMMO': 'Real Estate Investment Reimbursement',
+      'REMBOURSEMENTS INVESTISSEMENT IMMO': 'Real Estate Investment Reimbursements',
+      'MATERIEL': 'Equipment',
+      'ADMINISTRATIVE': 'Administrative',
+      'LOGISTIQUE': 'Logistics',
+      'ACHAT TERRAIN': 'Land Purchase',
+      'CHANTIER': 'Construction',
+      'CHANTIER TRAVAUX': 'Construction & Works',
+      'BIEN IMMO': 'Real Estate Asset',
+      'BIEN IMMOBILIER': 'Real Estate Asset',
+      'FORMALITES': 'Formalities',
+      'VOYAGES': 'Travel',
+      'ALIMENTATION': 'Food',
+      'BUREAUTIQUE': 'Office Supplies',
+      'CARBURANT': 'Fuel',
+      'CADEAUX': 'Gifts',
+      'ETUDES PLANS': 'Studies & Plans',
+      'MARCHANDISES': 'Merchandise',
+      'SHIPPING FRET': 'Shipping / Freight',
+      'ABONNEMENT': 'Subscription'
     },
     DE: {
       'VENTES': 'Verkauf',
@@ -440,9 +504,41 @@ const Finance = () => {
       'DEPENSES': 'Ausgaben',
       'SOCIAL': 'Soziales',
       'AIDE SOCIALE': 'Sozialhilfe',
+      'AIDE SOCIALE MENAGE': 'Sozialhilfe für Haushalte',
+      'SOUTIEN MENAGE': 'Haushaltshilfe',
+      'SOUTIEN FAMILLE': 'Familienhilfe',
+      'COMMERCE EQUITABLE': 'Fairer Handel',
       'PARTICIPATION': 'Beteiligung',
       'TRANSPORT': 'Transport',
-      'FOURNITURES': 'Materialien'
+      'FOURNITURES': 'Materialien',
+      'FINANCEMENT': 'Finanzierung',
+      'FINANCEMENT APPORTS COTISATIONS': 'Finanzierung (Einlagen & Beiträge)',
+      'VENTE DE MARCHANDISES': 'Warenverkauf',
+      'VENTE DE SERVICES': 'Dienstleistungsverkauf',
+      'DON EN NATURE': 'Sachspende',
+      'DONS EN NATURE': 'Sachspenden',
+      'DON MATERIEL': 'Sachspende',
+      'REMBOURSEMENT CAUTION LOYER': 'Rückerstattung Mietkaution',
+      'REMBOURSEMENT INVESTISSEMENT IMMO': 'Rückerstattung Immobilieninvestition',
+      'REMBOURSEMENTS INVESTISSEMENT IMMO': 'Rückerstattungen Immobilieninvestition',
+      'MATERIEL': 'Material',
+      'ADMINISTRATIVE': 'Verwaltung',
+      'LOGISTIQUE': 'Logistik',
+      'ACHAT TERRAIN': 'Grundstückskauf',
+      'CHANTIER': 'Baustelle',
+      'CHANTIER TRAVAUX': 'Bau & Bauarbeiten',
+      'BIEN IMMO': 'Immobilie',
+      'BIEN IMMOBILIER': 'Immobilie',
+      'FORMALITES': 'Formalitäten',
+      'VOYAGES': 'Reisen',
+      'ALIMENTATION': 'Verpflegung',
+      'BUREAUTIQUE': 'Bürobedarf',
+      'CARBURANT': 'Kraftstoff',
+      'CADEAUX': 'Geschenke',
+      'ETUDES PLANS': 'Studien & Pläne',
+      'MARCHANDISES': 'Waren',
+      'SHIPPING FRET': 'Versand / Fracht',
+      'ABONNEMENT': 'Abonnement'
     }
   };
   const normalizeCategoryKey = (value) =>
@@ -450,7 +546,7 @@ const Finance = () => {
       .trim()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[_-]+/g, ' ')
+      .replace(/[^A-Za-z0-9]+/g, ' ')
       .replace(/\s+/g, ' ')
       .toUpperCase();
   const formatUnknownCategory = (cat) =>
@@ -499,8 +595,8 @@ const Finance = () => {
 
   const categoryOptions = useMemo(() => {
     const defaults = modalType === 'recette'
-      ? ['Ventes', 'Recettes', 'Dons', 'Donation', 'Services', 'Immobilier', 'Fin Immo', 'Social', 'Participation']
-      : ['Depenses', 'Operationnel', 'Immobilier', 'Investissement Immo', 'Paie', 'Salaires', 'Social', 'Aide Sociale', 'Transport', 'Fournitures', 'Services'];
+      ? ['Financement', 'Vente de Marchandises', 'Vente de Services', 'Don en nature', 'Remboursement Caution Loyer', 'Remboursement Investissement Immo', 'Aide Sociale Ménage', 'Ventes', 'Recettes', 'Dons', 'Donation', 'Services', 'Immobilier', 'Fin Immo', 'Social', 'Participation']
+      : ['Materiel', 'Administrative', 'Logistique', 'Achat Terrain', 'Chantier', 'Bien_Immo', 'Don Materiel', 'Formalites', 'Voyages', 'Alimentation', 'Bureautique', 'Carburant', 'Cadeaux', 'Etudes & Plans', 'Marchandises', 'Shipping / Fret', 'Abonnement', 'Depenses', 'Operationnel', 'Immobilier', 'Investissement Immo', 'Paie', 'Salaires', 'Social', 'Aide Sociale', 'Transport', 'Fournitures', 'Services'];
     const sourceRows = modalType === 'recette' ? recettes : depenses;
     const existing = sourceRows.map((row) => row.categorie).filter(Boolean);
     return [...new Set([...defaults, ...existing, formData.categorie].filter(Boolean))];
