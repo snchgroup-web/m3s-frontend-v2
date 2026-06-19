@@ -14,7 +14,7 @@ const Admin = () => {
   const translations = {
     FR: {
       title: 'Administration',
-      subtitle: 'Gestion des Utilisateurs, Rôles et Audit Trail',
+      subtitle: 'Gestion administrative, activités, tâches et communication',
       totalUsers: 'Total Utilisateurs',
       activeUsers: 'Utilisateurs Actifs',
       totalRoles: 'Total Rôles',
@@ -69,11 +69,13 @@ const Admin = () => {
       , institution: 'Institution',
       projetsPhases: 'Projets / Phases',
       communication: 'Communication',
-      tachesTerminees: 'Tâches terminées'
+      tachesTerminees: 'Tâches terminées',
+      nouvelleTache: 'Nouvelle tâche',
+      modifierTache: 'Modifier tâche'
     },
     EN: {
       title: 'Administration',
-      subtitle: 'User Management, Roles and Audit Trail',
+      subtitle: 'Administrative management, activities, tasks and communication',
       totalUsers: 'Total Users',
       activeUsers: 'Active Users',
       totalRoles: 'Total Roles',
@@ -128,11 +130,13 @@ const Admin = () => {
       , institution: 'Institution',
       projetsPhases: 'Projects / Phases',
       communication: 'Communication',
-      tachesTerminees: 'Completed tasks'
+      tachesTerminees: 'Completed tasks',
+      nouvelleTache: 'New task',
+      modifierTache: 'Edit task'
     },
     DE: {
       title: 'Verwaltung',
-      subtitle: 'Benutzerverwaltung, Rollen und Audit-Trail',
+      subtitle: 'Administrative Verwaltung, Aktivitäten, Aufgaben und Kommunikation',
       totalUsers: 'Gesamtbenutzer',
       activeUsers: 'Aktive Benutzer',
       totalRoles: 'Gesamtrollen',
@@ -187,7 +191,9 @@ const Admin = () => {
       , institution: 'Institution',
       projetsPhases: 'Projekte / Phasen',
       communication: 'Kommunikation',
-      tachesTerminees: 'Abgeschlossene Aufgaben'
+      tachesTerminees: 'Abgeschlossene Aufgaben',
+      nouvelleTache: 'Neue Aufgabe',
+      modifierTache: 'Aufgabe bearbeiten'
     }
   };
 
@@ -305,6 +311,9 @@ const Admin = () => {
     'BASSE': 'Basse',
     'URGENTE': 'Urgente'
   };
+  const taskStatusOptions = ['À faire', 'En cours', 'Terminé', 'Bloqué', 'Annulé'];
+  const taskPriorityOptions = ['Basse', 'Moyenne', 'Haute', 'Urgente'];
+  const taskModuleOptions = ['ADMINISTRATION', 'TACHES', 'DOCUMENTS', 'RECETTES', 'DEPENSES', 'FINANCE', 'SOCIAL', 'IMMO', 'STOCKS', 'ACTIFS', 'RH', 'GED', 'CRM', 'PRODUCTION', 'FX'];
   const translateTaskStatus = (status) => {
     const canonical = taskStatusKeys[normalizeLookupKey(status)] || status;
     return dataTranslations.taskStatuses[language]?.[canonical] || status;
@@ -347,7 +356,9 @@ const Admin = () => {
   const [tasks, setTasks] = useState([]);
   const [showUserModal, setShowUserModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
+  const [showTaskModal, setShowTaskModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [editingTaskId, setEditingTaskId] = useState(null);
   const [userFormData, setUserFormData] = useState({
     nom: '',
     email: '',
@@ -359,6 +370,14 @@ const Admin = () => {
     nom: '',
     permissions: [],
     description: ''
+  });
+  const [taskFormData, setTaskFormData] = useState({
+    titre: '',
+    statut: 'En cours',
+    priorite: 'Moyenne',
+    responsable: '',
+    module: 'ADMINISTRATION',
+    progression: 0
   });
 
   useEffect(() => {
@@ -449,6 +468,10 @@ const Admin = () => {
     setRoleFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleTaskChange = (field, value) => {
+    setTaskFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   const handleSaveUser = () => {
     if (!userFormData.nom || !userFormData.email) {
       alert(t.remplirChamps);
@@ -508,19 +531,62 @@ const Admin = () => {
     setRoles(roles.filter(r => r.id !== id));
   };
 
-  const handleAddTask = () => {
-    setTasks([
-      {
-        id: Date.now(),
-        titre: 'Nouvelle tache',
-        statut: 'En cours',
-        priorite: 'Moyenne',
-        responsable: '',
-        module: 'ADMINISTRATION',
-        progression: 0
-      },
-      ...tasks
-    ]);
+  const getDefaultTaskFormData = () => ({
+    titre: '',
+    statut: 'En cours',
+    priorite: 'Moyenne',
+    responsable: '',
+    module: 'ADMINISTRATION',
+    progression: 0
+  });
+
+  const openNewTaskModal = () => {
+    setEditingTaskId(null);
+    setTaskFormData(getDefaultTaskFormData());
+    setShowTaskModal(true);
+  };
+
+  const handleEditTask = (task) => {
+    setEditingTaskId(task.id || task.source_id);
+    setTaskFormData({
+      titre: task.titre || task.title || '',
+      statut: taskStatusKeys[normalizeLookupKey(task.statut || task.status)] || 'En cours',
+      priorite: taskPriorityKeys[normalizeLookupKey(task.priorite || task.priority)] || 'Moyenne',
+      responsable: task.responsable || '',
+      module: normalizeLookupKey(task.module || 'ADMINISTRATION') || 'ADMINISTRATION',
+      progression: Number(task.progression || 0)
+    });
+    setShowTaskModal(true);
+  };
+
+  const handleSaveTask = () => {
+    if (!taskFormData.titre) {
+      alert(t.remplirChamps);
+      return;
+    }
+
+    const normalizedTask = {
+      titre: taskFormData.titre,
+      statut: taskStatusKeys[normalizeLookupKey(taskFormData.statut)] || taskFormData.statut,
+      priorite: taskPriorityKeys[normalizeLookupKey(taskFormData.priorite)] || taskFormData.priorite,
+      responsable: taskFormData.responsable,
+      module: normalizeLookupKey(taskFormData.module) || 'ADMINISTRATION',
+      progression: Math.max(0, Math.min(100, Number(taskFormData.progression) || 0))
+    };
+
+    if (editingTaskId) {
+      setTasks(tasks.map(task => (task.id || task.source_id) === editingTaskId ? { ...task, ...normalizedTask, id: task.id || editingTaskId } : task));
+    } else {
+      setTasks([{ ...normalizedTask, id: Date.now() }, ...tasks]);
+    }
+
+    setShowTaskModal(false);
+    setEditingTaskId(null);
+    setTaskFormData(getDefaultTaskFormData());
+  };
+
+  const handleDeleteTask = (id) => {
+    setTasks(tasks.filter(task => (task.id || task.source_id) !== id));
   };
 
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
@@ -648,8 +714,8 @@ const Admin = () => {
         {activeTab === 'tasks' && (
           <div>
             <div className="flex justify-end mb-4">
-              <button onClick={handleAddTask} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
-                <Plus size={20} /> {t.creer}
+              <button onClick={openNewTaskModal} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
+                <Plus size={20} /> {t.nouvelleTache}
               </button>
             </div>
             <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
@@ -662,6 +728,7 @@ const Admin = () => {
                     <th className="px-4 py-2 text-left text-white font-bold">{t.responsable}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.module}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.progression}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -673,6 +740,14 @@ const Admin = () => {
                       <td className="px-4 py-2 text-slate-400">{formatValue(task.responsable)}</td>
                       <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskModule(task.module))}</td>
                       <td className="px-4 py-2 text-blue-400 font-bold">{Number(task.progression || 0)}%</td>
+                      <td className="px-4 py-2 flex gap-2">
+                        <button onClick={() => handleEditTask(task)} className="p-1 hover:bg-slate-600 rounded">
+                          <Edit2 size={16} className="text-blue-400" />
+                        </button>
+                        <button onClick={() => handleDeleteTask(task.id || task.source_id)} className="p-1 hover:bg-slate-600 rounded">
+                          <Trash2 size={16} className="text-red-400" />
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -803,6 +878,66 @@ const Admin = () => {
         <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} handledTabs={['overview', 'tasks']} />
         </div>
       </div>
+
+      {/* Modal Tache */}
+      {showTaskModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
+            <h2 className="text-2xl font-bold text-white mb-6">
+              {editingTaskId ? t.modifierTache : t.nouvelleTache}
+            </h2>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.titleTask} *</label>
+                <input type="text" value={taskFormData.titre} onChange={(e) => handleTaskChange('titre', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.statut}</label>
+                <select value={taskFormData.statut} onChange={(e) => handleTaskChange('statut', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                  {taskStatusOptions.map(status => (
+                    <option key={status} value={status}>{translateTaskStatus(status)}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.priorite}</label>
+                <select value={taskFormData.priorite} onChange={(e) => handleTaskChange('priorite', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                  {taskPriorityOptions.map(priority => (
+                    <option key={priority} value={priority}>{translateTaskPriority(priority)}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.responsable}</label>
+                <input type="text" value={taskFormData.responsable} onChange={(e) => handleTaskChange('responsable', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.module}</label>
+                <select value={taskFormData.module} onChange={(e) => handleTaskChange('module', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                  {taskModuleOptions.map(module => (
+                    <option key={module} value={module}>{translateTaskModule(module)}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t.progression}</label>
+                <input type="number" min="0" max="100" value={taskFormData.progression} onChange={(e) => handleTaskChange('progression', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button onClick={() => setShowTaskModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">{t.annuler}</button>
+              <button onClick={handleSaveTask} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">{editingTaskId ? t.modifier : t.creer}</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal Utilisateur */}
       {showUserModal && (
