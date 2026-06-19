@@ -17,18 +17,6 @@ const monthTranslations = {
 
 const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
 
-// Exchange rate: 1 CHF = 656 CFA
-const CHF_TO_CFA_RATE = 656;
-
-// Format currency with both CHF and CFA - returns object for separate display
-const formatDualCurrency = (chfAmount) => {
-  const cfaAmount = Math.round(chfAmount * CHF_TO_CFA_RATE);
-  return {
-    chf: chfAmount.toLocaleString(),
-    cfa: cfaAmount.toLocaleString()
-  };
-};
-
 const Finance = () => {
   const { language } = useLanguage();
   const location = useLocation();
@@ -228,16 +216,19 @@ const Finance = () => {
   const normalizeFinanceRow = useCallback((item, type, fallbackCategory, index = 0) => {
     const deviseOrigine = String(item.devise_origine || item.devise || item.currency || 'CHF').toUpperCase();
     const rawTauxFx = item.taux_fx ?? item.taux ?? item.fx_rate;
-    const tauxFx = toNumber(rawTauxFx, CHF_TO_CFA_RATE);
+    const hasExplicitTauxFx = rawTauxFx !== undefined && rawTauxFx !== null && rawTauxFx !== '';
+    const tauxFx = hasExplicitTauxFx ? toNumber(rawTauxFx) : null;
     const rawAmount = item.montant_origine ?? item.amount_original ?? item.montant ?? item.amount ?? item.montant_chf ?? item.amount_chf ?? item.montant_cfa ?? item.amount_cfa ?? 0;
     const montantOrigine = toNumber(rawAmount);
+    const explicitMontantChf = item.montant_chf ?? item.amount_chf ?? item.montantChf;
+    const explicitMontantCfa = item.montant_cfa ?? item.amount_cfa ?? item.montantCfa;
     const montantChf = toNumber(
-      item.montant_chf ?? item.amount_chf ?? item.montantChf,
-      deviseOrigine === 'CFA' ? montantOrigine / tauxFx : montantOrigine
+      explicitMontantChf,
+      deviseOrigine === 'CHF' ? montantOrigine : 0
     );
     const montantCfa = toNumber(
-      item.montant_cfa ?? item.amount_cfa ?? item.montantCfa,
-      deviseOrigine === 'CFA' ? montantOrigine : montantOrigine * tauxFx
+      explicitMontantCfa,
+      deviseOrigine === 'CFA' ? montantOrigine : 0
     );
 
     return {
@@ -251,7 +242,7 @@ const Finance = () => {
       montantChf,
       montantCfa,
       tauxFx,
-      hasExplicitTauxFx: rawTauxFx !== undefined && rawTauxFx !== null && rawTauxFx !== '',
+      hasExplicitTauxFx,
       dateTauxFx: cleanDate(item.date_taux_fx || item.date_taux || item.date_updated || item.created_at),
       sourceTauxFx: item.source_taux_fx || item.source_taux || item.source || 'Standard',
       categorie: item.category || item.categorie || fallbackCategory,
@@ -287,7 +278,7 @@ const Finance = () => {
         return null;
       })
       .filter(Boolean)
-      .filter((fx) => !targetDate || fx.date <= targetDate)
+      .filter((fx) => targetDate && fx.date === targetDate)
       .sort((a, b) => b.date.localeCompare(a.date));
 
     return candidates[0] || null;
@@ -295,11 +286,11 @@ const Finance = () => {
 
   const applyHistoricalFx = useCallback((row) => {
     const historicalRate = row.hasExplicitTauxFx ? null : getHistoricalCfaPerChf(row.date);
-    const tauxFx = row.hasExplicitTauxFx ? row.tauxFx : toNumber(historicalRate?.cfaPerChf, row.tauxFx || CHF_TO_CFA_RATE);
+    const tauxFx = row.hasExplicitTauxFx ? row.tauxFx : historicalRate?.cfaPerChf;
     const montantOrigine = toNumber(row.montantOrigine ?? row.montant);
     const deviseOrigine = String(row.deviseOrigine || row.devise || 'CHF').toUpperCase();
-    const montantChf = deviseOrigine === 'CFA' ? montantOrigine / tauxFx : montantOrigine;
-    const montantCfa = deviseOrigine === 'CFA' ? montantOrigine : montantOrigine * tauxFx;
+    const montantChf = tauxFx && deviseOrigine === 'CFA' ? montantOrigine / tauxFx : toNumber(row.montantChf ?? row.montant);
+    const montantCfa = tauxFx && deviseOrigine === 'CHF' ? montantOrigine * tauxFx : toNumber(row.montantCfa);
 
     return {
       ...row,
@@ -546,7 +537,8 @@ const Finance = () => {
   const totalDepenses = depensesAffichees.reduce((sum, d) => sum + toNumber(d.montantChf ?? d.montant), 0);
   const solde = totalRecettes - totalDepenses;
   const latestHistoricalFx = getHistoricalCfaPerChf(new Date().toISOString().split('T')[0]);
-  const tauxChfCfa = tauxDuJour.CHF_CFA || latestHistoricalFx?.cfaPerChf || CHF_TO_CFA_RATE;
+  const tauxChfCfa = tauxDuJour.CHF_CFA || latestHistoricalFx?.cfaPerChf || null;
+  const formatCfaWithCurrentRate = (chfAmount) => tauxChfCfa ? Math.round(chfAmount * tauxChfCfa).toLocaleString() : '-';
 
   // Memoized data with translations
   const monthlyDataRaw = useMemo(() => [
@@ -716,8 +708,8 @@ const Finance = () => {
               <div>
                 <p className="text-green-200 text-xs">{t.totalRecettes}</p>
                 <div className="text-sm font-bold mt-1 leading-tight">
-                  <p className="text-white">{formatDualCurrency(totalRecettes).chf} CHF</p>
-                  <p className="text-white text-xs">{formatDualCurrency(totalRecettes).cfa} CFA</p>
+                  <p className="text-white">{totalRecettes.toLocaleString()} CHF</p>
+                  <p className="text-white text-xs">{formatCfaWithCurrentRate(totalRecettes)} CFA</p>
                 </div>
               </div>
               <TrendingUp size={24} className="text-green-400" />
@@ -729,8 +721,8 @@ const Finance = () => {
               <div>
                 <p className="text-red-200 text-xs">{t.totalDepenses}</p>
                 <div className="text-xs font-bold mt-1 leading-tight">
-                  <p className="text-white">{formatDualCurrency(totalDepenses).chf} CHF</p>
-                  <p className="text-white text-xs">{formatDualCurrency(totalDepenses).cfa} CFA</p>
+                  <p className="text-white">{totalDepenses.toLocaleString()} CHF</p>
+                  <p className="text-white text-xs">{formatCfaWithCurrentRate(totalDepenses)} CFA</p>
                 </div>
               </div>
               <TrendingDown size={24} className="text-red-400" />
@@ -742,8 +734,8 @@ const Finance = () => {
               <div>
                 <p className={`${solde >= 0 ? 'text-blue-200' : 'text-orange-200'} text-xs`}>{t.soldeNet}</p>
                 <div className="text-xs font-bold mt-1 leading-tight">
-                  <p className="text-white">{formatDualCurrency(solde).chf} CHF</p>
-                  <p className="text-white text-xs">{formatDualCurrency(solde).cfa} CFA</p>
+                  <p className="text-white">{solde.toLocaleString()} CHF</p>
+                  <p className="text-white text-xs">{formatCfaWithCurrentRate(solde)} CFA</p>
                 </div>
               </div>
               <DollarSign size={24} className={solde >= 0 ? 'text-blue-400' : 'text-orange-400'} />
@@ -754,7 +746,7 @@ const Finance = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-purple-200 text-xs">{t.tauxFX}</p>
-                <p className="text-white text-lg font-bold">{Number(tauxChfCfa).toLocaleString()} CFA</p>
+                <p className="text-white text-lg font-bold">{tauxChfCfa ? Number(tauxChfCfa).toLocaleString() : '-'} CFA</p>
               </div>
               <ArrowRightLeft size={24} className="text-purple-400" />
             </div>
