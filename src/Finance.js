@@ -17,6 +17,26 @@ const monthTranslations = {
 
 const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
 
+const createEmptyImmoForm = () => ({
+  date: new Date().toISOString().split('T')[0],
+  designation: '',
+  montantChf: '',
+  montantCfa: '',
+  tauxFx: '',
+  partCheikhChf: '',
+  remboursementCheikhChf: '',
+  typeOperation: 'Avance',
+  perimetre: 'Immobilier',
+  categorie: 'Autre',
+  projet: 'Terrain Lac Rose',
+  documentRef: '',
+  statut: 'En cours',
+  agent: '',
+  team: '',
+  departement: '',
+  phaseProjet: ''
+});
+
 const Finance = () => {
   const { language } = useLanguage();
   const location = useLocation();
@@ -27,6 +47,10 @@ const Finance = () => {
   const [immoTransactions, setImmoTransactions] = useState([]);
   const [immoSummary, setImmoSummary] = useState({});
   const [immoError, setImmoError] = useState('');
+  const [showImmoModal, setShowImmoModal] = useState(false);
+  const [editingImmoId, setEditingImmoId] = useState(null);
+  const [immoFormData, setImmoFormData] = useState(createEmptyImmoForm);
+  const [savingImmo, setSavingImmo] = useState(false);
   const [tauxDuJour, setTauxDuJour] = useState({});
   const [filterDevise, setFilterDevise] = useState('');
   const [showFxModal, setShowFxModal] = useState(false);
@@ -113,7 +137,14 @@ const Finance = () => {
       perimetre: 'Périmètre',
       projet: 'Projet',
       statut: 'Statut',
-      aucuneDonneeImmo: 'Les données Fin Immo seront disponibles après l’import BigQuery.'
+      aucuneDonneeImmo: 'Les données Fin Immo seront disponibles après l’import BigQuery.',
+      nouvelleOperationImmo: 'Nouvelle opération Immo',
+      modifierOperationImmo: 'Modifier l’opération Immo',
+      designation: 'Désignation',
+      documentRef: 'Document / Référence',
+      remboursementCheikh: 'Remboursement Cheikh',
+      enregistrer: 'Enregistrer',
+      supprimerConfirmation: 'Supprimer définitivement cette opération Fin Immo ?'
     },
     EN: {
       title: 'Finance',
@@ -177,7 +208,14 @@ const Finance = () => {
       perimetre: 'Scope',
       projet: 'Project',
       statut: 'Status',
-      aucuneDonneeImmo: 'Real Estate Finance data will be available after the BigQuery import.'
+      aucuneDonneeImmo: 'Real Estate Finance data will be available after the BigQuery import.',
+      nouvelleOperationImmo: 'New real estate operation',
+      modifierOperationImmo: 'Edit real estate operation',
+      designation: 'Description',
+      documentRef: 'Document / Reference',
+      remboursementCheikh: 'Reimbursement to Cheikh',
+      enregistrer: 'Save',
+      supprimerConfirmation: 'Permanently delete this real estate operation?'
     },
     DE: {
       title: 'Finanzen',
@@ -241,7 +279,14 @@ const Finance = () => {
       perimetre: 'Bereich',
       projet: 'Projekt',
       statut: 'Status',
-      aucuneDonneeImmo: 'Die Daten zur Immobilienfinanzierung sind nach dem BigQuery-Import verfügbar.'
+      aucuneDonneeImmo: 'Die Daten zur Immobilienfinanzierung sind nach dem BigQuery-Import verfügbar.',
+      nouvelleOperationImmo: 'Neuer Immobilienvorgang',
+      modifierOperationImmo: 'Immobilienvorgang bearbeiten',
+      designation: 'Bezeichnung',
+      documentRef: 'Dokument / Referenz',
+      remboursementCheikh: 'Rückzahlung an Cheikh',
+      enregistrer: 'Speichern',
+      supprimerConfirmation: 'Diesen Immobilienvorgang dauerhaft löschen?'
     }
   };
 
@@ -734,6 +779,15 @@ const Finance = () => {
     return [...new Set([...defaults, ...existing, formData.categorie].filter(Boolean))];
   }, [modalType, recettes, depenses, formData.categorie]);
 
+  const immoCategoryOptions = useMemo(() => [
+    ...new Set([
+      'Achat Terrain', 'Frais Administratifs', 'Clôture/Portail', 'Gros Œuvres',
+      'Seconds Œuvres', 'Solaire/Énergie', 'Équipements', 'Notaire/Domaines',
+      'Finitions', 'Expertise/Devis', 'Plomberie', 'Électricité', 'Remboursement',
+      'Autre', ...immoTransactions.map((item) => item.categorie), immoFormData.categorie
+    ].filter(Boolean))
+  ], [immoTransactions, immoFormData.categorie]);
+
   const getMonthName = useCallback((shortMonth) => {
     const index = shortMonths.indexOf(shortMonth);
     if (index !== -1) {
@@ -782,33 +836,36 @@ const Finance = () => {
     loadFxHistory();
   }, []);
 
-  useEffect(() => {
-    const loadRealEstateFinance = async () => {
-      try {
-        const response = await api.getRealEstateFinance(200, 0);
-        const rows = Array.isArray(response?.data) ? response.data : [];
-        setImmoTransactions(rows.map((item) => ({
-          ...item,
-          id: item.source_id,
-          date: cleanDate(item.date_operation),
-          montantChf: toNumber(item.montant_chf),
-          montantCfa: toNumber(item.montant_cfa),
-          tauxFx: item.taux_fx === null ? null : toNumber(item.taux_fx),
-          partCheikhChf: toNumber(item.part_cheikh_chf),
-          remboursementCheikhChf: toNumber(item.remboursement_cheikh_chf),
-          estPlanifie: Boolean(item.est_planifie)
-        })));
-        setImmoSummary(response?.summary || {});
-        setImmoError('');
-      } catch (error) {
-        console.error('Real Estate Finance error:', error);
-        setImmoTransactions([]);
-        setImmoSummary({});
-        setImmoError(error.message);
-      }
-    };
-    loadRealEstateFinance();
+  const loadRealEstateFinance = useCallback(async () => {
+    try {
+      const response = await api.getRealEstateFinance(200, 0);
+      const rows = Array.isArray(response?.data) ? response.data : [];
+      setImmoTransactions(rows.map((item) => ({
+        ...item,
+        id: item.source_id,
+        date: cleanDate(item.date_operation),
+        montantChf: toNumber(item.montant_chf),
+        montantCfa: toNumber(item.montant_cfa),
+        tauxFx: item.taux_fx === null ? null : toNumber(item.taux_fx),
+        partCheikhChf: toNumber(item.part_cheikh_chf),
+        remboursementCheikhChf: toNumber(item.remboursement_cheikh_chf),
+        estPlanifie: Boolean(item.est_planifie)
+      })));
+      setImmoSummary(response?.summary || {});
+      setImmoError('');
+    } catch (error) {
+      console.error('Real Estate Finance error:', error);
+      setImmoTransactions([]);
+      setImmoSummary({});
+      setImmoError(error.message);
+    }
+  // cleanDate and toNumber are stable helpers within this component.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    loadRealEstateFinance();
+  }, [loadRealEstateFinance]);
 
   const recettesAffichees = useMemo(() => recettes.map(applyHistoricalFx), [recettes, applyHistoricalFx]);
   const depensesAffichees = useMemo(() => depenses.map(applyHistoricalFx), [depenses, applyHistoricalFx]);
@@ -876,6 +933,109 @@ const Finance = () => {
       .map(([annee, montant]) => ({ annee, montant }))
       .sort((a, b) => a.annee.localeCompare(b.annee));
   }, [immoTransactions]);
+
+  const handleImmoFormChange = (field, value) => {
+    setImmoFormData((previous) => {
+      const next = { ...previous, [field]: value };
+      if (field === 'date') {
+        const historicalRate = getHistoricalCfaPerChf(value)?.cfaPerChf;
+        if (historicalRate) next.tauxFx = historicalRate;
+      }
+      return next;
+    });
+  };
+
+  const openNewImmoModal = () => {
+    const next = createEmptyImmoForm();
+    const historicalRate = getHistoricalCfaPerChf(next.date)?.cfaPerChf;
+    if (historicalRate) next.tauxFx = historicalRate;
+    setEditingImmoId(null);
+    setImmoFormData(next);
+    setShowImmoModal(true);
+  };
+
+  const handleImmoEdit = (item) => {
+    setEditingImmoId(item.id);
+    setImmoFormData({
+      date: item.date,
+      designation: item.designation || '',
+      montantChf: item.montantChf || '',
+      montantCfa: item.montantCfa || '',
+      tauxFx: item.tauxFx || '',
+      partCheikhChf: item.partCheikhChf || '',
+      remboursementCheikhChf: item.remboursementCheikhChf || '',
+      typeOperation: item.type_operation || 'Avance',
+      perimetre: item.perimetre || 'Immobilier',
+      categorie: item.categorie || 'Autre',
+      projet: item.projet || 'Terrain Lac Rose',
+      documentRef: item.document_ref || '',
+      statut: item.statut || 'En cours',
+      agent: item.agent || '',
+      team: item.team || '',
+      departement: item.departement || '',
+      phaseProjet: item.phase_projet || ''
+    });
+    setShowImmoModal(true);
+  };
+
+  const handleImmoSave = async () => {
+    if (!immoFormData.date || !immoFormData.designation.trim()) {
+      alert(t.remplirChamps);
+      return;
+    }
+    setSavingImmo(true);
+    try {
+      let montantChf = toNumber(immoFormData.montantChf);
+      let montantCfa = toNumber(immoFormData.montantCfa);
+      let tauxFx = montantChf > 0 && montantCfa > 0
+        ? montantCfa / montantChf
+        : toNumber(immoFormData.tauxFx);
+      if (!tauxFx) tauxFx = getHistoricalCfaPerChf(immoFormData.date)?.cfaPerChf || 0;
+      if (montantChf > 0 && !montantCfa && tauxFx) montantCfa = montantChf * tauxFx;
+      if (montantCfa > 0 && !montantChf && tauxFx) montantChf = montantCfa / tauxFx;
+
+      const payload = {
+        date_operation: immoFormData.date,
+        designation: immoFormData.designation,
+        montant_chf: montantChf,
+        montant_cfa: montantCfa,
+        taux_fx: tauxFx || null,
+        part_cheikh_chf: toNumber(immoFormData.partCheikhChf),
+        remboursement_cheikh_chf: toNumber(immoFormData.remboursementCheikhChf),
+        type_operation: immoFormData.typeOperation,
+        perimetre: immoFormData.perimetre,
+        categorie: immoFormData.categorie,
+        projet: immoFormData.projet,
+        document_ref: immoFormData.documentRef,
+        statut: immoFormData.statut,
+        agent: immoFormData.agent,
+        team: immoFormData.team,
+        departement: immoFormData.departement,
+        phase_projet: immoFormData.phaseProjet,
+        source_file: 'M3S App',
+        enrichi_genspark: false
+      };
+      if (editingImmoId) await api.updateRealEstateFinance(editingImmoId, payload);
+      else await api.createRealEstateFinance(payload);
+      await loadRealEstateFinance();
+      setShowImmoModal(false);
+      setEditingImmoId(null);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setSavingImmo(false);
+    }
+  };
+
+  const handleImmoDelete = async (id) => {
+    if (!window.confirm(t.supprimerConfirmation)) return;
+    try {
+      await api.deleteRealEstateFinance(id);
+      await loadRealEstateFinance();
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   const handleFormChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -1302,43 +1462,48 @@ const Finance = () => {
               </div>
             ) : (
               <>
-                <section className="bg-blue-950 border border-blue-800 rounded-lg p-6">
-                  <div className="flex items-start gap-3 mb-5">
-                    <Building2 size={28} className="text-orange-400 mt-1" />
-                    <div>
-                      <h2 className="text-xl font-bold text-white">{t.immoTitle}</h2>
-                      <p className="text-sm text-blue-200">{t.immoSubtitle}</p>
+                <div className="grid grid-cols-1 xl:grid-cols-[minmax(420px,0.8fr)_minmax(0,1.2fr)] gap-6 items-stretch">
+                  <section className="bg-blue-950 border border-blue-800 rounded-lg p-5">
+                    <div className="flex items-start gap-3 mb-4">
+                      <Building2 size={26} className="text-orange-400 mt-1 shrink-0" />
+                      <div>
+                        <h2 className="text-lg font-bold text-white">{t.immoTitle}</h2>
+                        <p className="text-sm text-blue-200">{t.immoSubtitle}</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="mb-6">
-                    <p className="text-sm text-blue-200">{t.totalInvesti}</p>
-                    <p className="text-3xl font-bold text-orange-400">{formatAmount(immoInvestiChf)} CHF</p>
-                    <p className="text-sm text-slate-300">{formatAmount(immoInvestiCfa)} CFA · {t.montantsHistoriques}</p>
+                    <p className="text-xs uppercase text-blue-200 mb-2">{t.totalInvesti}</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                      <div>
+                        <p className="text-3xl font-bold text-orange-400 whitespace-nowrap">{formatAmount(immoInvestiChf)} CHF</p>
+                      </div>
+                      <div>
+                        <p className="text-3xl font-bold text-cyan-300 whitespace-nowrap">{formatAmount(immoInvestiCfa)} CFA</p>
+                        <p className="text-xs text-slate-400">{t.montantsHistoriques}</p>
+                      </div>
+                    </div>
                     {immoEquivalentTauxJour !== null && (
-                      <p className="text-xs text-slate-400">≈ {formatAmount(immoEquivalentTauxJour)} CFA · {t.equivalentTauxJour}</p>
+                      <p className="text-xs text-slate-400 mb-4">≈ {formatAmount(immoEquivalentTauxJour)} CFA · {t.equivalentTauxJour}</p>
                     )}
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 border-t border-blue-800 md:divide-x divide-blue-800">
-                    <div className="py-4 md:pr-6">
-                      <p className="text-2xl font-bold text-white">{formatAmount(immoRemboursementsDirects)} CHF</p>
-                      <p className="text-sm text-blue-200">{t.remboursementsDirects}</p>
-                      <p className="text-xs text-slate-400 mt-1">{t.remboursementsTotal}: {formatAmount(immoRemboursementsTotal)} CHF</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 border-t border-blue-800 sm:divide-x divide-blue-800">
+                      <div className="py-3 sm:pr-3">
+                        <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoRemboursementsDirects)} CHF</p>
+                        <p className="text-xs text-blue-200">{t.remboursementsDirects}</p>
+                        <p className="text-xs text-slate-400 mt-1">{t.remboursementsTotal}: {formatAmount(immoRemboursementsTotal)} CHF</p>
+                      </div>
+                      <div className="py-3 sm:px-3">
+                        <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoSoldeOuvert)} CHF</p>
+                        <p className="text-xs text-blue-200">{t.soldeOuvert}</p>
+                      </div>
+                      <div className="py-3 sm:pl-3">
+                        <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoPartCheikh)} CHF</p>
+                        <p className="text-xs text-blue-200">{t.partCheikh}</p>
+                      </div>
                     </div>
-                    <div className="py-4 md:px-6">
-                      <p className="text-2xl font-bold text-white">{formatAmount(immoSoldeOuvert)} CHF</p>
-                      <p className="text-sm text-blue-200">{t.soldeOuvert}</p>
-                    </div>
-                    <div className="py-4 md:pl-6">
-                      <p className="text-2xl font-bold text-white">{formatAmount(immoPartCheikh)} CHF</p>
-                      <p className="text-sm text-blue-200">{t.partCheikh}</p>
-                    </div>
-                  </div>
-                </section>
+                  </section>
 
-                <div className="grid grid-cols-1 xl:grid-cols-[minmax(360px,0.75fr)_minmax(0,1.75fr)] gap-6">
-                  <section className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                  <section className="bg-slate-800 rounded-lg p-6 border border-slate-700 min-w-0">
                     <h3 className="text-white font-bold mb-4">{t.investissementsAnnee}</h3>
-                    <ResponsiveContainer width="100%" height={360}>
+                    <ResponsiveContainer width="100%" height={330}>
                       <BarChart data={immoYearlyData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
                         <XAxis dataKey="annee" stroke="#94a3b8" />
@@ -1348,31 +1513,50 @@ const Finance = () => {
                       </BarChart>
                     </ResponsiveContainer>
                   </section>
+                </div>
 
-                  <section className="bg-slate-800 rounded-lg p-6 border border-slate-700 min-w-0">
-                    <h3 className="text-white font-bold mb-4">{t.historiqueImmo}</h3>
+                <section className="bg-slate-800 rounded-lg p-6 border border-slate-700 min-w-0">
+                    <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                      <h3 className="text-white font-bold">{t.historiqueImmo}</h3>
+                      <button onClick={openNewImmoModal} className="flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition">
+                        <Plus size={18} /> {t.nouvelleOperationImmo}
+                      </button>
+                    </div>
                     <TableControls
                       rows={immoTransactions}
                       renderTable={(visibleRows) => (
-                        <table className="min-w-[1800px] text-sm">
+                        <table className="min-w-[2400px] text-sm">
                           <thead className="sticky top-0 z-10 bg-slate-700">
                             <tr>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.ref}</th>
                               <th className="px-4 py-3 text-left text-white font-bold">{t.date}</th>
-                              <th className="px-4 py-3 text-left text-white font-bold">{t.description}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.designation}</th>
                               <th className="px-4 py-3 text-left text-white font-bold">{t.montantCHF}</th>
                               <th className="px-4 py-3 text-left text-white font-bold">{t.montantCFA}</th>
                               <th className="px-4 py-3 text-left text-white font-bold">{t.tauxFXCol}</th>
                               <th className="px-4 py-3 text-left text-white font-bold">{t.partCheikh}</th>
-                              <th className="px-4 py-3 text-left text-white font-bold">{t.remboursementsTotal}</th>
-                              <th className="px-4 py-3 text-left text-white font-bold">{t.typeOperation}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.remboursementCheikh}</th>
                               <th className="px-4 py-3 text-left text-white font-bold">{t.categorie}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.agent}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.team}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.departement}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.phaseProjet}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.typeOperation}</th>
                               <th className="px-4 py-3 text-left text-white font-bold">{t.projet}</th>
                               <th className="px-4 py-3 text-left text-white font-bold">{t.statut}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.actions}</th>
                             </tr>
                           </thead>
                           <tbody>
                             {visibleRows.map((item) => (
-                              <tr key={item.id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                              <tr
+                                key={item.id}
+                                onClick={() => handleImmoEdit(item)}
+                                onKeyDown={(event) => event.key === 'Enter' && handleImmoEdit(item)}
+                                tabIndex={0}
+                                className="border-t border-slate-700 hover:bg-slate-700/50 cursor-pointer focus:outline-none focus:bg-slate-700/70"
+                              >
+                                <td className="px-4 py-3 text-slate-400 whitespace-nowrap">{item.id}</td>
                                 <td className="px-4 py-3 text-slate-300 whitespace-nowrap">{formatDateForDisplay(item.date)}</td>
                                 <td className="px-4 py-3 text-white font-medium max-w-[360px]">{item.designation}</td>
                                 <td className="px-4 py-3 text-orange-300 font-semibold whitespace-nowrap">{formatAmount(item.montantChf)} CHF</td>
@@ -1380,13 +1564,27 @@ const Finance = () => {
                                 <td className="px-4 py-3 text-purple-300">{item.tauxFx ? item.tauxFx.toLocaleString(undefined, { maximumFractionDigits: 3 }) : '-'}</td>
                                 <td className="px-4 py-3 text-blue-300 whitespace-nowrap">{formatAmount(item.partCheikhChf)} CHF</td>
                                 <td className="px-4 py-3 text-green-300 whitespace-nowrap">{formatAmount(item.remboursementCheikhChf)} CHF</td>
-                                <td className="px-4 py-3 text-slate-300">{translateStandardValue(item.type_operation)}</td>
                                 <td className="px-4 py-3 text-slate-300">{translateCategory(item.categorie)}</td>
+                                <td className="px-4 py-3 text-slate-300">{formatCell(item.agent)}</td>
+                                <td className="px-4 py-3 text-slate-300">{translateStandardValue(item.team)}</td>
+                                <td className="px-4 py-3 text-slate-300">{translateStandardValue(item.departement)}</td>
+                                <td className="px-4 py-3 text-slate-300">{translateStandardValue(item.phase_projet)}</td>
+                                <td className="px-4 py-3 text-slate-300">{translateStandardValue(item.type_operation)}</td>
                                 <td className="px-4 py-3 text-slate-300">{translateStandardValue(item.projet)}</td>
                                 <td className="px-4 py-3">
                                   <span className={`inline-flex px-2 py-1 rounded text-xs font-medium whitespace-nowrap ${immoStatusClass(item.statut)}`}>
                                     {translateStandardValue(item.statut)}
                                   </span>
+                                </td>
+                                <td className="px-4 py-3">
+                                  <div className="flex gap-2">
+                                    <button onClick={(event) => { event.stopPropagation(); handleImmoEdit(item); }} className="p-1 hover:bg-slate-600 rounded" title={t.modifier}>
+                                      <Edit2 size={17} className="text-blue-400" />
+                                    </button>
+                                    <button onClick={(event) => { event.stopPropagation(); handleImmoDelete(item.id); }} className="p-1 hover:bg-slate-600 rounded" title={t.actions}>
+                                      <Trash2 size={17} className="text-red-400" />
+                                    </button>
+                                  </div>
                                 </td>
                               </tr>
                             ))}
@@ -1394,14 +1592,110 @@ const Finance = () => {
                         </table>
                       )}
                     />
-                  </section>
-                </div>
+                </section>
               </>
             )}
           </div>
         )}
 
         <ChildTabPlaceholder moduleId="finances" language={language} activeTab={activeTab} handledTabs={['overview', 'recettes', 'depenses', 'fx', 'immobilier']} />
+
+        {showImmoModal && (
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+            <div className="bg-slate-800 rounded-lg p-6 w-full max-w-5xl max-h-[90vh] overflow-y-auto border border-slate-700">
+              <h2 className="text-white text-xl font-bold mb-5">{editingImmoId ? t.modifierOperationImmo : t.nouvelleOperationImmo}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <label className="lg:col-span-2 text-sm text-slate-300">
+                  <span className="block mb-1">{t.designation}</span>
+                  <input type="text" value={immoFormData.designation} onChange={(event) => handleImmoFormChange('designation', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                </label>
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.date}</span>
+                  <LocalizedDateInput value={immoFormData.date} onChange={(date) => handleImmoFormChange('date', date)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                </label>
+
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.montantCHF}</span>
+                  <input type="number" step="any" value={immoFormData.montantChf} onChange={(event) => handleImmoFormChange('montantChf', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                </label>
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.montantCFA}</span>
+                  <input type="number" step="any" value={immoFormData.montantCfa} onChange={(event) => handleImmoFormChange('montantCfa', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                </label>
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.tauxFXCol}</span>
+                  <input type="number" step="any" value={immoFormData.tauxFx} onChange={(event) => handleImmoFormChange('tauxFx', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                </label>
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.partCheikh}</span>
+                  <input type="number" step="any" value={immoFormData.partCheikhChf} onChange={(event) => handleImmoFormChange('partCheikhChf', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                </label>
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.remboursementCheikh}</span>
+                  <input type="number" step="any" value={immoFormData.remboursementCheikhChf} onChange={(event) => handleImmoFormChange('remboursementCheikhChf', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                </label>
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.categorie}</span>
+                  <select value={immoFormData.categorie} onChange={(event) => handleImmoFormChange('categorie', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
+                    {immoCategoryOptions.map((category) => <option key={category} value={category}>{translateCategory(category)}</option>)}
+                  </select>
+                </label>
+
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.typeOperation}</span>
+                  <select value={immoFormData.typeOperation} onChange={(event) => handleImmoFormChange('typeOperation', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
+                    {['Avance', 'Remboursement', 'Ajustement', 'Information', 'Report'].map((value) => <option key={value} value={value}>{translateStandardValue(value)}</option>)}
+                  </select>
+                </label>
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.perimetre}</span>
+                  <select value={immoFormData.perimetre} onChange={(event) => handleImmoFormChange('perimetre', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
+                    {['Immobilier', 'Personnel'].map((value) => <option key={value} value={value}>{translateStandardValue(value)}</option>)}
+                  </select>
+                </label>
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.projet}</span>
+                  <select value={immoFormData.projet} onChange={(event) => handleImmoFormChange('projet', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
+                    {['Terrain Lac Rose', 'Terrains Diass', 'Hors périmètre IMMO'].map((value) => <option key={value} value={value}>{translateStandardValue(value)}</option>)}
+                  </select>
+                </label>
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.statut}</span>
+                  <select value={immoFormData.statut} onChange={(event) => handleImmoFormChange('statut', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
+                    {['En cours', 'Partiel', 'Remboursé', 'Payé', 'Reporté', 'Planifié', 'Info'].map((value) => <option key={value} value={value}>{translateStandardValue(value)}</option>)}
+                  </select>
+                </label>
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.agent}</span>
+                  <input type="text" value={immoFormData.agent} onChange={(event) => handleImmoFormChange('agent', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                </label>
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.team}</span>
+                  <input type="text" value={immoFormData.team} onChange={(event) => handleImmoFormChange('team', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                </label>
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.departement}</span>
+                  <input type="text" value={immoFormData.departement} onChange={(event) => handleImmoFormChange('departement', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                </label>
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.phaseProjet}</span>
+                  <select value={immoFormData.phaseProjet} onChange={(event) => handleImmoFormChange('phaseProjet', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
+                    <option value="">-</option>
+                    {['Conception', 'Mise en Place', 'Consolidation', 'Dynamisation'].map((value) => <option key={value} value={value}>{translateStandardValue(value)}</option>)}
+                  </select>
+                </label>
+                <label className="md:col-span-2 text-sm text-slate-300">
+                  <span className="block mb-1">{t.documentRef}</span>
+                  <input type="text" value={immoFormData.documentRef} onChange={(event) => handleImmoFormChange('documentRef', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                </label>
+              </div>
+              <div className="flex justify-end gap-3 mt-6">
+                <button onClick={() => setShowImmoModal(false)} disabled={savingImmo} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg disabled:opacity-50">{t.annuler}</button>
+                <button onClick={handleImmoSave} disabled={savingImmo} className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg disabled:opacity-50">{t.enregistrer}</button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {showModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

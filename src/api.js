@@ -101,6 +101,34 @@ export const api = {
     }
   },
 
+  createRealEstateFinance: async (data) => {
+    const res = await apiFetch(`${API_BASE_URL}/finance/real-estate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+    return res.json();
+  },
+
+  updateRealEstateFinance: async (id, data) => {
+    const res = await apiFetch(`${API_BASE_URL}/finance/real-estate/${encodeURIComponent(id)}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+    return res.json();
+  },
+
+  deleteRealEstateFinance: async (id) => {
+    const res = await apiFetch(`${API_BASE_URL}/finance/real-estate/${encodeURIComponent(id)}`, {
+      method: 'DELETE'
+    });
+    if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+    return res.json();
+  },
+
   // Finance - Historique des taux de change (FX History)
   getFxHistory: async () => {
     try {
