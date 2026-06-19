@@ -188,7 +188,27 @@ const Production = () => {
   };
 
   // Helper function to translate data values
-  const translateStatus = (status) => dataTranslations.statuses[language]?.[status] || status;
+  const normalizeLookupKey = (value) => String(value || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+  const statusKeys = {
+    'LIVREE': 'Livrée',
+    'DELIVERED': 'Livrée',
+    'EN COURS': 'En cours',
+    'IN PROGRESS': 'En cours',
+    'LAUFEND': 'En cours',
+    'PREPARATION': 'Préparation',
+    'VORBEREITUNG': 'Préparation'
+  };
+  const normalizeStatus = (status) => statusKeys[normalizeLookupKey(status)] || status;
+  const translateStatus = (status) => {
+    const normalized = normalizeStatus(status);
+    return dataTranslations.statuses[language]?.[normalized] || status;
+  };
+  const getStatusClass = (status) => {
+    const normalized = normalizeStatus(status);
+    if (normalized === 'Livrée') return 'bg-green-900 text-green-200';
+    if (normalized === 'Préparation') return 'bg-amber-900 text-amber-200';
+    return 'bg-blue-900 text-blue-200';
+  };
   const translateProduct = (product) => dataTranslations.products[language]?.[product] || product;
   const translateMonth = (month) => dataTranslations.months[language]?.[month] || month;
   const translateCategory = (category) => dataTranslations.categories[language]?.[category] || category;
@@ -233,7 +253,7 @@ const Production = () => {
   }, []);
  
   const totalCommandes = commandes.length;
-  const commandesLivrees = commandes.filter(c => c.statut === 'Livrée').length;
+  const commandesLivrees = commandes.filter(c => normalizeStatus(c.statut) === 'Livrée').length;
   const totalFournisseurs = fournisseurs.length;
   const stocksBas = stocks.filter(s => s.quantite <= s.seuil).length;
  
@@ -259,11 +279,16 @@ const Production = () => {
       return;
     }
  
+    const normalizedData = {
+      ...formData,
+      statut: normalizeStatus(formData.statut)
+    };
+
     if (modalType === 'commande') {
       if (editingId) {
-        setCommandes(commandes.map(c => c.id === editingId ? { ...formData, id: editingId } : c));
+        setCommandes(commandes.map(c => c.id === editingId ? { ...normalizedData, id: editingId } : c));
       } else {
-        setCommandes([...commandes, { ...formData, id: Date.now() }]);
+        setCommandes([...commandes, { ...normalizedData, id: Date.now() }]);
       }
     } else if (modalType === 'fournisseur') {
       if (editingId) {
@@ -419,7 +444,7 @@ const Production = () => {
                       <td className="px-4 py-2 text-slate-400">{translateProduct(c.produit)}</td>
                       <td className="px-4 py-2 text-slate-400">{c.quantite}</td>
                       <td className="px-4 py-2">
-                        <span className={`px-2 py-1 rounded text-xs font-semibold ${c.statut === 'Livrée' ? 'bg-green-900 text-green-200' : 'bg-blue-900 text-blue-200'}`}>
+                        <span className={`px-2 py-1 rounded text-xs font-semibold ${getStatusClass(c.statut)}`}>
                           {translateStatus(c.statut)}
                         </span>
                       </td>
