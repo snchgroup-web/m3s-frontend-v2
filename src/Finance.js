@@ -1474,10 +1474,10 @@ const Finance = () => {
                     <p className="text-xs uppercase text-blue-200 mb-2">{t.totalInvesti}</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                       <div>
-                        <p className="text-3xl font-bold text-orange-400 whitespace-nowrap">{formatAmount(immoInvestiChf)} CHF</p>
+                        <p className="text-2xl font-bold text-orange-400 whitespace-nowrap">{formatAmount(immoInvestiChf)} CHF</p>
                       </div>
                       <div>
-                        <p className="text-3xl font-bold text-cyan-300 whitespace-nowrap">{formatAmount(immoInvestiCfa)} CFA</p>
+                        <p className="text-2xl font-bold text-cyan-300 whitespace-nowrap">{formatAmount(immoInvestiCfa)} CFA</p>
                         <p className="text-xs text-slate-400">{t.montantsHistoriques}</p>
                       </div>
                     </div>
