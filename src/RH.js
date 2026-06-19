@@ -5,6 +5,7 @@ import { Plus, Edit2, Trash2, Users, User, Heart, Users2 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { api } from './api';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
+import LocalizedDateInput from './LocalizedDateInput';
 
 const RH = () => {
   const { language } = useLanguage();
@@ -680,7 +681,7 @@ const RH = () => {
 
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">{t.dateEmbauche}</label>
-                <input type="date" lang={language.toLowerCase()} value={formData.dateEmbauche} onChange={(e) => handleFormChange('dateEmbauche', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                <LocalizedDateInput value={formData.dateEmbauche} onChange={(date) => handleFormChange('dateEmbauche', date)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
               </div>
 
               <div>

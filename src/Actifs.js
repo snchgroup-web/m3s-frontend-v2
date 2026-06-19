@@ -5,6 +5,7 @@ import { Building2, Plus, TrendingDown } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
+import LocalizedDateInput from './LocalizedDateInput';
 
 const Actifs = () => {
   const { language } = useLanguage();
@@ -365,7 +366,7 @@ const Actifs = () => {
             <div className="space-y-4">
               <input type="text" placeholder={t.nom} value={formData.nom} onChange={(e) => handleFormChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
               <input type="number" placeholder={t.valeurBrute} value={formData.valeurAcquisition} onChange={(e) => handleFormChange('valeurAcquisition', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
-              <input type="date" lang={language.toLowerCase()} value={formData.dateAcquisition} onChange={(e) => handleFormChange('dateAcquisition', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+              <LocalizedDateInput value={formData.dateAcquisition} onChange={(date) => handleFormChange('dateAcquisition', date)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
             </div>
             <div className="flex gap-3 mt-6">
               <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">{t.annuler}</button>

@@ -5,6 +5,7 @@ import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLe
 import { useLanguage } from './LanguageContext';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
+import LocalizedDateInput from './LocalizedDateInput';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -747,11 +748,9 @@ const Finance = () => {
                   onChange={(e) => handleFormChange('categorie', e.target.value)}
                   className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
                 />
-                <input
-                  type="date"
-                  lang={language.toLowerCase()}
+                <LocalizedDateInput
                   value={formData.date}
-                  onChange={(e) => handleFormChange('date', e.target.value)}
+                  onChange={(date) => handleFormChange('date', date)}
                   className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
                 />
                 <div className="flex gap-4 justify-end">
@@ -788,11 +787,9 @@ const Finance = () => {
                   onChange={(e) => handleFxFormChange('rate', e.target.value)}
                   className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
                 />
-                <input
-                  type="date"
-                  lang={language.toLowerCase()}
+                <LocalizedDateInput
                   value={fxFormData.date}
-                  onChange={(e) => handleFxFormChange('date', e.target.value)}
+                  onChange={(date) => handleFxFormChange('date', date)}
                   className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
                 />
                 <input
