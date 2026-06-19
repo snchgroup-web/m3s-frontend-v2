@@ -23,7 +23,7 @@ const Admin = () => {
       users: 'Utilisateurs',
       roles: 'Rôles',
       audit: 'Audit Log',
-      tasks: 'Activites & Taches',
+      tasks: 'Activités & Tâches',
       roleDistribution: 'Distribution des Rôles',
       activityByType: 'Activité par Type d\'Action',
       dailyActivity: 'Activité Quotidienne (7 derniers jours)',
@@ -54,10 +54,11 @@ const Admin = () => {
       suspended: 'Suspendu',
       success: 'Success',
       failed: 'Failed',
+      nonRenseigne: 'Non renseigné',
       userCount: 'Utilisateurs',
-      titleTask: 'Tache',
+      titleTask: 'Tâche',
       responsable: 'Responsable',
-      priorite: 'Priorite',
+      priorite: 'Priorité',
       progression: 'Progression',
       mon: 'Lun',
       tue: 'Mar',
@@ -108,6 +109,7 @@ const Admin = () => {
       suspended: 'Suspended',
       success: 'Success',
       failed: 'Failed',
+      nonRenseigne: 'Not provided',
       userCount: 'Users',
       titleTask: 'Task',
       responsable: 'Owner',
@@ -131,7 +133,7 @@ const Admin = () => {
       users: 'Benutzer',
       roles: 'Rollen',
       audit: 'Audit-Protokoll',
-      tasks: 'Aktivitaten & Aufgaben',
+      tasks: 'Aktivitäten & Aufgaben',
       roleDistribution: 'Rollenverteilung',
       activityByType: 'Aktivität nach Typ',
       dailyActivity: 'Tägliche Aktivität (letzte 7 Tage)',
@@ -162,10 +164,11 @@ const Admin = () => {
       suspended: 'Gesperrt',
       success: 'Erfolg',
       failed: 'Fehler',
+      nonRenseigne: 'Nicht angegeben',
       userCount: 'Benutzer',
       titleTask: 'Aufgabe',
       responsable: 'Verantwortlich',
-      priorite: 'Prioritat',
+      priorite: 'Priorität',
       progression: 'Fortschritt',
       mon: 'Mo',
       tue: 'Di',
@@ -209,6 +212,28 @@ const Admin = () => {
   const translateDay = (day) => dataTranslations.days[language]?.[day] || day;
   const translateRole = (role) => dataTranslations.roles[language]?.[role] || role;
   const translateRoleDescription = (desc) => dataTranslations.roleDescriptions[language]?.[desc] || desc;
+  const formatValue = (value) => {
+    const text = String(value || '').trim();
+    return text && text !== 'N/A' ? text : t.nonRenseigne;
+  };
+  const normalizeUserStatus = (value) => {
+    const text = String(value || '').trim().toLowerCase();
+    if (['inactif', 'inactive', 'inaktiv', 'false', '0'].includes(text)) return 'Inactif';
+    if (['suspendu', 'suspended', 'gesperrt'].includes(text)) return 'Suspendu';
+    return 'Actif';
+  };
+  const getUserStatusLabel = (status) => {
+    const normalized = normalizeUserStatus(status);
+    if (normalized === 'Inactif') return t.inactive;
+    if (normalized === 'Suspendu') return t.suspended;
+    return t.active;
+  };
+  const getUserStatusClass = (status) => {
+    const normalized = normalizeUserStatus(status);
+    if (normalized === 'Actif') return 'bg-green-900 text-green-200';
+    if (normalized === 'Suspendu') return 'bg-amber-900 text-amber-200';
+    return 'bg-red-900 text-red-200';
+  };
 
   const [activeTab, setActiveTab] = useState('overview');
   const [users, setUsers] = useState([]);
@@ -328,10 +353,15 @@ const Admin = () => {
       return;
     }
 
+    const normalizedUser = {
+      ...userFormData,
+      statut: normalizeUserStatus(userFormData.statut)
+    };
+
     if (editingId) {
-      setUsers(users.map(u => u.id === editingId ? { ...userFormData, id: editingId } : u));
+      setUsers(users.map(u => u.id === editingId ? { ...normalizedUser, id: editingId } : u));
     } else {
-      setUsers([...users, { ...userFormData, id: Date.now() }]);
+      setUsers([...users, { ...normalizedUser, id: Date.now() }]);
     }
 
     setShowUserModal(false);
@@ -515,11 +545,11 @@ const Admin = () => {
               <tbody>
                 {tasks.map(task => (
                   <tr key={task.id || task.source_id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                    <td className="px-4 py-2 text-slate-300 font-medium">{task.titre || task.title}</td>
-                    <td className="px-4 py-2 text-slate-400">{task.statut || task.status}</td>
-                    <td className="px-4 py-2 text-slate-400">{task.priorite || task.priority}</td>
-                    <td className="px-4 py-2 text-slate-400">{task.responsable}</td>
-                    <td className="px-4 py-2 text-slate-400">{task.module}</td>
+                    <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(task.titre || task.title)}</td>
+                    <td className="px-4 py-2 text-slate-400">{formatValue(task.statut || task.status)}</td>
+                    <td className="px-4 py-2 text-slate-400">{formatValue(task.priorite || task.priority)}</td>
+                    <td className="px-4 py-2 text-slate-400">{formatValue(task.responsable)}</td>
+                    <td className="px-4 py-2 text-slate-400">{formatValue(task.module)}</td>
                     <td className="px-4 py-2 text-blue-400 font-bold">{Number(task.progression || 0)}%</td>
                   </tr>
                 ))}
@@ -551,15 +581,15 @@ const Admin = () => {
                 <tbody>
                   {users.map(u => (
                     <tr key={u.id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                      <td className="px-4 py-2 text-slate-300 font-medium">{u.nom}</td>
-                      <td className="px-4 py-2 text-slate-400 text-xs">{u.email}</td>
-                      <td className="px-4 py-2 text-slate-300">{translateRole(u.role)}</td>
+                      <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(u.nom)}</td>
+                      <td className="px-4 py-2 text-slate-400 text-xs">{formatValue(u.email)}</td>
+                      <td className="px-4 py-2 text-slate-300">{formatValue(translateRole(u.role))}</td>
                       <td className="px-4 py-2">
-                        <span className={`px-2 py-1 rounded text-xs font-semibold ${u.statut === 'Actif' ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'}`}>
-                          {u.statut === 'Actif' ? t.active : u.statut === 'Inactif' ? t.inactive : t.suspended}
+                        <span className={`px-2 py-1 rounded text-xs font-semibold ${getUserStatusClass(u.statut)}`}>
+                          {getUserStatusLabel(u.statut)}
                         </span>
                       </td>
-                      <td className="px-4 py-2 text-slate-400 text-xs">{u.dateCreation}</td>
+                      <td className="px-4 py-2 text-slate-400 text-xs">{formatValue(u.dateCreation)}</td>
                       <td className="px-4 py-2 flex gap-2">
                         <button onClick={() => handleEditUser(u)} className="p-1 hover:bg-slate-600 rounded">
                           <Edit2 size={16} className="text-blue-400" />
@@ -680,9 +710,9 @@ const Admin = () => {
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">{t.statut}</label>
                 <select value={userFormData.statut} onChange={(e) => handleUserChange('statut', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
-                  <option>{t.active}</option>
-                  <option>{t.inactive}</option>
-                  <option>{t.suspended}</option>
+                  <option value="Actif">{t.active}</option>
+                  <option value="Inactif">{t.inactive}</option>
+                  <option value="Suspendu">{t.suspended}</option>
                 </select>
               </div>
             </div>
