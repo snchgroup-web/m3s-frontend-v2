@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 
 const tableText = {
   FR: {
     search: 'Rechercher...',
+    clearSearch: 'Effacer la recherche',
     rows: 'Lignes',
     noResult: 'Aucun resultat',
     of: 'sur',
@@ -12,6 +13,7 @@ const tableText = {
   },
   EN: {
     search: 'Search...',
+    clearSearch: 'Clear search',
     rows: 'Rows',
     noResult: 'No results',
     of: 'of',
@@ -19,6 +21,7 @@ const tableText = {
   },
   DE: {
     search: 'Suchen...',
+    clearSearch: 'Suche loeschen',
     rows: 'Zeilen',
     noResult: 'Keine Ergebnisse',
     of: 'von',
@@ -64,6 +67,7 @@ const TableControls = ({
   const startIndex = filteredRows.length ? (safePage - 1) * pageSize : 0;
   const endIndex = Math.min(startIndex + pageSize, filteredRows.length);
   const pageRows = filteredRows.slice(startIndex, endIndex);
+  const hasQuery = query.trim().length > 0;
 
   useEffect(() => {
     setPage(1);
@@ -73,14 +77,31 @@ const TableControls = ({
     <div>
       <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="relative flex-1">
-          <Search size={18} className="absolute left-3 top-3 text-slate-500" />
+          <Search size={18} className={`absolute left-3 top-3 ${hasQuery ? 'text-blue-400' : 'text-slate-500'}`} />
           <input
             type="text"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' && hasQuery) {
+                setQuery('');
+              }
+            }}
             placeholder={searchPlaceholder || t.search}
-            className="w-full rounded-lg border border-slate-600 bg-slate-700 py-2 pl-10 pr-4 text-white placeholder-slate-400"
+            className={`w-full rounded-lg border bg-slate-700 py-2 pl-10 pr-10 text-white placeholder-slate-400 ${
+              hasQuery ? 'border-blue-500 ring-1 ring-blue-500/40' : 'border-slate-600'
+            }`}
           />
+          {hasQuery && (
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              title={t.clearSearch}
+              className="absolute right-2 top-2 rounded p-1 text-slate-300 hover:bg-slate-600 hover:text-white"
+            >
+              <X size={18} />
+            </button>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-3 text-sm text-slate-300">

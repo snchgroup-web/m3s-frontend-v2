@@ -251,8 +251,80 @@ const Finance = () => {
     }
   };
 
+  const supplementalCategoryTranslations = {
+    FR: {
+      'VENTES': 'Ventes',
+      'RECETTES': 'Recettes',
+      'DONS': 'Dons',
+      'DONATION': 'Donation',
+      'SERVICES': 'Services',
+      'IMMOBILIER': 'Immobilier',
+      'FIN IMMO': 'Fin Immo',
+      'INVESTISSEMENT IMMO': 'Investissement Immo',
+      'PAIE': 'Paie',
+      'SALAIRES': 'Salaires',
+      'OPERATIONNEL': 'Operationnel',
+      'DEPENSES': 'Depenses',
+      'SOCIAL': 'Social',
+      'AIDE SOCIALE': 'Aide Sociale',
+      'PARTICIPATION': 'Participation',
+      'TRANSPORT': 'Transport',
+      'FOURNITURES': 'Fournitures'
+    },
+    EN: {
+      'VENTES': 'Sales',
+      'RECETTES': 'Revenue',
+      'DONS': 'Donations',
+      'DONATION': 'Donation',
+      'SERVICES': 'Services',
+      'IMMOBILIER': 'Real Estate',
+      'FIN IMMO': 'Real Estate Finance',
+      'INVESTISSEMENT IMMO': 'Real Estate Investment',
+      'PAIE': 'Payroll',
+      'SALAIRES': 'Salaries',
+      'OPERATIONNEL': 'Operations',
+      'DEPENSES': 'Expenses',
+      'SOCIAL': 'Social',
+      'AIDE SOCIALE': 'Social Aid',
+      'PARTICIPATION': 'Participation',
+      'TRANSPORT': 'Transport',
+      'FOURNITURES': 'Supplies'
+    },
+    DE: {
+      'VENTES': 'Verkauf',
+      'RECETTES': 'Einnahmen',
+      'DONS': 'Spenden',
+      'DONATION': 'Spende',
+      'SERVICES': 'Dienstleistungen',
+      'IMMOBILIER': 'Immobilien',
+      'FIN IMMO': 'Immobilienfinanzierung',
+      'INVESTISSEMENT IMMO': 'Immobilieninvestition',
+      'PAIE': 'Lohnbuchhaltung',
+      'SALAIRES': 'Gehaelter',
+      'OPERATIONNEL': 'Betrieb',
+      'DEPENSES': 'Ausgaben',
+      'SOCIAL': 'Soziales',
+      'AIDE SOCIALE': 'Sozialhilfe',
+      'PARTICIPATION': 'Beteiligung',
+      'TRANSPORT': 'Transport',
+      'FOURNITURES': 'Materialien'
+    }
+  };
+  const normalizeCategoryKey = (value) =>
+    String(value || '')
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[_-]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .toUpperCase();
+  const formatUnknownCategory = (cat) =>
+    String(cat || '').replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
   const translateDescription = (desc) => dataTranslations.descriptions[language]?.[desc] || desc;
-  const translateCategory = (cat) => dataTranslations.categories[language]?.[cat] || cat;
+  const translateCategory = (cat) => {
+    const key = normalizeCategoryKey(cat);
+    return supplementalCategoryTranslations[language]?.[key] || dataTranslations.categories[language]?.[cat] || formatUnknownCategory(cat);
+  };
 
   const getMonthName = useCallback((shortMonth) => {
     const index = shortMonths.indexOf(shortMonth);
