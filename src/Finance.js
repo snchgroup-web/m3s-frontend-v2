@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
@@ -53,6 +53,12 @@ const Finance = () => {
   const [savingImmo, setSavingImmo] = useState(false);
   const [tauxDuJour, setTauxDuJour] = useState({});
   const [filterDevise, setFilterDevise] = useState('');
+  const [fxView, setFxView] = useState('converter');
+  const [converterAmount, setConverterAmount] = useState('1000');
+  const [converterDirection, setConverterDirection] = useState('CHF_CFA');
+  const [converterDate, setConverterDate] = useState('');
+  const [conversionResult, setConversionResult] = useState(null);
+  const [recentConversions, setRecentConversions] = useState([]);
   const [showFxModal, setShowFxModal] = useState(false);
   const [editingFxId, setEditingFxId] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -122,6 +128,24 @@ const Finance = () => {
       filtreDevise: 'Filtrer par devise',
       id: 'ID',
       remplirChamps: 'Veuillez remplir les champs obligatoires',
+      convertisseur: 'Convertisseur',
+      tableauBordFx: 'Tableau de bord',
+      tauxHistorique: 'Taux & Historique',
+      parametresConversion: 'Paramètres de conversion',
+      direction: 'Direction',
+      dateReference: 'Date de référence (vide = taux du jour)',
+      tauxApplique: 'Taux appliqué',
+      calculer: 'Calculer',
+      conversionsRapides: 'Conversions rapides',
+      conversionResultat: 'Résultat de la conversion',
+      conversionsRecentes: 'Conversions récentes',
+      heure: 'Heure',
+      resultat: 'Résultat',
+      tauxActuel: 'Taux actuel',
+      maximum: 'Maximum',
+      minimum: 'Minimum',
+      moyenne: 'Moyenne',
+      aucunTauxDate: 'Aucun taux historique exact pour cette date',
       immoTitle: 'Financement Immo — Terrain Lac Rose',
       immoSubtitle: 'Investissements et remboursements immobiliers depuis 2019',
       totalInvesti: 'Total investi réalisé',
@@ -193,6 +217,24 @@ const Finance = () => {
       filtreDevise: 'Filter by currency',
       id: 'ID',
       remplirChamps: 'Please fill in all required fields',
+      convertisseur: 'Converter',
+      tableauBordFx: 'Dashboard',
+      tauxHistorique: 'Rates & History',
+      parametresConversion: 'Conversion settings',
+      direction: 'Direction',
+      dateReference: 'Reference date (blank = today’s rate)',
+      tauxApplique: 'Applied rate',
+      calculer: 'Calculate',
+      conversionsRapides: 'Quick conversions',
+      conversionResultat: 'Conversion result',
+      conversionsRecentes: 'Recent conversions',
+      heure: 'Time',
+      resultat: 'Result',
+      tauxActuel: 'Current rate',
+      maximum: 'Maximum',
+      minimum: 'Minimum',
+      moyenne: 'Average',
+      aucunTauxDate: 'No exact historical rate for this date',
       immoTitle: 'Real Estate Financing — Lac Rose Land',
       immoSubtitle: 'Real estate investments and reimbursements since 2019',
       totalInvesti: 'Total invested to date',
@@ -264,6 +306,24 @@ const Finance = () => {
       filtreDevise: 'Nach Währung filtern',
       id: 'ID',
       remplirChamps: 'Bitte füllen Sie alle erforderlichen Felder aus',
+      convertisseur: 'Umrechner',
+      tableauBordFx: 'Dashboard',
+      tauxHistorique: 'Kurse & Verlauf',
+      parametresConversion: 'Umrechnungseinstellungen',
+      direction: 'Richtung',
+      dateReference: 'Referenzdatum (leer = heutiger Kurs)',
+      tauxApplique: 'Angewandter Kurs',
+      calculer: 'Berechnen',
+      conversionsRapides: 'Schnellumrechnungen',
+      conversionResultat: 'Umrechnungsergebnis',
+      conversionsRecentes: 'Letzte Umrechnungen',
+      heure: 'Zeit',
+      resultat: 'Ergebnis',
+      tauxActuel: 'Aktueller Kurs',
+      maximum: 'Maximum',
+      minimum: 'Minimum',
+      moyenne: 'Durchschnitt',
+      aucunTauxDate: 'Kein exakter historischer Kurs für dieses Datum',
       immoTitle: 'Immobilienfinanzierung — Grundstück Lac Rose',
       immoSubtitle: 'Immobilieninvestitionen und Rückzahlungen seit 2019',
       totalInvesti: 'Bisher investiert',
@@ -922,6 +982,57 @@ const Finance = () => {
       .sort((a, b) => a.année - b.année);
   }, [fxHistory]);
 
+  const fxStatistics = useMemo(() => {
+    const rates = fxHistory.map((item) => {
+      const from = String(item.devise_from || '').toUpperCase();
+      const to = String(item.devise_to || '').toUpperCase();
+      const rate = toNumber(item.rate);
+      if (!rate) return null;
+      if (from === 'CHF' && to === 'CFA') return rate;
+      if (from === 'CFA' && to === 'CHF') return 1 / rate;
+      return null;
+    }).filter(Boolean);
+    if (!rates.length) return { minimum: 0, maximum: 0, average: 0 };
+    return {
+      minimum: Math.min(...rates),
+      maximum: Math.max(...rates),
+      average: rates.reduce((sum, rate) => sum + rate, 0) / rates.length
+    };
+  }, [fxHistory]);
+
+  const converterRate = converterDate
+    ? getHistoricalCfaPerChf(converterDate)?.cfaPerChf || null
+    : tauxChfCfa;
+  const converterInputCurrency = converterDirection === 'CHF_CFA' ? 'CHF' : 'CFA';
+  const converterOutputCurrency = converterDirection === 'CHF_CFA' ? 'CFA' : 'CHF';
+  const converterInputValue = toNumber(converterAmount);
+  const converterOutputValue = converterRate
+    ? (converterDirection === 'CHF_CFA' ? converterInputValue * converterRate : converterInputValue / converterRate)
+    : null;
+  const displayedConverterOutput = conversionResult?.output ?? converterOutputValue;
+  const formatConvertedValue = (value, currency) => {
+    if (value === null || value === undefined) return '-';
+    return Number(value).toLocaleString(undefined, {
+      minimumFractionDigits: currency === 'CHF' ? 2 : 0,
+      maximumFractionDigits: currency === 'CHF' ? 2 : 0
+    });
+  };
+  const calculateConversion = () => {
+    if (!converterRate || converterOutputValue === null) return;
+    const entry = {
+      id: Date.now(),
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      amount: converterInputValue,
+      inputCurrency: converterInputCurrency,
+      output: converterOutputValue,
+      outputCurrency: converterOutputCurrency,
+      rate: converterRate,
+      direction: converterDirection
+    };
+    setConversionResult(entry);
+    setRecentConversions((current) => [entry, ...current].slice(0, 5));
+  };
+
   const immoYearlyData = useMemo(() => {
     const yearly = immoTransactions.reduce((acc, item) => {
       if (item.estPlanifie || !['Avance', 'Information'].includes(item.type_operation)) return acc;
@@ -1394,61 +1505,138 @@ const Finance = () => {
         )}
 
         {activeTab === 'fx' && (
-          <div>
-            <div className="mb-4 flex justify-end gap-4">
-              <select
-                value={filterDevise}
-                onChange={(e) => setFilterDevise(e.target.value)}
-                className="px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
-              >
-                <option value="">{t.filtreDevise}</option>
-                <option value="CHF">CHF</option>
-                <option value="CFA">CFA</option>
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-              </select>
-              <button onClick={openNewFxModal} className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
-                <Plus size={20} /> {t.nouveauTaux}
-              </button>
+          <div className="space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+              {[
+                { label: t.tauxActuel, value: tauxChfCfa, icon: ArrowRightLeft, color: 'text-blue-400' },
+                { label: t.maximum, value: fxStatistics.maximum, icon: TrendingUp, color: 'text-green-400' },
+                { label: t.minimum, value: fxStatistics.minimum, icon: TrendingDown, color: 'text-orange-400' },
+                { label: t.moyenne, value: fxStatistics.average, icon: Calculator, color: 'text-purple-400' }
+              ].map(({ label, value, icon: Icon, color }) => (
+                <div key={label} className="bg-slate-800 border border-slate-700 rounded-lg p-4 flex items-center gap-4">
+                  <div className="w-10 h-10 shrink-0 rounded bg-slate-700 flex items-center justify-center">
+                    <Icon size={20} className={color} />
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold text-white">{value ? Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 }) : '-'}</p>
+                    <p className="text-xs text-slate-400">{label}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-            <TableControls
-              rows={filteredFxHistory}
-              renderTable={(visibleRows) => (
-                <table className="min-w-full text-sm">
-                  <thead className="sticky top-0 z-10 bg-slate-700">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-white font-bold">{t.id}</th>
-                      <th className="px-4 py-3 text-left text-white font-bold">{t.date}</th>
-                      <th className="px-4 py-3 text-left text-white font-bold">{t.deviseBase}</th>
-                      <th className="px-4 py-3 text-left text-white font-bold">{t.deviseCible}</th>
-                      <th className="px-4 py-3 text-left text-white font-bold">{t.taux}</th>
-                      <th className="px-4 py-3 text-left text-white font-bold">{t.source}</th>
-                      <th className="px-4 py-3 text-left text-white font-bold">{t.actions}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {visibleRows.map(fx => (
-                      <tr key={fx.id} className="border-t border-slate-700 hover:bg-slate-700/50">
-                        <td className="px-4 py-3 text-slate-300 text-xs">{fx.id}</td>
-                        <td className="px-4 py-3 text-slate-300 whitespace-nowrap">{formatDateForDisplay(fx.date)}</td>
-                        <td className="px-4 py-3 text-blue-400 font-bold">{fx.devise_from}</td>
-                        <td className="px-4 py-3 text-green-400 font-bold">{fx.devise_to}</td>
-                        <td className="px-4 py-3 text-purple-400 font-bold">{parseFloat(fx.rate).toLocaleString(undefined, { maximumFractionDigits: fx.rate < 1 ? 6 : 2 })}</td>
-                        <td className="px-4 py-3 text-slate-400">{fx.source}</td>
-                        <td className="px-4 py-3 flex gap-2">
-                          <button onClick={() => handleFxEdit(fx)} className="p-1 hover:bg-slate-600 rounded">
-                            <Edit2 size={16} className="text-blue-400" />
+
+            <div className="flex gap-2 border-b border-slate-700 overflow-x-auto">
+              {[
+                { id: 'converter', label: t.convertisseur, icon: Calculator },
+                { id: 'dashboard', label: t.tableauBordFx, icon: BarChart3 },
+                { id: 'history', label: t.tauxHistorique, icon: History }
+              ].map(({ id, label, icon: Icon }) => (
+                <button key={id} onClick={() => setFxView(id)} className={`flex items-center gap-2 px-4 py-3 whitespace-nowrap font-medium ${fxView === id ? 'text-orange-300 border-b-2 border-orange-400' : 'text-slate-400 hover:text-white'}`}>
+                  <Icon size={17} /> {label}
+                </button>
+              ))}
+            </div>
+
+            {fxView === 'converter' && (
+              <div className="grid grid-cols-1 xl:grid-cols-[1.1fr_0.9fr] gap-5 items-start">
+                <section className="bg-slate-800 border border-slate-700 rounded-lg p-6">
+                  <h3 className="text-white font-bold mb-5 flex items-center gap-2"><SlidersHorizontal size={18} className="text-orange-400" /> {t.parametresConversion}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label className="text-sm text-slate-300">
+                      <span className="block mb-1">{t.montant}</span>
+                      <input type="number" min="0" step="any" value={converterAmount} onChange={(event) => { setConverterAmount(event.target.value); setConversionResult(null); }} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                    </label>
+                    <label className="text-sm text-slate-300">
+                      <span className="block mb-1">{t.direction}</span>
+                      <select value={converterDirection} onChange={(event) => { setConverterDirection(event.target.value); setConversionResult(null); }} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white">
+                        <option value="CHF_CFA">CHF → CFA</option>
+                        <option value="CFA_CHF">CFA → CHF</option>
+                      </select>
+                    </label>
+                  </div>
+                  <label className="block text-sm text-slate-300 mt-4">
+                    <span className="block mb-1">{t.dateReference}</span>
+                    <LocalizedDateInput value={converterDate} onChange={(date) => { setConverterDate(date); setConversionResult(null); }} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                  </label>
+                  <div className="mt-4 px-4 py-3 border border-slate-600 rounded bg-slate-900/60">
+                    <p className="text-xs text-slate-400">{t.tauxApplique}</p>
+                    <p className="font-semibold text-orange-300">{converterRate ? `1 CHF = ${Number(converterRate).toLocaleString(undefined, { maximumFractionDigits: 4 })} CFA` : t.aucunTauxDate}</p>
+                  </div>
+                  <button onClick={calculateConversion} disabled={!converterRate || converterInputValue < 0} className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded disabled:opacity-50">
+                    <Calculator size={18} /> {t.calculer}
+                  </button>
+                  <div className="mt-6 border-t border-slate-700 pt-5">
+                    <h4 className="text-white font-semibold mb-3">{t.conversionsRapides}</h4>
+                    <div className="space-y-2">
+                      {(converterDirection === 'CHF_CFA' ? [100, 500, 1000, 5000, 10000] : [100000, 500000, 1000000, 5000000]).map((amount) => {
+                        const output = converterRate ? (converterDirection === 'CHF_CFA' ? amount * converterRate : amount / converterRate) : null;
+                        return (
+                          <button key={amount} onClick={() => { setConverterAmount(String(amount)); setConversionResult(null); }} className="w-full grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-sm py-1.5 hover:bg-slate-700/50 rounded px-2">
+                            <span className="text-left text-white font-medium">{formatConvertedValue(amount, converterInputCurrency)} {converterInputCurrency}</span>
+                            <span className="text-slate-500">→</span>
+                            <span className="text-right text-orange-300 font-medium">{formatConvertedValue(output, converterOutputCurrency)} {converterOutputCurrency}</span>
                           </button>
-                          <button onClick={() => handleFxDelete(fx.id)} className="p-1 hover:bg-slate-600 rounded">
-                            <Trash2 size={16} className="text-red-400" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            />
+                        );
+                      })}
+                    </div>
+                  </div>
+                </section>
+
+                <div className="space-y-5">
+                  <section className="bg-slate-800 border border-slate-700 rounded-lg p-6 text-center">
+                    <p className="text-sm text-slate-400">{t.conversionResultat}</p>
+                    <p className="text-sm text-slate-300 mt-3">{formatConvertedValue(converterInputValue, converterInputCurrency)} {converterInputCurrency} =</p>
+                    <p className="text-3xl font-bold text-orange-300 mt-1 break-words">{formatConvertedValue(displayedConverterOutput, converterOutputCurrency)} {converterOutputCurrency}</p>
+                    <p className="text-xs text-slate-400 mt-2">1 CHF = {converterRate ? Number(converterRate).toLocaleString(undefined, { maximumFractionDigits: 4 }) : '-'} CFA</p>
+                  </section>
+                  <section className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+                    <h3 className="text-white font-bold mb-4 flex items-center gap-2"><History size={18} className="text-orange-400" /> {t.conversionsRecentes}</h3>
+                    {recentConversions.length === 0 ? (
+                      <p className="text-sm text-slate-400">-</p>
+                    ) : (
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full text-sm">
+                          <thead className="text-slate-400 border-b border-slate-700"><tr><th className="text-left py-2">{t.heure}</th><th className="text-left py-2">{t.montant}</th><th className="text-left py-2">{t.resultat}</th><th className="text-right py-2">{t.taux}</th></tr></thead>
+                          <tbody>{recentConversions.map((entry) => <tr key={entry.id} className="border-b border-slate-700/60"><td className="py-2 text-slate-400">{entry.time}</td><td className="py-2 text-white">{formatConvertedValue(entry.amount, entry.inputCurrency)} {entry.inputCurrency}</td><td className="py-2 text-orange-300">{formatConvertedValue(entry.output, entry.outputCurrency)} {entry.outputCurrency}</td><td className="py-2 text-right text-slate-400">{Number(entry.rate).toLocaleString(undefined, { maximumFractionDigits: 4 })}</td></tr>)}</tbody>
+                        </table>
+                      </div>
+                    )}
+                  </section>
+                </div>
+              </div>
+            )}
+
+            {fxView === 'dashboard' && (
+              <section className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
+                <ResponsiveContainer width="100%" height={380}>
+                  <LineChart data={fxYearlyData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
+                    <XAxis dataKey="année" stroke="#94a3b8" />
+                    <YAxis stroke="#94a3b8" />
+                    <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
+                    <Line type="monotone" dataKey="Taux Moyen" stroke="#f59e0b" strokeWidth={3} dot={{ fill: '#f59e0b', r: 5 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </section>
+            )}
+
+            {fxView === 'history' && (
+              <div>
+                <div className="mb-4 flex flex-wrap justify-end gap-4">
+                  <select value={filterDevise} onChange={(e) => setFilterDevise(e.target.value)} className="px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                    <option value="">{t.filtreDevise}</option><option value="CHF">CHF</option><option value="CFA">CFA</option><option value="USD">USD</option><option value="EUR">EUR</option>
+                  </select>
+                  <button onClick={openNewFxModal} className="flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition"><Plus size={20} /> {t.nouveauTaux}</button>
+                </div>
+                <TableControls rows={filteredFxHistory} renderTable={(visibleRows) => (
+                  <table className="min-w-full text-sm">
+                    <thead className="sticky top-0 z-10 bg-slate-700"><tr><th className="px-4 py-3 text-left text-white font-bold">{t.id}</th><th className="px-4 py-3 text-left text-white font-bold">{t.date}</th><th className="px-4 py-3 text-left text-white font-bold">{t.deviseBase}</th><th className="px-4 py-3 text-left text-white font-bold">{t.deviseCible}</th><th className="px-4 py-3 text-left text-white font-bold">{t.taux}</th><th className="px-4 py-3 text-left text-white font-bold">{t.source}</th><th className="px-4 py-3 text-left text-white font-bold">{t.actions}</th></tr></thead>
+                    <tbody>{visibleRows.map(fx => <tr key={fx.id} className="border-t border-slate-700 hover:bg-slate-700/50"><td className="px-4 py-3 text-slate-300 text-xs">{fx.id}</td><td className="px-4 py-3 text-slate-300 whitespace-nowrap">{formatDateForDisplay(fx.date)}</td><td className="px-4 py-3 text-blue-400 font-bold">{fx.devise_from}</td><td className="px-4 py-3 text-green-400 font-bold">{fx.devise_to}</td><td className="px-4 py-3 text-purple-400 font-bold">{parseFloat(fx.rate).toLocaleString(undefined, { maximumFractionDigits: fx.rate < 1 ? 6 : 2 })}</td><td className="px-4 py-3 text-slate-400">{fx.source}</td><td className="px-4 py-3 flex gap-2"><button onClick={() => handleFxEdit(fx)} className="p-1 hover:bg-slate-600 rounded"><Edit2 size={16} className="text-blue-400" /></button><button onClick={() => handleFxDelete(fx.id)} className="p-1 hover:bg-slate-600 rounded"><Trash2 size={16} className="text-red-400" /></button></td></tr>)}</tbody>
+                  </table>
+                )} />
+              </div>
+            )}
           </div>
         )}
 
@@ -1463,15 +1651,15 @@ const Finance = () => {
             ) : (
               <>
                 <div className="grid grid-cols-1 xl:grid-cols-[minmax(420px,0.8fr)_minmax(0,1.2fr)] gap-6 items-stretch">
-                  <section className="bg-blue-950 border border-blue-800 rounded-lg p-5">
+                  <section className="bg-slate-800 border border-slate-700 border-t-2 border-t-orange-500 rounded-lg p-5">
                     <div className="flex items-start gap-3 mb-4">
                       <Building2 size={26} className="text-orange-400 mt-1 shrink-0" />
                       <div>
                         <h2 className="text-lg font-bold text-white">{t.immoTitle}</h2>
-                        <p className="text-sm text-blue-200">{t.immoSubtitle}</p>
+                        <p className="text-sm text-slate-400">{t.immoSubtitle}</p>
                       </div>
                     </div>
-                    <p className="text-xs uppercase text-blue-200 mb-2">{t.totalInvesti}</p>
+                    <p className="text-xs uppercase text-slate-400 mb-2">{t.totalInvesti}</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                       <div>
                         <p className="text-2xl font-bold text-orange-400 whitespace-nowrap">{formatAmount(immoInvestiChf)} CHF</p>
@@ -1484,19 +1672,19 @@ const Finance = () => {
                     {immoEquivalentTauxJour !== null && (
                       <p className="text-xs text-slate-400 mb-4">≈ {formatAmount(immoEquivalentTauxJour)} CFA · {t.equivalentTauxJour}</p>
                     )}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 border-t border-blue-800 sm:divide-x divide-blue-800">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 border-t border-slate-700 sm:divide-x divide-slate-700">
                       <div className="py-3 sm:pr-3">
                         <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoRemboursementsDirects)} CHF</p>
-                        <p className="text-xs text-blue-200">{t.remboursementsDirects}</p>
+                        <p className="text-xs text-slate-400">{t.remboursementsDirects}</p>
                         <p className="text-xs text-slate-400 mt-1">{t.remboursementsTotal}: {formatAmount(immoRemboursementsTotal)} CHF</p>
                       </div>
                       <div className="py-3 sm:px-3">
                         <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoSoldeOuvert)} CHF</p>
-                        <p className="text-xs text-blue-200">{t.soldeOuvert}</p>
+                        <p className="text-xs text-slate-400">{t.soldeOuvert}</p>
                       </div>
                       <div className="py-3 sm:pl-3">
                         <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoPartCheikh)} CHF</p>
-                        <p className="text-xs text-blue-200">{t.partCheikh}</p>
+                        <p className="text-xs text-slate-400">{t.partCheikh}</p>
                       </div>
                     </div>
                   </section>
