@@ -974,8 +974,12 @@ const Finance = () => {
     const addRows = (rows, key) => rows.forEach((row) => {
       const year = cleanDate(row.date).slice(0, 4);
       if (!/^\d{4}$/.test(year)) return;
-      if (!yearly[year]) yearly[year] = { année: year, recettes: 0, depenses: 0 };
-      yearly[year][key] += toNumber(row.montantChf ?? row.montant);
+      if (!yearly[year]) yearly[year] = { année: year, recettes: 0, depenses: 0, recettesCfa: 0, depensesCfa: 0 };
+      const montantChf = toNumber(row.montantChf ?? row.montant);
+      const tauxFx = toNumber(row.tauxFx);
+      const montantCfa = toNumber(row.montantCfa) || (tauxFx > 1 ? montantChf * tauxFx : 0);
+      yearly[year][key] += montantChf;
+      yearly[year][`${key}Cfa`] += montantCfa;
     });
     addRows(recettesExploitation, 'recettes');
     addRows(depensesAffichees, 'depenses');
@@ -1399,29 +1403,44 @@ const Finance = () => {
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">{t.tendance}</h3>
+              <h3 className="text-white font-bold mb-4">{t.tendance} (CHF)</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={annualFinanceData} margin={{ top: 8, right: 10, left: 8, bottom: 0 }} barGap={5}>
-                  <CartesianGrid strokeDasharray="2 5" stroke="#7180a0" vertical={false} />
+                  <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
                   <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} />
                   <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={52} tickFormatter={(value) => `${Math.round(value / 1000)}k`} />
-                  <Tooltip formatter={(value) => [`${Number(value).toLocaleString()} CHF`]} contentStyle={{ backgroundColor: '#272757', border: 'none', color: '#fff' }} />
+                  <Tooltip formatter={(value) => [`${Number(value).toLocaleString()} CHF`]} contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }} />
                   <Legend />
-                  <Bar dataKey="recettes" name={t.recettes} fill="#35c89a" radius={[5, 5, 0, 0]} maxBarSize={42} />
-                  <Bar dataKey="depenses" name={t.depenses} fill="#f06a78" radius={[5, 5, 0, 0]} maxBarSize={42} />
+                  <Bar dataKey="recettes" name={t.recettes} fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={36} />
+                  <Bar dataKey="depenses" name={t.depenses} fill="#ef5b62" radius={[4, 4, 0, 0]} maxBarSize={36} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
 
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
+              <h3 className="text-white font-bold mb-4">{t.tendance} (CFA)</h3>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={fxYearlyData} margin={{ top: 8, right: 18, left: 8, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="2 5" stroke="#7180a0" vertical={false} />
+                <BarChart data={annualFinanceData} margin={{ top: 8, right: 10, left: 12, bottom: 0 }} barGap={5}>
+                  <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
                   <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} />
-                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={52} domain={['auto', 'auto']} />
-                  <Tooltip formatter={(value) => [`${Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 })} CFA`, t.taux]} contentStyle={{ backgroundColor: '#272757', border: 'none', color: '#fff' }} />
-                  <Line type="monotone" dataKey="Taux Moyen" stroke="#79a7ff" strokeWidth={3} dot={{ fill: '#fff', stroke: '#79a7ff', strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }} />
+                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={66} tickFormatter={(value) => `${Math.round(value / 1000000)}M`} />
+                  <Tooltip formatter={(value) => [`${Math.round(Number(value)).toLocaleString()} CFA`]} contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }} />
+                  <Legend />
+                  <Bar dataKey="recettesCfa" name={t.recettes} fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={36} />
+                  <Bar dataKey="depensesCfa" name={t.depenses} fill="#ef5b62" radius={[4, 4, 0, 0]} maxBarSize={36} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="lg:col-span-2 bg-slate-800 rounded-lg p-6 border border-slate-700">
+              <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
+              <ResponsiveContainer width="100%" height={280}>
+                <LineChart data={fxYearlyData} margin={{ top: 8, right: 24, left: 8, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="2 7" stroke="#7180a0" vertical={false} />
+                  <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} />
+                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={54} domain={['auto', 'auto']} />
+                  <Tooltip formatter={(value) => [`${Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 })} CFA`, t.taux]} contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }} />
+                  <Line type="monotone" dataKey="Taux Moyen" stroke="#60a5fa" strokeWidth={1.75} dot={{ fill: '#60a5fa', strokeWidth: 0, r: 2.5 }} activeDot={{ r: 4 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>

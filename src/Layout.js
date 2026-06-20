@@ -6,7 +6,7 @@ import {
   Home, Settings, Users, DollarSign, Briefcase, Package, Building2, Zap,
   Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
   Wrench, Truck, Box, AlertTriangle, Eye, FileText, Brain, Database, BookOpen,
-  Code, HelpCircle, Book
+  Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft
 } from 'lucide-react';
 import menuData from './menuStructure.json';
 import Header from './Header';
@@ -17,7 +17,7 @@ const iconMap = {
   Home, Settings, Users, DollarSign, Briefcase, Package, Building2, Zap,
   Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
   Wrench, Truck, Box, AlertTriangle, Eye, FileText, Brain, Database, BookOpen,
-  Code, HelpCircle, Book
+  Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft
 };
 
 const Layout = ({ children }) => {
@@ -189,7 +189,7 @@ const Layout = ({ children }) => {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-700 space-y-2">
+        <div className="p-4 space-y-2">
           {/* Version & Copyright */}
           {sidebarOpen && (
             <div className="text-xs text-slate-500 mt-4 pt-4 border-t border-slate-700 text-center">

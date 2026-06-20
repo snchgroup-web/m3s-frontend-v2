@@ -80,6 +80,7 @@
             "EN": "Revenue",
             "DE": "Einnahmen"
           },
+          "icon": "TrendingUp",
           "path": "/finance?tab=recettes"
         },
         {
@@ -89,6 +90,7 @@
             "EN": "Expenses",
             "DE": "Ausgaben"
           },
+          "icon": "TrendingDown",
           "path": "/finance?tab=depenses"
         },
         {
@@ -98,6 +100,7 @@
             "EN": "Budget",
             "DE": "Budget"
           },
+          "icon": "Wallet",
           "path": "/finance?tab=budget"
         },
         {
@@ -107,6 +110,7 @@
             "EN": "Social",
             "DE": "Sozial"
           },
+          "icon": "Heart",
           "path": "/finance?tab=social"
         },
         {
@@ -116,6 +120,7 @@
             "EN": "Real Estate Finance",
             "DE": "Immobilienfinanzierung"
           },
+          "icon": "Building2",
           "path": "/finance?tab=immobilier"
         },
         {
@@ -125,6 +130,7 @@
             "EN": "FX Converter",
             "DE": "FX-Umrechner"
           },
+          "icon": "ArrowRightLeft",
           "path": "/finance?tab=fx"
         }
       ]
