@@ -17,6 +17,32 @@ const monthTranslations = {
 
 const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
 
+const TEAM_OPTIONS = ['Team_ZH', 'Team_SN'];
+const DEPARTMENT_OPTIONS = [
+  'Administration',
+  'Finances',
+  'Ressources Humaines',
+  'Commercial & CRM',
+  'Production',
+  'Stock & Actifs',
+  'IT & Support'
+];
+const PROJECT_PHASE_OPTIONS = ['Conception', 'Mise en Place', 'Consolidation', 'Dynamisation'];
+const COUNTRY_OPTIONS = ['CH', 'SN', 'FR', 'ISR'];
+
+const createEmptyFinanceForm = () => ({
+  description: '',
+  montant: '',
+  devise: 'CHF',
+  date: new Date().toISOString().split('T')[0],
+  categorie: '',
+  agent: '',
+  team: '',
+  departement: '',
+  phaseProjet: '',
+  pays: ''
+});
+
 const createEmptyImmoForm = () => ({
   date: new Date().toISOString().split('T')[0],
   designation: '',
@@ -72,13 +98,7 @@ const Finance = () => {
     date: new Date().toISOString().split('T')[0],
     source: 'Manual'
   });
-  const [formData, setFormData] = useState({
-    description: '',
-    montant: '',
-    devise: 'CHF',
-    date: new Date().toISOString().split('T')[0],
-    categorie: ''
-  });
+  const [formData, setFormData] = useState(createEmptyFinanceForm);
 
   // Translations
   const translations = {
@@ -110,6 +130,7 @@ const Finance = () => {
       team: 'Team',
       departement: 'Departement',
       phaseProjet: 'Phase Projet',
+      pays: 'Pays',
       date: 'Date',
       actions: 'Actions',
       modifierRecette: 'Modifier recette',
@@ -199,6 +220,7 @@ const Finance = () => {
       team: 'Team',
       departement: 'Department',
       phaseProjet: 'Project Phase',
+      pays: 'Country',
       date: 'Date',
       actions: 'Actions',
       modifierRecette: 'Edit revenue',
@@ -288,6 +310,7 @@ const Finance = () => {
       team: 'Team',
       departement: 'Abteilung',
       phaseProjet: 'Projektphase',
+      pays: 'Land',
       date: 'Datum',
       actions: 'Aktionen',
       modifierRecette: 'Einnahme bearbeiten',
@@ -840,6 +863,13 @@ const Finance = () => {
     return [...new Set([...defaults, ...existing, formData.categorie].filter(Boolean))];
   }, [modalType, recettes, depenses, formData.categorie]);
 
+  const agentOptions = useMemo(() => {
+    const existing = [...recettes, ...depenses]
+      .map((row) => row.agent)
+      .filter((value) => value && normalizeCategoryKey(value) !== 'NON RENSEIGNE');
+    return [...new Set(['Cheikh', 'Chantal', ...existing, formData.agent].filter(Boolean))];
+  }, [recettes, depenses, formData.agent]);
+
   const immoCategoryOptions = useMemo(() => [
     ...new Set([
       'Achat Terrain', 'Frais Administratifs', 'Clôture/Portail', 'Gros Œuvres',
@@ -1198,7 +1228,7 @@ const Finance = () => {
       await loadFinanceData();
       setShowModal(false);
       setEditingId(null);
-      setFormData({ description: '', montant: '', devise: 'CHF', date: new Date().toISOString().split('T')[0], categorie: '' });
+      setFormData(createEmptyFinanceForm());
     } catch (error) {
       alert(error.message);
     } finally {
@@ -1231,7 +1261,7 @@ const Finance = () => {
   const openNewModal = (type) => {
     setModalType(type);
     setEditingId(null);
-    setFormData({ description: '', montant: '', devise: 'CHF', date: new Date().toISOString().split('T')[0], categorie: '' });
+    setFormData(createEmptyFinanceForm());
     setShowModal(true);
   };
 
@@ -1879,21 +1909,30 @@ const Finance = () => {
                 </label>
                 <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.agent}</span>
-                  <input type="text" value={immoFormData.agent} onChange={(event) => handleImmoFormChange('agent', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                  <select value={immoFormData.agent} onChange={(event) => handleImmoFormChange('agent', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
+                    <option value="">-</option>
+                    {agentOptions.map((value) => <option key={value} value={value}>{value}</option>)}
+                  </select>
                 </label>
                 <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.team}</span>
-                  <input type="text" value={immoFormData.team} onChange={(event) => handleImmoFormChange('team', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                  <select value={immoFormData.team} onChange={(event) => handleImmoFormChange('team', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
+                    <option value="">-</option>
+                    {TEAM_OPTIONS.map((value) => <option key={value} value={value}>{formatUnknownCategory(value)}</option>)}
+                  </select>
                 </label>
                 <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.departement}</span>
-                  <input type="text" value={immoFormData.departement} onChange={(event) => handleImmoFormChange('departement', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                  <select value={immoFormData.departement} onChange={(event) => handleImmoFormChange('departement', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
+                    <option value="">-</option>
+                    {DEPARTMENT_OPTIONS.map((value) => <option key={value} value={value}>{value}</option>)}
+                  </select>
                 </label>
                 <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.phaseProjet}</span>
                   <select value={immoFormData.phaseProjet} onChange={(event) => handleImmoFormChange('phaseProjet', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
                     <option value="">-</option>
-                    {['Conception', 'Mise en Place', 'Consolidation', 'Dynamisation'].map((value) => <option key={value} value={value}>{translateStandardValue(value)}</option>)}
+                    {PROJECT_PHASE_OPTIONS.map((value) => <option key={value} value={value}>{translateStandardValue(value)}</option>)}
                   </select>
                 </label>
                 <label className="md:col-span-2 text-sm text-slate-300">
@@ -1911,7 +1950,7 @@ const Finance = () => {
 
         {showModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-slate-800 rounded-lg p-6 max-w-md w-full border border-slate-700">
+            <div className="bg-slate-800 rounded-lg p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto border border-slate-700">
               <h2 className="text-white font-bold mb-4">{editingId ? (modalType === 'recette' ? t.modifierRecette : t.modifierDepense) : (modalType === 'recette' ? t.creerRecette : t.creerDepense)}</h2>
               <div className="space-y-4">
                 <input
@@ -1947,6 +1986,43 @@ const Finance = () => {
                   onChange={(date) => handleFormChange('date', date)}
                   className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
                 />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <label className="text-sm text-slate-300">
+                    <span className="block mb-1">{t.agent}</span>
+                    <select value={formData.agent || ''} onChange={(e) => handleFormChange('agent', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                      <option value="">-</option>
+                      {agentOptions.map((value) => <option key={value} value={value}>{value}</option>)}
+                    </select>
+                  </label>
+                  <label className="text-sm text-slate-300">
+                    <span className="block mb-1">{t.team}</span>
+                    <select value={formData.team || ''} onChange={(e) => handleFormChange('team', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                      <option value="">-</option>
+                      {TEAM_OPTIONS.map((value) => <option key={value} value={value}>{formatUnknownCategory(value)}</option>)}
+                    </select>
+                  </label>
+                  <label className="text-sm text-slate-300">
+                    <span className="block mb-1">{t.departement}</span>
+                    <select value={formData.departement || ''} onChange={(e) => handleFormChange('departement', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                      <option value="">-</option>
+                      {DEPARTMENT_OPTIONS.map((value) => <option key={value} value={value}>{value}</option>)}
+                    </select>
+                  </label>
+                  <label className="text-sm text-slate-300">
+                    <span className="block mb-1">{t.phaseProjet}</span>
+                    <select value={formData.phaseProjet || ''} onChange={(e) => handleFormChange('phaseProjet', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                      <option value="">-</option>
+                      {PROJECT_PHASE_OPTIONS.map((value) => <option key={value} value={value}>{translateStandardValue(value)}</option>)}
+                    </select>
+                  </label>
+                  <label className="text-sm text-slate-300">
+                    <span className="block mb-1">{t.pays}</span>
+                    <select value={formData.pays || ''} onChange={(e) => handleFormChange('pays', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                      <option value="">-</option>
+                      {COUNTRY_OPTIONS.map((value) => <option key={value} value={value}>{value}</option>)}
+                    </select>
+                  </label>
+                </div>
                 <div className="flex gap-4 justify-end">
                   <button onClick={() => setShowModal(false)} disabled={savingFinance} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg disabled:opacity-50">{t.annuler}</button>
                   <button onClick={handleSave} disabled={savingFinance} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50">{editingId ? t.enregistrer : t.creer}</button>
