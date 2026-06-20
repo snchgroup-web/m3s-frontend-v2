@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ModuleTitle } from './modulePresentation';
 import { useLocation } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Plus, Edit2, Trash2, Shield, Users, Lock, Activity, AlertCircle } from 'lucide-react';
@@ -600,8 +601,7 @@ const Admin = () => {
         <div className="max-w-7xl mx-auto">
 
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">⚙️ {t.title}</h1>
-          <p className="text-slate-400">{t.subtitle}</p>
+          <ModuleTitle moduleId="administration" title={t.title} subtitle={t.subtitle} />
         </div>
 
         {/* KPIs */}

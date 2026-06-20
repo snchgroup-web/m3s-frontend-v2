@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import Header from './Header';
 import api from './api';
 
 // Month translations (stable constants, defined at module level)
@@ -13,9 +12,6 @@ const monthTranslations = {
 };
 
 const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-
-// Exchange rate: 1 CHF = 656 CFA
-const CHF_TO_CFA_RATE = 656;
 
 const numberFromApi = (value, fallback = 0) => {
   const parsed = Number(value);
@@ -32,8 +28,8 @@ const withApiFallback = async (request, fallback = null) => {
 };
 
 // Format currency with both CHF and CFA - returns object for separate display
-const formatDualCurrency = (chfAmount) => {
-  const cfaAmount = Math.round(chfAmount * CHF_TO_CFA_RATE);
+const formatDualCurrency = (chfAmount, exchangeRate) => {
+  const cfaAmount = Math.round(chfAmount * (exchangeRate || 0));
   return {
     chf: chfAmount.toLocaleString(),
     cfa: cfaAmount.toLocaleString()
@@ -54,7 +50,7 @@ const mockDataBaseRaw = {
     finance: { revenue: 285000, expenses: 215000, balance: 70000, donations: 15000, financing: 25000 },
     rh: { employees: 12, volunteers: 24, members: 156, beneficiaries: 89 },
     crm: { prospects: 45, clients: 28, donations: 18, suppliers: 34 },
-    production: { orders: 52, completed: 38, pending: 14, stocks: 342, articles: 127 },
+    production: { orders: 52, completed: 38, pending: 14, stocks: 342 },
     actifs: { total: 1250000, depreciation: 125000 },
     ged: { documents: 847, recent: 12 },
     tasks: { total: 234, completed: 178, pending: 56 },
@@ -64,7 +60,7 @@ const mockDataBaseRaw = {
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
   const [, setUser] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -91,7 +87,6 @@ const Dashboard = () => {
       orders: 'Commandes',
       documents: 'Documents',
       stocks: 'Quantité en Stock',
-      articles: 'Articles',
       donations: 'Dons',
       financing: 'Financements',
       files: 'Fichiers',
@@ -133,7 +128,6 @@ const Dashboard = () => {
       orders: 'Orders',
       documents: 'Documents',
       stocks: 'Stock Quantity',
-      articles: 'Articles',
       donations: 'Donations',
       financing: 'Financing',
       files: 'Files',
@@ -175,7 +169,6 @@ const Dashboard = () => {
       orders: 'Bestellungen',
       documents: 'Dokumente',
       stocks: 'Lagermenge',
-      articles: 'Artikel',
       donations: 'Spenden',
       financing: 'Finanzierung',
       files: 'Dateien',
@@ -218,9 +211,9 @@ const Dashboard = () => {
 
   // Create staff distribution with translated names
   const getStaffDistribution = () => [
-    { name: t.employees, value: 12 },
-    { name: t.volunteers, value: 24 },
-    { name: t.members, value: 156 }
+    { name: t.employees, value: dashboardData?.moduleStats.rh.employees || 0 },
+    { name: t.volunteers, value: dashboardData?.moduleStats.rh.volunteers || 0 },
+    { name: t.members, value: dashboardData?.moduleStats.rh.members || 0 }
   ];
 
   // Fetch data from API, with stable mock fallback when the backend is unavailable.
@@ -229,16 +222,29 @@ const Dashboard = () => {
       try {
         setLoading(true);
 
-        const [financeDashboard, documentsCount, inventoryCount, tasksCount, users] = await Promise.all([
+        const [financeDashboard, documentsCount, inventoryCount, tasksCount, users, income, expenses, fx] = await Promise.all([
           withApiFallback(() => api.getFinanceDashboard()),
           withApiFallback(() => api.getDocumentsCount()),
           withApiFallback(() => api.getInventoryCount()),
           withApiFallback(() => api.getTasksCount()),
-          withApiFallback(() => api.getUsers(100, 0))
+          withApiFallback(() => api.getUsers(100, 0)),
+          withApiFallback(() => api.getIncome(200, 0), { data: [] }),
+          withApiFallback(() => api.getExpenses(200, 0), { data: [] }),
+          withApiFallback(() => api.getFxHistory(), {})
         ]);
 
-        const totalIncome = numberFromApi(financeDashboard?.data?.total_income, mockDataBase.moduleStats.finance.revenue);
-        const totalExpenses = numberFromApi(financeDashboard?.data?.total_expenses, mockDataBase.moduleStats.finance.expenses);
+        const incomeRows = Array.isArray(income?.data) ? income.data : [];
+        const expenseRows = Array.isArray(expenses?.data) ? expenses.data : [];
+        const operatingIncomeRows = incomeRows.filter((row) => !String(row.category || '').toUpperCase().includes('AIDE SOCIALE'));
+        const totalIncome = incomeRows.length
+          ? operatingIncomeRows.reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0)
+          : numberFromApi(financeDashboard?.data?.total_income, mockDataBase.moduleStats.finance.revenue);
+        const totalExpenses = expenseRows.length
+          ? expenseRows.reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0)
+          : numberFromApi(financeDashboard?.data?.total_expenses, mockDataBase.moduleStats.finance.expenses);
+        const donations = incomeRows.filter((row) => String(row.category || '').toUpperCase().includes('DON')).reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0);
+        const financing = incomeRows.filter((row) => String(row.category || '').toUpperCase() === 'FINANCEMENT').reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0);
+        const exchangeRate = numberFromApi(fx?.taux_du_jour?.CHF_CFA, 710);
         const inventoryTotal = numberFromApi(inventoryCount?.total, mockDataBase.moduleStats.production.stocks);
         const documentsTotal = numberFromApi(documentsCount?.total, mockDataBase.moduleStats.ged.documents);
         const tasksTotal = numberFromApi(tasksCount?.total, mockDataBase.moduleStats.tasks.total);
@@ -246,13 +252,18 @@ const Dashboard = () => {
 
         setDashboardData({
           ...mockDataBase,
+          exchangeRate,
           moduleStats: {
             ...mockDataBase.moduleStats,
             finance: {
               ...mockDataBase.moduleStats.finance,
               revenue: totalIncome,
               expenses: totalExpenses,
-              balance: totalIncome - totalExpenses
+              balance: totalIncome - totalExpenses,
+              donations,
+              financing,
+              incomeCount: incomeRows.length,
+              expenseCount: expenseRows.length
             },
             production: {
               ...mockDataBase.moduleStats.production,
@@ -268,7 +279,9 @@ const Dashboard = () => {
             },
             rh: {
               ...mockDataBase.moduleStats.rh,
-              employees: userRows.length || mockDataBase.moduleStats.rh.employees
+              employees: 2,
+              volunteers: 0,
+              members: userRows.length
             }
           }
         });
@@ -317,9 +330,6 @@ const Dashboard = () => {
 
   return (
     <>
-      {/* New Header */}
-      <Header title={t.dashboard} language={language} setLanguage={setLanguage} />
-
       {/* Content */}
       <div className="overflow-auto">
         <div className="p-6 space-y-6">
@@ -331,10 +341,10 @@ const Dashboard = () => {
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.revenue}</p>
               </div>
-              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).chf} CHF</p>
-              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue).cfa} CFA</p>
+              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue, dashboardData.exchangeRate).chf} CHF</p>
+              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue, dashboardData.exchangeRate).cfa} CFA</p>
               <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">42 {t.transactions}</p>
+              <p className="text-slate-500 text-xs">{dashboardData?.moduleStats.finance.incomeCount} {t.transactions}</p>
             </div>
 
             {/* Dépenses */}
@@ -343,10 +353,10 @@ const Dashboard = () => {
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.expenses}</p>
               </div>
-              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).chf} CHF</p>
-              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses).cfa} CFA</p>
+              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses, dashboardData.exchangeRate).chf} CHF</p>
+              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses, dashboardData.exchangeRate).cfa} CFA</p>
               <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">38 {t.transactions}</p>
+              <p className="text-slate-500 text-xs">{dashboardData?.moduleStats.finance.expenseCount} {t.transactions}</p>
             </div>
 
             {/* Solde */}
@@ -355,8 +365,8 @@ const Dashboard = () => {
                 <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.balance}</p>
               </div>
-              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).chf} CHF</p>
-              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.balance).cfa} CFA</p>
+              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.balance, dashboardData.exchangeRate).chf} CHF</p>
+              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.balance, dashboardData.exchangeRate).cfa} CFA</p>
               <div className="border-t border-slate-700 my-2"></div>
               <p className="text-slate-500 text-xs">{t.netMonthly}</p>
             </div>
@@ -367,8 +377,8 @@ const Dashboard = () => {
                 <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.donations}</p>
               </div>
-              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).chf} CHF</p>
-              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations).cfa} CFA</p>
+              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations, dashboardData.exchangeRate).chf} CHF</p>
+              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations, dashboardData.exchangeRate).cfa} CFA</p>
               <div className="border-t border-slate-700 my-2"></div>
               <p className="text-slate-500 text-xs">7 {t.donors}</p>
             </div>
@@ -379,8 +389,8 @@ const Dashboard = () => {
                 <div className="w-3 h-3 bg-cyan-500 rounded-full"></div>
                 <p className="text-slate-300 text-sm font-medium">{t.financing}</p>
               </div>
-              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).chf} CHF</p>
-              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing).cfa} CFA</p>
+              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing, dashboardData.exchangeRate).chf} CHF</p>
+              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing, dashboardData.exchangeRate).cfa} CFA</p>
               <div className="border-t border-slate-700 my-2"></div>
               <p className="text-slate-500 text-xs">3 {t.projects}</p>
             </div>
@@ -394,7 +404,7 @@ const Dashboard = () => {
               <p className="text-white text-lg font-bold">{dashboardData?.moduleStats.rh.employees + dashboardData?.moduleStats.rh.volunteers + dashboardData?.moduleStats.rh.members}</p>
               <p className="text-slate-500 text-xs">{t.total}</p>
               <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">12 {t.employees_staff}</p>
+              <p className="text-slate-500 text-xs">{dashboardData?.moduleStats.rh.employees} {t.employees_staff}</p>
             </div>
           </div>
 
@@ -411,15 +421,15 @@ const Dashboard = () => {
               <p className="text-slate-500 text-xs">{t.quantity}</p>
             </div>
 
-            {/* Articles */}
+            {/* Documents */}
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-pink-500 hover:shadow-pink-500/20 transition-all duration-300 cursor-pointer group">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-3 h-3 bg-pink-500 rounded-full"></div>
-                <p className="text-slate-300 text-sm font-medium">Articles</p>
+                <p className="text-slate-300 text-sm font-medium">{t.documents}</p>
               </div>
-              <p className="text-white text-lg font-bold">{dashboardData?.moduleStats.production.articles}</p>
+              <p className="text-white text-lg font-bold">{dashboardData?.moduleStats.ged.documents}</p>
               <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{t.articles}</p>
+              <p className="text-slate-500 text-xs">{t.files}</p>
             </div>
 
             {/* Clients */}

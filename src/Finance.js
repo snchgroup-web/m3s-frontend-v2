@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { ModuleTitle } from './modulePresentation';
 import { useLocation } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal } from 'lucide-react';
@@ -1348,8 +1349,7 @@ const Finance = () => {
         <div className="mx-auto w-full max-w-[1800px]">
 
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">💰 {t.title}</h1>
-          <p className="text-slate-400">{t.subtitle}</p>
+          <ModuleTitle moduleId="finances" title={t.title} subtitle={t.subtitle} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-8">

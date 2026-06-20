@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import {
-  Menu, X, LogOut, Globe, ChevronDown, ChevronRight, Maximize2, Minimize2,
+  Menu, X, ChevronDown, ChevronRight, Maximize2, Minimize2, Circle,
   Home, Settings, Users, DollarSign, Briefcase, Package, Building2, Zap,
   Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
   Wrench, Truck, Box, AlertTriangle, Eye, FileText, Brain, Database, BookOpen,
   Code, HelpCircle, Book
 } from 'lucide-react';
 import menuData from './menuStructure.json';
+import Header from './Header';
+import { ModuleIcon, modulePresentation } from './modulePresentation';
 
 // Mapping des icônes
 const iconMap = {
@@ -20,7 +22,7 @@ const iconMap = {
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [expandedMenus, setExpandedMenus] = useState({});
   const [expandAll, setExpandAll] = useState(false);
@@ -60,18 +62,12 @@ const Layout = ({ children }) => {
     setExpandedMenus(newState);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/login');
-  };
-
   const handleMenuItemClick = (path) => {
     navigate(path);
   };
 
   return (
-    <div className="flex h-screen bg-slate-900 text-gray-100">
+    <div className="app-shell flex h-screen bg-slate-900 text-gray-100">
       {/* Sidebar */}
       <div className={`${sidebarOpen ? 'w-72' : 'w-20'} bg-slate-800 border-r border-slate-700 transition-all duration-300 flex flex-col overflow-hidden`}>
 
@@ -81,7 +77,7 @@ const Layout = ({ children }) => {
             <div className="flex flex-col space-y-1 items-center text-center flex-1">
               <div className="flex items-center space-x-2 justify-center">
                 {/* Logo Image */}
-                <img src="/assets/logo-2sg.svg" alt="2SG Logo" className="w-8 h-8 rounded flex-shrink-0" />
+                <img src="/assets/logo-2sg.png" alt="Logo SeneSwiss Group" className="w-10 h-10 rounded-full object-cover flex-shrink-0 bg-white" />
                 <h1 className="text-base font-bold text-blue-400 whitespace-nowrap">2SG - SeneSwiss Group</h1>
               </div>
               <p className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">M3S v2.0 - Management System - SeneSwiss</p>
@@ -147,12 +143,9 @@ const Layout = ({ children }) => {
                 {/* Icône */}
                 <div className="flex-shrink-0 flex items-center space-x-2">
                   {/* Module icon */}
-                  {item.icon && iconMap[item.icon] ? (
-                    React.createElement(iconMap[item.icon], {
-                      size: 18,
-                      className: "text-blue-400"
-                    })
-                  ) : null}
+                  <div className={`w-8 h-8 flex items-center justify-center rounded-md ${modulePresentation[item.id]?.bg || 'bg-slate-700'}`}>
+                    <ModuleIcon moduleId={item.id} size={18} />
+                  </div>
 
                   {/* Chevron for expandable items */}
                   {sidebarOpen && item.children && item.children.length > 0 && (
@@ -183,7 +176,9 @@ const Layout = ({ children }) => {
                       onClick={() => handleMenuItemClick(child.path)}
                       className="w-full flex items-center space-x-2 px-3 py-1.5 rounded text-xs hover:bg-slate-600 transition text-left text-slate-300 hover:text-white"
                     >
-                      <span className="text-blue-400">•</span>
+                      {child.icon && iconMap[child.icon]
+                        ? React.createElement(iconMap[child.icon], { size: 14, className: modulePresentation[item.id]?.color || 'text-sky-400' })
+                        : <Circle size={7} className={modulePresentation[item.id]?.color || 'text-sky-400'} fill="currentColor" />}
                       <span>{child.label[language] || child.label.FR}</span>
                     </button>
                   ))}
@@ -195,25 +190,6 @@ const Layout = ({ children }) => {
 
         {/* Footer */}
         <div className="p-4 border-t border-slate-700 space-y-2">
-          <div className="flex items-center space-x-2 px-3 py-2 text-sm">
-            <Globe size={18} />
-            {sidebarOpen && (
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className="flex-1 bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm hover:bg-slate-600"
-              >
-                <option value="FR">Français</option>
-                <option value="EN">English</option>
-                <option value="DE">Deutsch</option>
-              </select>
-            )}
-          </div>
-          <button onClick={handleLogout} className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-red-400 hover:bg-slate-700 rounded">
-            <LogOut size={18} />
-            {sidebarOpen && <span>{t.logout}</span>}
-          </button>
-
           {/* Version & Copyright */}
           {sidebarOpen && (
             <div className="text-xs text-slate-500 mt-4 pt-4 border-t border-slate-700 text-center">
@@ -225,8 +201,11 @@ const Layout = ({ children }) => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
-        {children}
+      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+        <Header />
+        <main className="flex-1 overflow-auto">
+          {children}
+        </main>
       </div>
     </div>
   );
