@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, LabelList } from 'recharts';
 import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
@@ -106,6 +106,7 @@ const Finance = () => {
       fx: 'Historique FX',
       tendance: 'Tendance Recettes vs Dépenses',
       historiqueTaux: 'Historique Taux de Change (CFA/CHF)',
+      moyenneAnnuelleFx: 'Taux moyen annuel - 1 CHF en CFA',
       nouvelleRecette: 'Nouvelle Recette',
       nouvelleDepense: 'Nouvelle Dépense',
       description: 'Description',
@@ -196,6 +197,7 @@ const Finance = () => {
       fx: 'FX History',
       tendance: 'Revenue vs Expense Trend',
       historiqueTaux: 'Exchange Rate History (CFA/CHF)',
+      moyenneAnnuelleFx: 'Annual average rate - 1 CHF in CFA',
       nouvelleRecette: 'New Revenue',
       nouvelleDepense: 'New Expense',
       description: 'Description',
@@ -286,6 +288,7 @@ const Finance = () => {
       fx: 'Wechselkurshistorie',
       tendance: 'Trend Einnahmen vs. Ausgaben',
       historiqueTaux: 'Wechselkurshistorie (CFA/CHF)',
+      moyenneAnnuelleFx: 'Jahresdurchschnitt - 1 CHF in CFA',
       nouvelleRecette: 'Neue Einnahme',
       nouvelleDepense: 'Neue Ausgabe',
       description: 'Beschreibung',
@@ -986,39 +989,41 @@ const Finance = () => {
     return Object.values(yearly).sort((a, b) => a.année.localeCompare(b.année));
   }, [recettesExploitation, depensesAffichees]);
 
-  // Transform 350 FX rates into yearly data for chart
+  // Average the direct CHF -> CFA observations for each year.
   const fxYearlyData = useMemo(() => {
-    if (!fxHistory || fxHistory.length === 0) return [];
+    const years = Array.from({ length: 8 }, (_, index) => String(2019 + index));
+    const yearlyMap = Object.fromEntries(years.map((year) => [year, { direct: [], inverse: [] }]));
 
-    const yearlyMap = {};
     fxHistory.forEach(item => {
-      try {
-        const dateStr = item.date || '';
-        const year = dateStr.substring(0, 4);
-        const rawRate = parseFloat(item.rate) || 0;
-        const from = String(item.devise_from || '').toUpperCase();
-        const to = String(item.devise_to || '').toUpperCase();
-        const rate = from === 'CFA' && to === 'CHF' && rawRate > 0 ? 1 / rawRate : rawRate;
-
-        if (!yearlyMap[year]) {
-          yearlyMap[year] = { rates: [], year };
-        }
-        if (rate > 0) {
-          yearlyMap[year].rates.push(rate);
-        }
-      } catch (e) {
-        // Skip malformed dates
-      }
+      const year = cleanDate(item.date).slice(0, 4);
+      if (!yearlyMap[year]) return;
+      const rawRate = toNumber(item.rate);
+      const from = String(item.devise_from || '').toUpperCase();
+      const to = String(item.devise_to || '').toUpperCase();
+      if (from === 'CHF' && to === 'CFA' && rawRate > 1) yearlyMap[year].direct.push(rawRate);
+      if (from === 'CFA' && to === 'CHF' && rawRate > 0 && rawRate < 1) yearlyMap[year].inverse.push(1 / rawRate);
     });
 
-    // Calculate average per year
-    return Object.values(yearlyMap)
-      .map(data => ({
-        année: data.year,
-        'Taux Moyen': parseFloat((data.rates.reduce((a, b) => a + b, 0) / data.rates.length).toFixed(2))
-      }))
-      .sort((a, b) => a.année - b.année);
+    return years.map((year) => {
+      const observations = yearlyMap[year].direct.length ? yearlyMap[year].direct : yearlyMap[year].inverse;
+      const average = observations.length
+        ? observations.reduce((sum, rate) => sum + rate, 0) / observations.length
+        : null;
+      return {
+        année: year,
+        'Taux Moyen': average === null ? null : Number(average.toFixed(2)),
+        observations: observations.length
+      };
+    });
   }, [fxHistory]);
+
+  const fxYearlyDomain = useMemo(() => {
+    const values = fxYearlyData.map((item) => item['Taux Moyen']).filter(Number.isFinite);
+    if (!values.length) return [550, 730];
+    const minimum = Math.floor((Math.min(...values) - 10) / 10) * 10;
+    const maximum = Math.ceil((Math.max(...values) + 10) / 10) * 10;
+    return [minimum, maximum];
+  }, [fxYearlyData]);
 
   const fxStatistics = useMemo(() => {
     const rates = fxHistory.map((item) => {
@@ -1434,13 +1439,20 @@ const Finance = () => {
 
             <div className="lg:col-span-2 bg-slate-800 rounded-lg p-6 border border-slate-700">
               <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
-              <ResponsiveContainer width="100%" height={280}>
-                <LineChart data={fxYearlyData} margin={{ top: 8, right: 24, left: 8, bottom: 0 }}>
+              <p className="text-slate-400 text-sm mb-2">{t.moyenneAnnuelleFx}</p>
+              <ResponsiveContainer width="100%" height={320}>
+                <LineChart data={fxYearlyData} margin={{ top: 28, right: 34, left: 12, bottom: 4 }}>
                   <CartesianGrid strokeDasharray="2 7" stroke="#7180a0" vertical={false} />
-                  <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} />
-                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={54} domain={['auto', 'auto']} />
-                  <Tooltip formatter={(value) => [`${Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 })} CFA`, t.taux]} contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }} />
-                  <Line type="monotone" dataKey="Taux Moyen" stroke="#60a5fa" strokeWidth={1.75} dot={{ fill: '#60a5fa', strokeWidth: 0, r: 2.5 }} activeDot={{ r: 4 }} />
+                  <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} padding={{ left: 20, right: 20 }} />
+                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={58} domain={fxYearlyDomain} tickFormatter={(value) => Number(value).toLocaleString(undefined, { maximumFractionDigits: 0 })} />
+                  <Tooltip
+                    labelFormatter={(year) => `${year}`}
+                    formatter={(value, name, item) => [`1 CHF = ${Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} CFA (${item.payload.observations} obs.)`, t.taux]}
+                    contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }}
+                  />
+                  <Line type="monotone" connectNulls dataKey="Taux Moyen" stroke="#60a5fa" strokeWidth={2.25} dot={{ fill: '#0f172a', stroke: '#60a5fa', strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }}>
+                    <LabelList dataKey="Taux Moyen" position="top" offset={10} fill="#93c5fd" fontSize={12} formatter={(value) => Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} />
+                  </Line>
                 </LineChart>
               </ResponsiveContainer>
             </div>
