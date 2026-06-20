@@ -403,8 +403,6 @@ const Finance = () => {
   const normalizeFinanceRow = useCallback((item, type, fallbackCategory, index = 0) => {
     const deviseOrigine = String(item.devise_origine || item.devise || item.currency || 'CHF').toUpperCase();
     const rawTauxFx = item.taux_fx ?? item.taux ?? item.fx_rate;
-    const hasExplicitTauxFx = rawTauxFx !== undefined && rawTauxFx !== null && rawTauxFx !== '';
-    const tauxFx = hasExplicitTauxFx ? toNumber(rawTauxFx) : null;
     const rawAmount = item.montant_origine ?? item.amount_original ?? item.montant ?? item.amount ?? item.montant_chf ?? item.amount_chf ?? item.montant_cfa ?? item.amount_cfa ?? 0;
     const montantOrigine = toNumber(rawAmount);
     const explicitMontantChf = item.montant_chf ?? item.amount_chf ?? item.montantChf;
@@ -417,6 +415,11 @@ const Finance = () => {
       explicitMontantCfa,
       deviseOrigine === 'CFA' ? montantOrigine : 0
     );
+    const tauxDepuisMontants = montantChf > 0 && montantCfa > 0 ? montantCfa / montantChf : null;
+    const tauxBrut = toNumber(rawTauxFx);
+    const tauxNormalise = deviseOrigine === 'CFA' && tauxBrut > 0 && tauxBrut < 1 ? 1 / tauxBrut : tauxBrut;
+    const tauxFx = tauxDepuisMontants || tauxNormalise || null;
+    const hasExplicitTauxFx = Boolean(tauxFx);
 
     return {
       id: item.id || item.source_id || `${type}-${String(index + 1).padStart(4, '0')}`,
@@ -480,6 +483,17 @@ const Finance = () => {
   }, [fxHistory]);
 
   const applyHistoricalFx = useCallback((row) => {
+    const storedMontantChf = toNumber(row.montantChf);
+    const storedMontantCfa = toNumber(row.montantCfa);
+    if (storedMontantChf > 0 && storedMontantCfa > 0) {
+      return {
+        ...row,
+        tauxFx: storedMontantCfa / storedMontantChf,
+        montant: storedMontantChf,
+        montantChf: storedMontantChf,
+        montantCfa: storedMontantCfa
+      };
+    }
     const historicalRate = row.hasExplicitTauxFx ? null : getHistoricalCfaPerChf(row.date);
     const tauxFx = row.hasExplicitTauxFx ? row.tauxFx : historicalRate?.cfaPerChf;
     const montantOrigine = toNumber(row.montantOrigine ?? row.montant);
@@ -961,7 +975,11 @@ const Finance = () => {
   const recettesAffichees = useMemo(() => recettes.map(applyHistoricalFx), [recettes, applyHistoricalFx]);
   const depensesAffichees = useMemo(() => depenses.map(applyHistoricalFx), [depenses, applyHistoricalFx]);
 
-  const totalRecettes = recettesAffichees.reduce((sum, r) => sum + toNumber(r.montantChf ?? r.montant), 0);
+  const recettesExploitation = useMemo(() => recettesAffichees.filter((row) => {
+    const category = normalizeCategoryKey(row.categorie);
+    return category !== 'AIDE SOCIALE MENAGE' && category !== 'AIDE SOCIALE';
+  }), [recettesAffichees]);
+  const totalRecettes = recettesExploitation.reduce((sum, r) => sum + toNumber(r.montantChf ?? r.montant), 0);
   const totalDepenses = depensesAffichees.reduce((sum, d) => sum + toNumber(d.montantChf ?? d.montant), 0);
   const solde = totalRecettes - totalDepenses;
   const latestHistoricalFx = getHistoricalCfaPerChf(new Date().toISOString().split('T')[0]);
