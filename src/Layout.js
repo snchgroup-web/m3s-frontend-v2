@@ -72,12 +72,12 @@ const Layout = ({ children }) => {
       <div className={`${sidebarOpen ? 'w-72' : 'w-20'} bg-slate-800 border-r border-slate-700 transition-all duration-300 flex flex-col overflow-hidden`}>
 
         {/* Header */}
-        <div className="px-4 py-6 border-b border-slate-700 flex items-center justify-between">
+        <div className="h-20 px-4 border-b border-slate-700 flex items-center justify-between">
           {sidebarOpen && (
             <div className="flex flex-col space-y-1 items-center text-center flex-1">
               <div className="flex items-center space-x-2 justify-center">
                 {/* Logo Image */}
-                <img src="/assets/logo-2sg.png" alt="Logo SeneSwiss Group" className="w-10 h-10 rounded-full object-cover flex-shrink-0 bg-white" />
+                <img src="/assets/logo-2sg.png" alt="Logo SeneSwiss Group" className="w-11 h-11 rounded-full object-cover flex-shrink-0 bg-white shadow-md" />
                 <h1 className="text-base font-bold text-blue-400 whitespace-nowrap">2SG - SeneSwiss Group</h1>
               </div>
               <p className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">M3S v2.0 - Management System - SeneSwiss</p>

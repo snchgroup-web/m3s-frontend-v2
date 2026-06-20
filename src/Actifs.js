@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ModuleTitle } from './modulePresentation';
 import { useLocation } from 'react-router-dom';
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { Building2, Plus, TrendingDown } from 'lucide-react';
@@ -210,10 +209,6 @@ const Actifs = () => {
     <>
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-8">
-            <ModuleTitle moduleId="stock" title={t.title} subtitle={t.subtitle} />
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
             <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
               <div className="flex items-center justify-between">

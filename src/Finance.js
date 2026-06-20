@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { ModuleTitle } from './modulePresentation';
 import { useLocation } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal } from 'lucide-react';
@@ -8,15 +7,6 @@ import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
-
-// Month translations (stable constants, defined at module level)
-const monthTranslations = {
-  FR: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-  EN: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-  DE: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
-};
-
-const shortMonths = ['Jan', 'Fév', 'Mar', 'Avr'];
 
 const TEAM_OPTIONS = ['Team_ZH', 'Team_SN'];
 const DEPARTMENT_OPTIONS = [
@@ -894,14 +884,6 @@ const Finance = () => {
     ].filter(Boolean))
   ], [immoTransactions, immoFormData.categorie]);
 
-  const getMonthName = useCallback((shortMonth) => {
-    const index = shortMonths.indexOf(shortMonth);
-    if (index !== -1) {
-      return monthTranslations[language][index] || shortMonth;
-    }
-    return shortMonth;
-  }, [language]);
-
   // Load FX history from BigQuery
   useEffect(() => {
     const loadFxHistory = async () => {
@@ -987,19 +969,18 @@ const Finance = () => {
   const tauxChfCfa = tauxDuJour.CHF_CFA || latestHistoricalFx?.cfaPerChf || null;
   const formatCfaWithCurrentRate = (chfAmount) => tauxChfCfa ? Math.round(chfAmount * tauxChfCfa).toLocaleString() : '-';
 
-  // Memoized data with translations
-  const monthlyDataRaw = useMemo(() => [
-    { mois: 'Jan', recettes: 5000, depenses: 3000 },
-    { mois: 'Fév', recettes: 6500, depenses: 3500 },
-    { mois: 'Mar', recettes: 7000, depenses: 4000 },
-    { mois: 'Avr', recettes: totalRecettes, depenses: totalDepenses },
-  ], [totalRecettes, totalDepenses]);
-
-  const monthlyData = useMemo(() =>
-    monthlyDataRaw.map(item => ({
-      ...item,
-      mois: getMonthName(item.mois)
-    })), [monthlyDataRaw, getMonthName]);
+  const annualFinanceData = useMemo(() => {
+    const yearly = {};
+    const addRows = (rows, key) => rows.forEach((row) => {
+      const year = cleanDate(row.date).slice(0, 4);
+      if (!/^\d{4}$/.test(year)) return;
+      if (!yearly[year]) yearly[year] = { année: year, recettes: 0, depenses: 0 };
+      yearly[year][key] += toNumber(row.montantChf ?? row.montant);
+    });
+    addRows(recettesExploitation, 'recettes');
+    addRows(depensesAffichees, 'depenses');
+    return Object.values(yearly).sort((a, b) => a.année.localeCompare(b.année));
+  }, [recettesExploitation, depensesAffichees]);
 
   // Transform 350 FX rates into yearly data for chart
   const fxYearlyData = useMemo(() => {
@@ -1010,7 +991,10 @@ const Finance = () => {
       try {
         const dateStr = item.date || '';
         const year = dateStr.substring(0, 4);
-        const rate = parseFloat(item.rate) || 0;
+        const rawRate = parseFloat(item.rate) || 0;
+        const from = String(item.devise_from || '').toUpperCase();
+        const to = String(item.devise_to || '').toUpperCase();
+        const rate = from === 'CFA' && to === 'CHF' && rawRate > 0 ? 1 / rawRate : rawRate;
 
         if (!yearlyMap[year]) {
           yearlyMap[year] = { rates: [], year };
@@ -1348,10 +1332,6 @@ const Finance = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
         <div className="mx-auto w-full max-w-[1800px]">
 
-        <div className="mb-8">
-          <ModuleTitle moduleId="finances" title={t.title} subtitle={t.subtitle} />
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-8">
           <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-4 border border-green-700">
             <div className="flex items-center justify-between">
@@ -1421,14 +1401,14 @@ const Finance = () => {
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
               <h3 className="text-white font-bold mb-4">{t.tendance}</h3>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={monthlyData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-                  <XAxis dataKey="mois" stroke="#94a3b8" />
-                  <YAxis stroke="#94a3b8" />
-                  <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
+                <BarChart data={annualFinanceData} margin={{ top: 8, right: 10, left: 8, bottom: 0 }} barGap={5}>
+                  <CartesianGrid strokeDasharray="2 5" stroke="#7180a0" vertical={false} />
+                  <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} />
+                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={52} tickFormatter={(value) => `${Math.round(value / 1000)}k`} />
+                  <Tooltip formatter={(value) => [`${Number(value).toLocaleString()} CHF`]} contentStyle={{ backgroundColor: '#272757', border: 'none', color: '#fff' }} />
                   <Legend />
-                  <Bar dataKey="recettes" name={t.recettes} fill="#10b981" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="depenses" name={t.depenses} fill="#ef4444" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="recettes" name={t.recettes} fill="#35c89a" radius={[5, 5, 0, 0]} maxBarSize={42} />
+                  <Bar dataKey="depenses" name={t.depenses} fill="#f06a78" radius={[5, 5, 0, 0]} maxBarSize={42} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -1436,12 +1416,12 @@ const Finance = () => {
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
               <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={fxYearlyData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-                  <XAxis dataKey="année" stroke="#94a3b8" />
-                  <YAxis stroke="#94a3b8" />
-                  <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
-                  <Line type="monotone" dataKey="Taux Moyen" stroke="#a78bfa" strokeWidth={3} dot={{ fill: '#a78bfa', r: 6 }} activeDot={{ r: 8 }} />
+                <LineChart data={fxYearlyData} margin={{ top: 8, right: 18, left: 8, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="2 5" stroke="#7180a0" vertical={false} />
+                  <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} />
+                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={52} domain={['auto', 'auto']} />
+                  <Tooltip formatter={(value) => [`${Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 })} CFA`, t.taux]} contentStyle={{ backgroundColor: '#272757', border: 'none', color: '#fff' }} />
+                  <Line type="monotone" dataKey="Taux Moyen" stroke="#79a7ff" strokeWidth={3} dot={{ fill: '#fff', stroke: '#79a7ff', strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>

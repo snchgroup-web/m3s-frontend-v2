@@ -63,8 +63,8 @@ const Header = () => {
   };
 
   return (
-    <header className="app-header sticky top-0 z-30 border-b border-slate-700 bg-slate-800 px-4 lg:px-6 py-3">
-      <div className="flex items-center justify-between gap-4">
+    <header className="app-header sticky top-0 z-30 border-b border-slate-700 bg-slate-800 h-20 px-4 lg:px-6">
+      <div className="h-full flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
           <div className={`w-10 h-10 shrink-0 flex items-center justify-center rounded-lg border ${presentation.bg} ${presentation.border}`}>
             <ModuleIcon moduleId={moduleId} size={23} />
@@ -76,20 +76,20 @@ const Header = () => {
         </div>
 
         <div className="hidden 2xl:flex items-center gap-2 text-xs">
-          <div className="header-chip flex items-center gap-2 px-3 py-2 border border-slate-700 bg-slate-900/35">
+          <div className="header-chip flex items-center gap-2 px-3 py-2 bg-slate-900/35">
             <FlagSenegal /><div><p className="text-white font-semibold">Dakar</p><p className="text-slate-400">{dakarTime}</p></div>
           </div>
-          <div className="header-chip flex items-center gap-2 px-3 py-2 border border-slate-700 bg-slate-900/35">
+          <div className="header-chip flex items-center gap-2 px-3 py-2 bg-slate-900/35">
             <SunMedium size={19} className="text-amber-400" /><div><p className="text-white font-semibold">28°C</p><p className="text-slate-400">{t.sunny}</p></div>
           </div>
           <div className="text-center px-3">
             <p className="text-slate-300 font-medium">{dateFormatted}</p>
             <p className="text-emerald-400 font-semibold">1 CHF = {currentRate ? currentRate.toLocaleString(locale, { maximumFractionDigits: 4 }) : '–'} CFA</p>
           </div>
-          <div className="header-chip flex items-center gap-2 px-3 py-2 border border-slate-700 bg-slate-900/35">
+          <div className="header-chip flex items-center gap-2 px-3 py-2 bg-slate-900/35">
             <CloudSun size={19} className="text-sky-400" /><div><p className="text-white font-semibold">18°C</p><p className="text-slate-400">{t.cloudy}</p></div>
           </div>
-          <div className="header-chip flex items-center gap-2 px-3 py-2 border border-slate-700 bg-slate-900/35">
+          <div className="header-chip flex items-center gap-2 px-3 py-2 bg-slate-900/35">
             <FlagSwitzerland /><div><p className="text-white font-semibold">Zürich</p><p className="text-slate-400">{zurichTime}</p></div>
           </div>
         </div>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { ModuleTitle } from './modulePresentation';
 import { useLocation } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Plus, Edit2, Trash2, Shield, Users, Lock, Activity, AlertCircle } from 'lucide-react';
@@ -599,10 +598,6 @@ const Admin = () => {
     <>
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
         <div className="max-w-7xl mx-auto">
-
-        <div className="mb-8">
-          <ModuleTitle moduleId="administration" title={t.title} subtitle={t.subtitle} />
-        </div>
 
         {/* KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
