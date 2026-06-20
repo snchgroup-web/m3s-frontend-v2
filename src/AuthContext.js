@@ -3,6 +3,29 @@ import React, { createContext, useContext, useState } from 'react';
 const AuthContext = createContext();
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
+const readStoredToken = () => {
+  const storedToken = localStorage.getItem('token');
+  if (!storedToken || storedToken.startsWith('demo_session_')) return storedToken;
+
+  try {
+    const encodedPayload = storedToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const paddedPayload = encodedPayload.padEnd(Math.ceil(encodedPayload.length / 4) * 4, '=');
+    const payload = JSON.parse(atob(paddedPayload));
+    if (payload.exp && payload.exp * 1000 <= Date.now()) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.setItem('session_expired', 'true');
+      return null;
+    }
+  } catch {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    return null;
+  }
+
+  return storedToken;
+};
+
 const readStoredUser = () => {
   try {
     const storedUser = localStorage.getItem('user');
@@ -14,7 +37,7 @@ const readStoredUser = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token, setToken] = useState(readStoredToken);
   const [user, setUser] = useState(readStoredUser);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);

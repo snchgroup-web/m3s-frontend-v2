@@ -19,8 +19,10 @@ const getAuthHeaders = () => {
 const clearExpiredSession = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
+  localStorage.setItem('session_expired', 'true');
   if (window.location.pathname !== '/login') {
-    window.location.href = '/login';
+    const next = `${window.location.pathname}${window.location.search}`;
+    window.location.replace(`/login?session=expired&next=${encodeURIComponent(next)}`);
   }
 };
 

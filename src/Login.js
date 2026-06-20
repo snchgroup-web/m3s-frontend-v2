@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AlertCircle, Lock, Mail } from 'lucide-react';
 import { useAuth } from './AuthContext';
 
@@ -11,16 +11,23 @@ const demoAccounts = [
 
 const Login = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { login, error, loading, demoAuthEnabled } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [localError, setLocalError] = useState('');
+  const [sessionExpired] = useState(() => searchParams.get('session') === 'expired' || localStorage.getItem('session_expired') === 'true');
+
+  useEffect(() => {
+    if (sessionExpired) localStorage.removeItem('session_expired');
+  }, [sessionExpired]);
 
   const submitLogin = async (loginEmail, loginPassword) => {
     const result = await login(loginEmail, loginPassword);
 
     if (result.success) {
-      navigate('/');
+      const next = searchParams.get('next');
+      navigate(next?.startsWith('/') && !next.startsWith('//') ? next : '/');
     } else {
       setLocalError(result.error || 'Erreur de connexion');
     }
@@ -58,6 +65,13 @@ const Login = () => {
 
         <div className="bg-slate-800 rounded-lg shadow-2xl p-8 border border-slate-700">
           <h2 className="text-2xl font-bold text-white mb-6">Connexion</h2>
+
+          {sessionExpired && !(error || localError) && (
+            <div className="mb-4 p-4 bg-amber-900/60 border border-amber-700 rounded flex items-start space-x-3">
+              <AlertCircle size={20} className="text-amber-400 flex-shrink-0 mt-0.5" />
+              <p className="text-amber-100 text-sm">Votre session a expiré. Reconnectez-vous pour retrouver toutes les données.</p>
+            </div>
+          )}
 
           {(error || localError) && (
             <div className="mb-4 p-4 bg-red-900 border border-red-700 rounded flex items-start space-x-3">
