@@ -64,6 +64,7 @@ const Finance = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('recette');
   const [editingId, setEditingId] = useState(null);
+  const [savingFinance, setSavingFinance] = useState(false);
   const [fxFormData, setFxFormData] = useState({
     devise_from: 'CHF',
     devise_to: 'CFA',
@@ -475,14 +476,13 @@ const Finance = () => {
   }, [getHistoricalCfaPerChf]);
 
   // Phase 2: Load real data from BigQuery via API
-  useEffect(() => {
-    const fetchFinanceData = async () => {
-      try {
-        console.log('Fetching real finance data from API...');
-        const [expensesRes, incomeRes] = await Promise.all([
-          api.getExpenses(100, 0),
-          api.getIncome(100, 0)
-        ]);
+  const loadFinanceData = useCallback(async () => {
+    try {
+      console.log('Fetching real finance data from API...');
+      const [expensesRes, incomeRes] = await Promise.all([
+        api.getExpenses(200, 0),
+        api.getIncome(200, 0)
+      ]);
 
         // Format expenses data
         const expensesData = Array.isArray(expensesRes?.data) ? expensesRes.data : [];
@@ -515,18 +515,19 @@ const Finance = () => {
           normalizeFinanceRow(item, 'REC', 'Ventes', index)
         );
 
-        console.log(`Loaded ${normalizedExpenses.length} expenses and ${normalizedIncome.length} income from BigQuery`);
-        setDepenses(normalizedExpenses.length ? normalizedExpenses : formattedExpenses);
-        setRecettes(normalizedIncome.length ? normalizedIncome : formattedIncome);
-      } catch (error) {
-        console.error('Error fetching finance data:', error);
-        setDepenses([]);
-        setRecettes([]);
-      }
-    };
-
-    fetchFinanceData();
+      console.log(`Loaded ${normalizedExpenses.length} expenses and ${normalizedIncome.length} income from BigQuery`);
+      setDepenses(normalizedExpenses.length ? normalizedExpenses : formattedExpenses);
+      setRecettes(normalizedIncome.length ? normalizedIncome : formattedIncome);
+    } catch (error) {
+      console.error('Error fetching finance data:', error);
+      setDepenses([]);
+      setRecettes([]);
+    }
   }, [normalizeFinanceRow]);
+
+  useEffect(() => {
+    loadFinanceData();
+  }, [loadFinanceData]);
 
   // Data translations for categories and descriptions
   const dataTranslations = {
@@ -1152,37 +1153,57 @@ const Finance = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!formData.description || !formData.montant) {
       alert('Veuillez remplir tous les champs');
       return;
     }
-
-    const typeCode = modalType === 'recette' ? 'REC' : 'DEP';
-    const fallbackCategory = modalType === 'recette' ? 'Ventes' : 'Operationnel';
-    const normalizedRow = normalizeFinanceRow(
-      { ...formData, id: editingId || Date.now() },
-      typeCode,
-      fallbackCategory
-    );
-
-    if (modalType === 'recette') {
-      if (editingId) {
-        setRecettes(recettes.map(r => r.id === editingId ? normalizedRow : r));
-      } else {
-        setRecettes([...recettes, normalizedRow]);
-      }
-    } else {
-      if (editingId) {
-        setDepenses(depenses.map(d => d.id === editingId ? normalizedRow : d));
-      } else {
-        setDepenses([...depenses, normalizedRow]);
-      }
+    const historicalRate = getHistoricalCfaPerChf(formData.date);
+    if (!historicalRate?.cfaPerChf) {
+      alert(`Aucun taux FX historique exact n'est disponible pour le ${formatDateForDisplay(formData.date)}.`);
+      return;
     }
 
-    setShowModal(false);
-    setEditingId(null);
-    setFormData({ description: '', montant: '', devise: 'CHF', date: new Date().toISOString().split('T')[0], categorie: '' });
+    const montantOrigine = toNumber(formData.montant);
+    const deviseOrigine = String(formData.devise || 'CHF').toUpperCase();
+    const tauxFx = historicalRate.cfaPerChf;
+    const montantChf = deviseOrigine === 'CHF' ? montantOrigine : montantOrigine / tauxFx;
+    const montantCfa = deviseOrigine === 'CFA' ? montantOrigine : montantOrigine * tauxFx;
+    const payload = {
+      description: formData.description,
+      date: formData.date,
+      montant_origine: montantOrigine,
+      devise_origine: deviseOrigine,
+      montant_chf: montantChf,
+      montant_cfa: montantCfa,
+      taux_fx: tauxFx,
+      categorie: formData.categorie,
+      type: formData.type || (modalType === 'recette' ? 'Virement' : 'Paiement'),
+      agent: formData.agent || '',
+      team: formData.team || '',
+      departement: formData.departement || '',
+      phase_projet: formData.phaseProjet || '',
+      pays: formData.pays || '',
+      commentaire: formData.commentaire || '',
+      fournisseur: formData.fournisseur || ''
+    };
+
+    setSavingFinance(true);
+    try {
+      if (modalType === 'recette') {
+        if (editingId) await api.updateIncome(editingId, payload);
+        else await api.createIncome(payload);
+      } else if (editingId) await api.updateExpense(editingId, payload);
+      else await api.createExpense(payload);
+      await loadFinanceData();
+      setShowModal(false);
+      setEditingId(null);
+      setFormData({ description: '', montant: '', devise: 'CHF', date: new Date().toISOString().split('T')[0], categorie: '' });
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setSavingFinance(false);
+    }
   };
 
   const handleEdit = (type, item) => {
@@ -1196,11 +1217,14 @@ const Finance = () => {
     setShowModal(true);
   };
 
-  const handleDelete = (type, id) => {
-    if (type === 'recette') {
-      setRecettes(recettes.filter(r => r.id !== id));
-    } else {
-      setDepenses(depenses.filter(d => d.id !== id));
+  const handleDelete = async (type, id) => {
+    if (!window.confirm(t.supprimerConfirmation)) return;
+    try {
+      if (type === 'recette') await api.deleteIncome(id);
+      else await api.deleteExpense(id);
+      await loadFinanceData();
+    } catch (error) {
+      alert(error.message);
     }
   };
 
@@ -1924,8 +1948,8 @@ const Finance = () => {
                   className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
                 />
                 <div className="flex gap-4 justify-end">
-                  <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg">{t.annuler}</button>
-                  <button onClick={handleSave} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">{t.creer}</button>
+                  <button onClick={() => setShowModal(false)} disabled={savingFinance} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg disabled:opacity-50">{t.annuler}</button>
+                  <button onClick={handleSave} disabled={savingFinance} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50">{editingId ? t.enregistrer : t.creer}</button>
                 </div>
               </div>
             </div>

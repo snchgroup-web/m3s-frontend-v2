@@ -75,6 +75,28 @@ export const api = {
     }
   },
 
+  createExpense: async (data) => {
+    const res = await apiFetch(`${API_BASE_URL}/finance/expenses`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+    return res.json();
+  },
+
+  updateExpense: async (id, data) => {
+    const res = await apiFetch(`${API_BASE_URL}/finance/expenses/${encodeURIComponent(id)}`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+    return res.json();
+  },
+
+  deleteExpense: async (id) => {
+    const res = await apiFetch(`${API_BASE_URL}/finance/expenses/${encodeURIComponent(id)}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+    return res.json();
+  },
+
   // Finance - Revenus/Recettes
   getIncome: async (limite = 100, decalage = 0) => {
     try {
@@ -86,6 +108,28 @@ export const api = {
     } catch (erreur) {
       handleError(erreur, '/finance/income');
     }
+  },
+
+  createIncome: async (data) => {
+    const res = await apiFetch(`${API_BASE_URL}/finance/income`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+    return res.json();
+  },
+
+  updateIncome: async (id, data) => {
+    const res = await apiFetch(`${API_BASE_URL}/finance/income/${encodeURIComponent(id)}`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+    return res.json();
+  },
+
+  deleteIncome: async (id) => {
+    const res = await apiFetch(`${API_BASE_URL}/finance/income/${encodeURIComponent(id)}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+    return res.json();
   },
 
   // Finance - Financement immobilier
