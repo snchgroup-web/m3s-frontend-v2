@@ -1080,11 +1080,13 @@ const Finance = () => {
     const yearly = immoTransactions.reduce((acc, item) => {
       if (item.estPlanifie || !['Avance', 'Information'].includes(item.type_operation)) return acc;
       const year = item.date.slice(0, 4);
-      acc[year] = (acc[year] || 0) + item.montantChf;
+      if (!acc[year]) acc[year] = { montantChf: 0, montantCfa: 0 };
+      acc[year].montantChf += item.montantChf;
+      acc[year].montantCfa += item.montantCfa;
       return acc;
     }, {});
     return Object.entries(yearly)
-      .map(([annee, montant]) => ({ annee, montant }))
+      .map(([annee, montants]) => ({ annee, ...montants }))
       .sort((a, b) => a.annee.localeCompare(b.annee));
   }, [immoTransactions]);
 
@@ -1342,50 +1344,50 @@ const Finance = () => {
         <div className="mx-auto w-full max-w-[1800px]">
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-8">
-          <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-4 border border-green-700">
+          <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-200 text-xs">{t.totalRecettes}</p>
+                <p className="text-green-400 text-xs">{t.totalRecettes}</p>
                 <div className="text-sm font-bold mt-1 leading-tight">
-                  <p className="text-white">{totalRecettes.toLocaleString()} CHF</p>
-                  <p className="text-white text-xs">{formatCfaWithCurrentRate(totalRecettes)} CFA</p>
+                  <p className="text-green-300">{totalRecettes.toLocaleString()} CHF</p>
+                  <p className="text-slate-300 text-xs">{formatCfaWithCurrentRate(totalRecettes)} CFA</p>
                 </div>
               </div>
               <TrendingUp size={24} className="text-green-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-4 border border-red-700">
+          <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-red-200 text-xs">{t.totalDepenses}</p>
+                <p className="text-red-400 text-xs">{t.totalDepenses}</p>
                 <div className="text-xs font-bold mt-1 leading-tight">
-                  <p className="text-white">{totalDepenses.toLocaleString()} CHF</p>
-                  <p className="text-white text-xs">{formatCfaWithCurrentRate(totalDepenses)} CFA</p>
+                  <p className="text-red-300">{totalDepenses.toLocaleString()} CHF</p>
+                  <p className="text-slate-300 text-xs">{formatCfaWithCurrentRate(totalDepenses)} CFA</p>
                 </div>
               </div>
               <TrendingDown size={24} className="text-red-400" />
             </div>
           </div>
 
-          <div className={`bg-gradient-to-br ${solde >= 0 ? 'from-blue-900 to-blue-800' : 'from-orange-900 to-orange-800'} rounded-lg p-4 border ${solde >= 0 ? 'border-blue-700' : 'border-orange-700'}`}>
+          <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className={`${solde >= 0 ? 'text-blue-200' : 'text-orange-200'} text-xs`}>{t.soldeNet}</p>
+                <p className={`${solde >= 0 ? 'text-blue-400' : 'text-orange-400'} text-xs`}>{t.soldeNet}</p>
                 <div className="text-xs font-bold mt-1 leading-tight">
-                  <p className="text-white">{solde.toLocaleString()} CHF</p>
-                  <p className="text-white text-xs">{formatCfaWithCurrentRate(solde)} CFA</p>
+                  <p className={solde >= 0 ? 'text-blue-300' : 'text-orange-300'}>{solde.toLocaleString()} CHF</p>
+                  <p className="text-slate-300 text-xs">{formatCfaWithCurrentRate(solde)} CFA</p>
                 </div>
               </div>
               <DollarSign size={24} className={solde >= 0 ? 'text-blue-400' : 'text-orange-400'} />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-4 border border-purple-700">
+          <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-200 text-xs">{t.tauxFX}</p>
-                <p className="text-white text-lg font-bold">{tauxChfCfa ? Number(tauxChfCfa).toLocaleString() : '-'} CFA</p>
+                <p className="text-purple-400 text-xs">{t.tauxFX}</p>
+                <p className="text-purple-300 text-lg font-bold">{tauxChfCfa ? Number(tauxChfCfa).toLocaleString() : '-'} CFA</p>
               </div>
               <ArrowRightLeft size={24} className="text-purple-400" />
             </div>
@@ -1733,54 +1735,76 @@ const Finance = () => {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 xl:grid-cols-[minmax(420px,0.8fr)_minmax(0,1.2fr)] gap-6 items-stretch">
-                  <section className="bg-slate-800 border border-slate-700 border-t-2 border-t-orange-500 rounded-lg p-5">
-                    <div className="flex items-start gap-3 mb-4">
+                <section className="bg-slate-800 border border-slate-700 border-t-2 border-t-orange-500 rounded-lg px-5 py-4">
+                  <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+                    <div className="flex items-start gap-3 min-w-0">
                       <Building2 size={26} className="text-orange-400 mt-1 shrink-0" />
                       <div>
                         <h2 className="text-lg font-bold text-white">{t.immoTitle}</h2>
                         <p className="text-sm text-slate-400">{t.immoSubtitle}</p>
                       </div>
                     </div>
-                    <p className="text-xs uppercase text-slate-400 mb-2">{t.totalInvesti}</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 shrink-0">
                       <div>
-                        <p className="text-2xl font-bold text-orange-400 whitespace-nowrap">{formatAmount(immoInvestiChf)} CHF</p>
+                        <p className="text-xs uppercase text-slate-400">{t.totalInvesti}</p>
+                        <p className="text-2xl font-bold text-cyan-300 whitespace-nowrap">{formatAmount(immoInvestiChf)} CHF</p>
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-cyan-300 whitespace-nowrap">{formatAmount(immoInvestiCfa)} CFA</p>
-                        <p className="text-xs text-slate-400">{t.montantsHistoriques}</p>
+                        <p className="text-xs uppercase text-slate-400">{t.montantsHistoriques}</p>
+                        <p className="text-2xl font-bold text-orange-400 whitespace-nowrap">{formatAmount(immoInvestiCfa)} CFA</p>
                       </div>
                     </div>
-                    {immoEquivalentTauxJour !== null && (
-                      <p className="text-xs text-slate-400 mb-4">≈ {formatAmount(immoEquivalentTauxJour)} CFA · {t.equivalentTauxJour}</p>
-                    )}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 border-t border-slate-700 sm:divide-x divide-slate-700">
-                      <div className="py-3 sm:pr-3">
-                        <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoRemboursementsDirects)} CHF</p>
-                        <p className="text-xs text-slate-400">{t.remboursementsDirects}</p>
-                        <p className="text-xs text-slate-400 mt-1">{t.remboursementsTotal}: {formatAmount(immoRemboursementsTotal)} CHF</p>
-                      </div>
-                      <div className="py-3 sm:px-3">
-                        <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoSoldeOuvert)} CHF</p>
-                        <p className="text-xs text-slate-400">{t.soldeOuvert}</p>
-                      </div>
-                      <div className="py-3 sm:pl-3">
-                        <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoPartCheikh)} CHF</p>
-                        <p className="text-xs text-slate-400">{t.partCheikh}</p>
-                      </div>
+                  </div>
+                  {immoEquivalentTauxJour !== null && (
+                    <p className="text-xs text-slate-400 mt-1 text-right">≈ {formatAmount(immoEquivalentTauxJour)} CFA · {t.equivalentTauxJour}</p>
+                  )}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 border-t border-slate-700 mt-3 xl:divide-x divide-slate-700">
+                    <div className="py-3 xl:pr-4">
+                      <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoRemboursementsDirects)} CHF</p>
+                      <p className="text-sm font-semibold text-cyan-300 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoRemboursementsDirects)} CFA</p>
+                      <p className="text-xs text-slate-400">{t.remboursementsDirects}</p>
                     </div>
+                    <div className="py-3 xl:px-4">
+                      <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoRemboursementsTotal)} CHF</p>
+                      <p className="text-sm font-semibold text-cyan-300 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoRemboursementsTotal)} CFA</p>
+                      <p className="text-xs text-slate-400">{t.remboursementsTotal}</p>
+                    </div>
+                    <div className="py-3 xl:px-4">
+                      <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoSoldeOuvert)} CHF</p>
+                      <p className="text-sm font-semibold text-cyan-300 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoSoldeOuvert)} CFA</p>
+                      <p className="text-xs text-slate-400">{t.soldeOuvert}</p>
+                    </div>
+                    <div className="py-3 xl:pl-4">
+                      <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoPartCheikh)} CHF</p>
+                      <p className="text-sm font-semibold text-cyan-300 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoPartCheikh)} CFA</p>
+                      <p className="text-xs text-slate-400">{t.partCheikh}</p>
+                    </div>
+                  </div>
+                </section>
+
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                  <section className="bg-slate-800 rounded-lg p-5 border border-slate-700 min-w-0">
+                    <h3 className="text-white font-bold mb-3">{t.investissementsAnnee} (CHF)</h3>
+                    <ResponsiveContainer width="100%" height={245}>
+                      <BarChart data={immoYearlyData} margin={{ top: 8, right: 10, left: 8, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
+                        <XAxis dataKey="annee" stroke="#94a3b8" tickLine={false} axisLine={false} />
+                        <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={52} tickFormatter={(value) => `${Math.round(value / 1000)}k`} />
+                        <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: 'none' }} formatter={(value) => [`${formatAmount(value)} CHF`, t.totalInvesti]} />
+                        <Bar dataKey="montantChf" fill="#22d3ee" radius={[4, 4, 0, 0]} maxBarSize={44} />
+                      </BarChart>
+                    </ResponsiveContainer>
                   </section>
 
-                  <section className="bg-slate-800 rounded-lg p-6 border border-slate-700 min-w-0">
-                    <h3 className="text-white font-bold mb-4">{t.investissementsAnnee}</h3>
-                    <ResponsiveContainer width="100%" height={330}>
-                      <BarChart data={immoYearlyData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-                        <XAxis dataKey="annee" stroke="#94a3b8" />
-                        <YAxis stroke="#94a3b8" />
-                        <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} formatter={(value) => [`${formatAmount(value)} CHF`, t.totalInvesti]} />
-                        <Bar dataKey="montant" fill="#f59e0b" radius={[6, 6, 0, 0]} />
+                  <section className="bg-slate-800 rounded-lg p-5 border border-slate-700 min-w-0">
+                    <h3 className="text-white font-bold mb-3">{t.investissementsAnnee} (CFA)</h3>
+                    <ResponsiveContainer width="100%" height={245}>
+                      <BarChart data={immoYearlyData} margin={{ top: 8, right: 10, left: 12, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
+                        <XAxis dataKey="annee" stroke="#94a3b8" tickLine={false} axisLine={false} />
+                        <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={66} tickFormatter={(value) => `${Math.round(value / 1000000)}M`} />
+                        <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: 'none' }} formatter={(value) => [`${formatAmount(value)} CFA`, t.totalInvesti]} />
+                        <Bar dataKey="montantCfa" fill="#f59e0b" radius={[4, 4, 0, 0]} maxBarSize={44} />
                       </BarChart>
                     </ResponsiveContainer>
                   </section>
