@@ -1344,52 +1344,52 @@ const Finance = () => {
         <div className="mx-auto w-full max-w-[1800px]">
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-8">
-          <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+          <div className="bg-slate-800 rounded-lg p-5 border border-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-green-500/60">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-400 text-xs">{t.totalRecettes}</p>
-                <div className="text-sm font-bold mt-1 leading-tight">
-                  <p className="text-green-300">{totalRecettes.toLocaleString()} CHF</p>
-                  <p className="text-slate-300 text-xs">{formatCfaWithCurrentRate(totalRecettes)} CFA</p>
+                <p className="text-green-400 text-sm font-medium">{t.totalRecettes}</p>
+                <div className="mt-1 leading-tight">
+                  <p className="text-green-300 text-xl font-bold">{totalRecettes.toLocaleString()} CHF</p>
+                  <p className="text-slate-300 text-sm font-semibold mt-1">{formatCfaWithCurrentRate(totalRecettes)} CFA</p>
                 </div>
               </div>
-              <TrendingUp size={24} className="text-green-400" />
+              <TrendingUp size={28} className="text-green-400" />
             </div>
           </div>
 
-          <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+          <div className="bg-slate-800 rounded-lg p-5 border border-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-red-500/60">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-red-400 text-xs">{t.totalDepenses}</p>
-                <div className="text-xs font-bold mt-1 leading-tight">
-                  <p className="text-red-300">{totalDepenses.toLocaleString()} CHF</p>
-                  <p className="text-slate-300 text-xs">{formatCfaWithCurrentRate(totalDepenses)} CFA</p>
+                <p className="text-red-400 text-sm font-medium">{t.totalDepenses}</p>
+                <div className="mt-1 leading-tight">
+                  <p className="text-red-300 text-xl font-bold">{totalDepenses.toLocaleString()} CHF</p>
+                  <p className="text-slate-300 text-sm font-semibold mt-1">{formatCfaWithCurrentRate(totalDepenses)} CFA</p>
                 </div>
               </div>
-              <TrendingDown size={24} className="text-red-400" />
+              <TrendingDown size={28} className="text-red-400" />
             </div>
           </div>
 
-          <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+          <div className={`bg-slate-800 rounded-lg p-5 border border-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${solde >= 0 ? 'hover:border-blue-500/60' : 'hover:border-orange-500/60'}`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`${solde >= 0 ? 'text-blue-400' : 'text-orange-400'} text-xs`}>{t.soldeNet}</p>
-                <div className="text-xs font-bold mt-1 leading-tight">
-                  <p className={solde >= 0 ? 'text-blue-300' : 'text-orange-300'}>{solde.toLocaleString()} CHF</p>
-                  <p className="text-slate-300 text-xs">{formatCfaWithCurrentRate(solde)} CFA</p>
+                <p className={`${solde >= 0 ? 'text-blue-400' : 'text-orange-400'} text-sm font-medium`}>{t.soldeNet}</p>
+                <div className="mt-1 leading-tight">
+                  <p className={`${solde >= 0 ? 'text-blue-300' : 'text-orange-300'} text-xl font-bold`}>{solde.toLocaleString()} CHF</p>
+                  <p className="text-slate-300 text-sm font-semibold mt-1">{formatCfaWithCurrentRate(solde)} CFA</p>
                 </div>
               </div>
-              <DollarSign size={24} className={solde >= 0 ? 'text-blue-400' : 'text-orange-400'} />
+              <DollarSign size={28} className={solde >= 0 ? 'text-blue-400' : 'text-orange-400'} />
             </div>
           </div>
 
-          <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+          <div className="bg-slate-800 rounded-lg p-5 border border-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-purple-500/60">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-400 text-xs">{t.tauxFX}</p>
-                <p className="text-purple-300 text-lg font-bold">{tauxChfCfa ? Number(tauxChfCfa).toLocaleString() : '-'} CFA</p>
+                <p className="text-purple-400 text-sm font-medium">{t.tauxFX}</p>
+                <p className="text-purple-300 text-xl font-bold mt-1">1 CHF = {tauxChfCfa ? Number(tauxChfCfa).toLocaleString() : '-'} CFA</p>
               </div>
-              <ArrowRightLeft size={24} className="text-purple-400" />
+              <ArrowRightLeft size={28} className="text-purple-400" />
             </div>
           </div>
         </div>
@@ -1735,7 +1735,7 @@ const Finance = () => {
               </div>
             ) : (
               <>
-                <section className="bg-slate-800 border border-slate-700 border-t-2 border-t-orange-500 rounded-lg px-5 py-4">
+                <section className="bg-slate-800 border border-slate-700 rounded-lg px-5 py-4 transition-shadow duration-200 hover:shadow-lg">
                   <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
                     <div className="flex items-start gap-3 min-w-0">
                       <Building2 size={26} className="text-orange-400 mt-1 shrink-0" />
@@ -1745,11 +1745,11 @@ const Finance = () => {
                       </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 shrink-0">
-                      <div>
+                      <div className="rounded-md px-3 py-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                         <p className="text-xs uppercase text-slate-400">{t.totalInvesti}</p>
                         <p className="text-2xl font-bold text-cyan-300 whitespace-nowrap">{formatAmount(immoInvestiChf)} CHF</p>
                       </div>
-                      <div>
+                      <div className="rounded-md px-3 py-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                         <p className="text-xs uppercase text-slate-400">{t.montantsHistoriques}</p>
                         <p className="text-2xl font-bold text-orange-400 whitespace-nowrap">{formatAmount(immoInvestiCfa)} CFA</p>
                       </div>
@@ -1759,25 +1759,33 @@ const Finance = () => {
                     <p className="text-xs text-slate-400 mt-1 text-right">≈ {formatAmount(immoEquivalentTauxJour)} CFA · {t.equivalentTauxJour}</p>
                   )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 border-t border-slate-700 mt-3 xl:divide-x divide-slate-700">
-                    <div className="py-3 xl:pr-4">
-                      <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoRemboursementsDirects)} CHF</p>
-                      <p className="text-sm font-semibold text-cyan-300 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoRemboursementsDirects)} CFA</p>
-                      <p className="text-xs text-slate-400">{t.remboursementsDirects}</p>
+                    <div className="py-3 xl:pr-4 rounded-md px-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
+                      <p className="text-xs uppercase text-slate-400 mb-1">{t.remboursementsDirects}</p>
+                      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatAmount(immoRemboursementsDirects)} CHF</p>
+                        <p className="text-xl font-bold text-orange-400 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoRemboursementsDirects)} CFA</p>
+                      </div>
                     </div>
-                    <div className="py-3 xl:px-4">
-                      <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoRemboursementsTotal)} CHF</p>
-                      <p className="text-sm font-semibold text-cyan-300 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoRemboursementsTotal)} CFA</p>
-                      <p className="text-xs text-slate-400">{t.remboursementsTotal}</p>
+                    <div className="py-3 xl:px-4 rounded-md px-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
+                      <p className="text-xs uppercase text-slate-400 mb-1">{t.remboursementsTotal}</p>
+                      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatAmount(immoRemboursementsTotal)} CHF</p>
+                        <p className="text-xl font-bold text-orange-400 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoRemboursementsTotal)} CFA</p>
+                      </div>
                     </div>
-                    <div className="py-3 xl:px-4">
-                      <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoSoldeOuvert)} CHF</p>
-                      <p className="text-sm font-semibold text-cyan-300 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoSoldeOuvert)} CFA</p>
-                      <p className="text-xs text-slate-400">{t.soldeOuvert}</p>
+                    <div className="py-3 xl:px-4 rounded-md px-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
+                      <p className="text-xs uppercase text-slate-400 mb-1">{t.soldeOuvert}</p>
+                      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatAmount(immoSoldeOuvert)} CHF</p>
+                        <p className="text-xl font-bold text-orange-400 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoSoldeOuvert)} CFA</p>
+                      </div>
                     </div>
-                    <div className="py-3 xl:pl-4">
-                      <p className="text-lg font-bold text-white whitespace-nowrap">{formatAmount(immoPartCheikh)} CHF</p>
-                      <p className="text-sm font-semibold text-cyan-300 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoPartCheikh)} CFA</p>
-                      <p className="text-xs text-slate-400">{t.partCheikh}</p>
+                    <div className="py-3 xl:pl-4 rounded-md px-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
+                      <p className="text-xs uppercase text-slate-400 mb-1">{t.partCheikh}</p>
+                      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatAmount(immoPartCheikh)} CHF</p>
+                        <p className="text-xl font-bold text-orange-400 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoPartCheikh)} CFA</p>
+                      </div>
                     </div>
                   </div>
                 </section>
