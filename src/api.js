@@ -20,6 +20,7 @@ const clearExpiredSession = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
   localStorage.setItem('session_expired', 'true');
+  window.dispatchEvent(new Event('m3s:session-expired'));
   if (window.location.pathname !== '/login') {
     const next = `${window.location.pathname}${window.location.search}`;
     window.location.replace(`/login?session=expired&next=${encodeURIComponent(next)}`);

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const AuthContext = createContext();
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
@@ -42,6 +42,15 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const demoAuthEnabled = process.env.REACT_APP_ENABLE_DEMO_AUTH === 'true';
+
+  useEffect(() => {
+    const handleExpiredSession = () => {
+      setToken(null);
+      setUser(null);
+    };
+    window.addEventListener('m3s:session-expired', handleExpiredSession);
+    return () => window.removeEventListener('m3s:session-expired', handleExpiredSession);
+  }, []);
 
   // Comptes de démonstration locaux, uniquement pour le développement.
   const demoAccounts = {

@@ -36,24 +36,17 @@ const formatDualCurrency = (chfAmount, exchangeRate) => {
   };
 };
 
-// Mock data (stable constant, defined at module level)
+// Neutral baseline: unavailable API data must never look like real business data.
 const mockDataBaseRaw = {
-  financialTrend: [
-    { month: 'Jan', revenue: 45000, expenses: 32000 },
-    { month: 'Feb', revenue: 52000, expenses: 35000 },
-    { month: 'Mar', revenue: 48000, expenses: 33000 },
-    { month: 'Apr', revenue: 61000, expenses: 38000 },
-    { month: 'May', revenue: 55000, expenses: 36000 },
-    { month: 'Jun', revenue: 67000, expenses: 41000 }
-  ],
+  financialTrend: [],
   moduleStats: {
-    finance: { revenue: 285000, expenses: 215000, balance: 70000, donations: 15000, financing: 25000 },
+    finance: { revenue: 0, expenses: 0, balance: 0, donations: 0, financing: 0, incomeCount: 0, expenseCount: 0 },
     rh: { employees: 12, volunteers: 24, members: 156, beneficiaries: 89 },
     crm: { prospects: 45, clients: 28, donations: 18, suppliers: 34 },
-    production: { orders: 52, completed: 38, pending: 14, stocks: 342 },
+    production: { orders: 52, completed: 38, pending: 14, stocks: 0 },
     actifs: { total: 1250000, depreciation: 125000 },
-    ged: { documents: 847, recent: 12 },
-    tasks: { total: 234, completed: 178, pending: 56 },
+    ged: { documents: 0, recent: 0 },
+    tasks: { total: 0, completed: 0, pending: 0 },
     caseStudies: 12
   }
 };
@@ -64,6 +57,7 @@ const Dashboard = () => {
   const [, setUser] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [dataWarning, setDataWarning] = useState(false);
 
   // Translations
   const translations = {
@@ -93,7 +87,7 @@ const Dashboard = () => {
       tasks: 'Tâches',
       beneficiaries: 'Bénéficiaires',
       suppliers: 'Fournisseurs',
-      month: 'Mois',
+      month: 'Année',
       total: 'Total',
       kpi: 'KPI',
       lastUpdate: 'Dernière mise à jour',
@@ -134,7 +128,7 @@ const Dashboard = () => {
       tasks: 'Tasks',
       beneficiaries: 'Beneficiaries',
       suppliers: 'Suppliers',
-      month: 'Month',
+      month: 'Year',
       total: 'Total',
       kpi: 'KPI',
       lastUpdate: 'Last Updated',
@@ -183,7 +177,7 @@ const Dashboard = () => {
       tasks: 'Aufgaben',
       beneficiaries: 'Begünstigte',
       suppliers: 'Lieferanten',
-      month: 'Monat',
+      month: 'Jahr',
       total: 'Gesamt',
       kpi: 'KPI',
       lastUpdate: 'Zuletzt aktualisiert',
@@ -193,6 +187,11 @@ const Dashboard = () => {
   };
 
   const t = translations[language];
+  const dataWarningText = {
+    FR: 'Certaines données réelles sont temporairement indisponibles. Aucune valeur de démonstration n’est affichée. Reconnectez-vous si votre session a expiré.',
+    EN: 'Some live data is temporarily unavailable. No demonstration values are displayed. Sign in again if your session has expired.',
+    DE: 'Einige Live-Daten sind vorübergehend nicht verfügbar. Es werden keine Demowerte angezeigt. Melden Sie sich erneut an, falls Ihre Sitzung abgelaufen ist.'
+  }[language] || '';
 
   // Get translated month name
   const getMonthName = useCallback((shortMonth) => {
@@ -228,31 +227,48 @@ const Dashboard = () => {
           withApiFallback(() => api.getInventoryCount()),
           withApiFallback(() => api.getTasksCount()),
           withApiFallback(() => api.getUsers(100, 0)),
-          withApiFallback(() => api.getIncome(200, 0), { data: [] }),
-          withApiFallback(() => api.getExpenses(200, 0), { data: [] }),
+          withApiFallback(() => api.getIncome(200, 0)),
+          withApiFallback(() => api.getExpenses(200, 0)),
           withApiFallback(() => api.getFxHistory(), {})
         ]);
+
+        const apiUnavailable = [financeDashboard, documentsCount, inventoryCount, tasksCount, users, income, expenses]
+          .some((response) => response === null) || fx?.success === false;
+        setDataWarning(apiUnavailable);
 
         const incomeRows = Array.isArray(income?.data) ? income.data : [];
         const expenseRows = Array.isArray(expenses?.data) ? expenses.data : [];
         const operatingIncomeRows = incomeRows.filter((row) => !String(row.category || '').toUpperCase().includes('AIDE SOCIALE'));
         const totalIncome = incomeRows.length
           ? operatingIncomeRows.reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0)
-          : numberFromApi(financeDashboard?.data?.total_income, mockDataBase.moduleStats.finance.revenue);
+          : numberFromApi(financeDashboard?.data?.total_income, 0);
         const totalExpenses = expenseRows.length
           ? expenseRows.reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0)
-          : numberFromApi(financeDashboard?.data?.total_expenses, mockDataBase.moduleStats.finance.expenses);
+          : numberFromApi(financeDashboard?.data?.total_expenses, 0);
         const donations = incomeRows.filter((row) => String(row.category || '').toUpperCase().includes('DON')).reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0);
         const financing = incomeRows.filter((row) => String(row.category || '').toUpperCase() === 'FINANCEMENT').reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0);
-        const exchangeRate = numberFromApi(fx?.taux_du_jour?.CHF_CFA, 710);
-        const inventoryTotal = numberFromApi(inventoryCount?.total, mockDataBase.moduleStats.production.stocks);
-        const documentsTotal = numberFromApi(documentsCount?.total, mockDataBase.moduleStats.ged.documents);
-        const tasksTotal = numberFromApi(tasksCount?.total, mockDataBase.moduleStats.tasks.total);
+        const exchangeRate = numberFromApi(fx?.taux_du_jour?.CHF_CFA, 0);
+        const inventoryTotal = numberFromApi(inventoryCount?.total, 0);
+        const documentsTotal = numberFromApi(documentsCount?.total, 0);
+        const tasksTotal = numberFromApi(tasksCount?.total, 0);
         const userRows = Array.isArray(users?.data) ? users.data : [];
+
+        const yearlyFinance = {};
+        const addToYear = (rows, key) => rows.forEach((row) => {
+          const rawDate = row.date_document?.value || row.date_document || row.date_created?.value || row.date_created || row.created_at?.value || row.created_at || row.date;
+          const year = String(rawDate || '').slice(0, 4);
+          if (!/^\d{4}$/.test(year)) return;
+          if (!yearlyFinance[year]) yearlyFinance[year] = { month: year, revenue: 0, expenses: 0 };
+          yearlyFinance[year][key] += numberFromApi(row.montant_chf ?? row.montant);
+        });
+        addToYear(operatingIncomeRows, 'revenue');
+        addToYear(expenseRows, 'expenses');
+        const financialTrend = Object.values(yearlyFinance).sort((a, b) => a.month.localeCompare(b.month));
 
         setDashboardData({
           ...mockDataBase,
           exchangeRate,
+          financialTrend,
           moduleStats: {
             ...mockDataBase.moduleStats,
             finance: {
@@ -297,7 +313,8 @@ const Dashboard = () => {
           });
         }
       } catch (err) {
-        console.warn('Using dashboard mock data:', err.message);
+        console.warn('Dashboard data unavailable:', err.message);
+        setDataWarning(true);
         setDashboardData(mockDataBase);
         setUser({
           name: 'Utilisateur M3S',
@@ -333,6 +350,11 @@ const Dashboard = () => {
       {/* Content */}
       <div className="overflow-auto">
         <div className="p-6 space-y-6">
+          {dataWarning && (
+            <div className="rounded-lg border border-amber-700 bg-amber-950/40 px-4 py-3 text-sm text-amber-200">
+              {dataWarningText}
+            </div>
+          )}
           {/* KPI Cards Row 1 */}
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {/* Recettes */}
