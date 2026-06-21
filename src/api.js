@@ -176,9 +176,9 @@ export const api = {
   },
 
   // Finance - Historique des taux de change (FX History)
-  getFxHistory: async () => {
+  getFxHistory: async (limite = 500, decalage = 0) => {
     try {
-      const res = await apiFetch(`${API_BASE_URL}/fx-rates`);
+      const res = await apiFetch(`${API_BASE_URL}/fx-rates?limit=${limite}&offset=${decalage}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (erreur) {
