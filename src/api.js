@@ -269,6 +269,28 @@ export const api = {
     }
   },
 
+  createInventoryItem: async (data) => {
+    const res = await apiFetch(`${API_BASE_URL}/inventory`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+    return res.json();
+  },
+
+  updateInventoryItem: async (id, data) => {
+    const res = await apiFetch(`${API_BASE_URL}/inventory/${encodeURIComponent(id)}`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+    return res.json();
+  },
+
+  deleteInventoryItem: async (id) => {
+    const res = await apiFetch(`${API_BASE_URL}/inventory/${encodeURIComponent(id)}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+    return res.json();
+  },
+
   // ============================================================================
   // APPELS API TÂCHES
   // ============================================================================
