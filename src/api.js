@@ -135,6 +135,18 @@ export const api = {
     return res.json();
   },
 
+  getSocialFinance: async (limite = 200, decalage = 0) => {
+    try {
+      const res = await apiFetch(
+        `${API_BASE_URL}/finance/social?limit=${limite}&offset=${decalage}`
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    } catch (erreur) {
+      handleError(erreur, '/finance/social');
+    }
+  },
+
   // Finance - Financement immobilier
   getRealEstateFinance: async (limite = 200, decalage = 0) => {
     try {

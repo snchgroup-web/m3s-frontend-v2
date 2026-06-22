@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, LabelList } from 'recharts';
-import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal } from 'lucide-react';
+import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
@@ -60,6 +60,9 @@ const Finance = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [recettes, setRecettes] = useState([]);
   const [depenses, setDepenses] = useState([]);
+  const [socialRows, setSocialRows] = useState([]);
+  const [socialSummary, setSocialSummary] = useState({});
+  const [socialError, setSocialError] = useState('');
   const [fxHistory, setFxHistory] = useState([]);
   const [immoTransactions, setImmoTransactions] = useState([]);
   const [immoSummary, setImmoSummary] = useState({});
@@ -80,6 +83,7 @@ const Finance = () => {
   const [editingFxId, setEditingFxId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('recette');
+  const [socialModal, setSocialModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [savingFinance, setSavingFinance] = useState(false);
   const [fxFormData, setFxFormData] = useState({
@@ -104,6 +108,20 @@ const Finance = () => {
       recettes: 'Recettes',
       depenses: 'Dépenses',
       fx: 'Historique FX',
+      social: 'Social',
+      socialTitle: 'SOCIAL - Flux reclassés',
+      socialSubtitle: 'Aides sociales et participations ménage séparées des recettes d’exploitation',
+      socialHistoricalCfa: 'CFA historiques enregistrés',
+      socialCurrentCfa: 'Équivalent CFA au taux du jour',
+      socialOperations: 'Opérations reclassées',
+      socialPeriod: 'Période couverte',
+      socialAnnualChf: 'Flux sociaux par année (CHF)',
+      socialAnnualCfa: 'Flux sociaux historiques par année (CFA)',
+      socialNotice: 'Ces flux restent traçables dans la source financière, mais sont exclus des recettes d’exploitation.',
+      socialNature: 'Nature',
+      beneficiaire: 'Bénéficiaire',
+      nouveauFluxSocial: 'Nouveau flux social',
+      modifierFluxSocial: 'Modifier le flux social',
       tendance: 'Tendance Recettes vs Dépenses',
       historiqueTaux: 'Historique Taux de Change (CFA/CHF)',
       moyenneAnnuelleFx: 'Taux moyen annuel - 1 CHF en CFA',
@@ -195,6 +213,20 @@ const Finance = () => {
       recettes: 'Revenue',
       depenses: 'Expenses',
       fx: 'FX History',
+      social: 'Social',
+      socialTitle: 'SOCIAL - Reclassified flows',
+      socialSubtitle: 'Social aid and household contributions separated from operating revenue',
+      socialHistoricalCfa: 'Recorded historical CFA',
+      socialCurrentCfa: 'Current-rate CFA equivalent',
+      socialOperations: 'Reclassified operations',
+      socialPeriod: 'Covered period',
+      socialAnnualChf: 'Social flows by year (CHF)',
+      socialAnnualCfa: 'Historical social flows by year (CFA)',
+      socialNotice: 'These flows remain traceable in the finance source but are excluded from operating revenue.',
+      socialNature: 'Nature',
+      beneficiaire: 'Beneficiary',
+      nouveauFluxSocial: 'New social flow',
+      modifierFluxSocial: 'Edit social flow',
       tendance: 'Revenue vs Expense Trend',
       historiqueTaux: 'Exchange Rate History (CFA/CHF)',
       moyenneAnnuelleFx: 'Annual average rate - 1 CHF in CFA',
@@ -286,6 +318,20 @@ const Finance = () => {
       recettes: 'Einnahmen',
       depenses: 'Ausgaben',
       fx: 'Wechselkurshistorie',
+      social: 'Soziales',
+      socialTitle: 'SOZIALES - Umklassifizierte Flüsse',
+      socialSubtitle: 'Sozialhilfen und Haushaltsbeiträge getrennt von den Betriebseinnahmen',
+      socialHistoricalCfa: 'Erfasste historische CFA',
+      socialCurrentCfa: 'CFA-Gegenwert zum Tageskurs',
+      socialOperations: 'Umklassifizierte Vorgänge',
+      socialPeriod: 'Abgedeckter Zeitraum',
+      socialAnnualChf: 'Soziale Flüsse pro Jahr (CHF)',
+      socialAnnualCfa: 'Historische soziale Flüsse pro Jahr (CFA)',
+      socialNotice: 'Diese Flüsse bleiben in der Finanzquelle nachvollziehbar, sind aber von den Betriebseinnahmen ausgeschlossen.',
+      socialNature: 'Art',
+      beneficiaire: 'Begünstigte',
+      nouveauFluxSocial: 'Neuer sozialer Fluss',
+      modifierFluxSocial: 'Sozialen Fluss bearbeiten',
       tendance: 'Trend Einnahmen vs. Ausgaben',
       historiqueTaux: 'Wechselkurshistorie (CFA/CHF)',
       moyenneAnnuelleFx: 'Jahresdurchschnitt - 1 CHF in CFA',
@@ -435,6 +481,9 @@ const Finance = () => {
       team: item.team || item.team_name || item.equipe || item.bu || item.business_unit || 'Non renseigne',
       departement: item.departement || item.department || item.department_name || item.service || 'Non renseigne',
       phaseProjet: item.phase_projet || item.phaseProjet || item.project_phase || item.phase || 'Conception',
+      natureSociale: item.nature_sociale || item.natureSociale || 'Aide sociale',
+      beneficiaire: item.beneficiaire || '',
+      pays: item.pays || item.country || '',
       status: item.status || item.statut || 'completed'
     };
   }, []);
@@ -559,6 +608,25 @@ const Finance = () => {
   useEffect(() => {
     loadFinanceData();
   }, [loadFinanceData]);
+
+  const loadSocialData = useCallback(async () => {
+    try {
+      const response = await api.getSocialFinance(200, 0);
+      const rows = Array.isArray(response?.data) ? response.data : [];
+      setSocialRows(rows.map((item, index) => normalizeFinanceRow(item, 'SOC', 'Aide Sociale Ménage', index)));
+      setSocialSummary(response?.summary || {});
+      setSocialError('');
+    } catch (error) {
+      console.error('Social finance error:', error);
+      setSocialRows([]);
+      setSocialSummary({});
+      setSocialError(error.message);
+    }
+  }, [normalizeFinanceRow]);
+
+  useEffect(() => {
+    loadSocialData();
+  }, [loadSocialData]);
 
   // Data translations for categories and descriptions
   const dataTranslations = {
@@ -863,13 +931,16 @@ const Finance = () => {
   };
 
   const categoryOptions = useMemo(() => {
+    if (socialModal) {
+      return [...new Set(['Aide Sociale Ménage', 'Aide Sociale', formData.categorie].filter(Boolean))];
+    }
     const defaults = modalType === 'recette'
       ? ['Financement', 'Vente de Marchandises', 'Vente de Services', 'Don en nature', 'Remboursement Caution Loyer', 'Remboursement Investissement Immo', 'Aide Sociale Ménage', 'Ventes', 'Recettes', 'Dons', 'Donation', 'Services', 'Immobilier', 'Fin Immo', 'Social', 'Participation']
       : ['Materiel', 'Administrative', 'Logistique', 'Achat Terrain', 'Chantier', 'Bien_Immo', 'Don Materiel', 'Formalites', 'Voyages', 'Alimentation', 'Bureautique', 'Carburant', 'Cadeaux', 'Etudes & Plans', 'Marchandises', 'Shipping / Fret', 'Abonnement', 'Depenses', 'Operationnel', 'Immobilier', 'Investissement Immo', 'Paie', 'Salaires', 'Social', 'Aide Sociale', 'Transport', 'Fournitures', 'Services'];
     const sourceRows = modalType === 'recette' ? recettes : depenses;
     const existing = sourceRows.map((row) => row.categorie).filter(Boolean);
     return [...new Set([...defaults, ...existing, formData.categorie].filter(Boolean))];
-  }, [modalType, recettes, depenses, formData.categorie]);
+  }, [modalType, socialModal, recettes, depenses, formData.categorie]);
 
   const agentOptions = useMemo(() => {
     const existing = [...recettes, ...depenses]
@@ -971,6 +1042,35 @@ const Finance = () => {
   const latestHistoricalFx = getHistoricalCfaPerChf(new Date().toISOString().split('T')[0]);
   const tauxChfCfa = tauxDuJour.CHF_CFA || latestHistoricalFx?.cfaPerChf || null;
   const formatCfaWithCurrentRate = (chfAmount) => tauxChfCfa ? Math.round(chfAmount * tauxChfCfa).toLocaleString() : '-';
+
+  const socialRowsAffichees = useMemo(() => {
+    const dedicatedRows = socialRows.map(applyHistoricalFx);
+    if (dedicatedRows.length) return dedicatedRows;
+    return recettesAffichees.filter((row) => {
+      const category = normalizeCategoryKey(row.categorie);
+      return category === 'AIDE SOCIALE MENAGE' || category === 'AIDE SOCIALE';
+    });
+  }, [socialRows, recettesAffichees, applyHistoricalFx]);
+  const socialTotalChf = socialRowsAffichees.reduce((sum, row) => sum + toNumber(row.montantChf), 0);
+  const socialTotalCfaHistorique = socialRowsAffichees.reduce((sum, row) => sum + toNumber(row.montantCfa), 0);
+  const socialTotalCfaActuel = tauxChfCfa ? socialTotalChf * tauxChfCfa : 0;
+  const socialYears = socialRowsAffichees
+    .map((row) => cleanDate(row.date).slice(0, 4))
+    .filter((year) => /^\d{4}$/.test(year));
+  const socialFirstYear = socialSummary.premiere_annee || (socialYears.length ? Math.min(...socialYears.map(Number)) : null);
+  const socialLastYear = socialSummary.derniere_annee || (socialYears.length ? Math.max(...socialYears.map(Number)) : null);
+  const socialAnnualData = useMemo(() => {
+    const yearly = {};
+    socialRowsAffichees.forEach((row) => {
+      const year = cleanDate(row.date).slice(0, 4);
+      if (!/^\d{4}$/.test(year)) return;
+      if (!yearly[year]) yearly[year] = { annee: year, montantChf: 0, montantCfa: 0, operations: 0 };
+      yearly[year].montantChf += toNumber(row.montantChf);
+      yearly[year].montantCfa += toNumber(row.montantCfa);
+      yearly[year].operations += 1;
+    });
+    return Object.values(yearly).sort((a, b) => a.annee.localeCompare(b.annee));
+  }, [socialRowsAffichees]);
 
   const annualFinanceData = useMemo(() => {
     const yearly = {};
@@ -1240,8 +1340,10 @@ const Finance = () => {
       } else if (editingId) await api.updateExpense(editingId, payload);
       else await api.createExpense(payload);
       await loadFinanceData();
+      if (socialModal) await loadSocialData();
       setShowModal(false);
       setEditingId(null);
+      setSocialModal(false);
       setFormData(createEmptyFinanceForm());
     } catch (error) {
       alert(error.message);
@@ -1252,6 +1354,7 @@ const Finance = () => {
 
   const handleEdit = (type, item) => {
     setModalType(type);
+    setSocialModal(type === 'recette' && activeTab === 'social');
     setEditingId(item.id);
     setFormData({
       ...item,
@@ -1267,6 +1370,7 @@ const Finance = () => {
       if (type === 'recette') await api.deleteIncome(id);
       else await api.deleteExpense(id);
       await loadFinanceData();
+      if (activeTab === 'social') await loadSocialData();
     } catch (error) {
       alert(error.message);
     }
@@ -1274,8 +1378,24 @@ const Finance = () => {
 
   const openNewModal = (type) => {
     setModalType(type);
+    setSocialModal(false);
     setEditingId(null);
     setFormData(createEmptyFinanceForm());
+    setShowModal(true);
+  };
+
+  const openNewSocialModal = () => {
+    setModalType('recette');
+    setSocialModal(true);
+    setEditingId(null);
+    setFormData({
+      ...createEmptyFinanceForm(),
+      categorie: 'Aide Sociale Ménage',
+      agent: 'Cheikh',
+      team: 'Team_ZH',
+      departement: 'Finances',
+      pays: 'CH'
+    });
     setShowModal(true);
   };
 
@@ -1725,6 +1845,136 @@ const Finance = () => {
           </div>
         )}
 
+        {activeTab === 'social' && (
+          <div className="space-y-6">
+            <section className="flex flex-col gap-4 border-b border-slate-700 pb-5 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <div className="mb-2 flex items-center gap-3">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-400">
+                    <Heart size={22} />
+                  </span>
+                  <h3 className="text-xl font-bold text-white">{t.socialTitle}</h3>
+                </div>
+                <p className="max-w-3xl text-sm text-slate-400">{t.socialSubtitle}</p>
+              </div>
+              <button onClick={openNewSocialModal} className="flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-white transition hover:bg-emerald-700">
+                <Plus size={19} /> {t.nouveauFluxSocial}
+              </button>
+            </section>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-emerald-500/60">
+                <p className="text-sm font-medium text-emerald-400">{t.socialTitle}</p>
+                <p className="mt-2 text-2xl font-bold text-white">{socialTotalChf.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} CHF</p>
+              </div>
+              <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-cyan-500/60">
+                <p className="text-sm font-medium text-cyan-400">{t.socialHistoricalCfa}</p>
+                <p className="mt-2 text-2xl font-bold text-white">{Math.round(socialTotalCfaHistorique).toLocaleString()} CFA</p>
+              </div>
+              <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-blue-500/60">
+                <p className="text-sm font-medium text-blue-400">{t.socialCurrentCfa}</p>
+                <p className="mt-2 text-2xl font-bold text-white">{socialTotalCfaActuel ? Math.round(socialTotalCfaActuel).toLocaleString() : '-'} CFA</p>
+                <p className="mt-1 text-xs text-slate-500">1 CHF = {tauxChfCfa ? Number(tauxChfCfa).toLocaleString() : '-'} CFA</p>
+              </div>
+              <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-violet-500/60">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-violet-400">{t.socialOperations}</p>
+                    <p className="mt-2 text-2xl font-bold text-white">{socialRowsAffichees.length}</p>
+                    <p className="mt-1 text-xs text-slate-500">{t.socialPeriod}: {socialFirstYear || '-'} - {socialLastYear || '-'}</p>
+                  </div>
+                  <UsersRound size={24} className="text-violet-400" />
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 px-5 py-4 text-sm text-amber-100">
+              {t.socialNotice}
+              {socialError && <span className="ml-2 text-slate-400">({socialError})</span>}
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+              <section className="rounded-lg border border-slate-700 bg-slate-800 p-6">
+                <h4 className="mb-4 font-bold text-white">{t.socialAnnualChf}</h4>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={socialAnnualData} margin={{ top: 12, right: 12, left: 8, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
+                    <XAxis dataKey="annee" stroke="#94a3b8" tickLine={false} axisLine={false} />
+                    <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={54} tickFormatter={(value) => `${Math.round(value / 1000)}k`} />
+                    <Tooltip formatter={(value) => [`${Number(value).toLocaleString()} CHF`, t.socialTitle]} contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }} />
+                    <Bar dataKey="montantChf" fill="#34d399" radius={[4, 4, 0, 0]} maxBarSize={42} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </section>
+              <section className="rounded-lg border border-slate-700 bg-slate-800 p-6">
+                <h4 className="mb-4 font-bold text-white">{t.socialAnnualCfa}</h4>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={socialAnnualData} margin={{ top: 12, right: 12, left: 12, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
+                    <XAxis dataKey="annee" stroke="#94a3b8" tickLine={false} axisLine={false} />
+                    <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={62} tickFormatter={(value) => `${(value / 1000000).toLocaleString(undefined, { maximumFractionDigits: 1 })}M`} />
+                    <Tooltip formatter={(value) => [`${Math.round(Number(value)).toLocaleString()} CFA`, t.socialHistoricalCfa]} contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }} />
+                    <Bar dataKey="montantCfa" fill="#22d3ee" radius={[4, 4, 0, 0]} maxBarSize={42} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </section>
+            </div>
+
+            <section>
+              <TableControls
+                rows={socialRowsAffichees}
+                defaultPageSize={10}
+                maxHeight="34rem"
+                renderTable={(visibleRows) => (
+                  <table className="min-w-[1900px] text-sm">
+                    <thead className="sticky top-0 z-10 bg-slate-700">
+                      <tr>
+                        <th className="px-4 py-3 text-left font-bold text-white">{t.ref}</th>
+                        <th className="px-4 py-3 text-left font-bold text-white">{t.date}</th>
+                        <th className="px-5 py-3 text-left font-bold text-white">{t.description}</th>
+                        <th className="px-4 py-3 text-left font-bold text-white">{t.montantCHF}</th>
+                        <th className="px-4 py-3 text-left font-bold text-white">{t.montantCFA}</th>
+                        <th className="px-4 py-3 text-left font-bold text-white">{t.tauxFXCol}</th>
+                        <th className="px-4 py-3 text-left font-bold text-white">{t.socialNature}</th>
+                        <th className="px-4 py-3 text-left font-bold text-white">{t.beneficiaire}</th>
+                        <th className="px-4 py-3 text-left font-bold text-white">{t.agent}</th>
+                        <th className="px-4 py-3 text-left font-bold text-white">{t.team}</th>
+                        <th className="px-4 py-3 text-left font-bold text-white">{t.departement}</th>
+                        <th className="px-4 py-3 text-left font-bold text-white">{t.pays}</th>
+                        <th className="px-4 py-3 text-left font-bold text-white">{t.actions}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {visibleRows.map((row) => (
+                        <tr key={row.id} onClick={() => handleEdit('recette', row)} onKeyDown={(event) => event.key === 'Enter' && handleEdit('recette', row)} tabIndex={0} className="cursor-pointer border-t border-slate-700 hover:bg-slate-700/50 focus:bg-slate-700/70 focus:outline-none">
+                          <td className="px-4 py-3 text-slate-400">{formatCell(row.ref)}</td>
+                          <td className="whitespace-nowrap px-4 py-3 text-slate-300">{formatDateForDisplay(row.date)}</td>
+                          <td className="max-w-[380px] px-5 py-3 font-medium text-white">{translateDescription(row.description)}</td>
+                          <td className="whitespace-nowrap px-4 py-3 font-semibold text-emerald-300">{formatAmount(row.montantChf)} CHF</td>
+                          <td className="whitespace-nowrap px-4 py-3 font-semibold text-cyan-300">{formatAmount(row.montantCfa)} CFA</td>
+                          <td className="px-4 py-3 text-purple-300">{row.tauxFx ? Number(row.tauxFx).toLocaleString(undefined, { maximumFractionDigits: 3 }) : '-'}</td>
+                          <td className="px-4 py-3"><span className="inline-flex whitespace-nowrap rounded bg-emerald-500/15 px-2 py-1 text-xs font-medium text-emerald-300">{translateStandardValue(row.natureSociale)}</span></td>
+                          <td className="px-4 py-3 text-slate-300">{formatCell(row.beneficiaire)}</td>
+                          <td className="px-4 py-3 text-slate-300">{formatCell(row.agent)}</td>
+                          <td className="px-4 py-3 text-slate-300">{translateStandardValue(row.team)}</td>
+                          <td className="px-4 py-3 text-slate-300">{translateStandardValue(row.departement)}</td>
+                          <td className="px-4 py-3 text-slate-300">{formatCell(row.pays)}</td>
+                          <td className="px-4 py-3">
+                            <div className="flex gap-2">
+                              <button onClick={(event) => { event.stopPropagation(); handleEdit('recette', row); }} className="rounded p-1 hover:bg-slate-600" title={t.modifier}><Edit2 size={17} className="text-blue-400" /></button>
+                              <button onClick={(event) => { event.stopPropagation(); handleDelete('recette', row.id); }} className="rounded p-1 hover:bg-slate-600" title={t.actions}><Trash2 size={17} className="text-red-400" /></button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              />
+            </section>
+          </div>
+        )}
+
         {activeTab === 'immobilier' && (
           <div className="space-y-6">
             {immoTransactions.length === 0 ? (
@@ -1901,7 +2151,7 @@ const Finance = () => {
           </div>
         )}
 
-        <ChildTabPlaceholder moduleId="finances" language={language} activeTab={activeTab} handledTabs={['overview', 'recettes', 'depenses', 'fx', 'immobilier']} />
+        <ChildTabPlaceholder moduleId="finances" language={language} activeTab={activeTab} handledTabs={['overview', 'recettes', 'depenses', 'fx', 'social', 'immobilier']} />
 
         {showImmoModal && (
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
@@ -2012,7 +2262,11 @@ const Finance = () => {
         {showModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-slate-800 rounded-lg p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto border border-slate-700">
-              <h2 className="text-white font-bold mb-4">{editingId ? (modalType === 'recette' ? t.modifierRecette : t.modifierDepense) : (modalType === 'recette' ? t.creerRecette : t.creerDepense)}</h2>
+              <h2 className="text-white font-bold mb-4">
+                {socialModal
+                  ? (editingId ? t.modifierFluxSocial : t.nouveauFluxSocial)
+                  : (editingId ? (modalType === 'recette' ? t.modifierRecette : t.modifierDepense) : (modalType === 'recette' ? t.creerRecette : t.creerDepense))}
+              </h2>
               <div className="space-y-4">
                 <input
                   type="text"
@@ -2085,7 +2339,7 @@ const Finance = () => {
                   </label>
                 </div>
                 <div className="flex gap-4 justify-end">
-                  <button onClick={() => setShowModal(false)} disabled={savingFinance} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg disabled:opacity-50">{t.annuler}</button>
+                  <button onClick={() => { setShowModal(false); setSocialModal(false); }} disabled={savingFinance} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg disabled:opacity-50">{t.annuler}</button>
                   <button onClick={handleSave} disabled={savingFinance} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50">{editingId ? t.enregistrer : t.creer}</button>
                 </div>
               </div>
