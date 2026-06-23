@@ -25,7 +25,7 @@ const CATEGORY_VALUES = [
 ];
 
 const STATUS_VALUES = ['Neuf', 'Bon état', '2nd Hand', 'A Réparer'];
-const UNIT_VALUES = ['Unité', 'Pièce', 'Lot', 'Carton', 'Paire', 'Kg', 'Litre', 'Mètre'];
+const UNIT_VALUES = ['Unité', 'Pièce', 'Parcelle', 'Lot', 'Carton', 'Paire', 'Kg', 'Litre', 'Mètre'];
 const BU_VALUES = ['ADMIN_ORG', 'IMPORT_EXPORT', 'SOCIAL', 'IMMO', 'TECH_DIGITAL'];
 const CHART_COLORS = ['#38bdf8', '#34d399', '#f59e0b', '#a78bfa', '#fb7185', '#22d3ee', '#f97316', '#818cf8', '#94a3b8'];
 
@@ -45,6 +45,23 @@ const getTerrainQuantity = (item) => {
   const text = normalizeText(`${item.designation || ''} ${item.projet || ''}`);
   if (/2\s*terrains?/.test(text) || text.includes('parcelles 235') || text.includes('235, 236')) return 2;
   return 1;
+};
+
+const getTerrainDetails = (item) => {
+  const project = getTerrainProject(item);
+  if (project === 'lac_rose') {
+    return [
+      { parcelle: 'Parcelle 235', titulaire: 'Cheikh' },
+      { parcelle: 'Parcelle 236', titulaire: 'Chantal' }
+    ];
+  }
+  if (project === 'diass') {
+    return [
+      { parcelle: 'Parcelle Chantal', titulaire: 'Chantal' },
+      { parcelle: 'Parcelle Pape', titulaire: 'Pape' }
+    ];
+  }
+  return [{ parcelle: 'Parcelle', titulaire: '' }];
 };
 
 const CATEGORY_LABELS = {
@@ -141,7 +158,9 @@ const Actifs = () => {
       riskItems: 'Articles à surveiller', repair: 'À réparer', transit: 'En transit', riskMessage: 'Aucun article à risque identifié.',
       noAssets: 'Aucune immobilisation explicitement classée.', allRealData: 'Données réelles BigQuery',
       acquisitionValue: "Valeur d'acquisition", currentValue: 'Valeur actuelle',
-      landRegistry: 'Registre foncier', trackedLands: 'Terrains suivis', terrainUnit: 'terrains', sourceFlow: 'Flux source', stockLines: 'Lignes stock classées Bien immobilier'
+      landRegistry: 'Registre foncier', trackedLands: 'Terrains suivis', terrainUnit: 'terrains', sourceFlow: 'Flux source',
+      stockLines: 'Lignes stock classées Bien immobilier', parcel: 'Parcelle', holder: 'Titulaire', project: 'Projet',
+      addLand: 'Ajouter terrain', realEstateFinanceSource: 'Financement immobilier', landPurchaseLines: '2 flux achat terrain'
     },
     EN: {
       overview: 'Overview', inventory: 'Inventory', immobilisations: 'Fixed Assets', risks: 'Risks',
@@ -159,7 +178,9 @@ const Actifs = () => {
       riskItems: 'Items to monitor', repair: 'Needs repair', transit: 'In transit', riskMessage: 'No risk item identified.',
       noAssets: 'No explicitly classified fixed asset.', allRealData: 'Live BigQuery data',
       acquisitionValue: 'Acquisition value', currentValue: 'Current value',
-      landRegistry: 'Land register', trackedLands: 'Tracked plots', terrainUnit: 'plots', sourceFlow: 'Source flow', stockLines: 'Stock lines classified as Real Estate'
+      landRegistry: 'Land register', trackedLands: 'Tracked plots', terrainUnit: 'plots', sourceFlow: 'Source flow',
+      stockLines: 'Stock lines classified as Real Estate', parcel: 'Plot', holder: 'Holder', project: 'Project',
+      addLand: 'Add plot', realEstateFinanceSource: 'Real estate financing', landPurchaseLines: '2 land purchase flows'
     },
     DE: {
       overview: 'Übersicht', inventory: 'Bestand', immobilisations: 'Anlagevermögen', risks: 'Risiken',
@@ -177,7 +198,9 @@ const Actifs = () => {
       riskItems: 'Zu überwachende Artikel', repair: 'Zu reparieren', transit: 'Im Transit', riskMessage: 'Keine Risikoartikel gefunden.',
       noAssets: 'Keine explizit klassifizierte Anlage.', allRealData: 'Echte BigQuery-Daten',
       acquisitionValue: 'Anschaffungswert', currentValue: 'Aktueller Wert',
-      landRegistry: 'Grundstücksregister', trackedLands: 'Geführte Grundstücke', terrainUnit: 'Grundstücke', sourceFlow: 'Quellfluss', stockLines: 'Als Immobilien klassifizierte Lagerzeilen'
+      landRegistry: 'Grundstücksregister', trackedLands: 'Geführte Grundstücke', terrainUnit: 'Grundstücke', sourceFlow: 'Quellfluss',
+      stockLines: 'Als Immobilien klassifizierte Lagerzeilen', parcel: 'Parzelle', holder: 'Inhaber', project: 'Projekt',
+      addLand: 'Grundstück hinzufügen', realEstateFinanceSource: 'Immobilienfinanzierung', landPurchaseLines: '2 Grundstückskauf-Flüsse'
     }
   };
   const t = translations[language] || translations.FR;
@@ -251,22 +274,26 @@ const Actifs = () => {
     achatsTerrains.forEach((item) => {
       const project = getTerrainProject(item);
       if (!project || byProject[project]) return;
-      byProject[project] = {
-        id: item.source_id,
+      const quantite = getTerrainQuantity(item);
+      byProject[project] = getTerrainDetails(item).map((detail, index) => ({
+        id: `${item.source_id}-${index + 1}`,
+        sourceId: item.source_id,
         project,
         label: project === 'diass' ? 'Diass' : 'Lac Rose',
         designation: item.designation,
         date: cleanDate(item.date_operation),
-        quantite: getTerrainQuantity(item),
-        montantChf: numberValue(item.montant_chf),
-        montantCfa: numberValue(item.montant_cfa),
+        quantite: 1,
+        parcelle: detail.parcelle,
+        titulaire: detail.titulaire,
+        montantChf: numberValue(item.montant_chf) / quantite,
+        montantCfa: numberValue(item.montant_cfa) / quantite,
         tauxFx: numberValue(item.taux_fx),
         statut: item.statut || '',
-        source: 'Fin Immo',
+        source: 'realEstateFinance',
         document: item.document_ref || ''
-      };
+      }));
     });
-    return ['lac_rose', 'diass'].map((key) => byProject[key]).filter(Boolean);
+    return ['lac_rose', 'diass'].flatMap((key) => byProject[key] || []);
   }, [realEstateTransactions]);
   const terrainSummary = useMemo(() => terrainsFonciers.reduce((acc, item) => {
     acc.quantite += item.quantite;
@@ -295,6 +322,23 @@ const Actifs = () => {
   const openCreate = () => {
     setEditingId(null);
     setFormData(EMPTY_FORM);
+    setShowModal(true);
+  };
+
+  const openCreateLandAsset = () => {
+    setEditingId(null);
+    setFormData({
+      ...EMPTY_FORM,
+      article: '',
+      categorie: 'Bien_Immo',
+      sous_categorie: 'Terrain',
+      quantite: '1',
+      unite: 'Parcelle',
+      localisation: 'Dakar, SN',
+      statut: 'Neuf',
+      bu: 'IMMO',
+      commentaires: 'Ajout depuis le registre foncier M3S.'
+    });
     setShowModal(true);
   };
 
@@ -504,21 +548,25 @@ const Actifs = () => {
                 </div>
                 <div className="rounded-lg bg-slate-800 p-5">
                   <p className="text-sm text-slate-400">{t.sourceFlow}</p>
-                  <p className="mt-2 text-2xl font-bold text-white">Fin Immo</p>
-                  <p className="mt-1 text-sm text-slate-400">2 lignes achat terrain</p>
+                  <p className="mt-2 text-2xl font-bold text-white">{t.realEstateFinanceSource}</p>
+                  <p className="mt-1 text-sm text-slate-400">{t.landPurchaseLines}</p>
                 </div>
               </div>
               <div className="mb-6 overflow-x-auto rounded-lg bg-slate-800">
-                <div className="border-b border-slate-700 px-5 py-4">
+                <div className="flex flex-col gap-3 border-b border-slate-700 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
                   <h3 className="font-bold text-white">{t.landRegistry}</h3>
+                  <button type="button" onClick={openCreateLandAsset} className="inline-flex items-center justify-center gap-2 rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-500">
+                    <PackagePlus size={16} /> {t.addLand}
+                  </button>
                 </div>
-                <table className="min-w-[980px] w-full text-sm">
+                <table className="min-w-[1180px] w-full text-sm">
                   <thead className="bg-slate-700">
                     <tr>
                       <th className="px-4 py-3 text-left text-white">{t.reference}</th>
-                      <th className="px-4 py-3 text-left text-white">Projet</th>
+                      <th className="px-4 py-3 text-left text-white">{t.project}</th>
+                      <th className="px-4 py-3 text-left text-white">{t.parcel}</th>
+                      <th className="px-4 py-3 text-left text-white">{t.holder}</th>
                       <th className="px-4 py-3 text-left text-white">{t.sourceFlow}</th>
-                      <th className="px-4 py-3 text-right text-white">{t.quantity}</th>
                       <th className="px-4 py-3 text-right text-white">{t.purchaseCHF}</th>
                       <th className="px-4 py-3 text-right text-white">{t.purchaseCFA}</th>
                       <th className="px-4 py-3 text-left text-white">{t.status}</th>
@@ -527,13 +575,14 @@ const Actifs = () => {
                   <tbody>
                     {terrainsFonciers.map((item) => (
                       <tr key={item.id} className="border-t border-slate-700">
-                        <td className="px-4 py-3 text-slate-400">{item.id}</td>
+                        <td className="px-4 py-3 text-slate-400">{item.sourceId}</td>
                         <td className="px-4 py-3 text-slate-100 font-semibold">{item.label}</td>
+                        <td className="px-4 py-3 text-white font-semibold">{item.parcelle}</td>
+                        <td className="px-4 py-3 text-slate-300">{item.titulaire || '-'}</td>
                         <td className="px-4 py-3 text-slate-300">
                           {item.designation}
-                          <div className="mt-1 text-xs text-slate-500">{item.date} · {item.source}</div>
+                          <div className="mt-1 text-xs text-slate-500">{item.date} · {t.realEstateFinanceSource}</div>
                         </td>
-                        <td className="px-4 py-3 text-right text-white font-bold">{item.quantite} {t.terrainUnit}</td>
                         <td className="px-4 py-3 text-right text-emerald-300 font-semibold">{formatAmount(item.montantChf)} CHF</td>
                         <td className="px-4 py-3 text-right text-sky-300 font-semibold">{formatAmount(item.montantCfa, 'fr-CH', 0)} CFA</td>
                         <td className="px-4 py-3 text-slate-300">{item.statut || '-'}</td>
