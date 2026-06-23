@@ -9,7 +9,12 @@
  * Langue: Français 🇫🇷
  */
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+const isLocalHost = typeof window !== 'undefined'
+  && ['localhost', '127.0.0.1'].includes(window.location.hostname);
+const DEFAULT_API_BASE_URL = isLocalHost
+  ? 'http://localhost:3001/api'
+  : 'https://web-production-1e53c.up.railway.app/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || DEFAULT_API_BASE_URL;
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');

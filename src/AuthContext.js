@@ -1,11 +1,25 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const AuthContext = createContext();
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+const isLocalHost = typeof window !== 'undefined'
+  && ['localhost', '127.0.0.1'].includes(window.location.hostname);
+const DEFAULT_API_BASE_URL = isLocalHost
+  ? 'http://localhost:3001/api'
+  : 'https://web-production-1e53c.up.railway.app/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || DEFAULT_API_BASE_URL;
+const DEMO_AUTH_ENABLED = process.env.REACT_APP_ENABLE_DEMO_AUTH === 'true' && isLocalHost;
 
 const readStoredToken = () => {
   const storedToken = localStorage.getItem('token');
-  if (!storedToken || storedToken.startsWith('demo_session_')) return storedToken;
+  if (!storedToken) return storedToken;
+  if (storedToken.startsWith('demo_session_')) {
+    if (!DEMO_AUTH_ENABLED) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      return null;
+    }
+    return storedToken;
+  }
 
   try {
     const encodedPayload = storedToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
@@ -41,7 +55,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(readStoredUser);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const demoAuthEnabled = process.env.REACT_APP_ENABLE_DEMO_AUTH === 'true';
+  const demoAuthEnabled = DEMO_AUTH_ENABLED;
 
   useEffect(() => {
     const handleExpiredSession = () => {

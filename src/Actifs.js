@@ -159,8 +159,9 @@ const Actifs = () => {
       noAssets: 'Aucune immobilisation explicitement classée.', allRealData: 'Données réelles BigQuery',
       acquisitionValue: "Valeur d'acquisition", currentValue: 'Valeur actuelle',
       landRegistry: 'Registre foncier', trackedLands: 'Terrains suivis', terrainUnit: 'terrains', sourceFlow: 'Flux source',
-      stockLines: 'Lignes stock classées Bien immobilier', parcel: 'Parcelle', holder: 'Titulaire', project: 'Projet',
-      addLand: 'Ajouter terrain', realEstateFinanceSource: 'Financement immobilier', landPurchaseLines: '2 flux achat terrain'
+      stockLines: 'Lignes stock classées Bien immobilier', stockLinesSource: 'Source BigQuery stocks_actifs_propres. Diass est visible dans le registre foncier ci-dessus, mais pas encore écrit comme ligne stock brute.',
+      parcel: 'Parcelle', holder: 'Titulaire', project: 'Projet',
+      addLand: 'Ajouter terrain', addStockAsset: 'Ajouter une ligne stock', realEstateFinanceSource: 'Financement immobilier', landPurchaseLines: '2 flux achat terrain'
     },
     EN: {
       overview: 'Overview', inventory: 'Inventory', immobilisations: 'Fixed Assets', risks: 'Risks',
@@ -179,8 +180,9 @@ const Actifs = () => {
       noAssets: 'No explicitly classified fixed asset.', allRealData: 'Live BigQuery data',
       acquisitionValue: 'Acquisition value', currentValue: 'Current value',
       landRegistry: 'Land register', trackedLands: 'Tracked plots', terrainUnit: 'plots', sourceFlow: 'Source flow',
-      stockLines: 'Stock lines classified as Real Estate', parcel: 'Plot', holder: 'Holder', project: 'Project',
-      addLand: 'Add plot', realEstateFinanceSource: 'Real estate financing', landPurchaseLines: '2 land purchase flows'
+      stockLines: 'Stock lines classified as Real Estate', stockLinesSource: 'BigQuery stocks_actifs_propres source. Diass is visible in the land register above, but not yet written as a raw stock line.',
+      parcel: 'Plot', holder: 'Holder', project: 'Project',
+      addLand: 'Add plot', addStockAsset: 'Add stock line', realEstateFinanceSource: 'Real estate financing', landPurchaseLines: '2 land purchase flows'
     },
     DE: {
       overview: 'Übersicht', inventory: 'Bestand', immobilisations: 'Anlagevermögen', risks: 'Risiken',
@@ -199,8 +201,9 @@ const Actifs = () => {
       noAssets: 'Keine explizit klassifizierte Anlage.', allRealData: 'Echte BigQuery-Daten',
       acquisitionValue: 'Anschaffungswert', currentValue: 'Aktueller Wert',
       landRegistry: 'Grundstücksregister', trackedLands: 'Geführte Grundstücke', terrainUnit: 'Grundstücke', sourceFlow: 'Quellfluss',
-      stockLines: 'Als Immobilien klassifizierte Lagerzeilen', parcel: 'Parzelle', holder: 'Inhaber', project: 'Projekt',
-      addLand: 'Grundstück hinzufügen', realEstateFinanceSource: 'Immobilienfinanzierung', landPurchaseLines: '2 Grundstückskauf-Flüsse'
+      stockLines: 'Als Immobilien klassifizierte Lagerzeilen', stockLinesSource: 'Quelle BigQuery stocks_actifs_propres. Diass ist oben im Grundstücksregister sichtbar, aber noch nicht als rohe Lagerzeile geschrieben.',
+      parcel: 'Parzelle', holder: 'Inhaber', project: 'Projekt',
+      addLand: 'Grundstück hinzufügen', addStockAsset: 'Lagerzeile hinzufügen', realEstateFinanceSource: 'Immobilienfinanzierung', landPurchaseLines: '2 Grundstückskauf-Flüsse'
     }
   };
   const t = translations[language] || translations.FR;
@@ -591,7 +594,15 @@ const Actifs = () => {
                   </tbody>
                 </table>
               </div>
-              <h3 className="mb-3 font-bold text-white">{t.stockLines}</h3>
+              <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h3 className="font-bold text-white">{t.stockLines}</h3>
+                  <p className="mt-1 max-w-3xl text-xs text-slate-400">{t.stockLinesSource}</p>
+                </div>
+                <button type="button" onClick={openCreateLandAsset} className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-white hover:bg-slate-600">
+                  <PackagePlus size={16} /> {t.addStockAsset}
+                </button>
+              </div>
               <TableControls
                 rows={immobilisations}
                 defaultPageSize={10}

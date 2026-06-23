@@ -149,7 +149,9 @@ const Login = () => {
 
         <div className="mt-8 text-center text-slate-500 text-xs">
           <p>{demoAuthEnabled ? 'Mode démonstration local' : 'Accès sécurisé par backend'}</p>
-          <p className="mt-1">API: {process.env.REACT_APP_API_URL || 'http://localhost:3001/api'}</p>
+          <p className="mt-1">
+            API: {process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3001/api' : 'https://web-production-1e53c.up.railway.app/api')}
+          </p>
         </div>
       </div>
     </div>

@@ -41,13 +41,13 @@ const mockDataBaseRaw = {
   financialTrend: [],
   moduleStats: {
     finance: { revenue: 0, expenses: 0, balance: 0, donations: 0, financing: 0, incomeCount: 0, expenseCount: 0 },
-    rh: { employees: 12, volunteers: 24, members: 156, beneficiaries: 89 },
-    crm: { prospects: 45, clients: 28, donations: 18, suppliers: 34 },
-    production: { orders: 52, completed: 38, pending: 14, stocks: 0 },
-    actifs: { total: 1250000, depreciation: 125000 },
+    rh: { employees: 0, volunteers: 0, members: 0, beneficiaries: 0 },
+    crm: { prospects: 0, clients: 0, donations: 0, suppliers: 0 },
+    production: { orders: 0, completed: 0, pending: 0, stocks: 0 },
+    actifs: { total: 0, depreciation: 0 },
     ged: { documents: 0, recent: 0 },
     tasks: { total: 0, completed: 0, pending: 0 },
-    caseStudies: 12
+    caseStudies: 0
   }
 };
 
