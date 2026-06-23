@@ -91,10 +91,22 @@ const STATUS_LABELS = {
   DE: { Neuf: 'Neu', 'Bon état': 'Guter Zustand', '2nd Hand': 'Gebraucht', 'A Réparer': 'Zu reparieren' }
 };
 
+const UNIT_LABELS = {
+  FR: { Unité: 'Unité', Pièce: 'Pièce', Parcelle: 'Parcelle', Lot: 'Lot', Carton: 'Carton', Paire: 'Paire', Kg: 'Kg', Litre: 'Litre', Mètre: 'Mètre' },
+  EN: { Unité: 'Unit', Pièce: 'Piece', Parcelle: 'Plot', Lot: 'Lot', Carton: 'Box', Paire: 'Pair', Kg: 'Kg', Litre: 'Liter', Mètre: 'Meter' },
+  DE: { Unité: 'Einheit', Pièce: 'Stück', Parcelle: 'Parzelle', Lot: 'Los', Carton: 'Karton', Paire: 'Paar', Kg: 'Kg', Litre: 'Liter', Mètre: 'Meter' }
+};
+
 const BU_LABELS = {
   FR: { ADMIN_ORG: 'Administration', IMPORT_EXPORT: 'Commercial & CRM', SOCIAL: 'Social', IMMO: 'Fin Immo', TECH_DIGITAL: 'IT & Support' },
   EN: { ADMIN_ORG: 'Administration', IMPORT_EXPORT: 'Commercial & CRM', SOCIAL: 'Social', IMMO: 'Real Estate Finance', TECH_DIGITAL: 'IT & Support' },
   DE: { ADMIN_ORG: 'Verwaltung', IMPORT_EXPORT: 'Vertrieb & CRM', SOCIAL: 'Sozial', IMMO: 'Immobilienfinanzierung', TECH_DIGITAL: 'IT & Support' }
+};
+
+const LAND_COMMENT_LABELS = {
+  FR: 'Ajout depuis le registre foncier M3S.',
+  EN: 'Added from the M3S land register.',
+  DE: 'Aus dem M3S-Grundstücksregister hinzugefügt.'
 };
 
 const EMPTY_FORM = {
@@ -149,7 +161,8 @@ const Actifs = () => {
       valueByFunction: 'Valeur CHF par fonction', article: 'Article', reference: 'Réf.', category: 'Catégorie',
       subCategory: 'Sous-catégorie', quantity: 'Quantité', unit: 'Unité', purchaseCHF: 'Achat CHF',
       purchaseCFA: 'Achat CFA', valueCHF: 'Valeur CHF', valueCFA: 'Valeur CFA', supplier: 'Fournisseur',
-      location: 'Localisation', status: 'État', function: 'Fonction', comments: 'Commentaires', actions: 'Actions',
+      location: 'Localisation', status: 'État', function: 'Fonction M3S', functionHint: "Affectation fonctionnelle / ancienne BU. Le champ Département n'existe pas encore dans la table Stocks.",
+      comments: 'Commentaires', actions: 'Actions',
       add: 'Nouvel article', edit: "Modifier l'article", cancel: 'Annuler', save: 'Enregistrer',
       required: "L'article et la catégorie sont obligatoires.", confirmDelete: 'Supprimer définitivement cet article ?',
       loadError: "Impossible de charger l'inventaire.", saveError: "Impossible d'enregistrer cet article.",
@@ -170,7 +183,8 @@ const Actifs = () => {
       valueByFunction: 'CHF value by function', article: 'Item', reference: 'Ref.', category: 'Category',
       subCategory: 'Subcategory', quantity: 'Quantity', unit: 'Unit', purchaseCHF: 'Purchase CHF',
       purchaseCFA: 'Purchase CFA', valueCHF: 'Value CHF', valueCFA: 'Value CFA', supplier: 'Supplier',
-      location: 'Location', status: 'Condition', function: 'Function', comments: 'Comments', actions: 'Actions',
+      location: 'Location', status: 'Condition', function: 'M3S function', functionHint: 'Functional allocation / legacy BU. Department is not yet a field in the Stocks table.',
+      comments: 'Comments', actions: 'Actions',
       add: 'New item', edit: 'Edit item', cancel: 'Cancel', save: 'Save',
       required: 'Item and category are required.', confirmDelete: 'Permanently delete this item?',
       loadError: 'Unable to load inventory.', saveError: 'Unable to save this item.',
@@ -191,7 +205,8 @@ const Actifs = () => {
       valueByFunction: 'CHF-Wert nach Funktion', article: 'Artikel', reference: 'Ref.', category: 'Kategorie',
       subCategory: 'Unterkategorie', quantity: 'Menge', unit: 'Einheit', purchaseCHF: 'Kauf CHF',
       purchaseCFA: 'Kauf CFA', valueCHF: 'Wert CHF', valueCFA: 'Wert CFA', supplier: 'Lieferant',
-      location: 'Standort', status: 'Zustand', function: 'Funktion', comments: 'Bemerkungen', actions: 'Aktionen',
+      location: 'Standort', status: 'Zustand', function: 'M3S-Funktion', functionHint: 'Funktionale Zuordnung / frühere BU. Abteilung ist in der Stocks-Tabelle noch kein eigenes Feld.',
+      comments: 'Bemerkungen', actions: 'Aktionen',
       add: 'Neuer Artikel', edit: 'Artikel bearbeiten', cancel: 'Abbrechen', save: 'Speichern',
       required: 'Artikel und Kategorie sind Pflichtfelder.', confirmDelete: 'Diesen Artikel endgültig löschen?',
       loadError: 'Inventar konnte nicht geladen werden.', saveError: 'Artikel konnte nicht gespeichert werden.',
@@ -210,12 +225,20 @@ const Actifs = () => {
 
   const translateCategory = useCallback((value) => CATEGORY_LABELS[language]?.[value] || CATEGORY_LABELS.FR[value] || value || 'Autre', [language]);
   const translateStatus = useCallback((value) => STATUS_LABELS[language]?.[value] || STATUS_LABELS.FR[value] || value || '-', [language]);
+  const translateUnit = useCallback((value) => UNIT_LABELS[language]?.[value] || UNIT_LABELS.FR[value] || value || '-', [language]);
   const translateBu = useCallback((value) => BU_LABELS[language]?.[value] || BU_LABELS.FR[value] || value || '-', [language]);
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
     setActiveTab(['overview', 'inventory', 'immobilisations', 'risques'].includes(tab) ? tab : 'overview');
   }, [location.search]);
+
+  useEffect(() => {
+    if (!showModal) return;
+    const defaultComments = Object.values(LAND_COMMENT_LABELS);
+    if (!defaultComments.includes(formData.commentaires)) return;
+    setFormData(prev => ({ ...prev, commentaires: LAND_COMMENT_LABELS[language] || LAND_COMMENT_LABELS.FR }));
+  }, [formData.commentaires, language, showModal]);
 
   const loadInventory = useCallback(async () => {
     setLoading(true);
@@ -340,7 +363,7 @@ const Actifs = () => {
       localisation: 'Dakar, SN',
       statut: 'Neuf',
       bu: 'IMMO',
-      commentaires: 'Ajout depuis le registre foncier M3S.'
+      commentaires: LAND_COMMENT_LABELS[language] || LAND_COMMENT_LABELS.FR
     });
     setShowModal(true);
   };
@@ -430,7 +453,7 @@ const Actifs = () => {
               {item.sousCategorie && <div className="text-xs text-slate-500 mt-1">{item.sousCategorie}</div>}
             </td>
             <td className="px-4 py-3 text-slate-300 whitespace-nowrap">{translateCategory(item.categorie)}</td>
-            <td className="px-4 py-3 text-right text-slate-200">{formatAmount(item.quantite, 'fr-CH', 0)} {item.unite}</td>
+            <td className="px-4 py-3 text-right text-slate-200">{formatAmount(item.quantite, 'fr-CH', 0)} {translateUnit(item.unite)}</td>
             <td className="px-4 py-3 text-right text-slate-400">{formatAmount(item.achatChf)} CHF</td>
             <td className="px-4 py-3 text-right text-slate-400">{formatAmount(item.achatCfa, 'fr-CH', 0)} CFA</td>
             <td className="px-4 py-3 text-right text-emerald-300 font-semibold">{formatAmount(item.valeurChf)} CHF</td>
@@ -642,12 +665,12 @@ const Actifs = () => {
               <label><span className="mb-1 block text-sm text-slate-300">{t.category} *</span><select value={formData.categorie} onChange={(event) => setFormData(prev => ({ ...prev, categorie: event.target.value }))} className="w-full rounded border border-slate-600 bg-slate-700 px-3 py-2 text-white">{CATEGORY_VALUES.map(value => <option key={value} value={value}>{translateCategory(value)}</option>)}</select></label>
               <label><span className="mb-1 block text-sm text-slate-300">{t.subCategory}</span><input value={formData.sous_categorie} onChange={(event) => setFormData(prev => ({ ...prev, sous_categorie: event.target.value }))} className="w-full rounded border border-slate-600 bg-slate-700 px-3 py-2 text-white" /></label>
               <label><span className="mb-1 block text-sm text-slate-300">{t.quantity}</span><input type="number" min="0" step="1" value={formData.quantite} onChange={(event) => setFormData(prev => ({ ...prev, quantite: event.target.value }))} className="w-full rounded border border-slate-600 bg-slate-700 px-3 py-2 text-white" /></label>
-              <label><span className="mb-1 block text-sm text-slate-300">{t.unit}</span><select value={formData.unite} onChange={(event) => setFormData(prev => ({ ...prev, unite: event.target.value }))} className="w-full rounded border border-slate-600 bg-slate-700 px-3 py-2 text-white">{UNIT_VALUES.map(value => <option key={value}>{value}</option>)}</select></label>
+              <label><span className="mb-1 block text-sm text-slate-300">{t.unit}</span><select value={formData.unite} onChange={(event) => setFormData(prev => ({ ...prev, unite: event.target.value }))} className="w-full rounded border border-slate-600 bg-slate-700 px-3 py-2 text-white">{UNIT_VALUES.map(value => <option key={value} value={value}>{translateUnit(value)}</option>)}</select></label>
               <label><span className="mb-1 block text-sm text-slate-300">{t.purchaseCHF}</span><input type="number" min="0" step="0.01" value={formData.achat_chf} onChange={(event) => setFormData(prev => ({ ...prev, achat_chf: event.target.value }))} className="w-full rounded border border-slate-600 bg-slate-700 px-3 py-2 text-white" /></label>
               <label><span className="mb-1 block text-sm text-slate-300">{t.purchaseCFA}</span><input type="number" min="0" step="1" value={formData.achat_cfa} onChange={(event) => setFormData(prev => ({ ...prev, achat_cfa: event.target.value }))} className="w-full rounded border border-slate-600 bg-slate-700 px-3 py-2 text-white" /></label>
               <label><span className="mb-1 block text-sm text-slate-300">{t.valueCHF}</span><input type="number" min="0" step="0.01" value={formData.valeur_chf} onChange={(event) => setFormData(prev => ({ ...prev, valeur_chf: event.target.value }))} className="w-full rounded border border-slate-600 bg-slate-700 px-3 py-2 text-white" /></label>
               <label><span className="mb-1 block text-sm text-slate-300">{t.valueCFA}</span><input type="number" min="0" step="1" value={formData.valeur_cfa} onChange={(event) => setFormData(prev => ({ ...prev, valeur_cfa: event.target.value }))} className="w-full rounded border border-slate-600 bg-slate-700 px-3 py-2 text-white" /></label>
-              <label><span className="mb-1 block text-sm text-slate-300">{t.function}</span><select value={formData.bu} onChange={(event) => setFormData(prev => ({ ...prev, bu: event.target.value }))} className="w-full rounded border border-slate-600 bg-slate-700 px-3 py-2 text-white">{BU_VALUES.map(value => <option key={value} value={value}>{translateBu(value)}</option>)}</select></label>
+              <label><span className="mb-1 block text-sm text-slate-300">{t.function}</span><select value={formData.bu} onChange={(event) => setFormData(prev => ({ ...prev, bu: event.target.value }))} className="w-full rounded border border-slate-600 bg-slate-700 px-3 py-2 text-white">{BU_VALUES.map(value => <option key={value} value={value}>{translateBu(value)}</option>)}</select><span className="mt-1 block text-xs text-slate-500">{t.functionHint}</span></label>
               <label><span className="mb-1 block text-sm text-slate-300">{t.status}</span><select value={formData.statut} onChange={(event) => setFormData(prev => ({ ...prev, statut: event.target.value }))} className="w-full rounded border border-slate-600 bg-slate-700 px-3 py-2 text-white">{STATUS_VALUES.map(value => <option key={value} value={value}>{translateStatus(value)}</option>)}</select></label>
               <label><span className="mb-1 block text-sm text-slate-300">{t.location}</span><input value={formData.localisation} onChange={(event) => setFormData(prev => ({ ...prev, localisation: event.target.value }))} className="w-full rounded border border-slate-600 bg-slate-700 px-3 py-2 text-white" /></label>
               <label><span className="mb-1 block text-sm text-slate-300">{t.supplier}</span><input value={formData.fournisseur} onChange={(event) => setFormData(prev => ({ ...prev, fournisseur: event.target.value }))} className="w-full rounded border border-slate-600 bg-slate-700 px-3 py-2 text-white" /></label>
