@@ -56,8 +56,12 @@ const Login = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-block p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg mb-4">
-            <Lock size={32} className="text-white" />
+          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-white p-2 shadow-xl ring-4 ring-white/10">
+            <img
+              src="/assets/logo-2sg.png"
+              alt="2SG SeneSwiss Group"
+              className="h-full w-full rounded-full object-cover"
+            />
           </div>
           <h1 className="text-4xl font-bold text-white mb-2">M3S v2.0</h1>
           <p className="text-slate-400">ERP Hybride - SENESWISS GROUP</p>
@@ -89,6 +93,11 @@ const Login = () => {
                 <Mail size={18} className="absolute left-3 top-3 text-slate-500" />
                 <input
                   type="email"
+                  name="email"
+                  autoComplete="email"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="vous@example.com"
@@ -105,6 +114,8 @@ const Login = () => {
                 <Lock size={18} className="absolute left-3 top-3 text-slate-500" />
                 <input
                   type="password"
+                  name="password"
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
