@@ -29,6 +29,24 @@ const UNIT_VALUES = ['Unité', 'Pièce', 'Lot', 'Carton', 'Paire', 'Kg', 'Litre'
 const BU_VALUES = ['ADMIN_ORG', 'IMPORT_EXPORT', 'SOCIAL', 'IMMO', 'TECH_DIGITAL'];
 const CHART_COLORS = ['#38bdf8', '#34d399', '#f59e0b', '#a78bfa', '#fb7185', '#22d3ee', '#f97316', '#818cf8', '#94a3b8'];
 
+const normalizeText = (value) => String(value || '')
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g, '')
+  .toLowerCase();
+
+const getTerrainProject = (item) => {
+  const haystack = normalizeText(`${item.projet || ''} ${item.designation || ''} ${item.document_ref || ''}`);
+  if (haystack.includes('diass')) return 'diass';
+  if (haystack.includes('lac rose') || haystack.includes('lrsn')) return 'lac_rose';
+  return null;
+};
+
+const getTerrainQuantity = (item) => {
+  const text = normalizeText(`${item.designation || ''} ${item.projet || ''}`);
+  if (/2\s*terrains?/.test(text) || text.includes('parcelles 235') || text.includes('235, 236')) return 2;
+  return 1;
+};
+
 const CATEGORY_LABELS = {
   FR: {
     Véhicule: 'Véhicules', Mobilier_Meubles: 'Mobilier & Meubles', Bien_Immo: 'Bien immobilier',
@@ -87,11 +105,18 @@ const numberValue = (value) => {
 const formatAmount = (value, locale = 'fr-CH', digits = 2) =>
   numberValue(value).toLocaleString(locale, { maximumFractionDigits: digits });
 
+const cleanDate = (value) => {
+  if (!value) return '';
+  if (typeof value === 'object' && value.value) return String(value.value).slice(0, 10);
+  return String(value).slice(0, 10);
+};
+
 const Actifs = () => {
   const { language } = useLanguage();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('overview');
   const [inventaire, setInventaire] = useState([]);
+  const [realEstateTransactions, setRealEstateTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -115,7 +140,8 @@ const Actifs = () => {
       assetRule: 'Cette vue reprend uniquement la catégorie Bien immobilier afin de ne pas inventer de classification comptable.',
       riskItems: 'Articles à surveiller', repair: 'À réparer', transit: 'En transit', riskMessage: 'Aucun article à risque identifié.',
       noAssets: 'Aucune immobilisation explicitement classée.', allRealData: 'Données réelles BigQuery',
-      acquisitionValue: "Valeur d'acquisition", currentValue: 'Valeur actuelle'
+      acquisitionValue: "Valeur d'acquisition", currentValue: 'Valeur actuelle',
+      landRegistry: 'Registre foncier', trackedLands: 'Terrains suivis', terrainUnit: 'terrains', sourceFlow: 'Flux source', stockLines: 'Lignes stock classées Bien immobilier'
     },
     EN: {
       overview: 'Overview', inventory: 'Inventory', immobilisations: 'Fixed Assets', risks: 'Risks',
@@ -132,7 +158,8 @@ const Actifs = () => {
       assetRule: 'This view only uses the Real Estate category to avoid inventing an accounting classification.',
       riskItems: 'Items to monitor', repair: 'Needs repair', transit: 'In transit', riskMessage: 'No risk item identified.',
       noAssets: 'No explicitly classified fixed asset.', allRealData: 'Live BigQuery data',
-      acquisitionValue: 'Acquisition value', currentValue: 'Current value'
+      acquisitionValue: 'Acquisition value', currentValue: 'Current value',
+      landRegistry: 'Land register', trackedLands: 'Tracked plots', terrainUnit: 'plots', sourceFlow: 'Source flow', stockLines: 'Stock lines classified as Real Estate'
     },
     DE: {
       overview: 'Übersicht', inventory: 'Bestand', immobilisations: 'Anlagevermögen', risks: 'Risiken',
@@ -149,7 +176,8 @@ const Actifs = () => {
       assetRule: 'Diese Ansicht verwendet nur die Kategorie Immobilien, um keine Buchungsklassifizierung zu erfinden.',
       riskItems: 'Zu überwachende Artikel', repair: 'Zu reparieren', transit: 'Im Transit', riskMessage: 'Keine Risikoartikel gefunden.',
       noAssets: 'Keine explizit klassifizierte Anlage.', allRealData: 'Echte BigQuery-Daten',
-      acquisitionValue: 'Anschaffungswert', currentValue: 'Aktueller Wert'
+      acquisitionValue: 'Anschaffungswert', currentValue: 'Aktueller Wert',
+      landRegistry: 'Grundstücksregister', trackedLands: 'Geführte Grundstücke', terrainUnit: 'Grundstücke', sourceFlow: 'Quellfluss', stockLines: 'Als Immobilien klassifizierte Lagerzeilen'
     }
   };
   const t = translations[language] || translations.FR;
@@ -167,8 +195,13 @@ const Actifs = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await api.getInventory(300, 0);
+      const [response, realEstateResponse] = await Promise.all([
+        api.getInventory(300, 0),
+        api.getRealEstateFinance(300, 0).catch(() => ({ data: [] }))
+      ]);
       const rows = Array.isArray(response?.data) ? response.data : [];
+      const realEstateRows = Array.isArray(realEstateResponse?.data) ? realEstateResponse.data : [];
+      setRealEstateTransactions(realEstateRows);
       setInventaire(rows.map(item => ({
         id: item.source_id || item.id || item.ref,
         article: item.article || item.name || '',
@@ -210,6 +243,37 @@ const Actifs = () => {
 
   const categoriesCount = useMemo(() => new Set(inventaire.map(item => item.categorie).filter(Boolean)).size, [inventaire]);
   const immobilisations = useMemo(() => inventaire.filter(item => item.categorie === 'Bien_Immo'), [inventaire]);
+  const terrainsFonciers = useMemo(() => {
+    const achatsTerrains = realEstateTransactions
+      .filter((item) => getTerrainProject(item))
+      .filter((item) => normalizeText(item.designation).includes('achat') && getTerrainQuantity(item) >= 2);
+    const byProject = {};
+    achatsTerrains.forEach((item) => {
+      const project = getTerrainProject(item);
+      if (!project || byProject[project]) return;
+      byProject[project] = {
+        id: item.source_id,
+        project,
+        label: project === 'diass' ? 'Diass' : 'Lac Rose',
+        designation: item.designation,
+        date: cleanDate(item.date_operation),
+        quantite: getTerrainQuantity(item),
+        montantChf: numberValue(item.montant_chf),
+        montantCfa: numberValue(item.montant_cfa),
+        tauxFx: numberValue(item.taux_fx),
+        statut: item.statut || '',
+        source: 'Fin Immo',
+        document: item.document_ref || ''
+      };
+    });
+    return ['lac_rose', 'diass'].map((key) => byProject[key]).filter(Boolean);
+  }, [realEstateTransactions]);
+  const terrainSummary = useMemo(() => terrainsFonciers.reduce((acc, item) => {
+    acc.quantite += item.quantite;
+    acc.montantChf += item.montantChf;
+    acc.montantCfa += item.montantCfa;
+    return acc;
+  }, { quantite: 0, montantChf: 0, montantCfa: 0 }), [terrainsFonciers]);
   const articlesRisques = useMemo(() => inventaire.filter(item =>
     item.statut === 'A Réparer' || /shipping|transit/i.test(item.localisation)
   ), [inventaire]);
@@ -371,7 +435,7 @@ const Actifs = () => {
             tabs={[
               { tab: 'overview', label: t.overview },
               { tab: 'inventory', label: `${t.inventory} (${inventaire.length})` },
-              { tab: 'immobilisations', label: `${t.immobilisations} (${immobilisations.length})` },
+              { tab: 'immobilisations', label: `${t.immobilisations} (${terrainSummary.quantite} ${t.terrainUnit})` },
               { tab: 'risques', label: `${t.risks} (${articlesRisques.length})` }
             ]}
           />
@@ -427,6 +491,58 @@ const Actifs = () => {
               <div className="mb-5 rounded-lg bg-sky-500/10 px-5 py-4 text-sm text-sky-100">
                 <div className="flex gap-3"><Tags size={20} className="shrink-0 text-sky-400" /><div><p className="font-semibold">{t.explicitAssets}</p><p className="mt-1 text-slate-300">{t.assetRule}</p></div></div>
               </div>
+              <div className="mb-5 grid grid-cols-1 gap-4 lg:grid-cols-3">
+                <div className="rounded-lg bg-slate-800 p-5">
+                  <p className="text-sm text-slate-400">{t.trackedLands}</p>
+                  <p className="mt-2 text-3xl font-bold text-white">{terrainSummary.quantite} {t.terrainUnit}</p>
+                  <p className="mt-1 text-sm text-slate-400">Lac Rose 2 + Diass 2</p>
+                </div>
+                <div className="rounded-lg bg-slate-800 p-5">
+                  <p className="text-sm text-slate-400">{t.acquisitionValue}</p>
+                  <p className="mt-2 text-2xl font-bold text-emerald-300">{formatAmount(terrainSummary.montantChf)} CHF</p>
+                  <p className="mt-1 text-sm text-sky-300">{formatAmount(terrainSummary.montantCfa, 'fr-CH', 0)} CFA</p>
+                </div>
+                <div className="rounded-lg bg-slate-800 p-5">
+                  <p className="text-sm text-slate-400">{t.sourceFlow}</p>
+                  <p className="mt-2 text-2xl font-bold text-white">Fin Immo</p>
+                  <p className="mt-1 text-sm text-slate-400">2 lignes achat terrain</p>
+                </div>
+              </div>
+              <div className="mb-6 overflow-x-auto rounded-lg bg-slate-800">
+                <div className="border-b border-slate-700 px-5 py-4">
+                  <h3 className="font-bold text-white">{t.landRegistry}</h3>
+                </div>
+                <table className="min-w-[980px] w-full text-sm">
+                  <thead className="bg-slate-700">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-white">{t.reference}</th>
+                      <th className="px-4 py-3 text-left text-white">Projet</th>
+                      <th className="px-4 py-3 text-left text-white">{t.sourceFlow}</th>
+                      <th className="px-4 py-3 text-right text-white">{t.quantity}</th>
+                      <th className="px-4 py-3 text-right text-white">{t.purchaseCHF}</th>
+                      <th className="px-4 py-3 text-right text-white">{t.purchaseCFA}</th>
+                      <th className="px-4 py-3 text-left text-white">{t.status}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {terrainsFonciers.map((item) => (
+                      <tr key={item.id} className="border-t border-slate-700">
+                        <td className="px-4 py-3 text-slate-400">{item.id}</td>
+                        <td className="px-4 py-3 text-slate-100 font-semibold">{item.label}</td>
+                        <td className="px-4 py-3 text-slate-300">
+                          {item.designation}
+                          <div className="mt-1 text-xs text-slate-500">{item.date} · {item.source}</div>
+                        </td>
+                        <td className="px-4 py-3 text-right text-white font-bold">{item.quantite} {t.terrainUnit}</td>
+                        <td className="px-4 py-3 text-right text-emerald-300 font-semibold">{formatAmount(item.montantChf)} CHF</td>
+                        <td className="px-4 py-3 text-right text-sky-300 font-semibold">{formatAmount(item.montantCfa, 'fr-CH', 0)} CFA</td>
+                        <td className="px-4 py-3 text-slate-300">{item.statut || '-'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <h3 className="mb-3 font-bold text-white">{t.stockLines}</h3>
               <TableControls
                 rows={immobilisations}
                 defaultPageSize={10}
