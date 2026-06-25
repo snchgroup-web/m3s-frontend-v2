@@ -14,7 +14,7 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
-import { Gift, HeartHandshake, Info, Target, TrendingUp, Users } from 'lucide-react';
+import { ChevronDown, Gift, HeartHandshake, Info, Plus, Target, TrendingUp, Users, X } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import TableControls from './TableControls';
@@ -42,6 +42,11 @@ const dictionaries = {
     socialByYear: 'Flux sociaux par année',
     noDonationRows: 'Aucun don en nature rapproché depuis Stocks & Actifs pour le moment.',
     noBeneficiaryRows: 'Aucun flux social reclassé chargé pour le moment.',
+    add: 'Ajouter',
+    addTitle: 'Préparer un ajout',
+    addHelp: "L'ajout est prêt côté interface. La sauvegarde sera activée après validation du schéma BigQuery CRM.",
+    close: 'Fermer',
+    selectedRegister: 'Registre sélectionné',
     date: 'Date',
     ref: 'Réf.',
     beneficiary: 'Bénéficiaire',
@@ -86,6 +91,11 @@ const dictionaries = {
     socialByYear: 'Social flows by year',
     noDonationRows: 'No in-kind donation matched from Stocks & Assets yet.',
     noBeneficiaryRows: 'No reclassified social flow loaded yet.',
+    add: 'Add',
+    addTitle: 'Prepare a new record',
+    addHelp: 'The entry point is ready in the interface. Saving will be enabled after the BigQuery CRM schema is validated.',
+    close: 'Close',
+    selectedRegister: 'Selected register',
     date: 'Date',
     ref: 'Ref.',
     beneficiary: 'Beneficiary',
@@ -130,6 +140,11 @@ const dictionaries = {
     socialByYear: 'Sozialflüsse nach Jahr',
     noDonationRows: 'Noch keine Sachspende aus Lager & Aktiven abgeglichen.',
     noBeneficiaryRows: 'Noch kein umklassierter Sozialfluss geladen.',
+    add: 'Hinzufügen',
+    addTitle: 'Neuen Eintrag vorbereiten',
+    addHelp: 'Der Einstieg ist in der Oberfläche vorbereitet. Das Speichern wird nach Validierung des BigQuery-CRM-Schemas aktiviert.',
+    close: 'Schliessen',
+    selectedRegister: 'Ausgewähltes Register',
     date: 'Datum',
     ref: 'Ref.',
     beneficiary: 'Begünstigter',
@@ -300,9 +315,25 @@ const CRM = () => {
   const [dons, setDons] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState('');
+  const [addMenuOpen, setAddMenuOpen] = useState(false);
+  const [selectedAddType, setSelectedAddType] = useState(null);
 
   const t = dictionaries[language] || dictionaries.FR;
   const tv = useCallback((value) => valueLabels[language]?.[value] || valueLabels.FR[value] || value || '-', [language]);
+
+  const addOptions = useMemo(() => ([
+    { tab: 'prospects', label: t.prospects },
+    { tab: 'clients', label: t.clients },
+    { tab: 'ventes', label: t.ventes },
+    { tab: 'dons', label: t.dons },
+    { tab: 'beneficiaires', label: t.beneficiaires }
+  ]), [t.beneficiaires, t.clients, t.dons, t.prospects, t.ventes]);
+
+  const handleAddSelection = (option) => {
+    setActiveTab(option.tab);
+    setSelectedAddType(option);
+    setAddMenuOpen(false);
+  };
 
   useEffect(() => {
     setActiveTab(tabs.includes(queryTab) ? queryTab : 'overview');
@@ -480,6 +511,35 @@ const CRM = () => {
     <span className="inline-flex rounded bg-slate-700 px-2 py-1 text-xs font-semibold text-slate-200">{children}</span>
   );
 
+  const AddMenu = () => (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setAddMenuOpen((current) => !current)}
+        className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-950/20 transition hover:bg-blue-500"
+      >
+        <Plus size={18} />
+        {t.add}
+        <ChevronDown size={16} className={`transition ${addMenuOpen ? 'rotate-180' : ''}`} />
+      </button>
+      {addMenuOpen && (
+        <div className="absolute right-0 z-30 mt-2 w-56 overflow-hidden rounded-lg border border-slate-700 bg-slate-800 shadow-xl shadow-slate-950/40">
+          {addOptions.map((option) => (
+            <button
+              key={option.tab}
+              type="button"
+              onClick={() => handleAddSelection(option)}
+              className="flex w-full items-center justify-between px-4 py-3 text-left text-sm text-slate-200 transition hover:bg-slate-700"
+            >
+              <span>{option.label}</span>
+              <Plus size={15} className="text-blue-300" />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-slate-900 p-8">
       <div className="mx-auto w-full max-w-[1800px]">
@@ -494,24 +554,42 @@ const CRM = () => {
         {loadError && <Notice>{loadError}</Notice>}
         <Notice>{loading ? `${t.sourceNotice} Chargement...` : t.sourceNotice}</Notice>
 
-        <ModulePageTabs
-          moduleId="commercial"
-          language={language}
-          activeTab={activeTab}
-          onSelect={setActiveTab}
-          tabs={[
-            { tab: 'overview', label: t.overview },
-            { tab: 'prospects', label: `${t.prospects} (0)` },
-            { tab: 'clients', label: `${t.clients} (0)` },
-            { tab: 'ventes', label: `${t.ventes} (0)` },
-            { tab: 'dons', label: `${t.dons} (${dons.length})` },
-            { tab: 'beneficiaires', label: `${t.beneficiaires} (${beneficiaires.length})` }
-          ]}
-        />
+        <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+          <div className="min-w-0 flex-1">
+            <ModulePageTabs
+              moduleId="commercial"
+              language={language}
+              activeTab={activeTab}
+              onSelect={setActiveTab}
+              tabs={[
+                { tab: 'overview', label: t.overview },
+                { tab: 'prospects', label: `${t.prospects} (0)` },
+                { tab: 'clients', label: `${t.clients} (0)` },
+                { tab: 'ventes', label: `${t.ventes} (0)` },
+                { tab: 'dons', label: `${t.dons} (${dons.length})` },
+                { tab: 'beneficiaires', label: `${t.beneficiaires} (${beneficiaires.length})` }
+              ]}
+            />
+          </div>
+          <AddMenu />
+        </div>
 
         {activeTab === 'overview' && (
           <div className="space-y-6">
-            <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+            <div className="rounded-lg border border-slate-700 bg-slate-800 p-6">
+              <h3 className="mb-4 font-bold text-white">{t.socialByYear}</h3>
+              <ResponsiveContainer width="100%" height={320}>
+                <LineChart data={socialByYear}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis dataKey="year" stroke="#94a3b8" />
+                  <YAxis stroke="#94a3b8" />
+                  <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} formatter={(value) => formatChf(value)} />
+                  <Line type="monotone" dataKey="value" stroke="#38bdf8" strokeWidth={2} dot={{ r: 4, fill: '#38bdf8' }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
               <div className="rounded-lg border border-slate-700 bg-slate-800 p-6">
                 <h3 className="mb-4 font-bold text-white">{t.beneficiariesByType}</h3>
                 <ResponsiveContainer width="100%" height={280}>
@@ -534,19 +612,6 @@ const CRM = () => {
                     <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} formatter={(value) => formatChf(value)} />
                     <Bar dataKey="value" fill="#a78bfa" radius={[6, 6, 0, 0]} />
                   </BarChart>
-                </ResponsiveContainer>
-              </div>
-
-              <div className="rounded-lg border border-slate-700 bg-slate-800 p-6">
-                <h3 className="mb-4 font-bold text-white">{t.socialByYear}</h3>
-                <ResponsiveContainer width="100%" height={280}>
-                  <LineChart data={socialByYear}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                    <XAxis dataKey="year" stroke="#94a3b8" />
-                    <YAxis stroke="#94a3b8" />
-                    <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} formatter={(value) => formatChf(value)} />
-                    <Line type="monotone" dataKey="value" stroke="#38bdf8" strokeWidth={2} dot={{ r: 4, fill: '#38bdf8' }} />
-                  </LineChart>
                 </ResponsiveContainer>
               </div>
             </div>
@@ -624,6 +689,38 @@ const CRM = () => {
 
         <ChildTabPlaceholder moduleId="commercial" language={language} activeTab={activeTab} handledTabs={tabs} />
       </div>
+      {selectedAddType && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-lg rounded-lg border border-slate-700 bg-slate-800 p-6 shadow-2xl shadow-slate-950/50">
+            <div className="mb-4 flex items-start justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-wide text-blue-300">{t.addTitle}</p>
+                <h2 className="mt-1 text-2xl font-bold text-white">{selectedAddType.label}</h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedAddType(null)}
+                className="rounded-lg p-2 text-slate-300 transition hover:bg-slate-700 hover:text-white"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 text-sm text-blue-100">
+              <p className="font-semibold">{t.selectedRegister}: {selectedAddType.label}</p>
+              <p className="mt-2 text-blue-100/90">{t.addHelp}</p>
+            </div>
+            <div className="mt-6 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setSelectedAddType(null)}
+                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-500"
+              >
+                {t.close}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
