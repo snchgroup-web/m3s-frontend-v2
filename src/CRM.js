@@ -14,7 +14,7 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
-import { ChevronDown, Gift, HeartHandshake, Info, Plus, Target, TrendingUp, Users, X } from 'lucide-react';
+import { ChevronDown, Edit2, Eye, Gift, HeartHandshake, Info, Plus, Target, TrendingUp, Users, X } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import TableControls from './TableControls';
@@ -47,6 +47,11 @@ const dictionaries = {
     addHelp: "L'ajout est prêt côté interface. La sauvegarde sera activée après validation du schéma BigQuery CRM.",
     close: 'Fermer',
     selectedRegister: 'Registre sélectionné',
+    actions: 'Actions',
+    view: 'Voir',
+    edit: 'Modifier',
+    recordSheet: 'Fiche',
+    editPending: 'La modification sera activée après validation du schéma BigQuery CRM.',
     date: 'Date',
     ref: 'Réf.',
     beneficiary: 'Bénéficiaire',
@@ -96,6 +101,11 @@ const dictionaries = {
     addHelp: 'The entry point is ready in the interface. Saving will be enabled after the BigQuery CRM schema is validated.',
     close: 'Close',
     selectedRegister: 'Selected register',
+    actions: 'Actions',
+    view: 'View',
+    edit: 'Edit',
+    recordSheet: 'Record sheet',
+    editPending: 'Editing will be enabled after the BigQuery CRM schema is validated.',
     date: 'Date',
     ref: 'Ref.',
     beneficiary: 'Beneficiary',
@@ -145,6 +155,11 @@ const dictionaries = {
     addHelp: 'Der Einstieg ist in der Oberfläche vorbereitet. Das Speichern wird nach Validierung des BigQuery-CRM-Schemas aktiviert.',
     close: 'Schliessen',
     selectedRegister: 'Ausgewähltes Register',
+    actions: 'Aktionen',
+    view: 'Ansehen',
+    edit: 'Bearbeiten',
+    recordSheet: 'Datensatz',
+    editPending: 'Die Bearbeitung wird nach Validierung des BigQuery-CRM-Schemas aktiviert.',
     date: 'Datum',
     ref: 'Ref.',
     beneficiary: 'Begünstigter',
@@ -217,6 +232,43 @@ const valueLabels = {
 
 const chartColors = ['#38bdf8', '#34d399', '#f59e0b', '#a78bfa', '#fb7185', '#22d3ee'];
 const tabs = ['overview', 'prospects', 'clients', 'ventes', 'dons', 'beneficiaires'];
+
+const designationTerms = {
+  EN: [
+    ['Soutien Ménage SN', 'Household support SN'],
+    ['Soutien Menage SN', 'Household support SN'],
+    ['Participation Cheikh', 'Cheikh contribution'],
+    ['Aide sociale', 'Social aid'],
+    ['Aide Sociale', 'Social aid'],
+    ['Envoi Smartphones Parents SN', 'Smartphones sent to parents SN'],
+    ['Soutien communautaire', 'Community support'],
+    ['Soutien familial', 'Family support'],
+    ['Don Matériel', 'Material donation'],
+    ['Don Materiel', 'Material donation'],
+    ['Préfinancement', 'Prefinancing'],
+    ['Achat', 'Purchase'],
+    ['Terrain', 'Land'],
+    ['Article', 'Item'],
+    ['Stock', 'Stock']
+  ],
+  DE: [
+    ['Soutien Ménage SN', 'Haushaltsunterstützung SN'],
+    ['Soutien Menage SN', 'Haushaltsunterstützung SN'],
+    ['Participation Cheikh', 'Beitrag Cheikh'],
+    ['Aide sociale', 'Sozialhilfe'],
+    ['Aide Sociale', 'Sozialhilfe'],
+    ['Envoi Smartphones Parents SN', 'Smartphones an Eltern SN gesendet'],
+    ['Soutien communautaire', 'Gemeinschaftsunterstützung'],
+    ['Soutien familial', 'Familienunterstützung'],
+    ['Don Matériel', 'Sachspende'],
+    ['Don Materiel', 'Sachspende'],
+    ['Préfinancement', 'Vorfinanzierung'],
+    ['Achat', 'Kauf'],
+    ['Terrain', 'Grundstück'],
+    ['Article', 'Artikel'],
+    ['Stock', 'Lager']
+  ]
+};
 
 const numberValue = (value) => Number(value) || 0;
 
@@ -317,9 +369,17 @@ const CRM = () => {
   const [loadError, setLoadError] = useState('');
   const [addMenuOpen, setAddMenuOpen] = useState(false);
   const [selectedAddType, setSelectedAddType] = useState(null);
+  const [selectedRecord, setSelectedRecord] = useState(null);
 
   const t = dictionaries[language] || dictionaries.FR;
   const tv = useCallback((value) => valueLabels[language]?.[value] || valueLabels.FR[value] || value || '-', [language]);
+  const translateDesignation = useCallback((value) => {
+    if (!value || language === 'FR') return value;
+    return (designationTerms[language] || []).reduce(
+      (text, [source, target]) => text.replaceAll(source, target),
+      String(value)
+    );
+  }, [language]);
 
   const addOptions = useMemo(() => ([
     { tab: 'prospects', label: t.prospects },
@@ -459,7 +519,7 @@ const CRM = () => {
     </div>
   );
 
-  const DataTable = ({ title, rows, columns, renderRow, emptyText, summaryItems = [] }) => (
+  const DataTable = ({ title, type, rows, columns, renderRow, emptyText, summaryItems = [] }) => (
     <div>
       <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
@@ -483,18 +543,49 @@ const CRM = () => {
         maxHeight="34rem"
         renderEmpty={() => <div className="px-6 py-8 text-center text-slate-400">{emptyText}</div>}
         renderTable={(visibleRows) => (
-          <table className="min-w-[1650px] text-sm">
+          <table className="min-w-[1720px] text-sm">
             <thead className="sticky top-0 z-10 bg-slate-700">
               <tr>
                 {columns.map((column) => (
                   <th key={column} className="px-4 py-3 text-left font-bold text-white">{column}</th>
                 ))}
+                <th className="px-4 py-3 text-left font-bold text-white">{t.actions}</th>
               </tr>
             </thead>
             <tbody>
               {visibleRows.map((item) => (
-                <tr key={item.id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                <tr
+                  key={item.id}
+                  onClick={() => setSelectedRecord({ type, title, item, mode: 'view' })}
+                  className="cursor-pointer border-t border-slate-700 hover:bg-slate-700/50"
+                >
                   {renderRow(item)}
+                  <td className="px-4 py-3 align-top">
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        title={t.view}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setSelectedRecord({ type, title, item, mode: 'view' });
+                        }}
+                        className="rounded p-1 text-blue-300 transition hover:bg-slate-600 hover:text-blue-100"
+                      >
+                        <Eye size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        title={t.edit}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setSelectedRecord({ type, title, item, mode: 'edit' });
+                        }}
+                        className="rounded p-1 text-amber-300 transition hover:bg-slate-600 hover:text-amber-100"
+                      >
+                        <Edit2 size={16} />
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -539,6 +630,47 @@ const CRM = () => {
       )}
     </div>
   );
+
+  const getRecordDetails = (record) => {
+    if (!record) return [];
+    const item = record.item;
+    if (record.type === 'dons') {
+      return [
+        [t.ref, item.ref],
+        [t.date, formatDate(item.date)],
+        [t.donor, item.donateur],
+        [t.designation, translateDesignation(item.designation)],
+        [t.nature, tv(item.nature)],
+        [t.amountChf, formatChf(item.montantChf)],
+        [t.amountCfa, formatCfa(item.montantCfa)],
+        [t.quantity, item.quantite],
+        [t.unit, item.unite],
+        [t.destination, item.destination],
+        ['BU', tv(item.bu)],
+        [t.status, tv(item.statut)],
+        [t.comment, item.commentaire],
+        [t.source, item.source]
+      ];
+    }
+
+    return [
+      [t.ref, item.ref],
+      [t.date, formatDate(item.date)],
+      [t.beneficiary, item.beneficiaire],
+      [t.designation, translateDesignation(item.designation)],
+      [t.aidType, tv(item.typeAide)],
+      [t.amountChf, formatChf(item.montantChf)],
+      [t.amountCfa, formatCfa(item.montantCfa)],
+      [t.fxRate, item.tauxFx ? item.tauxFx.toLocaleString('fr-CH', { maximumFractionDigits: 4 }) : '-'],
+      [t.agent, item.agent],
+      [t.team, item.team],
+      [t.department, item.departement],
+      [t.phase, item.phaseProjet],
+      [t.country, item.pays],
+      [t.comment, item.commentaire],
+      [t.source, item.source]
+    ];
+  };
 
   return (
     <div className="min-h-screen bg-slate-900 p-8">
@@ -625,6 +757,7 @@ const CRM = () => {
         {activeTab === 'dons' && (
           <DataTable
             title={t.dons}
+            type="dons"
             rows={dons}
             emptyText={t.noDonationRows}
             summaryItems={[
@@ -638,7 +771,7 @@ const CRM = () => {
                 {tableCell(item.ref, 'font-semibold text-slate-200')}
                 {tableCell(formatDate(item.date))}
                 {tableCell(item.donateur)}
-                {tableCell(<strong>{item.designation}</strong>, 'text-slate-200')}
+                {tableCell(<strong>{translateDesignation(item.designation)}</strong>, 'text-slate-200')}
                 {tableCell(tv(item.nature))}
                 {tableCell(formatChf(item.montantChf), 'font-bold text-emerald-300')}
                 {tableCell(formatCfa(item.montantCfa), 'font-semibold text-amber-300')}
@@ -657,6 +790,7 @@ const CRM = () => {
         {activeTab === 'beneficiaires' && (
           <DataTable
             title={t.beneficiaires}
+            type="beneficiaires"
             rows={beneficiaires}
             emptyText={t.noBeneficiaryRows}
             summaryItems={[
@@ -670,7 +804,7 @@ const CRM = () => {
                 {tableCell(item.ref, 'font-semibold text-slate-200')}
                 {tableCell(formatDate(item.date))}
                 {tableCell(<strong>{item.beneficiaire}</strong>, 'text-slate-200')}
-                {tableCell(item.designation, 'text-slate-400')}
+                {tableCell(translateDesignation(item.designation), 'text-slate-400')}
                 {tableCell(tv(item.typeAide))}
                 {tableCell(formatChf(item.montantChf), 'font-bold text-emerald-300')}
                 {tableCell(formatCfa(item.montantCfa), 'font-semibold text-amber-300')}
@@ -713,6 +847,45 @@ const CRM = () => {
               <button
                 type="button"
                 onClick={() => setSelectedAddType(null)}
+                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-500"
+              >
+                {t.close}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {selectedRecord && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-lg border border-slate-700 bg-slate-800 p-6 shadow-2xl shadow-slate-950/50">
+            <div className="mb-5 flex items-start justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-wide text-blue-300">
+                  {selectedRecord.mode === 'edit' ? t.edit : t.recordSheet}
+                </p>
+                <h2 className="mt-1 text-2xl font-bold text-white">{selectedRecord.title}</h2>
+                {selectedRecord.mode === 'edit' && <p className="mt-2 text-sm text-amber-200">{t.editPending}</p>}
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedRecord(null)}
+                className="rounded-lg p-2 text-slate-300 transition hover:bg-slate-700 hover:text-white"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              {getRecordDetails(selectedRecord).map(([label, value]) => (
+                <div key={label} className="rounded-lg border border-slate-700 bg-slate-900/50 px-4 py-3">
+                  <p className="text-xs uppercase tracking-wide text-slate-500">{label}</p>
+                  <p className="mt-1 break-words text-sm font-semibold text-slate-100">{value || '-'}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setSelectedRecord(null)}
                 className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-500"
               >
                 {t.close}
