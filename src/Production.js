@@ -55,6 +55,7 @@ const Production = () => {
       derniereOperation: 'Dernière opération',
       departement: 'Département',
       team: 'Team',
+      agent: 'Agent',
       reference: 'Réf.',
       nbReferences: 'Nb références',
       ficheFournisseur: 'Fiche fournisseur',
@@ -62,6 +63,8 @@ const Production = () => {
       preparationFournisseur: 'Préparer fournisseur',
       aucuneDonnee: 'Aucune donnée fournisseur disponible.',
       voir: 'Voir',
+      teamZh: 'Team ZH',
+      teamSn: 'Team SN',
       ok: 'OK',
       bas: 'BAS',
       creer: 'Créer',
@@ -110,6 +113,7 @@ const Production = () => {
       derniereOperation: 'Last operation',
       departement: 'Department',
       team: 'Team',
+      agent: 'Agent',
       reference: 'Ref.',
       nbReferences: 'Ref. count',
       ficheFournisseur: 'Supplier record',
@@ -117,6 +121,8 @@ const Production = () => {
       preparationFournisseur: 'Prepare supplier',
       aucuneDonnee: 'No supplier data available.',
       voir: 'View',
+      teamZh: 'Team ZH',
+      teamSn: 'Team SN',
       ok: 'OK',
       bas: 'LOW',
       creer: 'Create',
@@ -165,6 +171,7 @@ const Production = () => {
       derniereOperation: 'Letzte Buchung',
       departement: 'Abteilung',
       team: 'Team',
+      agent: 'Agent',
       reference: 'Ref.',
       nbReferences: 'Anzahl Ref.',
       ficheFournisseur: 'Lieferantendossier',
@@ -172,6 +179,8 @@ const Production = () => {
       preparationFournisseur: 'Lieferant vorbereiten',
       aucuneDonnee: 'Keine Lieferantendaten verfügbar.',
       voir: 'Ansehen',
+      teamZh: 'Team ZH',
+      teamSn: 'Team SN',
       ok: 'OK',
       bas: 'NIEDRIG',
       creer: 'Erstellen',
@@ -233,9 +242,47 @@ const Production = () => {
     },
     // Categories
     categories: {
-      FR: { 'Matériel': 'Matériel', 'Logiciels': 'Logiciels', 'Services': 'Services' },
-      EN: { 'Matériel': 'Hardware', 'Logiciels': 'Software', 'Services': 'Services' },
-      DE: { 'Matériel': 'Hardware', 'Logiciels': 'Software', 'Services': 'Dienstleistungen' }
+      FR: {
+        'Matériel': 'Matériel',
+        'Logiciels': 'Logiciels',
+        'Services': 'Services',
+        'Bien immobilier': 'Bien immobilier',
+        'Immobilier': 'Immobilier',
+        'Don matériel': 'Don matériel',
+        'Aide Sociale': 'Aide sociale',
+        'Frais Administratifs': 'Frais administratifs',
+        'Chantier': 'Chantier',
+        'Gros Œuvres': 'Gros œuvres'
+      },
+      EN: {
+        'Matériel': 'Hardware',
+        'Logiciels': 'Software',
+        'Services': 'Services',
+        'Bien immobilier': 'Real estate asset',
+        'Immobilier': 'Real estate',
+        'Don matériel': 'In-kind donation',
+        'Aide Sociale': 'Social aid',
+        'Frais Administratifs': 'Administrative fees',
+        'Chantier': 'Construction site',
+        'Gros Œuvres': 'Structural works'
+      },
+      DE: {
+        'Matériel': 'Hardware',
+        'Logiciels': 'Software',
+        'Services': 'Dienstleistungen',
+        'Bien immobilier': 'Immobilienwert',
+        'Immobilier': 'Immobilien',
+        'Don matériel': 'Sachspende',
+        'Aide Sociale': 'Sozialhilfe',
+        'Frais Administratifs': 'Verwaltungskosten',
+        'Chantier': 'Baustelle',
+        'Gros Œuvres': 'Rohbauarbeiten'
+      }
+    },
+    sources: {
+      FR: { 'Dépenses': 'Dépenses', 'Stocks & Actifs': 'Stocks & Actifs' },
+      EN: { 'Dépenses': 'Expenses', 'Stocks & Actifs': 'Stock & Assets' },
+      DE: { 'Dépenses': 'Ausgaben', 'Stocks & Actifs': 'Bestand & Aktiven' }
     },
     countries: {
       FR: { 'Sénégal': 'Sénégal', 'France': 'France', 'Suisse': 'Suisse' },
@@ -282,12 +329,43 @@ const Production = () => {
   const translateProduct = (product) => dataTranslations.products[language]?.[product] || product;
   const translateMonth = (month) => dataTranslations.months[language]?.[month] || month;
   const translateCategory = (category) => dataTranslations.categories[language]?.[category] || category;
+  const translateSource = (source) => dataTranslations.sources[language]?.[source] || source;
+  const translateJoinedValues = (value, translator) => String(value || '-')
+    .split(',')
+    .map(item => translator(item.trim()))
+    .join(', ');
   const normalizeCountry = (country) => countryKeys[normalizeLookupKey(country)] || country;
   const translateCountry = (country) => {
     const normalized = normalizeCountry(country);
     return dataTranslations.countries[language]?.[normalized] || country;
   };
   const translateChartLabel = (label) => dataTranslations.chartLabels[language]?.[label] || label;
+  const teamOptions = [
+    { value: 'Team_ZH', label: t.teamZh },
+    { value: 'Team_SN', label: t.teamSn }
+  ];
+  const agentsByTeam = {
+    Team_ZH: [
+      { value: 'Cheikh', label: 'Cheikh - Manager' },
+      { value: 'Chantal', label: 'Chantal - Administratrice Financière' }
+    ],
+    Team_SN: [
+      { value: 'Pape', label: 'Pape - Administrateur' },
+      { value: 'Gnilane Diouf', label: 'Gnilane Diouf - Cheffe Projets' },
+      { value: 'Gnilane Ndiaye', label: 'Gnilane Ndiaye - Cheffe Organisation & Développement' },
+      { value: 'Ibou', label: 'Ibou - Chef Opérations, Stocks & Actifs' }
+    ]
+  };
+  const normalizeTeam = (team) => {
+    const key = normalizeLookupKey(team).replace(/[\s-]/g, '_');
+    if (['TZH', 'TEAM_ZH', 'TEAMZH', 'ZH'].includes(key)) return 'Team_ZH';
+    if (['TSN', 'TEAM_SN', 'TEAMSN', 'SN'].includes(key)) return 'Team_SN';
+    return team || '-';
+  };
+  const translateTeam = (team) => {
+    const normalized = normalizeTeam(team);
+    return teamOptions.find(option => option.value === normalized)?.label || normalized;
+  };
   const getDefaultFormData = (type = 'commande') => ({
     numero: '',
     client: '',
@@ -298,12 +376,14 @@ const Production = () => {
     telephone: '',
     categorie: 'Services',
     pays: 'Sénégal',
+    team: 'Team_ZH',
+    agent: 'Cheikh',
     seuil: '',
     unite: 'Unité',
     statut: 'En cours',
     date: new Date().toISOString().split('T')[0],
     ...(type === 'stock' ? { produit: 'Licences IT', quantite: '', seuil: '', unite: 'Unité' } : {}),
-    ...(type === 'fournisseur' ? { categorie: 'Services', pays: 'Sénégal' } : {})
+    ...(type === 'fournisseur' ? { categorie: 'Services', pays: 'Sénégal', team: 'Team_ZH', agent: 'Cheikh' } : {})
   });
 
   const safeRows = (payload) => {
@@ -355,6 +435,7 @@ const Production = () => {
           categories: new Set(),
           departements: new Set(),
           teams: new Set(),
+          agents: new Set(),
           pays: new Set(),
           refs: new Set(),
           lignesDepenses: 0,
@@ -382,7 +463,8 @@ const Production = () => {
       supplier.montantCfa += toNumber(row.montant_cfa ?? row.amount_cfa ?? row.cfa);
       supplier.categories.add(row.category || row.categorie || row.nature);
       supplier.departements.add(row.departement || row.department);
-      supplier.teams.add(row.team || row.equipe);
+      supplier.teams.add(normalizeTeam(row.team || row.equipe));
+      supplier.agents.add(row.agent || row.responsable || row.owner);
       supplier.pays.add(row.pays || row.country);
       supplier.refs.add(row.ref || row.reference || row.id);
       touchDate(supplier, row.date_created || row.date || row.date_operation);
@@ -397,7 +479,8 @@ const Production = () => {
       supplier.montantCfa += toNumber(row.valeur_cfa ?? row.achat_cfa ?? row.montant_cfa);
       supplier.categories.add(row.categorie || row.category || row.sous_categorie);
       supplier.departements.add(row.departement || row.bu || row.department);
-      supplier.teams.add(row.team || row.equipe);
+      supplier.teams.add(normalizeTeam(row.team || row.equipe));
+      supplier.agents.add(row.agent || row.responsable || row.owner);
       supplier.pays.add(row.pays || row.localisation || row.country);
       supplier.refs.add(row.source_id || row.ref || row.reference || row.id);
       touchDate(supplier, row.date_achat || row.date_created || row.date || row.date_operation);
@@ -410,6 +493,7 @@ const Production = () => {
         categorie: joinSet(supplier.categories),
         departement: joinSet(supplier.departements),
         team: joinSet(supplier.teams),
+        agent: joinSet(supplier.agents),
         pays: joinSet(supplier.pays),
         references: supplier.refs.size
       }))
@@ -502,6 +586,15 @@ const Production = () => {
   }));
  
   const handleFormChange = (field, value) => {
+    if (field === 'team') {
+      const normalizedTeam = normalizeTeam(value);
+      setFormData(prev => ({
+        ...prev,
+        team: normalizedTeam,
+        agent: agentsByTeam[normalizedTeam]?.[0]?.value || ''
+      }));
+      return;
+    }
     setFormData(prev => ({ ...prev, [field]: value }));
   };
  
@@ -536,7 +629,9 @@ const Production = () => {
         email: formData.email,
         telephone: formData.telephone,
         categorie: formData.categorie,
-        pays: normalizeCountry(formData.pays)
+        pays: normalizeCountry(formData.pays),
+        team: normalizeTeam(formData.team),
+        agent: formData.agent
       };
       if (editingId) {
         setFournisseurs(fournisseurs.map(f => f.id === editingId ? { ...fournisseurData, id: editingId } : f));
@@ -732,7 +827,7 @@ const Production = () => {
               </div>
             )}
             <TableControls rows={fournisseurs} renderTable={(visibleRows) => (
-              <table className="min-w-[1300px] text-sm">
+              <table className="min-w-[1450px] text-sm">
                 <thead className="sticky top-0 z-10 bg-slate-700">
                   <tr>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.reference}</th>
@@ -745,6 +840,7 @@ const Production = () => {
                     <th className="px-4 py-2 text-left text-white font-bold">{t.categorie}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.departement}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.team}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.agent}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.pays}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.derniereOperation}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
@@ -753,26 +849,27 @@ const Production = () => {
                 <tbody>
                   {fournisseursLoading && (
                     <tr>
-                      <td colSpan="13" className="px-4 py-6 text-center text-slate-300">Chargement...</td>
+                      <td colSpan="14" className="px-4 py-6 text-center text-slate-300">Chargement...</td>
                     </tr>
                   )}
                   {!fournisseursLoading && visibleRows.length === 0 && (
                     <tr>
-                      <td colSpan="13" className="px-4 py-6 text-center text-slate-400">{t.aucuneDonnee}</td>
+                      <td colSpan="14" className="px-4 py-6 text-center text-slate-400">{t.aucuneDonnee}</td>
                     </tr>
                   )}
                   {visibleRows.map(f => (
                     <tr key={f.id} onClick={() => setSelectedFournisseur(f)} className="cursor-pointer border-t border-slate-700 hover:bg-slate-700/50">
                       <td className="px-4 py-2 text-slate-400">{f.id}</td>
                       <td className="px-4 py-2 text-slate-300 font-medium">{f.nom}</td>
-                      <td className="px-4 py-2 text-slate-400">{f.sourcesLabel}</td>
+                      <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.sourcesLabel, translateSource)}</td>
                       <td className="px-4 py-2 text-right font-semibold text-emerald-300">{formatMoney(f.montantChf, 'CHF')}</td>
                       <td className="px-4 py-2 text-right font-semibold text-amber-300">{formatMoney(f.montantCfa, 'CFA')}</td>
                       <td className="px-4 py-2 text-slate-400">{f.lignesDepenses}</td>
                       <td className="px-4 py-2 text-slate-400">{f.lignesStocks}</td>
-                      <td className="px-4 py-2 text-slate-400">{f.categorie}</td>
+                      <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.categorie, translateCategory)}</td>
                       <td className="px-4 py-2 text-slate-400">{f.departement}</td>
-                      <td className="px-4 py-2 text-slate-400">{f.team}</td>
+                      <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.team, translateTeam)}</td>
+                      <td className="px-4 py-2 text-slate-400">{f.agent}</td>
                       <td className="px-4 py-2 text-slate-400">{f.pays}</td>
                       <td className="px-4 py-2 text-slate-400">{formatDate(f.lastDate)}</td>
                       <StandardActionsCell
@@ -847,14 +944,15 @@ const Production = () => {
         onClose={() => setSelectedFournisseur(null)}
         details={selectedFournisseur ? [
           [t.reference, selectedFournisseur.id],
-          [t.sources, selectedFournisseur.sourcesLabel],
+          [t.sources, translateJoinedValues(selectedFournisseur.sourcesLabel, translateSource)],
           [t.montantChf, formatMoney(selectedFournisseur.montantChf, 'CHF')],
           [t.montantCfa, formatMoney(selectedFournisseur.montantCfa, 'CFA')],
           [t.lignesDepenses, selectedFournisseur.lignesDepenses],
           [t.lignesStocks, selectedFournisseur.lignesStocks],
-          [t.categorie, selectedFournisseur.categorie],
+          [t.categorie, translateJoinedValues(selectedFournisseur.categorie, translateCategory)],
           [t.departement, selectedFournisseur.departement],
-          [t.team, selectedFournisseur.team],
+          [t.team, translateJoinedValues(selectedFournisseur.team, translateTeam)],
+          [t.agent, selectedFournisseur.agent],
           [t.pays, selectedFournisseur.pays],
           [t.derniereOperation, formatDate(selectedFournisseur.lastDate)],
           [t.nbReferences, selectedFournisseur.references]
@@ -894,6 +992,19 @@ const Production = () => {
                     <option value="Matériel">{translateCategory('Matériel')}</option>
                     <option value="Logiciels">{translateCategory('Logiciels')}</option>
                     <option value="Services">{translateCategory('Services')}</option>
+                    <option value="Bien immobilier">{translateCategory('Bien immobilier')}</option>
+                    <option value="Frais Administratifs">{translateCategory('Frais Administratifs')}</option>
+                    <option value="Chantier">{translateCategory('Chantier')}</option>
+                  </select>
+                  <select value={normalizeTeam(formData.team)} onChange={(e) => handleFormChange('team', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                    {teamOptions.map(option => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                  <select value={formData.agent} onChange={(e) => handleFormChange('agent', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                    {(agentsByTeam[normalizeTeam(formData.team)] || []).map(option => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
                   </select>
                   <select value={formData.pays} onChange={(e) => handleFormChange('pays', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
                     <option value="Sénégal">{translateCountry('Sénégal')}</option>
