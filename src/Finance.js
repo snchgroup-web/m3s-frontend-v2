@@ -7,6 +7,7 @@ import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
+import { isLegacyBuCode, translateDas } from './strategicMapping';
 
 const TEAM_OPTIONS = ['Team_ZH', 'Team_SN'];
 const AGENT_OPTIONS = ['Cheikh', 'Chantal', 'Pape', 'Gnilane Diouf', 'Gnilane Ndiaye', 'Ibou'];
@@ -955,6 +956,7 @@ const Finance = () => {
     }
   };
   const translateStandardValue = (value) => {
+    if (isLegacyBuCode(value)) return translateDas(value, language);
     const key = normalizeCategoryKey(value);
     return standardValueTranslations[language]?.[key] || formatUnknownCategory(value);
   };

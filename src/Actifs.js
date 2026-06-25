@@ -11,6 +11,7 @@ import { useLanguage } from './LanguageContext';
 import api from './api';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import TableControls from './TableControls';
+import { getDasFromLegacyBu, translateDas, translateLegacyBu } from './strategicMapping';
 
 const CATEGORY_VALUES = [
   'Véhicule',
@@ -97,12 +98,6 @@ const UNIT_LABELS = {
   DE: { Unité: 'Einheit', Pièce: 'Stück', Parcelle: 'Parzelle', Lot: 'Los', Carton: 'Karton', Paire: 'Paar', Kg: 'Kg', Litre: 'Liter', Mètre: 'Meter' }
 };
 
-const BU_LABELS = {
-  FR: { ADMIN_ORG: 'Administration', IMPORT_EXPORT: 'Commercial & CRM', SOCIAL: 'Social', IMMO: 'Fin Immo', TECH_DIGITAL: 'IT & Support' },
-  EN: { ADMIN_ORG: 'Administration', IMPORT_EXPORT: 'Commercial & CRM', SOCIAL: 'Social', IMMO: 'Real Estate Finance', TECH_DIGITAL: 'IT & Support' },
-  DE: { ADMIN_ORG: 'Verwaltung', IMPORT_EXPORT: 'Vertrieb & CRM', SOCIAL: 'Sozial', IMMO: 'Immobilienfinanzierung', TECH_DIGITAL: 'IT & Support' }
-};
-
 const LAND_COMMENT_LABELS = {
   FR: 'Ajout depuis le registre foncier M3S.',
   EN: 'Added from the M3S land register.',
@@ -158,10 +153,10 @@ const Actifs = () => {
       overview: "Vue d'ensemble", inventory: 'Inventaire', immobilisations: 'Immobilisations', risks: 'Risques',
       articles: 'Articles en base', stockValue: 'Valeur estimée', purchaseCost: "Coût d'achat", totalQuantity: 'Quantité totale',
       categories: 'catégories', units: 'unités', valueByCategory: 'Valeur CHF par catégorie',
-      valueByFunction: 'Valeur CHF par fonction', article: 'Article', reference: 'Réf.', category: 'Catégorie',
+      valueByFunction: 'Valeur CHF par DAS stratégique', article: 'Article', reference: 'Réf.', category: 'Catégorie',
       subCategory: 'Sous-catégorie', quantity: 'Quantité', unit: 'Unité', purchaseCHF: 'Achat CHF',
       purchaseCFA: 'Achat CFA', valueCHF: 'Valeur CHF', valueCFA: 'Valeur CFA', supplier: 'Fournisseur',
-      location: 'Localisation', status: 'État', function: 'Fonction M3S', functionHint: "Affectation fonctionnelle / ancienne BU. Le champ Département n'existe pas encore dans la table Stocks.",
+      location: 'Localisation', status: 'État', function: 'BU historique', functionHint: "Code historique conservé pour la traçabilité. Le DAS stratégique est dérivé automatiquement.",
       comments: 'Commentaires', actions: 'Actions',
       add: 'Nouvel article', edit: "Modifier l'article", cancel: 'Annuler', save: 'Enregistrer',
       required: "L'article et la catégorie sont obligatoires.", confirmDelete: 'Supprimer définitivement cet article ?',
@@ -182,10 +177,10 @@ const Actifs = () => {
       overview: 'Overview', inventory: 'Inventory', immobilisations: 'Fixed Assets', risks: 'Risks',
       articles: 'Database items', stockValue: 'Estimated value', purchaseCost: 'Purchase cost', totalQuantity: 'Total quantity',
       categories: 'categories', units: 'units', valueByCategory: 'CHF value by category',
-      valueByFunction: 'CHF value by function', article: 'Item', reference: 'Ref.', category: 'Category',
+      valueByFunction: 'CHF value by strategic DAS', article: 'Item', reference: 'Ref.', category: 'Category',
       subCategory: 'Subcategory', quantity: 'Quantity', unit: 'Unit', purchaseCHF: 'Purchase CHF',
       purchaseCFA: 'Purchase CFA', valueCHF: 'Value CHF', valueCFA: 'Value CFA', supplier: 'Supplier',
-      location: 'Location', status: 'Condition', function: 'M3S function', functionHint: 'Functional allocation / legacy BU. Department is not yet a field in the Stocks table.',
+      location: 'Location', status: 'Condition', function: 'Legacy BU', functionHint: 'Historical code kept for traceability. The strategic DAS is derived automatically.',
       comments: 'Comments', actions: 'Actions',
       add: 'New item', edit: 'Edit item', cancel: 'Cancel', save: 'Save',
       required: 'Item and category are required.', confirmDelete: 'Permanently delete this item?',
@@ -206,10 +201,10 @@ const Actifs = () => {
       overview: 'Übersicht', inventory: 'Bestand', immobilisations: 'Anlagevermögen', risks: 'Risiken',
       articles: 'Artikel in der Datenbank', stockValue: 'Geschätzter Wert', purchaseCost: 'Anschaffungskosten', totalQuantity: 'Gesamtmenge',
       categories: 'Kategorien', units: 'Einheiten', valueByCategory: 'CHF-Wert nach Kategorie',
-      valueByFunction: 'CHF-Wert nach Funktion', article: 'Artikel', reference: 'Ref.', category: 'Kategorie',
+      valueByFunction: 'CHF-Wert nach strategischem DAS', article: 'Artikel', reference: 'Ref.', category: 'Kategorie',
       subCategory: 'Unterkategorie', quantity: 'Menge', unit: 'Einheit', purchaseCHF: 'Kauf CHF',
       purchaseCFA: 'Kauf CFA', valueCHF: 'Wert CHF', valueCFA: 'Wert CFA', supplier: 'Lieferant',
-      location: 'Standort', status: 'Zustand', function: 'M3S-Funktion', functionHint: 'Funktionale Zuordnung / frühere BU. Abteilung ist in der Stocks-Tabelle noch kein eigenes Feld.',
+      location: 'Standort', status: 'Zustand', function: 'Historische BU', functionHint: 'Historischer Code fuer die Nachverfolgbarkeit. Das strategische DAS wird automatisch abgeleitet.',
       comments: 'Bemerkungen', actions: 'Aktionen',
       add: 'Neuer Artikel', edit: 'Artikel bearbeiten', cancel: 'Abbrechen', save: 'Speichern',
       required: 'Artikel und Kategorie sind Pflichtfelder.', confirmDelete: 'Diesen Artikel endgültig löschen?',
@@ -232,7 +227,8 @@ const Actifs = () => {
   const translateCategory = useCallback((value) => CATEGORY_LABELS[language]?.[value] || CATEGORY_LABELS.FR[value] || value || 'Autre', [language]);
   const translateStatus = useCallback((value) => STATUS_LABELS[language]?.[value] || STATUS_LABELS.FR[value] || value || '-', [language]);
   const translateUnit = useCallback((value) => UNIT_LABELS[language]?.[value] || UNIT_LABELS.FR[value] || value || '-', [language]);
-  const translateBu = useCallback((value) => BU_LABELS[language]?.[value] || BU_LABELS.FR[value] || value || '-', [language]);
+  const translateBu = useCallback((value) => translateLegacyBu(value, language), [language]);
+  const translateStrategicDas = useCallback((value) => translateDas(value, language), [language]);
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
@@ -348,11 +344,11 @@ const Actifs = () => {
   }, {})).sort((a, b) => b.valeur - a.valeur), [inventaire, translateCategory]);
 
   const functionChart = useMemo(() => Object.values(inventaire.reduce((acc, item) => {
-    const key = item.bu || 'Autre';
-    if (!acc[key]) acc[key] = { key, label: translateBu(key), valeur: 0 };
+    const key = getDasFromLegacyBu(item.bu) || 'Autre';
+    if (!acc[key]) acc[key] = { key, label: translateStrategicDas(key), valeur: 0 };
     acc[key].valeur += item.valeurChf;
     return acc;
-  }, {})).sort((a, b) => b.valeur - a.valeur), [inventaire, translateBu]);
+  }, {})).sort((a, b) => b.valeur - a.valeur), [inventaire, translateStrategicDas]);
 
   const openCreate = () => {
     setEditingId(null);

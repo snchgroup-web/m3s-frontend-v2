@@ -20,6 +20,7 @@ import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import TableControls from './TableControls';
 import { StandardActionsCell, StandardKpiCard, StandardRecordSheetModal } from './StandardUI';
 import api from './api';
+import { isLegacyBuCode, translateDas } from './strategicMapping';
 
 const dictionaries = {
   FR: {
@@ -196,10 +197,10 @@ const valueLabels = {
     'Reclassé Social': 'Reclassé Social',
     'A rapprocher': 'À rapprocher',
     SOCIAL: 'Social',
-    IMMO: 'Fin Immo',
-    ADMIN_ORG: 'Administration',
-    IMPORT_EXPORT: 'Commercial & CRM',
-    TECH_DIGITAL: 'IT & Support',
+    IMMO: 'Business',
+    ADMIN_ORG: 'Gouvernance & Organisation',
+    IMPORT_EXPORT: 'Business',
+    TECH_DIGITAL: 'Digital',
     Team_ZH: 'Team ZH',
     Team_SN: 'Team SN',
     TZH: 'Team ZH',
@@ -223,10 +224,10 @@ const valueLabels = {
     'Reclassé Social': 'Reclassified Social',
     'A rapprocher': 'To reconcile',
     SOCIAL: 'Social',
-    IMMO: 'Real Estate Finance',
-    ADMIN_ORG: 'Administration',
-    IMPORT_EXPORT: 'Sales & CRM',
-    TECH_DIGITAL: 'IT & Support',
+    IMMO: 'Business',
+    ADMIN_ORG: 'Governance & Organization',
+    IMPORT_EXPORT: 'Business',
+    TECH_DIGITAL: 'Digital',
     Team_ZH: 'Team ZH',
     Team_SN: 'Team SN',
     TZH: 'Team ZH',
@@ -250,10 +251,10 @@ const valueLabels = {
     'Reclassé Social': 'Sozial umklassiert',
     'A rapprocher': 'Abzugleichen',
     SOCIAL: 'Soziales',
-    IMMO: 'Immobilienfinanzierung',
-    ADMIN_ORG: 'Administration',
-    IMPORT_EXPORT: 'Marketing & CRM',
-    TECH_DIGITAL: 'IT & Support',
+    IMMO: 'Business',
+    ADMIN_ORG: 'Governance & Organisation',
+    IMPORT_EXPORT: 'Business',
+    TECH_DIGITAL: 'Digital',
     Team_ZH: 'Team ZH',
     Team_SN: 'Team SN',
     TZH: 'Team ZH',
@@ -412,7 +413,10 @@ const CRM = () => {
   const [selectedRecord, setSelectedRecord] = useState(null);
 
   const t = dictionaries[language] || dictionaries.FR;
-  const tv = useCallback((value) => valueLabels[language]?.[value] || valueLabels.FR[value] || value || '-', [language]);
+  const tv = useCallback((value) => {
+    if (isLegacyBuCode(value)) return translateDas(value, language);
+    return valueLabels[language]?.[value] || valueLabels.FR[value] || value || '-';
+  }, [language]);
   const translateDesignation = useCallback((value) => {
     if (!value || language === 'FR') return value;
     return (designationTerms[language] || []).reduce(
@@ -653,7 +657,7 @@ const CRM = () => {
         [t.quantity, item.quantite],
         [t.unit, item.unite],
         [t.destination, item.destination],
-        ['BU', tv(item.bu)],
+        ['DAS', tv(item.bu)],
         [t.status, tv(item.statut)],
         [t.comment, item.commentaire],
         [t.source, tv(item.source)]
@@ -772,7 +776,7 @@ const CRM = () => {
               { label: t.amountChf, value: formatChf(donsTotals.chf) },
               { label: t.amountCfa, value: formatCfa(donsTotals.cfa) }
             ]}
-            columns={[t.ref, t.date, t.donor, t.designation, t.nature, t.amountChf, t.amountCfa, t.quantity, t.unit, t.destination, 'BU', t.status, t.comment, t.source]}
+            columns={[t.ref, t.date, t.donor, t.designation, t.nature, t.amountChf, t.amountCfa, t.quantity, t.unit, t.destination, 'DAS', t.status, t.comment, t.source]}
             renderRow={(item) => (
               <>
                 {tableCell(item.ref, 'font-semibold text-slate-200')}

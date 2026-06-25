@@ -8,6 +8,7 @@ import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
 import { api } from './api';
 import { StandardActionsCell, StandardRecordSheetModal } from './StandardUI';
+import { isLegacyBuCode, translateDas } from './strategicMapping';
 
 const Production = () => {
   const { language } = useLanguage();
@@ -286,33 +287,33 @@ const Production = () => {
     },
     departments: {
       FR: {
-        ADMIN_ORG: 'Administration',
-        IMPORT_EXPORT: 'Commercial & CRM',
+        ADMIN_ORG: 'Gouvernance & Organisation',
+        IMPORT_EXPORT: 'Business',
         SOCIAL: 'Social',
-        IMMO: 'Fin Immo',
-        TECH_DIGITAL: 'IT & Support',
+        IMMO: 'Business',
+        TECH_DIGITAL: 'Digital',
         'Finances': 'Finances',
         'Production': 'Production',
         'Stock & Actifs': 'Stocks & Actifs',
         'Stocks & Actifs': 'Stocks & Actifs'
       },
       EN: {
-        ADMIN_ORG: 'Administration',
-        IMPORT_EXPORT: 'Sales & CRM',
+        ADMIN_ORG: 'Governance & Organization',
+        IMPORT_EXPORT: 'Business',
         SOCIAL: 'Social',
-        IMMO: 'Real Estate Finance',
-        TECH_DIGITAL: 'IT & Support',
+        IMMO: 'Business',
+        TECH_DIGITAL: 'Digital',
         'Finances': 'Finance',
         'Production': 'Production',
         'Stock & Actifs': 'Stock & Assets',
         'Stocks & Actifs': 'Stock & Assets'
       },
       DE: {
-        ADMIN_ORG: 'Administration',
-        IMPORT_EXPORT: 'Vertrieb & CRM',
+        ADMIN_ORG: 'Governance & Organisation',
+        IMPORT_EXPORT: 'Business',
         SOCIAL: 'Soziales',
-        IMMO: 'Immobilienfinanzierung',
-        TECH_DIGITAL: 'IT & Support',
+        IMMO: 'Business',
+        TECH_DIGITAL: 'Digital',
         'Finances': 'Finanzen',
         'Production': 'Produktion',
         'Stock & Actifs': 'Bestand & Aktiven',
@@ -377,7 +378,9 @@ const Production = () => {
   };
   const translateCategory = (category) => translateFromDictionary(dataTranslations.categories, category);
   const translateSource = (source) => translateFromDictionary(dataTranslations.sources, source);
-  const translateDepartment = (department) => translateFromDictionary(dataTranslations.departments, department);
+  const translateDepartment = (department) => (
+    isLegacyBuCode(department) ? translateDas(department, language) : translateFromDictionary(dataTranslations.departments, department)
+  );
   const translateJoinedValues = (value, translator) => String(value || '-')
     .split(',')
     .map(item => translator(item.trim()))
