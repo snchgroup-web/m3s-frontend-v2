@@ -181,6 +181,10 @@ const RH = () => {
         'Gestion': 'Gestion',
         'RH': 'RH',
         'Social': 'Social',
+        'TZH': 'Team ZH',
+        'TSN': 'Team SN',
+        'Team_ZH': 'Team ZH',
+        'Team_SN': 'Team SN',
         'Événements': 'Événements',
         'Général': 'Général'
       },
@@ -190,6 +194,10 @@ const RH = () => {
         'Gestion': 'Management',
         'RH': 'HR',
         'Social': 'Social',
+        'TZH': 'Team ZH',
+        'TSN': 'Team SN',
+        'Team_ZH': 'Team ZH',
+        'Team_SN': 'Team SN',
         'Événements': 'Events',
         'Général': 'General'
       },
@@ -199,6 +207,10 @@ const RH = () => {
         'Gestion': 'Verwaltung',
         'RH': 'Personalwesen',
         'Social': 'Soziales',
+        'TZH': 'Team ZH',
+        'TSN': 'Team SN',
+        'Team_ZH': 'Team ZH',
+        'Team_SN': 'Team SN',
         'Événements': 'Veranstaltungen',
         'Général': 'Allgemein'
       }
@@ -650,8 +662,8 @@ const RH = () => {
                   <option value="RH">{translateDepartment('RH')}</option>
                   <option value="Gestion">{translateDepartment('Gestion')}</option>
                   <option value="Social">{translateDepartment('Social')}</option>
-                  <option value="TZH">TZH</option>
-                  <option value="TSN">TSN</option>
+                  <option value="Team_ZH">{translateDepartment('Team_ZH')}</option>
+                  <option value="Team_SN">{translateDepartment('Team_SN')}</option>
                 </select>
               </div>
 

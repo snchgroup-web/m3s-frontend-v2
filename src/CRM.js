@@ -199,7 +199,20 @@ const valueLabels = {
     IMMO: 'Fin Immo',
     ADMIN_ORG: 'Administration',
     IMPORT_EXPORT: 'Commercial & CRM',
-    TECH_DIGITAL: 'IT & Support'
+    TECH_DIGITAL: 'IT & Support',
+    Team_ZH: 'Team ZH',
+    Team_SN: 'Team SN',
+    TZH: 'Team ZH',
+    TSN: 'Team SN',
+    Finances: 'Finances',
+    Administration: 'Administration',
+    Production: 'Production',
+    'Stocks & Actifs': 'Stocks & Actifs',
+    'Finance Social': 'Finance Social',
+    Conception: 'Conception',
+    'Mise en Place': 'Mise en Place',
+    Consolidation: 'Consolidation',
+    Dynamisation: 'Dynamisation'
   },
   EN: {
     'Aide sociale': 'Social aid',
@@ -213,7 +226,20 @@ const valueLabels = {
     IMMO: 'Real Estate Finance',
     ADMIN_ORG: 'Administration',
     IMPORT_EXPORT: 'Sales & CRM',
-    TECH_DIGITAL: 'IT & Support'
+    TECH_DIGITAL: 'IT & Support',
+    Team_ZH: 'Team ZH',
+    Team_SN: 'Team SN',
+    TZH: 'Team ZH',
+    TSN: 'Team SN',
+    Finances: 'Finance',
+    Administration: 'Administration',
+    Production: 'Production',
+    'Stocks & Actifs': 'Stock & Assets',
+    'Finance Social': 'Finance Social',
+    Conception: 'Design',
+    'Mise en Place': 'Implementation',
+    Consolidation: 'Consolidation',
+    Dynamisation: 'Activation'
   },
   DE: {
     'Aide sociale': 'Sozialhilfe',
@@ -227,7 +253,20 @@ const valueLabels = {
     IMMO: 'Immobilienfinanzierung',
     ADMIN_ORG: 'Administration',
     IMPORT_EXPORT: 'Marketing & CRM',
-    TECH_DIGITAL: 'IT & Support'
+    TECH_DIGITAL: 'IT & Support',
+    Team_ZH: 'Team ZH',
+    Team_SN: 'Team SN',
+    TZH: 'Team ZH',
+    TSN: 'Team SN',
+    Finances: 'Finanzen',
+    Administration: 'Administration',
+    Production: 'Produktion',
+    'Stocks & Actifs': 'Bestand & Aktiven',
+    'Finance Social': 'Finance Social',
+    Conception: 'Konzeption',
+    'Mise en Place': 'Umsetzung',
+    Consolidation: 'Konsolidierung',
+    Dynamisation: 'Aktivierung'
   }
 };
 
@@ -617,7 +656,7 @@ const CRM = () => {
         ['BU', tv(item.bu)],
         [t.status, tv(item.statut)],
         [t.comment, item.commentaire],
-        [t.source, item.source]
+        [t.source, tv(item.source)]
       ];
     }
 
@@ -631,12 +670,12 @@ const CRM = () => {
       [t.amountCfa, formatCfa(item.montantCfa)],
       [t.fxRate, item.tauxFx ? item.tauxFx.toLocaleString('fr-CH', { maximumFractionDigits: 4 }) : '-'],
       [t.agent, item.agent],
-      [t.team, item.team],
-      [t.department, item.departement],
-      [t.phase, item.phaseProjet],
+      [t.team, tv(item.team)],
+      [t.department, tv(item.departement)],
+      [t.phase, tv(item.phaseProjet)],
       [t.country, item.pays],
       [t.comment, item.commentaire],
-      [t.source, item.source]
+      [t.source, tv(item.source)]
     ];
   };
 
@@ -749,7 +788,7 @@ const CRM = () => {
                 {tableCell(badge(tv(item.bu)))}
                 {tableCell(badge(tv(item.statut)))}
                 {tableCell(item.commentaire, 'text-slate-400')}
-                {tableCell(item.source)}
+                {tableCell(tv(item.source))}
               </>
             )}
           />
@@ -778,12 +817,12 @@ const CRM = () => {
                 {tableCell(formatCfa(item.montantCfa), 'font-semibold text-amber-300')}
                 {tableCell(item.tauxFx ? item.tauxFx.toLocaleString('fr-CH', { maximumFractionDigits: 4 }) : '-')}
                 {tableCell(item.agent)}
-                {tableCell(item.team)}
-                {tableCell(item.departement)}
-                {tableCell(item.phaseProjet)}
+                {tableCell(tv(item.team))}
+                {tableCell(tv(item.departement))}
+                {tableCell(tv(item.phaseProjet))}
                 {tableCell(badge(item.pays))}
                 {tableCell(item.commentaire, 'text-slate-400')}
-                {tableCell(item.source)}
+                {tableCell(tv(item.source))}
               </>
             )}
           />

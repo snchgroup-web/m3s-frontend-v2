@@ -284,6 +284,41 @@ const Production = () => {
       EN: { 'Dépenses': 'Expenses', 'Stocks & Actifs': 'Stock & Assets' },
       DE: { 'Dépenses': 'Ausgaben', 'Stocks & Actifs': 'Bestand & Aktiven' }
     },
+    departments: {
+      FR: {
+        ADMIN_ORG: 'Administration',
+        IMPORT_EXPORT: 'Commercial & CRM',
+        SOCIAL: 'Social',
+        IMMO: 'Fin Immo',
+        TECH_DIGITAL: 'IT & Support',
+        'Finances': 'Finances',
+        'Production': 'Production',
+        'Stock & Actifs': 'Stocks & Actifs',
+        'Stocks & Actifs': 'Stocks & Actifs'
+      },
+      EN: {
+        ADMIN_ORG: 'Administration',
+        IMPORT_EXPORT: 'Sales & CRM',
+        SOCIAL: 'Social',
+        IMMO: 'Real Estate Finance',
+        TECH_DIGITAL: 'IT & Support',
+        'Finances': 'Finance',
+        'Production': 'Production',
+        'Stock & Actifs': 'Stock & Assets',
+        'Stocks & Actifs': 'Stock & Assets'
+      },
+      DE: {
+        ADMIN_ORG: 'Administration',
+        IMPORT_EXPORT: 'Vertrieb & CRM',
+        SOCIAL: 'Soziales',
+        IMMO: 'Immobilienfinanzierung',
+        TECH_DIGITAL: 'IT & Support',
+        'Finances': 'Finanzen',
+        'Production': 'Produktion',
+        'Stock & Actifs': 'Bestand & Aktiven',
+        'Stocks & Actifs': 'Bestand & Aktiven'
+      }
+    },
     countries: {
       FR: { 'Sénégal': 'Sénégal', 'France': 'France', 'Suisse': 'Suisse' },
       EN: { 'Sénégal': 'Senegal', 'France': 'France', 'Suisse': 'Switzerland' },
@@ -328,8 +363,21 @@ const Production = () => {
   };
   const translateProduct = (product) => dataTranslations.products[language]?.[product] || product;
   const translateMonth = (month) => dataTranslations.months[language]?.[month] || month;
-  const translateCategory = (category) => dataTranslations.categories[language]?.[category] || category;
-  const translateSource = (source) => dataTranslations.sources[language]?.[source] || source;
+  const normalizedLabelKey = (value) => normalizeLookupKey(value).replace(/[_-]+/g, ' ').replace(/\s+/g, ' ');
+  const translateFromDictionary = (dictionary, value) => {
+    if (!value || value === '-') return '-';
+    const exact = dictionary[language]?.[value] || dictionary.FR?.[value];
+    if (exact) return exact;
+    const normalized = normalizedLabelKey(value);
+    const entries = Object.entries(dictionary[language] || {});
+    const found = entries.find(([key]) => normalizedLabelKey(key) === normalized);
+    if (found) return found[1];
+    const fallback = Object.entries(dictionary.FR || {}).find(([key]) => normalizedLabelKey(key) === normalized);
+    return fallback?.[1] || String(value).replace(/[_-]+/g, ' ');
+  };
+  const translateCategory = (category) => translateFromDictionary(dataTranslations.categories, category);
+  const translateSource = (source) => translateFromDictionary(dataTranslations.sources, source);
+  const translateDepartment = (department) => translateFromDictionary(dataTranslations.departments, department);
   const translateJoinedValues = (value, translator) => String(value || '-')
     .split(',')
     .map(item => translator(item.trim()))
@@ -867,7 +915,7 @@ const Production = () => {
                       <td className="px-4 py-2 text-slate-400">{f.lignesDepenses}</td>
                       <td className="px-4 py-2 text-slate-400">{f.lignesStocks}</td>
                       <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.categorie, translateCategory)}</td>
-                      <td className="px-4 py-2 text-slate-400">{f.departement}</td>
+                      <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.departement, translateDepartment)}</td>
                       <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.team, translateTeam)}</td>
                       <td className="px-4 py-2 text-slate-400">{f.agent}</td>
                       <td className="px-4 py-2 text-slate-400">{f.pays}</td>
@@ -950,7 +998,7 @@ const Production = () => {
           [t.lignesDepenses, selectedFournisseur.lignesDepenses],
           [t.lignesStocks, selectedFournisseur.lignesStocks],
           [t.categorie, translateJoinedValues(selectedFournisseur.categorie, translateCategory)],
-          [t.departement, selectedFournisseur.departement],
+          [t.departement, translateJoinedValues(selectedFournisseur.departement, translateDepartment)],
           [t.team, translateJoinedValues(selectedFournisseur.team, translateTeam)],
           [t.agent, selectedFournisseur.agent],
           [t.pays, selectedFournisseur.pays],

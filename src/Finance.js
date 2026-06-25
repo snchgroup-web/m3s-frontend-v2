@@ -9,6 +9,7 @@ import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
 
 const TEAM_OPTIONS = ['Team_ZH', 'Team_SN'];
+const AGENT_OPTIONS = ['Cheikh', 'Chantal', 'Pape', 'Gnilane Diouf', 'Gnilane Ndiaye', 'Ibou'];
 const DEPARTMENT_OPTIONS = [
   'Administration',
   'Finances',
@@ -852,7 +853,18 @@ const Finance = () => {
       'DYNAMISATION': 'Dynamisation',
       'IT': 'IT',
       'FINANCE': 'Finance',
+      'FINANCES': 'Finances',
       'ADMINISTRATION': 'Administration',
+      'RESSOURCES HUMAINES': 'Ressources Humaines',
+      'COMMERCIAL CRM': 'Commercial & CRM',
+      'PRODUCTION': 'Production',
+      'STOCK ACTIFS': 'Stocks & Actifs',
+      'STOCKS ACTIFS': 'Stocks & Actifs',
+      'IT SUPPORT': 'IT & Support',
+      'TEAM ZH': 'Team ZH',
+      'TZH': 'Team ZH',
+      'TEAM SN': 'Team SN',
+      'TSN': 'Team SN',
       'AVANCE': 'Avance',
       'REMBOURSEMENT': 'Remboursement',
       'AJUSTEMENT': 'Ajustement',
@@ -877,7 +889,18 @@ const Finance = () => {
       'DYNAMISATION': 'Activation',
       'IT': 'IT',
       'FINANCE': 'Finance',
+      'FINANCES': 'Finance',
       'ADMINISTRATION': 'Administration',
+      'RESSOURCES HUMAINES': 'Human Resources',
+      'COMMERCIAL CRM': 'Sales & CRM',
+      'PRODUCTION': 'Production',
+      'STOCK ACTIFS': 'Stock & Assets',
+      'STOCKS ACTIFS': 'Stock & Assets',
+      'IT SUPPORT': 'IT & Support',
+      'TEAM ZH': 'Team ZH',
+      'TZH': 'Team ZH',
+      'TEAM SN': 'Team SN',
+      'TSN': 'Team SN',
       'AVANCE': 'Advance',
       'REMBOURSEMENT': 'Reimbursement',
       'AJUSTEMENT': 'Adjustment',
@@ -902,7 +925,18 @@ const Finance = () => {
       'DYNAMISATION': 'Aktivierung',
       'IT': 'IT',
       'FINANCE': 'Finanzen',
+      'FINANCES': 'Finanzen',
       'ADMINISTRATION': 'Administration',
+      'RESSOURCES HUMAINES': 'Personalwesen',
+      'COMMERCIAL CRM': 'Vertrieb & CRM',
+      'PRODUCTION': 'Produktion',
+      'STOCK ACTIFS': 'Bestand & Aktiven',
+      'STOCKS ACTIFS': 'Bestand & Aktiven',
+      'IT SUPPORT': 'IT & Support',
+      'TEAM ZH': 'Team ZH',
+      'TZH': 'Team ZH',
+      'TEAM SN': 'Team SN',
+      'TSN': 'Team SN',
       'AVANCE': 'Vorauszahlung',
       'REMBOURSEMENT': 'Rückzahlung',
       'AJUSTEMENT': 'Anpassung',
@@ -946,7 +980,7 @@ const Finance = () => {
     const existing = [...recettes, ...depenses]
       .map((row) => row.agent)
       .filter((value) => value && normalizeCategoryKey(value) !== 'NON RENSEIGNE');
-    return [...new Set(['Cheikh', 'Chantal', ...existing, formData.agent].filter(Boolean))];
+    return [...new Set([...AGENT_OPTIONS, ...existing, formData.agent].filter(Boolean))];
   }, [recettes, depenses, formData.agent]);
 
   const immoCategoryOptions = useMemo(() => [
@@ -2229,14 +2263,14 @@ const Finance = () => {
                   <span className="block mb-1">{t.team}</span>
                   <select value={immoFormData.team} onChange={(event) => handleImmoFormChange('team', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
                     <option value="">-</option>
-                    {TEAM_OPTIONS.map((value) => <option key={value} value={value}>{formatUnknownCategory(value)}</option>)}
+                    {TEAM_OPTIONS.map((value) => <option key={value} value={value}>{translateStandardValue(value)}</option>)}
                   </select>
                 </label>
                 <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.departement}</span>
                   <select value={immoFormData.departement} onChange={(event) => handleImmoFormChange('departement', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
                     <option value="">-</option>
-                    {DEPARTMENT_OPTIONS.map((value) => <option key={value} value={value}>{value}</option>)}
+                    {DEPARTMENT_OPTIONS.map((value) => <option key={value} value={value}>{translateStandardValue(value)}</option>)}
                   </select>
                 </label>
                 <label className="text-sm text-slate-300">
@@ -2313,14 +2347,14 @@ const Finance = () => {
                     <span className="block mb-1">{t.team}</span>
                     <select value={formData.team || ''} onChange={(e) => handleFormChange('team', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
                       <option value="">-</option>
-                      {TEAM_OPTIONS.map((value) => <option key={value} value={value}>{formatUnknownCategory(value)}</option>)}
+                      {TEAM_OPTIONS.map((value) => <option key={value} value={value}>{translateStandardValue(value)}</option>)}
                     </select>
                   </label>
                   <label className="text-sm text-slate-300">
                     <span className="block mb-1">{t.departement}</span>
                     <select value={formData.departement || ''} onChange={(e) => handleFormChange('departement', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
                       <option value="">-</option>
-                      {DEPARTMENT_OPTIONS.map((value) => <option key={value} value={value}>{value}</option>)}
+                      {DEPARTMENT_OPTIONS.map((value) => <option key={value} value={value}>{translateStandardValue(value)}</option>)}
                     </select>
                   </label>
                   <label className="text-sm text-slate-300">
