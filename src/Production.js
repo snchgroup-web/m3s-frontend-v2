@@ -6,6 +6,8 @@ import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
+import { api } from './api';
+import { StandardActionsCell, StandardRecordSheetModal } from './StandardUI';
 
 const Production = () => {
   const { language } = useLanguage();
@@ -44,6 +46,22 @@ const Production = () => {
       nouveauFournisseur: 'Nouveau Fournisseur',
       ajouterStock: 'Ajouter Stock',
       nomFournisseur: 'Nom du fournisseur',
+      source: 'Source',
+      sources: 'Sources',
+      lignesDepenses: 'Lignes dépenses',
+      lignesStocks: 'Lignes stocks',
+      montantChf: 'Montant CHF',
+      montantCfa: 'Montant CFA',
+      derniereOperation: 'Dernière opération',
+      departement: 'Département',
+      team: 'Team',
+      reference: 'Réf.',
+      nbReferences: 'Nb références',
+      ficheFournisseur: 'Fiche fournisseur',
+      registreFournisseurs: 'Registre fournisseurs consolidé depuis Dépenses et Stocks & Actifs.',
+      preparationFournisseur: 'Préparer fournisseur',
+      aucuneDonnee: 'Aucune donnée fournisseur disponible.',
+      voir: 'Voir',
       ok: 'OK',
       bas: 'BAS',
       creer: 'Créer',
@@ -83,6 +101,22 @@ const Production = () => {
       nouveauFournisseur: 'New Supplier',
       ajouterStock: 'Add Stock',
       nomFournisseur: 'Supplier name',
+      source: 'Source',
+      sources: 'Sources',
+      lignesDepenses: 'Expense lines',
+      lignesStocks: 'Stock lines',
+      montantChf: 'Amount CHF',
+      montantCfa: 'Amount CFA',
+      derniereOperation: 'Last operation',
+      departement: 'Department',
+      team: 'Team',
+      reference: 'Ref.',
+      nbReferences: 'Ref. count',
+      ficheFournisseur: 'Supplier record',
+      registreFournisseurs: 'Supplier register consolidated from Expenses and Stock & Assets.',
+      preparationFournisseur: 'Prepare supplier',
+      aucuneDonnee: 'No supplier data available.',
+      voir: 'View',
       ok: 'OK',
       bas: 'LOW',
       creer: 'Create',
@@ -122,6 +156,22 @@ const Production = () => {
       nouveauFournisseur: 'Neuer Lieferant',
       ajouterStock: 'Bestand hinzufügen',
       nomFournisseur: 'Lieferantenname',
+      source: 'Quelle',
+      sources: 'Quellen',
+      lignesDepenses: 'Ausgabenzeilen',
+      lignesStocks: 'Bestandszeilen',
+      montantChf: 'Betrag CHF',
+      montantCfa: 'Betrag CFA',
+      derniereOperation: 'Letzte Buchung',
+      departement: 'Abteilung',
+      team: 'Team',
+      reference: 'Ref.',
+      nbReferences: 'Anzahl Ref.',
+      ficheFournisseur: 'Lieferantendossier',
+      registreFournisseurs: 'Lieferantenregister konsolidiert aus Ausgaben und Bestand & Aktiven.',
+      preparationFournisseur: 'Lieferant vorbereiten',
+      aucuneDonnee: 'Keine Lieferantendaten verfügbar.',
+      voir: 'Ansehen',
       ok: 'OK',
       bas: 'NIEDRIG',
       creer: 'Erstellen',
@@ -256,9 +306,122 @@ const Production = () => {
     ...(type === 'fournisseur' ? { categorie: 'Services', pays: 'Sénégal' } : {})
   });
 
+  const safeRows = (payload) => {
+    if (Array.isArray(payload)) return payload;
+    if (Array.isArray(payload?.data)) return payload.data;
+    if (Array.isArray(payload?.rows)) return payload.rows;
+    return [];
+  };
+
+  const toNumber = (value) => {
+    if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
+    const normalized = String(value ?? '').replace(/\s/g, '').replace(',', '.');
+    const parsed = Number(normalized);
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+
+  const formatMoney = (value, currency) => {
+    const amount = toNumber(value);
+    return `${amount.toLocaleString('fr-CH', { maximumFractionDigits: 2 })} ${currency}`;
+  };
+
+  const formatDate = (value) => {
+    if (!value) return '-';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return String(value).slice(0, 10);
+    return date.toLocaleDateString(language === 'EN' ? 'en-GB' : language === 'DE' ? 'de-CH' : 'fr-CH');
+  };
+
+  const normalizeSupplier = (value) => {
+    const name = String(value || '').trim();
+    if (!name || ['-', 'N/A', 'NA', 'A CONFIRMER', 'INCONNU'].includes(normalizeLookupKey(name))) return '';
+    return name;
+  };
+
+  const joinSet = (set) => Array.from(set).filter(Boolean).join(', ') || '-';
+
+  const buildSuppliersFromSources = (expenseRows, inventoryRows) => {
+    const suppliersByKey = new Map();
+
+    const ensureSupplier = (name) => {
+      const normalizedName = normalizeSupplier(name);
+      if (!normalizedName) return null;
+      const key = normalizeLookupKey(normalizedName);
+      if (!suppliersByKey.has(key)) {
+        suppliersByKey.set(key, {
+          id: `FOU-${String(suppliersByKey.size + 1).padStart(3, '0')}`,
+          nom: normalizedName,
+          sources: new Set(),
+          categories: new Set(),
+          departements: new Set(),
+          teams: new Set(),
+          pays: new Set(),
+          refs: new Set(),
+          lignesDepenses: 0,
+          lignesStocks: 0,
+          montantChf: 0,
+          montantCfa: 0,
+          lastDate: ''
+        });
+      }
+      return suppliersByKey.get(key);
+    };
+
+    const touchDate = (supplier, value) => {
+      if (!value) return;
+      const next = String(value).slice(0, 10);
+      if (!supplier.lastDate || next > supplier.lastDate) supplier.lastDate = next;
+    };
+
+    expenseRows.forEach((row) => {
+      const supplier = ensureSupplier(row.fournisseur || row.supplier || row.vendor);
+      if (!supplier) return;
+      supplier.sources.add('Dépenses');
+      supplier.lignesDepenses += 1;
+      supplier.montantChf += toNumber(row.montant_chf ?? row.amount_chf ?? row.chf);
+      supplier.montantCfa += toNumber(row.montant_cfa ?? row.amount_cfa ?? row.cfa);
+      supplier.categories.add(row.category || row.categorie || row.nature);
+      supplier.departements.add(row.departement || row.department);
+      supplier.teams.add(row.team || row.equipe);
+      supplier.pays.add(row.pays || row.country);
+      supplier.refs.add(row.ref || row.reference || row.id);
+      touchDate(supplier, row.date_created || row.date || row.date_operation);
+    });
+
+    inventoryRows.forEach((row) => {
+      const supplier = ensureSupplier(row.fournisseur || row.supplier || row.vendor);
+      if (!supplier) return;
+      supplier.sources.add('Stocks & Actifs');
+      supplier.lignesStocks += 1;
+      supplier.montantChf += toNumber(row.valeur_chf ?? row.achat_chf ?? row.montant_chf);
+      supplier.montantCfa += toNumber(row.valeur_cfa ?? row.achat_cfa ?? row.montant_cfa);
+      supplier.categories.add(row.categorie || row.category || row.sous_categorie);
+      supplier.departements.add(row.departement || row.bu || row.department);
+      supplier.teams.add(row.team || row.equipe);
+      supplier.pays.add(row.pays || row.localisation || row.country);
+      supplier.refs.add(row.source_id || row.ref || row.reference || row.id);
+      touchDate(supplier, row.date_achat || row.date_created || row.date || row.date_operation);
+    });
+
+    return Array.from(suppliersByKey.values())
+      .map((supplier) => ({
+        ...supplier,
+        sourcesLabel: joinSet(supplier.sources),
+        categorie: joinSet(supplier.categories),
+        departement: joinSet(supplier.departements),
+        team: joinSet(supplier.teams),
+        pays: joinSet(supplier.pays),
+        references: supplier.refs.size
+      }))
+      .sort((a, b) => b.montantChf - a.montantChf || a.nom.localeCompare(b.nom));
+  };
+
   const [activeTab, setActiveTab] = useState('overview');
   const [commandes, setCommandes] = useState([]);
   const [fournisseurs, setFournisseurs] = useState([]);
+  const [fournisseursLoading, setFournisseursLoading] = useState(false);
+  const [fournisseursError, setFournisseursError] = useState('');
+  const [selectedFournisseur, setSelectedFournisseur] = useState(null);
   const [stocks, setStocks] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('commande');
@@ -282,12 +445,6 @@ const Production = () => {
       { id: 4, numero: 'CMD-004', client: 'Banque Sénégalaise', produit: 'Implémentation', quantite: 1, statut: 'Préparation', date: '2026-04-15' },
     ]);
  
-    setFournisseurs([
-      { id: 1, nom: 'Tech Solutions Dakar', email: 'contact@techsol.sn', telephone: '+221 77 123 4567', categorie: 'Matériel', pays: 'Sénégal' },
-      { id: 2, nom: 'Logiciels Internationaux', email: 'sales@logiciels.com', telephone: '+33 1 23 45 67 89', categorie: 'Logiciels', pays: 'France' },
-      { id: 3, nom: 'Consulting Global', email: 'info@consulting.com', telephone: '+41 44 123 4567', categorie: 'Services', pays: 'Suisse' },
-    ]);
- 
     setStocks([
       { id: 1, produit: 'Licences IT', quantite: 250, seuil: 100, unite: 'Unité' },
       { id: 2, produit: 'Matériel Informatique', quantite: 45, seuil: 20, unite: 'Unité' },
@@ -295,7 +452,38 @@ const Production = () => {
       { id: 4, produit: 'Consommables', quantite: 80, seuil: 50, unite: 'Unité' },
     ]);
   }, []);
- 
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadFournisseurs = async () => {
+      setFournisseursLoading(true);
+      setFournisseursError('');
+      try {
+        const [expensesPayload, inventoryPayload] = await Promise.all([
+          api.getExpenses(500, 0),
+          api.getInventory(500, 0)
+        ]);
+        if (cancelled) return;
+        setFournisseurs(buildSuppliersFromSources(safeRows(expensesPayload), safeRows(inventoryPayload)));
+      } catch (error) {
+        if (cancelled) return;
+        setFournisseurs([]);
+        setFournisseursError(error.message || 'Erreur fournisseurs');
+      } finally {
+        if (!cancelled) setFournisseursLoading(false);
+      }
+    };
+
+    loadFournisseurs();
+
+    return () => {
+      cancelled = true;
+    };
+    // buildSuppliersFromSources is pure and intentionally scoped to this page.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const totalCommandes = commandes.length;
   const commandesLivrees = commandes.filter(c => normalizeStatus(c.statut) === 'Livrée').length;
   const totalFournisseurs = fournisseurs.length;
@@ -532,37 +720,67 @@ const Production = () => {
  
         {activeTab === 'fournisseurs' && (
           <div>
-            <div className="flex justify-end mb-4">
+            <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <p className="text-sm text-slate-300">{t.registreFournisseurs}</p>
               <button onClick={() => { setEditingId(null); setModalType('fournisseur'); setFormData(getDefaultFormData('fournisseur')); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
-                <Plus size={20} /> {t.nouveauFournisseur}
+                <Plus size={20} /> {t.preparationFournisseur}
               </button>
             </div>
+            {fournisseursError && (
+              <div className="mb-4 rounded-lg border border-red-700 bg-red-950/40 px-4 py-3 text-sm text-red-200">
+                {fournisseursError}
+              </div>
+            )}
             <TableControls rows={fournisseurs} renderTable={(visibleRows) => (
-              <table className="min-w-full text-sm">
+              <table className="min-w-[1300px] text-sm">
                 <thead className="sticky top-0 z-10 bg-slate-700">
                   <tr>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.reference}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.nom}</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">{t.email}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.sources}</th>
+                    <th className="px-4 py-2 text-right text-white font-bold">{t.montantChf}</th>
+                    <th className="px-4 py-2 text-right text-white font-bold">{t.montantCfa}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.lignesDepenses}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.lignesStocks}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.categorie}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.departement}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.team}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.pays}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.derniereOperation}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
                   </tr>
                 </thead>
                 <tbody>
+                  {fournisseursLoading && (
+                    <tr>
+                      <td colSpan="13" className="px-4 py-6 text-center text-slate-300">Chargement...</td>
+                    </tr>
+                  )}
+                  {!fournisseursLoading && visibleRows.length === 0 && (
+                    <tr>
+                      <td colSpan="13" className="px-4 py-6 text-center text-slate-400">{t.aucuneDonnee}</td>
+                    </tr>
+                  )}
                   {visibleRows.map(f => (
-                    <tr key={f.id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                    <tr key={f.id} onClick={() => setSelectedFournisseur(f)} className="cursor-pointer border-t border-slate-700 hover:bg-slate-700/50">
+                      <td className="px-4 py-2 text-slate-400">{f.id}</td>
                       <td className="px-4 py-2 text-slate-300 font-medium">{f.nom}</td>
-                      <td className="px-4 py-2 text-slate-400 text-xs">{f.email}</td>
-                      <td className="px-4 py-2 text-slate-400">{translateCategory(f.categorie)}</td>
-                      <td className="px-4 py-2 text-slate-400">{translateCountry(f.pays)}</td>
-                      <td className="px-4 py-2 flex gap-2">
-                        <button onClick={() => handleEdit('fournisseur', f)} className="p-1 hover:bg-slate-600 rounded">
-                          <Edit2 size={16} className="text-blue-400" />
-                        </button>
-                        <button onClick={() => handleDelete('fournisseur', f.id)} className="p-1 hover:bg-slate-600 rounded">
-                          <Trash2 size={16} className="text-red-400" />
-                        </button>
-                      </td>
+                      <td className="px-4 py-2 text-slate-400">{f.sourcesLabel}</td>
+                      <td className="px-4 py-2 text-right font-semibold text-emerald-300">{formatMoney(f.montantChf, 'CHF')}</td>
+                      <td className="px-4 py-2 text-right font-semibold text-amber-300">{formatMoney(f.montantCfa, 'CFA')}</td>
+                      <td className="px-4 py-2 text-slate-400">{f.lignesDepenses}</td>
+                      <td className="px-4 py-2 text-slate-400">{f.lignesStocks}</td>
+                      <td className="px-4 py-2 text-slate-400">{f.categorie}</td>
+                      <td className="px-4 py-2 text-slate-400">{f.departement}</td>
+                      <td className="px-4 py-2 text-slate-400">{f.team}</td>
+                      <td className="px-4 py-2 text-slate-400">{f.pays}</td>
+                      <td className="px-4 py-2 text-slate-400">{formatDate(f.lastDate)}</td>
+                      <StandardActionsCell
+                        item={f}
+                        onView={setSelectedFournisseur}
+                        onEdit={(item) => handleEdit('fournisseur', item)}
+                        labels={{ view: t.voir, edit: t.modifier }}
+                      />
                     </tr>
                   ))}
                 </tbody>
@@ -619,6 +837,29 @@ const Production = () => {
         <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'commandes', 'fournisseurs', 'stocks']} />
         </div>
       </div>
+
+      <StandardRecordSheetModal
+        open={Boolean(selectedFournisseur)}
+        title={selectedFournisseur?.nom}
+        eyebrow={t.ficheFournisseur}
+        description={t.registreFournisseurs}
+        closeLabel={t.annuler}
+        onClose={() => setSelectedFournisseur(null)}
+        details={selectedFournisseur ? [
+          [t.reference, selectedFournisseur.id],
+          [t.sources, selectedFournisseur.sourcesLabel],
+          [t.montantChf, formatMoney(selectedFournisseur.montantChf, 'CHF')],
+          [t.montantCfa, formatMoney(selectedFournisseur.montantCfa, 'CFA')],
+          [t.lignesDepenses, selectedFournisseur.lignesDepenses],
+          [t.lignesStocks, selectedFournisseur.lignesStocks],
+          [t.categorie, selectedFournisseur.categorie],
+          [t.departement, selectedFournisseur.departement],
+          [t.team, selectedFournisseur.team],
+          [t.pays, selectedFournisseur.pays],
+          [t.derniereOperation, formatDate(selectedFournisseur.lastDate)],
+          [t.nbReferences, selectedFournisseur.references]
+        ] : []}
+      />
 
       {/* Modal */}
       {showModal && (
