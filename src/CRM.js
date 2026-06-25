@@ -53,6 +53,8 @@ const dictionaries = {
     agent: 'Agent',
     team: 'Team',
     department: 'Département',
+    phase: 'Phase',
+    fxRate: 'Taux FX',
     country: 'Pays',
     donor: 'Donateur',
     nature: 'Nature',
@@ -95,6 +97,8 @@ const dictionaries = {
     agent: 'Agent',
     team: 'Team',
     department: 'Department',
+    phase: 'Phase',
+    fxRate: 'FX rate',
     country: 'Country',
     donor: 'Donor',
     nature: 'Nature',
@@ -137,6 +141,8 @@ const dictionaries = {
     agent: 'Agent',
     team: 'Team',
     department: 'Abteilung',
+    phase: 'Phase',
+    fxRate: 'FX-Kurs',
     country: 'Land',
     donor: 'Spender',
     nature: 'Art',
@@ -422,15 +428,31 @@ const CRM = () => {
     </div>
   );
 
-  const DataTable = ({ rows, columns, renderRow, emptyText }) => (
+  const DataTable = ({ title, rows, columns, renderRow, emptyText, summaryItems = [] }) => (
     <div>
-      <Notice>{t.readOnly}</Notice>
+      <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-white">{title}</h2>
+          <p className="mt-1 text-sm text-slate-400">{t.readOnly}</p>
+        </div>
+        {summaryItems.length > 0 && (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {summaryItems.map((item) => (
+              <div key={item.label} className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-3">
+                <p className="text-xs uppercase tracking-wide text-slate-400">{item.label}</p>
+                <p className="mt-1 text-lg font-bold text-white">{item.value}</p>
+                {item.secondary && <p className="text-xs font-semibold text-slate-400">{item.secondary}</p>}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
       <TableControls
         rows={rows}
         maxHeight="34rem"
         renderEmpty={() => <div className="px-6 py-8 text-center text-slate-400">{emptyText}</div>}
         renderTable={(visibleRows) => (
-          <table className="min-w-[1200px] text-sm">
+          <table className="min-w-[1650px] text-sm">
             <thead className="sticky top-0 z-10 bg-slate-700">
               <tr>
                 {columns.map((column) => (
@@ -537,12 +559,20 @@ const CRM = () => {
 
         {activeTab === 'dons' && (
           <DataTable
+            title={t.dons}
             rows={dons}
             emptyText={t.noDonationRows}
-            columns={[t.ref, t.designation, t.nature, t.amountChf, t.amountCfa, t.quantity, t.unit, t.destination, 'BU', t.status, t.source]}
+            summaryItems={[
+              { label: t.inKindDonations, value: dons.length, secondary: t.inventorySource },
+              { label: t.amountChf, value: formatChf(donsTotals.chf) },
+              { label: t.amountCfa, value: formatCfa(donsTotals.cfa) }
+            ]}
+            columns={[t.ref, t.date, t.donor, t.designation, t.nature, t.amountChf, t.amountCfa, t.quantity, t.unit, t.destination, 'BU', t.status, t.comment, t.source]}
             renderRow={(item) => (
               <>
                 {tableCell(item.ref, 'font-semibold text-slate-200')}
+                {tableCell(formatDate(item.date))}
+                {tableCell(item.donateur)}
                 {tableCell(<strong>{item.designation}</strong>, 'text-slate-200')}
                 {tableCell(tv(item.nature))}
                 {tableCell(formatChf(item.montantChf), 'font-bold text-emerald-300')}
@@ -552,6 +582,7 @@ const CRM = () => {
                 {tableCell(item.destination)}
                 {tableCell(badge(tv(item.bu)))}
                 {tableCell(badge(tv(item.statut)))}
+                {tableCell(item.commentaire, 'text-slate-400')}
                 {tableCell(item.source)}
               </>
             )}
@@ -560,9 +591,15 @@ const CRM = () => {
 
         {activeTab === 'beneficiaires' && (
           <DataTable
+            title={t.beneficiaires}
             rows={beneficiaires}
             emptyText={t.noBeneficiaryRows}
-            columns={[t.ref, t.date, t.beneficiary, t.designation, t.aidType, t.amountChf, t.amountCfa, t.agent, t.team, t.department, t.country, t.source]}
+            summaryItems={[
+              { label: t.socialFlows, value: beneficiaires.length, secondary: t.financeSocialSource },
+              { label: t.amountChf, value: formatChf(socialTotals.chf) },
+              { label: t.amountCfa, value: formatCfa(socialTotals.cfa) }
+            ]}
+            columns={[t.ref, t.date, t.beneficiary, t.designation, t.aidType, t.amountChf, t.amountCfa, t.fxRate, t.agent, t.team, t.department, t.phase, t.country, t.comment, t.source]}
             renderRow={(item) => (
               <>
                 {tableCell(item.ref, 'font-semibold text-slate-200')}
@@ -572,10 +609,13 @@ const CRM = () => {
                 {tableCell(tv(item.typeAide))}
                 {tableCell(formatChf(item.montantChf), 'font-bold text-emerald-300')}
                 {tableCell(formatCfa(item.montantCfa), 'font-semibold text-amber-300')}
+                {tableCell(item.tauxFx ? item.tauxFx.toLocaleString('fr-CH', { maximumFractionDigits: 4 }) : '-')}
                 {tableCell(item.agent)}
                 {tableCell(item.team)}
                 {tableCell(item.departement)}
+                {tableCell(item.phaseProjet)}
                 {tableCell(badge(item.pays))}
+                {tableCell(item.commentaire, 'text-slate-400')}
                 {tableCell(item.source)}
               </>
             )}
