@@ -14,10 +14,11 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
-import { ChevronDown, Edit2, Eye, Gift, HeartHandshake, Info, Plus, Target, TrendingUp, Users, X } from 'lucide-react';
+import { ChevronDown, Gift, HeartHandshake, Info, Plus, Target, TrendingUp, Users, X } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import TableControls from './TableControls';
+import { StandardActionsCell, StandardKpiCard, StandardRecordSheetModal } from './StandardUI';
 import api from './api';
 
 const dictionaries = {
@@ -492,19 +493,6 @@ const CRM = () => {
       .map(([year, value]) => ({ year, value }));
   }, [beneficiaires]);
 
-  const KpiCard = ({ label, value, secondary, icon: Icon, color }) => (
-    <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-slate-500 hover:shadow-lg hover:shadow-blue-950/30">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-sm text-slate-300">{label}</p>
-          <p className="mt-2 text-2xl font-bold text-white">{value}</p>
-          {secondary && <p className="mt-1 text-sm font-semibold text-slate-400">{secondary}</p>}
-        </div>
-        <Icon size={30} className={color} />
-      </div>
-    </div>
-  );
-
   const Notice = ({ children }) => (
     <div className="mb-4 flex items-start gap-3 rounded-lg border border-blue-500/30 bg-blue-500/10 px-4 py-3 text-sm text-blue-100">
       <Info size={18} className="mt-0.5 shrink-0 text-blue-300" />
@@ -560,32 +548,12 @@ const CRM = () => {
                   className="cursor-pointer border-t border-slate-700 hover:bg-slate-700/50"
                 >
                   {renderRow(item)}
-                  <td className="px-4 py-3 align-top">
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        title={t.view}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          setSelectedRecord({ type, title, item, mode: 'view' });
-                        }}
-                        className="rounded p-1 text-blue-300 transition hover:bg-slate-600 hover:text-blue-100"
-                      >
-                        <Eye size={16} />
-                      </button>
-                      <button
-                        type="button"
-                        title={t.edit}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          setSelectedRecord({ type, title, item, mode: 'edit' });
-                        }}
-                        className="rounded p-1 text-amber-300 transition hover:bg-slate-600 hover:text-amber-100"
-                      >
-                        <Edit2 size={16} />
-                      </button>
-                    </div>
-                  </td>
+                  <StandardActionsCell
+                    item={item}
+                    labels={{ view: t.view, edit: t.edit }}
+                    onView={() => setSelectedRecord({ type, title, item, mode: 'view' })}
+                    onEdit={() => setSelectedRecord({ type, title, item, mode: 'edit' })}
+                  />
                 </tr>
               ))}
             </tbody>
@@ -676,11 +644,11 @@ const CRM = () => {
     <div className="min-h-screen bg-slate-900 p-8">
       <div className="mx-auto w-full max-w-[1800px]">
         <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-5">
-          <KpiCard label={t.validatedSources} value="2" secondary="Finance + Stocks" icon={Target} color="text-blue-400" />
-          <KpiCard label={t.socialFlows} value={beneficiaires.length} secondary={t.financeSocialSource} icon={HeartHandshake} color="text-cyan-400" />
-          <KpiCard label={t.totalSocial} value={formatChf(socialTotals.chf)} secondary={formatCfa(socialTotals.cfa)} icon={TrendingUp} color="text-emerald-400" />
-          <KpiCard label={t.inKindDonations} value={dons.length} secondary={`${formatChf(donsTotals.chf)} / ${formatCfa(donsTotals.cfa)}`} icon={Gift} color="text-purple-400" />
-          <KpiCard label={t.toBuild} value="3" secondary={`${t.prospects} / ${t.clients} / ${t.ventes}`} icon={Users} color="text-amber-400" />
+          <StandardKpiCard label={t.validatedSources} value="2" secondary="Finance + Stocks" icon={Target} color="text-blue-400" />
+          <StandardKpiCard label={t.socialFlows} value={beneficiaires.length} secondary={t.financeSocialSource} icon={HeartHandshake} color="text-cyan-400" />
+          <StandardKpiCard label={t.totalSocial} value={formatChf(socialTotals.chf)} secondary={formatCfa(socialTotals.cfa)} icon={TrendingUp} color="text-emerald-400" />
+          <StandardKpiCard label={t.inKindDonations} value={dons.length} secondary={`${formatChf(donsTotals.chf)} / ${formatCfa(donsTotals.cfa)}`} icon={Gift} color="text-purple-400" />
+          <StandardKpiCard label={t.toBuild} value="3" secondary={`${t.prospects} / ${t.clients} / ${t.ventes}`} icon={Users} color="text-amber-400" />
         </div>
 
         {loadError && <Notice>{loadError}</Notice>}
@@ -855,45 +823,15 @@ const CRM = () => {
           </div>
         </div>
       )}
-      {selectedRecord && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-lg border border-slate-700 bg-slate-800 p-6 shadow-2xl shadow-slate-950/50">
-            <div className="mb-5 flex items-start justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-wide text-blue-300">
-                  {selectedRecord.mode === 'edit' ? t.edit : t.recordSheet}
-                </p>
-                <h2 className="mt-1 text-2xl font-bold text-white">{selectedRecord.title}</h2>
-                {selectedRecord.mode === 'edit' && <p className="mt-2 text-sm text-amber-200">{t.editPending}</p>}
-              </div>
-              <button
-                type="button"
-                onClick={() => setSelectedRecord(null)}
-                className="rounded-lg p-2 text-slate-300 transition hover:bg-slate-700 hover:text-white"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {getRecordDetails(selectedRecord).map(([label, value]) => (
-                <div key={label} className="rounded-lg border border-slate-700 bg-slate-900/50 px-4 py-3">
-                  <p className="text-xs uppercase tracking-wide text-slate-500">{label}</p>
-                  <p className="mt-1 break-words text-sm font-semibold text-slate-100">{value || '-'}</p>
-                </div>
-              ))}
-            </div>
-            <div className="mt-6 flex justify-end">
-              <button
-                type="button"
-                onClick={() => setSelectedRecord(null)}
-                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-500"
-              >
-                {t.close}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <StandardRecordSheetModal
+        open={Boolean(selectedRecord)}
+        title={selectedRecord?.title || ''}
+        eyebrow={selectedRecord?.mode === 'edit' ? t.edit : t.recordSheet}
+        description={selectedRecord?.mode === 'edit' ? t.editPending : ''}
+        details={getRecordDetails(selectedRecord)}
+        closeLabel={t.close}
+        onClose={() => setSelectedRecord(null)}
+      />
     </div>
   );
 };
