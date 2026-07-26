@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   LayoutDashboard, ClipboardList, WalletCards, UsersRound,
-  Handshake, Factory, Warehouse, FolderCog
+  Handshake, Factory, Warehouse, FolderCog, Search
 } from 'lucide-react';
 
 export const modulePresentation = {
@@ -12,7 +12,8 @@ export const modulePresentation = {
   commercial: { icon: Handshake, color: 'text-sky-400', bg: 'bg-sky-500/15', border: 'border-sky-500/30' },
   production: { icon: Factory, color: 'text-orange-400', bg: 'bg-orange-500/15', border: 'border-orange-500/30' },
   stock: { icon: Warehouse, color: 'text-rose-400', bg: 'bg-rose-500/15', border: 'border-rose-500/30' },
-  'it-support': { icon: FolderCog, color: 'text-teal-400', bg: 'bg-teal-500/15', border: 'border-teal-500/30' }
+  'it-support': { icon: FolderCog, color: 'text-teal-400', bg: 'bg-teal-500/15', border: 'border-teal-500/30' },
+  diagnostics: { icon: Search, color: 'text-blue-400', bg: 'bg-blue-500/15', border: 'border-blue-500/30' }
 };
 
 export const moduleIdFromPath = (pathname) => {
@@ -24,6 +25,7 @@ export const moduleIdFromPath = (pathname) => {
   if (pathname.startsWith('/production')) return 'production';
   if (pathname.startsWith('/actifs')) return 'stock';
   if (pathname.startsWith('/ged')) return 'it-support';
+  if (pathname.startsWith('/diagnostics')) return 'diagnostics';
   return 'dashboard';
 };
 

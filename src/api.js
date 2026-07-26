@@ -222,6 +222,21 @@ export const api = {
   // ============================================================================
 
   // Documents - Liste
+  getDigitalOffersTaxonomy: async () => {
+    const res = await apiFetch(`${API_BASE_URL}/referentiels/offres-digitales`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  },
+
+  getDigitalOfferTaxonomy: async (type) => {
+    const normalizedType = String(type || '').trim().toUpperCase();
+    const res = await apiFetch(
+      `${API_BASE_URL}/referentiels/offres-digitales/${encodeURIComponent(normalizedType)}`
+    );
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  },
+
   getDocuments: async (limite = 100, decalage = 0, type = null) => {
     try {
       let url = `${API_BASE_URL}/documents?limit=${limite}&offset=${decalage}`;

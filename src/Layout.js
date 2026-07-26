@@ -23,7 +23,9 @@ const iconMap = {
 const Layout = ({ children }) => {
   const navigate = useNavigate();
   const { language } = useLanguage();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(() => (
+    typeof window === 'undefined' || window.innerWidth >= 1024
+  ));
   const [expandedMenus, setExpandedMenus] = useState({});
   const [expandAll, setExpandAll] = useState(false);
 
@@ -64,17 +66,27 @@ const Layout = ({ children }) => {
 
   const handleMenuItemClick = (path) => {
     navigate(path);
+    if (window.innerWidth < 1024) {
+      setSidebarOpen(false);
+    }
   };
 
   return (
     <div className="app-shell flex h-screen bg-slate-900 text-gray-100">
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-72' : 'w-20'} bg-slate-800 border-r border-slate-700 transition-all duration-300 flex flex-col overflow-hidden`}>
+      <div className={`${
+        sidebarOpen
+          ? 'w-72 max-lg:absolute max-lg:inset-y-0 max-lg:left-0 max-lg:z-40'
+          : 'w-20 max-lg:w-16'
+      } bg-slate-800 border-r border-slate-700 transition-all duration-300 flex flex-col overflow-hidden`}>
 
         {/* Header */}
         <div className="h-20 px-4 border-b border-slate-700 flex items-center justify-between">
           {sidebarOpen && (
-            <div className="flex flex-col space-y-1 items-center text-center flex-1">
+            <div
+              className="flex flex-col space-y-1 items-center text-center flex-1"
+              style={{ fontFamily: 'Inter, "Segoe UI", Arial, sans-serif' }}
+            >
               <div className="flex items-center space-x-2 justify-center">
                 {/* Logo Image */}
                 <img src="/assets/logo-2sg.png" alt="Logo SeneSwiss Group" className="w-11 h-11 rounded-full object-cover flex-shrink-0 bg-white shadow-md" />
