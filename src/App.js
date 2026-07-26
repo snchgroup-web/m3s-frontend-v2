@@ -14,6 +14,8 @@ import CRM from './CRM';
 import Production from './Production';
 import Actifs from './Actifs';
 import GED from './GED';
+import TaxonomyDiagnostics from './diagnostics/TaxonomyDiagnostics';
+import LocalPilotSummary from './LocalPilotSummary';
 
 const App = () => {
   return (
@@ -105,6 +107,26 @@ const App = () => {
                 <ProtectedRoute>
                   <Layout>
                     <GED />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/diagnostics/taxonomie"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <TaxonomyDiagnostics />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/diagnostics/pilotes-locaux"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <LocalPilotSummary />
                   </Layout>
                 </ProtectedRoute>
               }

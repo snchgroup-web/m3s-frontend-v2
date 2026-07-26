@@ -32,7 +32,14 @@ const Header = () => {
   const [currentRate, setCurrentRate] = useState(null);
   const moduleId = moduleIdFromPath(location.pathname);
   const moduleItem = menuData.menu.find((item) => item.id === moduleId) || menuData.menu[0];
-  const title = moduleItem.label?.[language] || moduleItem.label?.FR;
+  const diagnosticTitle = {
+    FR: 'Diagnostics',
+    EN: 'Diagnostics',
+    DE: 'Diagnostik'
+  };
+  const title = moduleId === 'diagnostics'
+    ? diagnosticTitle[language] || diagnosticTitle.FR
+    : moduleItem.label?.[language] || moduleItem.label?.FR;
   const presentation = modulePresentation[moduleId] || modulePresentation.dashboard;
 
   useEffect(() => {
