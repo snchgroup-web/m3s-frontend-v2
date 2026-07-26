@@ -269,6 +269,7 @@ const GED = () => {
       overview: 'Übersicht',
       documents: 'Dokumente',
       dossiers: 'Ordner',
+      archives: 'Archive',
       totalDocuments: 'Gesamtdokumente',
       totalDossiers: 'Gesamtordner',
       storageTaille: 'Gesamtspeicher',
@@ -363,7 +364,19 @@ const GED = () => {
       suggestionType: 'Vorschlag',
       humanDecisionType: 'Menschliche Entscheidung',
       humanDecisionNote: 'Die Validierung bleibt menschlich. Diese Ansicht schreibt in kein Dokument, keine API und kein externes System.',
-      sourceNote: 'Quelle und Datum unterscheiden nachvollziehbare Informationen von einfachen Vorschlägen.'
+      sourceNote: 'Quelle und Datum unterscheiden nachvollziehbare Informationen von einfachen Vorschlägen.',
+      archivesTitle: 'GED-Archive',
+      archivesSubtitle: 'Lokale Pilotansicht zur operativen Nachverfolgung von Archiven, ohne offizielle Aufbewahrungsrichtlinie.',
+      operationalArchive: 'Operatives Archiv',
+      governanceLater: 'Administration und Governance später',
+      archivedDocuments: 'Archivierte Dokumente',
+      archiveTypes: 'Archivtypen',
+      pendingActions: 'Offene Maßnahmen',
+      indicativeDuration: 'Richtdauer',
+      owner: 'Verantwortlich',
+      nextAction: 'Nächste Maßnahme',
+      archiveType: 'Archivtyp',
+      archiveGovernanceNote: 'Die angezeigten Fristen sind Richtwerte für den GED-Piloten. Detaillierte Aufbewahrungsregeln, Zugriffsrechte und Verantwortlichkeiten werden später in Administration und Dokumenten-Governance festgelegt.'
     }
   };
 

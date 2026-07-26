@@ -88,3 +88,14 @@ test('renders the English pilot labels from the shared language context', async 
   expect(screen.getByLabelText('Search document capabilities')).toBeInTheDocument();
   expect(screen.getAllByText('Local pilot · Read only').length).toBeGreaterThan(0);
 });
+
+test('renders the archives pilot in German without French fallbacks', async () => {
+  renderGed('archives', 'DE');
+
+  expect(await screen.findByRole('heading', { name: 'GED-Archive' })).toBeInTheDocument();
+  expect(screen.getAllByText('Operatives Archiv').length).toBeGreaterThan(0);
+  expect(screen.getByText('Archivierte Dokumente')).toBeInTheDocument();
+  expect(screen.getByText('Offene Maßnahmen')).toBeInTheDocument();
+  expect(screen.queryByText('Archive operationnelle')).not.toBeInTheDocument();
+  expect(screen.queryByText('Actions a suivre')).not.toBeInTheDocument();
+});
