@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Plus, Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck } from 'lucide-react';
+import { Plus, Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck, Wrench } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
@@ -79,7 +79,12 @@ const Production = () => {
       pilotSource: 'Source : pilote local M3S',
       pilotFreshness: 'Fraîcheur : scénario de travail',
       connectedSuppliers: 'L’onglet Fournisseurs reste un registre connecté séparé, hors de ce pilote.',
-      noWriteAction: 'Les ajouts, modifications et suppressions seront réintroduits plus tard avec droits, confirmations et traçabilité.'
+      noWriteAction: 'Les ajouts, modifications et suppressions seront réintroduits plus tard avec droits, confirmations et traçabilité.',
+      manufacturingTitle: 'Fabrication',
+      manufacturingStatus: 'Prochain sous-lot',
+      manufacturingDescription: 'La Fabrication est identifiée dans Production, mais aucune donnée réelle ou consolidée n’est encore disponible.',
+      manufacturingGuardrail: 'Cette vue prépare le cadre métier sans créer de faux ordres de fabrication.',
+      manufacturingSteps: ['Ordres de fabrication', 'Phases et avancement', 'Équipe et responsables', 'Qualité et délais']
     },
     EN: {
       title: 'Production & Logistics',
@@ -144,7 +149,12 @@ const Production = () => {
       pilotSource: 'Source: M3S local pilot',
       pilotFreshness: 'Freshness: working scenario',
       connectedSuppliers: 'The Suppliers tab remains a separate connected register outside this pilot.',
-      noWriteAction: 'Create, edit and delete actions will return later with permissions, confirmations and traceability.'
+      noWriteAction: 'Create, edit and delete actions will return later with permissions, confirmations and traceability.',
+      manufacturingTitle: 'Manufacturing',
+      manufacturingStatus: 'Next sub-lot',
+      manufacturingDescription: 'Manufacturing is identified within Production, but no real or consolidated data is available yet.',
+      manufacturingGuardrail: 'This view prepares the business scope without creating fake manufacturing orders.',
+      manufacturingSteps: ['Manufacturing orders', 'Phases and progress', 'Team and owners', 'Quality and deadlines']
     },
     DE: {
       title: 'Produktion & Logistik',
@@ -209,7 +219,12 @@ const Production = () => {
       pilotSource: 'Quelle: lokaler M3S-Pilot',
       pilotFreshness: 'Aktualität: Arbeitsszenario',
       connectedSuppliers: 'Der Reiter Lieferanten bleibt ein separates verbundenes Register außerhalb dieses Piloten.',
-      noWriteAction: 'Erstellen, Bearbeiten und Löschen werden später mit Rechten, Bestätigungen und Nachverfolgung wieder eingeführt.'
+      noWriteAction: 'Erstellen, Bearbeiten und Löschen werden später mit Rechten, Bestätigungen und Nachverfolgung wieder eingeführt.',
+      manufacturingTitle: 'Herstellung',
+      manufacturingStatus: 'Nächstes Teilpaket',
+      manufacturingDescription: 'Die Herstellung ist innerhalb der Produktion vorgesehen, aber es sind noch keine realen oder konsolidierten Daten verfügbar.',
+      manufacturingGuardrail: 'Diese Ansicht bereitet den fachlichen Rahmen vor, ohne fiktive Fertigungsaufträge anzulegen.',
+      manufacturingSteps: ['Fertigungsaufträge', 'Phasen und Fortschritt', 'Team und Verantwortliche', 'Qualität und Termine']
     }
   };
 
@@ -898,7 +913,40 @@ const Production = () => {
             )} />
           </div>
         )}
- 
+
+        {activeTab === 'manufacturing' && (
+          <section className="rounded-lg border border-slate-700 bg-slate-800 p-5 text-slate-100">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div className="flex items-start gap-3">
+                <div className="rounded-md border border-orange-400/30 bg-orange-500/10 p-2 text-orange-300">
+                  <Wrench size={22} aria-hidden="true" />
+                </div>
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="text-lg font-bold text-white">{t.manufacturingTitle}</h3>
+                    <span className="rounded border border-amber-400/40 bg-amber-500/10 px-2 py-1 text-xs font-semibold text-amber-200">
+                      {t.manufacturingStatus}
+                    </span>
+                  </div>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">{t.manufacturingDescription}</p>
+                  <p className="mt-1 max-w-3xl text-sm leading-6 text-slate-400">{t.manufacturingGuardrail}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {t.manufacturingSteps.map((step, index) => (
+                <div key={step} className="flex min-h-20 items-center gap-3 rounded-md border border-slate-600 bg-slate-900/45 px-4 py-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-blue-400/40 bg-blue-500/10 text-sm font-bold text-blue-200">
+                    {index + 1}
+                  </span>
+                  <span className="text-sm font-semibold text-slate-100">{step}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {activeTab === 'fournisseurs' && (
           <div>
             <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -1015,7 +1063,7 @@ const Production = () => {
           </div>
         )}
 
-        <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'commandes', 'fournisseurs', 'stocks']} />
+        <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'commandes', 'manufacturing', 'fournisseurs', 'stocks']} />
         </div>
       </div>
 

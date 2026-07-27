@@ -67,6 +67,16 @@ test('renders the operational stock pilot without write actions', async () => {
   expect(screen.getAllByRole('button', { name: 'Delete' })).toHaveLength(4);
 });
 
+test('identifies manufacturing as the next read-only production sub-lot', async () => {
+  renderProduction('manufacturing');
+
+  expect(await screen.findByRole('heading', { name: 'Manufacturing' })).toBeInTheDocument();
+  expect(screen.getByText('Next sub-lot')).toBeInTheDocument();
+  expect(screen.getByText('Manufacturing orders')).toBeInTheDocument();
+  expect(screen.getByText('Quality and deadlines')).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Create' })).not.toBeInTheDocument();
+});
+
 test('keeps the connected suppliers register available separately', async () => {
   renderProduction('fournisseurs');
 
