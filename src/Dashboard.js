@@ -127,6 +127,7 @@ const Dashboard = () => {
       m3sUsers: 'Utilisateurs M3S',
       unavailable: 'Indisponible',
       notConnected: 'Source non connectée',
+      connectedData: 'Données connectées',
       noTrend: 'Aucune série financière disponible pour le moment.',
       openModule: 'Ouvrir le module'
     },
@@ -173,6 +174,7 @@ const Dashboard = () => {
       m3sUsers: 'M3S users',
       unavailable: 'Unavailable',
       notConnected: 'Source not connected',
+      connectedData: 'Connected data',
       noTrend: 'No financial series is available yet.',
       openModule: 'Open module'
     },
@@ -219,6 +221,7 @@ const Dashboard = () => {
       m3sUsers: 'M3S-Benutzer',
       unavailable: 'Nicht verfügbar',
       notConnected: 'Quelle nicht verbunden',
+      connectedData: 'Verbundene Daten',
       noTrend: 'Derzeit ist keine Finanzreihe verfügbar.',
       openModule: 'Modul öffnen'
     }
@@ -463,7 +466,7 @@ const Dashboard = () => {
               <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations, dashboardData.exchangeRate).chf} CHF</p>
               <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations, dashboardData.exchangeRate).cfa} CFA</p>
               <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{dashboardData?.sourceStatus.donations === 'available' ? t.transactions : t.unavailable}</p>
+              <p className="text-slate-500 text-xs">{dashboardData?.sourceStatus.donations === 'available' ? t.connectedData : t.unavailable}</p>
             </div>
 
             {/* Financements */}
@@ -475,7 +478,7 @@ const Dashboard = () => {
               <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing, dashboardData.exchangeRate).chf} CHF</p>
               <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing, dashboardData.exchangeRate).cfa} CFA</p>
               <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{dashboardData?.sourceStatus.financing === 'available' ? t.transactions : t.unavailable}</p>
+              <p className="text-slate-500 text-xs">{dashboardData?.sourceStatus.financing === 'available' ? t.connectedData : t.unavailable}</p>
             </div>
 
             {/* Staff */}
