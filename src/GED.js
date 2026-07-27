@@ -146,7 +146,36 @@ const GED = () => {
       owner: 'Responsable',
       nextAction: 'Prochaine action',
       archiveType: 'Typologie',
-      archiveGovernanceNote: 'Les durees affichees sont indicatives pour le pilote GED. Les regles de conservation, droits et responsabilites detaillees relevent plus tard d Administration / gouvernance documentaire.'
+      archiveGovernanceNote: 'Les durees affichees sont indicatives pour le pilote GED. Les regles de conservation, droits et responsabilites detaillees relevent plus tard d Administration / gouvernance documentaire.',
+      supportTitle: 'Aide & Support',
+      supportSubtitle: 'Guide d’orientation local pour préparer une demande d’assistance claire.',
+      supportPilot: 'Pilote local · Lecture seule',
+      supportNoTicket: 'Aucun ticket n’est créé dans cette version.',
+      supportNoTicketBody: 'Identifiez et documentez le besoin, puis utilisez le canal humain convenu par 2SG. Aucun envoi, délai ou traitement automatique n est simulé.',
+      supportFamilies: 'Familles de besoins',
+      supportAccess: 'Accès & connexion',
+      supportAccessBody: 'Compte, authentification, accès refusé ou session interrompue.',
+      supportData: 'Données & documents',
+      supportDataBody: 'Information manquante, document introuvable ou donnée à vérifier.',
+      supportUsage: 'Utilisation fonctionnelle',
+      supportUsageBody: 'Question sur un écran, un champ, une règle ou un parcours métier.',
+      supportIncident: 'Incident technique',
+      supportIncidentBody: 'Erreur, lenteur, affichage incohérent ou fonction indisponible.',
+      supportPrepare: 'Informations à préparer',
+      supportContext: 'Contexte et action effectuée',
+      supportScreen: 'Écran, module ou fonction concernée',
+      supportMessage: 'Message ou comportement observé',
+      supportImpact: 'Impact sur le travail',
+      supportCapture: 'Capture sans donnée sensible',
+      supportPath: 'Parcours d’assistance',
+      supportIdentify: 'Identifier',
+      supportDocument: 'Documenter',
+      supportTransmit: 'Transmettre',
+      supportTrack: 'Suivre',
+      supportIdentifyBody: 'Classer le besoin.',
+      supportDocumentBody: 'Réunir les faits utiles.',
+      supportTransmitBody: 'Partager au responsable humain.',
+      supportTrackBody: 'Noter la décision et le résultat.'
     },
     EN: {
       title: 'Document Management (GED)',
@@ -261,7 +290,36 @@ const GED = () => {
       owner: 'Owner',
       nextAction: 'Next action',
       archiveType: 'Type',
-      archiveGovernanceNote: 'Displayed durations are indicative for the GED pilot. Detailed retention rules, access rights and responsibilities belong later to Administration / document governance.'
+      archiveGovernanceNote: 'Displayed durations are indicative for the GED pilot. Detailed retention rules, access rights and responsibilities belong later to Administration / document governance.',
+      supportTitle: 'Help & Support',
+      supportSubtitle: 'Local orientation guide for preparing a clear support request.',
+      supportPilot: 'Local pilot · Read only',
+      supportNoTicket: 'No ticket is created in this version.',
+      supportNoTicketBody: 'Identify and document the need, then use the human channel agreed by 2SG. No submission, response time or automated handling is simulated.',
+      supportFamilies: 'Need categories',
+      supportAccess: 'Access & sign-in',
+      supportAccessBody: 'Account, authentication, denied access or interrupted session.',
+      supportData: 'Data & documents',
+      supportDataBody: 'Missing information, unavailable document or data requiring verification.',
+      supportUsage: 'Functional usage',
+      supportUsageBody: 'Question about a screen, field, rule or business flow.',
+      supportIncident: 'Technical incident',
+      supportIncidentBody: 'Error, slowness, inconsistent display or unavailable function.',
+      supportPrepare: 'Information to prepare',
+      supportContext: 'Context and action performed',
+      supportScreen: 'Affected screen, module or function',
+      supportMessage: 'Observed message or behaviour',
+      supportImpact: 'Impact on work',
+      supportCapture: 'Screenshot without sensitive data',
+      supportPath: 'Support path',
+      supportIdentify: 'Identify',
+      supportDocument: 'Document',
+      supportTransmit: 'Transmit',
+      supportTrack: 'Track',
+      supportIdentifyBody: 'Classify the need.',
+      supportDocumentBody: 'Gather useful facts.',
+      supportTransmitBody: 'Share with the human owner.',
+      supportTrackBody: 'Record the decision and result.'
     },
     DE: {
       title: 'Dokumentenverwaltung (GED)',
@@ -376,7 +434,36 @@ const GED = () => {
       owner: 'Verantwortlich',
       nextAction: 'Nächste Maßnahme',
       archiveType: 'Archivtyp',
-      archiveGovernanceNote: 'Die angezeigten Fristen sind Richtwerte für den GED-Piloten. Detaillierte Aufbewahrungsregeln, Zugriffsrechte und Verantwortlichkeiten werden später in Administration und Dokumenten-Governance festgelegt.'
+      archiveGovernanceNote: 'Die angezeigten Fristen sind Richtwerte für den GED-Piloten. Detaillierte Aufbewahrungsregeln, Zugriffsrechte und Verantwortlichkeiten werden später in Administration und Dokumenten-Governance festgelegt.',
+      supportTitle: 'Hilfe & Support',
+      supportSubtitle: 'Lokaler Orientierungsleitfaden zur Vorbereitung einer klaren Supportanfrage.',
+      supportPilot: 'Lokaler Pilot · Nur lesen',
+      supportNoTicket: 'In dieser Version wird kein Ticket erstellt.',
+      supportNoTicketBody: 'Bedarf identifizieren und dokumentieren, danach den von 2SG vereinbarten menschlichen Kanal nutzen. Versand, Reaktionszeit oder automatische Bearbeitung werden nicht simuliert.',
+      supportFamilies: 'Bedarfskategorien',
+      supportAccess: 'Zugang & Anmeldung',
+      supportAccessBody: 'Konto, Authentifizierung, verweigerter Zugang oder unterbrochene Sitzung.',
+      supportData: 'Daten & Dokumente',
+      supportDataBody: 'Fehlende Information, nicht auffindbares Dokument oder zu prüfende Daten.',
+      supportUsage: 'Funktionale Nutzung',
+      supportUsageBody: 'Frage zu einer Ansicht, einem Feld, einer Regel oder einem Geschäftsablauf.',
+      supportIncident: 'Technischer Vorfall',
+      supportIncidentBody: 'Fehler, Langsamkeit, inkonsistente Anzeige oder nicht verfügbare Funktion.',
+      supportPrepare: 'Vorbereitende Informationen',
+      supportContext: 'Kontext und ausgeführte Aktion',
+      supportScreen: 'Betroffene Ansicht, Modul oder Funktion',
+      supportMessage: 'Beobachtete Meldung oder Verhalten',
+      supportImpact: 'Auswirkung auf die Arbeit',
+      supportCapture: 'Screenshot ohne sensible Daten',
+      supportPath: 'Supportablauf',
+      supportIdentify: 'Identifizieren',
+      supportDocument: 'Dokumentieren',
+      supportTransmit: 'Übermitteln',
+      supportTrack: 'Nachverfolgen',
+      supportIdentifyBody: 'Bedarf einordnen.',
+      supportDocumentBody: 'Nützliche Fakten sammeln.',
+      supportTransmitBody: 'Mit der zuständigen Person teilen.',
+      supportTrackBody: 'Entscheidung und Ergebnis festhalten.'
     }
   };
 
@@ -1487,7 +1574,84 @@ const GED = () => {
           </div>
         )}
 
-        <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'ai-digital']} />
+        {activeTab === 'help-support' && (
+          <section className="space-y-6" aria-labelledby="support-title">
+            <div className="rounded-lg border border-blue-700 bg-blue-950/50 p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <div className="mb-3 inline-flex items-center gap-2 rounded border border-blue-600 bg-blue-900/60 px-3 py-1 text-sm font-semibold text-blue-100">
+                    <ShieldCheck size={16} aria-hidden="true" />
+                    {t.supportPilot}
+                  </div>
+                  <h3 id="support-title" className="text-2xl font-bold text-white">{t.supportTitle}</h3>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">{t.supportSubtitle}</p>
+                </div>
+                <HelpCircle size={34} className="shrink-0 text-blue-300" aria-hidden="true" />
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-amber-700 bg-amber-950/40 p-5" role="note">
+              <p className="font-bold text-amber-100">{t.supportNoTicket}</p>
+              <p className="mt-2 text-sm leading-6 text-amber-50/80">{t.supportNoTicketBody}</p>
+            </div>
+
+            <div>
+              <h4 className="mb-4 text-lg font-bold text-white">{t.supportFamilies}</h4>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                {[
+                  { icon: ShieldCheck, title: t.supportAccess, body: t.supportAccessBody },
+                  { icon: FileText, title: t.supportData, body: t.supportDataBody },
+                  { icon: BookOpen, title: t.supportUsage, body: t.supportUsageBody },
+                  { icon: Wrench, title: t.supportIncident, body: t.supportIncidentBody }
+                ].map(({ icon: Icon, title, body }) => (
+                  <article key={title} className="rounded-lg border border-slate-700 bg-slate-800 p-5">
+                    <Icon size={24} className="mb-4 text-blue-300" aria-hidden="true" />
+                    <h5 className="font-bold text-white">{title}</h5>
+                    <p className="mt-2 text-sm leading-6 text-slate-300">{body}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              <div className="rounded-lg border border-slate-700 bg-slate-800 p-6">
+                <h4 className="text-lg font-bold text-white">{t.supportPrepare}</h4>
+                <ul className="mt-4 space-y-3 text-sm text-slate-300">
+                  {[t.supportContext, t.supportScreen, t.supportMessage, t.supportImpact, t.supportCapture].map(item => (
+                    <li key={item} className="flex items-start gap-3">
+                      <ShieldCheck size={18} className="mt-0.5 shrink-0 text-emerald-400" aria-hidden="true" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="rounded-lg border border-slate-700 bg-slate-800 p-6">
+                <h4 className="text-lg font-bold text-white">{t.supportPath}</h4>
+                <ol className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {[
+                    [t.supportIdentify, t.supportIdentifyBody],
+                    [t.supportDocument, t.supportDocumentBody],
+                    [t.supportTransmit, t.supportTransmitBody],
+                    [t.supportTrack, t.supportTrackBody]
+                  ].map(([title, body], index) => (
+                    <li key={title} className="rounded border border-slate-600 bg-slate-900/60 p-4">
+                      <div className="mb-2 flex items-center gap-3">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-700 text-sm font-bold text-white">
+                          {index + 1}
+                        </span>
+                        <span className="font-bold text-white">{title}</span>
+                      </div>
+                      <p className="text-sm leading-6 text-slate-400">{body}</p>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+          </section>
+        )}
+
+        <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'ai-digital', 'help-support']} />
         </div>
       </div>
 

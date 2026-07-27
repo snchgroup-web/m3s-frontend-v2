@@ -99,3 +99,16 @@ test('renders the archives pilot in German without French fallbacks', async () =
   expect(screen.queryByText('Archive operationnelle')).not.toBeInTheDocument();
   expect(screen.queryByText('Actions a suivre')).not.toBeInTheDocument();
 });
+
+test('renders the read-only help and support guide without ticket actions', async () => {
+  renderGed('help-support');
+
+  expect(await screen.findByRole('heading', { name: 'Aide & Support' })).toBeInTheDocument();
+  expect(screen.getByText('Aucun ticket n’est créé dans cette version.')).toBeInTheDocument();
+  expect(screen.getByText('Accès & connexion')).toBeInTheDocument();
+  expect(screen.getByText('Données & documents')).toBeInTheDocument();
+  expect(screen.getByText('Utilisation fonctionnelle')).toBeInTheDocument();
+  expect(screen.getByText('Incident technique')).toBeInTheDocument();
+  expect(screen.getByText('Parcours d’assistance')).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /ticket|envoyer|transmettre/i })).not.toBeInTheDocument();
+});
