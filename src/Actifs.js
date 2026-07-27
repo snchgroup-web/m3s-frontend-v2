@@ -164,6 +164,8 @@ const Actifs = () => {
       deleteError: "Impossible de supprimer cet article.", explicitAssets: 'Actifs immobiliers explicitement classés',
       assetRule: 'Cette vue reprend uniquement la catégorie Bien immobilier afin de ne pas inventer de classification comptable.',
       riskItems: 'Articles à surveiller', repair: 'À réparer', transit: 'En transit', riskMessage: 'Aucun article à risque identifié.',
+      riskReadOnly: 'Registre de surveillance en lecture seule',
+      riskReadOnlyBody: "Consultez les risques ici. Toute correction d'un article s'effectue dans l'onglet Inventaire afin de préserver la traçabilité.",
       noAssets: 'Aucune immobilisation explicitement classée.', allRealData: 'Données réelles BigQuery',
       acquisitionValue: "Valeur d'acquisition", currentValue: 'Valeur actuelle',
       landRegistry: 'Registre foncier', trackedLands: 'Terrains suivis', terrainUnit: 'terrains', sourceFlow: 'Flux source',
@@ -188,6 +190,8 @@ const Actifs = () => {
       deleteError: 'Unable to delete this item.', explicitAssets: 'Explicitly classified real-estate assets',
       assetRule: 'This view only uses the Real Estate category to avoid inventing an accounting classification.',
       riskItems: 'Items to monitor', repair: 'Needs repair', transit: 'In transit', riskMessage: 'No risk item identified.',
+      riskReadOnly: 'Read-only monitoring register',
+      riskReadOnlyBody: 'Review risks here. Edit inventory items in the Inventory tab to preserve traceability.',
       noAssets: 'No explicitly classified fixed asset.', allRealData: 'Live BigQuery data',
       acquisitionValue: 'Acquisition value', currentValue: 'Current value',
       landRegistry: 'Land register', trackedLands: 'Tracked plots', terrainUnit: 'plots', sourceFlow: 'Source flow',
@@ -212,6 +216,8 @@ const Actifs = () => {
       deleteError: 'Artikel konnte nicht gelöscht werden.', explicitAssets: 'Explizit klassifizierte Immobilienanlagen',
       assetRule: 'Diese Ansicht verwendet nur die Kategorie Immobilien, um keine Buchungsklassifizierung zu erfinden.',
       riskItems: 'Zu überwachende Artikel', repair: 'Zu reparieren', transit: 'Im Transit', riskMessage: 'Keine Risikoartikel gefunden.',
+      riskReadOnly: 'Schreibgeschütztes Überwachungsregister',
+      riskReadOnlyBody: 'Risiken werden hier geprüft. Änderungen erfolgen im Reiter Bestand, damit die Nachverfolgbarkeit erhalten bleibt.',
       noAssets: 'Keine explizit klassifizierte Anlage.', allRealData: 'Echte BigQuery-Daten',
       acquisitionValue: 'Anschaffungswert', currentValue: 'Aktueller Wert',
       landRegistry: 'Grundstücksregister', trackedLands: 'Geführte Grundstücke', terrainUnit: 'Grundstücke', sourceFlow: 'Quellfluss',
@@ -451,7 +457,7 @@ const Actifs = () => {
       </thead>
       <tbody>
         {rows.map(item => (
-          <tr key={item.id} onClick={() => !compact && openEdit(item)} className="border-t border-slate-700 hover:bg-slate-700/45 cursor-pointer">
+          <tr key={item.id} onClick={() => !compact && openEdit(item)} className={`border-t border-slate-700 hover:bg-slate-700/45 ${compact ? '' : 'cursor-pointer'}`}>
             <td className="px-4 py-3 text-slate-400 whitespace-nowrap">{item.id}</td>
             <td className="px-4 py-3 text-slate-100 font-medium min-w-[260px]">
               {item.article}
@@ -643,6 +649,15 @@ const Actifs = () => {
 
           {!loading && activeTab === 'risques' && (
             <div>
+              <div className="mb-5 rounded-lg border border-sky-500/25 bg-sky-500/10 px-5 py-4">
+                <div className="flex gap-3">
+                  <AlertTriangle size={20} className="mt-0.5 shrink-0 text-sky-300" />
+                  <div>
+                    <p className="font-semibold text-sky-100">{t.riskReadOnly}</p>
+                    <p className="mt-1 text-sm text-slate-300">{t.riskReadOnlyBody}</p>
+                  </div>
+                </div>
+              </div>
               <div className="mb-5 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="rounded-lg bg-red-500/10 p-5"><div className="flex items-center gap-3"><Wrench className="text-red-400" /><div><p className="text-slate-400 text-sm">{t.repair}</p><p className="text-2xl font-bold text-white">{inventaire.filter(item => item.statut === 'A Réparer').length}</p></div></div></div>
                 <div className="rounded-lg bg-amber-500/10 p-5"><div className="flex items-center gap-3"><AlertTriangle className="text-amber-400" /><div><p className="text-slate-400 text-sm">{t.transit}</p><p className="text-2xl font-bold text-white">{inventaire.filter(item => /shipping|transit/i.test(item.localisation)).length}</p></div></div></div>
@@ -652,7 +667,7 @@ const Actifs = () => {
                 defaultPageSize={10}
                 maxHeight="32rem"
                 renderEmpty={() => <div className="px-6 py-10 text-center text-slate-400">{t.riskMessage}</div>}
-                renderTable={(rows) => renderInventoryTable(rows)}
+                renderTable={(rows) => renderInventoryTable(rows, true)}
               />
             </div>
           )}
