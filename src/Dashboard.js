@@ -128,6 +128,7 @@ const Dashboard = () => {
       unavailable: 'Indisponible',
       notConnected: 'Source non connectée',
       connectedData: 'Données connectées',
+      loadingDashboard: 'Chargement du tableau de bord...',
       noTrend: 'Aucune série financière disponible pour le moment.',
       openModule: 'Ouvrir le module'
     },
@@ -175,6 +176,7 @@ const Dashboard = () => {
       unavailable: 'Unavailable',
       notConnected: 'Source not connected',
       connectedData: 'Connected data',
+      loadingDashboard: 'Loading dashboard...',
       noTrend: 'No financial series is available yet.',
       openModule: 'Open module'
     },
@@ -222,6 +224,7 @@ const Dashboard = () => {
       unavailable: 'Nicht verfügbar',
       notConnected: 'Quelle nicht verbunden',
       connectedData: 'Verbundene Daten',
+      loadingDashboard: 'Dashboard wird geladen...',
       noTrend: 'Derzeit ist keine Finanzreihe verfügbar.',
       openModule: 'Modul öffnen'
     }
@@ -403,7 +406,7 @@ const Dashboard = () => {
       <div className="flex items-center justify-center h-full bg-gradient-to-br from-slate-900 to-slate-800">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-white text-lg">Chargement du tableau de bord...</p>
+          <p className="text-white text-lg">{t.loadingDashboard}</p>
         </div>
       </div>
     );
