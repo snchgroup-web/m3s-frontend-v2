@@ -112,3 +112,16 @@ test('renders the read-only help and support guide without ticket actions', asyn
   expect(screen.getByText('Parcours d’assistance')).toBeInTheDocument();
   expect(screen.queryByRole('button', { name: /ticket|envoyer|transmettre/i })).not.toBeInTheDocument();
 });
+
+test('renders the quick user guide and distinguishes it from the manual', async () => {
+  renderGed('user-guide');
+
+  expect(await screen.findByRole('heading', { name: 'Guide Utilisateur' })).toBeInTheDocument();
+  expect(screen.getByText('Démarrer en quatre étapes')).toBeInTheDocument();
+  expect(screen.getByText('Vérifier son contexte')).toBeInTheDocument();
+  expect(screen.getByText('Choisir un module')).toBeInTheDocument();
+  expect(screen.getByText('Lire l’état des données')).toBeInTheDocument();
+  expect(screen.getByText('Agir avec prudence')).toBeInTheDocument();
+  expect(screen.getByText('Guide rapide ou Manuel d’Utilisation ?')).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /enregistrer|modifier|supprimer/i })).not.toBeInTheDocument();
+});

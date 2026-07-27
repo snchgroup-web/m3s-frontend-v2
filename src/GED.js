@@ -175,7 +175,31 @@ const GED = () => {
       supportIdentifyBody: 'Classer le besoin.',
       supportDocumentBody: 'Réunir les faits utiles.',
       supportTransmitBody: 'Partager au responsable humain.',
-      supportTrackBody: 'Noter la décision et le résultat.'
+      supportTrackBody: 'Noter la décision et le résultat.',
+      guideTitle: 'Guide Utilisateur',
+      guideSubtitle: 'Prise en main rapide de M3S pour comprendre l’interface avant d’agir.',
+      guidePilot: 'Guide rapide · Lecture seule',
+      guideSteps: 'Démarrer en quatre étapes',
+      guideConnect: 'Vérifier son contexte',
+      guideConnectBody: 'Confirmer le nom, le rôle, la langue et la session affichés.',
+      guideNavigate: 'Choisir un module',
+      guideNavigateBody: 'Utiliser le menu pour ouvrir le domaine correspondant au besoin.',
+      guideRead: 'Lire l’état des données',
+      guideReadBody: 'Distinguer donnée connectée, indisponible, non connectée et pilote local.',
+      guideAct: 'Agir avec prudence',
+      guideActBody: 'Utiliser uniquement les commandes disponibles et confirmer les actions sensibles.',
+      guideLandmarks: 'Repères d interface',
+      guideNavigation: 'Navigation par modules et onglets',
+      guideLanguage: 'Langue FR, EN ou DE',
+      guideTheme: 'Thème clair ou sombre',
+      guideSession: 'Identité, rôle et déconnexion',
+      guidePractices: 'Bonnes pratiques',
+      guideVerify: 'Vérifier la source et le contexte avant d’agir.',
+      guideSensitive: 'Ne jamais partager de donnée sensible dans une capture.',
+      guideHuman: 'Conserver la validation humaine pour toute décision.',
+      guideSupport: 'Utiliser Aide & Support en cas de doute.',
+      guideManualTitle: 'Guide rapide ou Manuel d’Utilisation ?',
+      guideManualBody: 'Ce guide aide à démarrer et à s’orienter. Le Manuel d’Utilisation décrira plus tard les procédures détaillées et les cas particuliers.'
     },
     EN: {
       title: 'Document Management (GED)',
@@ -319,7 +343,31 @@ const GED = () => {
       supportIdentifyBody: 'Classify the need.',
       supportDocumentBody: 'Gather useful facts.',
       supportTransmitBody: 'Share with the human owner.',
-      supportTrackBody: 'Record the decision and result.'
+      supportTrackBody: 'Record the decision and result.',
+      guideTitle: 'User Guide',
+      guideSubtitle: 'Quick introduction to M3S for understanding the interface before taking action.',
+      guidePilot: 'Quick guide · Read only',
+      guideSteps: 'Start in four steps',
+      guideConnect: 'Check your context',
+      guideConnectBody: 'Confirm the displayed name, role, language and session.',
+      guideNavigate: 'Choose a module',
+      guideNavigateBody: 'Use the menu to open the domain that matches the need.',
+      guideRead: 'Read the data state',
+      guideReadBody: 'Distinguish connected, unavailable, not connected and local pilot data.',
+      guideAct: 'Act carefully',
+      guideActBody: 'Use only available commands and confirm sensitive actions.',
+      guideLandmarks: 'Interface landmarks',
+      guideNavigation: 'Navigation by modules and tabs',
+      guideLanguage: 'FR, EN or DE language',
+      guideTheme: 'Light or dark theme',
+      guideSession: 'Identity, role and sign-out',
+      guidePractices: 'Good practices',
+      guideVerify: 'Check the source and context before acting.',
+      guideSensitive: 'Never share sensitive data in a screenshot.',
+      guideHuman: 'Keep human validation for every decision.',
+      guideSupport: 'Use Help & Support when in doubt.',
+      guideManualTitle: 'Quick guide or User Manual?',
+      guideManualBody: 'This guide helps users get started and find their way. The User Manual will later describe detailed procedures and special cases.'
     },
     DE: {
       title: 'Dokumentenverwaltung (GED)',
@@ -463,7 +511,31 @@ const GED = () => {
       supportIdentifyBody: 'Bedarf einordnen.',
       supportDocumentBody: 'Nützliche Fakten sammeln.',
       supportTransmitBody: 'Mit der zuständigen Person teilen.',
-      supportTrackBody: 'Entscheidung und Ergebnis festhalten.'
+      supportTrackBody: 'Entscheidung und Ergebnis festhalten.',
+      guideTitle: 'Benutzerleitfaden',
+      guideSubtitle: 'Schnelle Einführung in M3S, um die Oberfläche vor einer Aktion zu verstehen.',
+      guidePilot: 'Schnellleitfaden · Nur lesen',
+      guideSteps: 'Start in vier Schritten',
+      guideConnect: 'Kontext prüfen',
+      guideConnectBody: 'Angezeigten Namen, Rolle, Sprache und Sitzung bestätigen.',
+      guideNavigate: 'Modul auswählen',
+      guideNavigateBody: 'Über das Menü den zum Bedarf passenden Bereich öffnen.',
+      guideRead: 'Datenstatus lesen',
+      guideReadBody: 'Verbundene, nicht verfügbare, nicht verbundene und lokale Pilotdaten unterscheiden.',
+      guideAct: 'Vorsichtig handeln',
+      guideActBody: 'Nur verfügbare Befehle nutzen und sensible Aktionen bestätigen.',
+      guideLandmarks: 'Orientierung in der Oberfläche',
+      guideNavigation: 'Navigation nach Modulen und Reitern',
+      guideLanguage: 'Sprache FR, EN oder DE',
+      guideTheme: 'Helles oder dunkles Design',
+      guideSession: 'Identität, Rolle und Abmeldung',
+      guidePractices: 'Gute Praktiken',
+      guideVerify: 'Quelle und Kontext vor einer Aktion prüfen.',
+      guideSensitive: 'Keine sensiblen Daten in Screenshots teilen.',
+      guideHuman: 'Menschliche Validierung für jede Entscheidung beibehalten.',
+      guideSupport: 'Bei Unsicherheit Hilfe & Support nutzen.',
+      guideManualTitle: 'Schnellleitfaden oder Benutzerhandbuch?',
+      guideManualBody: 'Dieser Leitfaden hilft beim Einstieg und bei der Orientierung. Das Benutzerhandbuch beschreibt später detaillierte Verfahren und Sonderfälle.'
     }
   };
 
@@ -1574,6 +1646,75 @@ const GED = () => {
           </div>
         )}
 
+        {activeTab === 'user-guide' && (
+          <section className="space-y-6" aria-labelledby="guide-title">
+            <div className="rounded-lg border border-cyan-700 bg-cyan-950/40 p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <div className="mb-3 inline-flex items-center gap-2 rounded border border-cyan-600 bg-cyan-900/50 px-3 py-1 text-sm font-semibold text-cyan-100">
+                    <BookOpen size={16} aria-hidden="true" />
+                    {t.guidePilot}
+                  </div>
+                  <h3 id="guide-title" className="text-2xl font-bold text-white">{t.guideTitle}</h3>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">{t.guideSubtitle}</p>
+                </div>
+                <BookOpen size={34} className="shrink-0 text-cyan-300" aria-hidden="true" />
+              </div>
+            </div>
+
+            <div>
+              <h4 className="mb-4 text-lg font-bold text-white">{t.guideSteps}</h4>
+              <ol className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                {[
+                  [t.guideConnect, t.guideConnectBody],
+                  [t.guideNavigate, t.guideNavigateBody],
+                  [t.guideRead, t.guideReadBody],
+                  [t.guideAct, t.guideActBody]
+                ].map(([title, body], index) => (
+                  <li key={title} className="rounded-lg border border-slate-700 bg-slate-800 p-5">
+                    <span className="mb-4 flex h-8 w-8 items-center justify-center rounded-full bg-cyan-700 font-bold text-white">
+                      {index + 1}
+                    </span>
+                    <h5 className="font-bold text-white">{title}</h5>
+                    <p className="mt-2 text-sm leading-6 text-slate-300">{body}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              <div className="rounded-lg border border-slate-700 bg-slate-800 p-6">
+                <h4 className="text-lg font-bold text-white">{t.guideLandmarks}</h4>
+                <ul className="mt-4 space-y-3 text-sm text-slate-300">
+                  {[t.guideNavigation, t.guideLanguage, t.guideTheme, t.guideSession].map(item => (
+                    <li key={item} className="flex items-start gap-3">
+                      <Folder size={18} className="mt-0.5 shrink-0 text-cyan-300" aria-hidden="true" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="rounded-lg border border-slate-700 bg-slate-800 p-6">
+                <h4 className="text-lg font-bold text-white">{t.guidePractices}</h4>
+                <ul className="mt-4 space-y-3 text-sm text-slate-300">
+                  {[t.guideVerify, t.guideSensitive, t.guideHuman, t.guideSupport].map(item => (
+                    <li key={item} className="flex items-start gap-3">
+                      <ShieldCheck size={18} className="mt-0.5 shrink-0 text-emerald-400" aria-hidden="true" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-blue-700 bg-blue-950/40 p-5" role="note">
+              <p className="font-bold text-blue-100">{t.guideManualTitle}</p>
+              <p className="mt-2 text-sm leading-6 text-blue-50/80">{t.guideManualBody}</p>
+            </div>
+          </section>
+        )}
+
         {activeTab === 'help-support' && (
           <section className="space-y-6" aria-labelledby="support-title">
             <div className="rounded-lg border border-blue-700 bg-blue-950/50 p-6">
@@ -1651,7 +1792,7 @@ const GED = () => {
           </section>
         )}
 
-        <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'ai-digital', 'help-support']} />
+        <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'ai-digital', 'user-guide', 'help-support']} />
         </div>
       </div>
 
