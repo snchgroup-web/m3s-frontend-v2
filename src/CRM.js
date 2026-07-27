@@ -14,7 +14,7 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
-import { ChevronDown, Gift, HeartHandshake, Info, Plus, Target, TrendingUp, Users, X } from 'lucide-react';
+import { Gift, HeartHandshake, Info, Target, TrendingUp, Users } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import TableControls from './TableControls';
@@ -75,7 +75,18 @@ const dictionaries = {
     unit: 'Unité',
     status: 'Statut',
     comment: 'Commentaire',
-    readOnly: 'Registre dérivé en lecture seule. La table CRM définitive sera créée après validation du schéma métier.'
+    readOnly: 'Registre dérivé en lecture seule. La table CRM définitive sera créée après validation du schéma métier.',
+    nextSubLot: 'Prochain sous-lot',
+    readOnlyPilot: 'Lecture seule',
+    noConsolidatedData: 'Aucune donnée commerciale consolidée n’est encore disponible. Cette vue prépare le cadre métier sans créer de faux enregistrements.',
+    prospectsPurpose: 'Qualifier les organisations, personnes et partenaires pouvant entrer dans une relation commerciale ou de coopération.',
+    clientsPurpose: 'Structurer les relations commerciales actives sans les confondre avec les bénéficiaires sociaux.',
+    salesPurpose: 'Suivre une opportunité commerciale jusqu’à la décision, sans ouvrir la facturation ni la comptabilité.',
+    prospectsFields: ['Organisation ou personne', 'Segment et besoin', 'Source et offre pressentie', 'Responsable, action et échéance'],
+    clientsFields: ['Identité et segment', 'Offre ou pack', 'Responsable et historique', 'Statut et prochaine action'],
+    salesFields: ['Prospect ou client', 'Offre et montants CFA / CHF', 'Phase et probabilité', 'Responsable, action et échéance'],
+    commercialBoundary: 'CRM suit la relation et l’opportunité. Finance suit la facturation, Production l’exécution et GED les pièces liées.',
+    writesUnavailable: 'Ajouts et modifications seront activés plus tard avec schéma validé, droits, confirmations et traçabilité.'
   },
   EN: {
     overview: 'Overview',
@@ -129,7 +140,18 @@ const dictionaries = {
     unit: 'Unit',
     status: 'Status',
     comment: 'Comment',
-    readOnly: 'Derived read-only register. The definitive CRM table will be created after the business schema is validated.'
+    readOnly: 'Derived read-only register. The definitive CRM table will be created after the business schema is validated.',
+    nextSubLot: 'Next sub-lot',
+    readOnlyPilot: 'Read only',
+    noConsolidatedData: 'No consolidated commercial data is available yet. This view prepares the business scope without creating fake records.',
+    prospectsPurpose: 'Qualify organizations, people and partners that may enter a commercial or cooperation relationship.',
+    clientsPurpose: 'Structure active commercial relationships without confusing them with social beneficiaries.',
+    salesPurpose: 'Track a commercial opportunity through decision without opening invoicing or accounting.',
+    prospectsFields: ['Organization or person', 'Segment and need', 'Source and expected offer', 'Owner, action and deadline'],
+    clientsFields: ['Identity and segment', 'Offer or pack', 'Owner and history', 'Status and next action'],
+    salesFields: ['Prospect or client', 'Offer and CFA / CHF amounts', 'Phase and probability', 'Owner, action and deadline'],
+    commercialBoundary: 'CRM tracks the relationship and opportunity. Finance handles invoicing, Production handles delivery and GED keeps related documents.',
+    writesUnavailable: 'Create and edit actions will return later with a validated schema, permissions, confirmations and traceability.'
   },
   DE: {
     overview: 'Übersicht',
@@ -183,7 +205,18 @@ const dictionaries = {
     unit: 'Einheit',
     status: 'Status',
     comment: 'Kommentar',
-    readOnly: 'Abgeleitetes Leseregister. Die definitive CRM-Tabelle wird nach Validierung des Fachschemas erstellt.'
+    readOnly: 'Abgeleitetes Leseregister. Die definitive CRM-Tabelle wird nach Validierung des Fachschemas erstellt.',
+    nextSubLot: 'Nächstes Teilpaket',
+    readOnlyPilot: 'Nur lesen',
+    noConsolidatedData: 'Es sind noch keine konsolidierten Vertriebsdaten verfügbar. Diese Ansicht bereitet den Fachrahmen vor, ohne fiktive Einträge anzulegen.',
+    prospectsPurpose: 'Organisationen, Personen und Partner für eine mögliche Geschäfts- oder Kooperationsbeziehung qualifizieren.',
+    clientsPurpose: 'Aktive Geschäftsbeziehungen strukturieren, ohne sie mit sozialen Begünstigten zu verwechseln.',
+    salesPurpose: 'Eine Verkaufschance bis zur Entscheidung verfolgen, ohne Fakturierung oder Buchhaltung zu öffnen.',
+    prospectsFields: ['Organisation oder Person', 'Segment und Bedarf', 'Quelle und vorgesehene Offerte', 'Verantwortung, Aktion und Termin'],
+    clientsFields: ['Identität und Segment', 'Offerte oder Paket', 'Verantwortung und Verlauf', 'Status und nächste Aktion'],
+    salesFields: ['Interessent oder Kunde', 'Offerte und Beträge CFA / CHF', 'Phase und Wahrscheinlichkeit', 'Verantwortung, Aktion und Termin'],
+    commercialBoundary: 'CRM verfolgt Beziehung und Verkaufschance. Finanzen bearbeitet Rechnungen, Produktion die Ausführung und GED die zugehörigen Dokumente.',
+    writesUnavailable: 'Erstellen und Bearbeiten werden später mit validiertem Schema, Rechten, Bestätigungen und Nachverfolgung aktiviert.'
   }
 };
 
@@ -408,8 +441,6 @@ const CRM = () => {
   const [dons, setDons] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState('');
-  const [addMenuOpen, setAddMenuOpen] = useState(false);
-  const [selectedAddType, setSelectedAddType] = useState(null);
   const [selectedRecord, setSelectedRecord] = useState(null);
 
   const t = dictionaries[language] || dictionaries.FR;
@@ -424,20 +455,6 @@ const CRM = () => {
       String(value)
     );
   }, [language]);
-
-  const addOptions = useMemo(() => ([
-    { tab: 'prospects', label: t.prospects },
-    { tab: 'clients', label: t.clients },
-    { tab: 'ventes', label: t.ventes },
-    { tab: 'dons', label: t.dons },
-    { tab: 'beneficiaires', label: t.beneficiaires }
-  ]), [t.beneficiaires, t.clients, t.dons, t.prospects, t.ventes]);
-
-  const handleAddSelection = (option) => {
-    setActiveTab(option.tab);
-    setSelectedAddType(option);
-    setAddMenuOpen(false);
-  };
 
   useEffect(() => {
     setActiveTab(tabs.includes(queryTab) ? queryTab : 'overview');
@@ -543,11 +560,49 @@ const CRM = () => {
     </div>
   );
 
-  const EmptyRegister = ({ title }) => (
-    <div className="rounded-lg border border-slate-700 bg-slate-800 p-8">
-      <p className="text-lg font-bold text-white">{title}</p>
-      <p className="mt-2 max-w-3xl text-sm text-slate-400">{t.toBuildText}</p>
-    </div>
+  const NextRegister = ({ title, purpose, fields, icon: Icon }) => (
+    <section className="rounded-lg border border-slate-700 bg-slate-800 p-5">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div className="flex min-w-0 items-start gap-3">
+          <div className="rounded-md border border-blue-400/30 bg-blue-500/10 p-2 text-blue-300">
+            <Icon size={22} aria-hidden="true" />
+          </div>
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="text-lg font-bold text-white">{title}</h2>
+              <span className="rounded border border-amber-400/40 bg-amber-500/10 px-2 py-1 text-xs font-semibold text-amber-200">
+                {t.nextSubLot}
+              </span>
+              <span className="rounded border border-blue-400/40 bg-blue-500/10 px-2 py-1 text-xs font-semibold text-blue-200">
+                {t.readOnlyPilot}
+              </span>
+            </div>
+            <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-300">{purpose}</p>
+            <p className="mt-1 max-w-4xl text-sm leading-6 text-slate-400">{t.noConsolidatedData}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {fields.map((field, index) => (
+          <div key={field} className="flex min-h-20 items-center gap-3 rounded-md border border-slate-600 bg-slate-900/45 px-4 py-3">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-blue-400/40 bg-blue-500/10 text-sm font-bold text-blue-200">
+              {index + 1}
+            </span>
+            <span className="text-sm font-semibold text-slate-100">{field}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 grid gap-3 lg:grid-cols-2">
+        <p className="rounded-md border border-slate-600 bg-slate-900/35 px-4 py-3 text-sm leading-6 text-slate-300">
+          {t.commercialBoundary}
+        </p>
+        <p className="rounded-md border border-slate-600 bg-slate-900/35 px-4 py-3 text-sm leading-6 text-slate-300">
+          {t.writesUnavailable}
+        </p>
+      </div>
+    </section>
   );
 
   const DataTable = ({ title, type, rows, columns, renderRow, emptyText, summaryItems = [] }) => (
@@ -613,35 +668,6 @@ const CRM = () => {
     <span className="inline-flex rounded bg-slate-700 px-2 py-1 text-xs font-semibold text-slate-200">{children}</span>
   );
 
-  const AddMenu = () => (
-    <div className="relative">
-      <button
-        type="button"
-        onClick={() => setAddMenuOpen((current) => !current)}
-        className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-950/20 transition hover:bg-blue-500"
-      >
-        <Plus size={18} />
-        {t.add}
-        <ChevronDown size={16} className={`transition ${addMenuOpen ? 'rotate-180' : ''}`} />
-      </button>
-      {addMenuOpen && (
-        <div className="absolute right-0 z-30 mt-2 w-56 overflow-hidden rounded-lg border border-slate-700 bg-slate-800 shadow-xl shadow-slate-950/40">
-          {addOptions.map((option) => (
-            <button
-              key={option.tab}
-              type="button"
-              onClick={() => handleAddSelection(option)}
-              className="flex w-full items-center justify-between px-4 py-3 text-left text-sm text-slate-200 transition hover:bg-slate-700"
-            >
-              <span>{option.label}</span>
-              <Plus size={15} className="text-blue-300" />
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-
   const getRecordDetails = (record) => {
     if (!record) return [];
     const item = record.item;
@@ -697,24 +723,21 @@ const CRM = () => {
         {loadError && <Notice>{loadError}</Notice>}
         <Notice>{loading ? `${t.sourceNotice} Chargement...` : t.sourceNotice}</Notice>
 
-        <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-          <div className="min-w-0 flex-1">
-            <ModulePageTabs
-              moduleId="commercial"
-              language={language}
-              activeTab={activeTab}
-              onSelect={setActiveTab}
-              tabs={[
-                { tab: 'overview', label: t.overview },
-                { tab: 'prospects', label: `${t.prospects} (0)` },
-                { tab: 'clients', label: `${t.clients} (0)` },
-                { tab: 'ventes', label: `${t.ventes} (0)` },
-                { tab: 'dons', label: `${t.dons} (${dons.length})` },
-                { tab: 'beneficiaires', label: `${t.beneficiaires} (${beneficiaires.length})` }
-              ]}
-            />
-          </div>
-          <AddMenu />
+        <div className="mb-6 min-w-0">
+          <ModulePageTabs
+            moduleId="commercial"
+            language={language}
+            activeTab={activeTab}
+            onSelect={setActiveTab}
+            tabs={[
+              { tab: 'overview', label: t.overview },
+              { tab: 'prospects', label: `${t.prospects} (0)` },
+              { tab: 'clients', label: `${t.clients} (0)` },
+              { tab: 'ventes', label: `${t.ventes} (0)` },
+              { tab: 'dons', label: `${t.dons} (${dons.length})` },
+              { tab: 'beneficiaires', label: `${t.beneficiaires} (${beneficiaires.length})` }
+            ]}
+          />
         </div>
 
         {activeTab === 'overview' && (
@@ -761,9 +784,15 @@ const CRM = () => {
           </div>
         )}
 
-        {activeTab === 'prospects' && <EmptyRegister title={t.prospects} />}
-        {activeTab === 'clients' && <EmptyRegister title={t.clients} />}
-        {activeTab === 'ventes' && <EmptyRegister title={t.ventes} />}
+        {activeTab === 'prospects' && (
+          <NextRegister title={t.prospects} purpose={t.prospectsPurpose} fields={t.prospectsFields} icon={Target} />
+        )}
+        {activeTab === 'clients' && (
+          <NextRegister title={t.clients} purpose={t.clientsPurpose} fields={t.clientsFields} icon={Users} />
+        )}
+        {activeTab === 'ventes' && (
+          <NextRegister title={t.ventes} purpose={t.salesPurpose} fields={t.salesFields} icon={TrendingUp} />
+        )}
 
         {activeTab === 'dons' && (
           <DataTable
@@ -834,38 +863,6 @@ const CRM = () => {
 
         <ChildTabPlaceholder moduleId="commercial" language={language} activeTab={activeTab} handledTabs={tabs} />
       </div>
-      {selectedAddType && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-lg rounded-lg border border-slate-700 bg-slate-800 p-6 shadow-2xl shadow-slate-950/50">
-            <div className="mb-4 flex items-start justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-wide text-blue-300">{t.addTitle}</p>
-                <h2 className="mt-1 text-2xl font-bold text-white">{selectedAddType.label}</h2>
-              </div>
-              <button
-                type="button"
-                onClick={() => setSelectedAddType(null)}
-                className="rounded-lg p-2 text-slate-300 transition hover:bg-slate-700 hover:text-white"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            <div className="rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 text-sm text-blue-100">
-              <p className="font-semibold">{t.selectedRegister}: {selectedAddType.label}</p>
-              <p className="mt-2 text-blue-100/90">{t.addHelp}</p>
-            </div>
-            <div className="mt-6 flex justify-end">
-              <button
-                type="button"
-                onClick={() => setSelectedAddType(null)}
-                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-500"
-              >
-                {t.close}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
       <StandardRecordSheetModal
         open={Boolean(selectedRecord)}
         title={selectedRecord?.title || ''}
