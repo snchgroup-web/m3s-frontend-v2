@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Plus, Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck } from 'lucide-react';
+import { Plus, Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck, Wrench } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
@@ -72,7 +72,19 @@ const Production = () => {
       modifier: 'Modifier',
       supprimer: 'Supprimer',
       annuler: 'Annuler',
-      remplirChamps: 'Veuillez remplir les champs obligatoires'
+      remplirChamps: 'Veuillez remplir les champs obligatoires',
+      pilotTitle: 'Pilote local Production',
+      pilotScope: 'Lecture seule',
+      pilotDescription: 'Commandes et stocks sont des données locales de démonstration. Elles ne constituent pas des données consolidées.',
+      pilotSource: 'Source : pilote local M3S',
+      pilotFreshness: 'Fraîcheur : scénario de travail',
+      connectedSuppliers: 'L’onglet Fournisseurs reste un registre connecté séparé, hors de ce pilote.',
+      noWriteAction: 'Les ajouts, modifications et suppressions seront réintroduits plus tard avec droits, confirmations et traçabilité.',
+      manufacturingTitle: 'Fabrication',
+      manufacturingStatus: 'Prochain sous-lot',
+      manufacturingDescription: 'La Fabrication est identifiée dans Production, mais aucune donnée réelle ou consolidée n’est encore disponible.',
+      manufacturingGuardrail: 'Cette vue prépare le cadre métier sans créer de faux ordres de fabrication.',
+      manufacturingSteps: ['Ordres de fabrication', 'Phases et avancement', 'Équipe et responsables', 'Qualité et délais']
     },
     EN: {
       title: 'Production & Logistics',
@@ -130,7 +142,19 @@ const Production = () => {
       modifier: 'Edit',
       supprimer: 'Delete',
       annuler: 'Cancel',
-      remplirChamps: 'Please fill in all required fields'
+      remplirChamps: 'Please fill in all required fields',
+      pilotTitle: 'Local Production pilot',
+      pilotScope: 'Read only',
+      pilotDescription: 'Orders and stock are local demonstration data. They are not consolidated data.',
+      pilotSource: 'Source: M3S local pilot',
+      pilotFreshness: 'Freshness: working scenario',
+      connectedSuppliers: 'The Suppliers tab remains a separate connected register outside this pilot.',
+      noWriteAction: 'Create, edit and delete actions will return later with permissions, confirmations and traceability.',
+      manufacturingTitle: 'Manufacturing',
+      manufacturingStatus: 'Next sub-lot',
+      manufacturingDescription: 'Manufacturing is identified within Production, but no real or consolidated data is available yet.',
+      manufacturingGuardrail: 'This view prepares the business scope without creating fake manufacturing orders.',
+      manufacturingSteps: ['Manufacturing orders', 'Phases and progress', 'Team and owners', 'Quality and deadlines']
     },
     DE: {
       title: 'Produktion & Logistik',
@@ -188,7 +212,19 @@ const Production = () => {
       modifier: 'Bearbeiten',
       supprimer: 'Löschen',
       annuler: 'Abbrechen',
-      remplirChamps: 'Bitte füllen Sie alle erforderlichen Felder aus'
+      remplirChamps: 'Bitte füllen Sie alle erforderlichen Felder aus',
+      pilotTitle: 'Lokaler Produktionspilot',
+      pilotScope: 'Nur lesen',
+      pilotDescription: 'Bestellungen und Bestände sind lokale Demonstrationsdaten. Sie sind keine konsolidierten Daten.',
+      pilotSource: 'Quelle: lokaler M3S-Pilot',
+      pilotFreshness: 'Aktualität: Arbeitsszenario',
+      connectedSuppliers: 'Der Reiter Lieferanten bleibt ein separates verbundenes Register außerhalb dieses Piloten.',
+      noWriteAction: 'Erstellen, Bearbeiten und Löschen werden später mit Rechten, Bestätigungen und Nachverfolgung wieder eingeführt.',
+      manufacturingTitle: 'Herstellung',
+      manufacturingStatus: 'Nächstes Teilpaket',
+      manufacturingDescription: 'Die Herstellung ist innerhalb der Produktion vorgesehen, aber es sind noch keine realen oder konsolidierten Daten verfügbar.',
+      manufacturingGuardrail: 'Diese Ansicht bereitet den fachlichen Rahmen vor, ohne fiktive Fertigungsaufträge anzulegen.',
+      manufacturingSteps: ['Fertigungsaufträge', 'Phasen und Fortschritt', 'Team und Verantwortliche', 'Qualität und Termine']
     }
   };
 
@@ -715,16 +751,32 @@ const Production = () => {
     setShowModal(true);
   };
  
-  const handleDelete = (type, id) => {
-    if (type === 'commande') setCommandes(commandes.filter(c => c.id !== id));
-    else if (type === 'fournisseur') setFournisseurs(fournisseurs.filter(f => f.id !== id));
-    else setStocks(stocks.filter(s => s.id !== id));
-  };
- 
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
         <div className="mx-auto w-full max-w-[1800px]">
+
+        <section className="mb-6 rounded-lg border border-blue-500/40 bg-blue-950/45 p-5 text-blue-50">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex items-start gap-3">
+              <AlertCircle size={20} className="mt-0.5 shrink-0 text-blue-300" aria-hidden="true" />
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="font-bold text-white">{t.pilotTitle}</h2>
+                  <span className="rounded border border-blue-400/50 bg-blue-500/15 px-2 py-1 text-xs font-semibold text-blue-100">
+                    {t.pilotScope}
+                  </span>
+                </div>
+                <p className="mt-2 max-w-4xl text-sm leading-6 text-blue-100">{t.pilotDescription}</p>
+                <p className="mt-1 text-sm text-blue-200">{t.connectedSuppliers}</p>
+              </div>
+            </div>
+            <dl className="grid shrink-0 gap-2 text-xs text-blue-100 sm:grid-cols-2 lg:grid-cols-1">
+              <div className="rounded border border-blue-400/25 bg-slate-950/25 px-3 py-2">{t.pilotSource}</div>
+              <div className="rounded border border-blue-400/25 bg-slate-950/25 px-3 py-2">{t.pilotFreshness}</div>
+            </dl>
+          </div>
+        </section>
  
         {/* KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
@@ -819,10 +871,8 @@ const Production = () => {
         {/* Tables */}
         {activeTab === 'commandes' && (
           <div>
-            <div className="flex justify-end mb-4">
-              <button onClick={() => { setEditingId(null); setModalType('commande'); setFormData(getDefaultFormData('commande')); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
-                <Plus size={20} /> {t.nouvelleCommande}
-              </button>
+            <div className="mb-4 rounded-lg border border-slate-600 bg-slate-800/70 px-4 py-3 text-sm text-slate-200">
+              {t.noWriteAction}
             </div>
             <TableControls rows={commandes} renderTable={(visibleRows) => (
               <table className="min-w-full text-sm">
@@ -849,10 +899,10 @@ const Production = () => {
                         </span>
                       </td>
                       <td className="px-4 py-2 flex gap-2">
-                        <button onClick={() => handleEdit('commande', c)} className="p-1 hover:bg-slate-600 rounded">
+                        <button type="button" disabled aria-label={t.modifier} className="cursor-not-allowed p-1 opacity-35">
                           <Edit2 size={16} className="text-blue-400" />
                         </button>
-                        <button onClick={() => handleDelete('commande', c.id)} className="p-1 hover:bg-slate-600 rounded">
+                        <button type="button" disabled aria-label={t.supprimer} className="cursor-not-allowed p-1 opacity-35">
                           <Trash2 size={16} className="text-red-400" />
                         </button>
                       </td>
@@ -863,7 +913,40 @@ const Production = () => {
             )} />
           </div>
         )}
- 
+
+        {activeTab === 'manufacturing' && (
+          <section className="rounded-lg border border-slate-700 bg-slate-800 p-5 text-slate-100">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div className="flex items-start gap-3">
+                <div className="rounded-md border border-orange-400/30 bg-orange-500/10 p-2 text-orange-300">
+                  <Wrench size={22} aria-hidden="true" />
+                </div>
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="text-lg font-bold text-white">{t.manufacturingTitle}</h3>
+                    <span className="rounded border border-amber-400/40 bg-amber-500/10 px-2 py-1 text-xs font-semibold text-amber-200">
+                      {t.manufacturingStatus}
+                    </span>
+                  </div>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">{t.manufacturingDescription}</p>
+                  <p className="mt-1 max-w-3xl text-sm leading-6 text-slate-400">{t.manufacturingGuardrail}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {t.manufacturingSteps.map((step, index) => (
+                <div key={step} className="flex min-h-20 items-center gap-3 rounded-md border border-slate-600 bg-slate-900/45 px-4 py-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-blue-400/40 bg-blue-500/10 text-sm font-bold text-blue-200">
+                    {index + 1}
+                  </span>
+                  <span className="text-sm font-semibold text-slate-100">{step}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {activeTab === 'fournisseurs' && (
           <div>
             <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -939,10 +1022,8 @@ const Production = () => {
  
         {activeTab === 'stocks' && (
           <div>
-            <div className="flex justify-end mb-4">
-              <button onClick={() => { setEditingId(null); setModalType('stock'); setFormData(getDefaultFormData('stock')); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
-                <Plus size={20} /> {t.ajouterStock}
-              </button>
+            <div className="mb-4 rounded-lg border border-slate-600 bg-slate-800/70 px-4 py-3 text-sm text-slate-200">
+              {t.noWriteAction}
             </div>
             <TableControls rows={stocks} renderTable={(visibleRows) => (
               <table className="min-w-full text-sm">
@@ -967,10 +1048,10 @@ const Production = () => {
                         </span>
                       </td>
                       <td className="px-4 py-2 flex gap-2">
-                        <button onClick={() => handleEdit('stock', s)} className="p-1 hover:bg-slate-600 rounded">
+                        <button type="button" disabled aria-label={t.modifier} className="cursor-not-allowed p-1 opacity-35">
                           <Edit2 size={16} className="text-blue-400" />
                         </button>
-                        <button onClick={() => handleDelete('stock', s.id)} className="p-1 hover:bg-slate-600 rounded">
+                        <button type="button" disabled aria-label={t.supprimer} className="cursor-not-allowed p-1 opacity-35">
                           <Trash2 size={16} className="text-red-400" />
                         </button>
                       </td>
@@ -982,7 +1063,7 @@ const Production = () => {
           </div>
         )}
 
-        <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'commandes', 'fournisseurs', 'stocks']} />
+        <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'commandes', 'manufacturing', 'fournisseurs', 'stocks']} />
         </div>
       </div>
 
