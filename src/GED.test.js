@@ -125,3 +125,16 @@ test('renders the quick user guide and distinguishes it from the manual', async 
   expect(screen.getByText('Guide rapide ou Manuel d’Utilisation ?')).toBeInTheDocument();
   expect(screen.queryByRole('button', { name: /enregistrer|modifier|supprimer/i })).not.toBeInTheDocument();
 });
+
+test('renders the protected technical documentation map without operational commands', async () => {
+  renderGed('tech-docs');
+
+  expect(await screen.findByRole('heading', { name: 'Documentation technique' })).toBeInTheDocument();
+  expect(screen.getByText('Interface frontend')).toBeInTheDocument();
+  expect(screen.getByText('Services backend & API')).toBeInTheDocument();
+  expect(screen.getByText('Données & sources')).toBeInTheDocument();
+  expect(screen.getByText('Documents & traçabilité')).toBeInTheDocument();
+  expect(screen.getByText('Chaîne de diagnostic')).toBeInTheDocument();
+  expect(screen.getByText('Informations volontairement protégées')).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /déployer|configurer|exécuter|supprimer/i })).not.toBeInTheDocument();
+});

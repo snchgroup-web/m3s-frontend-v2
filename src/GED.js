@@ -199,7 +199,27 @@ const GED = () => {
       guideHuman: 'Conserver la validation humaine pour toute décision.',
       guideSupport: 'Utiliser Aide & Support en cas de doute.',
       guideManualTitle: 'Guide rapide ou Manuel d’Utilisation ?',
-      guideManualBody: 'Ce guide aide à démarrer et à s’orienter. Le Manuel d’Utilisation décrira plus tard les procédures détaillées et les cas particuliers.'
+      guideManualBody: 'Ce guide aide à démarrer et à s’orienter. Le Manuel d’Utilisation décrira plus tard les procédures détaillées et les cas particuliers.',
+      techTitle: 'Documentation technique',
+      techSubtitle: 'Carte d’orientation des couches M3S et de leurs responsabilités.',
+      techPilot: 'Référence interne · Lecture seule',
+      techLayers: 'Couches du système',
+      techFrontend: 'Interface frontend',
+      techFrontendBody: 'Affichage, navigation, formulaires et états visibles par l’utilisateur.',
+      techBackend: 'Services backend & API',
+      techBackendBody: 'Authentification, règles de service et échanges contrôlés avec les sources.',
+      techData: 'Données & sources',
+      techDataBody: 'Données métier, disponibilité, fraîcheur et provenance à vérifier.',
+      techDocs: 'Documents & traçabilité',
+      techDocsBody: 'Cadrages, décisions, journaux et pièces permettant de comprendre les changements.',
+      techDiagnostic: 'Chaîne de diagnostic',
+      techObserve: 'Observer',
+      techSource: 'Vérifier la source',
+      techIsolate: 'Isoler la couche',
+      techRecord: 'Documenter le résultat',
+      techSecurity: 'Informations volontairement protégées',
+      techSecurityBody: 'Secrets, jetons, mots de passe, variables d’environnement, URL d’administration, commandes de production et journaux sensibles ne sont pas affichés.',
+      techSupportNote: 'En cas d’incident, préparer les faits utiles puis utiliser Aide & Support.'
     },
     EN: {
       title: 'Document Management (GED)',
@@ -367,7 +387,27 @@ const GED = () => {
       guideHuman: 'Keep human validation for every decision.',
       guideSupport: 'Use Help & Support when in doubt.',
       guideManualTitle: 'Quick guide or User Manual?',
-      guideManualBody: 'This guide helps users get started and find their way. The User Manual will later describe detailed procedures and special cases.'
+      guideManualBody: 'This guide helps users get started and find their way. The User Manual will later describe detailed procedures and special cases.',
+      techTitle: 'Technical documentation',
+      techSubtitle: 'Orientation map of M3S layers and their responsibilities.',
+      techPilot: 'Internal reference · Read only',
+      techLayers: 'System layers',
+      techFrontend: 'Frontend interface',
+      techFrontendBody: 'Display, navigation, forms and states visible to the user.',
+      techBackend: 'Backend services & API',
+      techBackendBody: 'Authentication, service rules and controlled exchanges with sources.',
+      techData: 'Data & sources',
+      techDataBody: 'Business data, availability, freshness and provenance to verify.',
+      techDocs: 'Documents & traceability',
+      techDocsBody: 'Framing, decisions, journals and evidence used to understand changes.',
+      techDiagnostic: 'Diagnostic chain',
+      techObserve: 'Observe',
+      techSource: 'Check the source',
+      techIsolate: 'Isolate the layer',
+      techRecord: 'Document the result',
+      techSecurity: 'Information intentionally protected',
+      techSecurityBody: 'Secrets, tokens, passwords, environment variables, administration URLs, production commands and sensitive logs are not displayed.',
+      techSupportNote: 'For an incident, prepare the useful facts and then use Help & Support.'
     },
     DE: {
       title: 'Dokumentenverwaltung (GED)',
@@ -535,7 +575,27 @@ const GED = () => {
       guideHuman: 'Menschliche Validierung für jede Entscheidung beibehalten.',
       guideSupport: 'Bei Unsicherheit Hilfe & Support nutzen.',
       guideManualTitle: 'Schnellleitfaden oder Benutzerhandbuch?',
-      guideManualBody: 'Dieser Leitfaden hilft beim Einstieg und bei der Orientierung. Das Benutzerhandbuch beschreibt später detaillierte Verfahren und Sonderfälle.'
+      guideManualBody: 'Dieser Leitfaden hilft beim Einstieg und bei der Orientierung. Das Benutzerhandbuch beschreibt später detaillierte Verfahren und Sonderfälle.',
+      techTitle: 'Technische Dokumentation',
+      techSubtitle: 'Orientierungskarte der M3S-Schichten und ihrer Verantwortlichkeiten.',
+      techPilot: 'Interne Referenz · Nur lesen',
+      techLayers: 'Systemschichten',
+      techFrontend: 'Frontend-Oberfläche',
+      techFrontendBody: 'Anzeige, Navigation, Formulare und für Benutzer sichtbare Zustände.',
+      techBackend: 'Backend-Dienste & API',
+      techBackendBody: 'Authentifizierung, Dienstregeln und kontrollierter Austausch mit Quellen.',
+      techData: 'Daten & Quellen',
+      techDataBody: 'Fachdaten, Verfügbarkeit, Aktualität und Herkunft zur Prüfung.',
+      techDocs: 'Dokumente & Nachvollziehbarkeit',
+      techDocsBody: 'Rahmen, Entscheidungen, Journale und Nachweise zum Verständnis von Änderungen.',
+      techDiagnostic: 'Diagnosekette',
+      techObserve: 'Beobachten',
+      techSource: 'Quelle prüfen',
+      techIsolate: 'Schicht isolieren',
+      techRecord: 'Ergebnis dokumentieren',
+      techSecurity: 'Bewusst geschützte Informationen',
+      techSecurityBody: 'Geheimnisse, Token, Passwörter, Umgebungsvariablen, Administrations-URLs, Produktionsbefehle und sensible Protokolle werden nicht angezeigt.',
+      techSupportNote: 'Bei einem Vorfall die nützlichen Fakten vorbereiten und danach Hilfe & Support nutzen.'
     }
   };
 
@@ -1646,6 +1706,74 @@ const GED = () => {
           </div>
         )}
 
+        {activeTab === 'tech-docs' && (
+          <section className="space-y-6" aria-labelledby="tech-title">
+            <div className="rounded-lg border border-indigo-700 bg-indigo-950/40 p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <div className="mb-3 inline-flex items-center gap-2 rounded border border-indigo-600 bg-indigo-900/50 px-3 py-1 text-sm font-semibold text-indigo-100">
+                    <FileText size={16} aria-hidden="true" />
+                    {t.techPilot}
+                  </div>
+                  <h3 id="tech-title" className="text-2xl font-bold text-white">{t.techTitle}</h3>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">{t.techSubtitle}</p>
+                </div>
+                <Wrench size={34} className="shrink-0 text-indigo-300" aria-hidden="true" />
+              </div>
+            </div>
+
+            <div>
+              <h4 className="mb-4 text-lg font-bold text-white">{t.techLayers}</h4>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                {[
+                  [t.techFrontend, t.techFrontendBody, Upload],
+                  [t.techBackend, t.techBackendBody, Wrench],
+                  [t.techData, t.techDataBody, Folder],
+                  [t.techDocs, t.techDocsBody, FileText]
+                ].map(([title, body, Icon]) => (
+                  <article key={title} className="rounded-lg border border-slate-700 bg-slate-800 p-5">
+                    <Icon size={24} className="mb-4 text-indigo-300" aria-hidden="true" />
+                    <h5 className="font-bold text-white">{title}</h5>
+                    <p className="mt-2 text-sm leading-6 text-slate-300">{body}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-slate-700 bg-slate-800 p-6">
+              <h4 className="text-lg font-bold text-white">{t.techDiagnostic}</h4>
+              <ol className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {[t.techObserve, t.techSource, t.techIsolate, t.techRecord].map((title, index) => (
+                  <li key={title} className="flex items-center gap-3 rounded border border-slate-600 bg-slate-900/60 p-4">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-700 font-bold text-white">
+                      {index + 1}
+                    </span>
+                    <span className="font-semibold text-slate-100">{title}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              <div className="rounded-lg border border-rose-800 bg-rose-950/30 p-5" role="note">
+                <div className="flex items-start gap-3">
+                  <ShieldCheck size={22} className="mt-0.5 shrink-0 text-rose-300" aria-hidden="true" />
+                  <div>
+                    <p className="font-bold text-rose-100">{t.techSecurity}</p>
+                    <p className="mt-2 text-sm leading-6 text-rose-50/80">{t.techSecurityBody}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="rounded-lg border border-blue-700 bg-blue-950/40 p-5">
+                <div className="flex items-start gap-3">
+                  <HelpCircle size={22} className="mt-0.5 shrink-0 text-blue-300" aria-hidden="true" />
+                  <p className="text-sm leading-6 text-blue-50/90">{t.techSupportNote}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
         {activeTab === 'user-guide' && (
           <section className="space-y-6" aria-labelledby="guide-title">
             <div className="rounded-lg border border-cyan-700 bg-cyan-950/40 p-6">
@@ -1792,7 +1920,7 @@ const GED = () => {
           </section>
         )}
 
-        <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'ai-digital', 'user-guide', 'help-support']} />
+        <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'ai-digital', 'user-guide', 'tech-docs', 'help-support']} />
         </div>
       </div>
 
