@@ -388,7 +388,7 @@
           "label": {
             "FR": "Guide Utilisateur",
             "EN": "User Guide",
-            "DE": "Benutzerhandbuch"
+            "DE": "Schnellleitfaden"
           },
           "icon": "BookOpen",
           "path": "/ged?tab=user-guide"
