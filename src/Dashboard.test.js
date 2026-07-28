@@ -97,3 +97,25 @@ test('does not turn unavailable sources into real zeroes', async () => {
   expect(screen.getAllByText('Unavailable').length).toBeGreaterThan(0);
   expect(screen.getByText('No financial series is available yet.')).toBeInTheDocument();
 });
+
+test('treats an empty users response as a real zero-user state', async () => {
+  api.getUsers.mockResolvedValue({ data: [] });
+
+  render(<Dashboard />);
+
+  expect(await screen.findByText('No M3S users are registered yet.')).toBeInTheDocument();
+  expect(screen.getByText('M3S users')).toBeInTheDocument();
+  expect(screen.getAllByText('0').length).toBeGreaterThan(0);
+});
+
+test('keeps null and empty count totals unavailable', async () => {
+  api.getDocumentsCount.mockResolvedValue({ total: null });
+  api.getInventoryCount.mockResolvedValue({ total: '' });
+  api.getTasksCount.mockResolvedValue({ total: undefined });
+
+  render(<Dashboard />);
+
+  await waitFor(() => {
+    expect(screen.getAllByText('Unavailable').length).toBeGreaterThanOrEqual(3);
+  });
+});

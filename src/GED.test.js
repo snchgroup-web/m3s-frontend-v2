@@ -126,6 +126,20 @@ test('renders the quick user guide and distinguishes it from the manual', async 
   expect(screen.queryByRole('button', { name: /enregistrer|modifier|supprimer/i })).not.toBeInTheDocument();
 });
 
+test('uses distinct German labels for the quick guide and the manual', async () => {
+  renderGed('user-guide', 'DE');
+
+  expect(await screen.findByText('Schnellleitfaden')).toBeInTheDocument();
+  expect(screen.getByText('Benutzerhandbuch')).toBeInTheDocument();
+});
+
+test('keeps the welcome instruction usable when identity details are hidden on mobile', async () => {
+  renderGed('user-guide', 'EN');
+
+  expect(await screen.findByText('Check the active language, then open the required module from the navigation.')).toBeInTheDocument();
+  expect(screen.queryByText('Confirm the displayed name, role, language and session.')).not.toBeInTheDocument();
+});
+
 test('renders the protected technical documentation map without operational commands', async () => {
   renderGed('tech-docs');
 

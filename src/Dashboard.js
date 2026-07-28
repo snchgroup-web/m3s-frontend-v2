@@ -130,6 +130,7 @@ const Dashboard = () => {
       connectedData: 'Données connectées',
       loadingDashboard: 'Chargement du tableau de bord...',
       noTrend: 'Aucune série financière disponible pour le moment.',
+      noUsers: 'Aucun utilisateur M3S enregistré pour le moment.',
       openModule: 'Ouvrir le module'
     },
     EN: {
@@ -178,6 +179,7 @@ const Dashboard = () => {
       connectedData: 'Connected data',
       loadingDashboard: 'Loading dashboard...',
       noTrend: 'No financial series is available yet.',
+      noUsers: 'No M3S users are registered yet.',
       openModule: 'Open module'
     },
     DE: {
@@ -226,6 +228,7 @@ const Dashboard = () => {
       connectedData: 'Verbundene Daten',
       loadingDashboard: 'Dashboard wird geladen...',
       noTrend: 'Derzeit ist keine Finanzreihe verfügbar.',
+      noUsers: 'Derzeit sind keine M3S-Benutzer registriert.',
       openModule: 'Modul öffnen'
     }
   };
@@ -301,9 +304,9 @@ const Dashboard = () => {
           ? incomeRows.filter((row) => String(row.category || '').toUpperCase() === 'FINANCEMENT').reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0)
           : null;
         const exchangeRate = numberFromApi(fx?.taux_du_jour?.CHF_CFA, 0);
-        const inventoryAvailable = Number.isFinite(Number(inventoryCount?.total));
-        const documentsAvailable = Number.isFinite(Number(documentsCount?.total));
-        const tasksAvailable = Number.isFinite(Number(tasksCount?.total));
+        const inventoryAvailable = hasApiNumber(inventoryCount?.total);
+        const documentsAvailable = hasApiNumber(documentsCount?.total);
+        const tasksAvailable = hasApiNumber(tasksCount?.total);
         const usersAvailable = Array.isArray(users?.data);
         const inventoryTotal = inventoryAvailable ? Number(inventoryCount.total) : null;
         const documentsTotal = documentsAvailable ? Number(documentsCount.total) : null;
@@ -606,7 +609,7 @@ const Dashboard = () => {
                 </ResponsiveContainer>
               ) : (
                 <div className="h-[300px] flex items-center justify-center rounded border border-dashed border-slate-600 text-center text-sm text-slate-400 px-6">
-                  {t.unavailable}
+                  {dashboardData?.sourceStatus.users === 'available' ? t.noUsers : t.unavailable}
                 </div>
               )}
             </div>
