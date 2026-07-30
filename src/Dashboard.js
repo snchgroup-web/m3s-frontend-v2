@@ -280,10 +280,6 @@ const Dashboard = () => {
           withApiFallback(() => api.getFxHistory(), {})
         ]);
 
-        const apiUnavailable = [financeDashboard, documentsCount, inventoryCount, tasksCount, users, income, expenses]
-          .some((response) => response === null) || fx?.success === false;
-        setDataWarning(apiUnavailable);
-
         const incomeAvailable = Array.isArray(income?.data);
         const expensesAvailable = Array.isArray(expenses?.data);
         const incomeRows = incomeAvailable ? income.data : [];
@@ -313,6 +309,23 @@ const Dashboard = () => {
         const tasksTotal = tasksAvailable ? Number(tasksCount.total) : null;
         const userRows = usersAvailable ? users.data : [];
         const financeAvailable = Number.isFinite(totalIncome) && Number.isFinite(totalExpenses);
+        const apiUnavailable = [
+          financeDashboard,
+          documentsCount,
+          inventoryCount,
+          tasksCount,
+          users,
+          income,
+          expenses
+        ].some((response) => response === null)
+          || !documentsAvailable
+          || !inventoryAvailable
+          || !tasksAvailable
+          || !usersAvailable
+          || !incomeAvailable
+          || !expensesAvailable
+          || fx?.success === false;
+        setDataWarning(apiUnavailable);
 
         const yearlyFinance = {};
         const addToYear = (rows, key) => rows.forEach((row) => {
