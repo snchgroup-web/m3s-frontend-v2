@@ -115,7 +115,21 @@ test('keeps null and empty count totals unavailable', async () => {
 
   render(<Dashboard />);
 
+  expect(await screen.findByText(/Some live data is temporarily unavailable/)).toBeInTheDocument();
+
   await waitFor(() => {
     expect(screen.getAllByText('Unavailable').length).toBeGreaterThanOrEqual(3);
   });
+});
+
+test('keeps real zero count totals available without a partial-data warning', async () => {
+  api.getDocumentsCount.mockResolvedValue({ total: 0 });
+  api.getInventoryCount.mockResolvedValue({ total: 0 });
+  api.getTasksCount.mockResolvedValue({ total: 0 });
+
+  render(<Dashboard />);
+
+  expect(await screen.findByText('M3S users')).toBeInTheDocument();
+  expect(screen.queryByText(/Some live data is temporarily unavailable/)).not.toBeInTheDocument();
+  expect(screen.getAllByText('0').length).toBeGreaterThanOrEqual(3);
 });
