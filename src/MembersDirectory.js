@@ -68,6 +68,38 @@ const copy = {
   }
 };
 
+const positionTranslations = {
+  'Manager et coordinateur général de 2SG - architecte fonctionnel M3S': {
+    EN: '2SG Manager and General Coordinator - M3S Functional Architect',
+    DE: 'Manager und Gesamtkoordinator von 2SG - Funktionaler Architekt von M3S'
+  },
+  'Administratrice financière et référente sociale': {
+    EN: 'Finance Administrator and Social Affairs Lead',
+    DE: 'Finanzadministratorin und Ansprechpartnerin für soziale Belange'
+  },
+  'Cheffe de projets': {
+    EN: 'Project Manager',
+    DE: 'Projektleiterin'
+  },
+  'Cheffe Organisation & RH': {
+    EN: 'Head of Organization & HR',
+    DE: 'Leiterin Organisation & Personalwesen'
+  },
+  'Responsable Administration & Marketing - référent local 2SG au Sénégal': {
+    EN: 'Head of Administration & Marketing - 2SG local representative in Senegal',
+    DE: 'Leiter Administration & Marketing - lokaler 2SG-Ansprechpartner im Senegal'
+  },
+  'Chef Opérations': {
+    EN: 'Head of Operations',
+    DE: 'Leiter Operations'
+  }
+};
+
+export const translateDirectoryPosition = (position, language) => {
+  if (!position || language === 'FR') return position;
+  return positionTranslations[position]?.[language] || position;
+};
+
 const normalize = (value) => String(value || '')
   .normalize('NFD')
   .replace(/[\u0300-\u036f]/g, '')
@@ -127,6 +159,7 @@ const MembersDirectory = ({ onLoaded }) => {
         member.display_name,
         member.preferred_name,
         member.position,
+        translateDirectoryPosition(member.position, language),
         member.team,
         member.subgroup
       ].join(' '));
@@ -134,7 +167,7 @@ const MembersDirectory = ({ onLoaded }) => {
         && (!team || member.team === team)
         && (!memberType || normalize(member.member_type) === memberType);
     });
-  }, [members, memberType, query, team]);
+  }, [language, members, memberType, query, team]);
 
   const getTypeLabel = (value) => normalize(value) === 'fondateur' ? t.founder : t.associate;
 
@@ -245,7 +278,7 @@ const MembersDirectory = ({ onLoaded }) => {
                         {member.preferred_name && member.preferred_name !== member.display_name ? `${member.preferred_name} · ` : ''}{t.reference} {member.person_id}
                       </p>
                     </div>
-                    <div><p className="mb-1 text-xs font-bold uppercase text-slate-500 lg:hidden">{t.position}</p><p className="text-sm text-slate-200">{member.position}</p></div>
+                    <div><p className="mb-1 text-xs font-bold uppercase text-slate-500 lg:hidden">{t.position}</p><p className="text-sm text-slate-200">{translateDirectoryPosition(member.position, language)}</p></div>
                     <div><p className="mb-1 text-xs font-bold uppercase text-slate-500 lg:hidden">{t.team}</p><p className="font-semibold text-blue-300">{member.team}</p><p className="mt-1 text-xs text-slate-400">{member.subgroup || t.noSubgroup}</p></div>
                     <div><p className="mb-1 text-xs font-bold uppercase text-slate-500 lg:hidden">{t.type}</p><span className="inline-flex rounded-full border border-slate-600 bg-slate-900 px-2.5 py-1 text-xs font-semibold text-slate-200">{getTypeLabel(member.member_type)}</span></div>
                     <div>
