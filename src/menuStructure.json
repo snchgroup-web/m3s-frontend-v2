@@ -146,6 +146,16 @@
       "path": "/rh",
       "children": [
         {
+          "id": "directory",
+          "label": {
+            "FR": "Annuaire interne",
+            "EN": "Internal directory",
+            "DE": "Internes Verzeichnis"
+          },
+          "icon": "ContactRound",
+          "path": "/rh?tab=directory"
+        },
+        {
           "id": "teams",
           "label": {
             "FR": "Teams & Profils",
