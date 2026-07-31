@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { LanguageProvider } from './LanguageContext';
-import MembersDirectory from './MembersDirectory';
+import MembersDirectory, { translateDirectoryPosition } from './MembersDirectory';
 import { api } from './api';
 
 jest.mock('./api', () => ({
@@ -80,6 +80,35 @@ test('filters accented associate member types from the backend contract', async 
   await screen.findByText('Cheikh Ndiaye');
 
   fireEvent.change(screen.getByDisplayValue('Tous les types'), { target: { value: 'associe' } });
+  expect(screen.queryByText('Cheikh Ndiaye')).not.toBeInTheDocument();
+  expect(screen.getByText('Ibrahima Ndiaye')).toBeInTheDocument();
+});
+
+test('translates every validated directory position in English and German', () => {
+  const expected = [
+    ['Manager et coordinateur général de 2SG - architecte fonctionnel M3S', '2SG Manager and General Coordinator - M3S Functional Architect', 'Manager und Gesamtkoordinator von 2SG - Funktionaler Architekt von M3S'],
+    ['Administratrice financière et référente sociale', 'Finance Administrator and Social Affairs Lead', 'Finanzadministratorin und Ansprechpartnerin für soziale Belange'],
+    ['Cheffe de projets', 'Project Manager', 'Projektleiterin'],
+    ['Cheffe Organisation & RH', 'Head of Organization & HR', 'Leiterin Organisation & Personalwesen'],
+    ['Responsable Administration & Marketing - référent local 2SG au Sénégal', 'Head of Administration & Marketing - 2SG local representative in Senegal', 'Leiter Administration & Marketing - lokaler 2SG-Ansprechpartner im Senegal'],
+    ['Chef Opérations', 'Head of Operations', 'Leiter Operations']
+  ];
+
+  expected.forEach(([source, english, german]) => {
+    expect(translateDirectoryPosition(source, 'FR')).toBe(source);
+    expect(translateDirectoryPosition(source, 'EN')).toBe(english);
+    expect(translateDirectoryPosition(source, 'DE')).toBe(german);
+  });
+  expect(translateDirectoryPosition('Fonction future', 'EN')).toBe('Fonction future');
+});
+
+test('shows and searches a translated position in English', async () => {
+  localStorage.setItem('language', 'EN');
+  api.getMembersDirectory.mockResolvedValue(response);
+  renderDirectory();
+
+  expect(await screen.findByText('Head of Operations')).toBeInTheDocument();
+  fireEvent.change(screen.getByPlaceholderText(/Search by name/i), { target: { value: 'Head of Operations' } });
   expect(screen.queryByText('Cheikh Ndiaye')).not.toBeInTheDocument();
   expect(screen.getByText('Ibrahima Ndiaye')).toBeInTheDocument();
 });
