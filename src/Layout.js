@@ -6,7 +6,7 @@ import {
   Home, Settings, Users, DollarSign, Briefcase, Package, Building2, Zap,
   Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
   Wrench, Truck, Box, AlertTriangle, Eye, FileText, Brain, Database, BookOpen,
-  Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft
+  Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft, ContactRound
 } from 'lucide-react';
 import menuData from './menuStructure.json';
 import Header from './Header';
@@ -17,7 +17,7 @@ const iconMap = {
   Home, Settings, Users, DollarSign, Briefcase, Package, Building2, Zap,
   Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
   Wrench, Truck, Box, AlertTriangle, Eye, FileText, Brain, Database, BookOpen,
-  Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft
+  Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft, ContactRound
 };
 
 const Layout = ({ children }) => {

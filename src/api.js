@@ -357,6 +357,32 @@ export const api = {
     }
   },
 
+  // RH-001 - Annuaire interne assaini, en lecture seule
+  getMembersDirectory: async (limite = 100, decalage = 0) => {
+    const res = await fetch(
+      `${API_BASE_URL}/members-directory?limit=${limite}&offset=${decalage}`,
+      { headers: getAuthHeaders() }
+    );
+
+    let payload = null;
+    try {
+      payload = await res.json();
+    } catch (error) {
+      payload = null;
+    }
+
+    if (res.status === 401) clearExpiredSession();
+
+    if (!res.ok) {
+      const error = new Error(payload?.error || `HTTP ${res.status}`);
+      error.status = res.status;
+      error.code = payload?.code || 'RH001_DIRECTORY_ERROR';
+      throw error;
+    }
+
+    return payload;
+  },
+
   // ============================================================================
   // APPELS API TAUX DE CHANGE
   // ============================================================================

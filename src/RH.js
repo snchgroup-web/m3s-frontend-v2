@@ -3,10 +3,10 @@ import { useLocation } from 'react-router-dom';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { Plus, Edit2, Trash2, Users, User, Heart, Users2 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
-import { api } from './api';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
+import MembersDirectory from './MembersDirectory';
 
 const RH = () => {
   const { language } = useLanguage();
@@ -237,13 +237,6 @@ const RH = () => {
     if (['conge', 'congé', 'leave'].includes(text)) return 'Congé';
     return 'Actif';
   };
-  const normalizeMemberType = (person) => {
-    const id = String(person.id || '').toLowerCase();
-    const name = String(person.name || `${person.prenom || ''} ${person.nom || ''}`).toLowerCase();
-    if (id.includes('cheikh') || id.includes('chantal') || name.includes('cheikh') || name.includes('chantal')) return 'Fondateur';
-    const raw = String(person.type_membre || person.member_type || '').trim().toLowerCase();
-    return raw === 'fondateur' ? 'Fondateur' : 'Associ\u00e9';
-  };
   const formatValue = (value) => {
     const text = String(value || '').trim();
     return text && text !== 'N/A' ? text : t.nonRenseigne;
@@ -269,6 +262,7 @@ const RH = () => {
   const [employes, setEmployes] = useState([]);
   const [benevoles, setBenevoles] = useState([]);
   const [membres, setMembres] = useState([]);
+  const [directoryCount, setDirectoryCount] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('employe'); // 'employe', 'benevole', 'membre'
   const [editingId, setEditingId] = useState(null);
@@ -288,59 +282,30 @@ const RH = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'membres', 'employes', 'benevoles', 'teams', 'hours', 'competences', 'myaccount'].includes(tab)) {
+    if (tab === 'membres') {
+      setActiveTab('directory');
+    } else if (['overview', 'directory', 'employes', 'benevoles', 'teams', 'hours', 'competences', 'myaccount'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
     }
   }, [location.search]);
 
-  // Charger les donnees RH depuis l'API et les sources provisoires validees.
+  // Charger uniquement les donnees de demonstration hors annuaire.
+  // RH-001 est isole dans MembersDirectory et ne se replie jamais sur /api/users.
   useEffect(() => {
-    const loadData = async () => {
-      setEmployes([
-        { id: 'EMP-001', nom: 'Jean Dupont', email: 'jean.dupont@seneswiss.sn', telephone: '+221 77 123 4567', poste: 'D\u00e9veloppeur', departement: 'IT', role: 'Utilisateur', typeMembre: '', dateEmbauche: '2024-01-15', statut: 'Actif' },
-        { id: 'EMP-002', nom: 'Marie Sall', email: 'marie.sall@seneswiss.sn', telephone: '+221 77 234 5678', poste: 'Responsable Finance', departement: 'Finance', role: 'Utilisateur', typeMembre: '', dateEmbauche: '2023-06-01', statut: 'Actif' },
-      ]);
-      setBenevoles([]);
-
-      try {
-        const response = await api.getUsers(100, 0);
-        console.log('RH API Response:', response);
-
-        if (response?.data && Array.isArray(response.data)) {
-          const mappedMembres = response.data.map(emp => ({
-            id: emp.id || emp.user_id,
-            nom: emp.name || emp.full_name || `${emp.prenom || ''} ${emp.nom || ''}`.trim() || 'N/A',
-            email: emp.email || emp.email_pro || emp.email_work,
-            emailPerso: emp.email_perso || emp.email_perso_raw || '',
-            telephone: emp.telephone || emp.phone || '',
-            poste: emp.poste || emp.position || 'Membre',
-            departement: emp.team || emp.departement || emp.department || 'N/A',
-            matricule: emp.matricule || emp.employee_id || '',
-            role: normalizeRole(emp.role || emp.profil || emp.access_role),
-            typeMembre: normalizeMemberType(emp),
-            dateEmbauche: emp.created_at ? emp.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
-            statut: emp.active === false ? 'Inactif' : normalizeStatus(emp.status)
-          }));
-          setMembres(mappedMembres);
-          console.log('RH members loaded:', mappedMembres.length, 'rows');
-        } else {
-          setMembres([]);
-        }
-      } catch (error) {
-        console.log('RH error:', error);
-        setMembres([]);
-      }
-    };
-
-    loadData();
+    setEmployes([
+      { id: 'EMP-001', nom: 'Jean Dupont', email: 'jean.dupont@seneswiss.sn', telephone: '+221 77 123 4567', poste: 'D\u00e9veloppeur', departement: 'IT', role: 'Utilisateur', typeMembre: '', dateEmbauche: '2024-01-15', statut: 'Actif' },
+      { id: 'EMP-002', nom: 'Marie Sall', email: 'marie.sall@seneswiss.sn', telephone: '+221 77 234 5678', poste: 'Responsable Finance', departement: 'Finance', role: 'Utilisateur', typeMembre: '', dateEmbauche: '2023-06-01', statut: 'Actif' },
+    ]);
+    setBenevoles([]);
+    setMembres([]);
   }, []);
 
   // Calculs KPIs
   const totalEmployes = employes.filter(e => e.statut === 'Actif').length;
   const totalBenevoles = benevoles.filter(b => b.statut === 'Actif').length;
-  const totalMembres = membres.filter(m => m.statut === 'Actif').length;
+  const totalMembres = directoryCount;
   const totalPersonnes = totalEmployes + totalBenevoles + totalMembres;
 
   // Données pour charts
@@ -543,7 +508,7 @@ const RH = () => {
           onSelect={setActiveTab}
           tabs={[
             { tab: 'overview', label: t.overview },
-            { tab: 'membres', label: `${t.membres} (${totalMembres})` },
+            { tab: 'directory', label: `${t.membres} (${totalMembres})` },
             { tab: 'employes', label: `${t.employes} (${totalEmployes})` },
             { tab: 'benevoles', label: `${t.benevoles} (${totalBenevoles})` }
           ]}
@@ -610,12 +575,12 @@ const RH = () => {
           <PersonnelTable data={benevoles} type="benevole" onEdit={handleEdit} onDelete={handleDelete} onAdd={openNewModal} />
         )}
 
-        {/* Membres */}
-        {activeTab === 'membres' && (
-          <PersonnelTable data={membres} type="membre" onEdit={handleEdit} onDelete={handleDelete} onAdd={openNewModal} />
+        {/* Annuaire interne RH-001 */}
+        {activeTab === 'directory' && (
+          <MembersDirectory onLoaded={setDirectoryCount} />
         )}
 
-        <ChildTabPlaceholder moduleId="rh" language={language} activeTab={activeTab} handledTabs={['overview', 'membres', 'employes', 'benevoles']} />
+        <ChildTabPlaceholder moduleId="rh" language={language} activeTab={activeTab} handledTabs={['overview', 'directory', 'employes', 'benevoles']} />
         </div>
       </div>
 
