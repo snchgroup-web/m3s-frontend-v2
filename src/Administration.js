@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
-import { Plus, Edit2, Trash2, Shield, Users, Lock, Activity, AlertCircle } from 'lucide-react';
+import { Plus, Edit2, Trash2, Shield, Users, Lock, AlertCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import TableControls from './TableControls';
+import InstitutionOverview from './InstitutionOverview';
+import PlanningOverview from './PlanningOverview';
+import ComplianceOverview from './ComplianceOverview';
+import { resolveAdministrationTab } from './administrationTabs';
 
 const Admin = () => {
   const { language } = useLanguage();
@@ -15,7 +19,7 @@ const Admin = () => {
   const translations = {
     FR: {
       title: 'Administration',
-      subtitle: 'Gestion administrative, activités, tâches et communication',
+      subtitle: 'Institution, planification, communication, courrier et conformité',
       totalUsers: 'Total Utilisateurs',
       activeUsers: 'Utilisateurs Actifs',
       totalRoles: 'Total Rôles',
@@ -25,7 +29,8 @@ const Admin = () => {
       users: 'Utilisateurs',
       roles: 'Rôles',
       audit: 'Audit Log',
-      tasks: 'Activités & Tâches',
+      tasks: 'Tâches & Actions',
+      planning: 'Planification & Projets',
       roleDistribution: 'Distribution des Rôles',
       activityByType: 'Activité par Type d\'Action',
       dailyActivity: 'Activité Quotidienne (7 derniers jours)',
@@ -68,15 +73,15 @@ const Admin = () => {
       thu: 'Jeu',
       fri: 'Ven'
       , institution: 'Institution',
-      projetsPhases: 'Projets / Phases',
-      communication: 'Communication',
+      communication: 'Communication & Courrier',
+      compliance: 'Conformité',
       tachesTerminees: 'Tâches terminées',
       nouvelleTache: 'Nouvelle tâche',
       modifierTache: 'Modifier tâche'
     },
     EN: {
       title: 'Administration',
-      subtitle: 'Administrative management, activities, tasks and communication',
+      subtitle: 'Institution, planning, communication, correspondence and compliance',
       totalUsers: 'Total Users',
       activeUsers: 'Active Users',
       totalRoles: 'Total Roles',
@@ -86,7 +91,8 @@ const Admin = () => {
       users: 'Users',
       roles: 'Roles',
       audit: 'Audit Log',
-      tasks: 'Activities & Tasks',
+      tasks: 'Tasks & Actions',
+      planning: 'Planning & Projects',
       roleDistribution: 'Role Distribution',
       activityByType: 'Activity by Type',
       dailyActivity: 'Daily Activity (Last 7 Days)',
@@ -129,15 +135,15 @@ const Admin = () => {
       thu: 'Thu',
       fri: 'Fri'
       , institution: 'Institution',
-      projetsPhases: 'Projects / Phases',
-      communication: 'Communication',
+      communication: 'Communication & Correspondence',
+      compliance: 'Compliance',
       tachesTerminees: 'Completed tasks',
       nouvelleTache: 'New task',
       modifierTache: 'Edit task'
     },
     DE: {
       title: 'Verwaltung',
-      subtitle: 'Administrative Verwaltung, Aktivitäten, Aufgaben und Kommunikation',
+      subtitle: 'Institution, Planung, Kommunikation, Korrespondenz und Compliance',
       totalUsers: 'Gesamtbenutzer',
       activeUsers: 'Aktive Benutzer',
       totalRoles: 'Gesamtrollen',
@@ -147,7 +153,8 @@ const Admin = () => {
       users: 'Benutzer',
       roles: 'Rollen',
       audit: 'Audit-Protokoll',
-      tasks: 'Aktivitäten & Aufgaben',
+      tasks: 'Aufgaben & Aktionen',
+      planning: 'Planung & Projekte',
       roleDistribution: 'Rollenverteilung',
       activityByType: 'Aktivität nach Typ',
       dailyActivity: 'Tägliche Aktivität (letzte 7 Tage)',
@@ -190,8 +197,8 @@ const Admin = () => {
       thu: 'Do',
       fri: 'Fr'
       , institution: 'Institution',
-      projetsPhases: 'Projekte / Phasen',
-      communication: 'Kommunikation',
+      communication: 'Kommunikation & Korrespondenz',
+      compliance: 'Compliance',
       tachesTerminees: 'Abgeschlossene Aufgaben',
       nouvelleTache: 'Neue Aufgabe',
       modifierTache: 'Aufgabe bearbeiten'
@@ -383,11 +390,7 @@ const Admin = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'tasks', 'institution', 'projects', 'communication'].includes(tab)) {
-      setActiveTab(tab);
-    } else {
-      setActiveTab('overview');
-    }
+    setActiveTab(resolveAdministrationTab(tab));
   }, [location.search]);
 
   useEffect(() => {
@@ -600,7 +603,8 @@ const Admin = () => {
         <div className="mx-auto w-full max-w-[1800px]">
 
         {/* KPIs */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+        {activeTab === 'overview' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
           <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
             <div className="flex items-center justify-between">
               <div>
@@ -614,7 +618,7 @@ const Admin = () => {
           <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-200 text-sm">{t.tasks}</p>
+                <p className="text-green-200 text-sm">{t.planning}</p>
                 <p className="text-white text-2xl font-bold">{tasks.length}</p>
               </div>
               <AlertCircle size={32} className="text-green-400" />
@@ -631,16 +635,6 @@ const Admin = () => {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-6 border border-orange-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-orange-200 text-sm">{t.projetsPhases}</p>
-                <p className="text-white text-2xl font-bold">0</p>
-              </div>
-              <Activity size={32} className="text-orange-400" />
-            </div>
-          </div>
-
           <div className="bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-6 border border-red-700">
             <div className="flex items-center justify-between">
               <div>
@@ -651,6 +645,7 @@ const Admin = () => {
             </div>
           </div>
         </div>
+        )}
 
         <ModulePageTabs
           moduleId="administration"
@@ -660,9 +655,9 @@ const Admin = () => {
           tabs={[
             { tab: 'overview', label: t.overview },
             { tab: 'institution', label: t.institution },
-            { tab: 'tasks', label: `${t.tasks} (${tasks.length})` },
-            { tab: 'projects', label: t.projetsPhases },
-            { tab: 'communication', label: t.communication }
+            { tab: 'planning', label: `${t.planning} (${tasks.length})` },
+            { tab: 'communication', label: t.communication },
+            { tab: 'compliance', label: t.compliance }
           ]}
         />
 
@@ -715,8 +710,13 @@ const Admin = () => {
           </div>
         )}
 
-        {activeTab === 'tasks' && (
+        {activeTab === 'institution' && (
+          <InstitutionOverview language={language} />
+        )}
+
+        {activeTab === 'planning' && (
           <div>
+            <PlanningOverview language={language} tasksTotal={tasks.length} completedTasks={completedTasks} />
             <div className="flex justify-end mb-4">
               <button onClick={openNewTaskModal} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
                 <Plus size={20} /> {t.nouvelleTache}
@@ -758,6 +758,10 @@ const Admin = () => {
               </table>
             )} />
           </div>
+        )}
+
+        {activeTab === 'compliance' && (
+          <ComplianceOverview language={language} />
         )}
 
         {/* Utilisateurs */}
@@ -879,7 +883,7 @@ const Admin = () => {
           </div>
         )}
 
-        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} handledTabs={['overview', 'tasks']} />
+        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} handledTabs={['overview', 'institution', 'planning', 'compliance']} />
         </div>
       </div>
 

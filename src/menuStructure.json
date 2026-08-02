@@ -32,34 +32,34 @@
           "path": "/administration?tab=institution"
         },
         {
-          "id": "activities",
+          "id": "planning",
           "label": {
-            "FR": "Activités & Tâches",
-            "EN": "Activities & Tasks",
-            "DE": "Aktivitäten & Aufgaben"
-          },
-          "icon": "Activity",
-          "path": "/administration?tab=tasks"
-        },
-        {
-          "id": "projects",
-          "label": {
-            "FR": "Projet Phase",
-            "EN": "Project Phase",
-            "DE": "Projektphase"
+            "FR": "Planification & Projets",
+            "EN": "Planning & Projects",
+            "DE": "Planung & Projekte"
           },
           "icon": "Briefcase",
-          "path": "/administration?tab=projects"
+          "path": "/administration?tab=planning"
         },
         {
           "id": "communication",
           "label": {
-            "FR": "Communication",
-            "EN": "Communication",
-            "DE": "Kommunikation"
+            "FR": "Communication & Courrier",
+            "EN": "Communication & Correspondence",
+            "DE": "Kommunikation & Korrespondenz"
           },
           "icon": "MessageSquare",
           "path": "/administration?tab=communication"
+        },
+        {
+          "id": "compliance",
+          "label": {
+            "FR": "Conformité",
+            "EN": "Compliance",
+            "DE": "Compliance"
+          },
+          "icon": "ShieldCheck",
+          "path": "/administration?tab=compliance"
         }
       ]
     },
