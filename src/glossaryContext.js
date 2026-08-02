@@ -195,4 +195,3 @@ export const getGlossaryContextEntry = (termId, language = 'FR') => {
 };
 
 export const GLOSSARY_CONTEXT_IDS = Object.freeze(Object.keys(GLOSSARY_CONTEXT));
-
