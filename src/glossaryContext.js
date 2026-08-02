@@ -178,6 +178,66 @@ const GLOSSARY_CONTEXT = {
         detailedDefinition: 'A versioned document covering the project, market or need, offers, organisation, operations, risks, investments, financing and financial projections. It supports decisions, management and presentation of the multi-year trajectory; its assumptions must remain traceable and updateable.'
       }
     }
+  },
+  'STRAT-BLUEPRINT': {
+    version: 'V5.0',
+    translations: {
+      FR: {
+        term: 'Blueprint institutionnel',
+        shortDefinition: "Document vivant qui décrit l'architecture cible et guide la structuration progressive de 2SG.",
+        detailedDefinition: "Boussole stratégique et opérationnelle présentant les composantes de l'institution et du Management System, leurs relations, leurs principes et leur évolution visée. Le Blueprint donne une cohérence d'ensemble ; il évolue avec le projet et ne remplace pas les plans détaillés de chaque chantier."
+      },
+      DE: {
+        term: 'Institutioneller Blueprint',
+        shortDefinition: 'Lebendes Dokument, das die Zielarchitektur beschreibt und die schrittweise Strukturierung von 2SG leitet.',
+        detailedDefinition: 'Strategischer und operativer Orientierungsrahmen für die Bestandteile der Institution und des Managementsystems, ihre Beziehungen, Grundsätze und angestrebte Entwicklung. Der Blueprint schafft Gesamtzusammenhang, entwickelt sich mit dem Projekt weiter und ersetzt nicht die Detailpläne einzelner Vorhaben.'
+      },
+      EN: {
+        term: 'Institutional blueprint',
+        shortDefinition: 'A living document describing the target architecture and guiding the progressive structuring of 2SG.',
+        detailedDefinition: 'A strategic and operational compass presenting the components of the institution and Management System, their relationships, principles and intended evolution. The blueprint provides overall coherence, evolves with the project and does not replace detailed plans for individual workstreams.'
+      }
+    }
+  },
+  'STRAT-FEUILLE-ROUTE': {
+    version: 'V5.0',
+    translations: {
+      FR: {
+        term: 'Feuille de route',
+        shortDefinition: 'Vue séquencée des étapes, jalons et priorités nécessaires pour progresser vers une cible.',
+        detailedDefinition: "Instrument de pilotage qui traduit une stratégie en trajectoire temporelle, avec des étapes, dépendances, jalons, responsables et horizons. Elle coordonne plusieurs projets ou lots sans remplacer leur planification détaillée ni le plan d'action opérationnel."
+      },
+      DE: {
+        term: 'Roadmap',
+        shortDefinition: 'Geordnete Übersicht der Schritte, Meilensteine und Prioritäten auf dem Weg zu einem Zielzustand.',
+        detailedDefinition: 'Steuerungsinstrument, das eine Strategie in einen zeitlichen Entwicklungspfad mit Etappen, Abhängigkeiten, Meilensteinen, Verantwortlichen und Zeithorizonten übersetzt. Es koordiniert mehrere Projekte oder Lose, ersetzt jedoch weder deren Detailplanung noch den operativen Maßnahmenplan.'
+      },
+      EN: {
+        term: 'Roadmap',
+        shortDefinition: 'A sequenced view of the steps, milestones and priorities needed to progress towards a target.',
+        detailedDefinition: 'A management instrument translating strategy into a time-based path with stages, dependencies, milestones, owners and horizons. It coordinates several projects or work packages without replacing their detailed planning or operational action plan.'
+      }
+    }
+  },
+  'OPS-PLAN-ACTION': {
+    version: 'V5.0',
+    translations: {
+      FR: {
+        term: "Plan d'action",
+        shortDefinition: 'Organisation concrète des actions, responsables, échéances, ressources et preuves nécessaires à un résultat.',
+        detailedDefinition: "Instrument d'exécution dérivé d'une stratégie, d'une feuille de route, d'un projet ou d'une décision. Chaque action doit avoir un responsable, une échéance, un statut, des moyens et une preuve ou un résultat attendu. Il ne doit pas devenir une liste de tâches déconnectée des priorités."
+      },
+      DE: {
+        term: 'Maßnahmenplan',
+        shortDefinition: 'Konkrete Organisation der Maßnahmen, Verantwortlichen, Fristen, Ressourcen und Nachweise für ein Ergebnis.',
+        detailedDefinition: 'Umsetzungsinstrument, das aus einer Strategie, Roadmap, einem Projekt oder einer Entscheidung abgeleitet wird. Jede Maßnahme benötigt eine verantwortliche Person, eine Frist, einen Status, Mittel sowie einen erwarteten Nachweis oder ein Ergebnis. Der Plan darf nicht zu einer von den Prioritäten losgelösten Aufgabenliste werden.'
+      },
+      EN: {
+        term: 'Action plan',
+        shortDefinition: 'The concrete organisation of actions, owners, deadlines, resources and evidence needed to achieve an outcome.',
+        detailedDefinition: 'An execution instrument derived from a strategy, roadmap, project or decision. Each action must have an owner, deadline, status, resources and expected evidence or result. It must not become a task list disconnected from priorities.'
+      }
+    }
   }
 };
 
