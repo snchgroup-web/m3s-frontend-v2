@@ -1,9 +1,11 @@
 import React from 'react';
 import {
   Activity,
+  ArrowRight,
   CalendarDays,
   CheckSquare2,
   Clock3,
+  Compass,
   Flag,
   FolderKanban,
   GitBranch,
@@ -12,6 +14,7 @@ import {
   Route,
   Target
 } from 'lucide-react';
+import GlossaryHelp from './GlossaryHelp';
 import InternalSectionNav from './InternalSectionNav';
 
 const COPY = {
@@ -22,12 +25,21 @@ const COPY = {
     targetModel: 'Modèle fonctionnel cible',
     connectedTasks: 'Registre des tâches existant',
     navLabel: 'Navigation dans Planification & Projets',
+    navSteering: 'Pilotage',
     navModel: 'Modèle',
     navBranches: 'Branches',
     navDimensions: 'Dimensions',
     navStatus: 'État',
     navRegister: 'Registre',
     backToTop: 'Revenir en haut',
+    steeringTitle: "De la cible à l'exécution",
+    steeringBody: "Cette chaîne relie l'architecture cible de 2SG à l'exécution. Elle oriente les projets et les activités sans remplacer leur planification détaillée.",
+    blueprint: 'Blueprint institutionnel',
+    blueprintBody: "Document vivant qui décrit l'architecture cible et guide la structuration progressive de 2SG.",
+    roadmap: 'Feuille de route',
+    roadmapBody: 'Vue séquencée des étapes, jalons et priorités nécessaires pour progresser vers une cible.',
+    actionPlan: "Plan d'action",
+    actionPlanBody: 'Organisation concrète des actions, responsables, échéances, ressources et preuves nécessaires à un résultat.',
     ruleTitle: 'Règle de modélisation',
     ruleBody: 'Une phase appartient toujours à un projet. Une activité récurrente peut relever d’un plan opérationnel sans qu’un projet artificiel soit créé.',
     projectBranch: 'Branche projet',
@@ -67,12 +79,21 @@ const COPY = {
     targetModel: 'Target functional model',
     connectedTasks: 'Existing task register',
     navLabel: 'Planning & Projects navigation',
+    navSteering: 'Steering',
     navModel: 'Model',
     navBranches: 'Branches',
     navDimensions: 'Dimensions',
     navStatus: 'Status',
     navRegister: 'Register',
     backToTop: 'Back to top',
+    steeringTitle: 'From target to execution',
+    steeringBody: 'This chain connects the 2SG target architecture to execution. It guides projects and activities without replacing their detailed planning.',
+    blueprint: 'Institutional blueprint',
+    blueprintBody: 'A living document describing the target architecture and guiding the progressive structuring of 2SG.',
+    roadmap: 'Roadmap',
+    roadmapBody: 'A sequenced view of the steps, milestones and priorities needed to progress towards a target.',
+    actionPlan: 'Action plan',
+    actionPlanBody: 'The concrete organisation of actions, owners, deadlines, resources and evidence needed to achieve an outcome.',
     ruleTitle: 'Modelling rule',
     ruleBody: 'A phase always belongs to a project. A recurring activity may belong to an operational plan without creating an artificial project.',
     projectBranch: 'Project branch',
@@ -112,12 +133,21 @@ const COPY = {
     targetModel: 'Funktionales Zielmodell',
     connectedTasks: 'Bestehendes Aufgabenregister',
     navLabel: 'Navigation innerhalb Planung & Projekte',
+    navSteering: 'Steuerung',
     navModel: 'Modell',
     navBranches: 'Zweige',
     navDimensions: 'Dimensionen',
     navStatus: 'Stand',
     navRegister: 'Register',
     backToTop: 'Nach oben',
+    steeringTitle: 'Vom Zielbild zur Umsetzung',
+    steeringBody: 'Diese Kette verbindet die Zielarchitektur von 2SG mit der Umsetzung. Sie steuert Projekte und Aktivitäten, ohne deren Detailplanung zu ersetzen.',
+    blueprint: 'Institutioneller Blueprint',
+    blueprintBody: 'Lebendes Dokument, das die Zielarchitektur beschreibt und die schrittweise Strukturierung von 2SG leitet.',
+    roadmap: 'Roadmap',
+    roadmapBody: 'Geordnete Übersicht der Schritte, Meilensteine und Prioritäten auf dem Weg zu einem Zielzustand.',
+    actionPlan: 'Maßnahmenplan',
+    actionPlanBody: 'Konkrete Organisation der Maßnahmen, Verantwortlichen, Fristen, Ressourcen und Nachweise für ein Ergebnis.',
     ruleTitle: 'Modellierungsregel',
     ruleBody: 'Eine Phase gehört immer zu einem Projekt. Eine wiederkehrende Aktivität kann einem operativen Plan zugeordnet werden, ohne ein künstliches Projekt anzulegen.',
     projectBranch: 'Projektzweig',
@@ -168,6 +198,24 @@ const StepCard = ({ icon: Icon, title, body, tone = 'blue' }) => {
   );
 };
 
+const SteeringStep = ({ icon: Icon, title, body, termId, language, index }) => (
+  <article className="flex min-w-0 flex-col rounded-lg border border-blue-700/70 bg-slate-950/35 p-4">
+    <div className="flex items-start justify-between gap-3">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-blue-500/40 bg-blue-950 text-blue-200">
+        <Icon size={19} aria-hidden="true" />
+      </span>
+      <span className="flex h-7 min-w-7 items-center justify-center rounded-full bg-blue-600 px-2 text-xs font-bold text-white">
+        {index}
+      </span>
+    </div>
+    <div className="mt-4 flex items-start gap-2">
+      <h4 className="min-w-0 flex-1 text-base font-bold leading-6 text-white">{title}</h4>
+      <GlossaryHelp termId={termId} language={language} />
+    </div>
+    <p className="mt-2 text-sm leading-6 text-slate-300">{body}</p>
+  </article>
+);
+
 const Metric = ({ label, value }) => (
   <div className="rounded-lg border border-slate-700 bg-slate-950/30 p-4">
     <p className="text-xs font-semibold uppercase text-slate-400">{label}</p>
@@ -179,6 +227,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0 
   const t = COPY[language] || COPY.FR;
   const completion = tasksTotal > 0 ? `${Math.round((completedTasks / tasksTotal) * 100)} %` : '0 %';
   const navItems = [
+    { id: 'planning-steering', label: t.navSteering },
     { id: 'planning-model', label: t.navModel },
     { id: 'planning-branches', label: t.navBranches },
     { id: 'planning-dimensions', label: t.navDimensions },
@@ -203,6 +252,24 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0 
       </header>
 
       <InternalSectionNav ariaLabel={t.navLabel} items={navItems} topId="planning-top" backToTopLabel={t.backToTop} refreshKey={language} />
+
+      <section id="planning-steering" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="planning-steering-title">
+        <div className="max-w-3xl">
+          <h3 id="planning-steering-title" className="text-lg font-bold text-white">{t.steeringTitle}</h3>
+          <p className="mt-2 text-sm leading-6 text-slate-300">{t.steeringBody}</p>
+        </div>
+        <div className="mt-5 grid gap-3 xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] xl:items-stretch">
+          <SteeringStep icon={Compass} title={t.blueprint} body={t.blueprintBody} termId="STRAT-BLUEPRINT" language={language} index="1" />
+          <div className="hidden items-center justify-center px-1 text-blue-300 xl:flex" aria-hidden="true">
+            <ArrowRight size={24} />
+          </div>
+          <SteeringStep icon={Route} title={t.roadmap} body={t.roadmapBody} termId="STRAT-FEUILLE-ROUTE" language={language} index="2" />
+          <div className="hidden items-center justify-center px-1 text-blue-300 xl:flex" aria-hidden="true">
+            <ArrowRight size={24} />
+          </div>
+          <SteeringStep icon={ListChecks} title={t.actionPlan} body={t.actionPlanBody} termId="OPS-PLAN-ACTION" language={language} index="3" />
+        </div>
+      </section>
 
       <aside id="planning-model" className="scroll-mt-20 rounded-lg border border-blue-700/60 bg-blue-950/25 p-5">
         <div className="flex items-start gap-3">

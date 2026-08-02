@@ -13,10 +13,32 @@ test('renders the project hierarchy and recurring activity branch in French', ()
   expect(screen.getByRole('navigation', { name: 'Navigation dans Planification & Projets' })).toBeInTheDocument();
 });
 
+test('connects strategic steering to validated glossary definitions', () => {
+  render(<PlanningOverview language="FR" tasksTotal={8} completedTasks={2} />);
+
+  expect(screen.getByRole('heading', { name: "De la cible à l'exécution" })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Pilotage' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Blueprint institutionnel' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Feuille de route' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: "Plan d'action" })).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: 'Définition du Glossaire : Feuille de route' }));
+  expect(screen.getByRole('dialog', { name: 'Feuille de route' })).toBeInTheDocument();
+  expect(screen.getByText('Définition validée')).toBeInTheDocument();
+  expect(screen.getByText('STRAT-FEUILLE-ROUTE')).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Voir dans le Glossaire' })).toHaveAttribute(
+    'href',
+    '/ged?tab=knowledge&term=STRAT-FEUILLE-ROUTE'
+  );
+});
+
 test('renders the planner model in German', () => {
   render(<PlanningOverview language="DE" tasksTotal={0} completedTasks={0} />);
 
   expect(screen.getByRole('heading', { name: 'Planung & Projektmanagement' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Vom Zielbild zur Umsetzung' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Institutioneller Blueprint' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Maßnahmenplan' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Übergreifende Dimensionen des Planers' })).toBeInTheDocument();
   expect(screen.getByText(/Eine Phase gehört immer zu einem Projekt/i)).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Nach oben' })).toBeInTheDocument();
