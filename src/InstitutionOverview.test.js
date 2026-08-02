@@ -18,6 +18,8 @@ test('renders the validated horizontal governance in French', () => {
   screen.getAllByRole('link', { name: 'Consulter l’espace documentaire' }).forEach(link => {
     expect(link).toHaveAttribute('href', '/ged?tab=documents');
   });
+  fireEvent.click(screen.getByRole('button', { name: 'Ouvrir la lecture visuelle' }));
+  expect(screen.getByRole('heading', { level: 3, name: 'Note de synthèse stratégique V2' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Définition du Glossaire : Vision' })).toBeInTheDocument();
   expect(screen.getAllByRole('button', { name: 'Définition du Glossaire : Business Plan' }).length).toBeGreaterThan(0);
   expect(screen.getByText(/Association internationale, structure de social business/i)).toBeInTheDocument();

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ArrowRight,
   BookOpen,
@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import InternalSectionNav from './InternalSectionNav';
 import GlossaryHelp from './GlossaryHelp';
+import StrategicSummaryVisual from './StrategicSummaryVisual';
 
 const COPY = {
   FR: {
@@ -100,6 +101,7 @@ const COPY = {
     intendedUse: 'Lecture attendue',
     targetOutput: 'Livrable visuel cible',
     openGed: 'Consulter l’espace documentaire',
+    openVisual: 'Ouvrir la lecture visuelle',
     businessPlanStatus: 'Travail interne · validation financière et visuelle requise',
     businessPlanUse: 'Décision économique, scénarios, financement et trajectoire.',
     businessPlanOutput: 'Parcours Business Plan interactif',
@@ -248,6 +250,7 @@ const COPY = {
     intendedUse: 'Intended reading',
     targetOutput: 'Target visual deliverable',
     openGed: 'Open document space',
+    openVisual: 'Open visual reading',
     businessPlanStatus: 'Internal working draft · financial and visual validation required',
     businessPlanUse: 'Economic decisions, scenarios, funding and trajectory.',
     businessPlanOutput: 'Interactive Business Plan journey',
@@ -396,6 +399,7 @@ const COPY = {
     intendedUse: 'Vorgesehene Lektüre',
     targetOutput: 'Visuelles Zielformat',
     openGed: 'Dokumentenbereich öffnen',
+    openVisual: 'Visuelle Aufbereitung öffnen',
     businessPlanStatus: 'Interner Arbeitsstand · finanzielle und visuelle Validierung erforderlich',
     businessPlanUse: 'Wirtschaftliche Entscheidungen, Szenarien, Finanzierung und Entwicklungspfad.',
     businessPlanOutput: 'Interaktive Businessplan-Darstellung',
@@ -519,7 +523,13 @@ const PersonCard = ({ person, type, typeLabel, rightLabel }) => (
 
 const InstitutionOverview = ({ language = 'FR' }) => {
   const t = COPY[language] || COPY.FR;
+  const [showStrategicSummary, setShowStrategicSummary] = useState(false);
   const data = people(t);
+
+  useEffect(() => {
+    if (!showStrategicSummary) return;
+    document.getElementById('strategic-summary-visual')?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+  }, [showStrategicSummary]);
   const accessRules = [
     [t.foundersAccess, t.foundersAccessBody, Shield],
     [t.associatesAccess, t.associatesAccessBody, UserCheck],
@@ -564,7 +574,8 @@ const InstitutionOverview = ({ language = 'FR' }) => {
       Icon: FileText,
       status: t.synthesisStatus,
       use: t.synthesisUse,
-      output: t.synthesisOutput
+      output: t.synthesisOutput,
+      hasVisual: true
     },
     {
       title: t.directorDoc,
@@ -719,7 +730,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
           <p className="mt-1 max-w-5xl text-sm leading-6 text-slate-400">{t.libraryBody}</p>
         </div>
         <div className="grid gap-4 lg:grid-cols-3">
-          {documentViews.map(({ title, body, Icon, status, use, output, glossaryTermId }) => (
+          {documentViews.map(({ title, body, Icon, status, use, output, glossaryTermId, hasVisual }) => (
             <article key={title} className="flex h-full flex-col rounded-lg border border-slate-700 bg-slate-800 p-5">
               <div className="flex items-center justify-between gap-3">
                 <Icon className="shrink-0 text-blue-300" size={21} aria-hidden="true" />
@@ -744,16 +755,26 @@ const InstitutionOverview = ({ language = 'FR' }) => {
                   <dd className="mt-1 text-sm font-semibold leading-5 text-amber-300">{output}</dd>
                 </div>
               </dl>
-              <a
-                href="/ged?tab=documents"
-                className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-blue-700 bg-blue-950/60 px-4 py-2 text-center text-sm font-bold text-blue-100 transition-colors hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              >
-                <FolderOpen size={17} aria-hidden="true" />
-                <span>{t.openGed}</span>
-              </a>
+              <div className="mt-auto space-y-2 pt-4">
+                {hasVisual && (
+                  <button type="button" onClick={() => setShowStrategicSummary(true)} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-bold text-white transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <Presentation size={17} aria-hidden="true" />
+                    <span>{t.openVisual}</span>
+                  </button>
+                )}
+                <a href="/ged?tab=documents" className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-blue-700 bg-blue-950/60 px-4 py-2 text-center text-sm font-bold text-blue-100 transition-colors hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                  <FolderOpen size={17} aria-hidden="true" />
+                  <span>{t.openGed}</span>
+                </a>
+              </div>
             </article>
           ))}
         </div>
+        {showStrategicSummary && (
+          <div className="mt-4">
+            <StrategicSummaryVisual language={language} onClose={() => setShowStrategicSummary(false)} />
+          </div>
+        )}
         <div className="mt-4 rounded-lg border border-slate-700 bg-slate-800 p-5 sm:p-6">
           <div className="flex gap-3">
             <Presentation className="mt-0.5 shrink-0 text-blue-300" size={21} aria-hidden="true" />
