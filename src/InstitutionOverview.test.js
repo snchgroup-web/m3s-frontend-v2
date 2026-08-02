@@ -12,6 +12,8 @@ test('renders the validated horizontal governance in French', () => {
   expect(screen.getByRole('heading', { name: 'Conformité légale & obligations' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Documents directeurs & lectures visuelles' })).toBeInTheDocument();
   expect(screen.getByText('Business Plan 2SG V8 - travail')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Définition du Glossaire : Vision' })).toBeInTheDocument();
+  expect(screen.getAllByRole('button', { name: 'Définition du Glossaire : Business Plan' }).length).toBeGreaterThan(0);
   expect(screen.getByText(/Association internationale, structure de social business/i)).toBeInTheDocument();
   expect(screen.getByText(/Les pièces sont conservées dans la GED/i)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Un Bureau horizontal' })).toBeInTheDocument();
@@ -28,6 +30,7 @@ test('renders access boundaries and support reporting in English', () => {
   expect(screen.getByRole('heading', { name: '2SG - Hybrid institution and governance' })).toBeInTheDocument();
   expect(screen.getByRole('navigation', { name: 'Institution navigation' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Back to top' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Glossary definition : Mission' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Institutional architecture and master sources' })).toBeInTheDocument();
   expect(screen.getByText(/report directly to Ibou/i)).toBeInTheDocument();
   expect(screen.getByText(/User access in other modules/i)).toBeInTheDocument();
@@ -41,6 +44,7 @@ test('renders the German institutional labels', () => {
   expect(screen.getByRole('heading', { name: 'Was administrative Verwaltung in M3S umfasst' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Ein horizontal organisiertes Büro' })).toBeInTheDocument();
   expect(screen.getAllByText('M3S-Adminrecht')).toHaveLength(2);
+  expect(screen.getByRole('button', { name: 'Glossardefinition : Institutioneller Zweck' })).toBeInTheDocument();
   expect(screen.getByText(/Vorfinanzierung von Investitionen und Betrieb/i)).toBeInTheDocument();
 });
 

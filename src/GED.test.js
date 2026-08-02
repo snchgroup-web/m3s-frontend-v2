@@ -30,8 +30,8 @@ jest.mock('./api', () => ({
   }
 }));
 
-const renderGed = (tab, language = 'FR') => {
-  mockSearch = `?tab=${tab}`;
+const renderGed = (tab, language = 'FR', extraQuery = '') => {
+  mockSearch = `?tab=${tab}${extraQuery}`;
   localStorage.setItem('language', language);
   api.getDocuments.mockResolvedValue({ data: [] });
   api.getDigitalOffersTaxonomy.mockRejectedValue(new Error('API disabled in test'));
@@ -79,6 +79,15 @@ test('renders searchable knowledge cards with source metadata', async () => {
 
   expect(screen.getAllByText('Knowledge Management (KM)').length).toBeGreaterThan(0);
   expect(screen.queryByText('Veille stratégique 2SG')).not.toBeInTheDocument();
+});
+
+test('opens a contextual glossary entry from its stable identifier', async () => {
+  renderGed('knowledge', 'FR', '&term=STRAT-BUSINESS-PLAN');
+
+  expect(await screen.findByRole('heading', { name: 'Business Plan' })).toBeInTheDocument();
+  expect(screen.getByText('Proposition à valider')).toBeInTheDocument();
+  expect(screen.getByText('STRAT-BUSINESS-PLAN')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Revenir à la page Institution' })).toBeInTheDocument();
 });
 
 test('renders the English pilot labels from the shared language context', async () => {
