@@ -1,17 +1,21 @@
 import React from 'react';
 import {
+  ArrowRight,
   BookOpen,
   BriefcaseBusiness,
   Building2,
   CheckCircle,
   Compass,
+  Eye,
   FileText,
+  FolderOpen,
   HandCoins,
   HeartHandshake,
   Info,
   Lock,
   Mail,
   Network,
+  Presentation,
   Scale,
   Shield,
   Star,
@@ -92,6 +96,25 @@ const COPY = {
     directorDocBody: 'Source de la présentation institutionnelle générale et de la navigation entre les référentiels.',
     sourceIdentified: 'Source identifiée',
     visualPlanned: 'Présentation à produire',
+    documentStatus: 'Statut documentaire',
+    intendedUse: 'Lecture attendue',
+    targetOutput: 'Livrable visuel cible',
+    openGed: 'Consulter l’espace documentaire',
+    businessPlanStatus: 'Travail interne · validation financière et visuelle requise',
+    businessPlanUse: 'Décision économique, scénarios, financement et trajectoire.',
+    businessPlanOutput: 'Parcours Business Plan interactif',
+    synthesisStatus: 'Pont stratégique · ne remplace pas les sources maîtresses',
+    synthesisUse: 'Compréhension rapide, reprise de contexte et aide à la décision.',
+    synthesisOutput: 'Présentation exécutive courte',
+    directorStatus: 'Travail stratégique · la V3C reste la référence historique',
+    directorUse: 'Vue institutionnelle globale et navigation entre les référentiels.',
+    directorOutput: 'Présentation institutionnelle générale',
+    sourceJourneyTitle: 'De la source maîtresse à la lecture visuelle',
+    sourceJourneyBody: 'La présentation facilite la lecture ; elle ne modifie ni le contenu, ni le statut, ni la gouvernance du document d’origine.',
+    journeySource: 'Source identifiée',
+    journeyReading: 'Lecture visuelle',
+    journeyValidation: 'Validation humaine',
+    journeyGed: 'Diffusion selon les droits',
     libraryRule: 'Chaque présentation dérivée devra afficher la source, la version, la date et la classification, puis proposer selon les droits : lecture interactive, téléchargement du document maître, export PDF et présentation PPTX. Aucun document interne ne doit être copié dans les ressources publiques du frontend.',
     adminScopeTitle: 'Ce que couvre la gestion administrative dans M3S',
     adminScopeBody: 'La gestion administrative organise, formalise, planifie, trace et communique le fonctionnement transversal de 2SG.',
@@ -221,6 +244,25 @@ const COPY = {
     directorDocBody: 'Source for the overall institutional presentation and navigation across reference documents.',
     sourceIdentified: 'Source identified',
     visualPlanned: 'Presentation to produce',
+    documentStatus: 'Document status',
+    intendedUse: 'Intended reading',
+    targetOutput: 'Target visual deliverable',
+    openGed: 'Open document space',
+    businessPlanStatus: 'Internal working draft · financial and visual validation required',
+    businessPlanUse: 'Economic decisions, scenarios, funding and trajectory.',
+    businessPlanOutput: 'Interactive Business Plan journey',
+    synthesisStatus: 'Strategic bridge · does not replace master sources',
+    synthesisUse: 'Rapid understanding, context resumption and decision support.',
+    synthesisOutput: 'Concise executive presentation',
+    directorStatus: 'Strategic working draft · V3C remains the historical reference',
+    directorUse: 'Overall institutional view and navigation across reference documents.',
+    directorOutput: 'Overall institutional presentation',
+    sourceJourneyTitle: 'From master source to visual reading',
+    sourceJourneyBody: 'The presentation makes the document easier to read; it does not alter the content, status or governance of the original document.',
+    journeySource: 'Source identified',
+    journeyReading: 'Visual reading',
+    journeyValidation: 'Human validation',
+    journeyGed: 'Rights-based distribution',
     libraryRule: 'Each derived presentation must show its source, version, date and classification, then offer according to access rights: interactive reading, master-document download, PDF export and PPTX presentation. No internal document may be copied into public frontend assets.',
     adminScopeTitle: 'What administrative management covers in M3S',
     adminScopeBody: 'Administrative management organises, formalises, plans, traces and communicates 2SG cross-functional operations.',
@@ -350,6 +392,25 @@ const COPY = {
     directorDocBody: 'Quelle für die allgemeine institutionelle Präsentation und die Navigation zwischen Referenzdokumenten.',
     sourceIdentified: 'Quelle identifiziert',
     visualPlanned: 'Präsentation zu erstellen',
+    documentStatus: 'Dokumentstatus',
+    intendedUse: 'Vorgesehene Lektüre',
+    targetOutput: 'Visuelles Zielformat',
+    openGed: 'Dokumentenbereich öffnen',
+    businessPlanStatus: 'Interner Arbeitsstand · finanzielle und visuelle Validierung erforderlich',
+    businessPlanUse: 'Wirtschaftliche Entscheidungen, Szenarien, Finanzierung und Entwicklungspfad.',
+    businessPlanOutput: 'Interaktive Businessplan-Darstellung',
+    synthesisStatus: 'Strategische Brücke · ersetzt keine maßgebliche Quelle',
+    synthesisUse: 'Schnelle Orientierung, Wiederaufnahme des Kontexts und Entscheidungshilfe.',
+    synthesisOutput: 'Kurze Managementpräsentation',
+    directorStatus: 'Strategischer Arbeitsstand · V3C bleibt die historische Referenz',
+    directorUse: 'Institutionelle Gesamtsicht und Navigation zwischen Referenzdokumenten.',
+    directorOutput: 'Allgemeine institutionelle Präsentation',
+    sourceJourneyTitle: 'Von der maßgeblichen Quelle zur visuellen Aufbereitung',
+    sourceJourneyBody: 'Die Präsentation erleichtert die Lektüre; Inhalt, Status und Governance des Originaldokuments bleiben unverändert.',
+    journeySource: 'Quelle identifiziert',
+    journeyReading: 'Visuelle Aufbereitung',
+    journeyValidation: 'Menschliche Validierung',
+    journeyGed: 'Berechtigte Verteilung',
     libraryRule: 'Jede abgeleitete Präsentation muss Quelle, Version, Datum und Klassifizierung anzeigen und je nach Berechtigung interaktive Lektüre, Download des Masterdokuments, PDF-Export und PPTX-Präsentation anbieten. Interne Dokumente dürfen nicht in öffentliche Frontend-Ressourcen kopiert werden.',
     adminScopeTitle: 'Was administrative Verwaltung in M3S umfasst',
     adminScopeBody: 'Administrative Verwaltung organisiert, formalisiert, plant, dokumentiert und kommuniziert die bereichsübergreifende Arbeit von 2SG.',
@@ -488,9 +549,37 @@ const InstitutionOverview = ({ language = 'FR' }) => {
     [t.m3sTitle, t.m3sBody, Network, []]
   ];
   const documentViews = [
-    [t.businessPlanDoc, t.businessPlanDocBody, BriefcaseBusiness],
-    [t.synthesisDoc, t.synthesisDocBody, FileText],
-    [t.directorDoc, t.directorDocBody, BookOpen]
+    {
+      title: t.businessPlanDoc,
+      body: t.businessPlanDocBody,
+      Icon: BriefcaseBusiness,
+      status: t.businessPlanStatus,
+      use: t.businessPlanUse,
+      output: t.businessPlanOutput,
+      glossaryTermId: 'STRAT-BUSINESS-PLAN'
+    },
+    {
+      title: t.synthesisDoc,
+      body: t.synthesisDocBody,
+      Icon: FileText,
+      status: t.synthesisStatus,
+      use: t.synthesisUse,
+      output: t.synthesisOutput
+    },
+    {
+      title: t.directorDoc,
+      body: t.directorDocBody,
+      Icon: BookOpen,
+      status: t.directorStatus,
+      use: t.directorUse,
+      output: t.directorOutput
+    }
+  ];
+  const sourceJourney = [
+    [t.journeySource, FileText],
+    [t.journeyReading, Eye],
+    [t.journeyValidation, CheckCircle],
+    [t.journeyGed, FolderOpen]
   ];
   const adminAreas = [
     [t.institutionAreaTitle, t.institutionAreaBody, Building2, t.activeArea, 'green'],
@@ -630,20 +719,59 @@ const InstitutionOverview = ({ language = 'FR' }) => {
           <p className="mt-1 max-w-5xl text-sm leading-6 text-slate-400">{t.libraryBody}</p>
         </div>
         <div className="grid gap-4 lg:grid-cols-3">
-          {documentViews.map(([title, body, Icon]) => (
+          {documentViews.map(({ title, body, Icon, status, use, output, glossaryTermId }) => (
             <article key={title} className="flex h-full flex-col rounded-lg border border-slate-700 bg-slate-800 p-5">
               <div className="flex items-center justify-between gap-3">
                 <Icon className="shrink-0 text-blue-300" size={21} aria-hidden="true" />
                 <StatusPill tone="green">{t.sourceIdentified}</StatusPill>
               </div>
-              <h4 className="mt-4 font-bold leading-6 text-white">{title}</h4>
-              {title === t.businessPlanDoc && (
-                <div className="mt-2"><GlossaryHelp termId="STRAT-BUSINESS-PLAN" language={language} /></div>
-              )}
-              <p className="mt-2 flex-1 text-sm leading-6 text-slate-400">{body}</p>
-              <p className="mt-4 border-t border-slate-700 pt-3 text-xs font-semibold text-amber-300">{t.visualPlanned}</p>
+              <div className="mt-4 flex items-start gap-2">
+                <h4 className="font-bold leading-6 text-white">{title}</h4>
+                {glossaryTermId && <GlossaryHelp termId={glossaryTermId} language={language} />}
+              </div>
+              <p className="mt-2 text-sm leading-6 text-slate-400">{body}</p>
+              <dl className="mt-4 divide-y divide-slate-700 border-y border-slate-700">
+                <div className="py-3">
+                  <dt className="text-xs font-bold uppercase text-slate-500">{t.documentStatus}</dt>
+                  <dd className="mt-1 text-sm leading-5 text-slate-300">{status}</dd>
+                </div>
+                <div className="py-3">
+                  <dt className="text-xs font-bold uppercase text-slate-500">{t.intendedUse}</dt>
+                  <dd className="mt-1 text-sm leading-5 text-slate-300">{use}</dd>
+                </div>
+                <div className="py-3">
+                  <dt className="text-xs font-bold uppercase text-slate-500">{t.targetOutput}</dt>
+                  <dd className="mt-1 text-sm font-semibold leading-5 text-amber-300">{output}</dd>
+                </div>
+              </dl>
+              <a
+                href="/ged?tab=documents"
+                className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-blue-700 bg-blue-950/60 px-4 py-2 text-center text-sm font-bold text-blue-100 transition-colors hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                <FolderOpen size={17} aria-hidden="true" />
+                <span>{t.openGed}</span>
+              </a>
             </article>
           ))}
+        </div>
+        <div className="mt-4 rounded-lg border border-slate-700 bg-slate-800 p-5 sm:p-6">
+          <div className="flex gap-3">
+            <Presentation className="mt-0.5 shrink-0 text-blue-300" size={21} aria-hidden="true" />
+            <div>
+              <h4 className="font-bold text-white">{t.sourceJourneyTitle}</h4>
+              <p className="mt-1 text-sm leading-6 text-slate-400">{t.sourceJourneyBody}</p>
+            </div>
+          </div>
+          <ol className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {sourceJourney.map(([label, Icon], index) => (
+              <li key={label} className="flex min-h-16 items-center gap-3 rounded-lg border border-slate-700 bg-slate-900/45 p-3">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-950 text-xs font-bold text-blue-200">{index + 1}</span>
+                <Icon className="shrink-0 text-slate-400" size={18} aria-hidden="true" />
+                <span className="text-sm font-semibold leading-5 text-slate-200">{label}</span>
+                {index < sourceJourney.length - 1 && <ArrowRight className="ml-auto hidden shrink-0 text-slate-600 xl:block" size={17} aria-hidden="true" />}
+              </li>
+            ))}
+          </ol>
         </div>
         <aside className="mt-4 rounded-lg border border-amber-800/60 bg-amber-950/20 p-4">
           <div className="flex gap-3"><Info className="mt-0.5 shrink-0 text-amber-300" size={19} aria-hidden="true" /><p className="text-sm leading-6 text-amber-100/85">{t.libraryRule}</p></div>
