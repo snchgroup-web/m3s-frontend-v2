@@ -4,9 +4,12 @@ import menuData from './menuStructure.json';
 export const centerTabHorizontally = (container, activeButton) => {
   if (!container || !activeButton) return;
 
-  const desiredLeft = activeButton.offsetLeft
-    - (container.clientWidth / 2)
-    + (activeButton.clientWidth / 2);
+  const containerRect = container.getBoundingClientRect();
+  const activeButtonRect = activeButton.getBoundingClientRect();
+  const buttonCenterInContent = container.scrollLeft
+    + (activeButtonRect.left - containerRect.left)
+    + (activeButtonRect.width / 2);
+  const desiredLeft = buttonCenterInContent - (container.clientWidth / 2);
   const maxLeft = Math.max(0, container.scrollWidth - container.clientWidth);
   const left = Math.min(maxLeft, Math.max(0, desiredLeft));
 
