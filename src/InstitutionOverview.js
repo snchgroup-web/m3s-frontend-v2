@@ -529,7 +529,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
         </div>
       </header>
 
-      <InternalSectionNav ariaLabel={t.sectionNavLabel} items={sectionNavItems} topId="institution-top" backToTopLabel={t.backToTop} />
+      <InternalSectionNav ariaLabel={t.sectionNavLabel} items={sectionNavItems} topId="institution-top" backToTopLabel={t.backToTop} refreshKey={language} />
 
       <section id="institution-fundamentals" className="scroll-mt-20 py-1" aria-labelledby="profile-title">
         <div className="mb-4">

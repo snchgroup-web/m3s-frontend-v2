@@ -271,7 +271,7 @@ const ComplianceOverview = ({ language = 'FR' }) => {
         </div>
       </header>
 
-      <InternalSectionNav ariaLabel={t.navLabel} items={navItems} topId="compliance-top" backToTopLabel={t.backToTop} />
+      <InternalSectionNav ariaLabel={t.navLabel} items={navItems} topId="compliance-top" backToTopLabel={t.backToTop} refreshKey={language} />
 
       <section id="compliance-framework" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="compliance-framework-title">
         <h3 id="compliance-framework-title" className="text-xl font-bold text-white">{t.frameworkTitle}</h3>
