@@ -27,14 +27,16 @@ test('renders the German compliance boundaries', () => {
   expect(screen.getByText(/ersetzt weder Fachmodule noch Rechtsberatung/i)).toBeInTheDocument();
 });
 
-test('uses the compliance internal navigation', () => {
+test('preserves the selected compliance section when the language changes', () => {
   const scrollIntoView = jest.fn();
   const originalScrollIntoView = window.HTMLElement.prototype.scrollIntoView;
   window.HTMLElement.prototype.scrollIntoView = scrollIntoView;
 
-  render(<ComplianceOverview language="EN" />);
-  fireEvent.click(screen.getByRole('button', { name: 'Controls & evidence' }));
+  const { rerender } = render(<ComplianceOverview language="EN" />);
+  fireEvent.click(screen.getByRole('button', { name: 'Registers' }));
+  rerender(<ComplianceOverview language="DE" />);
 
-  expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
+  expect(scrollIntoView).toHaveBeenNthCalledWith(1, { behavior: 'smooth', block: 'start' });
+  expect(scrollIntoView).toHaveBeenNthCalledWith(2, { behavior: 'auto', block: 'start' });
   window.HTMLElement.prototype.scrollIntoView = originalScrollIntoView;
 });

@@ -202,7 +202,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0 
         </div>
       </header>
 
-      <InternalSectionNav ariaLabel={t.navLabel} items={navItems} topId="planning-top" backToTopLabel={t.backToTop} />
+      <InternalSectionNav ariaLabel={t.navLabel} items={navItems} topId="planning-top" backToTopLabel={t.backToTop} refreshKey={language} />
 
       <aside id="planning-model" className="scroll-mt-20 rounded-lg border border-blue-700/60 bg-blue-950/25 p-5">
         <div className="flex items-start gap-3">
