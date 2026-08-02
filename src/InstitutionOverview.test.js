@@ -19,12 +19,15 @@ test('renders the validated horizontal governance in French', () => {
     expect(link).toHaveAttribute('href', '/ged?tab=documents');
   });
   const visualButtons = screen.getAllByRole('button', { name: 'Ouvrir la lecture visuelle' });
-  expect(visualButtons).toHaveLength(2);
+  expect(visualButtons).toHaveLength(3);
   fireEvent.click(visualButtons[0]);
   expect(screen.getByRole('heading', { level: 3, name: 'Business Plan 2SG V8' })).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Fermer le parcours Business Plan' }));
   fireEvent.click(screen.getAllByRole('button', { name: 'Ouvrir la lecture visuelle' })[1]);
   expect(screen.getByRole('heading', { level: 3, name: 'Note de synthèse stratégique V2' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Fermer la lecture visuelle' }));
+  fireEvent.click(screen.getAllByRole('button', { name: 'Ouvrir la lecture visuelle' })[2]);
+  expect(screen.getByRole('heading', { level: 3, name: 'Document Directeur Global 2SG V4' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Définition du Glossaire : Vision' })).toBeInTheDocument();
   expect(screen.getAllByRole('button', { name: 'Définition du Glossaire : Business Plan' }).length).toBeGreaterThan(0);
   expect(screen.getByText(/Association internationale, structure de social business/i)).toBeInTheDocument();

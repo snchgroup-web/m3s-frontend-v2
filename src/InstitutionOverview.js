@@ -26,6 +26,7 @@ import {
 import InternalSectionNav from './InternalSectionNav';
 import GlossaryHelp from './GlossaryHelp';
 import BusinessPlanVisual from './BusinessPlanVisual';
+import DirectorDocumentVisual from './DirectorDocumentVisual';
 import StrategicSummaryVisual from './StrategicSummaryVisual';
 
 const COPY = {
@@ -529,7 +530,12 @@ const InstitutionOverview = ({ language = 'FR' }) => {
 
   useEffect(() => {
     if (!activeVisual) return;
-    const targetId = activeVisual === 'business-plan' ? 'business-plan-visual' : 'strategic-summary-visual';
+    const targetIds = {
+      'business-plan': 'business-plan-visual',
+      'strategic-summary': 'strategic-summary-visual',
+      'director-document': 'director-document-visual'
+    };
+    const targetId = targetIds[activeVisual];
     document.getElementById(targetId)?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
   }, [activeVisual]);
   const accessRules = [
@@ -586,7 +592,8 @@ const InstitutionOverview = ({ language = 'FR' }) => {
       Icon: BookOpen,
       status: t.directorStatus,
       use: t.directorUse,
-      output: t.directorOutput
+      output: t.directorOutput,
+      visualKey: 'director-document'
     }
   ];
   const sourceJourney = [
@@ -781,6 +788,11 @@ const InstitutionOverview = ({ language = 'FR' }) => {
         {activeVisual === 'strategic-summary' && (
           <div className="mt-4">
             <StrategicSummaryVisual language={language} onClose={() => setActiveVisual(null)} />
+          </div>
+        )}
+        {activeVisual === 'director-document' && (
+          <div className="mt-4">
+            <DirectorDocumentVisual language={language} onClose={() => setActiveVisual(null)} />
           </div>
         )}
         <div className="mt-4 rounded-lg border border-slate-700 bg-slate-800 p-5 sm:p-6">
