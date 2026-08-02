@@ -9,6 +9,7 @@ import TableControls from './TableControls';
 import InstitutionOverview from './InstitutionOverview';
 import PlanningOverview from './PlanningOverview';
 import ComplianceOverview from './ComplianceOverview';
+import CommunicationOverview from './CommunicationOverview';
 import { resolveAdministrationTab } from './administrationTabs';
 
 const Admin = () => {
@@ -764,6 +765,10 @@ const Admin = () => {
           <ComplianceOverview language={language} />
         )}
 
+        {activeTab === 'communication' && (
+          <CommunicationOverview language={language} />
+        )}
+
         {/* Utilisateurs */}
         {activeTab === 'users' && (
           <div>
@@ -883,7 +888,7 @@ const Admin = () => {
           </div>
         )}
 
-        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} handledTabs={['overview', 'institution', 'planning', 'compliance']} />
+        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} handledTabs={['overview', 'institution', 'planning', 'communication', 'compliance']} />
         </div>
       </div>
 
