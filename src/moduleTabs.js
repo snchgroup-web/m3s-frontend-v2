@@ -1,6 +1,22 @@
 import { useEffect, useRef } from 'react';
 import menuData from './menuStructure.json';
 
+export const centerTabHorizontally = (container, activeButton) => {
+  if (!container || !activeButton) return;
+
+  const desiredLeft = activeButton.offsetLeft
+    - (container.clientWidth / 2)
+    + (activeButton.clientWidth / 2);
+  const maxLeft = Math.max(0, container.scrollWidth - container.clientWidth);
+  const left = Math.min(maxLeft, Math.max(0, desiredLeft));
+
+  if (typeof container.scrollTo === 'function') {
+    container.scrollTo({ left, behavior: 'smooth' });
+  } else {
+    container.scrollLeft = left;
+  }
+};
+
 const placeholderText = {
   FR: {
     title: 'Section a construire',
@@ -57,6 +73,7 @@ export const ModuleChildTabs = ({ moduleId, language, activeTab, onSelect }) => 
 
 export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs = [] }) => {
   const activeButtonRef = useRef(null);
+  const tabListRef = useRef(null);
   const mergedTabs = [];
   const seen = new Set();
   const explicitTabs = new Map(tabs.map(tab => [tab.tab, tab]));
@@ -77,13 +94,13 @@ export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs =
   tabs.forEach(addTab);
 
   useEffect(() => {
-    activeButtonRef.current?.scrollIntoView?.({ block: 'nearest', inline: 'center' });
+    centerTabHorizontally(tabListRef.current, activeButtonRef.current);
   }, [activeTab, language]);
 
   if (!mergedTabs.length) return null;
 
   return (
-    <div className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
+    <div ref={tabListRef} className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
       {mergedTabs.map(tab => (
         <button
           key={tab.id || tab.tab}
