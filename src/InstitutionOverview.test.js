@@ -12,13 +12,18 @@ test('renders the validated horizontal governance in French', () => {
   expect(screen.getByRole('heading', { name: 'Conformité légale & obligations' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Documents directeurs & lectures visuelles' })).toBeInTheDocument();
   expect(screen.getByText('Business Plan 2SG V8 - travail')).toBeInTheDocument();
-  expect(screen.getByText('Travail interne · validation financière et visuelle requise')).toBeInTheDocument();
+  expect(screen.getByText(/Base stratégique et financière validée sur le fond/i)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'De la source maîtresse à la lecture visuelle' })).toBeInTheDocument();
   expect(screen.getAllByRole('link', { name: 'Consulter l’espace documentaire' })).toHaveLength(3);
   screen.getAllByRole('link', { name: 'Consulter l’espace documentaire' }).forEach(link => {
     expect(link).toHaveAttribute('href', '/ged?tab=documents');
   });
-  fireEvent.click(screen.getByRole('button', { name: 'Ouvrir la lecture visuelle' }));
+  const visualButtons = screen.getAllByRole('button', { name: 'Ouvrir la lecture visuelle' });
+  expect(visualButtons).toHaveLength(2);
+  fireEvent.click(visualButtons[0]);
+  expect(screen.getByRole('heading', { level: 3, name: 'Business Plan 2SG V8' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Fermer le parcours Business Plan' }));
+  fireEvent.click(screen.getAllByRole('button', { name: 'Ouvrir la lecture visuelle' })[1]);
   expect(screen.getByRole('heading', { level: 3, name: 'Note de synthèse stratégique V2' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Définition du Glossaire : Vision' })).toBeInTheDocument();
   expect(screen.getAllByRole('button', { name: 'Définition du Glossaire : Business Plan' }).length).toBeGreaterThan(0);

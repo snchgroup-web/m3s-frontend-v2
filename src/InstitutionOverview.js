@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import InternalSectionNav from './InternalSectionNav';
 import GlossaryHelp from './GlossaryHelp';
+import BusinessPlanVisual from './BusinessPlanVisual';
 import StrategicSummaryVisual from './StrategicSummaryVisual';
 
 const COPY = {
@@ -102,7 +103,7 @@ const COPY = {
     targetOutput: 'Livrable visuel cible',
     openGed: 'Consulter l’espace documentaire',
     openVisual: 'Ouvrir la lecture visuelle',
-    businessPlanStatus: 'Travail interne · validation financière et visuelle requise',
+    businessPlanStatus: 'Base stratégique et financière validée sur le fond · chiffrage et revue visuelle à compléter',
     businessPlanUse: 'Décision économique, scénarios, financement et trajectoire.',
     businessPlanOutput: 'Parcours Business Plan interactif',
     synthesisStatus: 'Pont stratégique · ne remplace pas les sources maîtresses',
@@ -251,7 +252,7 @@ const COPY = {
     targetOutput: 'Target visual deliverable',
     openGed: 'Open document space',
     openVisual: 'Open visual reading',
-    businessPlanStatus: 'Internal working draft · financial and visual validation required',
+    businessPlanStatus: 'Strategic and financial baseline validated in substance · figures and visual review pending',
     businessPlanUse: 'Economic decisions, scenarios, funding and trajectory.',
     businessPlanOutput: 'Interactive Business Plan journey',
     synthesisStatus: 'Strategic bridge · does not replace master sources',
@@ -400,7 +401,7 @@ const COPY = {
     targetOutput: 'Visuelles Zielformat',
     openGed: 'Dokumentenbereich öffnen',
     openVisual: 'Visuelle Aufbereitung öffnen',
-    businessPlanStatus: 'Interner Arbeitsstand · finanzielle und visuelle Validierung erforderlich',
+    businessPlanStatus: 'Strategische und finanzielle Grundlage inhaltlich validiert · Zahlenprüfung und visuelle Überarbeitung ausstehend',
     businessPlanUse: 'Wirtschaftliche Entscheidungen, Szenarien, Finanzierung und Entwicklungspfad.',
     businessPlanOutput: 'Interaktive Businessplan-Darstellung',
     synthesisStatus: 'Strategische Brücke · ersetzt keine maßgebliche Quelle',
@@ -523,13 +524,14 @@ const PersonCard = ({ person, type, typeLabel, rightLabel }) => (
 
 const InstitutionOverview = ({ language = 'FR' }) => {
   const t = COPY[language] || COPY.FR;
-  const [showStrategicSummary, setShowStrategicSummary] = useState(false);
+  const [activeVisual, setActiveVisual] = useState(null);
   const data = people(t);
 
   useEffect(() => {
-    if (!showStrategicSummary) return;
-    document.getElementById('strategic-summary-visual')?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
-  }, [showStrategicSummary]);
+    if (!activeVisual) return;
+    const targetId = activeVisual === 'business-plan' ? 'business-plan-visual' : 'strategic-summary-visual';
+    document.getElementById(targetId)?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+  }, [activeVisual]);
   const accessRules = [
     [t.foundersAccess, t.foundersAccessBody, Shield],
     [t.associatesAccess, t.associatesAccessBody, UserCheck],
@@ -566,7 +568,8 @@ const InstitutionOverview = ({ language = 'FR' }) => {
       status: t.businessPlanStatus,
       use: t.businessPlanUse,
       output: t.businessPlanOutput,
-      glossaryTermId: 'STRAT-BUSINESS-PLAN'
+      glossaryTermId: 'STRAT-BUSINESS-PLAN',
+      visualKey: 'business-plan'
     },
     {
       title: t.synthesisDoc,
@@ -575,7 +578,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
       status: t.synthesisStatus,
       use: t.synthesisUse,
       output: t.synthesisOutput,
-      hasVisual: true
+      visualKey: 'strategic-summary'
     },
     {
       title: t.directorDoc,
@@ -730,7 +733,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
           <p className="mt-1 max-w-5xl text-sm leading-6 text-slate-400">{t.libraryBody}</p>
         </div>
         <div className="grid gap-4 lg:grid-cols-3">
-          {documentViews.map(({ title, body, Icon, status, use, output, glossaryTermId, hasVisual }) => (
+          {documentViews.map(({ title, body, Icon, status, use, output, glossaryTermId, visualKey }) => (
             <article key={title} className="flex h-full flex-col rounded-lg border border-slate-700 bg-slate-800 p-5">
               <div className="flex items-center justify-between gap-3">
                 <Icon className="shrink-0 text-blue-300" size={21} aria-hidden="true" />
@@ -756,8 +759,8 @@ const InstitutionOverview = ({ language = 'FR' }) => {
                 </div>
               </dl>
               <div className="mt-auto space-y-2 pt-4">
-                {hasVisual && (
-                  <button type="button" onClick={() => setShowStrategicSummary(true)} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-bold text-white transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                {visualKey && (
+                  <button type="button" onClick={() => setActiveVisual(visualKey)} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-bold text-white transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
                     <Presentation size={17} aria-hidden="true" />
                     <span>{t.openVisual}</span>
                   </button>
@@ -770,9 +773,14 @@ const InstitutionOverview = ({ language = 'FR' }) => {
             </article>
           ))}
         </div>
-        {showStrategicSummary && (
+        {activeVisual === 'business-plan' && (
           <div className="mt-4">
-            <StrategicSummaryVisual language={language} onClose={() => setShowStrategicSummary(false)} />
+            <BusinessPlanVisual language={language} onClose={() => setActiveVisual(null)} />
+          </div>
+        )}
+        {activeVisual === 'strategic-summary' && (
+          <div className="mt-4">
+            <StrategicSummaryVisual language={language} onClose={() => setActiveVisual(null)} />
           </div>
         )}
         <div className="mt-4 rounded-lg border border-slate-700 bg-slate-800 p-5 sm:p-6">
