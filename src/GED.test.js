@@ -85,7 +85,7 @@ test('opens a contextual glossary entry from its stable identifier', async () =>
   renderGed('knowledge', 'FR', '&term=STRAT-BUSINESS-PLAN');
 
   expect(await screen.findByRole('heading', { name: 'Business Plan' })).toBeInTheDocument();
-  expect(screen.getByText('Proposition à valider')).toBeInTheDocument();
+  expect(screen.getByText('Définition validée')).toBeInTheDocument();
   expect(screen.getByText('STRAT-BUSINESS-PLAN')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Revenir à la page Institution' })).toBeInTheDocument();
 });

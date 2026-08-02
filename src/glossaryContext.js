@@ -1,6 +1,6 @@
 const GLOSSARY_CONTEXT = {
   'INST-VISION': {
-    version: 'V4.9',
+    version: 'V5.0',
     translations: {
       FR: {
         term: 'Vision',
@@ -20,7 +20,7 @@ const GLOSSARY_CONTEXT = {
     }
   },
   'INST-MISSION': {
-    version: 'V4.9',
+    version: 'V5.0',
     translations: {
       FR: {
         term: 'Mission',
@@ -40,27 +40,27 @@ const GLOSSARY_CONTEXT = {
     }
   },
   'INST-BUT': {
-    version: 'V4.9',
+    version: 'V5.0',
     translations: {
       FR: {
         term: 'But institutionnel',
-        shortDefinition: 'Résultat institutionnel général que 2SG poursuit à travers sa mission.',
+        shortDefinition: 'Finalité institutionnelle générale que 2SG poursuit à travers sa mission.',
         detailedDefinition: "Finalité globale qui précise la contribution recherchée par 2SG. Elle donne un cap commun aux objectifs et aux projets, mais reste plus large qu'un résultat mesurable, une action ou une tâche."
       },
       DE: {
         term: 'Institutioneller Zweck',
-        shortDefinition: 'Übergeordnetes institutionelles Ergebnis, das 2SG durch seine Mission verfolgt.',
-        detailedDefinition: 'Gesamtzweck, der den von 2SG angestrebten Beitrag beschreibt. Er gibt Zielen und Projekten eine gemeinsame Richtung, ist jedoch umfassender als ein messbares Ergebnis, eine Maßnahme oder eine Aufgabe.'
+        shortDefinition: 'Übergeordneter institutioneller Zweck, den 2SG durch seine Mission verfolgt.',
+        detailedDefinition: 'Übergeordneter Zweck, der den von 2SG angestrebten Beitrag beschreibt. Er gibt Zielen und Projekten eine gemeinsame Richtung, ist jedoch umfassender als ein messbares Ergebnis, eine Maßnahme oder eine Aufgabe.'
       },
       EN: {
         term: 'Institutional purpose',
-        shortDefinition: 'The overarching institutional outcome pursued by 2SG through its mission.',
+        shortDefinition: 'The overarching institutional purpose pursued by 2SG through its mission.',
         detailedDefinition: 'The broad purpose that describes the contribution 2SG seeks to make. It gives common direction to objectives and projects but is broader than a measurable result, action or task.'
       }
     }
   },
   'INST-VALEURS': {
-    version: 'V4.9',
+    version: 'V5.0',
     translations: {
       FR: {
         term: 'Valeurs institutionnelles',
@@ -80,7 +80,7 @@ const GLOSSARY_CONTEXT = {
     }
   },
   'GOUV-REGLES-OR': {
-    version: 'V4.9',
+    version: 'V5.0',
     translations: {
       FR: {
         term: "Règles d'or de travail",
@@ -88,19 +88,19 @@ const GLOSSARY_CONTEXT = {
         detailedDefinition: "Petit nombre de règles simples servant à guider les décisions et la collaboration, notamment la traçabilité, la documentation utile, la lisibilité de la gouvernance et la proportionnalité des solutions. Elles ne remplacent ni les statuts, ni le règlement intérieur, ni le code de conduite."
       },
       DE: {
-        term: 'Goldene Arbeitsregeln',
-        shortDefinition: 'Gemeinsame praktische Leitlinien, die die Werte von 2SG in Arbeitsverhalten übersetzen.',
+        term: 'Goldene Regeln der Zusammenarbeit',
+        shortDefinition: 'Gemeinsame praktische Leitlinien, die die Werte von 2SG in die tägliche Zusammenarbeit übertragen.',
         detailedDefinition: 'Eine kleine Zahl einfacher Regeln zur Orientierung von Entscheidungen und Zusammenarbeit, insbesondere zu Nachvollziehbarkeit, nützlicher Dokumentation, verständlicher Governance und verhältnismäßigen Lösungen. Sie ersetzen weder Statuten noch Geschäftsordnung oder Verhaltenskodex.'
       },
       EN: {
-        term: 'Working golden rules',
-        shortDefinition: 'Shared practical guidelines that translate 2SG values into working behaviours.',
+        term: 'Golden rules for working together',
+        shortDefinition: 'Shared practical guidelines that translate 2SG values into everyday ways of working.',
         detailedDefinition: 'A small set of simple rules guiding decisions and collaboration, particularly traceability, useful documentation, understandable governance and proportionate solutions. They do not replace statutes, internal regulations or a code of conduct.'
       }
     }
   },
   'GOUV-GOUVERNANCE': {
-    version: 'V4.9',
+    version: 'V5.0',
     translations: {
       FR: {
         term: 'Gouvernance',
@@ -120,7 +120,7 @@ const GLOSSARY_CONTEXT = {
     }
   },
   'STRAT-STRATEGIE': {
-    version: 'V4.9',
+    version: 'V5.0',
     translations: {
       FR: {
         term: 'Stratégie',
@@ -140,7 +140,7 @@ const GLOSSARY_CONTEXT = {
     }
   },
   'STRAT-BUSINESS-MODEL': {
-    version: 'V4.9',
+    version: 'V5.0',
     translations: {
       FR: {
         term: 'Business Model',
@@ -160,7 +160,7 @@ const GLOSSARY_CONTEXT = {
     }
   },
   'STRAT-BUSINESS-PLAN': {
-    version: 'V4.9',
+    version: 'V5.0',
     translations: {
       FR: {
         term: 'Business Plan',
@@ -189,7 +189,7 @@ export const getGlossaryContextEntry = (termId, language = 'FR') => {
   return {
     id: termId,
     version: entry.version,
-    status: 'candidate',
+    status: 'validated',
     ...entry.translations[normalizedLanguage]
   };
 };

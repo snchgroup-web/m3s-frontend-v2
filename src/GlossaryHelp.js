@@ -5,7 +5,7 @@ import { getGlossaryContextEntry } from './glossaryContext';
 const COPY = {
   FR: {
     help: 'Définition du Glossaire',
-    candidate: 'Proposition à valider',
+    validated: 'Définition validée',
     source: 'Glossaire central 2SG',
     open: 'Voir dans le Glossaire',
     close: 'Fermer',
@@ -13,7 +13,7 @@ const COPY = {
   },
   DE: {
     help: 'Glossardefinition',
-    candidate: 'Vorschlag zur Validierung',
+    validated: 'Validierte Definition',
     source: 'Zentrales 2SG-Glossar',
     open: 'Im Glossar anzeigen',
     close: 'Schließen',
@@ -21,7 +21,7 @@ const COPY = {
   },
   EN: {
     help: 'Glossary definition',
-    candidate: 'Proposal to validate',
+    validated: 'Validated definition',
     source: '2SG Central Glossary',
     open: 'View in Glossary',
     close: 'Close',
@@ -51,8 +51,8 @@ export const GlossaryEntryPanel = ({ termId, language = 'FR', onReturn }) => {
             <p className="mt-2 text-sm font-semibold leading-6 text-blue-100">{entry.shortDefinition}</p>
           </div>
         </div>
-        <span className="w-fit rounded-full border border-amber-600/70 bg-amber-950/40 px-3 py-1 text-xs font-semibold text-amber-200">
-          {t.candidate}
+        <span className="w-fit rounded-full border border-emerald-600/70 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-200">
+          {t.validated}
         </span>
       </div>
       <p className="mt-4 text-sm leading-6 text-slate-300">{entry.detailedDefinition}</p>
@@ -143,8 +143,8 @@ const GlossaryHelp = ({ termId, language = 'FR' }) => {
                 <X size={19} aria-hidden="true" />
               </button>
             </div>
-            <span className="mt-4 inline-flex rounded-full border border-amber-600/70 bg-amber-950/40 px-3 py-1 text-xs font-semibold text-amber-200">
-              {t.candidate}
+            <span className="mt-4 inline-flex rounded-full border border-emerald-600/70 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-200">
+              {t.validated}
             </span>
             <p className="mt-4 font-semibold leading-6 text-blue-100">{entry.shortDefinition}</p>
             <p className="mt-3 text-sm leading-6 text-slate-300">{entry.detailedDefinition}</p>
