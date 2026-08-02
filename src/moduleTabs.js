@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import menuData from './menuStructure.json';
 
 const placeholderText = {
@@ -55,6 +56,7 @@ export const ModuleChildTabs = ({ moduleId, language, activeTab, onSelect }) => 
 };
 
 export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs = [] }) => {
+  const activeButtonRef = useRef(null);
   const mergedTabs = [];
   const seen = new Set();
   const explicitTabs = new Map(tabs.map(tab => [tab.tab, tab]));
@@ -74,6 +76,10 @@ export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs =
 
   tabs.forEach(addTab);
 
+  useEffect(() => {
+    activeButtonRef.current?.scrollIntoView?.({ block: 'nearest', inline: 'center' });
+  }, [activeTab, language]);
+
   if (!mergedTabs.length) return null;
 
   return (
@@ -81,6 +87,7 @@ export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs =
       {mergedTabs.map(tab => (
         <button
           key={tab.id || tab.tab}
+          ref={activeTab === tab.tab ? activeButtonRef : null}
           onClick={() => onSelect(tab.tab)}
           className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === tab.tab ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}
         >
