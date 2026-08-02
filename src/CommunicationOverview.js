@@ -304,7 +304,7 @@ const CommunicationOverview = ({ language = 'FR' }) => {
         </div>
       </header>
 
-      <InternalSectionNav ariaLabel={t.navLabel} items={navItems} topId="communication-top" backToTopLabel={t.backToTop} />
+      <InternalSectionNav ariaLabel={t.navLabel} items={navItems} topId="communication-top" backToTopLabel={t.backToTop} refreshKey={language} />
 
       <section id="communication-scope" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="communication-scope-title">
         <h3 id="communication-scope-title" className="text-xl font-bold text-white">{t.scopeTitle}</h3>

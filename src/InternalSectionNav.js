@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { ArrowUp } from 'lucide-react';
 
-const InternalSectionNav = ({ ariaLabel, items, topId, backToTopLabel }) => {
+const InternalSectionNav = ({ ariaLabel, items, topId, backToTopLabel, refreshKey }) => {
+  const activeSectionRef = useRef(null);
+
   const scrollToSection = (sectionId) => {
+    activeSectionRef.current = sectionId;
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+
+  useLayoutEffect(() => {
+    if (!activeSectionRef.current) return;
+    document.getElementById(activeSectionRef.current)?.scrollIntoView({ behavior: 'auto', block: 'start' });
+  }, [refreshKey]);
 
   return (
     <nav className="sticky top-0 z-20 rounded-lg border border-slate-600 bg-slate-900/95 p-2 shadow-lg backdrop-blur" aria-label={ariaLabel}>

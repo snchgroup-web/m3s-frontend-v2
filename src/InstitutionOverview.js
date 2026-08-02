@@ -20,6 +20,7 @@ import {
   Users
 } from 'lucide-react';
 import InternalSectionNav from './InternalSectionNav';
+import GlossaryHelp from './GlossaryHelp';
 
 const COPY = {
   FR: {
@@ -466,10 +467,10 @@ const InstitutionOverview = ({ language = 'FR' }) => {
   ];
   const resources = [t.resourceSavings, t.resourceOffice, t.resourceEquipment, t.resourceSubscriptions];
   const identityMarkers = [
-    [t.hybridNatureLabel, t.hybridNatureBody, Building2],
-    [t.identityLabel, t.identityBody, HeartHandshake],
-    [t.visionLabel, t.visionBody, Compass],
-    [t.purposeLabel, t.purposeBody, Target]
+    [t.hybridNatureLabel, t.hybridNatureBody, Building2, null],
+    [t.identityLabel, t.identityBody, HeartHandshake, null],
+    [t.visionLabel, t.visionBody, Compass, 'INST-VISION'],
+    [t.purposeLabel, t.purposeBody, Target, 'INST-BUT']
   ];
   const missions = [t.mission1, t.mission2, t.mission3];
   const values = [
@@ -481,10 +482,10 @@ const InstitutionOverview = ({ language = 'FR' }) => {
   ];
   const goldenRules = [t.golden1, t.golden2, t.golden3, t.golden4, t.golden5];
   const architectureLayers = [
-    [t.associationTitle, t.associationBody, Scale],
-    [t.enterpriseTitle, t.enterpriseBody, BriefcaseBusiness],
-    [t.strategyTitle, t.strategyBody, BookOpen],
-    [t.m3sTitle, t.m3sBody, Network]
+    [t.associationTitle, t.associationBody, Scale, []],
+    [t.enterpriseTitle, t.enterpriseBody, BriefcaseBusiness, []],
+    [t.strategyTitle, t.strategyBody, BookOpen, ['STRAT-STRATEGIE', 'STRAT-BUSINESS-MODEL', 'STRAT-BUSINESS-PLAN']],
+    [t.m3sTitle, t.m3sBody, Network, []]
   ];
   const documentViews = [
     [t.businessPlanDoc, t.businessPlanDocBody, BriefcaseBusiness],
@@ -528,7 +529,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
         </div>
       </header>
 
-      <InternalSectionNav ariaLabel={t.sectionNavLabel} items={sectionNavItems} topId="institution-top" backToTopLabel={t.backToTop} />
+      <InternalSectionNav ariaLabel={t.sectionNavLabel} items={sectionNavItems} topId="institution-top" backToTopLabel={t.backToTop} refreshKey={language} />
 
       <section id="institution-fundamentals" className="scroll-mt-20 py-1" aria-labelledby="profile-title">
         <div className="mb-4">
@@ -536,11 +537,17 @@ const InstitutionOverview = ({ language = 'FR' }) => {
           <p className="mt-1 max-w-5xl text-sm leading-6 text-slate-400">{t.profileBody}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
-          {identityMarkers.map(([title, body, Icon]) => (
+          {identityMarkers.map(([title, body, Icon, termId]) => (
             <article key={title} className="rounded-lg border border-slate-700 bg-slate-800 p-5">
               <div className="flex gap-3">
                 <Icon className="mt-0.5 shrink-0 text-blue-300" size={20} aria-hidden="true" />
-                <div><h4 className="font-bold text-white">{title}</h4><p className="mt-2 text-sm leading-6 text-slate-300">{body}</p></div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-bold text-white">{title}</h4>
+                    {termId && <GlossaryHelp termId={termId} language={language} />}
+                  </div>
+                  <p className="mt-2 text-sm leading-6 text-slate-300">{body}</p>
+                </div>
               </div>
             </article>
           ))}
@@ -552,6 +559,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
           <div className="flex items-center gap-3">
             <Target className="text-blue-300" size={22} aria-hidden="true" />
             <h3 id="mission-title" className="text-xl font-bold text-white">{t.missionTitle}</h3>
+            <GlossaryHelp termId="INST-MISSION" language={language} />
           </div>
           <p className="mt-2 text-sm leading-6 text-slate-400">{t.missionBody}</p>
           <ul className="mt-4 space-y-3">
@@ -565,6 +573,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
           <div className="flex items-center gap-3">
             <HeartHandshake className="text-emerald-300" size={22} aria-hidden="true" />
             <h3 id="values-title" className="text-xl font-bold text-white">{t.valuesTitle}</h3>
+            <GlossaryHelp termId="INST-VALEURS" language={language} />
           </div>
           <div className="mt-4 divide-y divide-slate-700">
             {values.map(([title, body]) => (
@@ -581,7 +590,10 @@ const InstitutionOverview = ({ language = 'FR' }) => {
         <div className="flex gap-3">
           <Star className="mt-0.5 shrink-0 text-amber-300" size={22} aria-hidden="true" />
           <div className="min-w-0">
-            <h3 id="golden-title" className="text-xl font-bold text-white">{t.goldenTitle}</h3>
+            <div className="flex items-center gap-2">
+              <h3 id="golden-title" className="text-xl font-bold text-white">{t.goldenTitle}</h3>
+              <GlossaryHelp termId="GOUV-REGLES-OR" language={language} />
+            </div>
             <p className="mt-1 text-sm leading-6 text-amber-100/80">{t.goldenBody}</p>
             <ul className="mt-4 grid gap-3 md:grid-cols-2">
               {goldenRules.map(rule => (
@@ -598,10 +610,13 @@ const InstitutionOverview = ({ language = 'FR' }) => {
           <p className="mt-1 max-w-5xl text-sm leading-6 text-slate-400">{t.architectureBody}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {architectureLayers.map(([title, body, Icon]) => (
+          {architectureLayers.map(([title, body, Icon, termIds]) => (
             <article key={title} className="rounded-lg border border-slate-700 bg-slate-800 p-5">
               <Icon className="text-blue-300" size={21} aria-hidden="true" />
-              <h4 className="mt-4 font-bold leading-6 text-white">{title}</h4>
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <h4 className="font-bold leading-6 text-white">{title}</h4>
+                {termIds.map(termId => <GlossaryHelp key={termId} termId={termId} language={language} />)}
+              </div>
               <p className="mt-2 text-sm leading-6 text-slate-400">{body}</p>
             </article>
           ))}
@@ -622,6 +637,9 @@ const InstitutionOverview = ({ language = 'FR' }) => {
                 <StatusPill tone="green">{t.sourceIdentified}</StatusPill>
               </div>
               <h4 className="mt-4 font-bold leading-6 text-white">{title}</h4>
+              {title === t.businessPlanDoc && (
+                <div className="mt-2"><GlossaryHelp termId="STRAT-BUSINESS-PLAN" language={language} /></div>
+              )}
               <p className="mt-2 flex-1 text-sm leading-6 text-slate-400">{body}</p>
               <p className="mt-4 border-t border-slate-700 pt-3 text-xs font-semibold text-amber-300">{t.visualPlanned}</p>
             </article>
@@ -658,7 +676,10 @@ const InstitutionOverview = ({ language = 'FR' }) => {
         <div className="flex gap-3">
           <Users className="mt-0.5 shrink-0 text-blue-300" size={22} aria-hidden="true" />
           <div>
-            <h3 className="text-lg font-bold text-white">{t.horizontalTitle}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-bold text-white">{t.horizontalTitle}</h3>
+              <GlossaryHelp termId="GOUV-GOUVERNANCE" language={language} />
+            </div>
             <p className="mt-2 max-w-5xl text-sm leading-6 text-slate-300">{t.horizontalBody}</p>
           </div>
         </div>

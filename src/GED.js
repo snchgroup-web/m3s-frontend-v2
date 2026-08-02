@@ -25,6 +25,7 @@ import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
 import { getOfferTaxonomy } from './offerTaxonomy';
 import { getDigitalOffersTaxonomyData } from './taxonomyDataProvider';
+import { GlossaryEntryPanel } from './GlossaryHelp';
 
 const GED = () => {
   const { language } = useLanguage();
@@ -730,6 +731,7 @@ const GED = () => {
   const [toolQuery, setToolQuery] = useState('');
   const [knowledgeQuery, setKnowledgeQuery] = useState('');
   const [selectedPilotDetail, setSelectedPilotDetail] = useState(null);
+  const requestedGlossaryTermId = new URLSearchParams(location.search).get('term');
   const [formData, setFormData] = useState({
     nom: '',
     type: 'PDF',
@@ -1480,6 +1482,13 @@ const GED = () => {
 
         {activeTab === 'knowledge' && (
           <div className="space-y-6">
+            {requestedGlossaryTermId && (
+              <GlossaryEntryPanel
+                termId={requestedGlossaryTermId}
+                language={language}
+                onReturn={() => navigate('/administration?tab=institution')}
+              />
+            )}
             <div className="rounded-lg border border-cyan-500/30 bg-slate-800 p-5 md:p-6">
               <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
                 <div className="max-w-4xl">
