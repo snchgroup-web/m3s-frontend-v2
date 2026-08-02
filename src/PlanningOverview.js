@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import GlossaryHelp from './GlossaryHelp';
 import InternalSectionNav from './InternalSectionNav';
+import ProjectMinimumMethod from './ProjectMinimumMethod';
 
 const COPY = {
   FR: {
@@ -29,6 +30,7 @@ const COPY = {
     navModel: 'Modèle',
     navBranches: 'Branches',
     navDimensions: 'Dimensions',
+    navMethod: 'Contrôle minimal',
     navStatus: 'État',
     navRegister: 'Registre',
     backToTop: 'Revenir en haut',
@@ -69,7 +71,7 @@ const COPY = {
     tasksAvailable: 'Tâches disponibles',
     tasksCompleted: 'Tâches terminées',
     completion: 'Progression documentaire',
-    currentBody: 'Le registre des tâches est utilisable localement. La lecture API doit être rétablie et la persistance des modifications ajoutée. Les projets, phases, dépendances, jalons, chronologies et agendas seront raccordés après validation du modèle de données.',
+    currentBody: 'Le registre des tâches est utilisable localement et la méthode minimale V0.1 est visible en lecture seule. La lecture API doit être rétablie et la persistance des modifications ajoutée. Les projets, phases, dépendances, jalons, chronologies et agendas seront raccordés après validation du modèle de données.',
     registerTitle: 'Registre des tâches et actions'
   },
   EN: {
@@ -83,6 +85,7 @@ const COPY = {
     navModel: 'Model',
     navBranches: 'Branches',
     navDimensions: 'Dimensions',
+    navMethod: 'Minimum control',
     navStatus: 'Status',
     navRegister: 'Register',
     backToTop: 'Back to top',
@@ -123,7 +126,7 @@ const COPY = {
     tasksAvailable: 'Available tasks',
     tasksCompleted: 'Completed tasks',
     completion: 'Documented completion',
-    currentBody: 'The task register is usable locally. API reading must be restored and change persistence added. Projects, phases, dependencies, milestones, timelines and agendas will be connected after the data model is approved.',
+    currentBody: 'The task register is usable locally and the minimum V0.1 method is visible in read-only mode. API reading must be restored and change persistence added. Projects, phases, dependencies, milestones, timelines and agendas will be connected after the data model is approved.',
     registerTitle: 'Task and action register'
   },
   DE: {
@@ -137,6 +140,7 @@ const COPY = {
     navModel: 'Modell',
     navBranches: 'Zweige',
     navDimensions: 'Dimensionen',
+    navMethod: 'Mindestkontrolle',
     navStatus: 'Stand',
     navRegister: 'Register',
     backToTop: 'Nach oben',
@@ -177,7 +181,7 @@ const COPY = {
     tasksAvailable: 'Verfügbare Aufgaben',
     tasksCompleted: 'Abgeschlossene Aufgaben',
     completion: 'Dokumentierter Fortschritt',
-    currentBody: 'Das Aufgabenregister ist lokal nutzbar. Der API-Lesezugriff muss wiederhergestellt und die Speicherung von Änderungen ergänzt werden. Projekte, Phasen, Abhängigkeiten, Meilensteine, Zeitachsen und Agenden werden nach Freigabe des Datenmodells angebunden.',
+    currentBody: 'Das Aufgabenregister ist lokal nutzbar und die minimale Methode V0.1 ist im Lesemodus sichtbar. Der API-Lesezugriff muss wiederhergestellt und die Speicherung von Änderungen ergänzt werden. Projekte, Phasen, Abhängigkeiten, Meilensteine, Zeitachsen und Agenden werden nach Freigabe des Datenmodells angebunden.',
     registerTitle: 'Aufgaben- und Aktionsregister'
   }
 };
@@ -231,6 +235,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0 
     { id: 'planning-model', label: t.navModel },
     { id: 'planning-branches', label: t.navBranches },
     { id: 'planning-dimensions', label: t.navDimensions },
+    { id: 'planning-method', label: t.navMethod },
     { id: 'planning-status', label: t.navStatus },
     { id: 'planning-register', label: t.navRegister }
   ];
@@ -313,6 +318,8 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0 
           <StepCard icon={CalendarDays} title={t.agenda} body={t.agendaBody} />
         </div>
       </section>
+
+      <ProjectMinimumMethod language={language} />
 
       <section id="planning-status" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="current-title">
         <div className="flex items-center gap-3">

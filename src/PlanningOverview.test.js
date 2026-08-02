@@ -11,6 +11,8 @@ test('renders the project hierarchy and recurring activity branch in French', ()
   expect(screen.getByText(/Une phase appartient toujours à un projet/i)).toBeInTheDocument();
   expect(screen.getByText('25 %')).toBeInTheDocument();
   expect(screen.getByRole('navigation', { name: 'Navigation dans Planification & Projets' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Contrôle minimal d’un projet' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Contrôle minimal' })).toBeInTheDocument();
 });
 
 test('connects strategic steering to validated glossary definitions', () => {
