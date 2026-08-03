@@ -8,6 +8,8 @@ test('navigates through the French governing document journey while preserving V
   expect(screen.getByRole('heading', { name: 'Document Directeur Global 2SG V4' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Identité & vocation' })).toBeInTheDocument();
   expect(screen.getByText('V3C historique préservée')).toBeInTheDocument();
+  expect(screen.getByText('Date de la source : 02-08-2026')).toBeInTheDocument();
+  expect(screen.getByText('Classification : Interne C2')).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Vue suivante' }));
   expect(screen.getByRole('heading', { name: 'Positionnement & promesse' })).toBeInTheDocument();
   fireEvent.click(screen.getByRole('tab', { name: 'Afficher la vue : Trajectoire & garde-fous' }));
@@ -21,6 +23,8 @@ test('renders the German governance warning and closes', () => {
 
   expect(screen.getByText(/konsolidiert das Dokument nicht automatisch/i)).toBeInTheDocument();
   expect(screen.getByText('Historische V3C bleibt erhalten')).toBeInTheDocument();
+  expect(screen.getByText('Quelldatum: 02.08.2026')).toBeInTheDocument();
+  expect(screen.getByText('Klassifizierung: Intern C2')).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Pfad des Leitdokuments schließen' }));
   expect(onClose).toHaveBeenCalledTimes(1);
 });

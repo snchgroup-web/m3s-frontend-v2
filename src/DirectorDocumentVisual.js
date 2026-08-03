@@ -24,6 +24,8 @@ const COPY = {
     sourceStatus: 'Version V4 de travail stratégique',
     historyStatus: 'V3C historique préservée',
     validationStatus: 'Consolidation à valider',
+    documentDate: 'Date de la source : 02-08-2026',
+    classification: 'Classification : Interne C2',
     languageNote: 'La source maîtresse est rédigée en français. Les lectures DE et EN facilitent la compréhension, mais ne constituent pas encore des traductions institutionnelles validées.',
     governanceNote: 'Cette présentation organise la lecture de la V4. Elle ne consolide pas automatiquement le document, ne modifie pas les référentiels et ne remplace aucune décision institutionnelle.',
     close: 'Fermer le parcours du Document Directeur',
@@ -92,6 +94,8 @@ const COPY = {
     sourceStatus: 'Strategic V4 working version',
     historyStatus: 'Historical V3C preserved',
     validationStatus: 'Consolidation to validate',
+    documentDate: 'Source date: 02-08-2026',
+    classification: 'Classification: Internal C2',
     languageNote: 'The master source is written in French. The DE and EN readings support understanding but are not yet validated institutional translations.',
     governanceNote: 'This presentation organises the reading of V4. It does not automatically consolidate the document, alter reference frameworks or replace any institutional decision.',
     close: 'Close Governing Document journey',
@@ -120,6 +124,8 @@ const COPY = {
     sourceStatus: 'Strategische V4-Arbeitsversion',
     historyStatus: 'Historische V3C bleibt erhalten',
     validationStatus: 'Konsolidierung zu validieren',
+    documentDate: 'Quelldatum: 02.08.2026',
+    classification: 'Klassifizierung: Intern C2',
     languageNote: 'Die maßgebliche Quelle ist auf Französisch verfasst. Die DE- und EN-Fassungen erleichtern die Lektüre, sind aber noch keine validierten institutionellen Übersetzungen.',
     governanceNote: 'Diese Präsentation strukturiert die Lektüre der V4. Sie konsolidiert das Dokument nicht automatisch, ändert keine Referenzrahmen und ersetzt keine institutionelle Entscheidung.',
     close: 'Pfad des Leitdokuments schließen',
@@ -170,6 +176,8 @@ const DirectorDocumentVisual = ({ language = 'FR', onClose }) => {
           <span className="rounded-full border border-blue-700 bg-blue-950/60 px-3 py-1.5 text-xs font-semibold text-blue-100">{t.sourceStatus}</span>
           <span className="rounded-full border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-200">{t.historyStatus}</span>
           <span className="rounded-full border border-amber-700 bg-amber-950/60 px-3 py-1.5 text-xs font-semibold text-amber-100">{t.validationStatus}</span>
+          <span className="rounded-full border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-200">{t.documentDate}</span>
+          <span className="rounded-full border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-200">{t.classification}</span>
         </div>
         <div className="mt-4 grid gap-3 lg:grid-cols-2">
           <p className="rounded-lg border border-slate-700 bg-slate-800/60 p-3 text-xs leading-5 text-slate-300">{t.languageNote}</p>
