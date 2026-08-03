@@ -606,43 +606,43 @@ const Admin = () => {
         {/* KPIs */}
         {activeTab === 'overview' && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
-          <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
+          <div className="administration-kpi bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-200 text-sm">{t.institution}</p>
-                <p className="text-white text-2xl font-bold">1</p>
+                <p className="administration-kpi__label text-blue-200 text-sm">{t.institution}</p>
+                <p className="administration-kpi__value text-white text-2xl font-bold">1</p>
               </div>
-              <Users size={32} className="text-blue-400" />
+              <Users size={32} className="administration-kpi__icon text-blue-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
+          <div className="administration-kpi bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-200 text-sm">{t.planning}</p>
-                <p className="text-white text-2xl font-bold">{tasks.length}</p>
+                <p className="administration-kpi__label text-green-200 text-sm">{t.planning}</p>
+                <p className="administration-kpi__value text-white text-2xl font-bold">{tasks.length}</p>
               </div>
-              <AlertCircle size={32} className="text-green-400" />
+              <AlertCircle size={32} className="administration-kpi__icon text-green-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
+          <div className="administration-kpi bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-200 text-sm">{t.tachesTerminees}</p>
-                <p className="text-white text-2xl font-bold">{completedTasks}</p>
+                <p className="administration-kpi__label text-purple-200 text-sm">{t.tachesTerminees}</p>
+                <p className="administration-kpi__value text-white text-2xl font-bold">{completedTasks}</p>
               </div>
-              <Lock size={32} className="text-purple-400" />
+              <Lock size={32} className="administration-kpi__icon text-purple-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-6 border border-red-700">
+          <div className="administration-kpi bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-6 border border-red-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-red-200 text-sm">{t.communication}</p>
-                <p className="text-white text-2xl font-bold">0</p>
+                <p className="administration-kpi__label text-red-200 text-sm">{t.communication}</p>
+                <p className="administration-kpi__value text-white text-2xl font-bold">0</p>
               </div>
-              <Shield size={32} className="text-red-400" />
+              <Shield size={32} className="administration-kpi__icon text-red-400" />
             </div>
           </div>
         </div>
