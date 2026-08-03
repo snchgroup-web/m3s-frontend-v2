@@ -241,7 +241,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0 
   ];
 
   return (
-    <section id="planning-top" aria-labelledby="planning-title" className="mb-6 space-y-6 scroll-mt-24">
+    <section id="planning-top" aria-labelledby="planning-title" className="administration-overview mb-6 space-y-6 scroll-mt-24">
       <header className="rounded-lg border border-slate-700 bg-slate-800 p-6">
         <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
           <div className="max-w-3xl">
