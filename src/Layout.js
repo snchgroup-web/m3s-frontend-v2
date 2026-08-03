@@ -6,7 +6,8 @@ import {
   Home, Settings, Users, DollarSign, Briefcase, Package, Building2, Zap,
   Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
   Wrench, Truck, Box, AlertTriangle, Eye, FileText, Brain, Database, BookOpen,
-  Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft, ContactRound, ShieldCheck
+  Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft, ContactRound, ShieldCheck,
+  MessageSquare
 } from 'lucide-react';
 import menuData from './menuStructure.json';
 import Header from './Header';
@@ -17,7 +18,8 @@ const iconMap = {
   Home, Settings, Users, DollarSign, Briefcase, Package, Building2, Zap,
   Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
   Wrench, Truck, Box, AlertTriangle, Eye, FileText, Brain, Database, BookOpen,
-  Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft, ContactRound, ShieldCheck
+  Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft, ContactRound, ShieldCheck,
+  MessageSquare
 };
 
 const Layout = ({ children }) => {
@@ -97,7 +99,7 @@ const Layout = ({ children }) => {
           )}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 hover:bg-slate-700 rounded flex-shrink-0"
+            className="sidebar-toggle-button p-2 hover:bg-slate-700 rounded flex-shrink-0"
             title={sidebarOpen ? "Masquer menu" : "Afficher menu"}
           >
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
@@ -109,7 +111,7 @@ const Layout = ({ children }) => {
           <div className="p-4 pt-3 border-b border-slate-700">
             <button
               onClick={toggleExpandAll}
-              className="w-full flex items-center justify-center space-x-2 px-3 py-2 text-xs bg-slate-700 hover:bg-slate-600 rounded transition"
+              className="sidebar-expand-button w-full flex items-center justify-center space-x-2 px-3 py-2 text-xs bg-slate-700 hover:bg-slate-600 rounded transition"
               title={expandAll ? t.collapseAll : t.expandAll}
             >
               {expandAll ? (
@@ -146,7 +148,7 @@ const Layout = ({ children }) => {
                   }
                 }}
                 title={!sidebarOpen ? (item.label[language] || item.label.FR) : undefined}
-                className={`flex items-center rounded hover:bg-slate-700 transition text-left text-sm cursor-pointer ${
+                className={`sidebar-nav-item flex items-center rounded hover:bg-slate-700 transition text-left text-sm cursor-pointer ${
                   sidebarOpen
                     ? 'w-full space-x-3 px-4 py-2'
                     : 'w-full justify-center py-3'
@@ -181,12 +183,12 @@ const Layout = ({ children }) => {
 
               {/* Sous-menus */}
               {sidebarOpen && expandedMenus[item.id] && item.children && item.children.length > 0 && (
-                <div className="ml-6 space-y-1 bg-slate-700 bg-opacity-30 rounded my-1 py-1 px-2">
+                <div className="sidebar-submenu ml-6 space-y-1 bg-slate-700 bg-opacity-30 rounded my-1 py-1 px-2">
                   {item.children.map(child => (
                     <button
                       key={child.id}
                       onClick={() => handleMenuItemClick(child.path)}
-                      className="w-full flex items-center space-x-2 px-3 py-1.5 rounded text-xs hover:bg-slate-600 transition text-left text-slate-300 hover:text-white"
+                      className="sidebar-submenu-item w-full flex items-center space-x-2 px-3 py-1.5 rounded text-xs hover:bg-slate-600 transition text-left text-slate-300 hover:text-white"
                     >
                       {child.icon && iconMap[child.icon]
                         ? React.createElement(iconMap[child.icon], { size: 14, className: modulePresentation[item.id]?.color || 'text-sky-400' })
