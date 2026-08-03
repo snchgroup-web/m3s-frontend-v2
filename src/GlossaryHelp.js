@@ -37,7 +37,7 @@ export const GlossaryEntryPanel = ({ termId, language = 'FR', onReturn }) => {
   return (
     <section
       id="glossary-context-entry"
-      className="scroll-mt-24 rounded-lg border border-blue-700/70 bg-blue-950/30 p-5 md:p-6"
+      className="glossary-entry-panel scroll-mt-24 rounded-lg border border-blue-700/70 bg-blue-950/30 p-5 md:p-6"
       aria-labelledby="glossary-context-title"
     >
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">

@@ -617,7 +617,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
   ];
 
   return (
-    <section id="institution-top" className="space-y-6 scroll-mt-24" aria-labelledby="institution-title">
+    <section id="institution-top" className="administration-overview space-y-6 scroll-mt-24" aria-labelledby="institution-title">
       <header className="rounded-lg border border-slate-700 bg-slate-800 p-5 sm:p-6">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex min-w-0 gap-3">

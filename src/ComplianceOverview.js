@@ -255,7 +255,7 @@ const ComplianceOverview = ({ language = 'FR' }) => {
   ];
 
   return (
-    <section id="compliance-top" className="mb-6 space-y-6 scroll-mt-24" aria-labelledby="compliance-title">
+    <section id="compliance-top" className="administration-overview mb-6 space-y-6 scroll-mt-24" aria-labelledby="compliance-title">
       <header className="rounded-lg border border-slate-700 bg-slate-800 p-5 sm:p-6">
         <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
           <div className="max-w-4xl">

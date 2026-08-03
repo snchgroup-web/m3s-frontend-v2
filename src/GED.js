@@ -1061,12 +1061,12 @@ const GED = () => {
  
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+      <div className="it-support-overview min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
         <div className="mx-auto w-full max-w-[1800px]">
  
         {/* KPIs */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
+        <div className="it-support-kpis grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <div className="it-support-kpi it-support-kpi--blue bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-blue-200 text-sm">{t.totalDocuments}</p>
@@ -1076,7 +1076,7 @@ const GED = () => {
             </div>
           </div>
  
-          <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
+          <div className="it-support-kpi it-support-kpi--green bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-green-200 text-sm">{t.totalDossiers}</p>
@@ -1086,7 +1086,7 @@ const GED = () => {
             </div>
           </div>
  
-          <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
+          <div className="it-support-kpi it-support-kpi--purple bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-purple-200 text-sm">{t.storageTaille}</p>
@@ -1096,7 +1096,7 @@ const GED = () => {
             </div>
           </div>
  
-          <div className="bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-6 border border-orange-700">
+          <div className="it-support-kpi it-support-kpi--orange bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-6 border border-orange-700">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-orange-200 text-sm">{t.documentsActifs}</p>
