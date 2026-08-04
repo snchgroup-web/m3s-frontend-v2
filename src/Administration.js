@@ -8,6 +8,7 @@ import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import TableControls from './TableControls';
 import InstitutionOverview from './InstitutionOverview';
 import PlanningOverview from './PlanningOverview';
+import JournalTaskRegister from './JournalTaskRegister';
 import ComplianceOverview from './ComplianceOverview';
 import CommunicationOverview from './CommunicationOverview';
 import { resolveAdministrationTab } from './administrationTabs';
@@ -717,7 +718,9 @@ const Admin = () => {
 
         {activeTab === 'planning' && (
           <div>
-            <PlanningOverview language={language} tasksTotal={tasks.length} completedTasks={completedTasks} />
+            <PlanningOverview language={language} tasksTotal={tasks.length} completedTasks={completedTasks}>
+              <JournalTaskRegister language={language} />
+            </PlanningOverview>
             <div className="flex justify-end mb-4">
               <button onClick={openNewTaskModal} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
                 <Plus size={20} /> {t.nouvelleTache}
