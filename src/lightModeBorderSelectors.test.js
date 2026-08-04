@@ -55,4 +55,22 @@ describe('light-mode accent border selectors', () => {
     expect(institutionSource).toContain('text-2xl font-semibold text-slate-100');
     expect(institutionSource).toContain('text-xl font-semibold text-slate-100');
   });
+
+  test('keeps Administration forms readable and accessible in both themes', () => {
+    expect(indexHtml).toContain('html:not(.dark) .administration-modal .text-slate-100{color:#172033!important}');
+    expect(indexHtml).toContain('html:not(.dark) .administration-modal__primary{color:#fff!important}');
+    expect((administrationSource.match(/administration-modal__panel/g) || [])).toHaveLength(3);
+    expect((administrationSource.match(/role="dialog"/g) || [])).toHaveLength(3);
+    expect((administrationSource.match(/aria-modal="true"/g) || [])).toHaveLength(3);
+    expect(administrationSource).toContain('id="task-title" type="text" required');
+    expect(administrationSource).toContain('id="user-name" type="text" required');
+    expect(administrationSource).toContain('id="user-email" type="email" required');
+    expect(administrationSource).toContain('id="role-name" type="text" required');
+  });
+
+  test('highlights Administration table rows without changing their layout', () => {
+    expect(indexHtml).toContain('html:not(.dark) .administration-table-row:hover{background-color:#eef6ff!important;box-shadow:inset 3px 0 #3b82f6}');
+    expect((administrationSource.match(/administration-table-row/g) || [])).toHaveLength(3);
+    expect(administrationSource).toContain('transition-colors hover:bg-blue-950/35');
+  });
 });

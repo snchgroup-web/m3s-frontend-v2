@@ -738,7 +738,7 @@ const Admin = () => {
                 </thead>
                 <tbody>
                   {visibleRows.map(task => (
-                    <tr key={task.id || task.source_id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                    <tr key={task.id || task.source_id} className="administration-table-row border-t border-slate-700 transition-colors hover:bg-blue-950/35">
                       <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(task.titre || task.title)}</td>
                       <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskStatus(task.statut || task.status))}</td>
                       <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskPriority(task.priorite || task.priority))}</td>
@@ -746,10 +746,10 @@ const Admin = () => {
                       <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskModule(task.module))}</td>
                       <td className="px-4 py-2 text-blue-400 font-bold">{Number(task.progression || 0)}%</td>
                       <td className="px-4 py-2 flex gap-2">
-                        <button onClick={() => handleEditTask(task)} className="p-1 hover:bg-slate-600 rounded">
+                        <button onClick={() => handleEditTask(task)} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.modifier} : ${formatValue(task.titre || task.title)}`} title={t.modifier}>
                           <Edit2 size={16} className="text-blue-400" />
                         </button>
-                        <button onClick={() => handleDeleteTask(task.id || task.source_id)} className="p-1 hover:bg-slate-600 rounded">
+                        <button onClick={() => handleDeleteTask(task.id || task.source_id)} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.supprimer} : ${formatValue(task.titre || task.title)}`} title={t.supprimer}>
                           <Trash2 size={16} className="text-red-400" />
                         </button>
                       </td>
@@ -791,7 +791,7 @@ const Admin = () => {
                 </thead>
                 <tbody>
                   {users.map(u => (
-                    <tr key={u.id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                    <tr key={u.id} className="administration-table-row border-t border-slate-700 transition-colors hover:bg-blue-950/35">
                       <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(u.nom)}</td>
                       <td className="px-4 py-2 text-slate-400 text-xs">{formatValue(u.email)}</td>
                       <td className="px-4 py-2 text-slate-300">{formatValue(translateRole(u.role))}</td>
@@ -802,10 +802,10 @@ const Admin = () => {
                       </td>
                       <td className="px-4 py-2 text-slate-400 text-xs">{formatValue(u.dateCreation)}</td>
                       <td className="px-4 py-2 flex gap-2">
-                        <button onClick={() => handleEditUser(u)} className="p-1 hover:bg-slate-600 rounded">
+                        <button onClick={() => handleEditUser(u)} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.modifier} : ${formatValue(u.nom)}`} title={t.modifier}>
                           <Edit2 size={16} className="text-blue-400" />
                         </button>
-                        <button onClick={() => handleDeleteUser(u.id)} className="p-1 hover:bg-slate-600 rounded">
+                        <button onClick={() => handleDeleteUser(u.id)} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.supprimer} : ${formatValue(u.nom)}`} title={t.supprimer}>
                           <Trash2 size={16} className="text-red-400" />
                         </button>
                       </td>
@@ -871,7 +871,7 @@ const Admin = () => {
               </thead>
               <tbody>
                 {auditLogs.map(log => (
-                  <tr key={log.id} className="border-t border-slate-700 hover:bg-slate-700/50">
+                  <tr key={log.id} className="administration-table-row border-t border-slate-700 transition-colors hover:bg-blue-950/35">
                     <td className="px-4 py-2 text-slate-300">{log.utilisateur}</td>
                     <td className="px-4 py-2 text-slate-400">{translateAuditAction(log.action)}</td>
                     <td className="px-4 py-2 text-slate-400">{log.module}</td>
@@ -894,21 +894,27 @@ const Admin = () => {
 
       {/* Modal Tache */}
       {showTaskModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
-            <h2 className="mb-6 text-2xl font-semibold text-slate-100">
+        <div className="administration-modal fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-4 sm:items-center">
+          <form
+            className="administration-modal__panel max-h-[calc(100vh-2rem)] w-full max-w-md overflow-y-auto rounded-lg border border-slate-700 bg-slate-800 p-5 shadow-2xl sm:p-8"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="task-modal-title"
+            onSubmit={(event) => { event.preventDefault(); handleSaveTask(); }}
+          >
+            <h2 id="task-modal-title" className="mb-6 text-2xl font-semibold text-slate-100">
               {editingTaskId ? t.modifierTache : t.nouvelleTache}
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.titleTask} *</label>
-                <input type="text" value={taskFormData.titre} onChange={(e) => handleTaskChange('titre', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                <label htmlFor="task-title" className="mb-2 block text-sm font-medium text-slate-300">{t.titleTask} *</label>
+                <input id="task-title" type="text" required value={taskFormData.titre} onChange={(e) => handleTaskChange('titre', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.statut}</label>
-                <select value={taskFormData.statut} onChange={(e) => handleTaskChange('statut', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                <label htmlFor="task-status" className="mb-2 block text-sm font-medium text-slate-300">{t.statut}</label>
+                <select id="task-status" value={taskFormData.statut} onChange={(e) => handleTaskChange('statut', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40">
                   {taskStatusOptions.map(status => (
                     <option key={status} value={status}>{translateTaskStatus(status)}</option>
                   ))}
@@ -916,8 +922,8 @@ const Admin = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.priorite}</label>
-                <select value={taskFormData.priorite} onChange={(e) => handleTaskChange('priorite', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                <label htmlFor="task-priority" className="mb-2 block text-sm font-medium text-slate-300">{t.priorite}</label>
+                <select id="task-priority" value={taskFormData.priorite} onChange={(e) => handleTaskChange('priorite', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40">
                   {taskPriorityOptions.map(priority => (
                     <option key={priority} value={priority}>{translateTaskPriority(priority)}</option>
                   ))}
@@ -925,13 +931,13 @@ const Admin = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.responsable}</label>
-                <input type="text" value={taskFormData.responsable} onChange={(e) => handleTaskChange('responsable', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                <label htmlFor="task-owner" className="mb-2 block text-sm font-medium text-slate-300">{t.responsable}</label>
+                <input id="task-owner" type="text" value={taskFormData.responsable} onChange={(e) => handleTaskChange('responsable', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.module}</label>
-                <select value={taskFormData.module} onChange={(e) => handleTaskChange('module', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                <label htmlFor="task-module" className="mb-2 block text-sm font-medium text-slate-300">{t.module}</label>
+                <select id="task-module" value={taskFormData.module} onChange={(e) => handleTaskChange('module', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40">
                   {taskModuleOptions.map(module => (
                     <option key={module} value={module}>{translateTaskModule(module)}</option>
                   ))}
@@ -939,41 +945,47 @@ const Admin = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.progression}</label>
-                <input type="number" min="0" max="100" value={taskFormData.progression} onChange={(e) => handleTaskChange('progression', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+                <label htmlFor="task-progress" className="mb-2 block text-sm font-medium text-slate-300">{t.progression}</label>
+                <input id="task-progress" type="number" min="0" max="100" value={taskFormData.progression} onChange={(e) => handleTaskChange('progression', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40" />
               </div>
             </div>
 
-            <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowTaskModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">{t.annuler}</button>
-              <button onClick={handleSaveTask} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">{editingTaskId ? t.modifier : t.creer}</button>
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <button type="button" onClick={() => setShowTaskModal(false)} className="administration-modal__cancel min-h-11 rounded-md bg-slate-700 px-4 py-2 font-medium text-white transition hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400">{t.annuler}</button>
+              <button type="submit" className="administration-modal__primary min-h-11 rounded-md bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">{editingTaskId ? t.modifier : t.creer}</button>
             </div>
-          </div>
+          </form>
         </div>
       )}
 
       {/* Modal Utilisateur */}
       {showUserModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
-            <h2 className="mb-6 text-2xl font-semibold text-slate-100">
+        <div className="administration-modal fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-4 sm:items-center">
+          <form
+            className="administration-modal__panel max-h-[calc(100vh-2rem)] w-full max-w-md overflow-y-auto rounded-lg border border-slate-700 bg-slate-800 p-5 shadow-2xl sm:p-8"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="user-modal-title"
+            onSubmit={(event) => { event.preventDefault(); handleSaveUser(); }}
+          >
+            <h2 id="user-modal-title" className="mb-6 text-2xl font-semibold text-slate-100">
               {editingId ? t.editUser : t.newUser}
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.nom} *</label>
-                <input type="text" value={userFormData.nom} onChange={(e) => handleUserChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="Nom complet" />
+                <label htmlFor="user-name" className="mb-2 block text-sm font-medium text-slate-300">{t.nom} *</label>
+                <input id="user-name" type="text" required value={userFormData.nom} onChange={(e) => handleUserChange('nom', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40" placeholder="Nom complet" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.email} *</label>
-                <input type="email" value={userFormData.email} onChange={(e) => handleUserChange('email', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="email@seneswiss.sn" />
+                <label htmlFor="user-email" className="mb-2 block text-sm font-medium text-slate-300">{t.email} *</label>
+                <input id="user-email" type="email" required value={userFormData.email} onChange={(e) => handleUserChange('email', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40" placeholder="email@seneswiss.sn" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.role}</label>
-                <select value={userFormData.role} onChange={(e) => handleUserChange('role', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                <label htmlFor="user-role" className="mb-2 block text-sm font-medium text-slate-300">{t.role}</label>
+                <select id="user-role" value={userFormData.role} onChange={(e) => handleUserChange('role', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40">
                   {roles.map(r => (
                     <option key={r.id} value={r.nom}>{translateRole(r.nom)}</option>
                   ))}
@@ -981,8 +993,8 @@ const Admin = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.statut}</label>
-                <select value={userFormData.statut} onChange={(e) => handleUserChange('statut', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                <label htmlFor="user-status" className="mb-2 block text-sm font-medium text-slate-300">{t.statut}</label>
+                <select id="user-status" value={userFormData.statut} onChange={(e) => handleUserChange('statut', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40">
                   <option value="Actif">{t.active}</option>
                   <option value="Inactif">{t.inactive}</option>
                   <option value="Suspendu">{t.suspended}</option>
@@ -990,44 +1002,50 @@ const Admin = () => {
               </div>
             </div>
 
-            <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowUserModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">{t.annuler}</button>
-              <button onClick={handleSaveUser} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">{editingId ? t.modifier : t.creer}</button>
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <button type="button" onClick={() => setShowUserModal(false)} className="administration-modal__cancel min-h-11 rounded-md bg-slate-700 px-4 py-2 font-medium text-white transition hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400">{t.annuler}</button>
+              <button type="submit" className="administration-modal__primary min-h-11 rounded-md bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">{editingId ? t.modifier : t.creer}</button>
             </div>
-          </div>
+          </form>
         </div>
       )}
 
       {/* Modal Rôle */}
       {showRoleModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
-            <h2 className="mb-6 text-2xl font-semibold text-slate-100">
+        <div className="administration-modal fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-4 sm:items-center">
+          <form
+            className="administration-modal__panel max-h-[calc(100vh-2rem)] w-full max-w-md overflow-y-auto rounded-lg border border-slate-700 bg-slate-800 p-5 shadow-2xl sm:p-8"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="role-modal-title"
+            onSubmit={(event) => { event.preventDefault(); handleSaveRole(); }}
+          >
+            <h2 id="role-modal-title" className="mb-6 text-2xl font-semibold text-slate-100">
               {editingId ? t.editRole : t.newRole}
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.nominRole} *</label>
-                <input type="text" value={roleFormData.nom} onChange={(e) => handleRoleChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="ex: Manager" />
+                <label htmlFor="role-name" className="mb-2 block text-sm font-medium text-slate-300">{t.nominRole} *</label>
+                <input id="role-name" type="text" required value={roleFormData.nom} onChange={(e) => handleRoleChange('nom', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40" placeholder="ex: Manager" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.description}</label>
-                <textarea value={roleFormData.description} onChange={(e) => handleRoleChange('description', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="Description du rôle" rows="3" />
+                <label htmlFor="role-description" className="mb-2 block text-sm font-medium text-slate-300">{t.description}</label>
+                <textarea id="role-description" value={roleFormData.description} onChange={(e) => handleRoleChange('description', e.target.value)} className="w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40" placeholder="Description du rôle" rows="3" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">{t.permissions}</label>
-                <textarea value={roleFormData.permissions.join(', ')} onChange={(e) => handleRoleChange('permissions', e.target.value.split(',').map(p => p.trim()))} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="Read, Create, Update, Delete" rows="3" />
+                <label htmlFor="role-permissions" className="mb-2 block text-sm font-medium text-slate-300">{t.permissions}</label>
+                <textarea id="role-permissions" value={roleFormData.permissions.join(', ')} onChange={(e) => handleRoleChange('permissions', e.target.value.split(',').map(p => p.trim()))} className="w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40" placeholder="Read, Create, Update, Delete" rows="3" />
               </div>
             </div>
 
-            <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowRoleModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">{t.annuler}</button>
-              <button onClick={handleSaveRole} className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">{editingId ? t.modifier : t.creer}</button>
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <button type="button" onClick={() => setShowRoleModal(false)} className="administration-modal__cancel min-h-11 rounded-md bg-slate-700 px-4 py-2 font-medium text-white transition hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400">{t.annuler}</button>
+              <button type="submit" className="administration-modal__primary min-h-11 rounded-md bg-purple-600 px-4 py-2 font-semibold text-white transition hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400">{editingId ? t.modifier : t.creer}</button>
             </div>
-          </div>
+          </form>
         </div>
       )}
     </>
