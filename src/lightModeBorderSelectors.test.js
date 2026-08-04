@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 
 const indexHtml = fs.readFileSync(path.join(__dirname, '..', 'public', 'index.html'), 'utf8');
+const administrationSource = fs.readFileSync(path.join(__dirname, 'Administration.js'), 'utf8');
+const institutionSource = fs.readFileSync(path.join(__dirname, 'InstitutionOverview.js'), 'utf8');
 
 const baseTokenSelector = (scope, color) =>
   `${scope} [class^="border-${color}-"],${scope} [class*=" border-${color}-"]`;
@@ -41,5 +43,16 @@ describe('light-mode accent border selectors', () => {
     expect(document.querySelector('#neutral').matches(cyanSelector)).toBe(false);
     expect(document.querySelector('#blue-base').matches(blueSelector)).toBe(true);
     expect(document.querySelector('#cyan-base').matches(cyanSelector)).toBe(true);
+  });
+
+  test('keeps Administration headings readable while preserving white KPI text', () => {
+    expect(administrationSource).toContain('administration-page min-h-screen');
+    expect(indexHtml).toContain('html:not(.dark) .administration-page .text-slate-100');
+    expect(indexHtml).toContain('html:not(.dark) .administration-page .administration-kpi__value{color:#fff!important}');
+  });
+
+  test('uses the lighter institutional heading hierarchy', () => {
+    expect(institutionSource).toContain('text-2xl font-semibold text-slate-100');
+    expect(institutionSource).toContain('text-xl font-semibold text-slate-100');
   });
 });

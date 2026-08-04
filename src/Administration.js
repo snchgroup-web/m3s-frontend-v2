@@ -600,7 +600,7 @@ const Admin = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+      <div className="administration-page min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
         <div className="mx-auto w-full max-w-[1800px]">
 
         {/* KPIs */}
@@ -610,7 +610,7 @@ const Admin = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="administration-kpi__label text-blue-200 text-sm">{t.institution}</p>
-                <p className="administration-kpi__value text-white text-2xl font-bold">1</p>
+                <p className="administration-kpi__value text-2xl font-semibold text-slate-100">1</p>
               </div>
               <Users size={32} className="administration-kpi__icon text-blue-400" />
             </div>
@@ -620,7 +620,7 @@ const Admin = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="administration-kpi__label text-green-200 text-sm">{t.planning}</p>
-                <p className="administration-kpi__value text-white text-2xl font-bold">{tasks.length}</p>
+                <p className="administration-kpi__value text-2xl font-semibold text-slate-100">{tasks.length}</p>
               </div>
               <AlertCircle size={32} className="administration-kpi__icon text-green-400" />
             </div>
@@ -630,7 +630,7 @@ const Admin = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="administration-kpi__label text-purple-200 text-sm">{t.tachesTerminees}</p>
-                <p className="administration-kpi__value text-white text-2xl font-bold">{completedTasks}</p>
+                <p className="administration-kpi__value text-2xl font-semibold text-slate-100">{completedTasks}</p>
               </div>
               <Lock size={32} className="administration-kpi__icon text-purple-400" />
             </div>
@@ -640,7 +640,7 @@ const Admin = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="administration-kpi__label text-red-200 text-sm">{t.communication}</p>
-                <p className="administration-kpi__value text-white text-2xl font-bold">0</p>
+                <p className="administration-kpi__value text-2xl font-semibold text-slate-100">0</p>
               </div>
               <Shield size={32} className="administration-kpi__icon text-red-400" />
             </div>
@@ -667,7 +667,7 @@ const Admin = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Distribution des rôles */}
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">{t.roleDistribution}</h3>
+              <h3 className="mb-4 font-semibold text-slate-100">{t.roleDistribution}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie data={roleDistribution.filter(r => r.count > 0)} cx="50%" cy="50%" labelLine={false} label={({ name, count }) => `${name}: ${count}`} outerRadius={80} fill="#8884d8" dataKey="count">
@@ -682,7 +682,7 @@ const Admin = () => {
 
             {/* Activité par type d'action */}
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">{t.activityByType}</h3>
+              <h3 className="mb-4 font-semibold text-slate-100">{t.activityByType}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={auditActivity}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
@@ -696,7 +696,7 @@ const Admin = () => {
 
             {/* Activité quotidienne */}
             <div className="lg:col-span-2 bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">{t.dailyActivity}</h3>
+              <h3 className="mb-4 font-semibold text-slate-100">{t.dailyActivity}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={dailyActivity}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
@@ -830,7 +830,7 @@ const Admin = () => {
                 <div key={r.id} className="bg-slate-800 rounded-lg p-6 border border-slate-700">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h4 className="text-white font-bold text-lg">{translateRole(r.nom)}</h4>
+                      <h4 className="text-lg font-semibold text-slate-100">{translateRole(r.nom)}</h4>
                       <p className="text-slate-400 text-sm">{translateRoleDescription(r.description)}</p>
                     </div>
                     <div className="flex gap-2">
@@ -896,7 +896,7 @@ const Admin = () => {
       {showTaskModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
-            <h2 className="text-2xl font-bold text-white mb-6">
+            <h2 className="mb-6 text-2xl font-semibold text-slate-100">
               {editingTaskId ? t.modifierTache : t.nouvelleTache}
             </h2>
 
@@ -956,7 +956,7 @@ const Admin = () => {
       {showUserModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
-            <h2 className="text-2xl font-bold text-white mb-6">
+            <h2 className="mb-6 text-2xl font-semibold text-slate-100">
               {editingId ? t.editUser : t.newUser}
             </h2>
 
@@ -1002,7 +1002,7 @@ const Admin = () => {
       {showRoleModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
-            <h2 className="text-2xl font-bold text-white mb-6">
+            <h2 className="mb-6 text-2xl font-semibold text-slate-100">
               {editingId ? t.editRole : t.newRole}
             </h2>
 

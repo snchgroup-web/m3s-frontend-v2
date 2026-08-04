@@ -221,7 +221,7 @@ const COPY = {
 const Card = ({ icon: Icon, title, body }) => (
   <article className="rounded-lg border border-slate-700 bg-slate-900/45 p-4">
     <Icon className="text-blue-300" size={21} aria-hidden="true" />
-    <h4 className="mt-3 font-bold text-white">{title}</h4>
+    <h4 className="mt-3 font-semibold text-slate-100">{title}</h4>
     <p className="mt-2 text-sm leading-6 text-slate-300">{body}</p>
   </article>
 );
@@ -260,7 +260,7 @@ const ComplianceOverview = ({ language = 'FR' }) => {
         <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
           <div className="max-w-4xl">
             <p className="text-xs font-bold uppercase text-blue-300">{t.eyebrow}</p>
-            <h2 id="compliance-title" className="mt-2 text-2xl font-bold text-white">{t.title}</h2>
+            <h2 id="compliance-title" className="mt-2 text-2xl font-semibold text-slate-100">{t.title}</h2>
             <p className="mt-3 text-sm leading-6 text-slate-300">{t.subtitle}</p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -274,7 +274,7 @@ const ComplianceOverview = ({ language = 'FR' }) => {
       <InternalSectionNav ariaLabel={t.navLabel} items={navItems} topId="compliance-top" backToTopLabel={t.backToTop} refreshKey={language} />
 
       <section id="compliance-framework" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="compliance-framework-title">
-        <h3 id="compliance-framework-title" className="text-xl font-bold text-white">{t.frameworkTitle}</h3>
+        <h3 id="compliance-framework-title" className="text-xl font-semibold text-slate-100">{t.frameworkTitle}</h3>
         <p className="mt-2 max-w-5xl text-sm leading-6 text-slate-400">{t.frameworkBody}</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {framework.map(([title, body, Icon]) => <Card key={title} title={title} body={body} icon={Icon} />)}
@@ -282,7 +282,7 @@ const ComplianceOverview = ({ language = 'FR' }) => {
       </section>
 
       <section id="compliance-register" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="compliance-register-title">
-        <h3 id="compliance-register-title" className="text-xl font-bold text-white">{t.registerTitle}</h3>
+        <h3 id="compliance-register-title" className="text-xl font-semibold text-slate-100">{t.registerTitle}</h3>
         <p className="mt-2 text-sm leading-6 text-slate-400">{t.registerBody}</p>
         <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {t.registerFields.map((field, index) => (
@@ -297,7 +297,7 @@ const ComplianceOverview = ({ language = 'FR' }) => {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <Landmark className="text-blue-300" size={21} aria-hidden="true" />
-                <h4 className="font-bold text-white">{t.associationTitle}</h4>
+                <h4 className="font-semibold text-slate-100">{t.associationTitle}</h4>
               </div>
               <span className="rounded-full border border-blue-700 bg-blue-950 px-3 py-1 text-xs font-semibold text-blue-100">{t.associationStatus}</span>
             </div>
@@ -314,7 +314,7 @@ const ComplianceOverview = ({ language = 'FR' }) => {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <Gavel className="text-amber-300" size={21} aria-hidden="true" />
-                <h4 className="font-bold text-white">{t.legalCasesTitle}</h4>
+                <h4 className="font-semibold text-slate-100">{t.legalCasesTitle}</h4>
               </div>
               <span className="rounded-full border border-amber-700 bg-amber-950 px-3 py-1 text-xs font-semibold text-amber-100">{t.legalCaseStatus}</span>
             </div>
@@ -323,7 +323,7 @@ const ComplianceOverview = ({ language = 'FR' }) => {
             <p className="mt-3 border-t border-amber-900/60 pt-3 text-sm leading-6 text-amber-100/80">{t.legalCaseRule}</p>
           </article>
         </div>
-        <h4 className="mt-6 font-bold text-white">{t.lifecycleTitle}</h4>
+        <h4 className="mt-6 font-semibold text-slate-100">{t.lifecycleTitle}</h4>
         <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
           {t.lifecycleSteps.map((step, index) => (
             <React.Fragment key={step}>
@@ -335,7 +335,7 @@ const ComplianceOverview = ({ language = 'FR' }) => {
       </section>
 
       <section id="compliance-controls" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="compliance-controls-title">
-        <h3 id="compliance-controls-title" className="text-xl font-bold text-white">{t.controlsTitle}</h3>
+        <h3 id="compliance-controls-title" className="text-xl font-semibold text-slate-100">{t.controlsTitle}</h3>
         <p className="mt-2 text-sm leading-6 text-slate-400">{t.controlsBody}</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {controls.map(([title, body, Icon]) => <Card key={title} title={title} body={body} icon={Icon} />)}
@@ -343,7 +343,7 @@ const ComplianceOverview = ({ language = 'FR' }) => {
       </section>
 
       <section id="compliance-responsibilities" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="compliance-responsibilities-title">
-        <h3 id="compliance-responsibilities-title" className="text-xl font-bold text-white">{t.responsibilitiesTitle}</h3>
+        <h3 id="compliance-responsibilities-title" className="text-xl font-semibold text-slate-100">{t.responsibilitiesTitle}</h3>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {responsibilities.map(([title, body, Icon]) => <Card key={title} title={title} body={body} icon={Icon} />)}
         </div>
@@ -353,7 +353,7 @@ const ComplianceOverview = ({ language = 'FR' }) => {
         <div className="flex items-start gap-3">
           <ShieldCheck className="mt-0.5 shrink-0 text-amber-300" size={22} aria-hidden="true" />
           <div>
-            <h3 id="compliance-boundaries-title" className="text-xl font-bold text-white">{t.boundariesTitle}</h3>
+            <h3 id="compliance-boundaries-title" className="text-xl font-semibold text-slate-100">{t.boundariesTitle}</h3>
             <p className="mt-2 text-sm leading-6 text-amber-100/80">{t.boundariesBody}</p>
           </div>
         </div>

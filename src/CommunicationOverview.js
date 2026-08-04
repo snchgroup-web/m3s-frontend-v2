@@ -254,7 +254,7 @@ const COPY = {
 const DetailCard = ({ icon: Icon, title, body }) => (
   <article className="rounded-lg border border-slate-700 bg-slate-900/45 p-4">
     <Icon className="text-cyan-300" size={21} aria-hidden="true" />
-    <h4 className="mt-3 font-bold text-white">{title}</h4>
+    <h4 className="mt-3 font-semibold text-slate-100">{title}</h4>
     <p className="mt-2 text-sm leading-6 text-slate-300">{body}</p>
   </article>
 );
@@ -293,7 +293,7 @@ const CommunicationOverview = ({ language = 'FR' }) => {
         <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
           <div className="max-w-4xl">
             <p className="text-xs font-bold uppercase text-cyan-300">{t.eyebrow}</p>
-            <h2 id="communication-title" className="mt-2 text-2xl font-bold text-white">{t.title}</h2>
+            <h2 id="communication-title" className="mt-2 text-2xl font-semibold text-slate-100">{t.title}</h2>
             <p className="mt-3 text-sm leading-6 text-slate-300">{t.subtitle}</p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -307,7 +307,7 @@ const CommunicationOverview = ({ language = 'FR' }) => {
       <InternalSectionNav ariaLabel={t.navLabel} items={navItems} topId="communication-top" backToTopLabel={t.backToTop} refreshKey={language} />
 
       <section id="communication-scope" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="communication-scope-title">
-        <h3 id="communication-scope-title" className="text-xl font-bold text-white">{t.scopeTitle}</h3>
+        <h3 id="communication-scope-title" className="text-xl font-semibold text-slate-100">{t.scopeTitle}</h3>
         <p className="mt-2 max-w-5xl text-sm leading-6 text-slate-400">{t.scopeBody}</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {scopeCards.map(([title, body, Icon]) => <DetailCard key={title} title={title} body={body} icon={Icon} />)}
@@ -315,7 +315,7 @@ const CommunicationOverview = ({ language = 'FR' }) => {
       </section>
 
       <section id="communication-register" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="communication-register-title">
-        <h3 id="communication-register-title" className="text-xl font-bold text-white">{t.registerTitle}</h3>
+        <h3 id="communication-register-title" className="text-xl font-semibold text-slate-100">{t.registerTitle}</h3>
         <p className="mt-2 text-sm leading-6 text-slate-400">{t.registerBody}</p>
         <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {t.registerFields.map((field, index) => (
@@ -332,7 +332,7 @@ const CommunicationOverview = ({ language = 'FR' }) => {
                 <span className="font-mono text-xs font-bold text-cyan-200">{item.id}</span>
                 <span className="rounded-full border border-cyan-800 bg-cyan-950 px-2.5 py-1 text-xs font-semibold text-cyan-100">{t.sampleBadge}</span>
               </div>
-              <h4 className="mt-3 font-bold text-white">{item.title}</h4>
+              <h4 className="mt-3 font-semibold text-slate-100">{item.title}</h4>
               <p className="mt-1 text-sm text-cyan-100/80">{item.direction}</p>
               <div className="mt-4 grid gap-2 border-t border-cyan-900/70 pt-3 text-sm text-slate-300">
                 <p><strong className="text-slate-100">{t.ownerLabel} :</strong> {item.owner}</p>
@@ -348,7 +348,7 @@ const CommunicationOverview = ({ language = 'FR' }) => {
         <div className="flex items-start gap-3">
           <Route className="mt-0.5 shrink-0 text-cyan-300" size={22} aria-hidden="true" />
           <div>
-            <h3 id="communication-workflow-title" className="text-xl font-bold text-white">{t.workflowTitle}</h3>
+            <h3 id="communication-workflow-title" className="text-xl font-semibold text-slate-100">{t.workflowTitle}</h3>
             <p className="mt-2 text-sm leading-6 text-slate-400">{t.workflowBody}</p>
           </div>
         </div>
@@ -356,7 +356,7 @@ const CommunicationOverview = ({ language = 'FR' }) => {
           {t.workflowSteps.map(([title, body], index) => (
             <article key={title} className="rounded-lg border border-slate-700 bg-slate-900/45 p-4">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-950 text-sm font-bold text-blue-200">{index + 1}</span>
-              <h4 className="mt-3 font-bold text-white">{title}</h4>
+              <h4 className="mt-3 font-semibold text-slate-100">{title}</h4>
               <p className="mt-2 text-sm leading-6 text-slate-400">{body}</p>
             </article>
           ))}
@@ -365,7 +365,7 @@ const CommunicationOverview = ({ language = 'FR' }) => {
       </section>
 
       <section id="communication-institutional" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="communication-institutional-title">
-        <h3 id="communication-institutional-title" className="text-xl font-bold text-white">{t.communicationTitle}</h3>
+        <h3 id="communication-institutional-title" className="text-xl font-semibold text-slate-100">{t.communicationTitle}</h3>
         <p className="mt-2 max-w-5xl text-sm leading-6 text-slate-400">{t.communicationBody}</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {communicationCards.map(([title, body, Icon]) => <DetailCard key={title} title={title} body={body} icon={Icon} />)}
@@ -373,7 +373,7 @@ const CommunicationOverview = ({ language = 'FR' }) => {
       </section>
 
       <section id="communication-governance" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="communication-governance-title">
-        <h3 id="communication-governance-title" className="text-xl font-bold text-white">{t.governanceTitle}</h3>
+        <h3 id="communication-governance-title" className="text-xl font-semibold text-slate-100">{t.governanceTitle}</h3>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {responsibilityCards.map(([title, body, Icon]) => <DetailCard key={title} title={title} body={body} icon={Icon} />)}
         </div>
@@ -381,7 +381,7 @@ const CommunicationOverview = ({ language = 'FR' }) => {
           <div className="flex items-start gap-3">
             <ShieldCheck className="mt-0.5 shrink-0 text-amber-300" size={22} aria-hidden="true" />
             <div>
-              <h4 className="font-bold text-white">{t.boundaryTitle}</h4>
+              <h4 className="font-semibold text-slate-100">{t.boundaryTitle}</h4>
               <ul className="mt-3 grid gap-2 text-sm leading-6 text-slate-300 lg:grid-cols-2">
                 {t.boundaryItems.map(item => <li key={item} className="rounded-md border border-amber-900/60 bg-slate-950/25 px-3 py-2">{item}</li>)}
               </ul>
