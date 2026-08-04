@@ -14,7 +14,7 @@ test('navigates through the French governing document journey while preserving V
   expect(screen.getByRole('heading', { name: 'Positionnement & promesse' })).toBeInTheDocument();
   fireEvent.click(screen.getByRole('tab', { name: 'Afficher la vue : Trajectoire & garde-fous' }));
   expect(screen.getByText(/consolidation formelle de la V4/i)).toBeInTheDocument();
-  expect(screen.getByRole('link', { name: 'Consulter la source dans la GED' })).toHaveAttribute('href', '/ged?tab=documents');
+  expect(screen.getByRole('link', { name: 'Consulter la source dans la GED' })).toHaveAttribute('href', '/ged?tab=documents&returnVisual=director-document');
 });
 
 test('renders the German governance warning and closes', () => {

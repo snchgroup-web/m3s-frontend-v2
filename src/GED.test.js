@@ -67,6 +67,14 @@ test('renders and filters the read-only document tools pilot', async () => {
   expect(screen.getByText('La validation reste humaine. Cette vue n’écrit dans aucun document, API ou système externe.')).toBeInTheDocument();
 });
 
+test('offers a contextual return from the GED to the governing document visual', async () => {
+  renderGed('documents', 'FR', '&returnVisual=director-document');
+
+  const returnLink = await screen.findByRole('link', { name: 'Revenir à la lecture visuelle : Document Directeur Global 2SG V4' });
+  expect(returnLink).toHaveAttribute('href', '/administration?tab=institution&section=institution-sources&visual=director-document');
+  expect(screen.getByText('Cette source a été ouverte depuis Administration / Institution.')).toBeInTheDocument();
+});
+
 test('renders searchable knowledge cards with source metadata', async () => {
   renderGed('knowledge');
 

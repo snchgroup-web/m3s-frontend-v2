@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import {
+  ArrowLeft,
   BookOpen,
   CalendarClock,
   Download,
@@ -39,6 +40,8 @@ const GED = () => {
       subtitle: 'Gestion des Documents et des Dossiers',
       overview: 'Vue d\'ensemble',
       documents: 'Documents',
+      returnToVisual: 'Revenir à la lecture visuelle : {document}',
+      returnContext: 'Cette source a été ouverte depuis Administration / Institution.',
       dossiers: 'Dossiers',
       archives: 'Archives',
       totalDocuments: 'Total Documents',
@@ -227,6 +230,8 @@ const GED = () => {
       subtitle: 'Documents and Folders Management',
       overview: 'Overview',
       documents: 'Documents',
+      returnToVisual: 'Return to visual reading: {document}',
+      returnContext: 'This source was opened from Administration / Institution.',
       dossiers: 'Folders',
       archives: 'Archives',
       totalDocuments: 'Total Documents',
@@ -415,6 +420,8 @@ const GED = () => {
       subtitle: 'Verwaltung von Dokumenten und Ordnern',
       overview: 'Übersicht',
       documents: 'Dokumente',
+      returnToVisual: 'Zur visuellen Aufbereitung zurückkehren: {document}',
+      returnContext: 'Diese Quelle wurde über Administration / Institution geöffnet.',
       dossiers: 'Ordner',
       archives: 'Archive',
       totalDocuments: 'Gesamtdokumente',
@@ -731,7 +738,30 @@ const GED = () => {
   const [toolQuery, setToolQuery] = useState('');
   const [knowledgeQuery, setKnowledgeQuery] = useState('');
   const [selectedPilotDetail, setSelectedPilotDetail] = useState(null);
-  const requestedGlossaryTermId = new URLSearchParams(location.search).get('term');
+  const searchParams = new URLSearchParams(location.search);
+  const requestedGlossaryTermId = searchParams.get('term');
+  const requestedReturnVisual = searchParams.get('returnVisual');
+  const returnVisualTitles = {
+    'director-document': {
+      FR: 'Document Directeur Global 2SG V4',
+      EN: '2SG Global Governing Document V4',
+      DE: 'Globales 2SG-Leitdokument V4'
+    },
+    'strategic-summary': {
+      FR: 'Note de synthèse stratégique V2',
+      EN: 'Strategic summary V2',
+      DE: 'Strategische Zusammenfassung V2'
+    },
+    'business-plan': {
+      FR: 'Business Plan 2SG V8',
+      EN: '2SG Business Plan V8',
+      DE: '2SG-Businessplan V8'
+    }
+  };
+  const returnVisualTitle = returnVisualTitles[requestedReturnVisual]?.[language];
+  const returnVisualHref = returnVisualTitle
+    ? `/administration?tab=institution&section=institution-sources&visual=${requestedReturnVisual}`
+    : null;
   const [formData, setFormData] = useState({
     nom: '',
     type: 'PDF',
@@ -752,7 +782,9 @@ const GED = () => {
 
   const selectTab = (tab) => {
     setActiveTab(tab);
-    navigate(`/ged?tab=${tab}`);
+    const params = new URLSearchParams(location.search);
+    params.set('tab', tab);
+    navigate(`/ged?${params.toString()}`);
   };
 
   useEffect(() => {
@@ -770,7 +802,7 @@ const GED = () => {
       isMounted = false;
     };
   }, []);
- 
+
   useEffect(() => {
     const loadDocuments = async () => {
       try {
@@ -1121,7 +1153,17 @@ const GED = () => {
             { tab: 'outils-documents', label: t.documentTools }
           ]}
         />
- 
+
+        {returnVisualHref && (
+          <aside className="mb-6 flex flex-col gap-3 rounded-lg border border-blue-700 bg-blue-950/45 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm leading-6 text-blue-100">{t.returnContext}</p>
+            <a href={returnVisualHref} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+              <ArrowLeft size={17} aria-hidden="true" />
+              {t.returnToVisual.replace('{document}', returnVisualTitle)}
+            </a>
+          </aside>
+        )}
+
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
