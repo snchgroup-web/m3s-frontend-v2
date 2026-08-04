@@ -12,7 +12,7 @@ test('navigates through the French Business Plan journey without publishing figu
   expect(screen.getByRole('heading', { name: 'Marchés & segments' })).toBeInTheDocument();
   fireEvent.click(screen.getByRole('tab', { name: 'Afficher la vue : Garde-fous & décisions' }));
   expect(screen.getByText(/La décision suivante porte sur les packs à chiffrer/i)).toBeInTheDocument();
-  expect(screen.getByRole('link', { name: 'Consulter la source dans la GED' })).toHaveAttribute('href', '/ged?tab=documents');
+  expect(screen.getByRole('link', { name: 'Consulter la source dans la GED' })).toHaveAttribute('href', '/ged?tab=documents&returnVisual=business-plan');
 });
 
 test('renders the German financial guardrail and closes', () => {

@@ -2,6 +2,10 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import InstitutionOverview from './InstitutionOverview';
 
+beforeEach(() => {
+  window.history.replaceState({}, '', '/administration?tab=institution');
+});
+
 test('renders the validated horizontal governance in French', () => {
   render(<InstitutionOverview language="FR" />);
 
@@ -11,20 +15,25 @@ test('renders the validated horizontal governance in French', () => {
   expect(screen.getByRole('heading', { name: 'Planification & gestion de projets' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Conformité légale & obligations' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Documents directeurs & lectures visuelles' })).toBeInTheDocument();
-  expect(screen.getByText('Business Plan 2SG V8 - travail')).toBeInTheDocument();
   expect(screen.getByText(/Base stratégique et financière validée sur le fond/i)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'De la source maîtresse à la lecture visuelle' })).toBeInTheDocument();
-  expect(screen.getAllByRole('link', { name: 'Consulter l’espace documentaire' })).toHaveLength(3);
-  screen.getAllByRole('link', { name: 'Consulter l’espace documentaire' }).forEach(link => {
-    expect(link).toHaveAttribute('href', '/ged?tab=documents');
-  });
+
+  expect(screen.getAllByRole('link', { name: 'Consulter l’espace documentaire' }).map(link => link.getAttribute('href'))).toEqual([
+    '/ged?tab=documents&returnVisual=director-document',
+    '/ged?tab=documents&returnVisual=strategic-summary',
+    '/ged?tab=documents&returnVisual=business-plan'
+  ]);
+
+  const directorCardTitle = screen.getByText('Document Directeur Global 2SG V4 - travail');
+  const synthesisCardTitle = screen.getByText('Note de synthèse stratégique V2');
+  const businessPlanCardTitle = screen.getByText('Business Plan 2SG V8 - travail');
+  expect(directorCardTitle.compareDocumentPosition(synthesisCardTitle) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  expect(synthesisCardTitle.compareDocumentPosition(businessPlanCardTitle) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+
   const visualButtons = screen.getAllByRole('button', { name: 'Ouvrir la lecture visuelle' });
-  expect(visualButtons).toHaveLength(2);
+  expect(visualButtons).toHaveLength(3);
   fireEvent.click(visualButtons[0]);
-  expect(screen.getByRole('heading', { level: 3, name: 'Business Plan 2SG V8' })).toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button', { name: 'Fermer le parcours Business Plan' }));
-  fireEvent.click(screen.getAllByRole('button', { name: 'Ouvrir la lecture visuelle' })[1]);
-  expect(screen.getByRole('heading', { level: 3, name: 'Note de synthèse stratégique V2' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { level: 3, name: 'Document Directeur Global 2SG V4' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Définition du Glossaire : Vision' })).toBeInTheDocument();
   expect(screen.getAllByRole('button', { name: 'Définition du Glossaire : Business Plan' }).length).toBeGreaterThan(0);
   expect(screen.getByText(/Association internationale, structure de social business/i)).toBeInTheDocument();
@@ -35,6 +44,13 @@ test('renders the validated horizontal governance in French', () => {
   expect(screen.getByText('Ibrahima Ndiaye (Ibou)')).toBeInTheDocument();
   expect(screen.getAllByText('Droit Admin M3S')).toHaveLength(2);
   expect(screen.getByText(/ne transforme pas cette personne en supérieur hiérarchique général/i)).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: 'Fermer le parcours du Document Directeur' }));
+  fireEvent.click(screen.getAllByRole('button', { name: 'Ouvrir la lecture visuelle' })[1]);
+  expect(screen.getByRole('heading', { level: 3, name: 'Note de synthèse stratégique V2' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Fermer la lecture visuelle' }));
+  fireEvent.click(screen.getAllByRole('button', { name: 'Ouvrir la lecture visuelle' })[2]);
+  expect(screen.getByRole('heading', { level: 3, name: 'Business Plan 2SG V8' })).toBeInTheDocument();
 });
 
 test('renders access boundaries and support reporting in English', () => {
@@ -73,5 +89,21 @@ test('uses the internal navigation to reach a section', () => {
   fireEvent.click(screen.getByRole('button', { name: 'Governance & team' }));
 
   expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
+  window.HTMLElement.prototype.scrollIntoView = originalScrollIntoView;
+});
+
+test('opens a deep-linked visual and keeps it in view when the language changes', () => {
+  const scrollIntoView = jest.fn();
+  const originalScrollIntoView = window.HTMLElement.prototype.scrollIntoView;
+  window.HTMLElement.prototype.scrollIntoView = scrollIntoView;
+  window.history.replaceState({}, '', '/administration?tab=institution&section=institution-sources&visual=director-document');
+
+  const { rerender } = render(<InstitutionOverview language="FR" />);
+  expect(screen.getByRole('heading', { level: 3, name: 'Document Directeur Global 2SG V4' })).toBeInTheDocument();
+
+  rerender(<InstitutionOverview language="DE" />);
+  expect(screen.getByRole('heading', { level: 3, name: 'Globales 2SG-Leitdokument V4' })).toBeInTheDocument();
+  expect(scrollIntoView).toHaveBeenLastCalledWith({ behavior: 'smooth', block: 'start' });
+
   window.HTMLElement.prototype.scrollIntoView = originalScrollIntoView;
 });

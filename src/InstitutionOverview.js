@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import {
   ArrowRight,
   BookOpen,
@@ -26,6 +26,7 @@ import {
 import InternalSectionNav from './InternalSectionNav';
 import GlossaryHelp from './GlossaryHelp';
 import BusinessPlanVisual from './BusinessPlanVisual';
+import DirectorDocumentVisual from './DirectorDocumentVisual';
 import StrategicSummaryVisual from './StrategicSummaryVisual';
 
 const COPY = {
@@ -522,16 +523,58 @@ const PersonCard = ({ person, type, typeLabel, rightLabel }) => (
   </article>
 );
 
+const VISUAL_TARGET_IDS = {
+  'business-plan': 'business-plan-visual',
+  'strategic-summary': 'strategic-summary-visual',
+  'director-document': 'director-document-visual'
+};
+
+const readInstitutionQuery = () => {
+  if (typeof window === 'undefined') return { visual: null, section: null };
+  const params = new URLSearchParams(window.location.search);
+  const visual = params.get('visual');
+  return {
+    visual: VISUAL_TARGET_IDS[visual] ? visual : null,
+    section: params.get('section')
+  };
+};
+
+const replaceInstitutionQuery = ({ visual, section }) => {
+  if (typeof window === 'undefined') return;
+  const params = new URLSearchParams(window.location.search);
+  if (visual) params.set('visual', visual); else params.delete('visual');
+  if (section) params.set('section', section); else params.delete('section');
+  const search = params.toString();
+  window.history.replaceState(window.history.state, '', `${window.location.pathname}${search ? `?${search}` : ''}${window.location.hash}`);
+};
+
 const InstitutionOverview = ({ language = 'FR' }) => {
   const t = COPY[language] || COPY.FR;
-  const [activeVisual, setActiveVisual] = useState(null);
+  const initialQuery = readInstitutionQuery();
+  const [activeVisual, setActiveVisual] = useState(initialQuery.visual);
   const data = people(t);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!activeVisual) return;
-    const targetId = activeVisual === 'business-plan' ? 'business-plan-visual' : 'strategic-summary-visual';
-    document.getElementById(targetId)?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
-  }, [activeVisual]);
+    const focusVisual = (behavior) => {
+      const target = document.getElementById(VISUAL_TARGET_IDS[activeVisual]);
+      target?.scrollIntoView?.({ behavior, block: 'start' });
+      target?.focus?.({ preventScroll: true });
+    };
+    focusVisual('smooth');
+    const frame = window.requestAnimationFrame(() => focusVisual('auto'));
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeVisual, language]);
+
+  const openVisual = (visualKey) => {
+    replaceInstitutionQuery({ visual: visualKey, section: 'institution-sources' });
+    setActiveVisual(visualKey);
+  };
+
+  const closeVisual = () => {
+    replaceInstitutionQuery({ visual: null, section: 'institution-sources' });
+    setActiveVisual(null);
+  };
   const accessRules = [
     [t.foundersAccess, t.foundersAccessBody, Shield],
     [t.associatesAccess, t.associatesAccessBody, UserCheck],
@@ -562,14 +605,13 @@ const InstitutionOverview = ({ language = 'FR' }) => {
   ];
   const documentViews = [
     {
-      title: t.businessPlanDoc,
-      body: t.businessPlanDocBody,
-      Icon: BriefcaseBusiness,
-      status: t.businessPlanStatus,
-      use: t.businessPlanUse,
-      output: t.businessPlanOutput,
-      glossaryTermId: 'STRAT-BUSINESS-PLAN',
-      visualKey: 'business-plan'
+      title: t.directorDoc,
+      body: t.directorDocBody,
+      Icon: BookOpen,
+      status: t.directorStatus,
+      use: t.directorUse,
+      output: t.directorOutput,
+      visualKey: 'director-document'
     },
     {
       title: t.synthesisDoc,
@@ -581,12 +623,14 @@ const InstitutionOverview = ({ language = 'FR' }) => {
       visualKey: 'strategic-summary'
     },
     {
-      title: t.directorDoc,
-      body: t.directorDocBody,
-      Icon: BookOpen,
-      status: t.directorStatus,
-      use: t.directorUse,
-      output: t.directorOutput
+      title: t.businessPlanDoc,
+      body: t.businessPlanDocBody,
+      Icon: BriefcaseBusiness,
+      status: t.businessPlanStatus,
+      use: t.businessPlanUse,
+      output: t.businessPlanOutput,
+      glossaryTermId: 'STRAT-BUSINESS-PLAN',
+      visualKey: 'business-plan'
     }
   ];
   const sourceJourney = [
@@ -632,7 +676,15 @@ const InstitutionOverview = ({ language = 'FR' }) => {
         </div>
       </header>
 
-      <InternalSectionNav ariaLabel={t.sectionNavLabel} items={sectionNavItems} topId="institution-top" backToTopLabel={t.backToTop} refreshKey={language} />
+      <InternalSectionNav
+        ariaLabel={t.sectionNavLabel}
+        items={sectionNavItems}
+        topId="institution-top"
+        backToTopLabel={t.backToTop}
+        refreshKey={activeVisual ? null : language}
+        initialSection={sectionNavItems.some(item => item.id === initialQuery.section) ? initialQuery.section : null}
+        onSectionChange={(section) => replaceInstitutionQuery({ visual: activeVisual, section })}
+      />
 
       <section id="institution-fundamentals" className="scroll-mt-20 py-1" aria-labelledby="profile-title">
         <div className="mb-4">
@@ -760,12 +812,12 @@ const InstitutionOverview = ({ language = 'FR' }) => {
               </dl>
               <div className="mt-auto space-y-2 pt-4">
                 {visualKey && (
-                  <button type="button" onClick={() => setActiveVisual(visualKey)} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-bold text-white transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                  <button type="button" onClick={() => openVisual(visualKey)} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-bold text-white transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
                     <Presentation size={17} aria-hidden="true" />
                     <span>{t.openVisual}</span>
                   </button>
                 )}
-                <a href="/ged?tab=documents" className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-blue-700 bg-blue-950/60 px-4 py-2 text-center text-sm font-bold text-blue-100 transition-colors hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <a href={`/ged?tab=documents&returnVisual=${visualKey}`} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-blue-700 bg-blue-950/60 px-4 py-2 text-center text-sm font-bold text-blue-100 transition-colors hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400">
                   <FolderOpen size={17} aria-hidden="true" />
                   <span>{t.openGed}</span>
                 </a>
@@ -775,12 +827,17 @@ const InstitutionOverview = ({ language = 'FR' }) => {
         </div>
         {activeVisual === 'business-plan' && (
           <div className="mt-4">
-            <BusinessPlanVisual language={language} onClose={() => setActiveVisual(null)} />
+            <BusinessPlanVisual language={language} onClose={closeVisual} />
           </div>
         )}
         {activeVisual === 'strategic-summary' && (
           <div className="mt-4">
-            <StrategicSummaryVisual language={language} onClose={() => setActiveVisual(null)} />
+            <StrategicSummaryVisual language={language} onClose={closeVisual} />
+          </div>
+        )}
+        {activeVisual === 'director-document' && (
+          <div className="mt-4">
+            <DirectorDocumentVisual language={language} onClose={closeVisual} />
           </div>
         )}
         <div className="mt-4 rounded-lg border border-slate-700 bg-slate-800 p-5 sm:p-6">

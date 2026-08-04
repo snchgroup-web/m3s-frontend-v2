@@ -11,7 +11,7 @@ test('navigates through the French strategic summary', () => {
   expect(screen.getByRole('heading', { name: 'Publics progressifs' })).toBeInTheDocument();
   fireEvent.click(screen.getByRole('tab', { name: 'Afficher la vue : Garde-fous & décision' }));
   expect(screen.getByText(/La prochaine décision porte sur la validation stratégique/i)).toBeInTheDocument();
-  expect(screen.getByRole('link', { name: 'Consulter la source dans la GED' })).toHaveAttribute('href', '/ged?tab=documents');
+  expect(screen.getByRole('link', { name: 'Consulter la source dans la GED' })).toHaveAttribute('href', '/ged?tab=documents&returnVisual=strategic-summary');
 });
 
 test('renders the German translation warning and closes', () => {

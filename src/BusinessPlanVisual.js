@@ -179,7 +179,7 @@ const BusinessPlanVisual = ({ language = 'FR', onClose }) => {
   const total = t.slides.length;
 
   return (
-    <section id="business-plan-visual" className="scroll-mt-20 rounded-lg border border-blue-800 bg-slate-900" aria-labelledby="business-plan-visual-title">
+    <section id="business-plan-visual" tabIndex={-1} className="scroll-mt-20 rounded-lg border border-blue-800 bg-slate-900 focus:outline-none" aria-labelledby="business-plan-visual-title">
       <header className="border-b border-slate-700 p-5 sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
@@ -237,7 +237,7 @@ const BusinessPlanVisual = ({ language = 'FR', onClose }) => {
             <button type="button" onClick={() => setActiveIndex(index => Math.max(0, index - 1))} disabled={activeIndex === 0} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-slate-600 px-4 py-2 text-sm font-bold text-slate-200 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:cursor-not-allowed disabled:opacity-40"><ArrowLeft size={17} aria-hidden="true" />{t.previous}</button>
             <button type="button" onClick={() => setActiveIndex(index => Math.min(total - 1, index + 1))} disabled={activeIndex === total - 1} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-blue-700 bg-blue-950 px-4 py-2 text-sm font-bold text-blue-100 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:cursor-not-allowed disabled:opacity-40">{t.next}<ArrowRight size={17} aria-hidden="true" /></button>
           </div>
-          <a href="/ged?tab=documents" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-sm font-bold text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"><FolderOpen size={17} aria-hidden="true" />{t.openGed}</a>
+          <a href="/ged?tab=documents&returnVisual=business-plan" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-sm font-bold text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"><FolderOpen size={17} aria-hidden="true" />{t.openGed}</a>
         </div>
         <p className="mt-4 flex gap-2 text-xs leading-5 text-slate-500"><BookOpen className="mt-0.5 shrink-0" size={15} aria-hidden="true" /><span>{t.sourceRule}</span></p>
       </div>

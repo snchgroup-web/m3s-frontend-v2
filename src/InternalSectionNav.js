@@ -1,18 +1,45 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { ArrowUp } from 'lucide-react';
 
-const InternalSectionNav = ({ ariaLabel, items, topId, backToTopLabel, refreshKey }) => {
-  const activeSectionRef = useRef(null);
+const InternalSectionNav = ({ ariaLabel, items, topId, backToTopLabel, refreshKey, initialSection, onSectionChange }) => {
+  const activeSectionRef = useRef(initialSection || null);
+  const itemIds = items.map(item => item.id).join('|');
 
   const scrollToSection = (sectionId) => {
     activeSectionRef.current = sectionId;
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    onSectionChange?.(sectionId);
+    document.getElementById(sectionId)?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
   };
 
   useLayoutEffect(() => {
-    if (!activeSectionRef.current) return;
-    document.getElementById(activeSectionRef.current)?.scrollIntoView({ behavior: 'auto', block: 'start' });
+    if (initialSection) activeSectionRef.current = initialSection;
+  }, [initialSection]);
+
+  useLayoutEffect(() => {
+    if (refreshKey == null || !activeSectionRef.current) return;
+    document.getElementById(activeSectionRef.current)?.scrollIntoView?.({ behavior: 'auto', block: 'start' });
   }, [refreshKey]);
+
+  useEffect(() => {
+    const scrollContainer = document.querySelector('main');
+    if (!scrollContainer) return undefined;
+
+    const updateActiveSection = () => {
+      const viewportTop = scrollContainer.getBoundingClientRect().top + 96;
+      const sections = itemIds
+        .split('|')
+        .map(id => document.getElementById(id))
+        .filter(Boolean);
+      const current = sections.reduce((active, section) => (
+        section.getBoundingClientRect().top <= viewportTop ? section : active
+      ), null);
+      if (current) activeSectionRef.current = current.id;
+    };
+
+    updateActiveSection();
+    scrollContainer.addEventListener('scroll', updateActiveSection, { passive: true });
+    return () => scrollContainer.removeEventListener('scroll', updateActiveSection);
+  }, [itemIds]);
 
   return (
     <nav className="internal-section-nav sticky top-0 z-20 rounded-lg border border-slate-600 bg-slate-900/95 p-2 shadow-lg backdrop-blur" aria-label={ariaLabel}>
