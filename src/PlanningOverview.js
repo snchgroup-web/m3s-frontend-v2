@@ -199,7 +199,7 @@ const StepCard = ({ icon: Icon, title, body, tone = 'blue' }) => {
       <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-md border border-current/30 bg-slate-950/30">
         <Icon size={18} aria-hidden="true" />
       </div>
-      <h4 className="text-sm font-bold text-white">{title}</h4>
+      <h4 className="text-sm font-semibold text-slate-100">{title}</h4>
       <p className="mt-2 text-sm leading-6 text-slate-300">{body}</p>
     </article>
   );
@@ -250,7 +250,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0,
         <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
           <div className="max-w-3xl">
             <p className="text-xs font-bold uppercase text-blue-300">{t.eyebrow}</p>
-            <h2 id="planning-title" className="mt-2 text-2xl font-bold text-white">{t.title}</h2>
+            <h2 id="planning-title" className="mt-2 text-2xl font-semibold text-slate-100">{t.title}</h2>
             <p className="mt-3 text-sm leading-6 text-slate-300">{t.body}</p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -264,7 +264,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0,
 
       <section id="planning-steering" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="planning-steering-title">
         <div className="max-w-3xl">
-          <h3 id="planning-steering-title" className="text-lg font-bold text-white">{t.steeringTitle}</h3>
+          <h3 id="planning-steering-title" className="text-lg font-semibold text-slate-100">{t.steeringTitle}</h3>
           <p className="mt-2 text-sm leading-6 text-slate-300">{t.steeringBody}</p>
         </div>
         <div className="mt-5 grid gap-3 xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] xl:items-stretch">
@@ -284,7 +284,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0,
         <div className="flex items-start gap-3">
           <Target className="mt-0.5 shrink-0 text-blue-300" size={20} aria-hidden="true" />
           <div>
-            <h3 className="font-bold text-white">{t.ruleTitle}</h3>
+            <h3 className="font-semibold text-slate-100">{t.ruleTitle}</h3>
             <p className="mt-1 text-sm leading-6 text-slate-300">{t.ruleBody}</p>
           </div>
         </div>
@@ -292,7 +292,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0,
 
       <div id="planning-branches" className="scroll-mt-20 grid gap-5 xl:grid-cols-2">
         <section className="rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="project-branch-title">
-          <h3 id="project-branch-title" className="text-lg font-bold text-white">{t.projectBranch}</h3>
+          <h3 id="project-branch-title" className="text-lg font-semibold text-slate-100">{t.projectBranch}</h3>
           <p className="mt-1 text-sm text-slate-400">{t.projectBranchBody}</p>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             <StepCard icon={FolderKanban} title={t.project} body={t.projectBody} />
@@ -303,7 +303,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0,
         </section>
 
         <section className="rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="operations-branch-title">
-          <h3 id="operations-branch-title" className="text-lg font-bold text-white">{t.operationsBranch}</h3>
+          <h3 id="operations-branch-title" className="text-lg font-semibold text-slate-100">{t.operationsBranch}</h3>
           <p className="mt-1 text-sm text-slate-400">{t.operationsBranchBody}</p>
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             <StepCard icon={Route} title={t.operationalPlan} body={t.operationalPlanBody} tone="green" />
@@ -314,7 +314,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0,
       </div>
 
       <section id="planning-dimensions" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="transversal-title">
-        <h3 id="transversal-title" className="text-lg font-bold text-white">{t.transversalTitle}</h3>
+        <h3 id="transversal-title" className="text-lg font-semibold text-slate-100">{t.transversalTitle}</h3>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <StepCard icon={Flag} title={t.milestone} body={t.milestoneBody} />
           <StepCard icon={GitBranch} title={t.dependency} body={t.dependencyBody} />
@@ -328,7 +328,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0,
       <section id="planning-status" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="current-title">
         <div className="flex items-center gap-3">
           <ListChecks className="text-emerald-300" size={22} aria-hidden="true" />
-          <h3 id="current-title" className="text-lg font-bold text-white">{t.currentTitle}</h3>
+          <h3 id="current-title" className="text-lg font-semibold text-white">{t.currentTitle}</h3>
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           <Metric label={t.tasksAvailable} value={tasksTotal} />
@@ -340,7 +340,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0,
 
       {children}
 
-      <h3 id="planning-register" className="scroll-mt-20 text-xl font-bold text-white">{t.registerTitle}</h3>
+      <h3 id="planning-register" className="scroll-mt-20 text-xl font-semibold text-slate-100">{t.registerTitle}</h3>
     </section>
   );
 };

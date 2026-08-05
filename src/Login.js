@@ -53,7 +53,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
+    <div className="login-page min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-white p-2 shadow-xl ring-4 ring-white/10">
@@ -63,17 +63,17 @@ const Login = () => {
               className="h-full w-full rounded-full object-cover"
             />
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2">M3S v2.0</h1>
+          <h1 className="text-4xl font-semibold text-white mb-2">M3S v2.0</h1>
           <p className="text-slate-400">ERP Hybride - SENESWISS GROUP</p>
         </div>
 
-        <div className="bg-slate-800 rounded-lg shadow-2xl p-8 border border-slate-700">
-          <h2 className="text-2xl font-bold text-white mb-6">Connexion</h2>
+        <div className="login-panel bg-slate-800 rounded-lg shadow-2xl p-8 border border-slate-700">
+          <h2 className="text-2xl font-semibold text-white mb-6">Connexion</h2>
 
           {sessionExpired && !(error || localError) && (
-            <div className="mb-4 p-4 bg-amber-900/60 border border-amber-700 rounded flex items-start space-x-3">
-              <AlertCircle size={20} className="text-amber-400 flex-shrink-0 mt-0.5" />
-              <p className="text-amber-100 text-sm">Votre session a expiré. Reconnectez-vous pour retrouver toutes les données.</p>
+            <div className="login-session-alert mb-4 p-4 bg-amber-900/60 border border-amber-700 rounded flex items-start space-x-3">
+              <AlertCircle size={20} className="login-session-alert__icon text-amber-400 flex-shrink-0 mt-0.5" />
+              <p className="login-session-alert__text text-amber-100 text-sm">Votre session a expiré. Reconnectez-vous pour retrouver toutes les données.</p>
             </div>
           )}
 
@@ -101,7 +101,7 @@ const Login = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="vous@example.com"
-                  className="w-full pl-10 pr-4 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 py-2 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
             </div>
@@ -119,7 +119,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 py-2 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
             </div>
@@ -127,7 +127,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded transition disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+              className="login-submit mt-6 min-h-11 w-full rounded-md bg-blue-600 px-4 py-2 font-semibold text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? 'Connexion en cours...' : 'Se connecter'}
             </button>

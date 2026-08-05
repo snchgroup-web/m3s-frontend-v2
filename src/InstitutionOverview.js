@@ -516,7 +516,7 @@ const PersonCard = ({ person, type, typeLabel, rightLabel }) => (
     <span className={`w-fit max-w-full rounded-full border px-2.5 py-1 text-xs font-semibold ${type === 'founder' ? 'border-blue-700 bg-blue-950 text-blue-200' : 'border-slate-600 bg-slate-800 text-slate-300'}`}>
       {typeLabel}
     </span>
-    <p className="mt-3 font-bold leading-6 text-white">{person.name}</p>
+    <p className="mt-3 font-semibold leading-6 text-slate-100">{person.name}</p>
     <p className="mt-1 text-sm leading-6 text-slate-300">{person.position}</p>
     {person.detail && <p className="mt-3 border-t border-slate-700 pt-3 text-xs leading-5 text-slate-400">{person.detail}</p>}
     {rightLabel && <p className="mt-auto pt-4 text-xs font-semibold text-emerald-300">{rightLabel}</p>}
@@ -663,7 +663,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
             </span>
             <div>
               <p className="text-xs font-bold uppercase text-blue-300">{t.eyebrow}</p>
-              <h2 id="institution-title" className="mt-1 text-2xl font-bold text-white">{t.title}</h2>
+              <h2 id="institution-title" className="mt-1 text-2xl font-semibold text-slate-100">{t.title}</h2>
               <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-300">{t.subtitle}</p>
             </div>
           </div>
@@ -688,7 +688,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
 
       <section id="institution-fundamentals" className="scroll-mt-20 py-1" aria-labelledby="profile-title">
         <div className="mb-4">
-          <h3 id="profile-title" className="text-xl font-bold text-white">{t.profileTitle}</h3>
+          <h3 id="profile-title" className="text-xl font-semibold text-slate-100">{t.profileTitle}</h3>
           <p className="mt-1 max-w-5xl text-sm leading-6 text-slate-400">{t.profileBody}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
@@ -698,7 +698,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
                 <Icon className="mt-0.5 shrink-0 text-blue-300" size={20} aria-hidden="true" />
                 <div>
                   <div className="flex items-center gap-2">
-                    <h4 className="font-bold text-white">{title}</h4>
+                    <h4 className="font-semibold text-slate-100">{title}</h4>
                     {termId && <GlossaryHelp termId={termId} language={language} />}
                   </div>
                   <p className="mt-2 text-sm leading-6 text-slate-300">{body}</p>
@@ -713,7 +713,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
         <section className="rounded-lg border border-slate-700 bg-slate-800 p-5 sm:p-6" aria-labelledby="mission-title">
           <div className="flex items-center gap-3">
             <Target className="text-blue-300" size={22} aria-hidden="true" />
-            <h3 id="mission-title" className="text-xl font-bold text-white">{t.missionTitle}</h3>
+            <h3 id="mission-title" className="text-xl font-semibold text-slate-100">{t.missionTitle}</h3>
             <GlossaryHelp termId="INST-MISSION" language={language} />
           </div>
           <p className="mt-2 text-sm leading-6 text-slate-400">{t.missionBody}</p>
@@ -727,7 +727,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
         <section className="rounded-lg border border-slate-700 bg-slate-800 p-5 sm:p-6" aria-labelledby="values-title">
           <div className="flex items-center gap-3">
             <HeartHandshake className="text-emerald-300" size={22} aria-hidden="true" />
-            <h3 id="values-title" className="text-xl font-bold text-white">{t.valuesTitle}</h3>
+            <h3 id="values-title" className="text-xl font-semibold text-slate-100">{t.valuesTitle}</h3>
             <GlossaryHelp termId="INST-VALEURS" language={language} />
           </div>
           <div className="mt-4 divide-y divide-slate-700">
@@ -746,7 +746,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
           <Star className="mt-0.5 shrink-0 text-amber-300" size={22} aria-hidden="true" />
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h3 id="golden-title" className="text-xl font-bold text-white">{t.goldenTitle}</h3>
+              <h3 id="golden-title" className="text-xl font-semibold text-slate-100">{t.goldenTitle}</h3>
               <GlossaryHelp termId="GOUV-REGLES-OR" language={language} />
             </div>
             <p className="mt-1 text-sm leading-6 text-amber-100/80">{t.goldenBody}</p>
@@ -761,7 +761,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
 
       <section id="institution-sources" className="scroll-mt-20 py-1" aria-labelledby="architecture-title">
         <div className="mb-4">
-          <h3 id="architecture-title" className="text-xl font-bold text-white">{t.architectureTitle}</h3>
+          <h3 id="architecture-title" className="text-xl font-semibold text-slate-100">{t.architectureTitle}</h3>
           <p className="mt-1 max-w-5xl text-sm leading-6 text-slate-400">{t.architectureBody}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -781,7 +781,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
 
       <section className="py-1" aria-labelledby="library-title">
         <div className="mb-4">
-          <h3 id="library-title" className="text-xl font-bold text-white">{t.libraryTitle}</h3>
+          <h3 id="library-title" className="text-xl font-semibold text-slate-100">{t.libraryTitle}</h3>
           <p className="mt-1 max-w-5xl text-sm leading-6 text-slate-400">{t.libraryBody}</p>
         </div>
         <div className="grid gap-4 lg:grid-cols-3">
@@ -844,7 +844,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
           <div className="flex gap-3">
             <Presentation className="mt-0.5 shrink-0 text-blue-300" size={21} aria-hidden="true" />
             <div>
-              <h4 className="font-bold text-white">{t.sourceJourneyTitle}</h4>
+              <h4 className="font-semibold text-slate-100">{t.sourceJourneyTitle}</h4>
               <p className="mt-1 text-sm leading-6 text-slate-400">{t.sourceJourneyBody}</p>
             </div>
           </div>
@@ -866,7 +866,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
 
       <section id="institution-administration" className="scroll-mt-20 py-1" aria-labelledby="admin-scope-title">
         <div className="mb-4">
-          <h3 id="admin-scope-title" className="text-xl font-bold text-white">{t.adminScopeTitle}</h3>
+          <h3 id="admin-scope-title" className="text-xl font-semibold text-slate-100">{t.adminScopeTitle}</h3>
           <p className="mt-1 max-w-5xl text-sm leading-6 text-slate-400">{t.adminScopeBody}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -876,13 +876,13 @@ const InstitutionOverview = ({ language = 'FR' }) => {
                 <Icon className="shrink-0 text-blue-300" size={21} aria-hidden="true" />
                 <StatusPill tone={tone}>{status}</StatusPill>
               </div>
-              <h4 className="mt-4 font-bold leading-6 text-white">{title}</h4>
+              <h4 className="mt-4 font-semibold leading-6 text-slate-100">{title}</h4>
               <p className="mt-2 text-sm leading-6 text-slate-400">{body}</p>
             </article>
           ))}
         </div>
         <aside className="mt-4 rounded-lg border border-slate-700 bg-slate-900/60 p-4" aria-label={t.scopeBoundaryTitle}>
-          <div className="flex gap-3"><Info className="mt-0.5 shrink-0 text-blue-300" size={19} aria-hidden="true" /><div><h4 className="font-bold text-white">{t.scopeBoundaryTitle}</h4><p className="mt-1 text-sm leading-6 text-slate-400">{t.scopeBoundaryBody}</p></div></div>
+          <div className="flex gap-3"><Info className="mt-0.5 shrink-0 text-blue-300" size={19} aria-hidden="true" /><div><h4 className="font-semibold text-slate-100">{t.scopeBoundaryTitle}</h4><p className="mt-1 text-sm leading-6 text-slate-400">{t.scopeBoundaryBody}</p></div></div>
         </aside>
       </section>
 
@@ -891,7 +891,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
           <Users className="mt-0.5 shrink-0 text-blue-300" size={22} aria-hidden="true" />
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-lg font-bold text-white">{t.horizontalTitle}</h3>
+              <h3 className="text-lg font-semibold text-slate-100">{t.horizontalTitle}</h3>
               <GlossaryHelp termId="GOUV-GOUVERNANCE" language={language} />
             </div>
             <p className="mt-2 max-w-5xl text-sm leading-6 text-slate-300">{t.horizontalBody}</p>
@@ -900,7 +900,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
       </div>
 
       <section className="rounded-lg border border-slate-700 bg-slate-800 p-5 sm:p-6" aria-labelledby="founders-title">
-        <h3 id="founders-title" className="text-xl font-bold text-white">{t.foundersTitle}</h3>
+        <h3 id="founders-title" className="text-xl font-semibold text-slate-100">{t.foundersTitle}</h3>
         <p className="mt-1 text-sm text-slate-400">{t.foundersBody}</p>
         <div className="mt-5 grid gap-4 md:grid-cols-2">
           {data.founders.map(person => <PersonCard key={person.name} person={person} type="founder" typeLabel={t.founder} rightLabel={person.right} />)}
@@ -908,7 +908,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
       </section>
 
       <section className="rounded-lg border border-slate-700 bg-slate-800 p-5 sm:p-6" aria-labelledby="associates-title">
-        <h3 id="associates-title" className="text-xl font-bold text-white">{t.associatesTitle}</h3>
+        <h3 id="associates-title" className="text-xl font-semibold text-slate-100">{t.associatesTitle}</h3>
         <p className="mt-1 text-sm text-slate-400">{t.associatesBody}</p>
         <div className="mt-5 grid gap-4 lg:grid-cols-2">
           {data.associates.map(person => <PersonCard key={person.name} person={person} type="associate" typeLabel={t.associate} rightLabel={`${t.userRight} · ${t.functionalRight}`} />)}
@@ -916,7 +916,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
       </section>
 
       <section className="rounded-lg border border-slate-700 bg-slate-800 p-5 sm:p-6" aria-labelledby="support-title">
-        <h3 id="support-title" className="text-xl font-bold text-white">{t.supportTitle}</h3>
+        <h3 id="support-title" className="text-xl font-semibold text-slate-100">{t.supportTitle}</h3>
         <p className="mt-1 text-sm text-slate-400">{t.supportBody}</p>
         <div className="mt-5 grid gap-4 md:grid-cols-3">
           {data.support.map(person => <PersonCard key={person.name} person={person} type="support" typeLabel={t.noDefaultAccess} />)}
@@ -927,13 +927,13 @@ const InstitutionOverview = ({ language = 'FR' }) => {
         <section className="rounded-lg border border-slate-700 bg-slate-800 p-5 sm:p-6" aria-labelledby="access-title">
           <div className="flex items-center gap-3">
             <Shield className="text-emerald-300" size={22} aria-hidden="true" />
-            <h3 id="access-title" className="text-xl font-bold text-white">{t.accessTitle}</h3>
+            <h3 id="access-title" className="text-xl font-semibold text-slate-100">{t.accessTitle}</h3>
           </div>
           <div className="mt-5 divide-y divide-slate-700">
             {accessRules.map(([title, body, Icon]) => (
               <div key={title} className="flex gap-3 py-4 first:pt-0 last:pb-0">
                 <Icon className="mt-0.5 shrink-0 text-slate-400" size={18} aria-hidden="true" />
-                <div><h4 className="font-bold text-slate-100">{title}</h4><p className="mt-1 text-sm leading-6 text-slate-400">{body}</p></div>
+                <div><h4 className="font-semibold text-slate-100">{title}</h4><p className="mt-1 text-sm leading-6 text-slate-400">{body}</p></div>
               </div>
             ))}
           </div>
@@ -942,7 +942,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
         <section className="rounded-lg border border-slate-700 bg-slate-800 p-5 sm:p-6" aria-labelledby="resources-title">
           <div className="flex items-center gap-3">
             <HandCoins className="text-amber-300" size={22} aria-hidden="true" />
-            <h3 id="resources-title" className="text-xl font-bold text-white">{t.resourcesTitle}</h3>
+            <h3 id="resources-title" className="text-xl font-semibold text-slate-100">{t.resourcesTitle}</h3>
           </div>
           <p className="mt-3 text-sm leading-6 text-slate-300">{t.resourcesBody}</p>
           <ul className="mt-4 space-y-3">
@@ -957,7 +957,7 @@ const InstitutionOverview = ({ language = 'FR' }) => {
       <aside className="rounded-lg border border-slate-700 bg-slate-900/60 p-5" aria-label={t.governanceNote}>
         <div className="flex gap-3">
           <Info className="mt-0.5 shrink-0 text-blue-300" size={20} aria-hidden="true" />
-          <div><h3 className="font-bold text-white">{t.governanceNote}</h3><p className="mt-1 text-sm leading-6 text-slate-400">{t.governanceNoteBody}</p></div>
+          <div><h3 className="font-semibold text-slate-100">{t.governanceNote}</h3><p className="mt-1 text-sm leading-6 text-slate-400">{t.governanceNoteBody}</p></div>
         </div>
       </aside>
     </section>
