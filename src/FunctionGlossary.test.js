@@ -49,3 +49,20 @@ test('filters a configured function glossary and preserves the central link', ()
     '/ged?tab=knowledge&term=PROJ-JALON'
   );
 });
+
+test('prepares a governed local proposal without modifying the central glossary', () => {
+  render(<FunctionGlossary language="FR" groups={groups} copy={copy} glossaryId="test-glossary" />);
+
+  fireEvent.click(screen.getByRole('button', { name: 'Ajouter' }));
+  expect(screen.getByRole('dialog', { name: 'Proposer un terme' })).toBeInTheDocument();
+
+  fireEvent.change(screen.getByLabelText(/Terme \*/), { target: { value: 'Revue de conformité' } });
+  fireEvent.change(screen.getByLabelText(/Définition courte \*/), { target: { value: 'Contrôle formalisé avant décision.' } });
+  fireEvent.change(screen.getByLabelText(/Source ou référence/), { target: { value: 'Référentiel Administration' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Ajouter la proposition' }));
+
+  expect(screen.queryByRole('dialog', { name: 'Proposer un terme' })).not.toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Propositions préparées dans cette session' })).toBeInTheDocument();
+  expect(screen.getByText('Revue de conformité')).toBeInTheDocument();
+  expect(screen.getByText('Brouillon local · à soumettre au Glossaire central')).toBeInTheDocument();
+});

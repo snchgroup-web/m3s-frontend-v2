@@ -767,15 +767,15 @@ const GED = () => {
   const glossaryReturnTargets = {
     'administration-glossary': {
       href: '/administration?tab=glossary',
-      labels: { FR: 'Revenir au Glossaire métier Administration', EN: 'Return to the Administration business glossary', DE: 'Zum Fachglossar Administration zurückkehren' }
+      labels: { FR: 'Revenir au Glossaire Administration', EN: 'Return to the Administration Glossary', DE: 'Zum Glossar Administration zurückkehren' }
     },
     'it-support-glossary': {
       href: '/ged?tab=glossary',
-      labels: { FR: 'Revenir au Glossaire métier IT & Support', EN: 'Return to the IT & Support business glossary', DE: 'Zum Fachglossar IT & Support zurückkehren' }
+      labels: { FR: 'Revenir au Glossaire IT & Support', EN: 'Return to the IT & Support Glossary', DE: 'Zum Glossar IT & Support zurückkehren' }
     },
     'finance-glossary': {
       href: '/finance?tab=glossary',
-      labels: { FR: 'Revenir au Glossaire métier Finances', EN: 'Return to the Finance business glossary', DE: 'Zum Fachglossar Finanzen zurückkehren' }
+      labels: { FR: 'Revenir au Glossaire Finances', EN: 'Return to the Finance Glossary', DE: 'Zum Glossar Finanzen zurückkehren' }
     }
   };
   const glossaryReturnTarget = glossaryReturnTargets[requestedGlossaryReturnTo] || {

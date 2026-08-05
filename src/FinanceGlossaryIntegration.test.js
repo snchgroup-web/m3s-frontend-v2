@@ -50,7 +50,7 @@ test('opens the Finance glossary from the governed child tab', async () => {
     </LanguageProvider>
   );
 
-  expect(await screen.findByRole('heading', { level: 2, name: 'Glossaire métier Finances' })).toBeInTheDocument();
+  expect(await screen.findByRole('heading', { level: 2, name: 'Glossaire Finances' })).toBeInTheDocument();
   expect(screen.getByText('5 termes')).toBeInTheDocument();
-  expect(screen.getAllByText('Définition proposée').length).toBeGreaterThan(0);
+  expect(screen.getAllByText('Définition validée').length).toBeGreaterThan(0);
 });

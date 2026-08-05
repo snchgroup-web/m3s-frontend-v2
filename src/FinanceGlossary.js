@@ -16,9 +16,9 @@ export const FINANCE_GLOSSARY_GROUPS = Object.freeze([
 
 export const FINANCE_GLOSSARY_COPY = Object.freeze({
   FR: {
-    eyebrow: 'VUE MÉTIER LOCALE · LECTURE SEULE',
-    title: 'Glossaire métier Finances',
-    intro: 'Cette première vague propose cinq termes pour décomposer un transfert financier sans confondre principal, frais, débit, réception et change. Le Glossaire central 2SG reste la source maîtresse versionnée.',
+    eyebrow: 'GLOSSAIRE LOCAL · DÉFINITIONS EN LECTURE SEULE',
+    title: 'Glossaire Finances',
+    intro: 'Cette première vague réunit cinq termes validés pour décomposer un transfert financier sans confondre principal, frais, débit, réception et change. Le Glossaire central 2SG reste la source maîtresse versionnée.',
     search: 'Rechercher un terme ou une définition…',
     all: 'Tous les domaines',
     terms: 'termes',
@@ -31,12 +31,12 @@ export const FINANCE_GLOSSARY_COPY = Object.freeze({
     source: 'Source maîtresse',
     central: 'Glossaire central 2SG',
     openCentral: 'Examiner dans le Glossaire central',
-    governance: 'Ces cinq définitions restent proposées jusqu’à validation humaine. Leur usage dans une opération financière ne remplace ni le reçu du prestataire ni le rapprochement des preuves.'
+    governance: 'Ces cinq définitions sont adoptées. Toute évolution ou nouvelle entrée sera proposée au Glossaire central, puis réutilisée ici après validation humaine. Leur usage ne remplace ni le reçu du prestataire ni le rapprochement des preuves.'
   },
   EN: {
-    eyebrow: 'LOCAL BUSINESS VIEW · READ ONLY',
-    title: 'Finance business glossary',
-    intro: 'This first wave proposes five terms to break down a financial transfer without confusing principal, fees, debit, receipt and foreign exchange. The 2SG Central Glossary remains the versioned master source.',
+    eyebrow: 'LOCAL GLOSSARY · READ-ONLY DEFINITIONS',
+    title: 'Finance Glossary',
+    intro: 'This first wave gathers five validated terms to break down a financial transfer without confusing principal, fees, debit, receipt and foreign exchange. The 2SG Central Glossary remains the versioned master source.',
     search: 'Search a term or definition…',
     all: 'All domains',
     terms: 'terms',
@@ -49,12 +49,12 @@ export const FINANCE_GLOSSARY_COPY = Object.freeze({
     source: 'Master source',
     central: '2SG Central Glossary',
     openCentral: 'Review in the Central Glossary',
-    governance: 'These five definitions remain proposed until human validation. Their use in a financial operation does not replace the provider receipt or reconciliation of supporting evidence.'
+    governance: 'These five definitions are adopted. Any change or new entry will be proposed to the Central Glossary and reused here after human validation. Their use does not replace the provider receipt or reconciliation of supporting evidence.'
   },
   DE: {
-    eyebrow: 'LOKALE FACHSICHT · NUR LESEN',
-    title: 'Fachglossar Finanzen',
-    intro: 'Diese erste Welle schlägt fünf Begriffe vor, um eine Finanzüberweisung in Hauptbetrag, Gebühren, Belastung, Empfang und Wechselkurs zu gliedern. Das zentrale 2SG-Glossar bleibt die versionierte maßgebliche Quelle.',
+    eyebrow: 'LOKALES GLOSSAR · DEFINITIONEN NUR LESEN',
+    title: 'Glossar Finanzen',
+    intro: 'Diese erste Welle umfasst fünf validierte Begriffe, um eine Finanzüberweisung in Hauptbetrag, Gebühren, Belastung, Empfang und Wechselkurs zu gliedern. Das zentrale 2SG-Glossar bleibt die versionierte maßgebliche Quelle.',
     search: 'Begriff oder Definition suchen…',
     all: 'Alle Bereiche',
     terms: 'Begriffe',
@@ -67,7 +67,7 @@ export const FINANCE_GLOSSARY_COPY = Object.freeze({
     source: 'Maßgebliche Quelle',
     central: 'Zentrales 2SG-Glossar',
     openCentral: 'Im zentralen Glossar prüfen',
-    governance: 'Diese fünf Definitionen bleiben bis zur menschlichen Validierung vorgeschlagen. Ihre Verwendung in einer Finanzoperation ersetzt weder den Dienstleisterbeleg noch den Abgleich der Nachweise.'
+    governance: 'Diese fünf Definitionen sind angenommen. Änderungen oder neue Einträge werden dem zentralen Glossar vorgeschlagen und nach menschlicher Validierung hier wiederverwendet. Ihre Verwendung ersetzt weder den Dienstleisterbeleg noch den Abgleich der Nachweise.'
   }
 });
 

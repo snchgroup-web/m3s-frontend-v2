@@ -29,6 +29,6 @@ test('filters the local view and opens the stable term in the Central Glossary',
 
 test('renders the local governance wording in German', () => {
   render(<AdministrationGlossary language="DE" />);
-  expect(screen.getByRole('heading', { level: 2, name: 'Fachglossar Administration' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { level: 2, name: 'Glossar Administration' })).toBeInTheDocument();
   expect(screen.getByText('Maßgebliche Quelle')).toBeInTheDocument();
 });

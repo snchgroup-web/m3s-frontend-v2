@@ -304,7 +304,7 @@ const GLOSSARY_CONTEXT = {
   },
   'FIN-MONTANT-ENVOYE': {
     version: 'V5.3',
-    status: 'candidate',
+    status: 'validated',
     translations: {
       FR: {
         term: 'Montant envoyé',
@@ -325,7 +325,7 @@ const GLOSSARY_CONTEXT = {
   },
   'FIN-FRAIS-TRANSACTION': {
     version: 'V5.3',
-    status: 'candidate',
+    status: 'validated',
     translations: {
       FR: {
         term: 'Frais de transaction',
@@ -346,7 +346,7 @@ const GLOSSARY_CONTEXT = {
   },
   'FIN-MONTANT-TOTAL-DEBITE': {
     version: 'V5.3',
-    status: 'candidate',
+    status: 'validated',
     translations: {
       FR: {
         term: 'Montant total débité',
@@ -367,7 +367,7 @@ const GLOSSARY_CONTEXT = {
   },
   'FIN-MONTANT-RECU': {
     version: 'V5.3',
-    status: 'candidate',
+    status: 'validated',
     translations: {
       FR: {
         term: 'Montant reçu',
@@ -388,7 +388,7 @@ const GLOSSARY_CONTEXT = {
   },
   'FIN-TAUX-CHANGE-APPLIQUE': {
     version: 'V5.3',
-    status: 'candidate',
+    status: 'validated',
     translations: {
       FR: {
         term: 'Taux de change appliqué',

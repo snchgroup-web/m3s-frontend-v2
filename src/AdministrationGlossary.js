@@ -33,8 +33,8 @@ export const ADMINISTRATION_GLOSSARY_GROUPS = Object.freeze([
 
 export const ADMINISTRATION_GLOSSARY_COPY = Object.freeze({
   FR: {
-    eyebrow: 'VUE MÉTIER LOCALE · LECTURE SEULE',
-    title: 'Glossaire métier Administration',
+    eyebrow: 'GLOSSAIRE LOCAL · DÉFINITIONS EN LECTURE SEULE',
+    title: 'Glossaire Administration',
     intro: 'Les termes utiles à la fonction Administration sont réunis ici sans dupliquer leurs définitions. Le Glossaire central 2SG reste la source maîtresse versionnée.',
     search: 'Rechercher un terme ou une définition…',
     all: 'Tous les domaines',
@@ -50,8 +50,8 @@ export const ADMINISTRATION_GLOSSARY_COPY = Object.freeze({
     governance: 'Toute modification ou nouvelle entrée est proposée au Glossaire central, puis réutilisée dans cette vue locale après validation.'
   },
   EN: {
-    eyebrow: 'LOCAL BUSINESS VIEW · READ ONLY',
-    title: 'Administration business glossary',
+    eyebrow: 'LOCAL GLOSSARY · READ-ONLY DEFINITIONS',
+    title: 'Administration Glossary',
     intro: 'Terms useful to the Administration function are gathered here without duplicating their definitions. The versioned 2SG Central Glossary remains the master source.',
     search: 'Search a term or definition…',
     all: 'All domains',
@@ -67,8 +67,8 @@ export const ADMINISTRATION_GLOSSARY_COPY = Object.freeze({
     governance: 'Any change or new entry is proposed to the Central Glossary, then reused in this local view after validation.'
   },
   DE: {
-    eyebrow: 'LOKALE FACHSICHT · NUR LESEN',
-    title: 'Fachglossar Administration',
+    eyebrow: 'LOKALES GLOSSAR · DEFINITIONEN NUR LESEN',
+    title: 'Glossar Administration',
     intro: 'Die für die Verwaltungsfunktion relevanten Begriffe werden hier zusammengeführt, ohne Definitionen zu duplizieren. Das versionierte zentrale 2SG-Glossar bleibt die maßgebliche Quelle.',
     search: 'Begriff oder Definition suchen…',
     all: 'Alle Bereiche',

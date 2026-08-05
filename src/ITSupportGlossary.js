@@ -16,8 +16,8 @@ export const IT_SUPPORT_GLOSSARY_GROUPS = Object.freeze([
 
 export const IT_SUPPORT_GLOSSARY_COPY = Object.freeze({
   FR: {
-    eyebrow: 'VUE MÉTIER LOCALE · LECTURE SEULE',
-    title: 'Glossaire métier IT & Support',
+    eyebrow: 'GLOSSAIRE LOCAL · DÉFINITIONS EN LECTURE SEULE',
+    title: 'Glossaire IT & Support',
     intro: 'Cette première vague rassemble trois termes validés utiles à la GED et au Knowledge Management. Le Glossaire central 2SG reste la source maîtresse versionnée.',
     search: 'Rechercher un terme ou une définition…',
     all: 'Tous les domaines',
@@ -34,8 +34,8 @@ export const IT_SUPPORT_GLOSSARY_COPY = Object.freeze({
     governance: 'Toute modification ou nouvelle entrée est proposée au Glossaire central, puis réutilisée dans cette vue locale après validation humaine.'
   },
   EN: {
-    eyebrow: 'LOCAL BUSINESS VIEW · READ ONLY',
-    title: 'IT & Support business glossary',
+    eyebrow: 'LOCAL GLOSSARY · READ-ONLY DEFINITIONS',
+    title: 'IT & Support Glossary',
     intro: 'This first wave gathers three validated terms for document and knowledge management. The 2SG Central Glossary remains the versioned master source.',
     search: 'Search a term or definition…',
     all: 'All domains',
@@ -52,8 +52,8 @@ export const IT_SUPPORT_GLOSSARY_COPY = Object.freeze({
     governance: 'Any change or new entry is proposed in the Central Glossary and reused in this local view after human validation.'
   },
   DE: {
-    eyebrow: 'LOKALE FACHSICHT · NUR LESEN',
-    title: 'Fachglossar IT & Support',
+    eyebrow: 'LOKALES GLOSSAR · DEFINITIONEN NUR LESEN',
+    title: 'Glossar IT & Support',
     intro: 'Diese erste Welle umfasst drei validierte Begriffe für Dokumenten- und Wissensmanagement. Das zentrale 2SG-Glossar bleibt die versionierte maßgebliche Quelle.',
     search: 'Begriff oder Definition suchen…',
     all: 'Alle Bereiche',
