@@ -4,6 +4,7 @@ const path = require('path');
 const indexHtml = fs.readFileSync(path.join(__dirname, '..', 'public', 'index.html'), 'utf8');
 const administrationSource = fs.readFileSync(path.join(__dirname, 'Administration.js'), 'utf8');
 const institutionSource = fs.readFileSync(path.join(__dirname, 'InstitutionOverview.js'), 'utf8');
+const planningSource = fs.readFileSync(path.join(__dirname, 'PlanningOverview.js'), 'utf8');
 
 const baseTokenSelector = (scope, color) =>
   `${scope} [class^="border-${color}-"],${scope} [class*=" border-${color}-"]`;
@@ -54,6 +55,7 @@ describe('light-mode accent border selectors', () => {
   test('uses the lighter institutional heading hierarchy', () => {
     expect(institutionSource).toContain('text-2xl font-semibold text-slate-100');
     expect(institutionSource).toContain('text-xl font-semibold text-slate-100');
+    expect(planningSource).toContain('id="current-title" className="text-lg font-semibold text-white"');
   });
 
   test('keeps Administration forms readable and accessible in both themes', () => {

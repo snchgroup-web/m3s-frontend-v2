@@ -324,7 +324,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0 
       <section id="planning-status" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="current-title">
         <div className="flex items-center gap-3">
           <ListChecks className="text-emerald-300" size={22} aria-hidden="true" />
-          <h3 id="current-title" className="text-lg font-semibold text-slate-100">{t.currentTitle}</h3>
+          <h3 id="current-title" className="text-lg font-semibold text-white">{t.currentTitle}</h3>
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           <Metric label={t.tasksAvailable} value={tasksTotal} />
