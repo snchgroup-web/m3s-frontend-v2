@@ -772,6 +772,10 @@ const GED = () => {
     'it-support-glossary': {
       href: '/ged?tab=glossary',
       labels: { FR: 'Revenir au Glossaire métier IT & Support', EN: 'Return to the IT & Support business glossary', DE: 'Zum Fachglossar IT & Support zurückkehren' }
+    },
+    'finance-glossary': {
+      href: '/finance?tab=glossary',
+      labels: { FR: 'Revenir au Glossaire métier Finances', EN: 'Return to the Finance business glossary', DE: 'Zum Fachglossar Finanzen zurückkehren' }
     }
   };
   const glossaryReturnTarget = glossaryReturnTargets[requestedGlossaryReturnTo] || {

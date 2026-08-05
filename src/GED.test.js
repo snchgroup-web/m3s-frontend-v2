@@ -115,6 +115,14 @@ test('returns from a central IT term to the originating local glossary', async (
   expect(mockNavigate).toHaveBeenCalledWith('/ged?tab=glossary');
 });
 
+test('returns from a central Finance term to the originating local glossary', async () => {
+  renderGed('knowledge', 'FR', '&term=FIN-TAUX-CHANGE-APPLIQUE&returnTo=finance-glossary');
+
+  const returnButton = await screen.findByRole('button', { name: 'Revenir au Glossaire métier Finances' });
+  fireEvent.click(returnButton);
+  expect(mockNavigate).toHaveBeenCalledWith('/finance?tab=glossary');
+});
+
 test('renders the English pilot labels from the shared language context', async () => {
   renderGed('outils-documents', 'EN');
 

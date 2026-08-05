@@ -302,6 +302,111 @@ const GLOSSARY_CONTEXT = {
       }
     }
   },
+  'FIN-MONTANT-ENVOYE': {
+    version: 'V5.3',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Montant envoyé',
+        shortDefinition: 'Somme principale confiée au prestataire pour être transférée, hors frais facturés séparément.',
+        detailedDefinition: 'Dans un paiement ou transfert 2SG, le montant envoyé désigne le principal destiné au bénéficiaire avant les frais distincts. Il doit être enregistré avec sa devise, sa date, le prestataire et la référence de l’opération. Il ne se confond ni avec le montant total débité au payeur ni avec le montant reçu après conversion.'
+      },
+      DE: {
+        term: 'Gesendeter Betrag',
+        shortDefinition: 'Hauptbetrag, der dem Dienstleister zur Überweisung anvertraut wird, ohne separat berechnete Gebühren.',
+        detailedDefinition: 'Bei einer 2SG-Zahlung oder -Überweisung bezeichnet der gesendete Betrag den für den Empfänger bestimmten Hauptbetrag vor gesonderten Gebühren. Er wird mit Währung, Datum, Dienstleister und Transaktionsreferenz erfasst. Er ist weder mit dem insgesamt belasteten Betrag noch mit dem nach Umrechnung erhaltenen Betrag gleichzusetzen.'
+      },
+      EN: {
+        term: 'Amount sent',
+        shortDefinition: 'Principal amount entrusted to the provider for transfer, excluding separately charged fees.',
+        detailedDefinition: 'In a 2SG payment or transfer, the amount sent is the principal intended for the beneficiary before separate fees. It must be recorded with its currency, date, provider and transaction reference. It is distinct from both the total amount debited from the payer and the amount received after conversion.'
+      }
+    }
+  },
+  'FIN-FRAIS-TRANSACTION': {
+    version: 'V5.3',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Frais de transaction',
+        shortDefinition: 'Coût facturé par un prestataire pour exécuter un paiement, un transfert ou une conversion.',
+        detailedDefinition: 'Les frais de transaction sont enregistrés séparément du montant envoyé afin de rendre visible le coût du service. Leur montant, devise, date, prestataire et justificatif doivent être conservés. Ils peuvent inclure des frais de transfert, de paiement ou d’intermédiation, mais ne doivent pas absorber un écart de change non expliqué.'
+      },
+      DE: {
+        term: 'Transaktionsgebühren',
+        shortDefinition: 'Kosten, die ein Dienstleister für die Ausführung einer Zahlung, Überweisung oder Umrechnung berechnet.',
+        detailedDefinition: 'Transaktionsgebühren werden getrennt vom gesendeten Betrag erfasst, damit die Dienstleistungskosten sichtbar bleiben. Betrag, Währung, Datum, Dienstleister und Beleg sind zu dokumentieren. Sie können Überweisungs-, Zahlungs- oder Vermittlungsgebühren umfassen, dürfen jedoch keine ungeklärte Wechselkursabweichung verdecken.'
+      },
+      EN: {
+        term: 'Transaction fees',
+        shortDefinition: 'Cost charged by a provider to execute a payment, transfer or currency conversion.',
+        detailedDefinition: 'Transaction fees are recorded separately from the amount sent so that the service cost remains visible. Their amount, currency, date, provider and supporting evidence must be retained. They may include transfer, payment or intermediary fees, but must not conceal an unexplained foreign-exchange difference.'
+      }
+    }
+  },
+  'FIN-MONTANT-TOTAL-DEBITE': {
+    version: 'V5.3',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Montant total débité',
+        shortDefinition: 'Somme totale payée par le donneur d’ordre dans la devise de débit, frais inclus.',
+        detailedDefinition: 'Le montant total débité correspond au montant envoyé augmenté des frais facturés dans la même opération. Il décrit la sortie financière réelle du payeur et doit être rapproché du reçu ou du relevé de paiement. Il ne permet pas, à lui seul, de déterminer le montant reçu dans une autre devise.'
+      },
+      DE: {
+        term: 'Gesamtbelastungsbetrag',
+        shortDefinition: 'Vom Auftraggeber insgesamt gezahlter Betrag in der Belastungswährung, einschließlich Gebühren.',
+        detailedDefinition: 'Der Gesamtbelastungsbetrag entspricht dem gesendeten Betrag zuzüglich der im selben Vorgang berechneten Gebühren. Er bildet den tatsächlichen Mittelabfluss des Zahlers ab und ist mit Quittung oder Zahlungsnachweis abzugleichen. Allein daraus lässt sich der in einer anderen Währung erhaltene Betrag nicht bestimmen.'
+      },
+      EN: {
+        term: 'Total amount debited',
+        shortDefinition: 'Total amount paid by the ordering party in the debit currency, including fees.',
+        detailedDefinition: 'The total amount debited equals the amount sent plus fees charged in the same transaction. It represents the payer’s actual cash outflow and must be reconciled with the receipt or payment record. On its own, it does not determine the amount received in another currency.'
+      }
+    }
+  },
+  'FIN-MONTANT-RECU': {
+    version: 'V5.3',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Montant reçu',
+        shortDefinition: 'Somme effectivement mise à disposition du bénéficiaire dans la devise de destination.',
+        detailedDefinition: 'Le montant reçu est enregistré indépendamment du montant envoyé et du total débité. Il doit être confirmé par le prestataire, le bénéficiaire ou un justificatif fiable, avec la devise et la date. Cette séparation permet de contrôler la conversion, les frais et les éventuels écarts.'
+      },
+      DE: {
+        term: 'Erhaltener Betrag',
+        shortDefinition: 'Betrag, der dem Empfänger tatsächlich in der Zielwährung zur Verfügung gestellt wird.',
+        detailedDefinition: 'Der erhaltene Betrag wird unabhängig vom gesendeten Betrag und vom Gesamtbelastungsbetrag erfasst. Er ist durch den Dienstleister, den Empfänger oder einen verlässlichen Beleg mit Währung und Datum zu bestätigen. Diese Trennung ermöglicht die Kontrolle von Umrechnung, Gebühren und möglichen Abweichungen.'
+      },
+      EN: {
+        term: 'Amount received',
+        shortDefinition: 'Amount actually made available to the beneficiary in the destination currency.',
+        detailedDefinition: 'The amount received is recorded independently from the amount sent and the total amount debited. It must be confirmed by the provider, the beneficiary or reliable supporting evidence, with its currency and date. This separation supports checks on conversion, fees and any discrepancies.'
+      }
+    }
+  },
+  'FIN-TAUX-CHANGE-APPLIQUE': {
+    version: 'V5.3',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Taux de change appliqué',
+        shortDefinition: 'Rapport de conversion effectivement utilisé par le prestataire entre le montant envoyé et le montant reçu.',
+        detailedDefinition: 'Le taux de change appliqué est le taux propre à l’opération, calculé ou indiqué par le prestataire, hors frais séparés. Il doit être conservé avec sa date, sa source et les devises concernées. Il se distingue d’un taux de référence ou du taux du jour, qui sert seulement à comparer et expliquer les écarts.'
+      },
+      DE: {
+        term: 'Angewandter Wechselkurs',
+        shortDefinition: 'Vom Dienstleister tatsächlich verwendetes Umrechnungsverhältnis zwischen gesendetem und erhaltenem Betrag.',
+        detailedDefinition: 'Der angewandte Wechselkurs ist der transaktionsspezifische Kurs, der vom Dienstleister angegeben oder aus der Operation berechnet wird, ohne separat ausgewiesene Gebühren. Datum, Quelle und beteiligte Währungen sind zu dokumentieren. Er unterscheidet sich von einem Referenz- oder Tageskurs, der nur dem Vergleich und der Erklärung von Abweichungen dient.'
+      },
+      EN: {
+        term: 'Applied exchange rate',
+        shortDefinition: 'Conversion ratio actually used by the provider between the amount sent and the amount received.',
+        detailedDefinition: 'The applied exchange rate is the transaction-specific rate stated by the provider or calculated from the operation, excluding separate fees. Its date, source and currency pair must be retained. It differs from a reference or daily rate, which is used only for comparison and explaining variances.'
+      }
+    }
+  },
   'PROJ-JALON': {
     version: 'V5.1',
     status: 'validated',

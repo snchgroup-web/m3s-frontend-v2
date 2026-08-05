@@ -8,6 +8,7 @@ import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
 import { isLegacyBuCode, translateDas } from './strategicMapping';
+import FinanceGlossary from './FinanceGlossary';
 
 const TEAM_OPTIONS = ['Team_ZH', 'Team_SN'];
 const AGENT_OPTIONS = ['Cheikh', 'Chantal', 'Pape', 'Gnilane Diouf', 'Gnilane Ndiaye', 'Ibou'];
@@ -420,7 +421,7 @@ const Finance = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'recettes', 'depenses', 'fx', 'budget', 'social', 'immobilier'].includes(tab)) {
+    if (['overview', 'recettes', 'depenses', 'fx', 'budget', 'social', 'immobilier', 'glossary'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
@@ -2187,7 +2188,9 @@ const Finance = () => {
           </div>
         )}
 
-        <ChildTabPlaceholder moduleId="finances" language={language} activeTab={activeTab} handledTabs={['overview', 'recettes', 'depenses', 'fx', 'social', 'immobilier']} />
+        {activeTab === 'glossary' && <FinanceGlossary language={language} />}
+
+        <ChildTabPlaceholder moduleId="finances" language={language} activeTab={activeTab} handledTabs={['overview', 'recettes', 'depenses', 'fx', 'social', 'immobilier', 'glossary']} />
 
         {showImmoModal && (
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">

@@ -142,6 +142,16 @@
           },
           "icon": "ArrowRightLeft",
           "path": "/finance?tab=fx"
+        },
+        {
+          "id": "finance-glossary",
+          "label": {
+            "FR": "Glossaire métier",
+            "EN": "Business glossary",
+            "DE": "Fachglossar"
+          },
+          "icon": "BookOpen",
+          "path": "/finance?tab=glossary"
         }
       ]
     },
