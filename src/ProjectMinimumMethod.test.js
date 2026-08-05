@@ -21,6 +21,7 @@ test('opens the complete milestone cycle', () => {
   expect(screen.getByRole('heading', { name: 'Cycle de contrôle J0 à J8' })).toBeInTheDocument();
   expect(screen.getByText('Besoin confirmé')).toBeInTheDocument();
   expect(screen.getByText('Archivage et retour d’expérience')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Définition du Glossaire : Jalon' })).toBeInTheDocument();
 });
 
 test('keeps the active method view when the language changes', () => {
@@ -34,6 +35,17 @@ test('keeps the active method view when the language changes', () => {
   expect(screen.getByText('Welcher Nachweis fehlt noch?')).toBeInTheDocument();
   expect(screen.getByText('Regelentwurf V0.1')).toBeInTheDocument();
   expect(screen.getByText('Nur-Lese-Modus')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Glossardefinition : Projektüberprüfung' })).toBeInTheDocument();
+});
+
+test('opens the validated project review definition', () => {
+  render(<ProjectMinimumMethod language="EN" />);
+  fireEvent.click(screen.getByRole('tab', { name: 'Review' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Glossary definition : Project review' }));
+
+  expect(screen.getByRole('dialog', { name: 'Project review' })).toBeInTheDocument();
+  expect(screen.getByText('Validated definition')).toBeInTheDocument();
+  expect(screen.getByText('PROJ-REVUE')).toBeInTheDocument();
 });
 
 test('shows closure conditions in English', () => {

@@ -6,6 +6,8 @@ const COPY = {
   FR: {
     help: 'Définition du Glossaire',
     validated: 'Définition validée',
+    candidate: 'Définition proposée',
+    pendingPublication: 'Publication dans le Glossaire après validation',
     source: 'Glossaire central 2SG',
     open: 'Voir dans le Glossaire',
     close: 'Fermer',
@@ -14,6 +16,8 @@ const COPY = {
   DE: {
     help: 'Glossardefinition',
     validated: 'Validierte Definition',
+    candidate: 'Vorgeschlagene Definition',
+    pendingPublication: 'Veröffentlichung im Glossar nach Validierung',
     source: 'Zentrales 2SG-Glossar',
     open: 'Im Glossar anzeigen',
     close: 'Schließen',
@@ -22,6 +26,8 @@ const COPY = {
   EN: {
     help: 'Glossary definition',
     validated: 'Validated definition',
+    candidate: 'Proposed definition',
+    pendingPublication: 'Publication in the Glossary after validation',
     source: '2SG Central Glossary',
     open: 'View in Glossary',
     close: 'Close',
@@ -29,10 +35,21 @@ const COPY = {
   }
 };
 
+const getStatusPresentation = (entry, t) => entry.status === 'candidate'
+  ? {
+      label: t.candidate,
+      classes: 'border-amber-600/70 bg-amber-950/40 text-amber-200'
+    }
+  : {
+      label: t.validated,
+      classes: 'border-emerald-600/70 bg-emerald-950/40 text-emerald-200'
+    };
+
 export const GlossaryEntryPanel = ({ termId, language = 'FR', onReturn }) => {
   const t = COPY[language] || COPY.FR;
   const entry = getGlossaryContextEntry(termId, language);
   if (!entry) return null;
+  const status = getStatusPresentation(entry, t);
 
   return (
     <section
@@ -51,8 +68,8 @@ export const GlossaryEntryPanel = ({ termId, language = 'FR', onReturn }) => {
             <p className="mt-2 text-sm font-semibold leading-6 text-blue-100">{entry.shortDefinition}</p>
           </div>
         </div>
-        <span className="w-fit rounded-full border border-emerald-600/70 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-200">
-          {t.validated}
+        <span className={`w-fit rounded-full border px-3 py-1 text-xs font-semibold ${status.classes}`}>
+          {status.label}
         </span>
       </div>
       <p className="mt-4 text-sm leading-6 text-slate-300">{entry.detailedDefinition}</p>
@@ -76,6 +93,7 @@ const GlossaryHelp = ({ termId, language = 'FR' }) => {
   const triggerRef = useRef(null);
   const t = COPY[language] || COPY.FR;
   const entry = getGlossaryContextEntry(termId, language);
+  const status = entry ? getStatusPresentation(entry, t) : null;
 
   useEffect(() => {
     if (!open) return undefined;
@@ -143,19 +161,25 @@ const GlossaryHelp = ({ termId, language = 'FR' }) => {
                 <X size={19} aria-hidden="true" />
               </button>
             </div>
-            <span className="mt-4 inline-flex rounded-full border border-emerald-600/70 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-200">
-              {t.validated}
+            <span className={`mt-4 inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${status.classes}`}>
+              {status.label}
             </span>
             <p className="mt-4 font-semibold leading-6 text-blue-100">{entry.shortDefinition}</p>
             <p className="mt-3 text-sm leading-6 text-slate-300">{entry.detailedDefinition}</p>
             <p className="mt-4 font-mono text-xs text-slate-500">{entry.id}</p>
-            <a
-              href={glossaryPath}
-              className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-blue-600 px-4 text-sm font-bold text-white transition hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
-            >
-              <ExternalLink size={17} aria-hidden="true" />
-              {t.open}
-            </a>
+            {entry.status === 'candidate' ? (
+              <p className="mt-5 inline-flex min-h-11 items-center rounded-md border border-amber-700 bg-amber-950/25 px-4 text-sm font-semibold text-amber-100">
+                {t.pendingPublication}
+              </p>
+            ) : (
+              <a
+                href={glossaryPath}
+                className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-blue-600 px-4 text-sm font-bold text-white transition hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              >
+                <ExternalLink size={17} aria-hidden="true" />
+                {t.open}
+              </a>
+            )}
           </section>
         </div>
       )}

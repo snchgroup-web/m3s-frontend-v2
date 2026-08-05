@@ -189,7 +189,7 @@ const COPY = {
   }
 };
 
-const StepCard = ({ icon: Icon, title, body, tone = 'blue' }) => {
+const StepCard = ({ icon: Icon, title, body, tone = 'blue', termId, language }) => {
   const styles = tone === 'green'
     ? 'border-emerald-700/70 bg-emerald-950/25 text-emerald-300'
     : 'border-blue-700/70 bg-blue-950/25 text-blue-300';
@@ -199,7 +199,10 @@ const StepCard = ({ icon: Icon, title, body, tone = 'blue' }) => {
       <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-md border border-current/30 bg-slate-950/30">
         <Icon size={18} aria-hidden="true" />
       </div>
-      <h4 className="text-sm font-semibold text-slate-100">{title}</h4>
+      <div className="flex items-start gap-2">
+        <h4 className="min-w-0 flex-1 text-sm font-semibold text-slate-100">{title}</h4>
+        {termId && <GlossaryHelp termId={termId} language={language} />}
+      </div>
       <p className="mt-2 text-sm leading-6 text-slate-300">{body}</p>
     </article>
   );
@@ -316,7 +319,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0,
       <section id="planning-dimensions" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="transversal-title">
         <h3 id="transversal-title" className="text-lg font-semibold text-slate-100">{t.transversalTitle}</h3>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <StepCard icon={Flag} title={t.milestone} body={t.milestoneBody} />
+          <StepCard icon={Flag} title={t.milestone} body={t.milestoneBody} termId="PROJ-JALON" language={language} />
           <StepCard icon={GitBranch} title={t.dependency} body={t.dependencyBody} />
           <StepCard icon={Clock3} title={t.timeline} body={t.timelineBody} />
           <StepCard icon={CalendarDays} title={t.agenda} body={t.agendaBody} />
