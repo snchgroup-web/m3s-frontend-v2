@@ -12,6 +12,7 @@ import {
   ShieldAlert,
   UserRoundCheck
 } from 'lucide-react';
+import GlossaryHelp from './GlossaryHelp';
 
 const COPY = {
   FR: {
@@ -279,7 +280,10 @@ const ProjectMinimumMethod = ({ language = 'FR' }) => {
 
         {activeView === 'milestones' && (
           <div>
-            <h4 className="font-bold text-white">{t.milestonesTitle}</h4>
+            <div className="flex items-center gap-2">
+              <h4 className="font-bold text-white">{t.milestonesTitle}</h4>
+              <GlossaryHelp termId="PROJ-JALON" language={language} />
+            </div>
             <p className="mt-1 text-sm leading-6 text-slate-400">{t.milestonesBody}</p>
             <ol className="mt-4 grid gap-3 md:grid-cols-3">
               {t.milestones.map(([code, label]) => (
@@ -294,7 +298,10 @@ const ProjectMinimumMethod = ({ language = 'FR' }) => {
 
         {activeView === 'review' && (
           <div>
-            <h4 className="font-bold text-white">{t.reviewTitle}</h4>
+            <div className="flex items-center gap-2">
+              <h4 className="font-bold text-white">{t.reviewTitle}</h4>
+              <GlossaryHelp termId="PROJ-REVUE" language={language} />
+            </div>
             <p className="mt-1 text-sm leading-6 text-slate-400">{t.reviewBody}</p>
             <ol className="mt-4 grid gap-x-6 md:grid-cols-2">
               {t.reviewQuestions.map((question, index) => (

@@ -34,3 +34,16 @@ test('uses the approved Direction and Strategy wording', () => {
   expect(screen.getByRole('heading', { name: 'Goldene Regeln der Zusammenarbeit' })).toBeInTheDocument();
   expect(screen.getByText('Validierte Definition')).toBeInTheDocument();
 });
+
+test('distinguishes a proposed project term from a validated definition', () => {
+  render(<GlossaryHelp termId="PROJ-JALON" language="FR" />);
+
+  fireEvent.click(screen.getByRole('button', { name: 'Définition du Glossaire : Jalon' }));
+
+  expect(screen.getByRole('dialog', { name: 'Jalon' })).toBeInTheDocument();
+  expect(screen.getByText('Définition proposée')).toBeInTheDocument();
+  expect(screen.queryByText('Définition validée')).not.toBeInTheDocument();
+  expect(screen.getByText('PROJ-JALON')).toBeInTheDocument();
+  expect(screen.getByText('Publication dans le Glossaire après validation')).toBeInTheDocument();
+  expect(screen.queryByRole('link', { name: 'Voir dans le Glossaire' })).not.toBeInTheDocument();
+});

@@ -238,6 +238,48 @@ const GLOSSARY_CONTEXT = {
         detailedDefinition: 'An execution instrument derived from a strategy, roadmap, project or decision. Each action must have an owner, deadline, status, resources and expected evidence or result. It must not become a task list disconnected from priorities.'
       }
     }
+  },
+  'PROJ-JALON': {
+    version: 'Candidat 0.1',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Jalon',
+        shortDefinition: 'Point daté de contrôle, de décision, de livraison ou de réception, sans durée propre.',
+        detailedDefinition: "Repère vérifiable dans le cycle d’un projet ou d’un plan. Un jalon indique qu’un résultat, une décision, une livraison ou une réception doit être contrôlé à une date donnée. Il n’est ni une tâche ni une phase et doit être relié à un responsable ainsi qu’à une preuve attendue."
+      },
+      DE: {
+        term: 'Meilenstein',
+        shortDefinition: 'Datierter Kontroll-, Entscheidungs-, Liefer- oder Abnahmepunkt ohne eigene Dauer.',
+        detailedDefinition: 'Überprüfbarer Orientierungspunkt im Verlauf eines Projekts oder Plans. Ein Meilenstein zeigt an, dass ein Ergebnis, eine Entscheidung, eine Lieferung oder eine Abnahme zu einem bestimmten Datum kontrolliert werden muss. Er ist weder Aufgabe noch Phase und muss mit einer verantwortlichen Person sowie einem erwarteten Nachweis verknüpft sein.'
+      },
+      EN: {
+        term: 'Milestone',
+        shortDefinition: 'A dated control, decision, delivery or acceptance point with no duration of its own.',
+        detailedDefinition: 'A verifiable reference point in the lifecycle of a project or plan. A milestone indicates that an outcome, decision, delivery or acceptance must be checked on a given date. It is neither a task nor a phase and must be linked to an owner and expected evidence.'
+      }
+    }
+  },
+  'PROJ-REVUE': {
+    version: 'Candidat 0.1',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Revue de projet',
+        shortDefinition: 'Contrôle périodique et factuel de l’état d’un projet, de ses risques, décisions, coûts et preuves.',
+        detailedDefinition: 'Moment court et structuré où les responsables comparent la situation réelle au résultat attendu, identifient les changements, le prochain jalon, les blocages, les montants engagés, payés et restants ainsi que les preuves manquantes. La revue produit une décision ou des actions tracées et ne remplace ni la réception ni l’audit.'
+      },
+      DE: {
+        term: 'Projektüberprüfung',
+        shortDefinition: 'Regelmäßige, sachliche Prüfung von Projektstand, Risiken, Entscheidungen, Kosten und Nachweisen.',
+        detailedDefinition: 'Kurzer, strukturierter Termin, bei dem die Verantwortlichen den tatsächlichen Stand mit dem erwarteten Ergebnis vergleichen und Änderungen, den nächsten Meilenstein, Blockaden, gebundene, bezahlte und offene Beträge sowie fehlende Nachweise feststellen. Die Prüfung führt zu einer dokumentierten Entscheidung oder zu nachverfolgbaren Maßnahmen und ersetzt weder Abnahme noch Audit.'
+      },
+      EN: {
+        term: 'Project review',
+        shortDefinition: 'A periodic, factual review of project status, risks, decisions, costs and evidence.',
+        detailedDefinition: 'A short, structured checkpoint where owners compare actual status with the expected outcome and identify changes, the next milestone, blockers, committed, paid and remaining amounts, and missing evidence. The review produces a recorded decision or traceable actions and does not replace acceptance or audit.'
+      }
+    }
   }
 };
 
@@ -249,7 +291,7 @@ export const getGlossaryContextEntry = (termId, language = 'FR') => {
   return {
     id: termId,
     version: entry.version,
-    status: 'validated',
+    status: entry.status || 'validated',
     ...entry.translations[normalizedLanguage]
   };
 };
