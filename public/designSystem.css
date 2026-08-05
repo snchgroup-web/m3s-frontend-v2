@@ -1,0 +1,187 @@
+:root {
+  --m3s-font-ui: "Segoe UI", Inter, Arial, sans-serif;
+  --m3s-surface-page: #f3f6fa;
+  --m3s-surface-panel: #ffffff;
+  --m3s-surface-raised: #f8fafc;
+  --m3s-text-primary: #172033;
+  --m3s-text-secondary: #52647a;
+  --m3s-border: #d7e0eb;
+  --m3s-border-strong: #afbdce;
+  --m3s-row-hover: #eef6ff;
+  --m3s-row-accent: #3b82f6;
+  --m3s-focus: #52a7ea;
+  --m3s-shadow-panel: 0 8px 24px rgba(31, 52, 75, 0.08);
+}
+
+html.dark {
+  --m3s-surface-page: #0b1424;
+  --m3s-surface-panel: #111e31;
+  --m3s-surface-raised: #16263c;
+  --m3s-text-primary: #f1f5f9;
+  --m3s-text-secondary: #b4c2d3;
+  --m3s-border: #2c415d;
+  --m3s-border-strong: #48617f;
+  --m3s-row-hover: rgba(30, 64, 175, 0.22);
+  --m3s-row-accent: #60a5fa;
+  --m3s-focus: #8cc9f6;
+  --m3s-shadow-panel: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+.m3s-design-scope {
+  min-width: 0;
+  font-family: var(--m3s-font-ui);
+  letter-spacing: 0;
+}
+
+.m3s-design-scope :where(h1, h2, h3, h4, p, button, input, select, textarea, table) {
+  font-family: inherit;
+  letter-spacing: 0;
+}
+
+.m3s-design-scope h1,
+.m3s-design-scope h2 {
+  font-weight: 600;
+}
+
+.m3s-design-scope h3,
+.m3s-design-scope h4,
+.m3s-design-scope th {
+  font-weight: 600;
+}
+
+/* Legacy utility classes must not reintroduce heavy frames in migrated modules. */
+.m3s-design-scope .border-2 {
+  border-width: 1px;
+}
+
+.m3s-design-scope :is(.rounded-xl, .rounded-2xl, .rounded-3xl) {
+  border-radius: 0.5rem;
+}
+
+.m3s-page-title {
+  color: var(--m3s-text-primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 2rem;
+}
+
+.m3s-section-title {
+  color: var(--m3s-text-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.75rem;
+}
+
+.m3s-panel-title {
+  color: var(--m3s-text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+}
+
+.m3s-panel {
+  border: 1px solid var(--m3s-border);
+  border-radius: 0.5rem;
+  background: var(--m3s-surface-panel);
+  color: var(--m3s-text-primary);
+  box-shadow: var(--m3s-shadow-panel);
+}
+
+.m3s-raised {
+  border: 1px solid var(--m3s-border);
+  border-radius: 0.5rem;
+  background: var(--m3s-surface-raised);
+}
+
+.m3s-design-scope :where(input, select, textarea).m3s-field {
+  min-height: 2.75rem;
+  border: 1px solid var(--m3s-border-strong);
+  border-radius: 0.5rem;
+  background: var(--m3s-surface-panel);
+  color: var(--m3s-text-primary);
+}
+
+.m3s-design-scope :where(input, select, textarea).m3s-field:focus {
+  border-color: var(--m3s-focus);
+  outline: 2px solid color-mix(in srgb, var(--m3s-focus) 38%, transparent);
+  outline-offset: 1px;
+}
+
+.m3s-table-shell {
+  overflow: hidden;
+  border: 1px solid var(--m3s-border);
+  border-radius: 0.5rem;
+  background: var(--m3s-surface-panel);
+}
+
+.m3s-design-scope table {
+  border-collapse: collapse;
+  color: var(--m3s-text-primary);
+}
+
+.m3s-design-scope table th {
+  color: var(--m3s-text-secondary);
+}
+
+.m3s-design-scope table :where(th, td) {
+  border-bottom: 1px solid var(--m3s-border);
+}
+
+.m3s-design-scope table tbody tr {
+  transition: background-color 150ms ease, box-shadow 150ms ease;
+}
+
+.m3s-design-scope table tbody tr:hover,
+.m3s-design-scope table tbody tr:focus-visible {
+  background: var(--m3s-row-hover);
+  box-shadow: inset 3px 0 var(--m3s-row-accent);
+}
+
+.m3s-design-scope table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.m3s-icon-button {
+  display: inline-flex;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+}
+
+.m3s-icon-button:focus-visible,
+.m3s-design-scope button:focus-visible,
+.m3s-design-scope a:focus-visible {
+  outline: 2px solid var(--m3s-focus);
+  outline-offset: 2px;
+}
+
+.administration-glossary__term {
+  color: var(--m3s-text-primary);
+  background: var(--m3s-surface-panel);
+}
+
+.administration-glossary__term:hover,
+.administration-glossary__term:focus-visible {
+  background: var(--m3s-row-hover);
+  box-shadow: inset 3px 0 var(--m3s-row-accent);
+}
+
+.administration-glossary__term.is-active {
+  background: color-mix(in srgb, var(--m3s-row-accent) 13%, var(--m3s-surface-panel));
+  box-shadow: inset 3px 0 var(--m3s-row-accent);
+}
+
+@media (max-width: 640px) {
+  .m3s-page-title {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
+  .m3s-section-title {
+    font-size: 1.125rem;
+    line-height: 1.625rem;
+  }
+}

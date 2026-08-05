@@ -77,7 +77,7 @@ const Header = () => {
             <ModuleIcon moduleId={moduleId} size={23} />
           </div>
           <div className="min-w-0">
-            <h1 className="text-xl font-bold text-white truncate">{title}</h1>
+            <h1 className="text-xl font-semibold text-slate-100 truncate">{title}</h1>
             <p className="text-xs text-slate-400 hidden sm:block">M3S Management System</p>
           </div>
         </div>

@@ -87,12 +87,12 @@ const Layout = ({ children }) => {
           {sidebarOpen && (
             <div
               className="flex flex-col space-y-1 items-center text-center flex-1"
-              style={{ fontFamily: 'Inter, "Segoe UI", Arial, sans-serif' }}
+              style={{ fontFamily: '"Segoe UI", Inter, Arial, sans-serif' }}
             >
               <div className="flex items-center space-x-2 justify-center">
                 {/* Logo Image */}
                 <img src="/assets/logo-2sg.png" alt="Logo SeneSwiss Group" className="w-11 h-11 rounded-full object-cover flex-shrink-0 bg-white shadow-md" />
-                <h1 className="text-base font-bold text-blue-400 whitespace-nowrap">2SG - SeneSwiss Group</h1>
+                <h1 className="text-base font-semibold text-blue-400 whitespace-nowrap">2SG - SeneSwiss Group</h1>
               </div>
               <p className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">M3S v2.0 - Management System - SeneSwiss</p>
             </div>
@@ -217,7 +217,7 @@ const Layout = ({ children }) => {
       {/* Main Content */}
       <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-auto">
+        <main className="m3s-design-scope flex-1 overflow-auto">
           {children}
         </main>
       </div>

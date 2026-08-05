@@ -43,7 +43,7 @@ export const ModuleTitle = ({ moduleId, title, subtitle }) => {
         <ModuleIcon moduleId={moduleId} size={25} />
       </div>
       <div>
-        <h1 className="text-3xl font-bold text-white mb-1">{title}</h1>
+        <h1 className="m3s-page-title mb-1">{title}</h1>
         {subtitle && <p className="text-slate-400">{subtitle}</p>}
       </div>
     </div>
