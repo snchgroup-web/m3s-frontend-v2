@@ -606,7 +606,7 @@ const Admin = () => {
         {/* KPIs */}
         {activeTab === 'overview' && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
-          <div className="administration-kpi bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
+          <div className="administration-kpi administration-kpi--blue bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
             <div className="flex items-center justify-between">
               <div>
                 <p className="administration-kpi__label text-blue-200 text-sm">{t.institution}</p>
@@ -616,7 +616,7 @@ const Admin = () => {
             </div>
           </div>
 
-          <div className="administration-kpi bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
+          <div className="administration-kpi administration-kpi--green bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
             <div className="flex items-center justify-between">
               <div>
                 <p className="administration-kpi__label text-green-200 text-sm">{t.planning}</p>
@@ -626,7 +626,7 @@ const Admin = () => {
             </div>
           </div>
 
-          <div className="administration-kpi bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
+          <div className="administration-kpi administration-kpi--purple bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
             <div className="flex items-center justify-between">
               <div>
                 <p className="administration-kpi__label text-purple-200 text-sm">{t.tachesTerminees}</p>
@@ -636,7 +636,7 @@ const Admin = () => {
             </div>
           </div>
 
-          <div className="administration-kpi bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-6 border border-red-700">
+          <div className="administration-kpi administration-kpi--red bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-6 border border-red-700">
             <div className="flex items-center justify-between">
               <div>
                 <p className="administration-kpi__label text-red-200 text-sm">{t.communication}</p>
@@ -738,7 +738,19 @@ const Admin = () => {
                 </thead>
                 <tbody>
                   {visibleRows.map(task => (
-                    <tr key={task.id || task.source_id} className="administration-table-row border-t border-slate-700 transition-colors hover:bg-blue-950/35">
+                    <tr
+                      key={task.id || task.source_id}
+                      className="administration-table-row cursor-pointer border-t border-slate-700 transition-colors hover:bg-blue-950/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-400"
+                      tabIndex={0}
+                      aria-label={`${t.modifier} : ${formatValue(task.titre || task.title)}`}
+                      onClick={() => handleEditTask(task)}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault();
+                          handleEditTask(task);
+                        }
+                      }}
+                    >
                       <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(task.titre || task.title)}</td>
                       <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskStatus(task.statut || task.status))}</td>
                       <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskPriority(task.priorite || task.priority))}</td>
@@ -746,10 +758,10 @@ const Admin = () => {
                       <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskModule(task.module))}</td>
                       <td className="px-4 py-2 text-blue-400 font-bold">{Number(task.progression || 0)}%</td>
                       <td className="px-4 py-2 flex gap-2">
-                        <button onClick={() => handleEditTask(task)} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.modifier} : ${formatValue(task.titre || task.title)}`} title={t.modifier}>
+                        <button onClick={(event) => { event.stopPropagation(); handleEditTask(task); }} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.modifier} : ${formatValue(task.titre || task.title)}`} title={t.modifier}>
                           <Edit2 size={16} className="text-blue-400" />
                         </button>
-                        <button onClick={() => handleDeleteTask(task.id || task.source_id)} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.supprimer} : ${formatValue(task.titre || task.title)}`} title={t.supprimer}>
+                        <button onClick={(event) => { event.stopPropagation(); handleDeleteTask(task.id || task.source_id); }} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.supprimer} : ${formatValue(task.titre || task.title)}`} title={t.supprimer}>
                           <Trash2 size={16} className="text-red-400" />
                         </button>
                       </td>
@@ -791,7 +803,19 @@ const Admin = () => {
                 </thead>
                 <tbody>
                   {users.map(u => (
-                    <tr key={u.id} className="administration-table-row border-t border-slate-700 transition-colors hover:bg-blue-950/35">
+                    <tr
+                      key={u.id}
+                      className="administration-table-row cursor-pointer border-t border-slate-700 transition-colors hover:bg-blue-950/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-400"
+                      tabIndex={0}
+                      aria-label={`${t.modifier} : ${formatValue(u.nom)}`}
+                      onClick={() => handleEditUser(u)}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault();
+                          handleEditUser(u);
+                        }
+                      }}
+                    >
                       <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(u.nom)}</td>
                       <td className="px-4 py-2 text-slate-400 text-xs">{formatValue(u.email)}</td>
                       <td className="px-4 py-2 text-slate-300">{formatValue(translateRole(u.role))}</td>
@@ -802,10 +826,10 @@ const Admin = () => {
                       </td>
                       <td className="px-4 py-2 text-slate-400 text-xs">{formatValue(u.dateCreation)}</td>
                       <td className="px-4 py-2 flex gap-2">
-                        <button onClick={() => handleEditUser(u)} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.modifier} : ${formatValue(u.nom)}`} title={t.modifier}>
+                        <button onClick={(event) => { event.stopPropagation(); handleEditUser(u); }} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.modifier} : ${formatValue(u.nom)}`} title={t.modifier}>
                           <Edit2 size={16} className="text-blue-400" />
                         </button>
-                        <button onClick={() => handleDeleteUser(u.id)} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.supprimer} : ${formatValue(u.nom)}`} title={t.supprimer}>
+                        <button onClick={(event) => { event.stopPropagation(); handleDeleteUser(u.id); }} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.supprimer} : ${formatValue(u.nom)}`} title={t.supprimer}>
                           <Trash2 size={16} className="text-red-400" />
                         </button>
                       </td>

@@ -46,10 +46,15 @@ describe('light-mode accent border selectors', () => {
     expect(document.querySelector('#cyan-base').matches(cyanSelector)).toBe(true);
   });
 
-  test('keeps Administration headings readable while preserving white KPI text', () => {
+  test('keeps Administration headings readable and gives light mode KPIs a softer palette', () => {
     expect(administrationSource).toContain('administration-page min-h-screen');
     expect(indexHtml).toContain('html:not(.dark) .administration-page .text-slate-100');
-    expect(indexHtml).toContain('html:not(.dark) .administration-page .administration-kpi__value{color:#fff!important}');
+    expect(indexHtml).toContain('html:not(.dark) .administration-page .administration-kpi{background-image:none!important}');
+    expect(indexHtml).toContain('.administration-kpi--blue{background-color:#eff6ff!important');
+    expect(indexHtml).toContain('.administration-kpi--green{background-color:#ecfdf5!important');
+    expect(indexHtml).toContain('.administration-kpi--purple{background-color:#faf5ff!important');
+    expect(indexHtml).toContain('.administration-kpi--red{background-color:#fff1f2!important');
+    expect((administrationSource.match(/administration-kpi--/g) || [])).toHaveLength(4);
   });
 
   test('uses the lighter institutional heading hierarchy', () => {
@@ -74,5 +79,10 @@ describe('light-mode accent border selectors', () => {
     expect(indexHtml).toContain('html:not(.dark) .administration-table-row:hover{background-color:#eef6ff!important;box-shadow:inset 3px 0 #3b82f6}');
     expect((administrationSource.match(/administration-table-row/g) || [])).toHaveLength(3);
     expect(administrationSource).toContain('transition-colors hover:bg-blue-950/35');
+    expect(administrationSource).toContain('onClick={() => handleEditTask(task)}');
+    expect(administrationSource).toContain('onClick={() => handleEditUser(u)}');
+    expect(administrationSource).toContain("event.key === 'Enter' || event.key === ' '");
+    expect(administrationSource).toContain('event.stopPropagation(); handleDeleteTask');
+    expect(administrationSource).toContain('event.stopPropagation(); handleDeleteUser');
   });
 });
