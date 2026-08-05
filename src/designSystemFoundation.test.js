@@ -33,6 +33,14 @@ describe('global M3S design foundations', () => {
     expect(tableSource).toContain("clearSearch: 'Suche löschen'");
   });
 
+  test('provides semantic action and feedback colors in both themes', () => {
+    expect(designSystemCss).toContain('.m3s-success-button');
+    expect(designSystemCss).toContain('.m3s-danger-button');
+    expect(designSystemCss).toContain('.m3s-feedback--success');
+    expect(designSystemCss).toContain('html.dark .m3s-glossary-status--validated');
+    expect(designSystemCss).toContain('html.dark .m3s-draft-badge');
+  });
+
   test('loads the shared foundation without changing the CDN Tailwind pipeline', () => {
     expect(indexHtml).toContain('<link rel="stylesheet" href="%PUBLIC_URL%/designSystem.css" />');
   });

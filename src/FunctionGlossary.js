@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { BookOpen, CheckCircle2, ExternalLink, Plus, Search, X } from 'lucide-react';
+import React, { useMemo, useRef, useState } from 'react';
+import { BookOpen, CheckCircle2, ExternalLink, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
 import { getGlossaryContextEntry } from './glossaryContext';
 
 const SUPPORTED_LANGUAGES = ['FR', 'DE', 'EN'];
@@ -55,6 +55,71 @@ const PROPOSAL_COPY = Object.freeze({
   }
 });
 
+const ACTION_COPY = Object.freeze({
+  FR: {
+    edit: 'Modifier',
+    delete: 'Supprimer',
+    editTitle: 'Modifier la proposition',
+    update: 'Modifier la proposition',
+    confirmAddTitle: "Confirmer l'ajout",
+    confirmAddBody: 'Ajouter « {term} » aux propositions locales de cette session ?',
+    confirmEditTitle: 'Confirmer la modification',
+    confirmEditBody: 'Enregistrer les modifications de « {term} » ?',
+    confirmDeleteTitle: 'Confirmer la suppression',
+    confirmDeleteBody: 'Supprimer « {term} » des propositions locales de cette session ?',
+    confirmAdd: 'Oui, ajouter',
+    confirmEdit: 'Oui, modifier',
+    confirmDelete: 'Oui, supprimer',
+    decline: 'Non',
+    addedSuccess: 'Proposition ajoutée avec succès.',
+    editedSuccess: 'Proposition modifiée avec succès.',
+    deletedSuccess: 'Proposition supprimée avec succès.',
+    dismiss: 'Masquer le message'
+  },
+  EN: {
+    edit: 'Edit',
+    delete: 'Delete',
+    editTitle: 'Edit proposal',
+    update: 'Update proposal',
+    confirmAddTitle: 'Confirm addition',
+    confirmAddBody: 'Add “{term}” to the local proposals for this session?',
+    confirmEditTitle: 'Confirm update',
+    confirmEditBody: 'Save the changes to “{term}”?',
+    confirmDeleteTitle: 'Confirm deletion',
+    confirmDeleteBody: 'Delete “{term}” from the local proposals for this session?',
+    confirmAdd: 'Yes, add',
+    confirmEdit: 'Yes, update',
+    confirmDelete: 'Yes, delete',
+    decline: 'No',
+    addedSuccess: 'Proposal added successfully.',
+    editedSuccess: 'Proposal updated successfully.',
+    deletedSuccess: 'Proposal deleted successfully.',
+    dismiss: 'Dismiss message'
+  },
+  DE: {
+    edit: 'Bearbeiten',
+    delete: 'Löschen',
+    editTitle: 'Vorschlag bearbeiten',
+    update: 'Vorschlag aktualisieren',
+    confirmAddTitle: 'Hinzufügen bestätigen',
+    confirmAddBody: '„{term}“ zu den lokalen Vorschlägen dieser Sitzung hinzufügen?',
+    confirmEditTitle: 'Änderung bestätigen',
+    confirmEditBody: 'Änderungen an „{term}“ speichern?',
+    confirmDeleteTitle: 'Löschen bestätigen',
+    confirmDeleteBody: '„{term}“ aus den lokalen Vorschlägen dieser Sitzung löschen?',
+    confirmAdd: 'Ja, hinzufügen',
+    confirmEdit: 'Ja, aktualisieren',
+    confirmDelete: 'Ja, löschen',
+    decline: 'Nein',
+    addedSuccess: 'Vorschlag erfolgreich hinzugefügt.',
+    editedSuccess: 'Vorschlag erfolgreich aktualisiert.',
+    deletedSuccess: 'Vorschlag erfolgreich gelöscht.',
+    dismiss: 'Meldung schließen'
+  }
+});
+
+const interpolateTerm = (template, term) => String(template || '').replace('{term}', term || '');
+
 export const buildFunctionGlossaryTerms = (groups = [], language = 'FR') => {
   const normalizedLanguage = normalizeLanguage(language);
 
@@ -78,7 +143,7 @@ const FunctionGlossary = ({
   centralReturnTo = null
 }) => {
   const normalizedLanguage = normalizeLanguage(language);
-  const t = { ...PROPOSAL_COPY[normalizedLanguage], ...(copy[normalizedLanguage] || copy.FR) };
+  const t = { ...PROPOSAL_COPY[normalizedLanguage], ...ACTION_COPY[normalizedLanguage], ...(copy[normalizedLanguage] || copy.FR) };
   const terms = useMemo(
     () => buildFunctionGlossaryTerms(groups, normalizedLanguage),
     [groups, normalizedLanguage]
@@ -89,6 +154,10 @@ const FunctionGlossary = ({
   const [showProposal, setShowProposal] = useState(false);
   const [proposal, setProposal] = useState({ term: '', definition: '', groupId: groups[0]?.id || '', source: '' });
   const [localProposals, setLocalProposals] = useState([]);
+  const [editingProposalId, setEditingProposalId] = useState(null);
+  const [pendingAction, setPendingAction] = useState(null);
+  const [feedback, setFeedback] = useState(null);
+  const nextProposalId = useRef(1);
 
   const visibleTerms = useMemo(() => {
     const normalizedQuery = normalizeSearch(query);
@@ -107,28 +176,79 @@ const FunctionGlossary = ({
   const selectedStatus = selectedTerm?.status === 'candidate'
     ? {
         label: t.candidate || t.validated,
-        classes: 'bg-amber-500/10 text-amber-600 dark:text-amber-300'
+        classes: 'm3s-glossary-status--candidate'
       }
     : {
         label: t.validated,
-        classes: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300'
+        classes: 'm3s-glossary-status--validated'
       };
 
-  const openProposal = () => {
-    setProposal({ term: '', definition: '', groupId: groups[0]?.id || '', source: '' });
+  const openProposal = (item = null) => {
+    setEditingProposalId(item?.id || null);
+    setProposal(item
+      ? { term: item.term, definition: item.definition, groupId: item.groupId, source: item.source || '' }
+      : { term: '', definition: '', groupId: groups[0]?.id || '', source: '' });
     setShowProposal(true);
   };
 
   const submitProposal = event => {
     event.preventDefault();
     const selectedGroup = groups.find(group => group.id === proposal.groupId);
-    setLocalProposals(current => [...current, {
+    const preparedProposal = {
       ...proposal,
-      id: `${glossaryId}-proposal-${current.length + 1}`,
+      id: editingProposalId || `${glossaryId}-proposal-${nextProposalId.current++}`,
       groupLabel: selectedGroup?.labels?.[normalizedLanguage] || selectedGroup?.labels?.FR || proposal.groupId
-    }]);
+    };
+    setPendingAction({ type: editingProposalId ? 'edit' : 'add', item: preparedProposal });
     setShowProposal(false);
   };
+
+  const requestDelete = item => setPendingAction({ type: 'delete', item });
+
+  const cancelPendingAction = () => {
+    const actionType = pendingAction?.type;
+    setPendingAction(null);
+    if (actionType === 'add' || actionType === 'edit') setShowProposal(true);
+  };
+
+  const confirmPendingAction = () => {
+    if (!pendingAction) return;
+
+    if (pendingAction.type === 'add') {
+      setLocalProposals(current => [...current, pendingAction.item]);
+      setFeedback('added');
+    } else if (pendingAction.type === 'edit') {
+      setLocalProposals(current => current.map(item => item.id === pendingAction.item.id ? pendingAction.item : item));
+      setFeedback('edited');
+    } else if (pendingAction.type === 'delete') {
+      setLocalProposals(current => current.filter(item => item.id !== pendingAction.item.id));
+      setFeedback('deleted');
+    }
+
+    setPendingAction(null);
+    setEditingProposalId(null);
+  };
+
+  const confirmationCopy = pendingAction ? {
+    add: {
+      title: t.confirmAddTitle,
+      body: t.confirmAddBody,
+      confirm: t.confirmAdd,
+      buttonClass: 'm3s-success-button'
+    },
+    edit: {
+      title: t.confirmEditTitle,
+      body: t.confirmEditBody,
+      confirm: t.confirmEdit,
+      buttonClass: 'm3s-primary-button'
+    },
+    delete: {
+      title: t.confirmDeleteTitle,
+      body: t.confirmDeleteBody,
+      confirm: t.confirmDelete,
+      buttonClass: 'm3s-danger-button'
+    }
+  }[pendingAction.type] : null;
 
   return (
     <section className="function-glossary space-y-5" aria-labelledby={titleId}>
@@ -142,11 +262,22 @@ const FunctionGlossary = ({
               <p className="mt-2 max-w-4xl text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{t.intro}</p>
             </div>
           </div>
-          <button type="button" className="m3s-primary-button inline-flex min-h-11 shrink-0 items-center justify-center gap-2 px-4" onClick={openProposal}>
+          <button type="button" className="m3s-success-button inline-flex min-h-11 shrink-0 items-center justify-center gap-2 px-4" onClick={() => openProposal()}>
             <Plus size={17} aria-hidden="true" /> {t.add}
           </button>
         </div>
       </header>
+
+      {feedback && (
+        <div className="m3s-feedback m3s-feedback--success flex items-center justify-between gap-3 px-4 py-3" role="status">
+          <span className="flex min-w-0 items-center gap-2 text-sm font-semibold">
+            <CheckCircle2 className="shrink-0" size={18} aria-hidden="true" /> {t[`${feedback}Success`]}
+          </span>
+          <button type="button" className="m3s-icon-button shrink-0" onClick={() => setFeedback(null)} aria-label={t.dismiss} title={t.dismiss}>
+            <X size={17} aria-hidden="true" />
+          </button>
+        </div>
+      )}
 
       <div className="m3s-panel p-4 sm:p-5">
         <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_15rem]">
@@ -178,9 +309,17 @@ const FunctionGlossary = ({
           <div className="mt-2 divide-y" style={{ borderColor: 'var(--m3s-border)' }}>
             {localProposals.map(item => (
               <div key={item.id} className="py-3 first:pt-1 last:pb-1">
-                <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="flex flex-wrap items-start justify-between gap-3">
                   <p className="font-semibold">{item.term}</p>
-                  <span className="rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-semibold text-amber-600 dark:text-amber-300">{t.localDraft}</span>
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                    <span className="m3s-draft-badge rounded-full px-2.5 py-1 text-xs font-semibold">{t.localDraft}</span>
+                    <button type="button" className="m3s-secondary-button inline-flex min-h-9 items-center gap-1.5 px-3 text-xs" onClick={() => openProposal(item)} title={t.edit}>
+                      <Pencil size={14} aria-hidden="true" /> {t.edit}
+                    </button>
+                    <button type="button" className="m3s-danger-button inline-flex min-h-9 items-center gap-1.5 px-3 text-xs" onClick={() => requestDelete(item)} title={t.delete}>
+                      <Trash2 size={14} aria-hidden="true" /> {t.delete}
+                    </button>
+                  </div>
                 </div>
                 <p className="mt-1 text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{item.definition}</p>
                 <p className="mt-1 text-xs" style={{ color: 'var(--m3s-text-secondary)' }}>{item.groupLabel}{item.source ? ` · ${item.source}` : ''}</p>
@@ -222,7 +361,7 @@ const FunctionGlossary = ({
                 <p className="text-xs font-semibold uppercase text-cyan-500">{selectedTerm.groupLabel}</p>
                 <h3 className="m3s-section-title mt-1">{selectedTerm.term}</h3>
               </div>
-              <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${selectedStatus.classes}`}>
+              <span className={`m3s-glossary-status inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${selectedStatus.classes}`}>
                 <CheckCircle2 size={14} aria-hidden="true" /> {selectedStatus.label}
               </span>
             </div>
@@ -254,7 +393,7 @@ const FunctionGlossary = ({
           <section className="m3s-panel w-full max-w-xl p-5 sm:p-6" role="dialog" aria-modal="true" aria-labelledby={`${glossaryId}-proposal-title`}>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h3 id={`${glossaryId}-proposal-title`} className="m3s-section-title">{t.proposalTitle}</h3>
+                <h3 id={`${glossaryId}-proposal-title`} className="m3s-section-title">{editingProposalId ? t.editTitle : t.proposalTitle}</h3>
                 <p className="mt-2 text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{t.proposalHelp}</p>
               </div>
               <button type="button" className="m3s-icon-button shrink-0" onClick={() => setShowProposal(false)} aria-label={t.close} title={t.close}>
@@ -282,9 +421,24 @@ const FunctionGlossary = ({
               </label>
               <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end" style={{ borderColor: 'var(--m3s-border)' }}>
                 <button type="button" className="m3s-secondary-button min-h-11 px-4" onClick={() => setShowProposal(false)}>{t.cancel}</button>
-                <button type="submit" className="m3s-primary-button min-h-11 px-4">{t.prepare}</button>
+                <button type="submit" className={`${editingProposalId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 px-4`}>{editingProposalId ? t.update : t.prepare}</button>
               </div>
             </form>
+          </section>
+        </div>
+      )}
+
+      {pendingAction && confirmationCopy && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/70 p-4" role="presentation">
+          <section className="m3s-panel w-full max-w-md p-5 sm:p-6" role="dialog" aria-modal="true" aria-labelledby={`${glossaryId}-confirmation-title`}>
+            <h3 id={`${glossaryId}-confirmation-title`} className="m3s-section-title">{confirmationCopy.title}</h3>
+            <p className="mt-3 text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>
+              {interpolateTerm(confirmationCopy.body, pendingAction.item.term)}
+            </p>
+            <div className="mt-5 flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end" style={{ borderColor: 'var(--m3s-border)' }}>
+              <button type="button" className="m3s-secondary-button min-h-11 px-4" onClick={cancelPendingAction}>{t.decline}</button>
+              <button type="button" className={`${confirmationCopy.buttonClass} min-h-11 px-4`} onClick={confirmPendingAction}>{confirmationCopy.confirm}</button>
+            </div>
           </section>
         </div>
       )}
