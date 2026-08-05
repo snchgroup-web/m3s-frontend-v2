@@ -23,6 +23,7 @@ describe('global M3S design foundations', () => {
     expect(designSystemCss).toContain('.m3s-design-scope .border-2');
     expect(designSystemCss).toContain('.m3s-design-scope :is(.rounded-xl, .rounded-2xl, .rounded-3xl)');
     expect(designSystemCss).toContain('.m3s-design-scope table tbody tr:hover');
+    expect(designSystemCss).toContain('.function-glossary__term:hover');
     expect(designSystemCss).toContain('box-shadow: inset 3px 0 var(--m3s-row-accent)');
   });
 
