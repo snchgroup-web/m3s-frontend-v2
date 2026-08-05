@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
-import { Plus, Edit2, Trash2, Shield, Users, Lock, AlertCircle } from 'lucide-react';
+import { Plus, Edit2, Trash2, Building2, FolderKanban, CheckCircle2, Mail, ShieldCheck } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
@@ -76,6 +76,7 @@ const Admin = () => {
       , institution: 'Institution',
       communication: 'Communication & Courrier',
       compliance: 'Conformité',
+      complianceTracked: 'dossier suivi',
       tachesTerminees: 'Tâches terminées',
       nouvelleTache: 'Nouvelle tâche',
       modifierTache: 'Modifier tâche'
@@ -138,6 +139,7 @@ const Admin = () => {
       , institution: 'Institution',
       communication: 'Communication & Correspondence',
       compliance: 'Compliance',
+      complianceTracked: 'tracked matter',
       tachesTerminees: 'Completed tasks',
       nouvelleTache: 'New task',
       modifierTache: 'Edit task'
@@ -200,6 +202,7 @@ const Admin = () => {
       , institution: 'Institution',
       communication: 'Kommunikation & Korrespondenz',
       compliance: 'Compliance',
+      complianceTracked: 'verfolgter Fall',
       tachesTerminees: 'Abgeschlossene Aufgaben',
       nouvelleTache: 'Neue Aufgabe',
       modifierTache: 'Aufgabe bearbeiten'
@@ -605,14 +608,14 @@ const Admin = () => {
 
         {/* KPIs */}
         {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 mb-8">
           <div className="administration-kpi administration-kpi--blue bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
             <div className="flex items-center justify-between">
               <div>
                 <p className="administration-kpi__label text-blue-200 text-sm">{t.institution}</p>
                 <p className="administration-kpi__value text-2xl font-semibold text-slate-100">1</p>
               </div>
-              <Users size={32} className="administration-kpi__icon text-blue-400" />
+              <Building2 size={32} className="administration-kpi__icon text-blue-400" aria-hidden="true" />
             </div>
           </div>
 
@@ -622,7 +625,7 @@ const Admin = () => {
                 <p className="administration-kpi__label text-green-200 text-sm">{t.planning}</p>
                 <p className="administration-kpi__value text-2xl font-semibold text-slate-100">{tasks.length}</p>
               </div>
-              <AlertCircle size={32} className="administration-kpi__icon text-green-400" />
+              <FolderKanban size={32} className="administration-kpi__icon text-green-400" aria-hidden="true" />
             </div>
           </div>
 
@@ -632,7 +635,7 @@ const Admin = () => {
                 <p className="administration-kpi__label text-purple-200 text-sm">{t.tachesTerminees}</p>
                 <p className="administration-kpi__value text-2xl font-semibold text-slate-100">{completedTasks}</p>
               </div>
-              <Lock size={32} className="administration-kpi__icon text-purple-400" />
+              <CheckCircle2 size={32} className="administration-kpi__icon text-purple-400" aria-hidden="true" />
             </div>
           </div>
 
@@ -642,7 +645,18 @@ const Admin = () => {
                 <p className="administration-kpi__label text-red-200 text-sm">{t.communication}</p>
                 <p className="administration-kpi__value text-2xl font-semibold text-slate-100">0</p>
               </div>
-              <Shield size={32} className="administration-kpi__icon text-red-400" />
+              <Mail size={32} className="administration-kpi__icon text-red-400" aria-hidden="true" />
+            </div>
+          </div>
+
+          <div className="administration-kpi administration-kpi--amber bg-gradient-to-br from-amber-900 to-amber-800 rounded-lg p-6 border border-amber-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="administration-kpi__label text-amber-200 text-sm">{t.compliance}</p>
+                <p className="administration-kpi__value text-2xl font-semibold text-slate-100">1</p>
+                <p className="administration-kpi__detail mt-1 text-xs text-amber-200">{t.complianceTracked}</p>
+              </div>
+              <ShieldCheck size={32} className="administration-kpi__icon text-amber-400" aria-hidden="true" />
             </div>
           </div>
         </div>

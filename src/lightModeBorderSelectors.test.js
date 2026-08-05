@@ -5,6 +5,7 @@ const indexHtml = fs.readFileSync(path.join(__dirname, '..', 'public', 'index.ht
 const administrationSource = fs.readFileSync(path.join(__dirname, 'Administration.js'), 'utf8');
 const institutionSource = fs.readFileSync(path.join(__dirname, 'InstitutionOverview.js'), 'utf8');
 const planningSource = fs.readFileSync(path.join(__dirname, 'PlanningOverview.js'), 'utf8');
+const loginSource = fs.readFileSync(path.join(__dirname, 'Login.js'), 'utf8');
 
 const baseTokenSelector = (scope, color) =>
   `${scope} [class^="border-${color}-"],${scope} [class*=" border-${color}-"]`;
@@ -54,7 +55,8 @@ describe('light-mode accent border selectors', () => {
     expect(indexHtml).toContain('.administration-kpi--green{background-color:#ecfdf5!important');
     expect(indexHtml).toContain('.administration-kpi--purple{background-color:#faf5ff!important');
     expect(indexHtml).toContain('.administration-kpi--red{background-color:#fff1f2!important');
-    expect((administrationSource.match(/administration-kpi--/g) || [])).toHaveLength(4);
+    expect(indexHtml).toContain('.administration-kpi--amber{background-color:#fffbeb!important');
+    expect((administrationSource.match(/administration-kpi--/g) || [])).toHaveLength(5);
   });
 
   test('uses the lighter institutional heading hierarchy', () => {
@@ -73,6 +75,22 @@ describe('light-mode accent border selectors', () => {
     expect(administrationSource).toContain('id="user-name" type="text" required');
     expect(administrationSource).toContain('id="user-email" type="email" required');
     expect(administrationSource).toContain('id="role-name" type="text" required');
+  });
+
+  test('keeps the light login form aligned with the design system', () => {
+    expect(loginSource).toContain('login-page min-h-screen');
+    expect(loginSource).toContain('login-session-alert');
+    expect(loginSource).toContain('login-submit mt-6 min-h-11');
+    expect(indexHtml).toContain('html:not(.dark) .login-page .login-session-alert{background-color:#fffbeb!important');
+    expect(indexHtml).toContain('html:not(.dark) .login-page .login-submit{background-color:#2563eb!important;color:#fff!important}');
+  });
+
+  test('uses business-specific icons for the Administration KPIs', () => {
+    expect(administrationSource).toContain('<Building2 size={32}');
+    expect(administrationSource).toContain('<FolderKanban size={32}');
+    expect(administrationSource).toContain('<CheckCircle2 size={32}');
+    expect(administrationSource).toContain('<Mail size={32}');
+    expect(administrationSource).toContain('<ShieldCheck size={32}');
   });
 
   test('highlights Administration table rows without changing their layout', () => {
