@@ -12,7 +12,7 @@ describe('global M3S design foundations', () => {
     expect(layoutSource).toContain('m3s-design-scope flex-1 overflow-auto');
     expect(designSystemCss).toContain('--m3s-font-ui: "Segoe UI", Inter, Arial, sans-serif');
     expect(designSystemCss).toContain('html.dark');
-    expect(designSystemCss).toContain('.m3s-design-scope :where(h1, h2)');
+    expect(designSystemCss).toContain('.m3s-design-scope h1');
     expect(headerSource).toContain('text-xl font-semibold text-slate-100');
   });
 
@@ -20,6 +20,8 @@ describe('global M3S design foundations', () => {
     expect(tableSource).toContain('m3s-table-shell');
     expect(tableSource).toContain('m3s-field');
     expect(designSystemCss).toContain('border: 1px solid var(--m3s-border)');
+    expect(designSystemCss).toContain('.m3s-design-scope .border-2');
+    expect(designSystemCss).toContain('.m3s-design-scope :is(.rounded-xl, .rounded-2xl, .rounded-3xl)');
     expect(designSystemCss).toContain('.m3s-design-scope table tbody tr:hover');
     expect(designSystemCss).toContain('box-shadow: inset 3px 0 var(--m3s-row-accent)');
   });

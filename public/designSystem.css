@@ -38,12 +38,24 @@ html.dark {
   letter-spacing: 0;
 }
 
-.m3s-design-scope :where(h1, h2) {
+.m3s-design-scope h1,
+.m3s-design-scope h2 {
   font-weight: 600;
 }
 
-.m3s-design-scope :where(h3, h4, th) {
+.m3s-design-scope h3,
+.m3s-design-scope h4,
+.m3s-design-scope th {
   font-weight: 600;
+}
+
+/* Legacy utility classes must not reintroduce heavy frames in migrated modules. */
+.m3s-design-scope .border-2 {
+  border-width: 1px;
+}
+
+.m3s-design-scope :is(.rounded-xl, .rounded-2xl, .rounded-3xl) {
+  border-radius: 0.5rem;
 }
 
 .m3s-page-title {
