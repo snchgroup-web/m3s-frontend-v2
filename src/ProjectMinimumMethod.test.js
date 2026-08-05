@@ -38,13 +38,13 @@ test('keeps the active method view when the language changes', () => {
   expect(screen.getByRole('button', { name: 'Glossardefinition : Projektüberprüfung' })).toBeInTheDocument();
 });
 
-test('opens the proposed project review definition', () => {
+test('opens the validated project review definition', () => {
   render(<ProjectMinimumMethod language="EN" />);
   fireEvent.click(screen.getByRole('tab', { name: 'Review' }));
   fireEvent.click(screen.getByRole('button', { name: 'Glossary definition : Project review' }));
 
   expect(screen.getByRole('dialog', { name: 'Project review' })).toBeInTheDocument();
-  expect(screen.getByText('Proposed definition')).toBeInTheDocument();
+  expect(screen.getByText('Validated definition')).toBeInTheDocument();
   expect(screen.getByText('PROJ-REVUE')).toBeInTheDocument();
 });
 

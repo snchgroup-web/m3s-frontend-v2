@@ -35,15 +35,17 @@ test('uses the approved Direction and Strategy wording', () => {
   expect(screen.getByText('Validierte Definition')).toBeInTheDocument();
 });
 
-test('distinguishes a proposed project term from a validated definition', () => {
+test('renders a validated project term and its stable glossary link', () => {
   render(<GlossaryHelp termId="PROJ-JALON" language="FR" />);
 
   fireEvent.click(screen.getByRole('button', { name: 'Définition du Glossaire : Jalon' }));
 
   expect(screen.getByRole('dialog', { name: 'Jalon' })).toBeInTheDocument();
-  expect(screen.getByText('Définition proposée')).toBeInTheDocument();
-  expect(screen.queryByText('Définition validée')).not.toBeInTheDocument();
+  expect(screen.getByText('Définition validée')).toBeInTheDocument();
+  expect(screen.queryByText('Définition proposée')).not.toBeInTheDocument();
   expect(screen.getByText('PROJ-JALON')).toBeInTheDocument();
-  expect(screen.getByText('Publication dans le Glossaire après validation')).toBeInTheDocument();
-  expect(screen.queryByRole('link', { name: 'Voir dans le Glossaire' })).not.toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Voir dans le Glossaire' })).toHaveAttribute(
+    'href',
+    '/ged?tab=knowledge&term=PROJ-JALON'
+  );
 });

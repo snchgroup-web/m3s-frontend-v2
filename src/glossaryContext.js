@@ -240,8 +240,8 @@ const GLOSSARY_CONTEXT = {
     }
   },
   'PROJ-JALON': {
-    version: 'Candidat 0.1',
-    status: 'candidate',
+    version: 'V5.1',
+    status: 'validated',
     translations: {
       FR: {
         term: 'Jalon',
@@ -261,8 +261,8 @@ const GLOSSARY_CONTEXT = {
     }
   },
   'PROJ-REVUE': {
-    version: 'Candidat 0.1',
-    status: 'candidate',
+    version: 'V5.1',
+    status: 'validated',
     translations: {
       FR: {
         term: 'Revue de projet',

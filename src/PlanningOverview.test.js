@@ -34,13 +34,13 @@ test('connects strategic steering to validated glossary definitions', () => {
   );
 });
 
-test('connects the milestone dimension to a proposed glossary definition', () => {
+test('connects the milestone dimension to a validated glossary definition', () => {
   render(<PlanningOverview language="FR" tasksTotal={8} completedTasks={2} />);
 
   fireEvent.click(screen.getByRole('button', { name: 'Définition du Glossaire : Jalon' }));
 
   expect(screen.getByRole('dialog', { name: 'Jalon' })).toBeInTheDocument();
-  expect(screen.getByText('Définition proposée')).toBeInTheDocument();
+  expect(screen.getByText('Définition validée')).toBeInTheDocument();
   expect(screen.getByText('PROJ-JALON')).toBeInTheDocument();
 });
 
