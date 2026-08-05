@@ -32,6 +32,7 @@ const COPY = {
     navDimensions: 'Dimensions',
     navMethod: 'Contrôle minimal',
     navStatus: 'État',
+    navJournal: 'Journal validé',
     navRegister: 'Registre',
     backToTop: 'Revenir en haut',
     steeringTitle: "De la cible à l'exécution",
@@ -87,6 +88,7 @@ const COPY = {
     navDimensions: 'Dimensions',
     navMethod: 'Minimum control',
     navStatus: 'Status',
+    navJournal: 'Validated journal',
     navRegister: 'Register',
     backToTop: 'Back to top',
     steeringTitle: 'From target to execution',
@@ -142,6 +144,7 @@ const COPY = {
     navDimensions: 'Dimensionen',
     navMethod: 'Mindestkontrolle',
     navStatus: 'Stand',
+    navJournal: 'Freigegebenes Journal',
     navRegister: 'Register',
     backToTop: 'Nach oben',
     steeringTitle: 'Vom Zielbild zur Umsetzung',
@@ -227,7 +230,7 @@ const Metric = ({ label, value }) => (
   </div>
 );
 
-const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0 }) => {
+const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0, children }) => {
   const t = COPY[language] || COPY.FR;
   const completion = tasksTotal > 0 ? `${Math.round((completedTasks / tasksTotal) * 100)} %` : '0 %';
   const navItems = [
@@ -237,6 +240,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0 
     { id: 'planning-dimensions', label: t.navDimensions },
     { id: 'planning-method', label: t.navMethod },
     { id: 'planning-status', label: t.navStatus },
+    { id: 'planning-journal-register', label: t.navJournal },
     { id: 'planning-register', label: t.navRegister }
   ];
 
@@ -333,6 +337,8 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0 
         </div>
         <p className="mt-4 text-sm leading-6 text-slate-400">{t.currentBody}</p>
       </section>
+
+      {children}
 
       <h3 id="planning-register" className="scroll-mt-20 text-xl font-semibold text-slate-100">{t.registerTitle}</h3>
     </section>
