@@ -151,6 +151,118 @@ html.dark {
   border-radius: 0.5rem;
 }
 
+.m3s-primary-button,
+.m3s-secondary-button,
+.m3s-success-button,
+.m3s-danger-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+
+.m3s-primary-button {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.m3s-primary-button:hover {
+  border-color: #1d4ed8;
+  background: #1d4ed8;
+}
+
+.m3s-secondary-button {
+  border-color: var(--m3s-border-strong);
+  background: var(--m3s-surface-raised);
+  color: var(--m3s-text-primary);
+}
+
+.m3s-secondary-button:hover {
+  border-color: var(--m3s-row-accent);
+  background: var(--m3s-row-hover);
+}
+
+.m3s-success-button {
+  border-color: #15803d;
+  background: #15803d;
+  color: #ffffff;
+}
+
+.m3s-success-button:hover {
+  border-color: #166534;
+  background: #166534;
+}
+
+.m3s-danger-button {
+  border-color: #dc2626;
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.m3s-danger-button:hover {
+  border-color: #b91c1c;
+  background: #b91c1c;
+}
+
+.m3s-primary-button:disabled,
+.m3s-secondary-button:disabled,
+.m3s-success-button:disabled,
+.m3s-danger-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.m3s-feedback {
+  border: 1px solid var(--m3s-border);
+  border-radius: 0.5rem;
+  background: var(--m3s-surface-panel);
+  color: var(--m3s-text-primary);
+  box-shadow: var(--m3s-shadow-panel);
+}
+
+.m3s-feedback--success {
+  border-color: #86efac;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+html.dark .m3s-feedback--success {
+  border-color: #166534;
+  background: #052e16;
+  color: #bbf7d0;
+}
+
+.m3s-draft-badge,
+.m3s-glossary-status--candidate {
+  border: 1px solid #fde68a;
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.m3s-glossary-status--validated {
+  border: 1px solid #a7f3d0;
+  background: #ecfdf5;
+  color: #047857;
+}
+
+html.dark .m3s-draft-badge,
+html.dark .m3s-glossary-status--candidate {
+  border-color: #92400e;
+  background: #451a03;
+  color: #fde68a;
+}
+
+html.dark .m3s-glossary-status--validated {
+  border-color: #166534;
+  background: #052e16;
+  color: #bbf7d0;
+}
+
 .m3s-icon-button:focus-visible,
 .m3s-design-scope button:focus-visible,
 .m3s-design-scope a:focus-visible {

@@ -50,7 +50,7 @@ test('filters a configured function glossary and preserves the central link', ()
   );
 });
 
-test('prepares a governed local proposal without modifying the central glossary', () => {
+test('confirms adding, editing and deleting a governed local proposal', () => {
   render(<FunctionGlossary language="FR" groups={groups} copy={copy} glossaryId="test-glossary" />);
 
   fireEvent.click(screen.getByRole('button', { name: 'Ajouter' }));
@@ -61,8 +61,36 @@ test('prepares a governed local proposal without modifying the central glossary'
   fireEvent.change(screen.getByLabelText(/Source ou référence/), { target: { value: 'Référentiel Administration' } });
   fireEvent.click(screen.getByRole('button', { name: 'Ajouter la proposition' }));
 
-  expect(screen.queryByRole('dialog', { name: 'Proposer un terme' })).not.toBeInTheDocument();
+  expect(screen.getByRole('dialog', { name: "Confirmer l'ajout" })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Non' }));
+  expect(screen.getByRole('dialog', { name: 'Proposer un terme' })).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: 'Ajouter la proposition' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, ajouter' }));
+
   expect(screen.getByRole('heading', { name: 'Propositions préparées dans cette session' })).toBeInTheDocument();
   expect(screen.getByText('Revue de conformité')).toBeInTheDocument();
   expect(screen.getByText('Brouillon local · à soumettre au Glossaire central')).toBeInTheDocument();
+  expect(screen.getByRole('status')).toHaveTextContent('Proposition ajoutée avec succès.');
+
+  fireEvent.click(screen.getByRole('button', { name: 'Modifier' }));
+  expect(screen.getByRole('dialog', { name: 'Modifier la proposition' })).toBeInTheDocument();
+  fireEvent.change(screen.getByLabelText(/Définition courte \*/), { target: { value: 'Contrôle formalisé et documenté avant décision.' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Modifier la proposition' }));
+  expect(screen.getByRole('dialog', { name: 'Confirmer la modification' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
+
+  expect(screen.getByText('Contrôle formalisé et documenté avant décision.')).toBeInTheDocument();
+  expect(screen.getByRole('status')).toHaveTextContent('Proposition modifiée avec succès.');
+
+  fireEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
+  expect(screen.getByRole('dialog', { name: 'Confirmer la suppression' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Non' }));
+  expect(screen.getByText('Revue de conformité')).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, supprimer' }));
+
+  expect(screen.queryByText('Revue de conformité')).not.toBeInTheDocument();
+  expect(screen.getByRole('status')).toHaveTextContent('Proposition supprimée avec succès.');
 });
