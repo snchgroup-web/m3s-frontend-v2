@@ -101,7 +101,7 @@ test('opens a contextual glossary entry from its stable identifier', async () =>
 test('opens the local IT & Support glossary with validated central terms', async () => {
   renderGed('glossary');
 
-  expect(await screen.findByRole('heading', { level: 2, name: 'Glossaire métier IT & Support' })).toBeInTheDocument();
+  expect(await screen.findByRole('heading', { level: 2, name: 'Glossaire IT & Support' })).toBeInTheDocument();
   expect(screen.getByText('3 termes')).toBeInTheDocument();
   expect(screen.getAllByText('Définition validée').length).toBeGreaterThan(0);
   expect(screen.getByRole('button', { name: /^Gestion électronique des documents/i })).toBeInTheDocument();
@@ -110,9 +110,17 @@ test('opens the local IT & Support glossary with validated central terms', async
 test('returns from a central IT term to the originating local glossary', async () => {
   renderGed('knowledge', 'FR', '&term=KM-GED&returnTo=it-support-glossary');
 
-  const returnButton = await screen.findByRole('button', { name: 'Revenir au Glossaire métier IT & Support' });
+  const returnButton = await screen.findByRole('button', { name: 'Revenir au Glossaire IT & Support' });
   fireEvent.click(returnButton);
   expect(mockNavigate).toHaveBeenCalledWith('/ged?tab=glossary');
+});
+
+test('returns from a central Finance term to the originating local glossary', async () => {
+  renderGed('knowledge', 'FR', '&term=FIN-TAUX-CHANGE-APPLIQUE&returnTo=finance-glossary');
+
+  const returnButton = await screen.findByRole('button', { name: 'Revenir au Glossaire Finances' });
+  fireEvent.click(returnButton);
+  expect(mockNavigate).toHaveBeenCalledWith('/finance?tab=glossary');
 });
 
 test('renders the English pilot labels from the shared language context', async () => {

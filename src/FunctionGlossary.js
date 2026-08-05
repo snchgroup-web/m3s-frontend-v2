@@ -1,11 +1,59 @@
 import React, { useMemo, useState } from 'react';
-import { BookOpen, CheckCircle2, ExternalLink, Search } from 'lucide-react';
+import { BookOpen, CheckCircle2, ExternalLink, Plus, Search, X } from 'lucide-react';
 import { getGlossaryContextEntry } from './glossaryContext';
 
 const SUPPORTED_LANGUAGES = ['FR', 'DE', 'EN'];
 
 const normalizeLanguage = language => SUPPORTED_LANGUAGES.includes(language) ? language : 'FR';
 const normalizeSearch = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+const PROPOSAL_COPY = Object.freeze({
+  FR: {
+    add: 'Ajouter',
+    proposalTitle: 'Proposer un terme',
+    proposalHelp: 'Cette action prépare un brouillon local. Elle ne modifie pas le Glossaire central 2SG et nécessite une validation humaine.',
+    termLabel: 'Terme',
+    definitionLabel: 'Définition courte',
+    domainLabel: 'Domaine local',
+    sourceLabel: 'Source ou référence',
+    optional: 'facultatif',
+    cancel: 'Annuler',
+    prepare: 'Ajouter la proposition',
+    close: 'Fermer',
+    draftTitle: 'Propositions préparées dans cette session',
+    localDraft: 'Brouillon local · à soumettre au Glossaire central'
+  },
+  EN: {
+    add: 'Add',
+    proposalTitle: 'Propose a term',
+    proposalHelp: 'This action prepares a local draft. It does not modify the 2SG Central Glossary and requires human validation.',
+    termLabel: 'Term',
+    definitionLabel: 'Short definition',
+    domainLabel: 'Local domain',
+    sourceLabel: 'Source or reference',
+    optional: 'optional',
+    cancel: 'Cancel',
+    prepare: 'Add proposal',
+    close: 'Close',
+    draftTitle: 'Proposals prepared in this session',
+    localDraft: 'Local draft · to be submitted to the Central Glossary'
+  },
+  DE: {
+    add: 'Hinzufügen',
+    proposalTitle: 'Begriff vorschlagen',
+    proposalHelp: 'Diese Aktion erstellt einen lokalen Entwurf. Sie ändert das zentrale 2SG-Glossar nicht und erfordert eine menschliche Validierung.',
+    termLabel: 'Begriff',
+    definitionLabel: 'Kurzdefinition',
+    domainLabel: 'Lokaler Bereich',
+    sourceLabel: 'Quelle oder Referenz',
+    optional: 'optional',
+    cancel: 'Abbrechen',
+    prepare: 'Vorschlag hinzufügen',
+    close: 'Schließen',
+    draftTitle: 'In dieser Sitzung vorbereitete Vorschläge',
+    localDraft: 'Lokaler Entwurf · an das zentrale Glossar zu übermitteln'
+  }
+});
 
 export const buildFunctionGlossaryTerms = (groups = [], language = 'FR') => {
   const normalizedLanguage = normalizeLanguage(language);
@@ -30,7 +78,7 @@ const FunctionGlossary = ({
   centralReturnTo = null
 }) => {
   const normalizedLanguage = normalizeLanguage(language);
-  const t = copy[normalizedLanguage] || copy.FR;
+  const t = { ...PROPOSAL_COPY[normalizedLanguage], ...(copy[normalizedLanguage] || copy.FR) };
   const terms = useMemo(
     () => buildFunctionGlossaryTerms(groups, normalizedLanguage),
     [groups, normalizedLanguage]
@@ -38,6 +86,9 @@ const FunctionGlossary = ({
   const [query, setQuery] = useState('');
   const [groupId, setGroupId] = useState('all');
   const [selectedId, setSelectedId] = useState(terms[0]?.id || null);
+  const [showProposal, setShowProposal] = useState(false);
+  const [proposal, setProposal] = useState({ term: '', definition: '', groupId: groups[0]?.id || '', source: '' });
+  const [localProposals, setLocalProposals] = useState([]);
 
   const visibleTerms = useMemo(() => {
     const normalizedQuery = normalizeSearch(query);
@@ -63,16 +114,37 @@ const FunctionGlossary = ({
         classes: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300'
       };
 
+  const openProposal = () => {
+    setProposal({ term: '', definition: '', groupId: groups[0]?.id || '', source: '' });
+    setShowProposal(true);
+  };
+
+  const submitProposal = event => {
+    event.preventDefault();
+    const selectedGroup = groups.find(group => group.id === proposal.groupId);
+    setLocalProposals(current => [...current, {
+      ...proposal,
+      id: `${glossaryId}-proposal-${current.length + 1}`,
+      groupLabel: selectedGroup?.labels?.[normalizedLanguage] || selectedGroup?.labels?.FR || proposal.groupId
+    }]);
+    setShowProposal(false);
+  };
+
   return (
     <section className="function-glossary space-y-5" aria-labelledby={titleId}>
       <header className="m3s-panel p-5 sm:p-6">
-        <div className="flex items-start gap-3">
-          <span className="m3s-icon-button shrink-0 bg-cyan-500/10 text-cyan-500" aria-hidden="true"><BookOpen size={22} /></span>
-          <div className="min-w-0">
-            <p className="text-xs font-semibold uppercase text-cyan-500">{t.eyebrow}</p>
-            <h2 id={titleId} className="m3s-page-title mt-1">{t.title}</h2>
-            <p className="mt-2 max-w-4xl text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{t.intro}</p>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex min-w-0 items-start gap-3">
+            <span className="m3s-icon-button shrink-0 bg-cyan-500/10 text-cyan-500" aria-hidden="true"><BookOpen size={22} /></span>
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase text-cyan-500">{t.eyebrow}</p>
+              <h2 id={titleId} className="m3s-page-title mt-1">{t.title}</h2>
+              <p className="mt-2 max-w-4xl text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{t.intro}</p>
+            </div>
           </div>
+          <button type="button" className="m3s-primary-button inline-flex min-h-11 shrink-0 items-center justify-center gap-2 px-4" onClick={openProposal}>
+            <Plus size={17} aria-hidden="true" /> {t.add}
+          </button>
         </div>
       </header>
 
@@ -99,6 +171,24 @@ const FunctionGlossary = ({
           </select>
         </div>
       </div>
+
+      {localProposals.length > 0 && (
+        <section className="m3s-panel px-4 py-3 sm:px-5" aria-labelledby={`${glossaryId}-drafts-title`}>
+          <h3 id={`${glossaryId}-drafts-title`} className="m3s-panel-title">{t.draftTitle}</h3>
+          <div className="mt-2 divide-y" style={{ borderColor: 'var(--m3s-border)' }}>
+            {localProposals.map(item => (
+              <div key={item.id} className="py-3 first:pt-1 last:pb-1">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <p className="font-semibold">{item.term}</p>
+                  <span className="rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-semibold text-amber-600 dark:text-amber-300">{t.localDraft}</span>
+                </div>
+                <p className="mt-1 text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{item.definition}</p>
+                <p className="mt-1 text-xs" style={{ color: 'var(--m3s-text-secondary)' }}>{item.groupLabel}{item.source ? ` · ${item.source}` : ''}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="grid min-w-0 gap-5 xl:grid-cols-[minmax(18rem,0.8fr)_minmax(0,1.2fr)]">
         <div className="m3s-panel min-w-0 overflow-hidden">
@@ -158,6 +248,46 @@ const FunctionGlossary = ({
           </article>
         )}
       </div>
+
+      {showProposal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4" role="presentation">
+          <section className="m3s-panel w-full max-w-xl p-5 sm:p-6" role="dialog" aria-modal="true" aria-labelledby={`${glossaryId}-proposal-title`}>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 id={`${glossaryId}-proposal-title`} className="m3s-section-title">{t.proposalTitle}</h3>
+                <p className="mt-2 text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{t.proposalHelp}</p>
+              </div>
+              <button type="button" className="m3s-icon-button shrink-0" onClick={() => setShowProposal(false)} aria-label={t.close} title={t.close}>
+                <X size={19} aria-hidden="true" />
+              </button>
+            </div>
+            <form className="mt-5 space-y-4" onSubmit={submitProposal}>
+              <label className="block text-sm font-semibold">
+                {t.termLabel} *
+                <input className="m3s-field mt-1.5 w-full px-3" value={proposal.term} onChange={event => setProposal(current => ({ ...current, term: event.target.value }))} required />
+              </label>
+              <label className="block text-sm font-semibold">
+                {t.definitionLabel} *
+                <textarea className="m3s-field mt-1.5 min-h-24 w-full px-3 py-2" value={proposal.definition} onChange={event => setProposal(current => ({ ...current, definition: event.target.value }))} required />
+              </label>
+              <label className="block text-sm font-semibold">
+                {t.domainLabel} *
+                <select className="m3s-field mt-1.5 w-full px-3" value={proposal.groupId} onChange={event => setProposal(current => ({ ...current, groupId: event.target.value }))} required>
+                  {groups.map(group => <option key={group.id} value={group.id}>{group.labels[normalizedLanguage] || group.labels.FR || group.id}</option>)}
+                </select>
+              </label>
+              <label className="block text-sm font-semibold">
+                {t.sourceLabel} <span className="font-normal" style={{ color: 'var(--m3s-text-secondary)' }}>({t.optional})</span>
+                <input className="m3s-field mt-1.5 w-full px-3" value={proposal.source} onChange={event => setProposal(current => ({ ...current, source: event.target.value }))} />
+              </label>
+              <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end" style={{ borderColor: 'var(--m3s-border)' }}>
+                <button type="button" className="m3s-secondary-button min-h-11 px-4" onClick={() => setShowProposal(false)}>{t.cancel}</button>
+                <button type="submit" className="m3s-primary-button min-h-11 px-4">{t.prepare}</button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
     </section>
   );
 };

@@ -31,7 +31,7 @@ test('shows the validated status and opens the stable central entry', () => {
 
 test('renders the German function title without a French fallback', () => {
   render(<ITSupportGlossary language="DE" />);
-  expect(screen.getByRole('heading', { level: 2, name: 'Fachglossar IT & Support' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { level: 2, name: 'Glossar IT & Support' })).toBeInTheDocument();
   expect(screen.getByText('Validierte Definition')).toBeInTheDocument();
   expect(screen.queryByText('Définition validée')).not.toBeInTheDocument();
 });

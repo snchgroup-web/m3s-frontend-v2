@@ -64,9 +64,9 @@
         {
           "id": "administration-glossary",
           "label": {
-            "FR": "Glossaire métier",
-            "EN": "Business glossary",
-            "DE": "Fachglossar"
+            "FR": "Glossaire",
+            "EN": "Glossary",
+            "DE": "Glossar"
           },
           "icon": "BookOpen",
           "path": "/administration?tab=glossary"
@@ -142,6 +142,16 @@
           },
           "icon": "ArrowRightLeft",
           "path": "/finance?tab=fx"
+        },
+        {
+          "id": "finance-glossary",
+          "label": {
+            "FR": "Glossaire",
+            "EN": "Glossary",
+            "DE": "Glossar"
+          },
+          "icon": "BookOpen",
+          "path": "/finance?tab=glossary"
         }
       ]
     },
@@ -376,9 +386,9 @@
         {
           "id": "it-support-glossary",
           "label": {
-            "FR": "Glossaire métier",
-            "EN": "Business glossary",
-            "DE": "Fachglossar"
+            "FR": "Glossaire",
+            "EN": "Glossary",
+            "DE": "Glossar"
           },
           "icon": "BookOpen",
           "path": "/ged?tab=glossary"
