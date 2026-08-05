@@ -374,6 +374,16 @@
           "path": "/ged?tab=knowledge"
         },
         {
+          "id": "it-support-glossary",
+          "label": {
+            "FR": "Glossaire métier",
+            "EN": "Business glossary",
+            "DE": "Fachglossar"
+          },
+          "icon": "BookOpen",
+          "path": "/ged?tab=glossary"
+        },
+        {
           "id": "ged",
           "label": {
             "FR": "GED",

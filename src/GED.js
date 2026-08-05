@@ -27,6 +27,7 @@ import TableControls from './TableControls';
 import { getOfferTaxonomy } from './offerTaxonomy';
 import { getDigitalOffersTaxonomyData } from './taxonomyDataProvider';
 import { GlossaryEntryPanel } from './GlossaryHelp';
+import ITSupportGlossary from './ITSupportGlossary';
 
 const GED = () => {
   const { language } = useLanguage();
@@ -740,6 +741,7 @@ const GED = () => {
   const [selectedPilotDetail, setSelectedPilotDetail] = useState(null);
   const searchParams = new URLSearchParams(location.search);
   const requestedGlossaryTermId = searchParams.get('term');
+  const requestedGlossaryReturnTo = searchParams.get('returnTo');
   const requestedReturnVisual = searchParams.get('returnVisual');
   const returnVisualTitles = {
     'director-document': {
@@ -762,6 +764,20 @@ const GED = () => {
   const returnVisualHref = returnVisualTitle
     ? `/administration?tab=institution&section=institution-sources&visual=${requestedReturnVisual}`
     : null;
+  const glossaryReturnTargets = {
+    'administration-glossary': {
+      href: '/administration?tab=glossary',
+      labels: { FR: 'Revenir au Glossaire métier Administration', EN: 'Return to the Administration business glossary', DE: 'Zum Fachglossar Administration zurückkehren' }
+    },
+    'it-support-glossary': {
+      href: '/ged?tab=glossary',
+      labels: { FR: 'Revenir au Glossaire métier IT & Support', EN: 'Return to the IT & Support business glossary', DE: 'Zum Fachglossar IT & Support zurückkehren' }
+    }
+  };
+  const glossaryReturnTarget = glossaryReturnTargets[requestedGlossaryReturnTo] || {
+    href: '/administration?tab=institution',
+    labels: { FR: 'Revenir à la page Institution', EN: 'Return to the Institution page', DE: 'Zur Institution-Seite zurückkehren' }
+  };
   const [formData, setFormData] = useState({
     nom: '',
     type: 'PDF',
@@ -773,7 +789,7 @@ const GED = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'ai-digital', 'database', 'user-guide', 'tech-docs', 'help-support', 'manual'].includes(tab)) {
+    if (['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'glossary', 'ai-digital', 'database', 'user-guide', 'tech-docs', 'help-support', 'manual'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
@@ -1528,7 +1544,8 @@ const GED = () => {
               <GlossaryEntryPanel
                 termId={requestedGlossaryTermId}
                 language={language}
-                onReturn={() => navigate('/administration?tab=institution')}
+                onReturn={() => navigate(glossaryReturnTarget.href)}
+                returnLabel={glossaryReturnTarget.labels[language] || glossaryReturnTarget.labels.FR}
               />
             )}
             <div className="rounded-lg border border-cyan-500/30 bg-slate-800 p-5 md:p-6">
@@ -1707,6 +1724,10 @@ const GED = () => {
               )}
             </div>
           </div>
+        )}
+
+        {activeTab === 'glossary' && (
+          <ITSupportGlossary language={language} />
         )}
 
         {activeTab === 'ai-digital' && (
@@ -1971,7 +1992,7 @@ const GED = () => {
           </section>
         )}
 
-        <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'ai-digital', 'user-guide', 'tech-docs', 'help-support']} />
+        <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'glossary', 'ai-digital', 'user-guide', 'tech-docs', 'help-support']} />
         </div>
       </div>
 

@@ -23,7 +23,7 @@ test('filters the local view and opens the stable term in the Central Glossary',
   expect(screen.getByText('PROJ-JALON')).toBeInTheDocument();
   expect(screen.getByRole('link', { name: /Consulter dans le Glossaire central/i })).toHaveAttribute(
     'href',
-    '/ged?tab=knowledge&term=PROJ-JALON'
+    '/ged?tab=knowledge&term=PROJ-JALON&returnTo=administration-glossary'
   );
 });
 

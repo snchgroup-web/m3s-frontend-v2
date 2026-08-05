@@ -17,6 +17,18 @@ test('opens an accessible contextual definition and links to the stable glossary
   );
 });
 
+test('uses a contextual return label when supplied by the originating function', () => {
+  render(
+    <GlossaryEntryPanel
+      termId="INST-VISION"
+      language="FR"
+      onReturn={() => {}}
+      returnLabel="Revenir au glossaire métier"
+    />
+  );
+  expect(screen.getByRole('button', { name: 'Revenir au glossaire métier' })).toBeInTheDocument();
+});
+
 test('renders the selected contextual entry in German', () => {
   render(<GlossaryEntryPanel termId="GOUV-GOUVERNANCE" language="DE" />);
 

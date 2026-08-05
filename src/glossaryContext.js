@@ -239,6 +239,69 @@ const GLOSSARY_CONTEXT = {
       }
     }
   },
+  'KM-GED': {
+    version: 'V5.2',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Gestion électronique des documents (GED)',
+        shortDefinition: 'Organisation des documents numériques afin de les classer, retrouver, versionner, sécuriser et conserver.',
+        detailedDefinition: "Ensemble coordonné de règles, métadonnées, droits d'accès, statuts, preuves et outils permettant de gérer le cycle de vie des documents de 2SG. La GED facilite la traçabilité et l'accès à la bonne version, mais ne remplace ni la validation métier ni les obligations légales de conservation."
+      },
+      DE: {
+        term: 'Elektronische Dokumentenverwaltung (DMS)',
+        shortDefinition: 'Organisation digitaler Dokumente zum Klassifizieren, Auffinden, Versionieren, Schützen und Aufbewahren.',
+        detailedDefinition: 'Abgestimmtes System aus Regeln, Metadaten, Zugriffsrechten, Status, Nachweisen und Werkzeugen zur Verwaltung des gesamten Lebenszyklus der 2SG-Dokumente. Die Dokumentenverwaltung verbessert Nachvollziehbarkeit und Zugriff auf die richtige Version, ersetzt jedoch weder die fachliche Freigabe noch gesetzliche Aufbewahrungspflichten.'
+      },
+      EN: {
+        term: 'Electronic document management (EDM)',
+        shortDefinition: 'The organisation of digital documents so they can be classified, found, versioned, secured and retained.',
+        detailedDefinition: 'A coordinated set of rules, metadata, access rights, statuses, evidence and tools used to manage the lifecycle of 2SG documents. Document management supports traceability and access to the correct version but does not replace business approval or legal retention duties.'
+      }
+    }
+  },
+  'KM-KNOWLEDGE-MANAGEMENT': {
+    version: 'V5.2',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Knowledge Management (KM)',
+        shortDefinition: 'Démarche organisée pour identifier, valider, partager et réutiliser les connaissances utiles à 2SG.',
+        detailedDefinition: "Processus transversal qui transforme des informations, expériences, décisions, méthodes et retours d'usage en connaissances accessibles et réutilisables. Le Knowledge Management relie les personnes, les pratiques et les sources ; il ne se réduit ni à la veille, ni au stockage de documents, ni à un outil technique."
+      },
+      DE: {
+        term: 'Wissensmanagement (KM)',
+        shortDefinition: 'Organisierter Ansatz zum Identifizieren, Validieren, Teilen und Wiederverwenden des für 2SG nützlichen Wissens.',
+        detailedDefinition: 'Übergreifender Prozess, der Informationen, Erfahrungen, Entscheidungen, Methoden und Nutzungserkenntnisse in zugängliches und wiederverwendbares Wissen überführt. Wissensmanagement verbindet Menschen, Praktiken und Quellen und ist weder auf Beobachtung noch auf Dokumentenablage oder ein technisches Werkzeug beschränkt.'
+      },
+      EN: {
+        term: 'Knowledge Management (KM)',
+        shortDefinition: 'An organised approach to identifying, validating, sharing and reusing knowledge useful to 2SG.',
+        detailedDefinition: 'A cross-functional process that turns information, experience, decisions, methods and lessons learned into accessible and reusable knowledge. Knowledge Management connects people, practices and sources; it is not limited to monitoring, document storage or a technical tool.'
+      }
+    }
+  },
+  'KM-BASE-CONNAISSANCES': {
+    version: 'V5.2',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Base de connaissances',
+        shortDefinition: 'Ensemble structuré et maintenu de connaissances consultables, sourcées et adaptées aux besoins des utilisateurs.',
+        detailedDefinition: "Espace organisé regroupant des fiches, réponses, procédures, définitions, décisions et retours d'expérience dont la provenance et le statut sont visibles. Une base de connaissances privilégie l'usage et la compréhension ; elle se distingue d'un simple dépôt documentaire et du Glossaire, centré sur les termes et leurs définitions."
+      },
+      DE: {
+        term: 'Wissensdatenbank',
+        shortDefinition: 'Strukturierter und gepflegter Bestand an nachschlagbarem, belegtem und nutzergerechtem Wissen.',
+        detailedDefinition: 'Geordneter Bereich mit Merkblättern, Antworten, Verfahren, Definitionen, Entscheidungen und Erfahrungswerten, deren Herkunft und Status sichtbar sind. Eine Wissensdatenbank ist auf Nutzung und Verständnis ausgerichtet; sie unterscheidet sich von einer reinen Dokumentenablage und vom Glossar, das Begriffe und Definitionen fokussiert.'
+      },
+      EN: {
+        term: 'Knowledge base',
+        shortDefinition: 'A structured and maintained collection of searchable, sourced knowledge adapted to user needs.',
+        detailedDefinition: 'An organised space containing guidance, answers, procedures, definitions, decisions and lessons learned with visible provenance and status. A knowledge base is designed for use and understanding; it differs from a document repository and from a glossary focused on terms and definitions.'
+      }
+    }
+  },
   'PROJ-JALON': {
     version: 'V5.1',
     status: 'validated',

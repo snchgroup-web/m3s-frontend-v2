@@ -45,7 +45,7 @@ const getStatusPresentation = (entry, t) => entry.status === 'candidate'
       classes: 'border-emerald-600/70 bg-emerald-950/40 text-emerald-200'
     };
 
-export const GlossaryEntryPanel = ({ termId, language = 'FR', onReturn }) => {
+export const GlossaryEntryPanel = ({ termId, language = 'FR', onReturn, returnLabel }) => {
   const t = COPY[language] || COPY.FR;
   const entry = getGlossaryContextEntry(termId, language);
   if (!entry) return null;
@@ -80,7 +80,7 @@ export const GlossaryEntryPanel = ({ termId, language = 'FR', onReturn }) => {
           onClick={onReturn}
           className="mt-5 inline-flex min-h-10 items-center justify-center rounded-md border border-slate-600 bg-slate-800 px-4 text-sm font-semibold text-slate-100 transition hover:border-blue-500 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
-          {t.returnToPage}
+          {returnLabel || t.returnToPage}
         </button>
       )}
     </section>
