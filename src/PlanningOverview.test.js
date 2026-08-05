@@ -67,3 +67,15 @@ test('uses the planner internal navigation', () => {
   expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
   window.HTMLElement.prototype.scrollIntoView = originalScrollIntoView;
 });
+
+test('connects the validated journal layer before the historical register', () => {
+  render(
+    <PlanningOverview language="FR" tasksTotal={2} completedTasks={1}>
+      <section id="planning-journal-register">Registre pilote du journal</section>
+    </PlanningOverview>
+  );
+
+  expect(screen.getByRole('button', { name: 'Journal validé' })).toBeInTheDocument();
+  expect(screen.getByText('Registre pilote du journal')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Registre des tâches et actions' })).toBeInTheDocument();
+});
