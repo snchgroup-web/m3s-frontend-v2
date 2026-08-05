@@ -95,6 +95,7 @@ const AdministrationGlossary = ({ language = 'FR' }) => (
     groups={ADMINISTRATION_GLOSSARY_GROUPS}
     copy={ADMINISTRATION_GLOSSARY_COPY}
     glossaryId="administration-glossary"
+    centralReturnTo="administration-glossary"
   />
 );
 

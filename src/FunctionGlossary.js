@@ -26,7 +26,8 @@ const FunctionGlossary = ({
   language = 'FR',
   groups = [],
   copy,
-  glossaryId = 'function-glossary'
+  glossaryId = 'function-glossary',
+  centralReturnTo = null
 }) => {
   const normalizedLanguage = normalizeLanguage(language);
   const t = copy[normalizedLanguage] || copy.FR;
@@ -51,6 +52,16 @@ const FunctionGlossary = ({
     || visibleTerms[0]
     || null;
   const titleId = `${glossaryId}-title`;
+  const centralHref = `/ged?tab=knowledge&term=${encodeURIComponent(selectedTerm?.id || '')}${centralReturnTo ? `&returnTo=${encodeURIComponent(centralReturnTo)}` : ''}`;
+  const selectedStatus = selectedTerm?.status === 'candidate'
+    ? {
+        label: t.candidate || t.validated,
+        classes: 'bg-amber-500/10 text-amber-600 dark:text-amber-300'
+      }
+    : {
+        label: t.validated,
+        classes: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300'
+      };
 
   return (
     <section className="function-glossary space-y-5" aria-labelledby={titleId}>
@@ -121,8 +132,8 @@ const FunctionGlossary = ({
                 <p className="text-xs font-semibold uppercase text-cyan-500">{selectedTerm.groupLabel}</p>
                 <h3 className="m3s-section-title mt-1">{selectedTerm.term}</h3>
               </div>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-500">
-                <CheckCircle2 size={14} aria-hidden="true" /> {t.validated}
+              <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${selectedStatus.classes}`}>
+                <CheckCircle2 size={14} aria-hidden="true" /> {selectedStatus.label}
               </span>
             </div>
             <p className="mt-5 text-base font-semibold leading-7">{selectedTerm.shortDefinition}</p>
@@ -139,7 +150,7 @@ const FunctionGlossary = ({
               <p className="text-xs leading-5" style={{ color: 'var(--m3s-text-secondary)' }}>{t.governance}</p>
               <a
                 className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
-                href={`/ged?tab=knowledge&term=${encodeURIComponent(selectedTerm.id)}`}
+                href={centralHref}
               >
                 {t.openCentral} <ExternalLink size={16} aria-hidden="true" />
               </a>
