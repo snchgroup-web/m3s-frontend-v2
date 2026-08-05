@@ -158,18 +158,18 @@ html.dark {
   outline-offset: 2px;
 }
 
-.administration-glossary__term {
+.function-glossary__term {
   color: var(--m3s-text-primary);
   background: var(--m3s-surface-panel);
 }
 
-.administration-glossary__term:hover,
-.administration-glossary__term:focus-visible {
+.function-glossary__term:hover,
+.function-glossary__term:focus-visible {
   background: var(--m3s-row-hover);
   box-shadow: inset 3px 0 var(--m3s-row-accent);
 }
 
-.administration-glossary__term.is-active {
+.function-glossary__term.is-active {
   background: color-mix(in srgb, var(--m3s-row-accent) 13%, var(--m3s-surface-panel));
   box-shadow: inset 3px 0 var(--m3s-row-accent);
 }
