@@ -98,12 +98,12 @@ test('opens a contextual glossary entry from its stable identifier', async () =>
   expect(screen.getByRole('button', { name: 'Revenir à la page Institution' })).toBeInTheDocument();
 });
 
-test('opens the local IT & Support glossary with proposed central terms', async () => {
+test('opens the local IT & Support glossary with validated central terms', async () => {
   renderGed('glossary');
 
   expect(await screen.findByRole('heading', { level: 2, name: 'Glossaire métier IT & Support' })).toBeInTheDocument();
   expect(screen.getByText('3 termes')).toBeInTheDocument();
-  expect(screen.getAllByText('Définition proposée').length).toBeGreaterThan(0);
+  expect(screen.getAllByText('Définition validée').length).toBeGreaterThan(0);
   expect(screen.getByRole('button', { name: /^Gestion électronique des documents/i })).toBeInTheDocument();
 });
 

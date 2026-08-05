@@ -241,7 +241,7 @@ const GLOSSARY_CONTEXT = {
   },
   'KM-GED': {
     version: 'V5.2',
-    status: 'candidate',
+    status: 'validated',
     translations: {
       FR: {
         term: 'Gestion électronique des documents (GED)',
@@ -262,7 +262,7 @@ const GLOSSARY_CONTEXT = {
   },
   'KM-KNOWLEDGE-MANAGEMENT': {
     version: 'V5.2',
-    status: 'candidate',
+    status: 'validated',
     translations: {
       FR: {
         term: 'Knowledge Management (KM)',
@@ -283,7 +283,7 @@ const GLOSSARY_CONTEXT = {
   },
   'KM-BASE-CONNAISSANCES': {
     version: 'V5.2',
-    status: 'candidate',
+    status: 'validated',
     translations: {
       FR: {
         term: 'Base de connaissances',

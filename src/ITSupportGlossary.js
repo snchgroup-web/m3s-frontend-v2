@@ -18,7 +18,7 @@ export const IT_SUPPORT_GLOSSARY_COPY = Object.freeze({
   FR: {
     eyebrow: 'VUE MÉTIER LOCALE · LECTURE SEULE',
     title: 'Glossaire métier IT & Support',
-    intro: 'Cette première vague rassemble trois termes candidats utiles à la GED et au Knowledge Management. Les définitions restent proposées jusqu’à validation humaine dans le Glossaire central 2SG.',
+    intro: 'Cette première vague rassemble trois termes validés utiles à la GED et au Knowledge Management. Le Glossaire central 2SG reste la source maîtresse versionnée.',
     search: 'Rechercher un terme ou une définition…',
     all: 'Tous les domaines',
     terms: 'termes',
@@ -31,12 +31,12 @@ export const IT_SUPPORT_GLOSSARY_COPY = Object.freeze({
     source: 'Source maîtresse',
     central: 'Glossaire central 2SG',
     openCentral: 'Examiner dans le Glossaire central',
-    governance: 'La validation humaine porte sur le terme, les définitions FR/DE/EN et son rattachement métier. Aucune proposition n’est présentée comme validée avant cette décision.'
+    governance: 'Toute modification ou nouvelle entrée est proposée au Glossaire central, puis réutilisée dans cette vue locale après validation humaine.'
   },
   EN: {
     eyebrow: 'LOCAL BUSINESS VIEW · READ ONLY',
     title: 'IT & Support business glossary',
-    intro: 'This first wave gathers three candidate terms for document and knowledge management. Definitions remain proposed until human validation in the 2SG Central Glossary.',
+    intro: 'This first wave gathers three validated terms for document and knowledge management. The 2SG Central Glossary remains the versioned master source.',
     search: 'Search a term or definition…',
     all: 'All domains',
     terms: 'terms',
@@ -49,12 +49,12 @@ export const IT_SUPPORT_GLOSSARY_COPY = Object.freeze({
     source: 'Master source',
     central: '2SG Central Glossary',
     openCentral: 'Review in the Central Glossary',
-    governance: 'Human validation covers the term, its FR/DE/EN definitions and business relationship. No proposal is presented as validated before that decision.'
+    governance: 'Any change or new entry is proposed in the Central Glossary and reused in this local view after human validation.'
   },
   DE: {
     eyebrow: 'LOKALE FACHSICHT · NUR LESEN',
     title: 'Fachglossar IT & Support',
-    intro: 'Diese erste Welle umfasst drei Begriffsvorschläge für Dokumenten- und Wissensmanagement. Die Definitionen bleiben bis zur menschlichen Validierung im zentralen 2SG-Glossar vorgeschlagen.',
+    intro: 'Diese erste Welle umfasst drei validierte Begriffe für Dokumenten- und Wissensmanagement. Das zentrale 2SG-Glossar bleibt die versionierte maßgebliche Quelle.',
     search: 'Begriff oder Definition suchen…',
     all: 'Alle Bereiche',
     terms: 'Begriffe',
@@ -67,7 +67,7 @@ export const IT_SUPPORT_GLOSSARY_COPY = Object.freeze({
     source: 'Maßgebliche Quelle',
     central: 'Zentrales 2SG-Glossar',
     openCentral: 'Im zentralen Glossar prüfen',
-    governance: 'Die menschliche Validierung umfasst Begriff, Definitionen in FR/DE/EN und fachliche Zuordnung. Vor dieser Entscheidung wird kein Vorschlag als validiert dargestellt.'
+    governance: 'Jede Änderung oder neue Eintragung wird im zentralen Glossar vorgeschlagen und nach menschlicher Validierung in dieser lokalen Sicht wiederverwendet.'
   }
 });
 
