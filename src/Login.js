@@ -151,7 +151,7 @@ const Login = () => {
             </div>
           ) : (
             <div className="mt-6 pt-6 border-t border-slate-700">
-              <p className="text-xs text-amber-300 text-center">
+              <p className="login-backend-notice text-center text-xs text-amber-300">
                 Connexion backend requise. Le mode démonstration local est désactivé.
               </p>
             </div>

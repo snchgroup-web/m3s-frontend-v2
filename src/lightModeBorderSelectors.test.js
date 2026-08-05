@@ -81,8 +81,10 @@ describe('light-mode accent border selectors', () => {
     expect(loginSource).toContain('login-page min-h-screen');
     expect(loginSource).toContain('login-session-alert');
     expect(loginSource).toContain('login-submit mt-6 min-h-11');
+    expect(loginSource).toContain('login-backend-notice');
     expect(indexHtml).toContain('html:not(.dark) .login-page .login-session-alert{background-color:#fffbeb!important');
     expect(indexHtml).toContain('html:not(.dark) .login-page .login-submit{background-color:#2563eb!important;color:#fff!important}');
+    expect(indexHtml).toContain('html:not(.dark) .login-page .login-backend-notice{color:#92400e!important}');
   });
 
   test('uses business-specific icons for the Administration KPIs', () => {
