@@ -11,6 +11,7 @@ import PlanningOverview from './PlanningOverview';
 import JournalTaskRegister from './JournalTaskRegister';
 import ComplianceOverview from './ComplianceOverview';
 import CommunicationOverview from './CommunicationOverview';
+import AdministrationGlossary from './AdministrationGlossary';
 import { resolveAdministrationTab } from './administrationTabs';
 
 const Admin = () => {
@@ -798,6 +799,10 @@ const Admin = () => {
           <CommunicationOverview language={language} />
         )}
 
+        {activeTab === 'glossary' && (
+          <AdministrationGlossary language={language} />
+        )}
+
         {/* Utilisateurs */}
         {activeTab === 'users' && (
           <div>
@@ -929,7 +934,7 @@ const Admin = () => {
           </div>
         )}
 
-        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} handledTabs={['overview', 'institution', 'planning', 'communication', 'compliance']} />
+        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} handledTabs={['overview', 'institution', 'planning', 'communication', 'compliance', 'glossary']} />
         </div>
       </div>
 

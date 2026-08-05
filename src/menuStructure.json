@@ -60,6 +60,16 @@
           },
           "icon": "ShieldCheck",
           "path": "/administration?tab=compliance"
+        },
+        {
+          "id": "administration-glossary",
+          "label": {
+            "FR": "Glossaire métier",
+            "EN": "Business glossary",
+            "DE": "Fachglossar"
+          },
+          "icon": "BookOpen",
+          "path": "/administration?tab=glossary"
         }
       ]
     },
