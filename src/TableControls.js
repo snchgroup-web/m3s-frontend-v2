@@ -7,9 +7,9 @@ const tableText = {
     search: 'Rechercher...',
     clearSearch: 'Effacer la recherche',
     rows: 'Lignes',
-    noResult: 'Aucun resultat',
+    noResult: 'Aucun résultat',
     of: 'sur',
-    shown: 'affichees'
+    shown: 'affichées'
   },
   EN: {
     search: 'Search...',
@@ -21,7 +21,7 @@ const tableText = {
   },
   DE: {
     search: 'Suchen...',
-    clearSearch: 'Suche loeschen',
+    clearSearch: 'Suche löschen',
     rows: 'Zeilen',
     noResult: 'Keine Ergebnisse',
     of: 'von',
@@ -88,7 +88,7 @@ const TableControls = ({
               }
             }}
             placeholder={searchPlaceholder || t.search}
-            className={`w-full rounded-lg border bg-slate-700 py-2 pl-10 pr-10 text-white placeholder-slate-400 ${
+            className={`m3s-field w-full py-2 pl-10 pr-10 placeholder-slate-400 ${
               hasQuery ? 'border-blue-500 ring-1 ring-blue-500/40' : 'border-slate-600'
             }`}
           />
@@ -110,7 +110,7 @@ const TableControls = ({
             <select
               value={pageSize}
               onChange={(event) => setPageSize(Number(event.target.value))}
-              className="rounded-lg border border-slate-600 bg-slate-700 px-3 py-2 text-white"
+              className="m3s-field px-3 py-2"
             >
               {pageSizeOptions.map(option => (
                 <option key={option} value={option}>{option}</option>
@@ -124,7 +124,7 @@ const TableControls = ({
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-slate-700 bg-slate-800">
+      <div className="m3s-table-shell">
         <div className="overflow-auto" style={{ maxHeight }}>
           {pageRows.length > 0 ? renderTable(pageRows) : (renderEmpty?.() || (
             <div className="px-6 py-8 text-center text-slate-400">{t.noResult}</div>

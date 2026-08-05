@@ -2,12 +2,12 @@ import React from 'react';
 import { Edit2, Eye, Trash2, X } from 'lucide-react';
 
 export const StandardKpiCard = ({ label, value, secondary, icon: Icon, color = 'text-blue-400' }) => (
-  <div className="min-h-[118px] rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-slate-500 hover:shadow-lg hover:shadow-blue-950/30">
+  <div className="m3s-panel min-h-[118px] p-5 transition hover:-translate-y-0.5 hover:border-slate-500">
     <div className="flex h-full items-center justify-between gap-3">
       <div className="min-w-0">
         <p className="text-sm text-slate-300">{label}</p>
-        <p className="mt-2 break-words text-2xl font-bold text-white">{value}</p>
-        {secondary && <p className="mt-1 break-words text-sm font-semibold text-slate-400">{secondary}</p>}
+        <p className="mt-2 break-words text-2xl font-semibold text-slate-100">{value}</p>
+        {secondary && <p className="mt-1 break-words text-sm font-medium text-slate-400">{secondary}</p>}
       </div>
       {Icon && <Icon size={30} className={`shrink-0 ${color}`} />}
     </div>
@@ -79,24 +79,26 @@ export const StandardRecordSheetModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-lg border border-slate-700 bg-slate-800 p-6 shadow-2xl shadow-slate-950/50">
+      <div className="m3s-panel max-h-[90vh] w-full max-w-4xl overflow-y-auto p-6 shadow-2xl shadow-slate-950/50">
         <div className="mb-5 flex items-start justify-between gap-4">
           <div>
             {eyebrow && <p className="text-sm font-semibold uppercase tracking-wide text-blue-300">{eyebrow}</p>}
-            <h2 className="mt-1 text-2xl font-bold text-white">{title}</h2>
+            <h2 className="m3s-page-title mt-1">{title}</h2>
             {description && <p className="mt-2 text-sm text-amber-200">{description}</p>}
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-slate-300 transition hover:bg-slate-700 hover:text-white"
+            className="m3s-icon-button text-slate-300 transition hover:bg-slate-700 hover:text-white"
+            aria-label={closeLabel}
+            title={closeLabel}
           >
             <X size={20} />
           </button>
         </div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           {details.map(([label, value]) => (
-            <div key={label} className="rounded-lg border border-slate-700 bg-slate-900/50 px-4 py-3">
+            <div key={label} className="m3s-raised px-4 py-3">
               <p className="text-xs uppercase tracking-wide text-slate-500">{label}</p>
               <p className="mt-1 break-words text-sm font-semibold text-slate-100">{value || '-'}</p>
             </div>
