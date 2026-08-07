@@ -7,6 +7,7 @@ const administrationDashboardSource = fs.readFileSync(path.join(__dirname, 'Admi
 const institutionSource = fs.readFileSync(path.join(__dirname, 'InstitutionOverview.js'), 'utf8');
 const planningSource = fs.readFileSync(path.join(__dirname, 'PlanningOverview.js'), 'utf8');
 const loginSource = fs.readFileSync(path.join(__dirname, 'Login.js'), 'utf8');
+const dashboardPilotageSource = fs.readFileSync(path.join(__dirname, 'DashboardPilotageNavigation.js'), 'utf8');
 
 const baseTokenSelector = (scope, color) =>
   `${scope} [class^="border-${color}-"],${scope} [class*=" border-${color}-"]`;
@@ -99,6 +100,13 @@ describe('light-mode accent border selectors', () => {
     expect(administrationDashboardSource).toContain('icon={Network}');
     expect(administrationDashboardSource).toContain('icon={BookOpenText}');
     expect(administrationDashboardSource).toContain('icon={ShieldCheck}');
+  });
+
+  test('keeps global steering headings and active tabs readable in light mode', () => {
+    expect(dashboardPilotageSource).toContain('global-pilotage rounded-lg');
+    expect(dashboardPilotageSource).toContain('text-2xl font-semibold text-slate-100');
+    expect(indexHtml).toContain('html:not(.dark) .global-pilotage .text-slate-100');
+    expect(indexHtml).toContain('html:not(.dark) .global-pilotage .bg-blue-700.text-white{color:#fff!important}');
   });
 
   test('highlights Administration table rows without changing their layout', () => {
