@@ -1,12 +1,12 @@
 import React from 'react';
 import {
-  LayoutDashboard, ClipboardList, WalletCards, UsersRound,
+  LayoutDashboard, Briefcase, WalletCards, UsersRound,
   Handshake, Factory, Warehouse, FolderCog, Search
 } from 'lucide-react';
 
 export const modulePresentation = {
   dashboard: { icon: LayoutDashboard, color: 'text-amber-400', bg: 'bg-amber-500/15', border: 'border-amber-500/30' },
-  administration: { icon: ClipboardList, color: 'text-cyan-400', bg: 'bg-cyan-500/15', border: 'border-cyan-500/30' },
+  administration: { icon: Briefcase, color: 'text-cyan-400', bg: 'bg-cyan-500/15', border: 'border-cyan-500/30' },
   finances: { icon: WalletCards, color: 'text-emerald-400', bg: 'bg-emerald-500/15', border: 'border-emerald-500/30' },
   rh: { icon: UsersRound, color: 'text-violet-400', bg: 'bg-violet-500/15', border: 'border-violet-500/30' },
   commercial: { icon: Handshake, color: 'text-sky-400', bg: 'bg-sky-500/15', border: 'border-sky-500/30' },

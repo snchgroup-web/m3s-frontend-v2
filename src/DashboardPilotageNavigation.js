@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
   BookOpenText,
@@ -118,6 +119,11 @@ const functionDefinitions = [
 
 const tabIcons = { overview: LayoutDashboard, intelligence: BrainCircuit, map: Network };
 
+export const resolveDashboardView = (search = '') => {
+  const view = new URLSearchParams(search).get('view');
+  return ['overview', 'intelligence', 'map'].includes(view) ? view : 'overview';
+};
+
 export const renderSandboxedHtmlArtifact = (target, url) => {
   if (!target?.document?.body) return false;
   target.opener = null;
@@ -135,11 +141,25 @@ export const renderSandboxedHtmlArtifact = (target, url) => {
 };
 
 const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
-  const [activeView, setActiveView] = useState('overview');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [activeView, setActiveView] = useState(() => resolveDashboardView(location.search));
   const [intelligenceState, setIntelligenceState] = useState({ status: 'idle', data: null });
   const [artifactError, setArtifactError] = useState('');
   const intelligenceRequested = useRef(false);
   const t = translations[language] || translations.FR;
+
+  useEffect(() => {
+    setActiveView(resolveDashboardView(location.search));
+  }, [location.search]);
+
+  const selectView = (view) => {
+    const nextView = resolveDashboardView(`?view=${view}`);
+    const params = new URLSearchParams(location.search);
+    params.set('view', nextView);
+    setActiveView(nextView);
+    navigate({ pathname: location.pathname, search: `?${params.toString()}` }, { replace: true });
+  };
 
   useEffect(() => {
     if (activeView !== 'intelligence' || intelligenceRequested.current) return undefined;
@@ -221,7 +241,7 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
                 type="button"
                 role="tab"
                 aria-selected={active}
-                onClick={() => setActiveView(id)}
+                onClick={() => selectView(id)}
                 className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-semibold transition ${active ? 'border-blue-500 bg-blue-700 text-white' : 'border-slate-600 bg-slate-700 text-slate-200 hover:border-blue-400 hover:bg-slate-600'}`}
               >
                 <Icon size={17} aria-hidden="true" />

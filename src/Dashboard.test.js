@@ -6,6 +6,7 @@ import api from './api';
 const mockNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({
+  useLocation: () => ({ pathname: '/', search: '' }),
   useNavigate: () => mockNavigate
 }), { virtual: true });
 

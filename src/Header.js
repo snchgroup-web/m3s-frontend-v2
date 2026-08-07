@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CloudSun, Globe2, LogOut, Moon, Sun, SunMedium } from 'lucide-react';
+import { ChevronRight, CloudSun, Globe2, LogOut, Moon, Sun, SunMedium } from 'lucide-react';
 import { useTheme } from './ThemeContext';
 import { useLanguage } from './LanguageContext';
 import { useAuth } from './AuthContext';
 import api from './api';
 import menuData from './menuStructure.json';
 import { ModuleIcon, moduleIdFromPath, modulePresentation } from './modulePresentation';
+import { resolveActiveMenuLocation } from './sidebarMenu';
 
 const FlagSenegal = () => (
   <span className="relative inline-grid grid-cols-3 w-8 h-5 overflow-hidden rounded-sm shadow-sm" aria-label="Sénégal">
@@ -32,6 +33,7 @@ const Header = () => {
   const [currentRate, setCurrentRate] = useState(null);
   const moduleId = moduleIdFromPath(location.pathname);
   const moduleItem = menuData.menu.find((item) => item.id === moduleId) || menuData.menu[0];
+  const activeMenu = resolveActiveMenuLocation(menuData, location.pathname, location.search);
   const diagnosticTitle = {
     FR: 'Diagnostics',
     EN: 'Diagnostics',
@@ -40,6 +42,7 @@ const Header = () => {
   const title = moduleId === 'diagnostics'
     ? diagnosticTitle[language] || diagnosticTitle.FR
     : moduleItem.label?.[language] || moduleItem.label?.FR;
+  const childTitle = activeMenu.child?.label?.[language] || activeMenu.child?.label?.FR || '';
   const presentation = modulePresentation[moduleId] || modulePresentation.dashboard;
 
   useEffect(() => {
@@ -77,7 +80,15 @@ const Header = () => {
             <ModuleIcon moduleId={moduleId} size={23} />
           </div>
           <div className="min-w-0">
-            <h1 className="text-xl font-semibold text-slate-100 truncate">{title}</h1>
+            <h1 className="flex min-w-0 items-center gap-1.5 text-xl font-semibold text-slate-100" aria-label={childTitle ? `${title} - ${childTitle}` : title}>
+              <span className="truncate">{title}</span>
+              {childTitle && (
+                <>
+                  <ChevronRight size={17} className="shrink-0 text-slate-500" aria-hidden="true" />
+                  <span className="truncate text-base font-medium text-slate-300">{childTitle}</span>
+                </>
+              )}
+            </h1>
             <p className="text-xs text-slate-400 hidden sm:block">M3S Management System</p>
           </div>
         </div>

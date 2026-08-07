@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import {
   Menu, X, ChevronDown, ChevronRight, Maximize2, Minimize2, Circle,
@@ -7,11 +7,12 @@ import {
   Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
   Wrench, Truck, Box, AlertTriangle, Eye, FileText, Brain, Database, BookOpen,
   Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft, ContactRound, ShieldCheck,
-  MessageSquare, Network
+  MessageSquare, Network, ClipboardList, LayoutDashboard, BrainCircuit
 } from 'lucide-react';
 import menuData from './menuStructure.json';
 import Header from './Header';
 import { ModuleIcon, modulePresentation } from './modulePresentation';
+import { getSidebarMenuGroups, resolveActiveMenuLocation } from './sidebarMenu';
 
 // Mapping des icônes
 const iconMap = {
@@ -19,10 +20,13 @@ const iconMap = {
   Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
   Wrench, Truck, Box, AlertTriangle, Eye, FileText, Brain, Database, BookOpen,
   Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft, ContactRound, ShieldCheck,
-  MessageSquare, Network
+  MessageSquare, Network, ClipboardList, LayoutDashboard, BrainCircuit
 };
 
+const sidebarGroups = getSidebarMenuGroups(menuData);
+
 const Layout = ({ children }) => {
+  const location = useLocation();
   const navigate = useNavigate();
   const { language } = useLanguage();
   const [sidebarOpen, setSidebarOpen] = useState(() => (
@@ -30,6 +34,9 @@ const Layout = ({ children }) => {
   ));
   const [expandedMenus, setExpandedMenus] = useState({});
   const [expandAll, setExpandAll] = useState(false);
+  const activeMenu = resolveActiveMenuLocation(menuData, location.pathname, location.search);
+  const activeParentId = activeMenu.parent?.id;
+  const activeParentHasChildren = Boolean(activeMenu.parent?.children?.length);
 
   // Traductions UI
   const translations = {
@@ -51,6 +58,11 @@ const Layout = ({ children }) => {
   };
 
   const t = translations[language];
+
+  useEffect(() => {
+    if (!activeParentHasChildren) return;
+    setExpandedMenus(previous => ({ ...previous, [activeParentId]: true }));
+  }, [activeParentHasChildren, activeParentId]);
 
   // Expand/Collapse All
   const toggleExpandAll = () => {
@@ -130,75 +142,97 @@ const Layout = ({ children }) => {
         )}
 
         {/* Navigation */}
-        <nav className="flex-1 p-2 space-y-1 overflow-y-auto">
-          {menuData.menu.map(item => (
-            <div key={item.id}>
-              {/* Menu Item Principal */}
-              <button
-                onClick={() => {
-                  const hasChildren = item.children && item.children.length > 0;
-                  const isExpanded = Boolean(expandedMenus[item.id]);
-
-                  handleMenuItemClick(item.path);
-
-                  if (sidebarOpen && hasChildren) {
-                    setExpandedMenus(isExpanded ? {} : { [item.id]: true });
-                  } else {
-                    setExpandedMenus({});
-                  }
-                }}
-                title={!sidebarOpen ? (item.label[language] || item.label.FR) : undefined}
-                className={`sidebar-nav-item flex items-center rounded hover:bg-slate-700 transition text-left text-sm cursor-pointer ${
-                  sidebarOpen
-                    ? 'w-full space-x-3 px-4 py-2'
-                    : 'w-full justify-center py-3'
-                }`}
-              >
-                {/* Icône */}
-                <div className="flex-shrink-0 flex items-center space-x-2">
-                  {/* Module icon */}
-                  <div className={`w-8 h-8 flex items-center justify-center rounded-md ${modulePresentation[item.id]?.bg || 'bg-slate-700'}`}>
-                    <ModuleIcon moduleId={item.id} size={18} />
-                  </div>
-
-                  {/* Chevron for expandable items */}
-                  {sidebarOpen && item.children && item.children.length > 0 && (
-                    <div className="flex-shrink-0">
-                      {expandedMenus[item.id] ? (
-                        <ChevronDown size={16} className="text-blue-400" />
-                      ) : (
-                        <ChevronRight size={16} className="text-slate-400" />
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                {/* Label */}
-                {sidebarOpen && (
-                  <span className="flex-1 font-medium">
-                    {item.label[language] || item.label.FR}
-                  </span>
-                )}
-              </button>
-
-              {/* Sous-menus */}
-              {sidebarOpen && expandedMenus[item.id] && item.children && item.children.length > 0 && (
-                <div className="sidebar-submenu ml-6 space-y-1 bg-slate-700 bg-opacity-30 rounded my-1 py-1 px-2">
-                  {item.children.map(child => (
-                    <button
-                      key={child.id}
-                      onClick={() => handleMenuItemClick(child.path)}
-                      className="sidebar-submenu-item w-full flex items-center space-x-2 px-3 py-1.5 rounded text-xs hover:bg-slate-600 transition text-left text-slate-300 hover:text-white"
-                    >
-                      {child.icon && iconMap[child.icon]
-                        ? React.createElement(iconMap[child.icon], { size: 14, className: modulePresentation[item.id]?.color || 'text-sky-400' })
-                        : <Circle size={7} className={modulePresentation[item.id]?.color || 'text-sky-400'} fill="currentColor" />}
-                      <span>{child.label[language] || child.label.FR}</span>
-                    </button>
-                  ))}
-                </div>
+        <nav className="flex-1 overflow-y-auto p-2" aria-label="Navigation M3S">
+          {sidebarGroups.map((group, groupIndex) => (
+            <section
+              key={group.id}
+              aria-labelledby={sidebarOpen ? `sidebar-group-${group.id}` : undefined}
+              className={groupIndex > 0 ? 'mt-3 border-t border-slate-700/80 pt-3' : ''}
+            >
+              {sidebarOpen && group.label?.FR && (
+                <p
+                  id={`sidebar-group-${group.id}`}
+                  className="px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500"
+                >
+                  {group.label[language] || group.label.FR}
+                </p>
               )}
-            </div>
+              <div className="space-y-1">
+                {group.items.map(item => (
+                  <div key={item.id}>
+                    {(() => {
+                      const parentActive = activeMenu.parent?.id === item.id;
+                      return (
+                    <button
+                      onClick={() => {
+                        const hasChildren = item.children && item.children.length > 0;
+                        const isExpanded = Boolean(expandedMenus[item.id]);
+
+                        handleMenuItemClick(item.path);
+
+                        if (sidebarOpen && hasChildren) {
+                          setExpandedMenus(isExpanded ? {} : { [item.id]: true });
+                        } else {
+                          setExpandedMenus({});
+                        }
+                      }}
+                      title={!sidebarOpen ? (item.label[language] || item.label.FR) : undefined}
+                      aria-current={parentActive && !activeMenu.child ? 'page' : undefined}
+                      className={`sidebar-nav-item flex items-center rounded hover:bg-slate-700 transition text-left text-sm cursor-pointer ${
+                        sidebarOpen
+                          ? 'w-full space-x-3 px-4 py-2'
+                          : 'w-full justify-center py-3'
+                      } ${parentActive ? 'bg-slate-700 text-white shadow-sm ring-1 ring-inset ring-slate-600' : 'text-slate-200'}`}
+                    >
+                      <div className="flex-shrink-0 flex items-center space-x-2">
+                        <div className={`w-8 h-8 flex items-center justify-center rounded-md ${modulePresentation[item.id]?.bg || 'bg-slate-700'}`}>
+                          <ModuleIcon moduleId={item.id} size={18} />
+                        </div>
+
+                        {sidebarOpen && item.children && item.children.length > 0 && (
+                          <div className="flex-shrink-0">
+                            {expandedMenus[item.id] ? (
+                              <ChevronDown size={16} className="text-blue-400" />
+                            ) : (
+                              <ChevronRight size={16} className="text-slate-400" />
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      {sidebarOpen && (
+                        <span className="flex-1 font-medium">
+                          {item.label[language] || item.label.FR}
+                        </span>
+                      )}
+                    </button>
+                      );
+                    })()}
+
+                    {sidebarOpen && expandedMenus[item.id] && item.children && item.children.length > 0 && (
+                      <div className="sidebar-submenu ml-6 space-y-1 bg-slate-700 bg-opacity-30 rounded my-1 py-1 px-2">
+                        {item.children.map(child => {
+                          const childActive = activeMenu.child?.id === child.id;
+                          return (
+                          <button
+                            key={child.id}
+                            onClick={() => handleMenuItemClick(child.path)}
+                            aria-current={childActive ? 'page' : undefined}
+                            className={`sidebar-submenu-item w-full flex items-center space-x-2 rounded border px-3 py-1.5 text-left text-xs transition ${childActive ? 'border-blue-500/60 bg-blue-700/45 font-semibold text-blue-100 shadow-sm' : 'border-transparent text-slate-300 hover:bg-slate-600 hover:text-white'}`}
+                          >
+                            {child.icon && iconMap[child.icon]
+                              ? React.createElement(iconMap[child.icon], { size: 14, className: modulePresentation[item.id]?.color || 'text-sky-400' })
+                              : <Circle size={7} className={modulePresentation[item.id]?.color || 'text-sky-400'} fill="currentColor" />}
+                            <span>{child.label[language] || child.label.FR}</span>
+                          </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
           ))}
         </nav>
 
