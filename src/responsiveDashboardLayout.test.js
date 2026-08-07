@@ -31,4 +31,13 @@ describe('responsive dashboard shell', () => {
     expect(indexHtml).toContain('html:not(.dark) .dashboard-data-warning{background-color:#fff!important');
     expect(indexHtml).toContain('html:not(.dark) .intelligence-card{background-color:#fff!important');
   });
+
+  test('keeps management copy readable and Intelligence actions aligned in light mode', () => {
+    expect(pilotageSource).toContain('management-principle-body');
+    expect(pilotageSource).toContain('intelligence-actions mt-4 grid grid-cols-2');
+    expect(pilotageSource).toContain('intelligence-action--success');
+    expect(pilotageSource).toContain('intelligence-action--primary');
+    expect(indexHtml).toContain('html:not(.dark) .management-principle-body{color:#334155!important}');
+    expect(indexHtml).toContain('html:not(.dark) .intelligence-edition-meta{color:#047857!important}');
+  });
 });

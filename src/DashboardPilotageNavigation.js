@@ -255,10 +255,10 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
       {activeView === 'overview' && (
         <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
           {t.management.map(([title, body], index) => (
-            <article key={title} className="rounded-md border border-slate-700 bg-slate-900/35 p-4">
-              <div className="mb-3 inline-flex h-8 w-8 items-center justify-center rounded-md bg-blue-950 text-sm font-bold text-blue-300">{index + 1}</div>
-              <h3 className="text-base font-semibold text-slate-100">{title}</h3>
-              <p className="mt-1 text-sm leading-5 text-slate-400">{body}</p>
+            <article key={title} className="management-principle-card rounded-md border border-slate-700 bg-slate-900/35 p-4">
+              <div className="management-principle-index mb-3 inline-flex h-8 w-8 items-center justify-center rounded-md bg-blue-950 text-sm font-bold text-blue-300">{index + 1}</div>
+              <h3 className="management-principle-title text-base font-semibold text-slate-100">{title}</h3>
+              <p className="management-principle-body mt-1 text-sm leading-5 text-slate-400">{body}</p>
             </article>
           ))}
         </div>
@@ -270,32 +270,37 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
             <div className="flex flex-wrap items-center gap-3">
               <BookOpenText className="text-amber-300" size={22} aria-hidden="true" />
               <h3 className="text-lg font-semibold text-slate-100">{t.intelligenceTitle}</h3>
-              <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${intelligenceReady ? 'border-emerald-700 text-emerald-200' : 'border-amber-700 text-amber-200'}`}>{intelligenceLabel}</span>
+              <span className={`intelligence-status-badge rounded-full border px-2.5 py-1 text-xs font-semibold ${intelligenceReady ? 'intelligence-status-badge--ready border-emerald-700 text-emerald-200' : 'intelligence-status-badge--pending border-amber-700 text-amber-200'}`}>{intelligenceLabel}</span>
             </div>
             <p className="mt-3 text-sm leading-6 text-slate-300">{t.intelligenceBody}</p>
             {intelligenceReady && (
-              <p className="mt-2 text-sm font-semibold text-emerald-200">
+              <p className="intelligence-edition-meta mt-2 text-sm font-semibold text-emerald-200">
                 {t.intelligenceEdition} : {intelligenceState.data.editionDate} · {intelligenceState.data.sourceVersion}
               </p>
             )}
             {intelligenceState.status === 'loading' && <LoaderCircle className="mt-3 animate-spin text-blue-300" size={20} aria-hidden="true" />}
             {artifactError && <p role="alert" className="mt-3 text-sm text-rose-300">{artifactError}</p>}
             {intelligenceReady && (
-              <div className="mt-4 flex flex-wrap gap-2">
-                <button type="button" onClick={() => openArtifact('html')} className="inline-flex min-h-10 items-center gap-2 rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600">
+              <div className="intelligence-actions mt-4 grid grid-cols-2 gap-2">
+                <button type="button" onClick={() => openArtifact('html')} className="intelligence-action intelligence-action--success inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-emerald-700 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-emerald-600">
                   <BookOpenText size={16} aria-hidden="true" />{t.openHtml}
                 </button>
-                <button type="button" onClick={() => openArtifact('pdf')} className="inline-flex min-h-10 items-center gap-2 rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 hover:border-blue-400 hover:bg-slate-600">
+                <button type="button" onClick={() => openArtifact('pdf')} className="intelligence-action inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-center text-sm font-semibold text-slate-100 hover:border-blue-400 hover:bg-slate-600">
                   <FileDown size={16} aria-hidden="true" />{t.openPdf}
                 </button>
-                <button type="button" onClick={() => openArtifact('reference')} className="inline-flex min-h-10 items-center gap-2 rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 hover:border-blue-400 hover:bg-slate-600">
+                <button type="button" onClick={() => openArtifact('reference')} className="intelligence-action inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-center text-sm font-semibold text-slate-100 hover:border-blue-400 hover:bg-slate-600">
                   <FileText size={16} aria-hidden="true" />{t.openReference}
+                </button>
+                <button type="button" onClick={() => onNavigate('/ged?tab=knowledge')} className="intelligence-action intelligence-action--primary inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-blue-700 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-blue-600">
+                  {t.knowledgeAction}<ArrowRight size={16} aria-hidden="true" />
                 </button>
               </div>
             )}
-            <button type="button" onClick={() => onNavigate('/ged?tab=knowledge')} className="mt-4 inline-flex min-h-10 items-center gap-2 rounded-md bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-600">
-              {t.knowledgeAction}<ArrowRight size={16} aria-hidden="true" />
-            </button>
+            {!intelligenceReady && (
+              <button type="button" onClick={() => onNavigate('/ged?tab=knowledge')} className="intelligence-action intelligence-action--primary mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-600">
+                {t.knowledgeAction}<ArrowRight size={16} aria-hidden="true" />
+              </button>
+            )}
           </article>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {t.intelligenceAreas.map((area) => (
