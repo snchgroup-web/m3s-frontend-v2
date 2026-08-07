@@ -14,6 +14,7 @@ describe('global M3S design foundations', () => {
     expect(designSystemCss).toContain('html.dark');
     expect(designSystemCss).toContain('.m3s-design-scope h1');
     expect(headerSource).toContain('text-xl font-semibold text-slate-100');
+    expect(indexHtml).toContain('html:not(.dark) .app-header .text-slate-100{color:#172033!important}');
   });
 
   test('standardizes thin table borders and interactive rows', () => {
