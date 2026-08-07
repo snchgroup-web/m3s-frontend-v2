@@ -35,6 +35,7 @@ test('shows the four management responsibilities in French', () => {
   renderDashboardNavigation();
 
   expect(screen.getByRole('heading', { name: 'Décider avec une vue d’ensemble fiable' })).toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: 'Pilotage' })).toHaveAttribute('aria-selected', 'true');
   expect(screen.getByText('Piloter')).toBeInTheDocument();
   expect(screen.getByText('Organiser')).toBeInTheDocument();
   expect(screen.getByText('Animer')).toBeInTheDocument();
@@ -149,6 +150,16 @@ test('keeps the selected dashboard view in the URL', () => {
   fireEvent.click(screen.getByRole('tab', { name: 'Carte des fonctions' }));
   expect(mockNavigate).toHaveBeenCalledWith(
     { pathname: '/', search: '?view=map' },
+    { replace: true }
+  );
+});
+
+test('opens the dedicated steering view from another dashboard view', () => {
+  renderDashboardNavigation({}, '/?view=intelligence');
+
+  fireEvent.click(screen.getByRole('tab', { name: 'Pilotage' }));
+  expect(mockNavigate).toHaveBeenCalledWith(
+    { pathname: '/', search: '?view=overview' },
     { replace: true }
   );
 });

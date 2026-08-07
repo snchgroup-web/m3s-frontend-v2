@@ -38,14 +38,6 @@ const childMatchesLocation = (child, pathname, search = '') => {
   const expectedEntries = Array.from(candidate.searchParams.entries());
   if (!expectedEntries.length) return false;
 
-  if (
-    currentPathname === '/'
-    && candidate.searchParams.get('view') === 'overview'
-    && !currentParams.get('view')
-  ) {
-    return true;
-  }
-
   return expectedEntries.every(([key, value]) => currentParams.get(key) === value);
 };
 
