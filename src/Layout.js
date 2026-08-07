@@ -87,12 +87,20 @@ const Layout = ({ children }) => {
 
   return (
     <div className="app-shell flex h-screen bg-slate-900 text-gray-100">
+      {sidebarOpen && (
+        <button
+          type="button"
+          className="fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-[1px] lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+          aria-label="Fermer le menu"
+        />
+      )}
       {/* Sidebar */}
       <div className={`${
         sidebarOpen
-          ? 'w-72 max-lg:absolute max-lg:inset-y-0 max-lg:left-0 max-lg:z-40'
-          : 'w-20 max-lg:w-16'
-      } bg-slate-800 border-r border-slate-700 transition-all duration-300 flex flex-col overflow-hidden`}>
+          ? 'w-72 max-lg:translate-x-0'
+          : 'w-20 max-lg:-translate-x-full'
+      } max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-50 max-lg:w-72 bg-slate-800 border-r border-slate-700 transition-all duration-300 flex flex-col overflow-hidden`}>
 
         {/* Header */}
         <div className="h-20 px-4 border-b border-slate-700 flex items-center justify-between">
@@ -250,7 +258,7 @@ const Layout = ({ children }) => {
 
       {/* Main Content */}
       <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
-        <Header />
+        <Header onOpenMenu={() => setSidebarOpen(true)} />
         <main className="m3s-design-scope flex-1 overflow-auto">
           {children}
         </main>

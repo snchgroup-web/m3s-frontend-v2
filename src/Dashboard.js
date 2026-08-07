@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { AlertTriangle } from 'lucide-react';
 import api from './api';
 import DashboardPilotageNavigation from './DashboardPilotageNavigation';
 
@@ -433,16 +434,17 @@ const Dashboard = () => {
     <>
       {/* Content */}
       <div className="overflow-auto">
-        <div className="p-6 space-y-6">
+        <div className="space-y-4 p-3 sm:p-4 lg:space-y-6 lg:p-6">
           {dataWarning && (
-            <div className="rounded-lg border border-amber-700 bg-amber-950/40 px-4 py-3 text-sm text-amber-200">
-              {dataWarningText}
+            <div className="dashboard-data-warning flex items-start gap-3 rounded-md border px-3 py-3 text-sm leading-5 shadow-sm sm:px-4" role="status">
+              <AlertTriangle className="mt-0.5 shrink-0" size={18} aria-hidden="true" />
+              <span>{dataWarningText}</span>
             </div>
           )}
           <DashboardPilotageNavigation language={language} onNavigate={handleModuleClick} />
           <section id="global-situation" aria-label={t.dashboard} className="space-y-6">
           {/* KPI Cards Row 1 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 lg:gap-4">
             {/* Recettes */}
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-green-500 hover:shadow-green-500/20 transition-all duration-300 cursor-pointer group">
               <div className="flex items-center gap-2 mb-3">
@@ -517,7 +519,7 @@ const Dashboard = () => {
           </div>
 
           {/* Additional Stats Row */}
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 lg:gap-4">
             {/* Stocks */}
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-red-400 hover:shadow-red-400/20 transition-all duration-300 cursor-pointer group">
               <div className="flex items-center gap-2 mb-3">
