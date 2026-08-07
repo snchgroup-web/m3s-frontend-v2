@@ -67,3 +67,38 @@ test('preserves a forbidden RH-001 response for the access-state UI', async () =
   });
   expect(localStorage.getItem('session_expired')).toBeNull();
 });
+
+test('requests the latest Intelligence metadata with authentication', async () => {
+  const payload = { success: true, data: { editionDate: '2026-08-07', sourceVersion: 'V4' } };
+  localStorage.setItem('token', 'test-token');
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    status: 200,
+    json: jest.fn().mockResolvedValue(payload)
+  });
+
+  await expect(api.getLatestIntelligence()).resolves.toEqual(payload);
+  expect(global.fetch).toHaveBeenCalledWith(
+    expect.stringMatching(/\/intelligence\/latest$/),
+    expect.objectContaining({ headers: { Authorization: 'Bearer test-token' } })
+  );
+});
+
+test('downloads a secured Intelligence artifact as a blob', async () => {
+  const blob = new Blob(['2SG'], { type: 'text/html' });
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    status: 200,
+    blob: jest.fn().mockResolvedValue(blob),
+    headers: { get: jest.fn().mockReturnValue('inline; filename="latest.html"') }
+  });
+
+  await expect(api.getLatestIntelligenceArtifact('html')).resolves.toEqual({
+    blob,
+    contentDisposition: 'inline; filename="latest.html"'
+  });
+  expect(global.fetch).toHaveBeenCalledWith(
+    expect.stringMatching(/\/intelligence\/latest\/html$/),
+    expect.objectContaining({ headers: {} })
+  );
+});

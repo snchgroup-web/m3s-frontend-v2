@@ -59,6 +59,23 @@ const handleError = (erreur, endpoint) => {
 // ============================================================================
 
 export const api = {
+  getLatestIntelligence: async () => {
+    const res = await apiFetch(`${API_BASE_URL}/intelligence/latest`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  },
+
+  getLatestIntelligenceArtifact: async (artifactType) => {
+    const supportedTypes = new Set(['html', 'pdf', 'reference']);
+    if (!supportedTypes.has(artifactType)) throw new Error('Type de livrable Intelligence invalide');
+    const res = await apiFetch(`${API_BASE_URL}/intelligence/latest/${artifactType}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return {
+      blob: await res.blob(),
+      contentDisposition: res.headers?.get?.('content-disposition') || ''
+    };
+  },
+
   // Finance - Tableau de bord
   getFinanceDashboard: async () => {
     try {
