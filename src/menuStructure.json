@@ -62,6 +62,16 @@
           "path": "/administration?tab=compliance"
         },
         {
+          "id": "processes",
+          "label": {
+            "FR": "Processus & Procédures",
+            "EN": "Processes & Procedures",
+            "DE": "Prozesse & Verfahren"
+          },
+          "icon": "Activity",
+          "path": "/administration?tab=processes"
+        },
+        {
           "id": "administration-glossary",
           "label": {
             "FR": "Glossaire",

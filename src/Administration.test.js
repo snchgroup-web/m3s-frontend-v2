@@ -6,6 +6,7 @@ test.each([
   ['planning', 'planning'],
   ['communication', 'communication'],
   ['compliance', 'compliance'],
+  ['processes', 'processes'],
   ['glossary', 'glossary'],
   ['tasks', 'planning'],
   ['projects', 'planning'],

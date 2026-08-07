@@ -12,6 +12,7 @@ import JournalTaskRegister from './JournalTaskRegister';
 import ComplianceOverview from './ComplianceOverview';
 import CommunicationOverview from './CommunicationOverview';
 import AdministrationGlossary from './AdministrationGlossary';
+import ProcessProcedureArchiveOverview from './ProcessProcedureArchiveOverview';
 import { resolveAdministrationTab } from './administrationTabs';
 
 const Admin = () => {
@@ -77,6 +78,7 @@ const Admin = () => {
       fri: 'Ven'
       , institution: 'Institution',
       communication: 'Communication & Courrier',
+      processes: 'Processus & Procédures',
       compliance: 'Conformité',
       complianceTracked: 'dossier suivi',
       tachesTerminees: 'Tâches terminées',
@@ -140,6 +142,7 @@ const Admin = () => {
       fri: 'Fri'
       , institution: 'Institution',
       communication: 'Communication & Correspondence',
+      processes: 'Processes & Procedures',
       compliance: 'Compliance',
       complianceTracked: 'tracked matter',
       tachesTerminees: 'Completed tasks',
@@ -203,6 +206,7 @@ const Admin = () => {
       fri: 'Fr'
       , institution: 'Institution',
       communication: 'Kommunikation & Korrespondenz',
+      processes: 'Prozesse & Verfahren',
       compliance: 'Compliance',
       complianceTracked: 'verfolgter Fall',
       tachesTerminees: 'Abgeschlossene Aufgaben',
@@ -674,7 +678,8 @@ const Admin = () => {
             { tab: 'institution', label: t.institution },
             { tab: 'planning', label: `${t.planning} (${tasks.length})` },
             { tab: 'communication', label: t.communication },
-            { tab: 'compliance', label: t.compliance }
+            { tab: 'compliance', label: t.compliance },
+            { tab: 'processes', label: t.processes }
           ]}
         />
 
@@ -801,6 +806,10 @@ const Admin = () => {
 
         {activeTab === 'glossary' && (
           <AdministrationGlossary language={language} />
+        )}
+
+        {activeTab === 'processes' && (
+          <ProcessProcedureArchiveOverview language={language} />
         )}
 
         {/* Utilisateurs */}
@@ -934,7 +943,7 @@ const Admin = () => {
           </div>
         )}
 
-        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} handledTabs={['overview', 'institution', 'planning', 'communication', 'compliance', 'glossary']} />
+        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} handledTabs={['overview', 'institution', 'planning', 'communication', 'compliance', 'processes', 'glossary']} />
         </div>
       </div>
 
