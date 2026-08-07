@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import Dashboard from './Dashboard';
 import api from './api';
 
@@ -132,4 +132,13 @@ test('keeps real zero count totals available without a partial-data warning', as
   expect(await screen.findByText('M3S users')).toBeInTheDocument();
   expect(screen.queryByText(/Some live data is temporarily unavailable/)).not.toBeInTheDocument();
   expect(screen.getAllByText('0').length).toBeGreaterThanOrEqual(3);
+});
+
+test('connects global steering navigation to real application routes', async () => {
+  render(<Dashboard />);
+
+  expect(await screen.findByRole('heading', { name: 'Decide from a reliable overall view' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('tab', { name: 'Function map' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Open : Administration' }));
+  expect(mockNavigate).toHaveBeenCalledWith('/administration');
 });

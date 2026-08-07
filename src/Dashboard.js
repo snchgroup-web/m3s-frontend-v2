@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import api from './api';
+import DashboardPilotageNavigation from './DashboardPilotageNavigation';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -438,6 +439,8 @@ const Dashboard = () => {
               {dataWarningText}
             </div>
           )}
+          <DashboardPilotageNavigation language={language} onNavigate={handleModuleClick} />
+          <section id="global-situation" aria-label={t.dashboard} className="space-y-6">
           {/* KPI Cards Row 1 */}
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {/* Recettes */}
@@ -654,6 +657,7 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
+          </section>
 
           {/* Footer */}
           <div className="text-center text-slate-500 text-xs py-4">
