@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import DashboardPilotageNavigation from './DashboardPilotageNavigation';
+import DashboardPilotageNavigation, { renderSandboxedHtmlArtifact } from './DashboardPilotageNavigation';
 import api from './api';
 
 jest.mock('./api', () => ({
@@ -71,6 +71,43 @@ test('retries metadata loading after leaving the Intelligence tab mid-request', 
 
   expect(api.getLatestIntelligence).toHaveBeenCalledTimes(2);
   expect(await screen.findByText('Edition available')).toBeInTheDocument();
+});
+
+test('allows retrying metadata after a transient request failure', async () => {
+  api.getLatestIntelligence
+    .mockRejectedValueOnce(new Error('temporary failure'))
+    .mockResolvedValueOnce({
+      success: true,
+      data: { editionDate: '2026-08-07', sourceVersion: 'V4' }
+    });
+  render(<DashboardPilotageNavigation language="EN" onNavigate={jest.fn()} />);
+
+  fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
+  expect(await screen.findByText('The Intelligence source is temporarily unavailable.')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('tab', { name: 'Steering' }));
+  fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
+
+  expect(api.getLatestIntelligence).toHaveBeenCalledTimes(2);
+  expect(await screen.findByText('Edition available')).toBeInTheDocument();
+});
+
+test('renders HTML artifacts in an opaque sandbox without same-origin access', () => {
+  const frame = { style: {}, setAttribute: jest.fn() };
+  const target = {
+    opener: {},
+    document: {
+      title: '',
+      body: { style: {}, replaceChildren: jest.fn() },
+      createElement: jest.fn(() => frame)
+    }
+  };
+
+  expect(renderSandboxedHtmlArtifact(target, 'blob:m3s-intelligence')).toBe(true);
+  const sandboxValue = frame.setAttribute.mock.calls.find(([name]) => name === 'sandbox')[1];
+  expect(sandboxValue).toContain('allow-scripts');
+  expect(sandboxValue).not.toContain('allow-same-origin');
+  expect(target.document.body.replaceChildren).toHaveBeenCalledWith(frame);
+  expect(target.opener).toBeNull();
 });
 
 test('opens real function routes from the trilingual function map', () => {

@@ -118,6 +118,22 @@ const functionDefinitions = [
 
 const tabIcons = { overview: LayoutDashboard, intelligence: BrainCircuit, map: Network };
 
+export const renderSandboxedHtmlArtifact = (target, url) => {
+  if (!target?.document?.body) return false;
+  target.opener = null;
+  target.document.title = '2SG Intelligence Dashboard';
+  Object.assign(target.document.body.style, { margin: '0', minHeight: '100vh', background: '#f8fafc' });
+  const frame = target.document.createElement('iframe');
+  frame.src = url;
+  frame.title = '2SG Intelligence Dashboard';
+  frame.referrerPolicy = 'no-referrer';
+  frame.setAttribute('sandbox', 'allow-scripts allow-forms allow-modals allow-popups allow-downloads');
+  frame.setAttribute('aria-label', '2SG Intelligence Dashboard');
+  Object.assign(frame.style, { display: 'block', width: '100%', height: '100vh', border: '0' });
+  target.document.body.replaceChildren(frame);
+  return true;
+};
+
 const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
   const [activeView, setActiveView] = useState('overview');
   const [intelligenceState, setIntelligenceState] = useState({ status: 'idle', data: null });
@@ -136,7 +152,10 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
         if (current) setIntelligenceState({ status: payload.data ? 'ready' : 'empty', data: payload.data || null });
       })
       .catch(() => {
-        if (current) setIntelligenceState({ status: 'error', data: null });
+        if (current) {
+          intelligenceRequested.current = false;
+          setIntelligenceState({ status: 'error', data: null });
+        }
       })
       .finally(() => {
         settled = true;
@@ -154,13 +173,19 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
     try {
       const { blob } = await api.getLatestIntelligenceArtifact(artifactType);
       const url = URL.createObjectURL(blob);
-      if (target) target.location.href = url;
-      else {
+      if (artifactType === 'html' && target) {
+        renderSandboxedHtmlArtifact(target, url);
+      } else if (target) {
+        target.location.href = url;
+      } else {
         const anchor = document.createElement('a');
         anchor.href = url;
-        anchor.target = '_blank';
+        if (artifactType === 'html') anchor.download = '2SG_Intelligence_Dashboard_V4.html';
+        else anchor.target = '_blank';
         anchor.rel = 'noopener noreferrer';
+        document.body.appendChild(anchor);
         anchor.click();
+        anchor.remove();
       }
       window.setTimeout(() => URL.revokeObjectURL(url), 60000);
     } catch {
