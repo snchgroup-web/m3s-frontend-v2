@@ -8,6 +8,7 @@ const institutionSource = fs.readFileSync(path.join(__dirname, 'InstitutionOverv
 const planningSource = fs.readFileSync(path.join(__dirname, 'PlanningOverview.js'), 'utf8');
 const loginSource = fs.readFileSync(path.join(__dirname, 'Login.js'), 'utf8');
 const dashboardPilotageSource = fs.readFileSync(path.join(__dirname, 'DashboardPilotageNavigation.js'), 'utf8');
+const layoutSource = fs.readFileSync(path.join(__dirname, 'Layout.js'), 'utf8');
 
 const baseTokenSelector = (scope, color) =>
   `${scope} [class^="border-${color}-"],${scope} [class*=" border-${color}-"]`;
@@ -118,5 +119,14 @@ describe('light-mode accent border selectors', () => {
     expect(administrationSource).toContain("event.key === 'Enter' || event.key === ' '");
     expect(administrationSource).toContain('event.stopPropagation(); handleDeleteTask');
     expect(administrationSource).toContain('event.stopPropagation(); handleDeleteUser');
+  });
+
+  test('keeps global sidebar labels and active locations readable in light mode', () => {
+    expect(layoutSource).toContain('sidebar-group-label');
+    expect(layoutSource).toContain("parentActive ? 'sidebar-nav-item--active' : 'sidebar-nav-item--inactive'");
+    expect(layoutSource).toContain("childActive ? 'sidebar-submenu-item--active' : 'sidebar-submenu-item--inactive'");
+    expect(indexHtml).toContain('html:not(.dark) .sidebar-nav-item{color:#334155!important}');
+    expect(indexHtml).toContain('html:not(.dark) .sidebar-nav-item--active{background-color:#e5eefb!important;color:#0f2d5c!important');
+    expect(indexHtml).toContain('html:not(.dark) .sidebar-submenu-item--active{background-color:#dbeafe!important;border-color:#60a5fa!important;color:#1e3a8a!important');
   });
 });
