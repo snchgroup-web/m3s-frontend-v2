@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
-import { Plus, Edit2, Trash2, Building2, FolderKanban, CheckCircle2, Mail, ShieldCheck } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Plus, Edit2, Trash2 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
@@ -13,11 +12,13 @@ import ComplianceOverview from './ComplianceOverview';
 import CommunicationOverview from './CommunicationOverview';
 import AdministrationGlossary from './AdministrationGlossary';
 import ProcessProcedureArchiveOverview from './ProcessProcedureArchiveOverview';
+import AdministrationDashboardOverview from './AdministrationDashboardOverview';
 import { resolveAdministrationTab } from './administrationTabs';
 
 const Admin = () => {
   const { language } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Translations
   const translations = {
@@ -312,7 +313,6 @@ const Admin = () => {
   };
 
   const translateAuditAction = (action) => dataTranslations.auditActions[language]?.[action] || action;
-  const translateDay = (day) => dataTranslations.days[language]?.[day] || day;
   const translateRole = (role) => dataTranslations.roles[language]?.[role] || role;
   const translateRoleDescription = (desc) => dataTranslations.roleDescriptions[language]?.[desc] || desc;
   const normalizeLookupKey = (value) => String(value || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
@@ -372,6 +372,7 @@ const Admin = () => {
   const [roles, setRoles] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
   const [tasks, setTasks] = useState([]);
+  const [tasksStatus, setTasksStatus] = useState('loading');
   const [showUserModal, setShowUserModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
@@ -405,12 +406,16 @@ const Admin = () => {
 
   useEffect(() => {
     const loadTasks = async () => {
+      setTasksStatus('loading');
       try {
         const response = await api.getTasks(100, 0);
-        setTasks(Array.isArray(response?.data) ? response.data : []);
+        if (!Array.isArray(response?.data)) throw new Error('Source tâches invalide');
+        setTasks(response.data);
+        setTasksStatus('ready');
       } catch (error) {
         console.error('Erreur chargement taches:', error);
         setTasks([]);
+        setTasksStatus('unavailable');
       }
     };
 
@@ -449,31 +454,7 @@ const Admin = () => {
   }, []);
 
   // Calculs KPIs
-  const auditCount = auditLogs.length;
   const completedTasks = tasks.filter(task => normalizeLookupKey(task.statut || task.status) === 'TERMINE').length;
-
-  // Données pour charts
-  const roleDistribution = roles.map(r => ({
-    name: translateRole(r.nom),
-    nameKey: r.nom,
-    count: users.filter(u => u.role === r.nom).length
-  }));
-
-  const auditActivity = [
-    { action: translateAuditAction('LOGIN'), actionKey: 'LOGIN', count: auditLogs.filter(log => log.action === 'LOGIN').length },
-    { action: translateAuditAction('CREATE'), actionKey: 'CREATE', count: auditLogs.filter(log => log.action === 'CREATE').length },
-    { action: translateAuditAction('UPDATE'), actionKey: 'UPDATE', count: auditLogs.filter(log => log.action === 'UPDATE').length },
-    { action: translateAuditAction('DELETE'), actionKey: 'DELETE', count: auditLogs.filter(log => log.action === 'DELETE').length },
-    { action: translateAuditAction('READ'), actionKey: 'READ', count: auditLogs.filter(log => log.action === 'READ').length },
-  ];
-
-  const dailyActivity = [
-    { jour: translateDay('Lun'), jourKey: 'Lun', actions: 8 },
-    { jour: translateDay('Mar'), jourKey: 'Mar', actions: 12 },
-    { jour: translateDay('Mer'), jourKey: 'Mer', actions: 15 },
-    { jour: translateDay('Jeu'), jourKey: 'Jeu', actions: 10 },
-    { jour: translateDay('Ven'), jourKey: 'Ven', actions: auditCount },
-  ];
 
   // Gestion formulaires
   const handleUserChange = (field, value) => {
@@ -605,74 +586,21 @@ const Admin = () => {
     setTasks(tasks.filter(task => (task.id || task.source_id) !== id));
   };
 
-  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+  const handleTabSelect = (tab) => {
+    setActiveTab(tab);
+    navigate(`/administration?tab=${tab}`);
+  };
 
   return (
     <>
       <div className="administration-page min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
         <div className="mx-auto w-full max-w-[1800px]">
 
-        {/* KPIs */}
-        {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 mb-8">
-          <div className="administration-kpi administration-kpi--blue bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="administration-kpi__label text-blue-200 text-sm">{t.institution}</p>
-                <p className="administration-kpi__value text-2xl font-semibold text-slate-100">1</p>
-              </div>
-              <Building2 size={32} className="administration-kpi__icon text-blue-400" aria-hidden="true" />
-            </div>
-          </div>
-
-          <div className="administration-kpi administration-kpi--green bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="administration-kpi__label text-green-200 text-sm">{t.planning}</p>
-                <p className="administration-kpi__value text-2xl font-semibold text-slate-100">{tasks.length}</p>
-              </div>
-              <FolderKanban size={32} className="administration-kpi__icon text-green-400" aria-hidden="true" />
-            </div>
-          </div>
-
-          <div className="administration-kpi administration-kpi--purple bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="administration-kpi__label text-purple-200 text-sm">{t.tachesTerminees}</p>
-                <p className="administration-kpi__value text-2xl font-semibold text-slate-100">{completedTasks}</p>
-              </div>
-              <CheckCircle2 size={32} className="administration-kpi__icon text-purple-400" aria-hidden="true" />
-            </div>
-          </div>
-
-          <div className="administration-kpi administration-kpi--red bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-6 border border-red-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="administration-kpi__label text-red-200 text-sm">{t.communication}</p>
-                <p className="administration-kpi__value text-2xl font-semibold text-slate-100">0</p>
-              </div>
-              <Mail size={32} className="administration-kpi__icon text-red-400" aria-hidden="true" />
-            </div>
-          </div>
-
-          <div className="administration-kpi administration-kpi--amber bg-gradient-to-br from-amber-900 to-amber-800 rounded-lg p-6 border border-amber-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="administration-kpi__label text-amber-200 text-sm">{t.compliance}</p>
-                <p className="administration-kpi__value text-2xl font-semibold text-slate-100">1</p>
-                <p className="administration-kpi__detail mt-1 text-xs text-amber-200">{t.complianceTracked}</p>
-              </div>
-              <ShieldCheck size={32} className="administration-kpi__icon text-amber-400" aria-hidden="true" />
-            </div>
-          </div>
-        </div>
-        )}
-
         <ModulePageTabs
           moduleId="administration"
           language={language}
           activeTab={activeTab}
-          onSelect={setActiveTab}
+          onSelect={handleTabSelect}
           tabs={[
             { tab: 'overview', label: t.overview },
             { tab: 'institution', label: t.institution },
@@ -685,51 +613,13 @@ const Admin = () => {
 
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Distribution des rôles */}
-            <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="mb-4 font-semibold text-slate-100">{t.roleDistribution}</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie data={roleDistribution.filter(r => r.count > 0)} cx="50%" cy="50%" labelLine={false} label={({ name, count }) => `${name}: ${count}`} outerRadius={80} fill="#8884d8" dataKey="count">
-                    {roleDistribution.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Activité par type d'action */}
-            <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="mb-4 font-semibold text-slate-100">{t.activityByType}</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={auditActivity}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-                  <XAxis dataKey="action" stroke="#94a3b8" />
-                  <YAxis stroke="#94a3b8" />
-                  <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
-                  <Bar dataKey="count" fill="#10b981" radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Activité quotidienne */}
-            <div className="lg:col-span-2 bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="mb-4 font-semibold text-slate-100">{t.dailyActivity}</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={dailyActivity}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-                  <XAxis dataKey="jour" stroke="#94a3b8" />
-                  <YAxis stroke="#94a3b8" />
-                  <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
-                  <Legend />
-                  <Line type="monotone" dataKey="actions" stroke="#3b82f6" strokeWidth={2} dot={{ fill: '#3b82f6' }} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+          <AdministrationDashboardOverview
+            language={language}
+            tasks={tasks}
+            tasksStatus={tasksStatus}
+            completedTasks={completedTasks}
+            onNavigate={handleTabSelect}
+          />
         )}
 
         {activeTab === 'institution' && (
