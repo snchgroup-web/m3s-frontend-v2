@@ -3,6 +3,7 @@ const path = require('path');
 
 const indexHtml = fs.readFileSync(path.join(__dirname, '..', 'public', 'index.html'), 'utf8');
 const administrationSource = fs.readFileSync(path.join(__dirname, 'Administration.js'), 'utf8');
+const administrationDashboardSource = fs.readFileSync(path.join(__dirname, 'AdministrationDashboardOverview.js'), 'utf8');
 const institutionSource = fs.readFileSync(path.join(__dirname, 'InstitutionOverview.js'), 'utf8');
 const planningSource = fs.readFileSync(path.join(__dirname, 'PlanningOverview.js'), 'utf8');
 const loginSource = fs.readFileSync(path.join(__dirname, 'Login.js'), 'utf8');
@@ -56,7 +57,12 @@ describe('light-mode accent border selectors', () => {
     expect(indexHtml).toContain('.administration-kpi--purple{background-color:#faf5ff!important');
     expect(indexHtml).toContain('.administration-kpi--red{background-color:#fff1f2!important');
     expect(indexHtml).toContain('.administration-kpi--amber{background-color:#fffbeb!important');
-    expect((administrationSource.match(/administration-kpi--/g) || [])).toHaveLength(5);
+    expect((administrationDashboardSource.match(/<MetricCard /g) || [])).toHaveLength(5);
+    expect(administrationDashboardSource).toContain('bg-blue-950 text-blue-300');
+    expect(administrationDashboardSource).toContain('bg-emerald-950 text-emerald-300');
+    expect(administrationDashboardSource).toContain('bg-cyan-950 text-cyan-300');
+    expect(administrationDashboardSource).toContain('bg-violet-950 text-violet-300');
+    expect(administrationDashboardSource).toContain('bg-amber-950 text-amber-300');
   });
 
   test('uses the lighter institutional heading hierarchy', () => {
@@ -88,11 +94,11 @@ describe('light-mode accent border selectors', () => {
   });
 
   test('uses business-specific icons for the Administration KPIs', () => {
-    expect(administrationSource).toContain('<Building2 size={32}');
-    expect(administrationSource).toContain('<FolderKanban size={32}');
-    expect(administrationSource).toContain('<CheckCircle2 size={32}');
-    expect(administrationSource).toContain('<Mail size={32}');
-    expect(administrationSource).toContain('<ShieldCheck size={32}');
+    expect(administrationDashboardSource).toContain('icon={ClipboardList}');
+    expect(administrationDashboardSource).toContain('icon={CheckCircle2}');
+    expect(administrationDashboardSource).toContain('icon={Network}');
+    expect(administrationDashboardSource).toContain('icon={BookOpenText}');
+    expect(administrationDashboardSource).toContain('icon={ShieldCheck}');
   });
 
   test('highlights Administration table rows without changing their layout', () => {
