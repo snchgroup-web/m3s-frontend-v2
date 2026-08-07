@@ -145,8 +145,10 @@ const COPY = {
   }
 };
 
+const HOVER_CARD_CLASSES = 'transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-blue-500/70 hover:shadow-lg hover:shadow-blue-950/20';
+
 const MetricCard = ({ icon: Icon, label, value, source, state, tone }) => (
-  <article className="rounded-lg border border-slate-700 bg-slate-800 p-4">
+  <article className={`rounded-lg border border-slate-700 bg-slate-800 p-4 ${HOVER_CARD_CLASSES}`}>
     <div className="flex items-start justify-between gap-3">
       <div>
         <p className="text-sm font-medium text-slate-400">{label}</p>
@@ -174,11 +176,11 @@ const AdministrationDashboardOverview = ({ language = 'FR', tasks = [], tasksSta
   const completedValue = tasksReady ? completedTasks : '—';
   const components = [
     { id: 'institution', icon: Building2, status: t.statuses.structured },
+    { id: 'architecture', icon: Boxes, status: t.statuses.structured },
+    { id: 'processes', icon: Network, status: t.statuses.framed },
+    { id: 'compliance', icon: ShieldCheck, status: t.statuses.framed },
     { id: 'planning', icon: FolderKanban, status: tasksReady ? t.statuses.connected : t.unavailable },
     { id: 'communication', icon: Mail, status: t.statuses.framed },
-    { id: 'compliance', icon: ShieldCheck, status: t.statuses.framed },
-    { id: 'processes', icon: Network, status: t.statuses.framed },
-    { id: 'architecture', icon: Boxes, status: t.statuses.structured },
     { id: 'glossary', icon: BookOpenText, status: `${glossaryCount} ${t.metrics.glossary.toLowerCase()}` }
   ];
 
@@ -201,11 +203,12 @@ const AdministrationDashboardOverview = ({ language = 'FR', tasks = [], tasksSta
       <section className="rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="administration-coverage-title">
         <h3 id="administration-coverage-title" className="text-xl font-semibold text-slate-100">{t.coverageTitle}</h3>
         <p className="mt-2 max-w-5xl text-sm leading-6 text-slate-400">{t.coverageBody}</p>
-        <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {components.map(({ id, icon: Icon, status }) => {
+        <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-12">
+          {components.map(({ id, icon: Icon, status }, index) => {
             const [title, body] = t.components[id];
+            const wideSpan = index < 3 ? 'xl:col-span-4' : 'xl:col-span-3';
             return (
-              <article key={id} className="flex min-h-44 flex-col rounded-lg border border-slate-700 bg-slate-900/45 p-4">
+              <article key={id} className={`flex min-h-44 flex-col rounded-lg border border-slate-700 bg-slate-900/45 p-4 ${wideSpan} ${HOVER_CARD_CLASSES}`}>
                 <div className="flex items-start justify-between gap-3">
                   <Icon size={21} className="text-blue-300" aria-hidden="true" />
                   <span className="rounded-full border border-slate-600 bg-slate-900 px-2.5 py-1 text-xs font-semibold text-slate-300">{status}</span>

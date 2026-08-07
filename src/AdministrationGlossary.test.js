@@ -4,7 +4,7 @@ import AdministrationGlossary, { getAdministrationGlossaryTerms } from './Admini
 
 test.each(['FR', 'DE', 'EN'])('reuses all central Administration definitions in %s', language => {
   const terms = getAdministrationGlossaryTerms(language);
-  expect(terms).toHaveLength(14);
+  expect(terms).toHaveLength(23);
   terms.forEach(term => {
     expect(term.id).toBeTruthy();
     expect(term.term).toBeTruthy();
@@ -12,6 +12,21 @@ test.each(['FR', 'DE', 'EN'])('reuses all central Administration definitions in 
     expect(term.detailedDefinition).toBeTruthy();
     expect(term.version).toMatch(/^V5\./);
   });
+});
+
+test('covers every Administration component and keeps unvalidated business terms explicit', () => {
+  const terms = getAdministrationGlossaryTerms('FR');
+  const ids = terms.map(term => term.id);
+
+  expect(ids).toEqual(expect.arrayContaining([
+    'ADM-ARCHITECTURE-FONCTIONNELLE',
+    'ADM-PROCESSUS',
+    'ADM-PROCEDURE',
+    'ADM-MANUEL-PROCEDURES',
+    'ADM-CONFORMITE',
+    'ADM-CORRESPONDANCE'
+  ]));
+  expect(terms.find(term => term.id === 'ADM-PROCESSUS')).toMatchObject({ status: 'candidate' });
 });
 
 test('filters the local view and opens the stable term in the Central Glossary', () => {

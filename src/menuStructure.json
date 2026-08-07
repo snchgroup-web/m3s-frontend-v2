@@ -32,6 +32,36 @@
           "path": "/administration?tab=institution"
         },
         {
+          "id": "administration-architecture",
+          "label": {
+            "FR": "Architecture & Relations",
+            "EN": "Architecture & Relationships",
+            "DE": "Architektur & Beziehungen"
+          },
+          "icon": "Network",
+          "path": "/administration?tab=architecture"
+        },
+        {
+          "id": "processes",
+          "label": {
+            "FR": "Processus & Procédures",
+            "EN": "Processes & Procedures",
+            "DE": "Prozesse & Verfahren"
+          },
+          "icon": "Activity",
+          "path": "/administration?tab=processes"
+        },
+        {
+          "id": "compliance",
+          "label": {
+            "FR": "Conformité",
+            "EN": "Compliance",
+            "DE": "Compliance"
+          },
+          "icon": "ShieldCheck",
+          "path": "/administration?tab=compliance"
+        },
+        {
           "id": "planning",
           "label": {
             "FR": "Planification & Projets",
@@ -50,36 +80,6 @@
           },
           "icon": "MessageSquare",
           "path": "/administration?tab=communication"
-        },
-        {
-          "id": "compliance",
-          "label": {
-            "FR": "Conformité",
-            "EN": "Compliance",
-            "DE": "Compliance"
-          },
-          "icon": "ShieldCheck",
-          "path": "/administration?tab=compliance"
-        },
-        {
-          "id": "processes",
-          "label": {
-            "FR": "Processus & Procédures",
-            "EN": "Processes & Procedures",
-            "DE": "Prozesse & Verfahren"
-          },
-          "icon": "Activity",
-          "path": "/administration?tab=processes"
-        },
-        {
-          "id": "administration-architecture",
-          "label": {
-            "FR": "Architecture & Relations",
-            "EN": "Architecture & Relationships",
-            "DE": "Architektur & Beziehungen"
-          },
-          "icon": "Network",
-          "path": "/administration?tab=architecture"
         },
         {
           "id": "administration-glossary",
