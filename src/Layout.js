@@ -152,7 +152,7 @@ const Layout = ({ children }) => {
               {sidebarOpen && group.label?.FR && (
                 <p
                   id={`sidebar-group-${group.id}`}
-                  className="px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500"
+                  className="sidebar-group-label px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500"
                 >
                   {group.label[language] || group.label.FR}
                 </p>
@@ -178,7 +178,7 @@ const Layout = ({ children }) => {
                       }}
                       title={!sidebarOpen ? (item.label[language] || item.label.FR) : undefined}
                       aria-current={parentActive && !activeMenu.child ? 'page' : undefined}
-                      className={`sidebar-nav-item flex items-center rounded hover:bg-slate-700 transition text-left text-sm cursor-pointer ${
+                      className={`sidebar-nav-item ${parentActive ? 'sidebar-nav-item--active' : 'sidebar-nav-item--inactive'} flex items-center rounded hover:bg-slate-700 transition text-left text-sm cursor-pointer ${
                         sidebarOpen
                           ? 'w-full space-x-3 px-4 py-2'
                           : 'w-full justify-center py-3'
@@ -218,7 +218,7 @@ const Layout = ({ children }) => {
                             key={child.id}
                             onClick={() => handleMenuItemClick(child.path)}
                             aria-current={childActive ? 'page' : undefined}
-                            className={`sidebar-submenu-item w-full flex items-center space-x-2 rounded border px-3 py-1.5 text-left text-xs transition ${childActive ? 'border-blue-500/60 bg-blue-700/45 font-semibold text-blue-100 shadow-sm' : 'border-transparent text-slate-300 hover:bg-slate-600 hover:text-white'}`}
+                            className={`sidebar-submenu-item ${childActive ? 'sidebar-submenu-item--active' : 'sidebar-submenu-item--inactive'} w-full flex items-center space-x-2 rounded border px-3 py-1.5 text-left text-xs transition ${childActive ? 'border-blue-500/60 bg-blue-700/45 font-semibold text-blue-100 shadow-sm' : 'border-transparent text-slate-300 hover:bg-slate-600 hover:text-white'}`}
                           >
                             {child.icon && iconMap[child.icon]
                               ? React.createElement(iconMap[child.icon], { size: 14, className: modulePresentation[item.id]?.color || 'text-sky-400' })
