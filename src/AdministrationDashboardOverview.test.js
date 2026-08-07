@@ -15,7 +15,7 @@ test('distinguishes a confirmed zero from an unavailable task source', () => {
   expect(screen.getAllByText('Source indisponible').length).toBeGreaterThanOrEqual(2);
 });
 
-test('shows the six governed Administration components and opens the selected one', () => {
+test('shows the seven governed Administration components and opens the selected one', () => {
   const onNavigate = jest.fn();
   render(
     <AdministrationDashboardOverview
@@ -29,11 +29,12 @@ test('shows the six governed Administration components and opens the selected on
 
   expect(screen.getByRole('heading', { name: 'Administration local dashboard' })).toBeInTheDocument();
   const componentsMetric = screen.getByText('Structured components').closest('article');
-  expect(within(componentsMetric).getByText('6')).toBeInTheDocument();
+  expect(within(componentsMetric).getByText('7')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Processes & Procedures' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Architecture & Relationships' })).toBeInTheDocument();
 
   const openButtons = screen.getAllByRole('button', { name: /Open/ });
-  expect(openButtons).toHaveLength(6);
+  expect(openButtons).toHaveLength(7);
   fireEvent.click(openButtons[4]);
   expect(onNavigate).toHaveBeenCalledWith('processes');
 });

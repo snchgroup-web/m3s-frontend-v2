@@ -2,6 +2,7 @@ import React from 'react';
 import {
   ArrowRight,
   BookOpenText,
+  Boxes,
   Building2,
   CheckCircle2,
   ClipboardList,
@@ -35,7 +36,7 @@ const COPY = {
     confirmedZero: 'Zéro confirmé par la source',
     available: 'Source disponible',
     coverageTitle: 'Couverture fonctionnelle',
-    coverageBody: 'Six composantes organisent actuellement la fonction Administration. Leur niveau de maturité reste visible sans transformer un cadrage en donnée opérationnelle.',
+    coverageBody: 'Sept composantes organisent actuellement la fonction Administration. Leur niveau de maturité reste visible sans transformer un cadrage en donnée opérationnelle.',
     open: 'Ouvrir',
     statuses: { structured: 'Structurée', connected: 'Connectée', framed: 'Cadrée', governed: 'Gouverné' },
     components: {
@@ -44,6 +45,7 @@ const COPY = {
       communication: ['Communication & Courrier', 'Périmètre, responsabilités et circuit documentaire cadrés.'],
       compliance: ['Conformité', 'Obligations et dossier juridique signalé, sans conclusion inventée.'],
       processes: ['Processus & Procédures', 'Cycle, manuel cible, dossiers et archives cadrés.'],
+      architecture: ['Architecture & Relations', 'Couches, objets, échanges, systèmes et sources maîtresses structurés.'],
       glossary: ['Glossaire', 'Définitions locales réutilisées depuis le Glossaire central 2SG.']
     },
     readingTitle: 'Règle de lecture des indicateurs',
@@ -77,7 +79,7 @@ const COPY = {
     confirmedZero: 'Zero confirmed by source',
     available: 'Source available',
     coverageTitle: 'Functional coverage',
-    coverageBody: 'Six components currently organise the Administration function. Their maturity remains visible without presenting framing as operational data.',
+    coverageBody: 'Seven components currently organise the Administration function. Their maturity remains visible without presenting framing as operational data.',
     open: 'Open',
     statuses: { structured: 'Structured', connected: 'Connected', framed: 'Framed', governed: 'Governed' },
     components: {
@@ -86,6 +88,7 @@ const COPY = {
       communication: ['Communication & Correspondence', 'Scope, responsibilities and document flow are framed.'],
       compliance: ['Compliance', 'Obligations and a reported legal matter, without invented conclusions.'],
       processes: ['Processes & Procedures', 'Cycle, target manual, files and archives are framed.'],
+      architecture: ['Architecture & Relationships', 'Layers, objects, exchanges, systems and master sources are structured.'],
       glossary: ['Glossary', 'Local definitions reused from the 2SG Central Glossary.']
     },
     readingTitle: 'Indicator reading rule',
@@ -119,7 +122,7 @@ const COPY = {
     confirmedZero: 'Null durch die Quelle bestätigt',
     available: 'Quelle verfügbar',
     coverageTitle: 'Funktionale Abdeckung',
-    coverageBody: 'Sechs Komponenten strukturieren derzeit die Verwaltungsfunktion. Ihr Reifegrad bleibt sichtbar, ohne einen Rahmen als operative Daten darzustellen.',
+    coverageBody: 'Sieben Komponenten strukturieren derzeit die Verwaltungsfunktion. Ihr Reifegrad bleibt sichtbar, ohne einen Rahmen als operative Daten darzustellen.',
     open: 'Öffnen',
     statuses: { structured: 'Strukturiert', connected: 'Verbunden', framed: 'Gerahmt', governed: 'Gesteuert' },
     components: {
@@ -128,6 +131,7 @@ const COPY = {
       communication: ['Kommunikation & Korrespondenz', 'Umfang, Verantwortungen und Dokumentenfluss sind gerahmt.'],
       compliance: ['Compliance', 'Pflichten und ein gemeldeter Rechtsfall, ohne erfundene Schlussfolgerung.'],
       processes: ['Prozesse & Verfahren', 'Ablauf, Zielhandbuch, Akten und Archive sind gerahmt.'],
+      architecture: ['Architektur & Beziehungen', 'Ebenen, Objekte, Austausch, Systeme und Masterquellen sind strukturiert.'],
       glossary: ['Glossar', 'Lokale Definitionen werden aus dem zentralen 2SG-Glossar übernommen.']
     },
     readingTitle: 'Leseregel für Kennzahlen',
@@ -174,6 +178,7 @@ const AdministrationDashboardOverview = ({ language = 'FR', tasks = [], tasksSta
     { id: 'communication', icon: Mail, status: t.statuses.framed },
     { id: 'compliance', icon: ShieldCheck, status: t.statuses.framed },
     { id: 'processes', icon: Network, status: t.statuses.framed },
+    { id: 'architecture', icon: Boxes, status: t.statuses.structured },
     { id: 'glossary', icon: BookOpenText, status: `${glossaryCount} ${t.metrics.glossary.toLowerCase()}` }
   ];
 
