@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ArrowRight,
   BookOpenText,
@@ -6,14 +6,18 @@ import {
   BriefcaseBusiness,
   Building2,
   Factory,
+  FileDown,
+  FileText,
   FolderCog,
   Handshake,
   LayoutDashboard,
+  LoaderCircle,
   Network,
   UsersRound,
   WalletCards,
   Warehouse
 } from 'lucide-react';
+import api from './api';
 
 const translations = {
   FR: {
@@ -28,8 +32,15 @@ const translations = {
       ['Diriger', 'Prendre les décisions nécessaires à la réalisation des objectifs.']
     ],
     intelligenceTitle: '2SG Intelligence Dashboard',
-    intelligenceStatus: 'Raccordement applicatif à finaliser',
-    intelligenceBody: 'La livraison quotidienne reste actuellement externe au frontend M3S. Aucun contenu ancien ou simulé n’est repris ici.',
+    intelligenceStatus: 'Édition disponible',
+    intelligenceUnavailable: 'Aucune édition publiée',
+    intelligenceLoading: 'Vérification de la dernière édition...',
+    intelligenceError: 'La source Intelligence est momentanément indisponible.',
+    intelligenceBody: 'La dernière livraison validée est conservée dans M3S et reste accessible uniquement après connexion.',
+    intelligenceEdition: 'Édition',
+    openHtml: 'Ouvrir le Dashboard',
+    openPdf: 'Ouvrir le PDF',
+    openReference: 'Ouvrir le référentiel',
     intelligenceAreas: ['Mémoire stratégique', 'État du système', 'Radar & veille', 'Opportunités', 'Agenda', 'Journal de bord', 'Recommandations'],
     knowledgeAction: 'Ouvrir Veille & KM',
     mapTitle: 'Fonctions reliées au pilotage global',
@@ -49,8 +60,15 @@ const translations = {
       ['Direct', 'Make the decisions required to achieve objectives.']
     ],
     intelligenceTitle: '2SG Intelligence Dashboard',
-    intelligenceStatus: 'Application connection to be completed',
-    intelligenceBody: 'The daily delivery currently remains external to the M3S frontend. No outdated or simulated content is reproduced here.',
+    intelligenceStatus: 'Edition available',
+    intelligenceUnavailable: 'No published edition',
+    intelligenceLoading: 'Checking the latest edition...',
+    intelligenceError: 'The Intelligence source is temporarily unavailable.',
+    intelligenceBody: 'The latest validated delivery is retained in M3S and remains accessible only after sign-in.',
+    intelligenceEdition: 'Edition',
+    openHtml: 'Open Dashboard',
+    openPdf: 'Open PDF',
+    openReference: 'Open reference',
     intelligenceAreas: ['Strategic memory', 'System status', 'Radar & monitoring', 'Opportunities', 'Agenda', 'Logbook', 'Recommendations'],
     knowledgeAction: 'Open Monitoring & KM',
     mapTitle: 'Functions connected to global steering',
@@ -70,8 +88,15 @@ const translations = {
       ['Leiten', 'Die für die Zielerreichung nötigen Entscheidungen treffen.']
     ],
     intelligenceTitle: '2SG Intelligence Dashboard',
-    intelligenceStatus: 'Anwendungsanbindung noch abzuschließen',
-    intelligenceBody: 'Die tägliche Lieferung bleibt derzeit außerhalb des M3S-Frontends. Hier werden keine veralteten oder simulierten Inhalte übernommen.',
+    intelligenceStatus: 'Ausgabe verfügbar',
+    intelligenceUnavailable: 'Keine veröffentlichte Ausgabe',
+    intelligenceLoading: 'Letzte Ausgabe wird geprüft...',
+    intelligenceError: 'Die Intelligence-Quelle ist vorübergehend nicht verfügbar.',
+    intelligenceBody: 'Die letzte validierte Lieferung wird in M3S aufbewahrt und ist nur nach der Anmeldung zugänglich.',
+    intelligenceEdition: 'Ausgabe',
+    openHtml: 'Dashboard öffnen',
+    openPdf: 'PDF öffnen',
+    openReference: 'Referenz öffnen',
     intelligenceAreas: ['Strategisches Gedächtnis', 'Systemstatus', 'Radar & Monitoring', 'Chancen', 'Agenda', 'Arbeitsjournal', 'Empfehlungen'],
     knowledgeAction: 'Monitoring & KM öffnen',
     mapTitle: 'Mit der globalen Steuerung verbundene Funktionen',
@@ -93,9 +118,90 @@ const functionDefinitions = [
 
 const tabIcons = { overview: LayoutDashboard, intelligence: BrainCircuit, map: Network };
 
+export const renderSandboxedHtmlArtifact = (target, url) => {
+  if (!target?.document?.body) return false;
+  target.opener = null;
+  target.document.title = '2SG Intelligence Dashboard';
+  Object.assign(target.document.body.style, { margin: '0', minHeight: '100vh', background: '#f8fafc' });
+  const frame = target.document.createElement('iframe');
+  frame.src = url;
+  frame.title = '2SG Intelligence Dashboard';
+  frame.referrerPolicy = 'no-referrer';
+  frame.setAttribute('sandbox', 'allow-scripts allow-forms allow-modals allow-popups allow-downloads');
+  frame.setAttribute('aria-label', '2SG Intelligence Dashboard');
+  Object.assign(frame.style, { display: 'block', width: '100%', height: '100vh', border: '0' });
+  target.document.body.replaceChildren(frame);
+  return true;
+};
+
 const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
   const [activeView, setActiveView] = useState('overview');
+  const [intelligenceState, setIntelligenceState] = useState({ status: 'idle', data: null });
+  const [artifactError, setArtifactError] = useState('');
+  const intelligenceRequested = useRef(false);
   const t = translations[language] || translations.FR;
+
+  useEffect(() => {
+    if (activeView !== 'intelligence' || intelligenceRequested.current) return undefined;
+    intelligenceRequested.current = true;
+    let current = true;
+    let settled = false;
+    setIntelligenceState({ status: 'loading', data: null });
+    api.getLatestIntelligence()
+      .then((payload) => {
+        if (current) setIntelligenceState({ status: payload.data ? 'ready' : 'empty', data: payload.data || null });
+      })
+      .catch(() => {
+        if (current) {
+          intelligenceRequested.current = false;
+          setIntelligenceState({ status: 'error', data: null });
+        }
+      })
+      .finally(() => {
+        settled = true;
+      });
+    return () => {
+      current = false;
+      if (!settled) intelligenceRequested.current = false;
+    };
+  }, [activeView]);
+
+  const openArtifact = async (artifactType) => {
+    setArtifactError('');
+    const target = window.open('about:blank', '_blank');
+    if (target) target.opener = null;
+    try {
+      const { blob } = await api.getLatestIntelligenceArtifact(artifactType);
+      const url = URL.createObjectURL(blob);
+      if (artifactType === 'html' && target) {
+        renderSandboxedHtmlArtifact(target, url);
+      } else if (target) {
+        target.location.href = url;
+      } else {
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        if (artifactType === 'html') anchor.download = '2SG_Intelligence_Dashboard_V4.html';
+        else anchor.target = '_blank';
+        anchor.rel = 'noopener noreferrer';
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+      }
+      window.setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } catch {
+      if (target) target.close();
+      setArtifactError(t.intelligenceError);
+    }
+  };
+
+  const intelligenceReady = intelligenceState.status === 'ready';
+  const intelligenceLabel = intelligenceState.status === 'loading'
+    ? t.intelligenceLoading
+    : intelligenceReady
+      ? t.intelligenceStatus
+      : intelligenceState.status === 'error'
+        ? t.intelligenceError
+        : t.intelligenceUnavailable;
 
   return (
     <section className="global-pilotage rounded-lg border border-slate-700 bg-slate-800 p-4 shadow-lg sm:p-5" aria-labelledby="global-pilotage-title">
@@ -144,9 +250,29 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
             <div className="flex flex-wrap items-center gap-3">
               <BookOpenText className="text-amber-300" size={22} aria-hidden="true" />
               <h3 className="text-lg font-semibold text-slate-100">{t.intelligenceTitle}</h3>
-              <span className="rounded-full border border-amber-700 px-2.5 py-1 text-xs font-semibold text-amber-200">{t.intelligenceStatus}</span>
+              <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${intelligenceReady ? 'border-emerald-700 text-emerald-200' : 'border-amber-700 text-amber-200'}`}>{intelligenceLabel}</span>
             </div>
             <p className="mt-3 text-sm leading-6 text-slate-300">{t.intelligenceBody}</p>
+            {intelligenceReady && (
+              <p className="mt-2 text-sm font-semibold text-emerald-200">
+                {t.intelligenceEdition} : {intelligenceState.data.editionDate} · {intelligenceState.data.sourceVersion}
+              </p>
+            )}
+            {intelligenceState.status === 'loading' && <LoaderCircle className="mt-3 animate-spin text-blue-300" size={20} aria-hidden="true" />}
+            {artifactError && <p role="alert" className="mt-3 text-sm text-rose-300">{artifactError}</p>}
+            {intelligenceReady && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                <button type="button" onClick={() => openArtifact('html')} className="inline-flex min-h-10 items-center gap-2 rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600">
+                  <BookOpenText size={16} aria-hidden="true" />{t.openHtml}
+                </button>
+                <button type="button" onClick={() => openArtifact('pdf')} className="inline-flex min-h-10 items-center gap-2 rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 hover:border-blue-400 hover:bg-slate-600">
+                  <FileDown size={16} aria-hidden="true" />{t.openPdf}
+                </button>
+                <button type="button" onClick={() => openArtifact('reference')} className="inline-flex min-h-10 items-center gap-2 rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 hover:border-blue-400 hover:bg-slate-600">
+                  <FileText size={16} aria-hidden="true" />{t.openReference}
+                </button>
+              </div>
+            )}
             <button type="button" onClick={() => onNavigate('/ged?tab=knowledge')} className="mt-4 inline-flex min-h-10 items-center gap-2 rounded-md bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-600">
               {t.knowledgeAction}<ArrowRight size={16} aria-hidden="true" />
             </button>

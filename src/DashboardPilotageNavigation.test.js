@@ -1,6 +1,19 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
-import DashboardPilotageNavigation from './DashboardPilotageNavigation';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import DashboardPilotageNavigation, { renderSandboxedHtmlArtifact } from './DashboardPilotageNavigation';
+import api from './api';
+
+jest.mock('./api', () => ({
+  __esModule: true,
+  default: {
+    getLatestIntelligence: jest.fn(),
+    getLatestIntelligenceArtifact: jest.fn()
+  }
+}));
+
+beforeEach(() => {
+  api.getLatestIntelligence.mockResolvedValue({ success: true, data: null });
+});
 
 test('shows the four management responsibilities in French', () => {
   render(<DashboardPilotageNavigation language="FR" onNavigate={jest.fn()} />);
@@ -12,15 +25,89 @@ test('shows the four management responsibilities in French', () => {
   expect(screen.getByText('Diriger')).toBeInTheDocument();
 });
 
-test('keeps Intelligence honest and links to the governed knowledge view', () => {
+test('keeps Intelligence honest when no edition is published', async () => {
   const onNavigate = jest.fn();
   render(<DashboardPilotageNavigation language="EN" onNavigate={onNavigate} />);
 
   fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
-  expect(screen.getByText('Application connection to be completed')).toBeInTheDocument();
-  expect(screen.getByText(/No outdated or simulated content/)).toBeInTheDocument();
+  expect(await screen.findByText('No published edition')).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: /Open Monitoring & KM/ }));
   expect(onNavigate).toHaveBeenCalledWith('/ged?tab=knowledge');
+});
+
+test('shows the real edition and its three secured artifacts', async () => {
+  api.getLatestIntelligence.mockResolvedValue({
+    success: true,
+    data: { editionDate: '2026-08-07', sourceVersion: 'V4' }
+  });
+  render(<DashboardPilotageNavigation language="FR" onNavigate={jest.fn()} />);
+
+  fireEvent.click(screen.getByRole('tab', { name: 'Intelligence 2SG' }));
+  expect(await screen.findByText('Édition disponible')).toBeInTheDocument();
+  expect(screen.getByText(/2026-08-07/)).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Ouvrir le Dashboard/ })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Ouvrir le PDF/ })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Ouvrir le référentiel/ })).toBeInTheDocument();
+});
+
+test('retries metadata loading after leaving the Intelligence tab mid-request', async () => {
+  let resolveFirstRequest;
+  api.getLatestIntelligence
+    .mockImplementationOnce(() => new Promise((resolve) => { resolveFirstRequest = resolve; }))
+    .mockResolvedValueOnce({
+      success: true,
+      data: { editionDate: '2026-08-07', sourceVersion: 'V4' }
+    });
+  render(<DashboardPilotageNavigation language="EN" onNavigate={jest.fn()} />);
+
+  fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
+  expect(api.getLatestIntelligence).toHaveBeenCalledTimes(1);
+  fireEvent.click(screen.getByRole('tab', { name: 'Steering' }));
+
+  await act(async () => {
+    resolveFirstRequest({ success: true, data: null });
+  });
+  fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
+
+  expect(api.getLatestIntelligence).toHaveBeenCalledTimes(2);
+  expect(await screen.findByText('Edition available')).toBeInTheDocument();
+});
+
+test('allows retrying metadata after a transient request failure', async () => {
+  api.getLatestIntelligence
+    .mockRejectedValueOnce(new Error('temporary failure'))
+    .mockResolvedValueOnce({
+      success: true,
+      data: { editionDate: '2026-08-07', sourceVersion: 'V4' }
+    });
+  render(<DashboardPilotageNavigation language="EN" onNavigate={jest.fn()} />);
+
+  fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
+  expect(await screen.findByText('The Intelligence source is temporarily unavailable.')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('tab', { name: 'Steering' }));
+  fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
+
+  expect(api.getLatestIntelligence).toHaveBeenCalledTimes(2);
+  expect(await screen.findByText('Edition available')).toBeInTheDocument();
+});
+
+test('renders HTML artifacts in an opaque sandbox without same-origin access', () => {
+  const frame = { style: {}, setAttribute: jest.fn() };
+  const target = {
+    opener: {},
+    document: {
+      title: '',
+      body: { style: {}, replaceChildren: jest.fn() },
+      createElement: jest.fn(() => frame)
+    }
+  };
+
+  expect(renderSandboxedHtmlArtifact(target, 'blob:m3s-intelligence')).toBe(true);
+  const sandboxValue = frame.setAttribute.mock.calls.find(([name]) => name === 'sandbox')[1];
+  expect(sandboxValue).toContain('allow-scripts');
+  expect(sandboxValue).not.toContain('allow-same-origin');
+  expect(target.document.body.replaceChildren).toHaveBeenCalledWith(frame);
+  expect(target.opener).toBeNull();
 });
 
 test('opens real function routes from the trilingual function map', () => {
