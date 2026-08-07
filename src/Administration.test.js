@@ -7,6 +7,7 @@ test.each([
   ['communication', 'communication'],
   ['compliance', 'compliance'],
   ['processes', 'processes'],
+  ['architecture', 'architecture'],
   ['glossary', 'glossary'],
   ['tasks', 'planning'],
   ['projects', 'planning'],

@@ -13,6 +13,7 @@ import CommunicationOverview from './CommunicationOverview';
 import AdministrationGlossary from './AdministrationGlossary';
 import ProcessProcedureArchiveOverview from './ProcessProcedureArchiveOverview';
 import AdministrationDashboardOverview from './AdministrationDashboardOverview';
+import AdministrationArchitectureOverview from './AdministrationArchitectureOverview';
 import { resolveAdministrationTab } from './administrationTabs';
 
 const Admin = () => {
@@ -80,6 +81,7 @@ const Admin = () => {
       , institution: 'Institution',
       communication: 'Communication & Courrier',
       processes: 'Processus & Procédures',
+      architecture: 'Architecture & Relations',
       compliance: 'Conformité',
       complianceTracked: 'dossier suivi',
       tachesTerminees: 'Tâches terminées',
@@ -144,6 +146,7 @@ const Admin = () => {
       , institution: 'Institution',
       communication: 'Communication & Correspondence',
       processes: 'Processes & Procedures',
+      architecture: 'Architecture & Relationships',
       compliance: 'Compliance',
       complianceTracked: 'tracked matter',
       tachesTerminees: 'Completed tasks',
@@ -208,6 +211,7 @@ const Admin = () => {
       , institution: 'Institution',
       communication: 'Kommunikation & Korrespondenz',
       processes: 'Prozesse & Verfahren',
+      architecture: 'Architektur & Beziehungen',
       compliance: 'Compliance',
       complianceTracked: 'verfolgter Fall',
       tachesTerminees: 'Abgeschlossene Aufgaben',
@@ -607,7 +611,8 @@ const Admin = () => {
             { tab: 'planning', label: `${t.planning} (${tasks.length})` },
             { tab: 'communication', label: t.communication },
             { tab: 'compliance', label: t.compliance },
-            { tab: 'processes', label: t.processes }
+            { tab: 'processes', label: t.processes },
+            { tab: 'architecture', label: t.architecture }
           ]}
         />
 
@@ -700,6 +705,10 @@ const Admin = () => {
 
         {activeTab === 'processes' && (
           <ProcessProcedureArchiveOverview language={language} />
+        )}
+
+        {activeTab === 'architecture' && (
+          <AdministrationArchitectureOverview language={language} />
         )}
 
         {/* Utilisateurs */}
@@ -833,7 +842,7 @@ const Admin = () => {
           </div>
         )}
 
-        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} handledTabs={['overview', 'institution', 'planning', 'communication', 'compliance', 'processes', 'glossary']} />
+        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} handledTabs={['overview', 'institution', 'planning', 'communication', 'compliance', 'processes', 'architecture', 'glossary']} />
         </div>
       </div>
 
