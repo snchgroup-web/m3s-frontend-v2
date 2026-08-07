@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import DashboardPilotageNavigation from './DashboardPilotageNavigation';
 import api from './api';
 
@@ -48,6 +48,29 @@ test('shows the real edition and its three secured artifacts', async () => {
   expect(screen.getByRole('button', { name: /Ouvrir le Dashboard/ })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /Ouvrir le PDF/ })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /Ouvrir le référentiel/ })).toBeInTheDocument();
+});
+
+test('retries metadata loading after leaving the Intelligence tab mid-request', async () => {
+  let resolveFirstRequest;
+  api.getLatestIntelligence
+    .mockImplementationOnce(() => new Promise((resolve) => { resolveFirstRequest = resolve; }))
+    .mockResolvedValueOnce({
+      success: true,
+      data: { editionDate: '2026-08-07', sourceVersion: 'V4' }
+    });
+  render(<DashboardPilotageNavigation language="EN" onNavigate={jest.fn()} />);
+
+  fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
+  expect(api.getLatestIntelligence).toHaveBeenCalledTimes(1);
+  fireEvent.click(screen.getByRole('tab', { name: 'Steering' }));
+
+  await act(async () => {
+    resolveFirstRequest({ success: true, data: null });
+  });
+  fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
+
+  expect(api.getLatestIntelligence).toHaveBeenCalledTimes(2);
+  expect(await screen.findByText('Edition available')).toBeInTheDocument();
 });
 
 test('opens real function routes from the trilingual function map', () => {

@@ -129,6 +129,7 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
     if (activeView !== 'intelligence' || intelligenceRequested.current) return undefined;
     intelligenceRequested.current = true;
     let current = true;
+    let settled = false;
     setIntelligenceState({ status: 'loading', data: null });
     api.getLatestIntelligence()
       .then((payload) => {
@@ -136,8 +137,14 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
       })
       .catch(() => {
         if (current) setIntelligenceState({ status: 'error', data: null });
+      })
+      .finally(() => {
+        settled = true;
       });
-    return () => { current = false; };
+    return () => {
+      current = false;
+      if (!settled) intelligenceRequested.current = false;
+    };
   }, [activeView]);
 
   const openArtifact = async (artifactType) => {
