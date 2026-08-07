@@ -32,10 +32,19 @@ test('shows the seven governed Administration components and opens the selected 
   expect(within(componentsMetric).getByText('7')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Processes & Procedures' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Architecture & Relationships' })).toBeInTheDocument();
+  expect(screen.getAllByRole('heading', { level: 4 }).map(heading => heading.textContent)).toEqual([
+    'Institution',
+    'Architecture & Relationships',
+    'Processes & Procedures',
+    'Compliance',
+    'Planning & Projects',
+    'Communication & Correspondence',
+    'Glossary'
+  ]);
 
   const openButtons = screen.getAllByRole('button', { name: /Open/ });
   expect(openButtons).toHaveLength(7);
-  fireEvent.click(openButtons[4]);
+  fireEvent.click(openButtons[2]);
   expect(onNavigate).toHaveBeenCalledWith('processes');
 });
 

@@ -407,6 +407,195 @@ const GLOSSARY_CONTEXT = {
       }
     }
   },
+  'ADM-ARCHITECTURE-FONCTIONNELLE': {
+    version: 'V5.4',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Architecture fonctionnelle',
+        shortDefinition: 'Vue structurée des fonctions, objets, relations, systèmes et sources nécessaires à une activité.',
+        detailedDefinition: "Représentation de la manière dont une fonction comme Administration est organisée et reliée au reste de 2SG/M3S. Elle décrit les responsabilités, objets métier, échanges, systèmes d’appui et sources maîtresses, sans constituer un organigramme hiérarchique ni imposer un logiciel précis."
+      },
+      DE: {
+        term: 'Funktionale Architektur',
+        shortDefinition: 'Strukturierte Sicht auf Funktionen, Objekte, Beziehungen, Systeme und Quellen einer Tätigkeit.',
+        detailedDefinition: 'Darstellung, wie eine Funktion wie Verwaltung aufgebaut und mit dem übrigen 2SG-/M3S-System verbunden ist. Sie beschreibt Verantwortlichkeiten, Fachobjekte, Austausch, unterstützende Systeme und maßgebliche Quellen, ohne ein hierarchisches Organigramm oder eine bestimmte Software vorzugeben.'
+      },
+      EN: {
+        term: 'Functional architecture',
+        shortDefinition: 'A structured view of the functions, objects, relationships, systems and sources required by an activity.',
+        detailedDefinition: 'A representation of how a function such as Administration is organised and connected to the rest of 2SG/M3S. It describes responsibilities, business objects, exchanges, supporting systems and master sources without being a hierarchical organisation chart or prescribing specific software.'
+      }
+    }
+  },
+  'ADM-PROCESSUS': {
+    version: 'V5.4',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Processus',
+        shortDefinition: 'Enchaînement coordonné d’activités qui transforme une demande ou une ressource en résultat vérifiable.',
+        detailedDefinition: 'Suite organisée d’activités reliées par un déclencheur, des rôles, des contrôles, des informations et un résultat attendu. Un processus traverse parfois plusieurs fonctions et précise le flux global, tandis qu’une procédure décrit une manière approuvée d’en exécuter une partie.'
+      },
+      DE: {
+        term: 'Prozess',
+        shortDefinition: 'Koordinierte Folge von Tätigkeiten, die eine Anfrage oder Ressource in ein überprüfbares Ergebnis überführt.',
+        detailedDefinition: 'Geordnete Abfolge von Tätigkeiten mit Auslöser, Rollen, Kontrollen, Informationen und erwartetem Ergebnis. Ein Prozess kann mehrere Funktionen durchlaufen und beschreibt den Gesamtfluss, während ein Verfahren die genehmigte Ausführung eines Teils davon festlegt.'
+      },
+      EN: {
+        term: 'Process',
+        shortDefinition: 'A coordinated sequence of activities that turns a request or resource into a verifiable result.',
+        detailedDefinition: 'An organised sequence of activities linked by a trigger, roles, controls, information and an expected result. A process may cross several functions and describes the overall flow, while a procedure sets out an approved way to perform part of it.'
+      }
+    }
+  },
+  'ADM-PROCEDURE': {
+    version: 'V5.4',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Procédure',
+        shortDefinition: 'Façon approuvée d’exécuter une partie d’un processus avec des étapes, rôles, contrôles et preuves.',
+        detailedDefinition: 'Description versionnée des actions à réaliser, de leur ordre, des responsabilités, contrôles, preuves attendues et exceptions possibles. Une procédure rend l’exécution reproductible et traçable sans remplacer le jugement professionnel ni la validation humaine requise.'
+      },
+      DE: {
+        term: 'Verfahren',
+        shortDefinition: 'Genehmigte Art, einen Teil eines Prozesses mit Schritten, Rollen, Kontrollen und Nachweisen auszuführen.',
+        detailedDefinition: 'Versionierte Beschreibung der auszuführenden Handlungen, ihrer Reihenfolge, Verantwortlichkeiten, Kontrollen, erwarteten Nachweise und möglichen Ausnahmen. Ein Verfahren macht die Ausführung wiederholbar und nachvollziehbar, ersetzt jedoch weder fachliches Urteil noch erforderliche menschliche Freigaben.'
+      },
+      EN: {
+        term: 'Procedure',
+        shortDefinition: 'An approved way to perform part of a process using defined steps, roles, controls and evidence.',
+        detailedDefinition: 'A versioned description of the actions to perform, their order, responsibilities, controls, expected evidence and possible exceptions. A procedure makes execution repeatable and traceable without replacing professional judgement or required human approval.'
+      }
+    }
+  },
+  'ADM-MANUEL-PROCEDURES': {
+    version: 'V5.4',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Manuel de procédures',
+        shortDefinition: 'Ensemble gouverné des procédures applicables, de leurs responsables, versions et règles communes.',
+        detailedDefinition: 'Référentiel organisé qui rassemble les procédures validées d’une institution ou d’une fonction, leur périmètre, leurs propriétaires, versions, contrôles et modalités de mise à jour. Chaque procédure reste identifiable et reliée au processus qu’elle soutient.'
+      },
+      DE: {
+        term: 'Verfahrenshandbuch',
+        shortDefinition: 'Gesteuerte Sammlung anwendbarer Verfahren mit Verantwortlichen, Versionen und gemeinsamen Regeln.',
+        detailedDefinition: 'Geordnete Referenz, die validierte Verfahren einer Institution oder Funktion samt Geltungsbereich, Verantwortlichen, Versionen, Kontrollen und Aktualisierungsregeln zusammenführt. Jedes Verfahren bleibt eindeutig erkennbar und mit dem unterstützten Prozess verbunden.'
+      },
+      EN: {
+        term: 'Procedures manual',
+        shortDefinition: 'A governed set of applicable procedures, their owners, versions and common rules.',
+        detailedDefinition: 'An organised reference bringing together the validated procedures of an institution or function, their scope, owners, versions, controls and update rules. Each procedure remains identifiable and linked to the process it supports.'
+      }
+    }
+  },
+  'ADM-DOSSIER': {
+    version: 'V5.4',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Dossier administratif',
+        shortDefinition: 'Regroupement des informations et pièces relatives à une affaire, une décision, un projet ou une obligation.',
+        detailedDefinition: 'Ensemble structuré de documents, données, échanges, décisions et preuves rattachés à un même objet administratif. Il possède un identifiant, un responsable, un statut, un niveau de confidentialité et un emplacement GED afin de rester traçable pendant tout son cycle de vie.'
+      },
+      DE: {
+        term: 'Verwaltungsakte',
+        shortDefinition: 'Zusammenstellung der Informationen und Unterlagen zu einem Vorgang, einer Entscheidung, einem Projekt oder einer Pflicht.',
+        detailedDefinition: 'Strukturierte Gesamtheit von Dokumenten, Daten, Austausch, Entscheidungen und Nachweisen zu demselben Verwaltungsvorgang. Sie verfügt über Kennung, Verantwortung, Status, Vertraulichkeitsstufe und DMS-Ablageort, damit ihr Lebenszyklus nachvollziehbar bleibt.'
+      },
+      EN: {
+        term: 'Administrative file',
+        shortDefinition: 'A collection of information and records relating to a matter, decision, project or obligation.',
+        detailedDefinition: 'A structured set of documents, data, exchanges, decisions and evidence linked to the same administrative subject. It has an identifier, owner, status, confidentiality level and DMS location so its lifecycle remains traceable.'
+      }
+    }
+  },
+  'ADM-ARCHIVE': {
+    version: 'V5.4',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Archive',
+        shortDefinition: 'Dossier ou document clos conservé avec son contexte, sa version, sa durée et ses droits d’accès.',
+        detailedDefinition: 'Document ou dossier qui n’est plus en traitement actif mais reste conservé selon une règle définie. Son statut, sa version, sa provenance, sa durée de conservation et ses droits d’accès doivent rester visibles ; une archive ne se confond pas avec un brouillon ou un document actif.'
+      },
+      DE: {
+        term: 'Archivgut',
+        shortDefinition: 'Abgeschlossene Akte oder abgeschlossenes Dokument, das mit Kontext, Version, Dauer und Zugriffsrechten aufbewahrt wird.',
+        detailedDefinition: 'Dokument oder Akte, die nicht mehr aktiv bearbeitet, aber nach einer festgelegten Regel aufbewahrt wird. Status, Version, Herkunft, Aufbewahrungsdauer und Zugriffsrechte bleiben sichtbar; Archivgut ist weder Entwurf noch aktives Dokument.'
+      },
+      EN: {
+        term: 'Archive record',
+        shortDefinition: 'A closed file or document retained with its context, version, retention period and access rights.',
+        detailedDefinition: 'A document or file no longer under active processing but retained according to a defined rule. Its status, version, provenance, retention period and access rights remain visible; an archive record is distinct from a draft or active document.'
+      }
+    }
+  },
+  'ADM-CONTROLE': {
+    version: 'V5.4',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Contrôle administratif',
+        shortDefinition: 'Vérification définie à l’avance pour confirmer un état, une règle, une autorisation ou une preuve.',
+        detailedDefinition: 'Point de vérification doté d’un objet, d’un responsable, de critères, d’une date et d’une preuve attendue. Il rend un processus plus fiable et traçable, mais ne vaut ni validation juridique, ni audit, ni réception lorsque ces actes relèvent d’un autre rôle.'
+      },
+      DE: {
+        term: 'Verwaltungskontrolle',
+        shortDefinition: 'Vorab festgelegte Prüfung zur Bestätigung eines Zustands, einer Regel, einer Genehmigung oder eines Nachweises.',
+        detailedDefinition: 'Prüfpunkt mit Gegenstand, Verantwortung, Kriterien, Datum und erwartetem Nachweis. Er erhöht Zuverlässigkeit und Nachvollziehbarkeit eines Prozesses, ersetzt aber weder rechtliche Freigabe noch Audit oder Abnahme, wenn diese anderen Rollen zugeordnet sind.'
+      },
+      EN: {
+        term: 'Administrative control',
+        shortDefinition: 'A predefined check used to confirm a status, rule, authorisation or item of evidence.',
+        detailedDefinition: 'A verification point with a subject, owner, criteria, date and expected evidence. It makes a process more reliable and traceable but does not constitute legal approval, audit or acceptance when those acts belong to another role.'
+      }
+    }
+  },
+  'ADM-CONFORMITE': {
+    version: 'V5.4',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Conformité',
+        shortDefinition: 'Organisation du suivi des obligations légales, réglementaires, statutaires et internes applicables à 2SG.',
+        detailedDefinition: 'Démarche visant à identifier les obligations applicables, leurs sources, responsables, échéances, risques et preuves. Elle permet de suivre et documenter la situation, sans déclarer automatiquement qu’une institution ou un acte est juridiquement conforme et sans remplacer un avis professionnel compétent.'
+      },
+      DE: {
+        term: 'Compliance',
+        shortDefinition: 'Organisation der Überwachung rechtlicher, regulatorischer, statutarischer und interner Pflichten von 2SG.',
+        detailedDefinition: 'Vorgehen zur Ermittlung anwendbarer Pflichten, ihrer Quellen, Verantwortlichen, Fristen, Risiken und Nachweise. Es ermöglicht die dokumentierte Nachverfolgung, erklärt jedoch weder eine Institution noch eine Handlung automatisch für rechtskonform und ersetzt keine fachkundige Rechtsberatung.'
+      },
+      EN: {
+        term: 'Compliance',
+        shortDefinition: 'The organised monitoring of legal, regulatory, statutory and internal obligations applicable to 2SG.',
+        detailedDefinition: 'An approach for identifying applicable obligations, their sources, owners, deadlines, risks and evidence. It supports documented monitoring without automatically declaring an institution or act legally compliant and without replacing competent professional advice.'
+      }
+    }
+  },
+  'ADM-CORRESPONDANCE': {
+    version: 'V5.4',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Correspondance administrative',
+        shortDefinition: 'Message entrant ou sortant suivi comme un objet administratif avec responsable, statut et preuves.',
+        detailedDefinition: 'Courrier, email, formulaire, message ou remise en main propre reçu ou émis dans un cadre institutionnel. La correspondance est enregistrée avec son expéditeur ou destinataire, sa date, son objet, son niveau de confidentialité, son responsable, les suites attendues et les pièces conservées dans la GED.'
+      },
+      DE: {
+        term: 'Verwaltungskorrespondenz',
+        shortDefinition: 'Ein- oder ausgehende Nachricht, die mit Verantwortung, Status und Nachweisen als Verwaltungsvorgang verfolgt wird.',
+        detailedDefinition: 'Brief, E-Mail, Formular, Nachricht oder persönliche Übergabe, die in einem institutionellen Rahmen empfangen oder versendet wird. Erfasst werden Absender oder Empfänger, Datum, Betreff, Vertraulichkeit, Verantwortung, erwartete Folgemaßnahmen und die im DMS aufbewahrten Unterlagen.'
+      },
+      EN: {
+        term: 'Administrative correspondence',
+        shortDefinition: 'An incoming or outgoing message tracked as an administrative object with an owner, status and evidence.',
+        detailedDefinition: 'A letter, email, form, message or hand-delivered item received or issued in an institutional context. Correspondence is registered with sender or recipient, date, subject, confidentiality level, owner, expected follow-up and supporting records retained in the DMS.'
+      }
+    }
+  },
   'PROJ-JALON': {
     version: 'V5.1',
     status: 'validated',

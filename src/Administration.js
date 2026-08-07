@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { ArrowLeft, Plus, Edit2, Trash2 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
@@ -14,7 +14,11 @@ import AdministrationGlossary from './AdministrationGlossary';
 import ProcessProcedureArchiveOverview from './ProcessProcedureArchiveOverview';
 import AdministrationDashboardOverview from './AdministrationDashboardOverview';
 import AdministrationArchitectureOverview from './AdministrationArchitectureOverview';
-import { resolveAdministrationTab } from './administrationTabs';
+import {
+  buildAdministrationTabPath,
+  resolveAdministrationTab,
+  shouldShowAdministrationOverviewReturn
+} from './administrationTabs';
 
 const Admin = () => {
   const { language } = useLanguage();
@@ -84,6 +88,7 @@ const Admin = () => {
       architecture: 'Architecture & Relations',
       compliance: 'Conformité',
       complianceTracked: 'dossier suivi',
+      backToOverview: 'Revenir à la vue d’ensemble',
       tachesTerminees: 'Tâches terminées',
       nouvelleTache: 'Nouvelle tâche',
       modifierTache: 'Modifier tâche'
@@ -149,6 +154,7 @@ const Admin = () => {
       architecture: 'Architecture & Relationships',
       compliance: 'Compliance',
       complianceTracked: 'tracked matter',
+      backToOverview: 'Return to overview',
       tachesTerminees: 'Completed tasks',
       nouvelleTache: 'New task',
       modifierTache: 'Edit task'
@@ -214,6 +220,7 @@ const Admin = () => {
       architecture: 'Architektur & Beziehungen',
       compliance: 'Compliance',
       complianceTracked: 'verfolgter Fall',
+      backToOverview: 'Zur Übersicht zurückkehren',
       tachesTerminees: 'Abgeschlossene Aufgaben',
       nouvelleTache: 'Neue Aufgabe',
       modifierTache: 'Aufgabe bearbeiten'
@@ -590,10 +597,13 @@ const Admin = () => {
     setTasks(tasks.filter(task => (task.id || task.source_id) !== id));
   };
 
-  const handleTabSelect = (tab) => {
+  const handleTabSelect = (tab, { fromOverview = false } = {}) => {
     setActiveTab(tab);
-    navigate(`/administration?tab=${tab}`);
+    navigate(buildAdministrationTabPath(tab, { fromOverview }));
   };
+
+  const handleOverviewNavigate = tab => handleTabSelect(tab, { fromOverview: true });
+  const returnToOverview = shouldShowAdministrationOverviewReturn(activeTab, location.search);
 
   return (
     <>
@@ -616,6 +626,19 @@ const Admin = () => {
           ]}
         />
 
+        {returnToOverview && (
+          <nav className="mb-5" aria-label={t.backToOverview}>
+            <button
+              type="button"
+              onClick={() => handleTabSelect('overview')}
+              className="inline-flex min-h-10 items-center gap-2 rounded-md border border-slate-600 bg-slate-800 px-3 text-sm font-semibold text-slate-200 transition-colors hover:border-blue-500 hover:bg-slate-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              <ArrowLeft size={17} aria-hidden="true" />
+              {t.backToOverview}
+            </button>
+          </nav>
+        )}
+
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
           <AdministrationDashboardOverview
@@ -623,7 +646,7 @@ const Admin = () => {
             tasks={tasks}
             tasksStatus={tasksStatus}
             completedTasks={completedTasks}
-            onNavigate={handleTabSelect}
+            onNavigate={handleOverviewNavigate}
           />
         )}
 

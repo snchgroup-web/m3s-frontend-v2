@@ -25,9 +25,29 @@ export const ADMINISTRATION_GLOSSARY_GROUPS = Object.freeze([
     ]
   },
   {
+    id: 'architecture',
+    labels: { FR: 'Architecture & Relations', EN: 'Architecture & Relationships', DE: 'Architektur & Beziehungen' },
+    termIds: ['ADM-ARCHITECTURE-FONCTIONNELLE']
+  },
+  {
+    id: 'processes',
+    labels: { FR: 'Processus & Procédures', EN: 'Processes & Procedures', DE: 'Prozesse & Verfahren' },
+    termIds: ['ADM-PROCESSUS', 'ADM-PROCEDURE', 'ADM-MANUEL-PROCEDURES', 'ADM-DOSSIER', 'ADM-ARCHIVE', 'ADM-CONTROLE']
+  },
+  {
+    id: 'compliance',
+    labels: { FR: 'Conformité', EN: 'Compliance', DE: 'Compliance' },
+    termIds: ['ADM-CONFORMITE']
+  },
+  {
     id: 'planning',
     labels: { FR: 'Planification & Projets', EN: 'Planning & Projects', DE: 'Planung & Projekte' },
     termIds: ['PROJ-JALON', 'PROJ-REVUE']
+  },
+  {
+    id: 'communication',
+    labels: { FR: 'Communication & Courrier', EN: 'Communication & Correspondence', DE: 'Kommunikation & Korrespondenz' },
+    termIds: ['ADM-CORRESPONDANCE']
   }
 ]);
 
@@ -41,6 +61,7 @@ export const ADMINISTRATION_GLOSSARY_COPY = Object.freeze({
     terms: 'termes',
     empty: 'Aucun terme ne correspond à ces critères.',
     validated: 'Définition validée',
+    candidate: 'Définition candidate',
     stableId: 'Identifiant stable',
     version: 'Version',
     localDomain: 'Contexte métier',
@@ -58,6 +79,7 @@ export const ADMINISTRATION_GLOSSARY_COPY = Object.freeze({
     terms: 'terms',
     empty: 'No term matches these criteria.',
     validated: 'Validated definition',
+    candidate: 'Candidate definition',
     stableId: 'Stable identifier',
     version: 'Version',
     localDomain: 'Business context',
@@ -75,6 +97,7 @@ export const ADMINISTRATION_GLOSSARY_COPY = Object.freeze({
     terms: 'Begriffe',
     empty: 'Kein Begriff entspricht diesen Kriterien.',
     validated: 'Validierte Definition',
+    candidate: 'Begriffsdefinition zur Validierung',
     stableId: 'Stabile Kennung',
     version: 'Version',
     localDomain: 'Fachlicher Kontext',

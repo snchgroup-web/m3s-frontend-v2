@@ -1,4 +1,8 @@
-import { resolveAdministrationTab } from './administrationTabs';
+import {
+  buildAdministrationTabPath,
+  resolveAdministrationTab,
+  shouldShowAdministrationOverviewReturn
+} from './administrationTabs';
 
 test.each([
   ['overview', 'overview'],
@@ -15,4 +19,11 @@ test.each([
   [null, 'overview']
 ])('resolves the Administration route %p to %p', (input, expected) => {
   expect(resolveAdministrationTab(input)).toBe(expected);
+});
+
+test('keeps a visible return path when a component is opened from the Administration overview', () => {
+  expect(buildAdministrationTabPath('processes', { fromOverview: true }))
+    .toBe('/administration?tab=processes&returnTo=overview');
+  expect(shouldShowAdministrationOverviewReturn('processes', '?tab=processes&returnTo=overview')).toBe(true);
+  expect(shouldShowAdministrationOverviewReturn('overview', '?tab=overview&returnTo=overview')).toBe(false);
 });
