@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChevronRight, CloudSun, Globe2, LogOut, Moon, Sun, SunMedium } from 'lucide-react';
+import { ChevronRight, CloudSun, Globe2, LogOut, Menu, Moon, Sun, SunMedium } from 'lucide-react';
 import { useTheme } from './ThemeContext';
 import { useLanguage } from './LanguageContext';
 import { useAuth } from './AuthContext';
@@ -23,7 +23,7 @@ const FlagSwitzerland = () => (
   </span>
 );
 
-const Header = () => {
+const Header = ({ onOpenMenu }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { language, setLanguage } = useLanguage();
@@ -73,19 +73,22 @@ const Header = () => {
   };
 
   return (
-    <header className="app-header sticky top-0 z-30 border-b border-slate-700 bg-slate-800 h-20 px-4 lg:px-6">
-      <div className="h-full flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className={`w-10 h-10 shrink-0 flex items-center justify-center rounded-lg border ${presentation.bg} ${presentation.border}`}>
+    <header className="app-header sticky top-0 z-30 border-b border-slate-700 bg-slate-800 h-20 px-3 sm:px-4 lg:px-6">
+      <div className="h-full flex items-center justify-between gap-2 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <button type="button" onClick={onOpenMenu} className="icon-button lg:hidden" aria-label="Afficher le menu" title="Afficher le menu">
+            <Menu size={21} />
+          </button>
+          <div className={`w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center rounded-lg border ${presentation.bg} ${presentation.border}`}>
             <ModuleIcon moduleId={moduleId} size={23} />
           </div>
           <div className="min-w-0">
-            <h1 className="flex min-w-0 items-center gap-1.5 text-xl font-semibold text-slate-100" aria-label={childTitle ? `${title} - ${childTitle}` : title}>
+            <h1 className="flex min-w-0 items-center gap-1 text-base font-semibold text-slate-100 sm:gap-1.5 sm:text-xl" aria-label={childTitle ? `${title} - ${childTitle}` : title}>
               <span className="truncate">{title}</span>
               {childTitle && (
                 <>
-                  <ChevronRight size={17} className="shrink-0 text-slate-500" aria-hidden="true" />
-                  <span className="truncate text-base font-medium text-slate-300">{childTitle}</span>
+                  <ChevronRight size={16} className="shrink-0 text-slate-500" aria-hidden="true" />
+                  <span className="truncate text-sm font-medium text-slate-300 sm:text-base">{childTitle}</span>
                 </>
               )}
             </h1>

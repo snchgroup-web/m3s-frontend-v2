@@ -224,14 +224,14 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
         : t.intelligenceUnavailable;
 
   return (
-    <section className="global-pilotage rounded-lg border border-slate-700 bg-slate-800 p-4 shadow-lg sm:p-5" aria-labelledby="global-pilotage-title">
+    <section className="global-pilotage rounded-lg border border-slate-700 bg-slate-800 p-3 shadow-lg sm:p-5" aria-labelledby="global-pilotage-title">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <div className="max-w-3xl">
           <p className="text-xs font-semibold uppercase text-amber-300">{t.eyebrow}</p>
-          <h2 id="global-pilotage-title" className="mt-1 text-2xl font-semibold text-slate-100">{t.title}</h2>
+          <h2 id="global-pilotage-title" className="mt-1 text-xl font-semibold text-slate-100 sm:text-2xl">{t.title}</h2>
           <p className="mt-2 text-sm leading-6 text-slate-300">{t.subtitle}</p>
         </div>
-        <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-3 xl:w-auto" role="tablist" aria-label={t.title}>
+        <div className="grid w-full grid-cols-3 gap-1.5 sm:gap-2 xl:w-auto" role="tablist" aria-label={t.title}>
           {Object.entries(t.tabs).map(([id, label]) => {
             const Icon = tabIcons[id];
             const active = activeView === id;
@@ -242,10 +242,10 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
                 role="tab"
                 aria-selected={active}
                 onClick={() => selectView(id)}
-                className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-semibold transition ${active ? 'border-blue-500 bg-blue-700 text-white' : 'border-slate-600 bg-slate-700 text-slate-200 hover:border-blue-400 hover:bg-slate-600'}`}
+                className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-md border px-2 py-2 text-xs font-semibold leading-4 transition sm:gap-2 sm:px-3 sm:text-sm ${active ? 'border-blue-500 bg-blue-700 text-white' : 'border-slate-600 bg-slate-700 text-slate-200 hover:border-blue-400 hover:bg-slate-600'}`}
               >
                 <Icon size={17} aria-hidden="true" />
-                {label}
+                <span>{label}</span>
               </button>
             );
           })}
@@ -266,7 +266,7 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
 
       {activeView === 'intelligence' && (
         <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[1.1fr_1fr]">
-          <article className="rounded-md border border-amber-700 bg-amber-950/30 p-4">
+          <article className="intelligence-card rounded-md border p-3 sm:p-4">
             <div className="flex flex-wrap items-center gap-3">
               <BookOpenText className="text-amber-300" size={22} aria-hidden="true" />
               <h3 className="text-lg font-semibold text-slate-100">{t.intelligenceTitle}</h3>

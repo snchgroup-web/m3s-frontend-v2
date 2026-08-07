@@ -105,7 +105,7 @@ describe('light-mode accent border selectors', () => {
 
   test('keeps global steering headings and active tabs readable in light mode', () => {
     expect(dashboardPilotageSource).toContain('global-pilotage rounded-lg');
-    expect(dashboardPilotageSource).toContain('text-2xl font-semibold text-slate-100');
+    expect(dashboardPilotageSource).toContain('text-xl font-semibold text-slate-100 sm:text-2xl');
     expect(indexHtml).toContain('html:not(.dark) .global-pilotage .text-slate-100');
     expect(indexHtml).toContain('html:not(.dark) .global-pilotage .bg-blue-700.text-white{color:#fff!important}');
   });
