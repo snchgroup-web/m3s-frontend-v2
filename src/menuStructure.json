@@ -9,7 +9,38 @@
       },
       "icon": "Home",
       "path": "/",
-      "children": []
+      "children": [
+        {
+          "id": "global-steering",
+          "label": {
+            "FR": "Pilotage",
+            "EN": "Steering",
+            "DE": "Steuerung"
+          },
+          "icon": "LayoutDashboard",
+          "path": "/?view=overview"
+        },
+        {
+          "id": "global-intelligence",
+          "label": {
+            "FR": "Intelligence 2SG",
+            "EN": "2SG Intelligence",
+            "DE": "2SG Intelligence"
+          },
+          "icon": "BrainCircuit",
+          "path": "/?view=intelligence"
+        },
+        {
+          "id": "global-function-map",
+          "label": {
+            "FR": "Carte des fonctions",
+            "EN": "Function map",
+            "DE": "Funktionskarte"
+          },
+          "icon": "Network",
+          "path": "/?view=map"
+        }
+      ]
     },
     {
       "id": "administration",
@@ -18,7 +49,7 @@
         "EN": "Administration",
         "DE": "Verwaltung"
       },
-      "icon": "Settings",
+      "icon": "Briefcase",
       "path": "/administration",
       "children": [
         {
@@ -68,7 +99,7 @@
             "EN": "Planning & Projects",
             "DE": "Planung & Projekte"
           },
-          "icon": "Briefcase",
+          "icon": "ClipboardList",
           "path": "/administration?tab=planning"
         },
         {
@@ -484,6 +515,35 @@
           "path": "/ged?tab=manual"
         }
       ]
+    }
+  ],
+  "groups": [
+    {
+      "id": "management-governance",
+      "label": {
+        "FR": "Management & Gouvernance",
+        "EN": "Management & Governance",
+        "DE": "Management & Governance"
+      },
+      "itemIds": ["dashboard"]
+    },
+    {
+      "id": "support-functions",
+      "label": {
+        "FR": "Fonctions support",
+        "EN": "Support functions",
+        "DE": "Unterstützungsfunktionen"
+      },
+      "itemIds": ["administration", "finances", "rh", "it-support"]
+    },
+    {
+      "id": "operations-development",
+      "label": {
+        "FR": "Opérations & Développement",
+        "EN": "Operations & Development",
+        "DE": "Betrieb & Entwicklung"
+      },
+      "itemIds": ["commercial", "production", "stock"]
     }
   ]
 }

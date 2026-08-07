@@ -1,7 +1,15 @@
 import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import DashboardPilotageNavigation, { renderSandboxedHtmlArtifact } from './DashboardPilotageNavigation';
+import DashboardPilotageNavigation, { renderSandboxedHtmlArtifact, resolveDashboardView } from './DashboardPilotageNavigation';
 import api from './api';
+
+let mockLocation = { pathname: '/', search: '' };
+const mockNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  useLocation: () => mockLocation,
+  useNavigate: () => mockNavigate
+}), { virtual: true });
 
 jest.mock('./api', () => ({
   __esModule: true,
@@ -12,11 +20,19 @@ jest.mock('./api', () => ({
 }));
 
 beforeEach(() => {
+  mockLocation = { pathname: '/', search: '' };
+  mockNavigate.mockReset();
   api.getLatestIntelligence.mockResolvedValue({ success: true, data: null });
 });
 
+const renderDashboardNavigation = (props = {}, initialEntry = '/') => {
+  const url = new URL(initialEntry, 'https://m3s.local');
+  mockLocation = { pathname: url.pathname, search: url.search };
+  return render(<DashboardPilotageNavigation language="FR" onNavigate={jest.fn()} {...props} />);
+};
+
 test('shows the four management responsibilities in French', () => {
-  render(<DashboardPilotageNavigation language="FR" onNavigate={jest.fn()} />);
+  renderDashboardNavigation();
 
   expect(screen.getByRole('heading', { name: 'Décider avec une vue d’ensemble fiable' })).toBeInTheDocument();
   expect(screen.getByText('Piloter')).toBeInTheDocument();
@@ -27,7 +43,7 @@ test('shows the four management responsibilities in French', () => {
 
 test('keeps Intelligence honest when no edition is published', async () => {
   const onNavigate = jest.fn();
-  render(<DashboardPilotageNavigation language="EN" onNavigate={onNavigate} />);
+  renderDashboardNavigation({ language: 'EN', onNavigate });
 
   fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
   expect(await screen.findByText('No published edition')).toBeInTheDocument();
@@ -40,7 +56,7 @@ test('shows the real edition and its three secured artifacts', async () => {
     success: true,
     data: { editionDate: '2026-08-07', sourceVersion: 'V4' }
   });
-  render(<DashboardPilotageNavigation language="FR" onNavigate={jest.fn()} />);
+  renderDashboardNavigation();
 
   fireEvent.click(screen.getByRole('tab', { name: 'Intelligence 2SG' }));
   expect(await screen.findByText('Édition disponible')).toBeInTheDocument();
@@ -58,7 +74,7 @@ test('retries metadata loading after leaving the Intelligence tab mid-request', 
       success: true,
       data: { editionDate: '2026-08-07', sourceVersion: 'V4' }
     });
-  render(<DashboardPilotageNavigation language="EN" onNavigate={jest.fn()} />);
+  renderDashboardNavigation({ language: 'EN' });
 
   fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
   expect(api.getLatestIntelligence).toHaveBeenCalledTimes(1);
@@ -80,7 +96,7 @@ test('allows retrying metadata after a transient request failure', async () => {
       success: true,
       data: { editionDate: '2026-08-07', sourceVersion: 'V4' }
     });
-  render(<DashboardPilotageNavigation language="EN" onNavigate={jest.fn()} />);
+  renderDashboardNavigation({ language: 'EN' });
 
   fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
   expect(await screen.findByText('The Intelligence source is temporarily unavailable.')).toBeInTheDocument();
@@ -112,10 +128,37 @@ test('renders HTML artifacts in an opaque sandbox without same-origin access', (
 
 test('opens real function routes from the trilingual function map', () => {
   const onNavigate = jest.fn();
-  render(<DashboardPilotageNavigation language="DE" onNavigate={onNavigate} />);
+  renderDashboardNavigation({ language: 'DE', onNavigate });
 
   fireEvent.click(screen.getByRole('tab', { name: 'Funktionskarte' }));
   fireEvent.click(screen.getByRole('button', { name: 'Öffnen : Verwaltung' }));
   expect(onNavigate).toHaveBeenCalledWith('/administration');
   expect(screen.getByRole('button', { name: 'Öffnen : IT & Support' })).toBeInTheDocument();
+});
+
+test('opens a dashboard view directly from the governed URL', async () => {
+  renderDashboardNavigation({}, '/?view=intelligence');
+
+  expect(screen.getByRole('tab', { name: 'Intelligence 2SG' })).toHaveAttribute('aria-selected', 'true');
+  expect(await screen.findByText('Aucune édition publiée')).toBeInTheDocument();
+});
+
+test('keeps the selected dashboard view in the URL', () => {
+  renderDashboardNavigation();
+
+  fireEvent.click(screen.getByRole('tab', { name: 'Carte des fonctions' }));
+  expect(mockNavigate).toHaveBeenCalledWith(
+    { pathname: '/', search: '?view=map' },
+    { replace: true }
+  );
+});
+
+test.each([
+  ['', 'overview'],
+  ['?view=overview', 'overview'],
+  ['?view=intelligence', 'intelligence'],
+  ['?view=map', 'map'],
+  ['?view=unknown', 'overview']
+])('resolves %p to the safe dashboard view %p', (search, expected) => {
+  expect(resolveDashboardView(search)).toBe(expected);
 });
