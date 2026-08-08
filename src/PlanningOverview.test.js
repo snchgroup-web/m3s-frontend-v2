@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import PlanningOverview from './PlanningOverview';
 
 test('renders the project hierarchy and recurring activity branch in French', () => {
-  render(<PlanningOverview language="FR" tasksTotal={8} completedTasks={2} />);
+  render(<PlanningOverview language="FR" tasksTotal={8} openTasks={6} completedTasks={2} />);
 
   expect(screen.getByRole('heading', { name: 'Planification & Gestion de projets' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Branche projet' })).toBeInTheDocument();
@@ -13,6 +13,8 @@ test('renders the project hierarchy and recurring activity branch in French', ()
   expect(screen.getByRole('navigation', { name: 'Navigation dans Planification & Projets' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Contrôle minimal d’un projet' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Contrôle minimal' })).toBeInTheDocument();
+  expect(screen.getByText('Tâches ouvertes')).toBeInTheDocument();
+  expect(screen.getByText('6')).toBeInTheDocument();
 });
 
 test('connects strategic steering to validated glossary definitions', () => {
@@ -45,7 +47,7 @@ test('connects the milestone dimension to a validated glossary definition', () =
 });
 
 test('renders the planner model in German', () => {
-  render(<PlanningOverview language="DE" tasksTotal={0} completedTasks={0} />);
+  render(<PlanningOverview language="DE" tasksTotal={0} openTasks={0} completedTasks={0} />);
 
   expect(screen.getByRole('heading', { name: 'Planung & Projektmanagement' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Vom Zielbild zur Umsetzung' })).toBeInTheDocument();
@@ -54,13 +56,23 @@ test('renders the planner model in German', () => {
   expect(screen.getByRole('heading', { name: 'Übergreifende Dimensionen des Planers' })).toBeInTheDocument();
   expect(screen.getByText(/Eine Phase gehört immer zu einem Projekt/i)).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Nach oben' })).toBeInTheDocument();
+  expect(screen.getByText('Offene Aufgaben')).toBeInTheDocument();
 });
 
 test('does not turn an unavailable task summary into a zero total or zero completion', () => {
   render(<PlanningOverview language="EN" tasksTotal={null} completedTasks={null} tasksStatus="unavailable" />);
 
-  expect(screen.getAllByText('—')).toHaveLength(3);
+  expect(screen.getAllByText('—')).toHaveLength(4);
   expect(screen.queryByText('0 %')).not.toBeInTheDocument();
+});
+
+test('keeps the task summary usable when an older API does not provide the open count', () => {
+  render(<PlanningOverview language="EN" tasksTotal={8} openTasks={null} completedTasks={2} />);
+
+  expect(screen.getByText('Available tasks')).toBeInTheDocument();
+  expect(screen.getByText('Open tasks')).toBeInTheDocument();
+  expect(screen.getByText('25 %')).toBeInTheDocument();
+  expect(screen.getByText('—')).toBeInTheDocument();
 });
 
 test('uses the planner internal navigation', () => {

@@ -383,7 +383,7 @@ const Admin = () => {
   const [roles, setRoles] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
   const [tasks, setTasks] = useState([]);
-  const [taskSummary, setTaskSummary] = useState({ total: null, completed: null });
+  const [taskSummary, setTaskSummary] = useState({ total: null, open: null, completed: null });
   const [taskSummaryStatus, setTaskSummaryStatus] = useState('loading');
   const [showUserModal, setShowUserModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
@@ -442,11 +442,17 @@ const Admin = () => {
       const total = hasSummaryCounts ? Number(summary.total) : NaN;
       const completed = hasSummaryCounts ? Number(summary.completed) : NaN;
       if (hasSummaryCounts && Number.isFinite(total) && Number.isFinite(completed)) {
-        setTaskSummary({ total, completed });
+        const hasOpenCount = summary?.open !== null
+          && summary?.open !== undefined
+          && summary?.open !== '';
+        const open = hasOpenCount && Number.isFinite(Number(summary.open))
+          ? Number(summary.open)
+          : null;
+        setTaskSummary({ total, open, completed });
         setTaskSummaryStatus('ready');
       } else {
         console.error('Erreur chargement synthese taches:', summaryResult.reason || 'Synthese taches invalide');
-        setTaskSummary({ total: null, completed: null });
+        setTaskSummary({ total: null, open: null, completed: null });
         setTaskSummaryStatus('unavailable');
       }
     };
@@ -487,6 +493,7 @@ const Admin = () => {
 
   // Calculs KPIs
   const tasksTotal = taskSummaryStatus === 'ready' ? taskSummary.total : null;
+  const openTasks = taskSummaryStatus === 'ready' ? taskSummary.open : null;
   const completedTasks = taskSummaryStatus === 'ready' ? taskSummary.completed : null;
 
   // Gestion formulaires
@@ -682,6 +689,7 @@ const Admin = () => {
               language={language}
               tasksTotal={tasksTotal}
               tasksStatus={taskSummaryStatus}
+              openTasks={openTasks}
               completedTasks={completedTasks}
             >
               <JournalTaskRegister language={language} />
