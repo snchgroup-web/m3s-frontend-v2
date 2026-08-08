@@ -383,7 +383,8 @@ const Admin = () => {
   const [roles, setRoles] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
   const [tasks, setTasks] = useState([]);
-  const [tasksStatus, setTasksStatus] = useState('loading');
+  const [taskSummary, setTaskSummary] = useState({ total: null, completed: null });
+  const [taskSummaryStatus, setTaskSummaryStatus] = useState('loading');
   const [showUserModal, setShowUserModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
@@ -417,16 +418,36 @@ const Admin = () => {
 
   useEffect(() => {
     const loadTasks = async () => {
-      setTasksStatus('loading');
-      try {
-        const response = await api.getTasks(100, 0);
-        if (!Array.isArray(response?.data)) throw new Error('Source tâches invalide');
-        setTasks(response.data);
-        setTasksStatus('ready');
-      } catch (error) {
-        console.error('Erreur chargement taches:', error);
+      setTaskSummaryStatus('loading');
+
+      const [tasksResult, summaryResult] = await Promise.allSettled([
+        api.getTasks(100, 0),
+        api.getTasksCount()
+      ]);
+
+      if (tasksResult.status === 'fulfilled' && Array.isArray(tasksResult.value?.data)) {
+        setTasks(tasksResult.value.data);
+      } else {
+        console.error('Erreur chargement taches:', tasksResult.reason || 'Source taches invalide');
         setTasks([]);
-        setTasksStatus('unavailable');
+      }
+
+      const summary = summaryResult.status === 'fulfilled' ? summaryResult.value : null;
+      const hasSummaryCounts = summary?.total !== null
+        && summary?.total !== undefined
+        && summary?.total !== ''
+        && summary?.completed !== null
+        && summary?.completed !== undefined
+        && summary?.completed !== '';
+      const total = hasSummaryCounts ? Number(summary.total) : NaN;
+      const completed = hasSummaryCounts ? Number(summary.completed) : NaN;
+      if (hasSummaryCounts && Number.isFinite(total) && Number.isFinite(completed)) {
+        setTaskSummary({ total, completed });
+        setTaskSummaryStatus('ready');
+      } else {
+        console.error('Erreur chargement synthese taches:', summaryResult.reason || 'Synthese taches invalide');
+        setTaskSummary({ total: null, completed: null });
+        setTaskSummaryStatus('unavailable');
       }
     };
 
@@ -465,7 +486,8 @@ const Admin = () => {
   }, []);
 
   // Calculs KPIs
-  const completedTasks = tasks.filter(task => normalizeLookupKey(task.statut || task.status) === 'TERMINE').length;
+  const tasksTotal = taskSummaryStatus === 'ready' ? taskSummary.total : null;
+  const completedTasks = taskSummaryStatus === 'ready' ? taskSummary.completed : null;
 
   // Gestion formulaires
   const handleUserChange = (field, value) => {
@@ -618,7 +640,7 @@ const Admin = () => {
           tabs={[
             { tab: 'overview', label: t.overview },
             { tab: 'institution', label: t.institution },
-            { tab: 'planning', label: `${t.planning} (${tasks.length})` },
+            { tab: 'planning', label: taskSummaryStatus === 'ready' ? `${t.planning} (${tasksTotal})` : t.planning },
             { tab: 'communication', label: t.communication },
             { tab: 'compliance', label: t.compliance },
             { tab: 'processes', label: t.processes },
@@ -643,8 +665,8 @@ const Admin = () => {
         {activeTab === 'overview' && (
           <AdministrationDashboardOverview
             language={language}
-            tasks={tasks}
-            tasksStatus={tasksStatus}
+            tasksTotal={tasksTotal}
+            tasksStatus={taskSummaryStatus}
             completedTasks={completedTasks}
             onNavigate={handleOverviewNavigate}
           />
@@ -656,7 +678,12 @@ const Admin = () => {
 
         {activeTab === 'planning' && (
           <div>
-            <PlanningOverview language={language} tasksTotal={tasks.length} completedTasks={completedTasks}>
+            <PlanningOverview
+              language={language}
+              tasksTotal={tasksTotal}
+              tasksStatus={taskSummaryStatus}
+              completedTasks={completedTasks}
+            >
               <JournalTaskRegister language={language} />
             </PlanningOverview>
             <div className="flex justify-end mb-4">

@@ -163,16 +163,18 @@ const MetricCard = ({ icon: Icon, label, value, source, state, tone }) => (
   </article>
 );
 
-const AdministrationDashboardOverview = ({ language = 'FR', tasks = [], tasksStatus = 'loading', completedTasks = 0, onNavigate }) => {
+const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, tasksStatus = 'loading', completedTasks = null, onNavigate }) => {
   const t = COPY[language] || COPY.FR;
   const glossaryCount = getAdministrationGlossaryTerms(language).length;
-  const tasksReady = tasksStatus === 'ready';
+  const tasksReady = tasksStatus === 'ready'
+    && Number.isFinite(tasksTotal)
+    && Number.isFinite(completedTasks);
   const taskState = tasksStatus === 'loading'
     ? t.loading
     : tasksReady
-      ? (tasks.length === 0 ? t.confirmedZero : t.available)
+      ? (tasksTotal === 0 ? t.confirmedZero : t.available)
       : t.unavailable;
-  const taskValue = tasksReady ? tasks.length : '—';
+  const taskValue = tasksReady ? tasksTotal : '—';
   const completedValue = tasksReady ? completedTasks : '—';
   const components = [
     { id: 'institution', icon: Building2, status: t.statuses.structured },
