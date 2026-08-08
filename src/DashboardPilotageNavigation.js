@@ -48,8 +48,16 @@ const translations = {
     referenceTitle: 'Référentiel du 2SG Daily Intelligence Dashboard',
     mapTitle: 'Fonctions reliées au pilotage global',
     mapBody: 'Chaque accès ouvre la fonction concernée. Son tableau de bord local conserve le pilotage métier détaillé.',
+    managementFamily: ['Management & Gouvernance', 'Le Tableau de bord global constitue la couche de pilotage transversal de 2SG/M3S.'],
+    functionGroups: {
+      support: ['Fonctions support', 'Organiser, sécuriser et mettre les ressources à disposition.'],
+      operations: ['Opérations & Développement', 'Développer les relations, produire et gérer les actifs.']
+    },
     open: 'Ouvrir',
-    functions: ['Administration', 'Finances', 'Ressources humaines', 'Commercial & CRM', 'Production', 'Stock & Actifs', 'IT & Support']
+    functions: {
+      administration: 'Administration', finance: 'Finances', rh: 'Ressources humaines',
+      crm: 'Commercial & CRM', production: 'Production', assets: 'Stock & Actifs', it: 'IT & Support'
+    }
   },
   EN: {
     eyebrow: '2SG / M3S GLOBAL STEERING',
@@ -78,8 +86,16 @@ const translations = {
     referenceTitle: '2SG Daily Intelligence Dashboard reference',
     mapTitle: 'Functions connected to global steering',
     mapBody: 'Each access opens the relevant function. Its local dashboard retains detailed business steering.',
+    managementFamily: ['Management & Governance', 'The global Dashboard forms the cross-functional steering layer of 2SG/M3S.'],
+    functionGroups: {
+      support: ['Support functions', 'Organise, secure and make resources available.'],
+      operations: ['Operations & Development', 'Develop relationships, deliver work and manage assets.']
+    },
     open: 'Open',
-    functions: ['Administration', 'Finance', 'Human resources', 'Commercial & CRM', 'Production', 'Stock & Assets', 'IT & Support']
+    functions: {
+      administration: 'Administration', finance: 'Finance', rh: 'Human resources',
+      crm: 'Commercial & CRM', production: 'Production', assets: 'Stock & Assets', it: 'IT & Support'
+    }
   },
   DE: {
     eyebrow: 'GLOBALE 2SG-/M3S-STEUERUNG',
@@ -108,19 +124,27 @@ const translations = {
     referenceTitle: 'Referenz des 2SG Daily Intelligence Dashboard',
     mapTitle: 'Mit der globalen Steuerung verbundene Funktionen',
     mapBody: 'Jeder Zugang öffnet die betreffende Funktion. Das lokale Dashboard behält die detaillierte Fachsteuerung.',
+    managementFamily: ['Management & Governance', 'Das globale Dashboard bildet die funktionsübergreifende Steuerungsebene von 2SG/M3S.'],
+    functionGroups: {
+      support: ['Unterstützungsfunktionen', 'Ressourcen organisieren, absichern und bereitstellen.'],
+      operations: ['Betrieb & Entwicklung', 'Beziehungen entwickeln, Leistungen erbringen und Vermögenswerte verwalten.']
+    },
     open: 'Öffnen',
-    functions: ['Verwaltung', 'Finanzen', 'Personalwesen', 'Vertrieb & CRM', 'Produktion', 'Bestand & Vermögenswerte', 'IT & Support']
+    functions: {
+      administration: 'Verwaltung', finance: 'Finanzen', rh: 'Personalwesen',
+      crm: 'Vertrieb & CRM', production: 'Produktion', assets: 'Bestand & Vermögenswerte', it: 'IT & Support'
+    }
   }
 };
 
 const functionDefinitions = [
-  { path: '/administration', icon: Building2, color: 'text-cyan-300', background: 'bg-cyan-950/40' },
-  { path: '/finance', icon: WalletCards, color: 'text-emerald-300', background: 'bg-emerald-950/40' },
-  { path: '/rh', icon: UsersRound, color: 'text-violet-300', background: 'bg-violet-950/40' },
-  { path: '/crm', icon: Handshake, color: 'text-sky-300', background: 'bg-sky-950/40' },
-  { path: '/production', icon: Factory, color: 'text-orange-300', background: 'bg-orange-950/40' },
-  { path: '/actifs', icon: Warehouse, color: 'text-rose-300', background: 'bg-rose-950/40' },
-  { path: '/ged', icon: FolderCog, color: 'text-teal-300', background: 'bg-teal-950/40' }
+  { id: 'administration', group: 'support', path: '/administration', icon: Building2, color: 'text-cyan-300', background: 'bg-cyan-950/40' },
+  { id: 'finance', group: 'support', path: '/finance', icon: WalletCards, color: 'text-emerald-300', background: 'bg-emerald-950/40' },
+  { id: 'rh', group: 'support', path: '/rh', icon: UsersRound, color: 'text-violet-300', background: 'bg-violet-950/40' },
+  { id: 'it', group: 'support', path: '/ged', icon: FolderCog, color: 'text-teal-300', background: 'bg-teal-950/40' },
+  { id: 'crm', group: 'operations', path: '/crm', icon: Handshake, color: 'text-sky-300', background: 'bg-sky-950/40' },
+  { id: 'production', group: 'operations', path: '/production', icon: Factory, color: 'text-orange-300', background: 'bg-orange-950/40' },
+  { id: 'assets', group: 'operations', path: '/actifs', icon: Warehouse, color: 'text-rose-300', background: 'bg-rose-950/40' }
 ];
 
 const tabIcons = { overview: LayoutDashboard, intelligence: BrainCircuit, map: Network };
@@ -495,15 +519,30 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
         <div className="mt-5">
           <h3 className="text-lg font-semibold text-slate-100">{t.mapTitle}</h3>
           <p className="mt-1 text-sm text-slate-400">{t.mapBody}</p>
-          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {functionDefinitions.map(({ path, icon: Icon, color, background }, index) => (
-              <button key={path} type="button" onClick={() => onNavigate(path)} aria-label={`${t.open} : ${t.functions[index]}`} className="group flex min-h-20 items-center justify-between rounded-md border border-slate-700 bg-slate-900/35 p-4 text-left hover:border-blue-400 hover:bg-slate-700">
-                <span className="flex items-center gap-3">
-                  <span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${background} ${color}`}><Icon size={21} aria-hidden="true" /></span>
-                  <span className="text-sm font-semibold text-slate-100">{t.functions[index]}</span>
-                </span>
-                <ArrowRight className="text-slate-500 group-hover:text-blue-300" size={17} aria-hidden="true" />
-              </button>
+          <div className="mt-4 flex items-start gap-3 border-y border-slate-700 py-3">
+            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-blue-950 text-blue-300"><LayoutDashboard size={21} aria-hidden="true" /></span>
+            <div>
+              <h4 className="text-sm font-semibold text-slate-100">{t.managementFamily[0]}</h4>
+              <p className="mt-1 text-sm leading-5 text-slate-400">{t.managementFamily[1]}</p>
+            </div>
+          </div>
+          <div className="mt-4 grid grid-cols-1 gap-5 xl:grid-cols-2">
+            {Object.entries(t.functionGroups).map(([groupId, [groupTitle, groupBody]]) => (
+              <section key={groupId} className="function-family border-t border-slate-700 pt-3" aria-labelledby={`function-family-${groupId}`}>
+                <h4 id={`function-family-${groupId}`} className="text-sm font-semibold uppercase text-blue-300">{groupTitle}</h4>
+                <p className="mt-1 text-sm leading-5 text-slate-400">{groupBody}</p>
+                <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {functionDefinitions.filter(({ group }) => group === groupId).map(({ id, path, icon: Icon, color, background }) => (
+                    <button key={path} type="button" onClick={() => onNavigate(path)} aria-label={`${t.open} : ${t.functions[id]}`} className="group flex min-h-16 items-center justify-between rounded-md border border-slate-700 bg-slate-900/35 p-3 text-left hover:border-blue-400 hover:bg-slate-700">
+                      <span className="flex items-center gap-3">
+                        <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${background} ${color}`}><Icon size={20} aria-hidden="true" /></span>
+                        <span className="text-sm font-semibold text-slate-100">{t.functions[id]}</span>
+                      </span>
+                      <ArrowRight className="shrink-0 text-slate-500 group-hover:text-blue-300" size={17} aria-hidden="true" />
+                    </button>
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
         </div>

@@ -150,6 +150,9 @@ test('opens real function routes from the trilingual function map', () => {
   renderDashboardNavigation({ language: 'DE', onNavigate });
 
   fireEvent.click(screen.getByRole('tab', { name: 'Funktionskarte' }));
+  expect(screen.getByRole('heading', { name: 'Management & Governance' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Unterstützungsfunktionen' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Betrieb & Entwicklung' })).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Öffnen : Verwaltung' }));
   expect(onNavigate).toHaveBeenCalledWith('/administration');
   expect(screen.getByRole('button', { name: 'Öffnen : IT & Support' })).toBeInTheDocument();
