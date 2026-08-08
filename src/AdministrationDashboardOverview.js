@@ -24,7 +24,8 @@ const COPY = {
       completed: 'Tâches terminées',
       components: 'Composantes structurées',
       glossary: 'Termes du glossaire',
-      compliance: 'Dossier de conformité signalé'
+      compliance: 'Conformité & juridique',
+      complianceValue: 'Dossier signalé'
     },
     sources: {
       tasks: 'API M3S · registre des tâches',
@@ -68,7 +69,8 @@ const COPY = {
       completed: 'Completed tasks',
       components: 'Structured components',
       glossary: 'Glossary terms',
-      compliance: 'Reported compliance matter'
+      compliance: 'Compliance & legal',
+      complianceValue: 'Matter reported'
     },
     sources: {
       tasks: 'M3S API · task register',
@@ -112,7 +114,8 @@ const COPY = {
       completed: 'Abgeschlossene Aufgaben',
       components: 'Strukturierte Komponenten',
       glossary: 'Glossarbegriffe',
-      compliance: 'Gemeldeter Compliance-Fall'
+      compliance: 'Compliance & Recht',
+      complianceValue: 'Fall gemeldet'
     },
     sources: {
       tasks: 'M3S-API · Aufgabenregister',
@@ -204,7 +207,7 @@ const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, t
         <MetricCard icon={CheckCircle2} label={t.metrics.completed} value={completedValue} source={t.sources.tasks} state={taskState} tone="bg-emerald-950 text-emerald-300" />
         <MetricCard icon={Network} label={t.metrics.components} value={components.length} source={t.sources.components} state={t.statuses.structured} tone="bg-cyan-950 text-cyan-300" />
         <MetricCard icon={BookOpenText} label={t.metrics.glossary} value={glossaryCount} source={t.sources.glossary} state={t.statuses.governed} tone="bg-violet-950 text-violet-300" />
-        <MetricCard icon={ShieldCheck} label={t.metrics.compliance} value={1} source={t.sources.compliance} state={t.statuses.framed} tone="bg-amber-950 text-amber-300" />
+        <MetricCard icon={ShieldCheck} label={t.metrics.compliance} value={t.metrics.complianceValue} source={t.sources.compliance} state={t.statuses.framed} tone="bg-amber-950 text-amber-300" />
       </div>
 
       <section className="rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="administration-coverage-title">
