@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Check, ChevronRight, CloudSun, Globe2, LogOut, Menu, Moon, Settings2, Sun, SunMedium } from 'lucide-react';
+import { Check, ChevronRight, CloudSun, Globe2, LogOut, Menu, Moon, Settings, Sun, SunMedium } from 'lucide-react';
 import { useTheme } from './ThemeContext';
 import { useLanguage } from './LanguageContext';
 import { useAuth } from './AuthContext';
@@ -79,6 +79,21 @@ const Header = ({ onOpenMenu }) => {
     };
   }, [settingsOpen]);
 
+  const closeSettings = () => {
+    setSettingsOpen(false);
+    settingsButtonRef.current?.focus();
+  };
+
+  const handleThemeChange = (theme) => {
+    setTheme(theme);
+    closeSettings();
+  };
+
+  const handleLanguageChange = (nextLanguage) => {
+    setLanguage(nextLanguage);
+    closeSettings();
+  };
+
   const translations = {
     FR: { sunny: 'Ensoleillé', cloudy: 'Nuageux', logout: 'Déconnexion', settings: 'Paramètres d’affichage', appearance: 'Apparence', language: 'Langue', light: 'Clair', dark: 'Sombre', active: 'Actif' },
     EN: { sunny: 'Sunny', cloudy: 'Cloudy', logout: 'Logout', settings: 'Display settings', appearance: 'Appearance', language: 'Language', light: 'Light', dark: 'Dark', active: 'Active' },
@@ -150,7 +165,7 @@ const Header = ({ onOpenMenu }) => {
               aria-expanded={settingsOpen}
               onClick={() => setSettingsOpen(current => !current)}
             >
-              <Settings2 size={19} className="text-sky-400" />
+              <Settings size={19} className="text-sky-400" />
             </button>
             {settingsOpen && (
               <div className="header-settings-panel absolute right-0 top-11 z-50 w-72 max-w-[calc(100vw-1rem)] rounded-md border border-slate-600 bg-slate-800 p-3 text-slate-100 shadow-xl" role="dialog" aria-label={t.settings}>
@@ -169,7 +184,7 @@ const Header = ({ onOpenMenu }) => {
                           type="button"
                           className={`header-settings-choice flex min-h-11 items-center justify-between gap-2 rounded-md border px-3 py-2 text-sm font-semibold transition ${selected ? 'header-settings-choice--active border-blue-500 bg-blue-700 text-white' : 'border-slate-600 bg-slate-700 text-slate-200 hover:border-blue-400 hover:bg-slate-600'}`}
                           aria-pressed={selected}
-                          onClick={() => setTheme(id)}
+                          onClick={() => handleThemeChange(id)}
                         >
                           <span className="flex items-center gap-2"><ThemeIcon size={17} aria-hidden="true" />{label}</span>
                           {selected && <Check size={16} aria-label={t.active} />}
@@ -187,7 +202,7 @@ const Header = ({ onOpenMenu }) => {
                         type="button"
                         className={`header-settings-choice min-h-10 rounded-md border px-2 py-2 text-sm font-semibold transition ${language === option ? 'header-settings-choice--active border-blue-500 bg-blue-700 text-white' : 'border-slate-600 bg-slate-700 text-slate-200 hover:border-blue-400 hover:bg-slate-600'}`}
                         aria-pressed={language === option}
-                        onClick={() => setLanguage(option)}
+                        onClick={() => handleLanguageChange(option)}
                       >
                         {option}
                       </button>

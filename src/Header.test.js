@@ -43,7 +43,9 @@ test('groups theme and language choices in one display settings panel', async ()
   render(<Header onOpenMenu={jest.fn()} />);
 
   expect(screen.queryByRole('dialog', { name: 'Paramètres d’affichage' })).not.toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button', { name: 'Paramètres d’affichage' }));
+  const trigger = screen.getByRole('button', { name: 'Paramètres d’affichage' });
+  expect(trigger.querySelector('.lucide-settings')).toBeInTheDocument();
+  fireEvent.click(trigger);
 
   const panel = screen.getByRole('dialog', { name: 'Paramètres d’affichage' });
   expect(panel).toBeInTheDocument();
@@ -52,8 +54,14 @@ test('groups theme and language choices in one display settings panel', async ()
 
   fireEvent.click(screen.getByRole('button', { name: /Clair/ }));
   expect(mockSetTheme).toHaveBeenCalledWith('light');
+  expect(screen.queryByRole('dialog', { name: 'Paramètres d’affichage' })).not.toBeInTheDocument();
+  expect(trigger).toHaveFocus();
+
+  fireEvent.click(trigger);
   fireEvent.click(screen.getByRole('button', { name: 'EN' }));
   expect(mockSetLanguage).toHaveBeenCalledWith('EN');
+  expect(screen.queryByRole('dialog', { name: 'Paramètres d’affichage' })).not.toBeInTheDocument();
+  expect(trigger).toHaveFocus();
 
   await waitFor(() => expect(api.getFxHistory).toHaveBeenCalledTimes(1));
 });
@@ -65,6 +73,18 @@ test('closes display settings with Escape and restores trigger focus', () => {
   fireEvent.click(trigger);
   fireEvent.keyDown(document, { key: 'Escape' });
 
+  expect(screen.queryByRole('dialog', { name: 'Paramètres d’affichage' })).not.toBeInTheDocument();
+  expect(trigger).toHaveFocus();
+});
+
+test('closes display settings when the active language is selected again', () => {
+  render(<Header onOpenMenu={jest.fn()} />);
+
+  const trigger = screen.getByRole('button', { name: 'Paramètres d’affichage' });
+  fireEvent.click(trigger);
+  fireEvent.click(screen.getByRole('button', { name: 'FR' }));
+
+  expect(mockSetLanguage).toHaveBeenCalledWith('FR');
   expect(screen.queryByRole('dialog', { name: 'Paramètres d’affichage' })).not.toBeInTheDocument();
   expect(trigger).toHaveFocus();
 });
