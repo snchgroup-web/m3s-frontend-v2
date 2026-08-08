@@ -674,6 +674,7 @@ const Admin = () => {
             language={language}
             tasksTotal={tasksTotal}
             tasksStatus={taskSummaryStatus}
+            openTasks={openTasks}
             completedTasks={completedTasks}
             onNavigate={handleOverviewNavigate}
           />

@@ -20,6 +20,7 @@ const COPY = {
     intro: 'Cette vue distingue les données opérationnelles disponibles, les éléments de cadrage et les sources qui ne sont pas encore raccordées.',
     metrics: {
       tasks: 'Tâches suivies',
+      open: 'Ouvertes',
       completed: 'Tâches terminées',
       components: 'Composantes structurées',
       glossary: 'Termes du glossaire',
@@ -63,6 +64,7 @@ const COPY = {
     intro: 'This view separates available operational data, framing elements and sources that are not connected yet.',
     metrics: {
       tasks: 'Tracked tasks',
+      open: 'Open',
       completed: 'Completed tasks',
       components: 'Structured components',
       glossary: 'Glossary terms',
@@ -106,6 +108,7 @@ const COPY = {
     intro: 'Diese Ansicht trennt verfügbare operative Daten, Rahmenelemente und noch nicht angebundene Quellen.',
     metrics: {
       tasks: 'Verfolgte Aufgaben',
+      open: 'Offen',
       completed: 'Abgeschlossene Aufgaben',
       components: 'Strukturierte Komponenten',
       glossary: 'Glossarbegriffe',
@@ -147,7 +150,7 @@ const COPY = {
 
 const HOVER_CARD_CLASSES = 'transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-blue-500/70 hover:shadow-lg hover:shadow-blue-950/20';
 
-const MetricCard = ({ icon: Icon, label, value, source, state, tone }) => (
+const MetricCard = ({ icon: Icon, label, value, detail, source, state, tone }) => (
   <article className={`rounded-lg border border-slate-700 bg-slate-800 p-4 ${HOVER_CARD_CLASSES}`}>
     <div className="flex items-start justify-between gap-3">
       <div>
@@ -158,12 +161,13 @@ const MetricCard = ({ icon: Icon, label, value, source, state, tone }) => (
         <Icon size={21} aria-hidden="true" />
       </span>
     </div>
+    {detail && <p className="mt-3 text-sm font-semibold text-slate-200">{detail}</p>}
     <p className="mt-4 text-xs font-semibold text-slate-300">{state}</p>
     <p className="mt-1 text-xs text-slate-500">{source}</p>
   </article>
 );
 
-const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, tasksStatus = 'loading', completedTasks = null, onNavigate }) => {
+const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, tasksStatus = 'loading', openTasks = null, completedTasks = null, onNavigate }) => {
   const t = COPY[language] || COPY.FR;
   const glossaryCount = getAdministrationGlossaryTerms(language).length;
   const tasksReady = tasksStatus === 'ready'
@@ -175,6 +179,7 @@ const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, t
       ? (tasksTotal === 0 ? t.confirmedZero : t.available)
       : t.unavailable;
   const taskValue = tasksReady ? tasksTotal : '—';
+  const openDetail = tasksReady && Number.isFinite(openTasks) ? `${t.metrics.open} : ${openTasks}` : null;
   const completedValue = tasksReady ? completedTasks : '—';
   const components = [
     { id: 'institution', icon: Building2, status: t.statuses.structured },
@@ -195,7 +200,7 @@ const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, t
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-        <MetricCard icon={ClipboardList} label={t.metrics.tasks} value={taskValue} source={t.sources.tasks} state={taskState} tone="bg-blue-950 text-blue-300" />
+        <MetricCard icon={ClipboardList} label={t.metrics.tasks} value={taskValue} detail={openDetail} source={t.sources.tasks} state={taskState} tone="bg-blue-950 text-blue-300" />
         <MetricCard icon={CheckCircle2} label={t.metrics.completed} value={completedValue} source={t.sources.tasks} state={taskState} tone="bg-emerald-950 text-emerald-300" />
         <MetricCard icon={Network} label={t.metrics.components} value={components.length} source={t.sources.components} state={t.statuses.structured} tone="bg-cyan-950 text-cyan-300" />
         <MetricCard icon={BookOpenText} label={t.metrics.glossary} value={glossaryCount} source={t.sources.glossary} state={t.statuses.governed} tone="bg-violet-950 text-violet-300" />

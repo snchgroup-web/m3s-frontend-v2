@@ -3,10 +3,11 @@ import AdministrationDashboardOverview from './AdministrationDashboardOverview';
 
 test('distinguishes a confirmed zero from an unavailable task source', () => {
   const { rerender } = render(
-    <AdministrationDashboardOverview language="FR" tasksTotal={0} tasksStatus="ready" completedTasks={0} />
+    <AdministrationDashboardOverview language="FR" tasksTotal={0} tasksStatus="ready" openTasks={0} completedTasks={0} />
   );
 
   expect(screen.getAllByText('0')).toHaveLength(2);
+  expect(screen.getByText('Ouvertes : 0')).toBeInTheDocument();
   expect(screen.getAllByText('Zéro confirmé par la source')).toHaveLength(2);
 
   rerender(<AdministrationDashboardOverview language="FR" tasksTotal={null} tasksStatus="unavailable" completedTasks={null} />);
@@ -22,6 +23,7 @@ test('shows the seven governed Administration components and opens the selected 
       language="EN"
       tasksTotal={654}
       tasksStatus="ready"
+      openTasks={88}
       completedTasks={566}
       onNavigate={onNavigate}
     />
@@ -31,6 +33,7 @@ test('shows the seven governed Administration components and opens the selected 
   const trackedTasksMetric = screen.getByText('Tracked tasks').closest('article');
   const completedTasksMetric = screen.getByText('Completed tasks').closest('article');
   expect(within(trackedTasksMetric).getByText('654')).toBeInTheDocument();
+  expect(within(trackedTasksMetric).getByText('Open : 88')).toBeInTheDocument();
   expect(within(completedTasksMetric).getByText('566')).toBeInTheDocument();
   const componentsMetric = screen.getByText('Structured components').closest('article');
   expect(within(componentsMetric).getByText('7')).toBeInTheDocument();
@@ -50,6 +53,22 @@ test('shows the seven governed Administration components and opens the selected 
   expect(openButtons).toHaveLength(7);
   fireEvent.click(openButtons[2]);
   expect(onNavigate).toHaveBeenCalledWith('processes');
+});
+
+test('does not fabricate an open count when an older task summary omits it', () => {
+  render(
+    <AdministrationDashboardOverview
+      language="EN"
+      tasksTotal={654}
+      tasksStatus="ready"
+      openTasks={null}
+      completedTasks={566}
+    />
+  );
+
+  const trackedTasksMetric = screen.getByText('Tracked tasks').closest('article');
+  expect(within(trackedTasksMetric).getByText('654')).toBeInTheDocument();
+  expect(within(trackedTasksMetric).queryByText(/^Open/)).not.toBeInTheDocument();
 });
 
 test('renders the German operational wording', () => {
