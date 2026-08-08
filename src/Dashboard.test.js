@@ -16,12 +16,9 @@ jest.mock('./LanguageContext', () => ({
 
 jest.mock('recharts', () => ({
   CartesianGrid: () => null,
-  Cell: () => null,
   Legend: () => null,
   Line: () => null,
   LineChart: ({ children }) => <div>{children}</div>,
-  Pie: ({ children }) => <div>{children}</div>,
-  PieChart: ({ children }) => <div>{children}</div>,
   ResponsiveContainer: ({ children }) => <div>{children}</div>,
   Tooltip: () => null,
   XAxis: () => null,
@@ -78,9 +75,11 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   expect(screen.getAllByText('Source not connected').length).toBeGreaterThan(0);
   expect(screen.queryByText('7 donors')).not.toBeInTheDocument();
   expect(screen.queryByText('3 projects')).not.toBeInTheDocument();
-
-  expect(screen.getByRole('button', { name: 'Open module: CRM' })).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: 'Open module: Production' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Cross-functional analysis' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Documented financial trend' })).toBeInTheDocument();
+  expect(screen.getByLabelText('Global indicators')).toBeInTheDocument();
+  expect(screen.queryByRole('heading', { name: 'Module Statistics' })).not.toBeInTheDocument();
+  expect(screen.queryByRole('heading', { name: 'Human Resources' })).not.toBeInTheDocument();
 
   fireEvent.click(screen.getByRole('button', { name: 'Open module: Revenue' }));
   expect(mockNavigate).toHaveBeenCalledWith('/finance?tab=recettes');
@@ -107,6 +106,7 @@ test('does not turn unavailable sources into real zeroes', async () => {
   expect(await screen.findByText(/Some live data is temporarily unavailable/)).toBeInTheDocument();
   expect(screen.getAllByText('Unavailable').length).toBeGreaterThan(0);
   expect(screen.getByText('No financial series is available yet.')).toBeInTheDocument();
+  expect(screen.queryByText('0 CHF')).not.toBeInTheDocument();
 });
 
 test('treats an empty users response as a real zero-user state', async () => {
@@ -114,9 +114,9 @@ test('treats an empty users response as a real zero-user state', async () => {
 
   render(<Dashboard />);
 
-  expect(await screen.findByText('No M3S users are registered yet.')).toBeInTheDocument();
-  expect(screen.getByText('M3S users')).toBeInTheDocument();
+  expect(await screen.findByText('M3S users')).toBeInTheDocument();
   expect(screen.getAllByText('0').length).toBeGreaterThan(0);
+  expect(screen.queryByText(/Some live data is temporarily unavailable/)).not.toBeInTheDocument();
 });
 
 test('keeps null and empty count totals unavailable', async () => {
@@ -129,7 +129,7 @@ test('keeps null and empty count totals unavailable', async () => {
   expect(await screen.findByText(/Some live data is temporarily unavailable/)).toBeInTheDocument();
 
   await waitFor(() => {
-    expect(screen.getAllByText('Unavailable').length).toBeGreaterThanOrEqual(3);
+    expect(screen.getAllByText('Unavailable').length).toBeGreaterThanOrEqual(2);
   });
 });
 
@@ -142,7 +142,7 @@ test('keeps real zero count totals available without a partial-data warning', as
 
   expect(await screen.findByText('M3S users')).toBeInTheDocument();
   expect(screen.queryByText(/Some live data is temporarily unavailable/)).not.toBeInTheDocument();
-  expect(screen.getAllByText('0').length).toBeGreaterThanOrEqual(3);
+  expect(screen.getAllByText('0').length).toBeGreaterThanOrEqual(2);
 });
 
 test('connects global steering navigation to real application routes', async () => {
