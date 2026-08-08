@@ -32,8 +32,14 @@ const Header = ({ onOpenMenu }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentRate, setCurrentRate] = useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [languageLoading, setLanguageLoading] = useState(false);
+  const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState(false);
+  const [profileImageFailed, setProfileImageFailed] = useState(false);
   const settingsRef = useRef(null);
   const settingsButtonRef = useRef(null);
+  const logoutButtonRef = useRef(null);
+  const cancelLogoutButtonRef = useRef(null);
+  const languageTimerRef = useRef(null);
   const moduleId = moduleIdFromPath(location.pathname);
   const moduleItem = menuData.menu.find((item) => item.id === moduleId) || menuData.menu[0];
   const activeMenu = resolveActiveMenuLocation(menuData, location.pathname, location.search);
@@ -79,6 +85,28 @@ const Header = ({ onOpenMenu }) => {
     };
   }, [settingsOpen]);
 
+  useEffect(() => () => window.clearTimeout(languageTimerRef.current), []);
+
+  useEffect(() => {
+    if (!logoutConfirmationOpen) return undefined;
+
+    cancelLogoutButtonRef.current?.focus();
+    const handleKeyDown = (event) => {
+      if (event.key !== 'Escape') return;
+      setLogoutConfirmationOpen(false);
+      logoutButtonRef.current?.focus();
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [logoutConfirmationOpen]);
+
+  const profileImage = user?.avatar_url || user?.photo_url || user?.picture || null;
+
+  useEffect(() => {
+    setProfileImageFailed(false);
+  }, [profileImage]);
+
   const closeSettings = () => {
     setSettingsOpen(false);
     settingsButtonRef.current?.focus();
@@ -90,14 +118,32 @@ const Header = ({ onOpenMenu }) => {
   };
 
   const handleLanguageChange = (nextLanguage) => {
+    const languageChanged = nextLanguage !== language;
+    window.clearTimeout(languageTimerRef.current);
+    if (languageChanged) setLanguageLoading(true);
     setLanguage(nextLanguage);
     closeSettings();
+    if (languageChanged) {
+      languageTimerRef.current = window.setTimeout(() => {
+        setLanguageLoading(false);
+        settingsButtonRef.current?.focus();
+      }, 450);
+    }
   };
 
   const translations = {
-    FR: { sunny: 'Ensoleillé', cloudy: 'Nuageux', logout: 'Déconnexion', settings: 'Paramètres d’affichage', appearance: 'Apparence', language: 'Langue', light: 'Clair', dark: 'Sombre', active: 'Actif' },
-    EN: { sunny: 'Sunny', cloudy: 'Cloudy', logout: 'Logout', settings: 'Display settings', appearance: 'Appearance', language: 'Language', light: 'Light', dark: 'Dark', active: 'Active' },
-    DE: { sunny: 'Sonnig', cloudy: 'Bewölkt', logout: 'Abmelden', settings: 'Anzeigeeinstellungen', appearance: 'Darstellung', language: 'Sprache', light: 'Hell', dark: 'Dunkel', active: 'Aktiv' }
+    FR: {
+      sunny: 'Ensoleillé', cloudy: 'Nuageux', logout: 'Déconnexion', settings: 'Paramètres d’affichage', appearance: 'Apparence', language: 'Langue', light: 'Clair', dark: 'Sombre', active: 'Actif',
+      languageLoading: 'Chargement de la langue en cours…', logoutConfirmTitle: 'Confirmer la déconnexion', logoutConfirmBody: 'Voulez-vous vraiment vous déconnecter de M3S ?', cancel: 'Annuler', confirmLogout: 'Se déconnecter', profilePhoto: 'Photo de profil'
+    },
+    EN: {
+      sunny: 'Sunny', cloudy: 'Cloudy', logout: 'Logout', settings: 'Display settings', appearance: 'Appearance', language: 'Language', light: 'Light', dark: 'Dark', active: 'Active',
+      languageLoading: 'Applying language…', logoutConfirmTitle: 'Confirm logout', logoutConfirmBody: 'Do you really want to log out of M3S?', cancel: 'Cancel', confirmLogout: 'Log out', profilePhoto: 'Profile photo'
+    },
+    DE: {
+      sunny: 'Sonnig', cloudy: 'Bewölkt', logout: 'Abmelden', settings: 'Anzeigeeinstellungen', appearance: 'Darstellung', language: 'Sprache', light: 'Hell', dark: 'Dunkel', active: 'Aktiv',
+      languageLoading: 'Sprache wird geladen…', logoutConfirmTitle: 'Abmeldung bestätigen', logoutConfirmBody: 'Möchten Sie sich wirklich von M3S abmelden?', cancel: 'Abbrechen', confirmLogout: 'Abmelden', profilePhoto: 'Profilfoto'
+    }
   };
   const t = translations[language] || translations.FR;
   const locale = language === 'DE' ? 'de-CH' : language === 'EN' ? 'en-GB' : 'fr-CH';
@@ -105,9 +151,21 @@ const Header = ({ onOpenMenu }) => {
   const zurichTime = currentTime.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Zurich' });
   const dateFormatted = currentTime.toLocaleDateString(locale, { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
 
-  const handleLogout = () => {
+  const requestLogout = () => {
+    setSettingsOpen(false);
+    setLogoutConfirmationOpen(true);
+  };
+
+  const cancelLogout = () => {
+    setLogoutConfirmationOpen(false);
+    logoutButtonRef.current?.focus();
+  };
+
+  const confirmLogout = () => {
+    setLogoutConfirmationOpen(false);
+    sessionStorage.setItem('logout_success', 'true');
     logout();
-    navigate('/login');
+    navigate('/login', { replace: true });
   };
 
   return (
@@ -212,17 +270,43 @@ const Header = ({ onOpenMenu }) => {
               </div>
             )}
           </div>
-          <button onClick={handleLogout} className="icon-button text-red-400" title={t.logout} aria-label={t.logout}>
+          <button ref={logoutButtonRef} type="button" onClick={requestLogout} className="icon-button text-red-400" title={t.logout} aria-label={t.logout}>
             <LogOut size={19} />
           </button>
           <div className="hidden md:flex items-center gap-2 border-l border-slate-700 pl-3 ml-1">
-            <div className="w-9 h-9 rounded-full bg-sky-600 flex items-center justify-center text-white text-sm font-bold">
-              {(user?.name || 'M3S').slice(0, 2).toUpperCase()}
+            <div className="w-9 h-9 overflow-hidden rounded-full bg-sky-600 flex items-center justify-center text-white text-sm font-bold">
+              {profileImage && !profileImageFailed ? (
+                <img src={profileImage} alt={`${t.profilePhoto} - ${user?.name || 'M3S'}`} className="h-full w-full object-cover" onError={() => setProfileImageFailed(true)} />
+              ) : (
+                (user?.name || 'M3S').slice(0, 2).toUpperCase()
+              )}
             </div>
             <div className="max-w-32"><p className="text-sm text-white font-semibold truncate">{user?.name || 'Utilisateur M3S'}</p><p className="text-xs text-slate-400 truncate">{user?.role || 'Manager'}</p></div>
           </div>
         </div>
       </div>
+
+      {languageLoading && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-[1px]" role="status" aria-live="polite" aria-label={t.languageLoading}>
+          <div className="m3s-panel flex min-w-56 flex-col items-center gap-3 px-6 py-5 text-center shadow-2xl">
+            <img src="/assets/logo-2sg.png" alt="" aria-hidden="true" className="h-12 w-12 rounded-full object-cover shadow-md motion-safe:animate-pulse" />
+            <p className="text-sm font-semibold" style={{ color: 'var(--m3s-text-primary)' }}>{t.languageLoading}</p>
+          </div>
+        </div>
+      )}
+
+      {logoutConfirmationOpen && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-950/70 p-4" role="presentation">
+          <section className="m3s-panel w-full max-w-md p-5 shadow-2xl sm:p-6" role="dialog" aria-modal="true" aria-labelledby="logout-confirmation-title">
+            <h2 id="logout-confirmation-title" className="m3s-section-title">{t.logoutConfirmTitle}</h2>
+            <p className="mt-3 text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{t.logoutConfirmBody}</p>
+            <div className="mt-5 flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end" style={{ borderColor: 'var(--m3s-border)' }}>
+              <button ref={cancelLogoutButtonRef} type="button" className="m3s-secondary-button min-h-11 px-4" onClick={cancelLogout}>{t.cancel}</button>
+              <button type="button" className="m3s-danger-button min-h-11 px-4" onClick={confirmLogout}>{t.confirmLogout}</button>
+            </div>
+          </section>
+        </div>
+      )}
     </header>
   );
 };
