@@ -142,7 +142,7 @@ const mockDataBaseRaw = {
     production: { orders: null, completed: null, pending: null, stocks: null },
     actifs: { total: null, depreciation: null },
     ged: { documents: null, recent: null },
-    tasks: { total: null, completed: null, pending: null },
+    tasks: { total: null, open: null, completed: null, blocked: null, cancelled: null },
     caseStudies: null
   }
 };
@@ -199,6 +199,8 @@ const Dashboard = () => {
       persons: 'Personnes',
       m3sUsers: 'Utilisateurs M3S',
       trackedTasks: 'Tâches suivies',
+      openTasks: 'Ouvertes',
+      completedTasks: 'Terminées',
       unavailable: 'Indisponible',
       notConnected: 'Source non connectée',
       connectedData: 'Données connectées',
@@ -269,6 +271,8 @@ const Dashboard = () => {
       persons: 'Persons',
       m3sUsers: 'M3S users',
       trackedTasks: 'Tracked tasks',
+      openTasks: 'Open',
+      completedTasks: 'Completed',
       unavailable: 'Unavailable',
       notConnected: 'Source not connected',
       connectedData: 'Connected data',
@@ -339,6 +343,8 @@ const Dashboard = () => {
       globalIndicators: 'Globale Kennzahlen',
       m3sUsers: 'M3S-Benutzer',
       trackedTasks: 'Verfolgte Aufgaben',
+      openTasks: 'Offen',
+      completedTasks: 'Erledigt',
       unavailable: 'Nicht verfügbar',
       notConnected: 'Quelle nicht verbunden',
       connectedData: 'Verbundene Daten',
@@ -431,10 +437,15 @@ const Dashboard = () => {
         const inventoryAvailable = hasApiNumber(inventoryCount?.total);
         const documentsAvailable = hasApiNumber(documentsCount?.total);
         const tasksAvailable = hasApiNumber(tasksCount?.total);
+        const taskStatusesAvailable = hasApiNumber(tasksCount?.open) && hasApiNumber(tasksCount?.completed);
         const usersAvailable = Array.isArray(users?.data);
         const inventoryTotal = inventoryAvailable ? Number(inventoryCount.total) : null;
         const documentsTotal = documentsAvailable ? Number(documentsCount.total) : null;
         const tasksTotal = tasksAvailable ? Number(tasksCount.total) : null;
+        const tasksOpen = taskStatusesAvailable ? Number(tasksCount.open) : null;
+        const tasksCompleted = taskStatusesAvailable ? Number(tasksCount.completed) : null;
+        const tasksBlocked = hasApiNumber(tasksCount?.blocked) ? Number(tasksCount.blocked) : null;
+        const tasksCancelled = hasApiNumber(tasksCount?.cancelled) ? Number(tasksCount.cancelled) : null;
         const userRows = usersAvailable ? users.data : [];
         const financeAvailable = Number.isFinite(totalIncome) && Number.isFinite(totalExpenses);
         const apiUnavailable = [
@@ -504,7 +515,11 @@ const Dashboard = () => {
             },
             tasks: {
               ...mockDataBase.moduleStats.tasks,
-              total: tasksTotal
+              total: tasksTotal,
+              open: tasksOpen,
+              completed: tasksCompleted,
+              blocked: tasksBlocked,
+              cancelled: tasksCancelled
             },
             rh: {
               ...mockDataBase.moduleStats.rh,
@@ -586,7 +601,11 @@ const Dashboard = () => {
         },
         {
           id: 'tasks', label: t.trackedTasks, value: formatCount(dashboardData?.moduleStats.tasks.total),
-          secondary: dashboardData?.sourceStatus.tasks === 'available' ? t.tasks : null,
+          secondary: dashboardData?.sourceStatus.tasks === 'available'
+            && Number.isFinite(dashboardData?.moduleStats.tasks.open)
+            && Number.isFinite(dashboardData?.moduleStats.tasks.completed)
+            ? `${t.openTasks} ${formatCount(dashboardData.moduleStats.tasks.open)} · ${t.completedTasks} ${formatCount(dashboardData.moduleStats.tasks.completed)}`
+            : null,
           source: t.administrationTasks, ...sourceState('tasks'), icon: ListChecks, accent: 'cyan',
           openLabel: t.openModule, onOpen: () => handleModuleClick('/administration?tab=planning')
         }
