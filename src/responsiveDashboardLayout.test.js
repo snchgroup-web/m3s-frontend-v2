@@ -52,4 +52,11 @@ describe('responsive dashboard shell', () => {
     expect(indexHtml).toContain('html:not(.dark) .global-kpi-group .text-slate-100{color:#172033!important}');
     expect(indexHtml).toContain('html:not(.dark) .global-kpi-card{background-color:#fff!important');
   });
+
+  test('keeps only source-backed dashboard analysis', () => {
+    expect(dashboardSource).toContain('dashboard-analysis-section');
+    expect(dashboardSource).toContain('Documented financial trend');
+    expect(dashboardSource).not.toContain('<PieChart>');
+    expect(dashboardSource).not.toContain('aria-label={`${t.openModule}: ${t.crm}`}');
+  });
 });

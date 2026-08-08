@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
-import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
   AlertTriangle,
   ArrowDownToLine,
@@ -135,7 +135,7 @@ const mockDataBaseRaw = {
     financing: 'unavailable'
   },
   moduleStats: {
-    finance: { revenue: 0, expenses: 0, balance: 0, donations: 0, financing: 0, incomeCount: 0, expenseCount: 0 },
+    finance: { revenue: null, expenses: null, balance: null, donations: null, financing: null, incomeCount: 0, expenseCount: 0 },
     rh: { employees: null, volunteers: null, members: null, beneficiaries: null },
     crm: { prospects: null, clients: null, donations: null, suppliers: null },
     production: { orders: null, completed: null, pending: null, stocks: null },
@@ -187,7 +187,7 @@ const Dashboard = () => {
       kpi: 'KPI',
       lastUpdate: 'Dernière mise à jour',
       currency: 'CHF',
-      moduleStats: 'Statistiques par Module',
+      globalIndicators: 'Indicateurs globaux',
       transactions: 'transactions',
       netMonthly: 'Net mensuel',
       donors: 'donateurs',
@@ -202,7 +202,10 @@ const Dashboard = () => {
       connectedData: 'Données connectées',
       loadingDashboard: 'Chargement du tableau de bord...',
       noTrend: 'Aucune série financière disponible pour le moment.',
-      noUsers: 'Aucun utilisateur M3S enregistré pour le moment.',
+      analysisGroup: 'Analyse transversale',
+      analysisGroupBody: 'Le graphique repose uniquement sur les recettes et dépenses datées disponibles. Aucune série de démonstration n’est ajoutée.',
+      financialEvolution: 'Évolution financière documentée',
+      financeSource: 'Finance · Recettes et dépenses datées',
       openModule: 'Ouvrir le module',
       managementGroup: 'Management & Gouvernance',
       managementGroupBody: 'Accès, utilisateurs et preuves documentaires transversales.',
@@ -252,7 +255,7 @@ const Dashboard = () => {
       kpi: 'KPI',
       lastUpdate: 'Last Updated',
       currency: 'CHF',
-      moduleStats: 'Module Statistics',
+      globalIndicators: 'Global indicators',
       transactions: 'transactions',
       netMonthly: 'Net monthly',
       donors: 'donors',
@@ -267,7 +270,10 @@ const Dashboard = () => {
       connectedData: 'Connected data',
       loadingDashboard: 'Loading dashboard...',
       noTrend: 'No financial series is available yet.',
-      noUsers: 'No M3S users are registered yet.',
+      analysisGroup: 'Cross-functional analysis',
+      analysisGroupBody: 'The chart uses only available dated income and expense records. No demonstration series is added.',
+      financialEvolution: 'Documented financial trend',
+      financeSource: 'Finance · Dated income and expenses',
       openModule: 'Open module',
       managementGroup: 'Management & Governance',
       managementGroupBody: 'Cross-functional access, users and documentary evidence.',
@@ -325,14 +331,17 @@ const Dashboard = () => {
       kpi: 'KPI',
       lastUpdate: 'Zuletzt aktualisiert',
       currency: 'CHF',
-      moduleStats: 'Modulstatistiken',
+      globalIndicators: 'Globale Kennzahlen',
       m3sUsers: 'M3S-Benutzer',
       unavailable: 'Nicht verfügbar',
       notConnected: 'Quelle nicht verbunden',
       connectedData: 'Verbundene Daten',
       loadingDashboard: 'Dashboard wird geladen...',
       noTrend: 'Derzeit ist keine Finanzreihe verfügbar.',
-      noUsers: 'Derzeit sind keine M3S-Benutzer registriert.',
+      analysisGroup: 'Funktionsübergreifende Analyse',
+      analysisGroupBody: 'Das Diagramm verwendet ausschließlich verfügbare datierte Einnahmen und Ausgaben. Es werden keine Demoreihen ergänzt.',
+      financialEvolution: 'Dokumentierte Finanzentwicklung',
+      financeSource: 'Finanzen · Datierte Einnahmen und Ausgaben',
       openModule: 'Modul öffnen',
       managementGroup: 'Management & Governance',
       managementGroupBody: 'Funktionsübergreifende Zugänge, Benutzer und Dokumentennachweise.',
@@ -374,14 +383,6 @@ const Dashboard = () => {
       month: getMonthName(item.month)
     }))
   }), [getMonthName]);
-
-  // Create staff distribution with translated names
-  const getStaffDistribution = () => {
-    const usersCount = dashboardData?.moduleStats.rh.members;
-    return Number.isFinite(usersCount) && usersCount > 0
-      ? [{ name: t.m3sUsers, value: usersCount }]
-      : [];
-  };
 
   // Fetch data from API, with stable mock fallback when the backend is unavailable.
   useEffect(() => {
@@ -535,8 +536,6 @@ const Dashboard = () => {
     navigate(path);
   };
 
-  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
-
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full bg-gradient-to-br from-slate-900 to-slate-800">
@@ -662,7 +661,7 @@ const Dashboard = () => {
           )}
           <DashboardPilotageNavigation language={language} onNavigate={handleModuleClick} />
           <section id="global-situation" aria-label={t.dashboard} className="space-y-6">
-          <div className="space-y-6" aria-label={t.moduleStats}>
+          <div className="space-y-6" aria-label={t.globalIndicators}>
             {kpiGroups.map((group) => (
               <GlobalKpiGroup
                 key={group.id}
@@ -674,18 +673,28 @@ const Dashboard = () => {
               />
             ))}
           </div>
-          {/* Charts Row 1 */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Financial Trend */}
-            <div className="lg:col-span-2 bg-slate-800 rounded-lg p-6 shadow-lg border border-slate-700">
-              <h3 className="text-lg font-semibold mb-4">{t.finance} - {t.month}</h3>
+          <section className="dashboard-analysis-section space-y-3" aria-labelledby="dashboard-analysis-title">
+            <div className="border-l-2 border-cyan-500 pl-3">
+              <h2 id="dashboard-analysis-title" className="text-base font-semibold text-slate-100">{t.analysisGroup}</h2>
+              <p className="mt-0.5 max-w-4xl text-sm text-slate-400">{t.analysisGroupBody}</p>
+            </div>
+            <div className="dashboard-analysis-card rounded-md border border-slate-700 bg-slate-800 p-4 shadow-sm sm:p-5">
+              <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-100">{t.financialEvolution}</h3>
+                  <p className="mt-1 text-xs text-slate-500">{t.financeSource}</p>
+                </div>
+                <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${dashboardData?.sourceStatus.finance === 'available' ? kpiStatusClasses.available : kpiStatusClasses.unavailable}`}>
+                  {dashboardData?.sourceStatus.finance === 'available' ? t.available : t.unavailable}
+                </span>
+              </div>
               {dashboardData?.financialTrend?.length ? (
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={dashboardData.financialTrend}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
                     <XAxis dataKey="month" stroke="#94a3b8" />
                     <YAxis stroke="#94a3b8" />
-                    <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
+                    <Tooltip contentStyle={{ backgroundColor: 'var(--chart-tooltip-bg, #1e293b)', border: '1px solid var(--chart-tooltip-border, #475569)', color: 'var(--chart-tooltip-text, #e2e8f0)' }} />
                     <Legend />
                     <Line type="monotone" dataKey="revenue" name={t.revenue} stroke="#10b981" strokeWidth={2} />
                     <Line type="monotone" dataKey="expenses" name={t.expenses} stroke="#ef4444" strokeWidth={2} />
@@ -697,55 +706,7 @@ const Dashboard = () => {
                 </div>
               )}
             </div>
-
-            {/* Staff Distribution */}
-            <div className="bg-slate-800 rounded-lg p-6 shadow-lg border border-slate-700">
-              <h3 className="text-lg font-semibold mb-4">{t.rh}</h3>
-              {getStaffDistribution().length ? (
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie data={getStaffDistribution()} cx="50%" cy="50%" labelLine={false} label={({ name, value }) => `${name}: ${value}`} outerRadius={80} fill="#8884d8" dataKey="value">
-                      {getStaffDistribution().map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="h-[300px] flex items-center justify-center rounded border border-dashed border-slate-600 text-center text-sm text-slate-400 px-6">
-                  {dashboardData?.sourceStatus.users === 'available' ? t.noUsers : t.unavailable}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Module Stats */}
-          <div className="bg-slate-800 rounded-lg p-6 shadow-lg border border-slate-700">
-            <h3 className="text-lg font-semibold mb-4">{t.moduleStats}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <button type="button" aria-label={`${t.openModule}: ${t.crm}`} className="bg-slate-700 rounded p-4 text-left hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition" onClick={() => handleModuleClick('/crm')}>
-                <p className="text-sm text-slate-400">{t.crm}</p>
-                <p className="text-2xl font-bold mt-2">{formatCount(dashboardData?.moduleStats.crm.clients)}</p>
-                <p className="text-xs text-slate-500 mt-1">{t.notConnected}</p>
-              </button>
-              <button type="button" aria-label={`${t.openModule}: ${t.production}`} className="bg-slate-700 rounded p-4 text-left hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition" onClick={() => handleModuleClick('/production')}>
-                <p className="text-sm text-slate-400">{t.production}</p>
-                <p className="text-2xl font-bold mt-2">{formatCount(dashboardData?.moduleStats.production.orders)}</p>
-                <p className="text-xs text-slate-500 mt-1">{t.notConnected}</p>
-              </button>
-              <button type="button" aria-label={`${t.openModule}: ${t.ged}`} className="bg-slate-700 rounded p-4 text-left hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition" onClick={() => handleModuleClick('/ged')}>
-                <p className="text-sm text-slate-400">{t.ged}</p>
-                <p className="text-2xl font-bold mt-2">{formatCount(dashboardData?.moduleStats.ged.documents)}</p>
-                <p className="text-xs text-slate-500 mt-1">{dashboardData?.sourceStatus.documents === 'available' ? t.documents : t.unavailable}</p>
-              </button>
-              <button type="button" aria-label={`${t.openModule}: ${t.actifs}`} className="bg-slate-700 rounded p-4 text-left hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition" onClick={() => handleModuleClick('/actifs')}>
-                <p className="text-sm text-slate-400">{t.actifs}</p>
-                <p className="text-2xl font-bold mt-2">{formatCount(dashboardData?.moduleStats.actifs.total)}</p>
-                <p className="text-xs text-slate-500 mt-1">{t.notConnected}</p>
-              </button>
-            </div>
-          </div>
+          </section>
           </section>
 
           {/* Footer */}
