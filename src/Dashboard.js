@@ -10,6 +10,7 @@ import {
   HandCoins,
   HeartHandshake,
   Landmark,
+  ListChecks,
   Scale,
   ShoppingCart,
   Truck,
@@ -197,6 +198,7 @@ const Dashboard = () => {
       active: 'Actifs',
       persons: 'Personnes',
       m3sUsers: 'Utilisateurs M3S',
+      trackedTasks: 'Tâches suivies',
       unavailable: 'Indisponible',
       notConnected: 'Source non connectée',
       connectedData: 'Données connectées',
@@ -216,6 +218,7 @@ const Dashboard = () => {
       available: 'Disponible',
       sourceToConnect: 'À connecter',
       administrationUsers: 'Administration · Utilisateurs',
+      administrationTasks: 'Administration · Registre des tâches',
       gedDocuments: 'GED · Documents',
       financeIncome: 'Finance · Recettes',
       financeExpenses: 'Finance · Dépenses',
@@ -265,6 +268,7 @@ const Dashboard = () => {
       active: 'Active',
       persons: 'Persons',
       m3sUsers: 'M3S users',
+      trackedTasks: 'Tracked tasks',
       unavailable: 'Unavailable',
       notConnected: 'Source not connected',
       connectedData: 'Connected data',
@@ -284,6 +288,7 @@ const Dashboard = () => {
       available: 'Available',
       sourceToConnect: 'To connect',
       administrationUsers: 'Administration · Users',
+      administrationTasks: 'Administration · Task register',
       gedDocuments: 'Document Management · Documents',
       financeIncome: 'Finance · Income',
       financeExpenses: 'Finance · Expenses',
@@ -333,6 +338,7 @@ const Dashboard = () => {
       currency: 'CHF',
       globalIndicators: 'Globale Kennzahlen',
       m3sUsers: 'M3S-Benutzer',
+      trackedTasks: 'Verfolgte Aufgaben',
       unavailable: 'Nicht verfügbar',
       notConnected: 'Quelle nicht verbunden',
       connectedData: 'Verbundene Daten',
@@ -352,6 +358,7 @@ const Dashboard = () => {
       available: 'Verfügbar',
       sourceToConnect: 'Zu verbinden',
       administrationUsers: 'Verwaltung · Benutzer',
+      administrationTasks: 'Verwaltung · Aufgabenregister',
       gedDocuments: 'Dokumentenverwaltung · Dokumente',
       financeIncome: 'Finanzen · Einnahmen',
       financeExpenses: 'Finanzen · Ausgaben',
@@ -563,7 +570,7 @@ const Dashboard = () => {
       id: 'management',
       title: t.managementGroup,
       description: t.managementGroupBody,
-      gridClass: 'grid-cols-1 sm:grid-cols-2',
+      gridClass: 'grid-cols-1 sm:grid-cols-3',
       cards: [
         {
           id: 'users', label: t.m3sUsers, value: formatCount(dashboardData?.moduleStats.rh.members),
@@ -576,6 +583,12 @@ const Dashboard = () => {
           secondary: dashboardData?.sourceStatus.documents === 'available' ? t.files : null,
           source: t.gedDocuments, ...sourceState('documents'), icon: Files, accent: 'pink',
           openLabel: t.openModule, onOpen: () => handleModuleClick('/ged?tab=documents')
+        },
+        {
+          id: 'tasks', label: t.trackedTasks, value: formatCount(dashboardData?.moduleStats.tasks.total),
+          secondary: dashboardData?.sourceStatus.tasks === 'available' ? t.tasks : null,
+          source: t.administrationTasks, ...sourceState('tasks'), icon: ListChecks, accent: 'cyan',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/administration?tab=planning')
         }
       ]
     },

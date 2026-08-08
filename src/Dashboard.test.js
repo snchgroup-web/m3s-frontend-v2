@@ -67,11 +67,13 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   expect(screen.getByRole('heading', { name: 'Support functions' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Operations & Development' })).toBeInTheDocument();
   expect(screen.getByText('Administration · Users')).toBeInTheDocument();
+  expect(screen.getByText('Administration · Task register')).toBeInTheDocument();
   expect(screen.getByText('Document Management · Documents')).toBeInTheDocument();
   expect(screen.getAllByText('Available').length).toBeGreaterThan(0);
   expect(screen.getAllByText('To connect').length).toBeGreaterThan(0);
   expect(screen.getAllByText('12').length).toBeGreaterThan(0);
   expect(screen.getByText('8')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Open module: Tracked tasks' })).toHaveTextContent('4');
   expect(screen.getAllByText('Source not connected').length).toBeGreaterThan(0);
   expect(screen.queryByText('7 donors')).not.toBeInTheDocument();
   expect(screen.queryByText('3 projects')).not.toBeInTheDocument();
@@ -83,6 +85,8 @@ test('shows connected KPI values and labels missing sources explicitly', async (
 
   fireEvent.click(screen.getByRole('button', { name: 'Open module: Revenue' }));
   expect(mockNavigate).toHaveBeenCalledWith('/finance?tab=recettes');
+  fireEvent.click(screen.getByRole('button', { name: 'Open module: Tracked tasks' }));
+  expect(mockNavigate).toHaveBeenCalledWith('/administration?tab=planning');
 
   await waitFor(() => {
     expect(api.getFinanceDashboard).toHaveBeenCalledTimes(1);
@@ -129,7 +133,7 @@ test('keeps null and empty count totals unavailable', async () => {
   expect(await screen.findByText(/Some live data is temporarily unavailable/)).toBeInTheDocument();
 
   await waitFor(() => {
-    expect(screen.getAllByText('Unavailable').length).toBeGreaterThanOrEqual(2);
+    expect(screen.getAllByText('Unavailable').length).toBeGreaterThanOrEqual(3);
   });
 });
 
@@ -142,7 +146,7 @@ test('keeps real zero count totals available without a partial-data warning', as
 
   expect(await screen.findByText('M3S users')).toBeInTheDocument();
   expect(screen.queryByText(/Some live data is temporarily unavailable/)).not.toBeInTheDocument();
-  expect(screen.getAllByText('0').length).toBeGreaterThanOrEqual(2);
+  expect(screen.getAllByText('0').length).toBeGreaterThanOrEqual(3);
 });
 
 test('connects global steering navigation to real application routes', async () => {
