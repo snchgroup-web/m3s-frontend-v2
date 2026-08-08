@@ -56,6 +56,13 @@ test('renders the planner model in German', () => {
   expect(screen.getByRole('button', { name: 'Nach oben' })).toBeInTheDocument();
 });
 
+test('does not turn an unavailable task summary into a zero total or zero completion', () => {
+  render(<PlanningOverview language="EN" tasksTotal={null} completedTasks={null} tasksStatus="unavailable" />);
+
+  expect(screen.getAllByText('—')).toHaveLength(3);
+  expect(screen.queryByText('0 %')).not.toBeInTheDocument();
+});
+
 test('uses the planner internal navigation', () => {
   const scrollIntoView = jest.fn();
   const originalScrollIntoView = window.HTMLElement.prototype.scrollIntoView;

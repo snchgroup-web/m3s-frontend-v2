@@ -233,9 +233,16 @@ const Metric = ({ label, value }) => (
   </div>
 );
 
-const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0, children }) => {
+const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'ready', completedTasks = 0, children }) => {
   const t = COPY[language] || COPY.FR;
-  const completion = tasksTotal > 0 ? `${Math.round((completedTasks / tasksTotal) * 100)} %` : '0 %';
+  const tasksReady = tasksStatus === 'ready'
+    && Number.isFinite(tasksTotal)
+    && Number.isFinite(completedTasks);
+  const taskTotalValue = tasksReady ? tasksTotal : '—';
+  const completedTaskValue = tasksReady ? completedTasks : '—';
+  const completion = tasksReady
+    ? (tasksTotal > 0 ? `${Math.round((completedTasks / tasksTotal) * 100)} %` : '0 %')
+    : '—';
   const navItems = [
     { id: 'planning-steering', label: t.navSteering },
     { id: 'planning-model', label: t.navModel },
@@ -334,8 +341,8 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, completedTasks = 0,
           <h3 id="current-title" className="text-lg font-semibold text-white">{t.currentTitle}</h3>
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
-          <Metric label={t.tasksAvailable} value={tasksTotal} />
-          <Metric label={t.tasksCompleted} value={completedTasks} />
+          <Metric label={t.tasksAvailable} value={taskTotalValue} />
+          <Metric label={t.tasksCompleted} value={completedTaskValue} />
           <Metric label={t.completion} value={completion} />
         </div>
         <p className="mt-4 text-sm leading-6 text-slate-400">{t.currentBody}</p>
