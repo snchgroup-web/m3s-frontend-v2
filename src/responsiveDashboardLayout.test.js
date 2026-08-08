@@ -20,7 +20,8 @@ describe('responsive dashboard shell', () => {
 
   test('keeps dashboard content compact and readable on small screens', () => {
     expect(dashboardSource).toContain('space-y-4 p-3 sm:p-4 lg:space-y-6 lg:p-6');
-    expect(dashboardSource).toContain('grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6');
+    expect(dashboardSource).toContain("gridClass: 'grid-cols-2 sm:grid-cols-3 xl:grid-cols-5'");
+    expect(dashboardSource).toContain('global-kpi-card group flex min-h-[132px] w-full flex-col');
     expect(pilotageSource).toContain('grid w-full grid-cols-3 gap-1.5');
     expect(pilotageSource).toContain('intelligence-card rounded-md border');
   });
@@ -34,11 +35,21 @@ describe('responsive dashboard shell', () => {
 
   test('keeps management copy readable and Intelligence actions aligned in light mode', () => {
     expect(pilotageSource).toContain('management-principle-body');
+    expect(pilotageSource).toContain('hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-lg');
+    expect(pilotageSource).toContain('tabIndex={0}');
     expect(pilotageSource).toContain('flex items-center gap-2.5');
     expect(pilotageSource).toContain('intelligence-actions mt-4 grid grid-cols-2');
     expect(pilotageSource).toContain('intelligence-action--success');
     expect(pilotageSource).toContain('intelligence-action--primary');
     expect(indexHtml).toContain('html:not(.dark) .management-principle-body{color:#334155!important}');
+    expect(indexHtml).toContain('html:not(.dark) .management-principle-card:hover');
     expect(indexHtml).toContain('html:not(.dark) .intelligence-edition-meta{color:#047857!important}');
+  });
+
+  test('keeps grouped KPI headings and values readable in light mode', () => {
+    expect(dashboardSource).toContain('Management & Governance');
+    expect(dashboardSource).toContain('Operations & Development');
+    expect(indexHtml).toContain('html:not(.dark) .global-kpi-group .text-slate-100{color:#172033!important}');
+    expect(indexHtml).toContain('html:not(.dark) .global-kpi-card{background-color:#fff!important');
   });
 });

@@ -66,6 +66,13 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   render(<Dashboard />);
 
   expect(await screen.findByText('M3S users')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Management & Governance' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Support functions' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Operations & Development' })).toBeInTheDocument();
+  expect(screen.getByText('Administration · Users')).toBeInTheDocument();
+  expect(screen.getByText('Document Management · Documents')).toBeInTheDocument();
+  expect(screen.getAllByText('Available').length).toBeGreaterThan(0);
+  expect(screen.getAllByText('To connect').length).toBeGreaterThan(0);
   expect(screen.getAllByText('12').length).toBeGreaterThan(0);
   expect(screen.getByText('8')).toBeInTheDocument();
   expect(screen.getAllByText('Source not connected').length).toBeGreaterThan(0);
@@ -74,6 +81,9 @@ test('shows connected KPI values and labels missing sources explicitly', async (
 
   expect(screen.getByRole('button', { name: 'Open module: CRM' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Open module: Production' })).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: 'Open module: Revenue' }));
+  expect(mockNavigate).toHaveBeenCalledWith('/finance?tab=recettes');
 
   await waitFor(() => {
     expect(api.getFinanceDashboard).toHaveBeenCalledTimes(1);

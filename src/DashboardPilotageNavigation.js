@@ -455,7 +455,11 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
       {activeView === 'overview' && (
         <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
           {t.management.map(([title, body], index) => (
-            <article key={title} className="management-principle-card rounded-md border border-slate-700 bg-slate-900/35 p-3">
+            <article
+              key={title}
+              tabIndex={0}
+              className="management-principle-card rounded-md border border-slate-700 bg-slate-900/35 p-3 transition duration-200 hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-lg hover:shadow-blue-950/15 focus:outline-none focus:ring-2 focus:ring-blue-500/70"
+            >
               <div className="flex items-center gap-2.5">
                 <div className="management-principle-index inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-blue-950 text-sm font-bold text-blue-300">{index + 1}</div>
                 <h3 className="management-principle-title text-base font-semibold text-slate-100">{title}</h3>

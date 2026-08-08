@@ -2,7 +2,21 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { AlertTriangle } from 'lucide-react';
+import {
+  AlertTriangle,
+  ArrowDownToLine,
+  Files,
+  Gift,
+  HandCoins,
+  HeartHandshake,
+  Landmark,
+  Scale,
+  ShoppingCart,
+  Truck,
+  UserRoundSearch,
+  UsersRound,
+  Warehouse
+} from 'lucide-react';
 import api from './api';
 import DashboardPilotageNavigation from './DashboardPilotageNavigation';
 
@@ -49,6 +63,62 @@ const formatDualCurrency = (chfAmount, exchangeRate) => {
 };
 
 const formatCount = (value) => Number.isFinite(value) ? value.toLocaleString() : '—';
+
+const kpiAccentClasses = {
+  amber: 'bg-amber-500/10 text-amber-300',
+  blue: 'bg-blue-500/10 text-blue-300',
+  cyan: 'bg-cyan-500/10 text-cyan-300',
+  emerald: 'bg-emerald-500/10 text-emerald-300',
+  lime: 'bg-lime-500/10 text-lime-300',
+  pink: 'bg-pink-500/10 text-pink-300',
+  red: 'bg-red-500/10 text-red-300',
+  rose: 'bg-rose-500/10 text-rose-300',
+  sky: 'bg-sky-500/10 text-sky-300',
+  teal: 'bg-teal-500/10 text-teal-300',
+  violet: 'bg-violet-500/10 text-violet-300'
+};
+
+const kpiStatusClasses = {
+  available: 'border-emerald-700/60 bg-emerald-950/35 text-emerald-300',
+  unavailable: 'border-amber-700/60 bg-amber-950/30 text-amber-300',
+  disconnected: 'border-slate-600 bg-slate-900/45 text-slate-400'
+};
+
+const GlobalKpiCard = ({ label, value, secondary, source, status, statusLabel, icon: Icon, accent, onOpen, openLabel }) => (
+  <button
+    type="button"
+    onClick={onOpen}
+    aria-label={`${openLabel}: ${label}`}
+    className="global-kpi-card group flex min-h-[132px] w-full flex-col rounded-md border border-slate-700 bg-slate-800 p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-blue-950/25 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  >
+    <span className="flex items-start justify-between gap-3">
+      <span className="min-w-0">
+        <span className="block text-sm font-medium text-slate-300">{label}</span>
+        <span className="mt-2 block break-words text-lg font-semibold text-slate-100">{value}</span>
+        {secondary && <span className="mt-0.5 block break-words text-sm font-medium text-slate-400">{secondary}</span>}
+      </span>
+      <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${kpiAccentClasses[accent]}`}>
+        <Icon size={20} aria-hidden="true" />
+      </span>
+    </span>
+    <span className="mt-auto flex items-end justify-between gap-2 border-t border-slate-700 pt-2">
+      <span className="min-w-0 truncate text-xs text-slate-500" title={source}>{source}</span>
+      <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-semibold ${kpiStatusClasses[status]}`}>{statusLabel}</span>
+    </span>
+  </button>
+);
+
+const GlobalKpiGroup = ({ id, title, description, cards, gridClass }) => (
+  <section className="global-kpi-group space-y-3" aria-labelledby={`kpi-group-${id}`}>
+    <div className="border-l-2 border-blue-500 pl-3">
+      <h2 id={`kpi-group-${id}`} className="text-base font-semibold text-slate-100">{title}</h2>
+      <p className="mt-0.5 text-sm text-slate-400">{description}</p>
+    </div>
+    <div className={`grid gap-3 ${gridClass}`}>
+      {cards.map((card) => <GlobalKpiCard key={card.id} {...card} />)}
+    </div>
+  </section>
+);
 
 // Neutral baseline: missing sources must never look like real zeroes.
 const mockDataBaseRaw = {
@@ -133,7 +203,23 @@ const Dashboard = () => {
       loadingDashboard: 'Chargement du tableau de bord...',
       noTrend: 'Aucune série financière disponible pour le moment.',
       noUsers: 'Aucun utilisateur M3S enregistré pour le moment.',
-      openModule: 'Ouvrir le module'
+      openModule: 'Ouvrir le module',
+      managementGroup: 'Management & Gouvernance',
+      managementGroupBody: 'Accès, utilisateurs et preuves documentaires transversales.',
+      supportGroup: 'Fonctions support',
+      supportGroupBody: 'Indicateurs financiers issus des flux réellement disponibles.',
+      operationsGroup: 'Opérations & Développement',
+      operationsGroupBody: 'Activité métier et relations opérationnelles, avec sources absentes signalées.',
+      available: 'Disponible',
+      sourceToConnect: 'À connecter',
+      administrationUsers: 'Administration · Utilisateurs',
+      gedDocuments: 'GED · Documents',
+      financeIncome: 'Finance · Recettes',
+      financeExpenses: 'Finance · Dépenses',
+      financeBalance: 'Finance · Recettes et dépenses',
+      financeDonations: 'Finance · Dons',
+      financeFunding: 'Finance · Financements',
+      assetsInventory: 'Stock & Actifs · Inventaire'
     },
     EN: {
       dashboard: 'Dashboard',
@@ -182,7 +268,23 @@ const Dashboard = () => {
       loadingDashboard: 'Loading dashboard...',
       noTrend: 'No financial series is available yet.',
       noUsers: 'No M3S users are registered yet.',
-      openModule: 'Open module'
+      openModule: 'Open module',
+      managementGroup: 'Management & Governance',
+      managementGroupBody: 'Cross-functional access, users and documentary evidence.',
+      supportGroup: 'Support functions',
+      supportGroupBody: 'Financial indicators drawn from genuinely available flows.',
+      operationsGroup: 'Operations & Development',
+      operationsGroupBody: 'Business activity and operational relationships, with missing sources clearly marked.',
+      available: 'Available',
+      sourceToConnect: 'To connect',
+      administrationUsers: 'Administration · Users',
+      gedDocuments: 'Document Management · Documents',
+      financeIncome: 'Finance · Income',
+      financeExpenses: 'Finance · Expenses',
+      financeBalance: 'Finance · Income and expenses',
+      financeDonations: 'Finance · Donations',
+      financeFunding: 'Finance · Financing',
+      assetsInventory: 'Stock & Assets · Inventory'
     },
     DE: {
       dashboard: 'Dashboard',
@@ -231,7 +333,23 @@ const Dashboard = () => {
       loadingDashboard: 'Dashboard wird geladen...',
       noTrend: 'Derzeit ist keine Finanzreihe verfügbar.',
       noUsers: 'Derzeit sind keine M3S-Benutzer registriert.',
-      openModule: 'Modul öffnen'
+      openModule: 'Modul öffnen',
+      managementGroup: 'Management & Governance',
+      managementGroupBody: 'Funktionsübergreifende Zugänge, Benutzer und Dokumentennachweise.',
+      supportGroup: 'Unterstützungsfunktionen',
+      supportGroupBody: 'Finanzkennzahlen aus tatsächlich verfügbaren Datenflüssen.',
+      operationsGroup: 'Betrieb & Entwicklung',
+      operationsGroupBody: 'Fachliche Aktivität und operative Beziehungen; fehlende Quellen sind klar gekennzeichnet.',
+      available: 'Verfügbar',
+      sourceToConnect: 'Zu verbinden',
+      administrationUsers: 'Verwaltung · Benutzer',
+      gedDocuments: 'Dokumentenverwaltung · Dokumente',
+      financeIncome: 'Finanzen · Einnahmen',
+      financeExpenses: 'Finanzen · Ausgaben',
+      financeBalance: 'Finanzen · Einnahmen und Ausgaben',
+      financeDonations: 'Finanzen · Spenden',
+      financeFunding: 'Finanzen · Finanzierung',
+      assetsInventory: 'Bestand & Aktiven · Inventar'
     }
   };
 
@@ -430,6 +548,107 @@ const Dashboard = () => {
     );
   }
 
+  const sourceState = (sourceKey) => dashboardData?.sourceStatus?.[sourceKey] === 'available'
+    ? { status: 'available', statusLabel: t.available }
+    : { status: 'unavailable', statusLabel: t.unavailable };
+  const disconnectedState = { status: 'disconnected', statusLabel: t.sourceToConnect };
+  const financeValues = {
+    revenue: formatDualCurrency(dashboardData?.moduleStats.finance.revenue, dashboardData.exchangeRate),
+    expenses: formatDualCurrency(dashboardData?.moduleStats.finance.expenses, dashboardData.exchangeRate),
+    balance: formatDualCurrency(dashboardData?.moduleStats.finance.balance, dashboardData.exchangeRate),
+    donations: formatDualCurrency(dashboardData?.moduleStats.finance.donations, dashboardData.exchangeRate),
+    financing: formatDualCurrency(dashboardData?.moduleStats.finance.financing, dashboardData.exchangeRate)
+  };
+  const kpiGroups = [
+    {
+      id: 'management',
+      title: t.managementGroup,
+      description: t.managementGroupBody,
+      gridClass: 'grid-cols-1 sm:grid-cols-2',
+      cards: [
+        {
+          id: 'users', label: t.m3sUsers, value: formatCount(dashboardData?.moduleStats.rh.members),
+          secondary: dashboardData?.sourceStatus.users === 'available' ? t.members : null,
+          source: t.administrationUsers, ...sourceState('users'), icon: UsersRound, accent: 'violet',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/administration?tab=institution')
+        },
+        {
+          id: 'documents', label: t.documents, value: formatCount(dashboardData?.moduleStats.ged.documents),
+          secondary: dashboardData?.sourceStatus.documents === 'available' ? t.files : null,
+          source: t.gedDocuments, ...sourceState('documents'), icon: Files, accent: 'pink',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/ged?tab=documents')
+        }
+      ]
+    },
+    {
+      id: 'support',
+      title: t.supportGroup,
+      description: t.supportGroupBody,
+      gridClass: 'grid-cols-2 sm:grid-cols-3 xl:grid-cols-5',
+      cards: [
+        {
+          id: 'revenue', label: t.revenue, value: `${financeValues.revenue.chf} CHF`, secondary: `${financeValues.revenue.cfa} CFA`,
+          source: t.financeIncome, ...sourceState('income'), icon: HandCoins, accent: 'emerald',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=recettes')
+        },
+        {
+          id: 'expenses', label: t.expenses, value: `${financeValues.expenses.chf} CHF`, secondary: `${financeValues.expenses.cfa} CFA`,
+          source: t.financeExpenses, ...sourceState('expenses'), icon: ArrowDownToLine, accent: 'red',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=depenses')
+        },
+        {
+          id: 'balance', label: t.balance, value: `${financeValues.balance.chf} CHF`, secondary: `${financeValues.balance.cfa} CFA`,
+          source: t.financeBalance, ...sourceState('finance'), icon: Scale, accent: 'blue',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance')
+        },
+        {
+          id: 'donations', label: t.donations, value: `${financeValues.donations.chf} CHF`, secondary: `${financeValues.donations.cfa} CFA`,
+          source: t.financeDonations, ...sourceState('donations'), icon: Gift, accent: 'amber',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=recettes')
+        },
+        {
+          id: 'financing', label: t.financing, value: `${financeValues.financing.chf} CHF`, secondary: `${financeValues.financing.cfa} CFA`,
+          source: t.financeFunding, ...sourceState('financing'), icon: Landmark, accent: 'cyan',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=recettes')
+        }
+      ]
+    },
+    {
+      id: 'operations',
+      title: t.operationsGroup,
+      description: t.operationsGroupBody,
+      gridClass: 'grid-cols-2 sm:grid-cols-3 xl:grid-cols-5',
+      cards: [
+        {
+          id: 'stocks', label: t.stocks, value: formatCount(dashboardData?.moduleStats.production.stocks),
+          secondary: dashboardData?.sourceStatus.inventory === 'available' ? t.quantity : null,
+          source: t.assetsInventory, ...sourceState('inventory'), icon: Warehouse, accent: 'rose',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/actifs?tab=inventory')
+        },
+        {
+          id: 'clients', label: t.clients, value: formatCount(dashboardData?.moduleStats.crm.clients),
+          source: t.notConnected, ...disconnectedState, icon: UserRoundSearch, accent: 'teal',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/crm?tab=clients')
+        },
+        {
+          id: 'orders', label: t.orders, value: formatCount(dashboardData?.moduleStats.production.orders),
+          source: t.notConnected, ...disconnectedState, icon: ShoppingCart, accent: 'lime',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/production?tab=commandes')
+        },
+        {
+          id: 'beneficiaries', label: t.beneficiaries, value: formatCount(dashboardData?.moduleStats.rh.beneficiaries),
+          source: t.notConnected, ...disconnectedState, icon: HeartHandshake, accent: 'violet',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/crm?tab=beneficiaires')
+        },
+        {
+          id: 'suppliers', label: t.suppliers, value: formatCount(dashboardData?.moduleStats.crm.suppliers),
+          source: t.notConnected, ...disconnectedState, icon: Truck, accent: 'sky',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/production?tab=fournisseurs')
+        }
+      ]
+    }
+  ];
+
   return (
     <>
       {/* Content */}
@@ -443,150 +662,18 @@ const Dashboard = () => {
           )}
           <DashboardPilotageNavigation language={language} onNavigate={handleModuleClick} />
           <section id="global-situation" aria-label={t.dashboard} className="space-y-6">
-          {/* KPI Cards Row 1 */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 lg:gap-4">
-            {/* Recettes */}
-            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-green-500 hover:shadow-green-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <p className="text-slate-300 text-sm font-medium">{t.revenue}</p>
-              </div>
-              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue, dashboardData.exchangeRate).chf} CHF</p>
-              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.revenue, dashboardData.exchangeRate).cfa} CFA</p>
-              <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{dashboardData?.sourceStatus.income === 'available' ? `${dashboardData.moduleStats.finance.incomeCount} ${t.transactions}` : t.unavailable}</p>
-            </div>
-
-            {/* Dépenses */}
-            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-red-500 hover:shadow-red-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <p className="text-slate-300 text-sm font-medium">{t.expenses}</p>
-              </div>
-              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses, dashboardData.exchangeRate).chf} CHF</p>
-              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.expenses, dashboardData.exchangeRate).cfa} CFA</p>
-              <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{dashboardData?.sourceStatus.expenses === 'available' ? `${dashboardData.moduleStats.finance.expenseCount} ${t.transactions}` : t.unavailable}</p>
-            </div>
-
-            {/* Solde */}
-            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-blue-500 hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                <p className="text-slate-300 text-sm font-medium">{t.balance}</p>
-              </div>
-              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.balance, dashboardData.exchangeRate).chf} CHF</p>
-              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.balance, dashboardData.exchangeRate).cfa} CFA</p>
-              <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{t.netMonthly}</p>
-            </div>
-
-            {/* Dons */}
-            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-yellow-500 hover:shadow-yellow-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                <p className="text-slate-300 text-sm font-medium">{t.donations}</p>
-              </div>
-              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations, dashboardData.exchangeRate).chf} CHF</p>
-              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.donations, dashboardData.exchangeRate).cfa} CFA</p>
-              <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{dashboardData?.sourceStatus.donations === 'available' ? t.connectedData : t.unavailable}</p>
-            </div>
-
-            {/* Financements */}
-            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-cyan-500 hover:shadow-cyan-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-3 h-3 bg-cyan-500 rounded-full"></div>
-                <p className="text-slate-300 text-sm font-medium">{t.financing}</p>
-              </div>
-              <p className="text-white text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing, dashboardData.exchangeRate).chf} CHF</p>
-              <p className="text-slate-400 text-lg font-bold">{formatDualCurrency(dashboardData?.moduleStats.finance.financing, dashboardData.exchangeRate).cfa} CFA</p>
-              <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{dashboardData?.sourceStatus.financing === 'available' ? t.connectedData : t.unavailable}</p>
-            </div>
-
-            {/* Staff */}
-            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-purple-500 hover:shadow-purple-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                <p className="text-slate-300 text-sm font-medium">{t.m3sUsers}</p>
-              </div>
-              <p className="text-white text-lg font-bold">{formatCount(dashboardData?.moduleStats.rh.members)}</p>
-              <p className="text-slate-500 text-xs">{t.total}</p>
-              <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{dashboardData?.sourceStatus.users === 'available' ? t.members : t.unavailable}</p>
-            </div>
+          <div className="space-y-6" aria-label={t.moduleStats}>
+            {kpiGroups.map((group) => (
+              <GlobalKpiGroup
+                key={group.id}
+                id={group.id}
+                title={group.title}
+                description={group.description}
+                cards={group.cards}
+                gridClass={group.gridClass}
+              />
+            ))}
           </div>
-
-          {/* Additional Stats Row */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 lg:gap-4">
-            {/* Stocks */}
-            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-red-400 hover:shadow-red-400/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-3 h-3 bg-red-400 rounded-full"></div>
-                <p className="text-slate-300 text-sm font-medium">Stocks</p>
-              </div>
-              <p className="text-white text-lg font-bold">{formatCount(dashboardData?.moduleStats.production.stocks)}</p>
-              <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{dashboardData?.sourceStatus.inventory === 'available' ? t.quantity : t.unavailable}</p>
-            </div>
-
-            {/* Documents */}
-            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-pink-500 hover:shadow-pink-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-3 h-3 bg-pink-500 rounded-full"></div>
-                <p className="text-slate-300 text-sm font-medium">{t.documents}</p>
-              </div>
-              <p className="text-white text-lg font-bold">{formatCount(dashboardData?.moduleStats.ged.documents)}</p>
-              <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{dashboardData?.sourceStatus.documents === 'available' ? t.files : t.unavailable}</p>
-            </div>
-
-            {/* Clients */}
-            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-teal-400 hover:shadow-teal-400/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-3 h-3 bg-teal-400 rounded-full"></div>
-                <p className="text-slate-300 text-sm font-medium">Clients</p>
-              </div>
-              <p className="text-white text-lg font-bold">{formatCount(dashboardData?.moduleStats.crm.clients)}</p>
-              <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{t.notConnected}</p>
-            </div>
-
-            {/* Commandes */}
-            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-lime-500 hover:shadow-lime-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-3 h-3 bg-lime-500 rounded-full"></div>
-                <p className="text-slate-300 text-sm font-medium">{t.orders}</p>
-              </div>
-              <p className="text-white text-lg font-bold">{formatCount(dashboardData?.moduleStats.production.orders)}</p>
-              <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{t.notConnected}</p>
-            </div>
-
-            {/* Bénéficiaires */}
-            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-violet-500 hover:shadow-violet-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-3 h-3 bg-violet-500 rounded-full"></div>
-                <p className="text-slate-300 text-sm font-medium">{t.beneficiaries}</p>
-              </div>
-              <p className="text-white text-lg font-bold">{formatCount(dashboardData?.moduleStats.rh.beneficiaries)}</p>
-              <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{t.notConnected}</p>
-            </div>
-
-            {/* Fournisseurs */}
-            <div className="bg-slate-800 rounded-lg p-4 shadow-lg border-2 border-slate-700 hover:border-sky-400 hover:shadow-sky-400/20 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-3 h-3 bg-sky-400 rounded-full"></div>
-                <p className="text-slate-300 text-sm font-medium">{t.suppliers}</p>
-              </div>
-              <p className="text-white text-lg font-bold">{formatCount(dashboardData?.moduleStats.crm.suppliers)}</p>
-              <div className="border-t border-slate-700 my-2"></div>
-              <p className="text-slate-500 text-xs">{t.notConnected}</p>
-            </div>
-          </div>
-
           {/* Charts Row 1 */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Financial Trend */}
