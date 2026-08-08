@@ -153,8 +153,13 @@ const COPY = {
 
 const HOVER_CARD_CLASSES = 'transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-blue-500/70 hover:shadow-lg hover:shadow-blue-950/20';
 
-const MetricCard = ({ icon: Icon, label, value, detail, source, state, tone }) => (
-  <article className={`rounded-lg border border-slate-700 bg-slate-800 p-4 ${HOVER_CARD_CLASSES}`}>
+const MetricCard = ({ icon: Icon, label, value, detail, source, state, tone, openLabel, onOpen }) => (
+  <button
+    type="button"
+    onClick={onOpen}
+    aria-label={`${openLabel} ${label}`}
+    className={`w-full rounded-lg border border-slate-700 bg-slate-800 p-4 text-left focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-950 ${HOVER_CARD_CLASSES}`}
+  >
     <div className="flex items-start justify-between gap-3">
       <div>
         <p className="text-sm font-medium text-slate-400">{label}</p>
@@ -167,7 +172,7 @@ const MetricCard = ({ icon: Icon, label, value, detail, source, state, tone }) =
     {detail && <p className="mt-3 text-sm font-semibold text-slate-200">{detail}</p>}
     <p className="mt-4 text-xs font-semibold text-slate-300">{state}</p>
     <p className="mt-1 text-xs text-slate-500">{source}</p>
-  </article>
+  </button>
 );
 
 const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, tasksStatus = 'loading', openTasks = null, completedTasks = null, onNavigate }) => {
@@ -203,11 +208,11 @@ const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, t
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-        <MetricCard icon={ClipboardList} label={t.metrics.tasks} value={taskValue} detail={openDetail} source={t.sources.tasks} state={taskState} tone="bg-blue-950 text-blue-300" />
-        <MetricCard icon={CheckCircle2} label={t.metrics.completed} value={completedValue} source={t.sources.tasks} state={taskState} tone="bg-emerald-950 text-emerald-300" />
-        <MetricCard icon={Network} label={t.metrics.components} value={components.length} source={t.sources.components} state={t.statuses.structured} tone="bg-cyan-950 text-cyan-300" />
-        <MetricCard icon={BookOpenText} label={t.metrics.glossary} value={glossaryCount} source={t.sources.glossary} state={t.statuses.governed} tone="bg-violet-950 text-violet-300" />
-        <MetricCard icon={ShieldCheck} label={t.metrics.compliance} value={t.metrics.complianceValue} source={t.sources.compliance} state={t.statuses.framed} tone="bg-amber-950 text-amber-300" />
+        <MetricCard icon={ClipboardList} label={t.metrics.tasks} value={taskValue} detail={openDetail} source={t.sources.tasks} state={taskState} tone="bg-blue-950 text-blue-300" openLabel={t.open} onOpen={() => onNavigate?.('planning')} />
+        <MetricCard icon={CheckCircle2} label={t.metrics.completed} value={completedValue} source={t.sources.tasks} state={taskState} tone="bg-emerald-950 text-emerald-300" openLabel={t.open} onOpen={() => onNavigate?.('planning')} />
+        <MetricCard icon={Network} label={t.metrics.components} value={components.length} source={t.sources.components} state={t.statuses.structured} tone="bg-cyan-950 text-cyan-300" openLabel={t.open} onOpen={() => onNavigate?.('architecture')} />
+        <MetricCard icon={BookOpenText} label={t.metrics.glossary} value={glossaryCount} source={t.sources.glossary} state={t.statuses.governed} tone="bg-violet-950 text-violet-300" openLabel={t.open} onOpen={() => onNavigate?.('glossary')} />
+        <MetricCard icon={ShieldCheck} label={t.metrics.compliance} value={t.metrics.complianceValue} source={t.sources.compliance} state={t.statuses.framed} tone="bg-amber-950 text-amber-300" openLabel={t.open} onOpen={() => onNavigate?.('compliance')} />
       </div>
 
       <section className="rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="administration-coverage-title">

@@ -30,14 +30,14 @@ test('shows the seven governed Administration components and opens the selected 
   );
 
   expect(screen.getByRole('heading', { name: 'Administration local dashboard' })).toBeInTheDocument();
-  const trackedTasksMetric = screen.getByText('Tracked tasks').closest('article');
-  const completedTasksMetric = screen.getByText('Completed tasks').closest('article');
+  const trackedTasksMetric = screen.getByText('Tracked tasks').closest('button');
+  const completedTasksMetric = screen.getByText('Completed tasks').closest('button');
   expect(within(trackedTasksMetric).getByText('654')).toBeInTheDocument();
   expect(within(trackedTasksMetric).getByText('Open : 88')).toBeInTheDocument();
   expect(within(completedTasksMetric).getByText('566')).toBeInTheDocument();
-  const componentsMetric = screen.getByText('Structured components').closest('article');
+  const componentsMetric = screen.getByText('Structured components').closest('button');
   expect(within(componentsMetric).getByText('7')).toBeInTheDocument();
-  const complianceMetric = screen.getByText('Compliance & legal').closest('article');
+  const complianceMetric = screen.getByText('Compliance & legal').closest('button');
   expect(within(complianceMetric).getByText('Matter reported')).toBeInTheDocument();
   expect(within(complianceMetric).queryByText('1')).not.toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Processes & Procedures' })).toBeInTheDocument();
@@ -52,7 +52,10 @@ test('shows the seven governed Administration components and opens the selected 
     'Glossary'
   ]);
 
-  const openButtons = screen.getAllByRole('button', { name: /Open/ });
+  fireEvent.click(screen.getByRole('button', { name: 'Open Tracked tasks' }));
+  expect(onNavigate).toHaveBeenCalledWith('planning');
+
+  const openButtons = screen.getAllByRole('button', { name: 'Open' });
   expect(openButtons).toHaveLength(7);
   fireEvent.click(openButtons[2]);
   expect(onNavigate).toHaveBeenCalledWith('processes');
@@ -69,7 +72,7 @@ test('does not fabricate an open count when an older task summary omits it', () 
     />
   );
 
-  const trackedTasksMetric = screen.getByText('Tracked tasks').closest('article');
+  const trackedTasksMetric = screen.getByText('Tracked tasks').closest('button');
   expect(within(trackedTasksMetric).getByText('654')).toBeInTheDocument();
   expect(within(trackedTasksMetric).queryByText(/^Open/)).not.toBeInTheDocument();
 });
