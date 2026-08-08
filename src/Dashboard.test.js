@@ -44,7 +44,7 @@ beforeEach(() => {
   api.getFinanceDashboard.mockResolvedValue({ data: {} });
   api.getDocumentsCount.mockResolvedValue({ total: 12 });
   api.getInventoryCount.mockResolvedValue({ total: 8 });
-  api.getTasksCount.mockResolvedValue({ total: 4 });
+  api.getTasksCount.mockResolvedValue({ total: 4, open: 2, completed: 2, blocked: 0, cancelled: 0 });
   api.getUsers.mockResolvedValue({ data: [{ id: 1 }, { id: 2 }, { id: 3 }] });
   api.getIncome.mockResolvedValue({
     data: [
@@ -74,6 +74,7 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   expect(screen.getAllByText('12').length).toBeGreaterThan(0);
   expect(screen.getByText('8')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Open module: Tracked tasks' })).toHaveTextContent('4');
+  expect(screen.getByRole('button', { name: 'Open module: Tracked tasks' })).toHaveTextContent('Open 2 · Completed 2');
   expect(screen.getAllByText('Source not connected').length).toBeGreaterThan(0);
   expect(screen.queryByText('7 donors')).not.toBeInTheDocument();
   expect(screen.queryByText('3 projects')).not.toBeInTheDocument();
@@ -147,6 +148,17 @@ test('keeps real zero count totals available without a partial-data warning', as
   expect(await screen.findByText('M3S users')).toBeInTheDocument();
   expect(screen.queryByText(/Some live data is temporarily unavailable/)).not.toBeInTheDocument();
   expect(screen.getAllByText('0').length).toBeGreaterThanOrEqual(3);
+});
+
+test('keeps the real task total when the optional status summary is unavailable', async () => {
+  api.getTasksCount.mockResolvedValue({ total: 4 });
+
+  render(<Dashboard />);
+
+  const taskCard = await screen.findByRole('button', { name: 'Open module: Tracked tasks' });
+  expect(taskCard).toHaveTextContent('4');
+  expect(taskCard).not.toHaveTextContent('Open');
+  expect(screen.queryByText(/Some live data is temporarily unavailable/)).not.toBeInTheDocument();
 });
 
 test('connects global steering navigation to real application routes', async () => {
