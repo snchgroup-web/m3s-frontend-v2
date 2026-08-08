@@ -31,6 +31,7 @@ const COPY = {
     navBranches: 'Branches',
     navDimensions: 'Dimensions',
     navMethod: 'Contrôle minimal',
+    navPilotProject: 'Projet pilote',
     navStatus: 'État',
     navJournal: 'Journal validé',
     navRegister: 'Registre',
@@ -68,6 +69,17 @@ const COPY = {
     timelineBody: 'Vue des projets, phases, activités et tâches dans le temps.',
     agenda: 'Agenda',
     agendaBody: 'Vue consolidée des échéances, réunions, jalons et rappels.',
+    pilotProjectEyebrow: 'Projet candidat · À affiner',
+    pilotProjectTitle: 'Standardisation des modules métier M3S',
+    pilotProjectBody: "Capitaliser le pilote Administration pour cadrer, construire et contrôler plus rapidement les autres fonctions M3S, sans reproduire mécaniquement leur architecture.",
+    pilotProjectObjective: 'Objectif',
+    pilotProjectObjectiveBody: 'Transformer les acquis Administration en méthode réutilisable pour les prochains modules métier.',
+    pilotProjectSources: 'Sources',
+    pilotProjectSourcesBody: 'Skill Codex build-m3s-business-module · Journal de bord du 08-08-2026',
+    pilotProjectNext: 'Prochaine décision',
+    pilotProjectNextBody: 'Valider le périmètre puis choisir la première fonction à traiter avec ce modèle.',
+    pilotProjectOwner: 'Pilotage : Cheikh · Appui : Codex',
+    pilotProjectStatus: 'Cadré · non enregistré en base',
     currentTitle: 'État du prototype',
     tasksAvailable: 'Tâches disponibles',
     tasksOpen: 'Tâches ouvertes',
@@ -88,6 +100,7 @@ const COPY = {
     navBranches: 'Branches',
     navDimensions: 'Dimensions',
     navMethod: 'Minimum control',
+    navPilotProject: 'Pilot project',
     navStatus: 'Status',
     navJournal: 'Validated journal',
     navRegister: 'Register',
@@ -125,6 +138,17 @@ const COPY = {
     timelineBody: 'A time-based view of projects, phases, activities and tasks.',
     agenda: 'Agenda',
     agendaBody: 'A consolidated view of deadlines, meetings, milestones and reminders.',
+    pilotProjectEyebrow: 'Project candidate · To refine',
+    pilotProjectTitle: 'M3S business module standardisation',
+    pilotProjectBody: 'Capitalise on the Administration pilot to frame, build and review other M3S functions faster, without mechanically copying their architecture.',
+    pilotProjectObjective: 'Objective',
+    pilotProjectObjectiveBody: 'Turn the Administration lessons into a reusable method for the next business modules.',
+    pilotProjectSources: 'Sources',
+    pilotProjectSourcesBody: 'Codex skill build-m3s-business-module · 08-08-2026 work journal',
+    pilotProjectNext: 'Next decision',
+    pilotProjectNextBody: 'Approve the scope, then select the first function to apply the model to.',
+    pilotProjectOwner: 'Steering: Cheikh · Support: Codex',
+    pilotProjectStatus: 'Framed · not stored in the database',
     currentTitle: 'Prototype status',
     tasksAvailable: 'Available tasks',
     tasksOpen: 'Open tasks',
@@ -145,6 +169,7 @@ const COPY = {
     navBranches: 'Zweige',
     navDimensions: 'Dimensionen',
     navMethod: 'Mindestkontrolle',
+    navPilotProject: 'Pilotprojekt',
     navStatus: 'Stand',
     navJournal: 'Freigegebenes Journal',
     navRegister: 'Register',
@@ -182,6 +207,17 @@ const COPY = {
     timelineBody: 'Zeitliche Ansicht von Projekten, Phasen, Aktivitäten und Aufgaben.',
     agenda: 'Agenda',
     agendaBody: 'Zusammengeführte Ansicht von Fristen, Sitzungen, Meilensteinen und Erinnerungen.',
+    pilotProjectEyebrow: 'Projektkandidat · Zu verfeinern',
+    pilotProjectTitle: 'Standardisierung der M3S-Fachmodule',
+    pilotProjectBody: 'Die Erkenntnisse aus dem Verwaltungspiloten werden genutzt, um weitere M3S-Funktionen schneller zu strukturieren, umzusetzen und zu prüfen, ohne deren Architektur mechanisch zu kopieren.',
+    pilotProjectObjective: 'Ziel',
+    pilotProjectObjectiveBody: 'Die Erfahrungen aus der Verwaltung in eine wiederverwendbare Methode für die nächsten Fachmodule überführen.',
+    pilotProjectSources: 'Quellen',
+    pilotProjectSourcesBody: 'Codex-Skill build-m3s-business-module · Arbeitsjournal vom 08.08.2026',
+    pilotProjectNext: 'Nächste Entscheidung',
+    pilotProjectNextBody: 'Umfang freigeben und anschließend die erste Funktion für die Anwendung des Modells auswählen.',
+    pilotProjectOwner: 'Steuerung: Cheikh · Unterstützung: Codex',
+    pilotProjectStatus: 'Strukturiert · nicht in der Datenbank gespeichert',
     currentTitle: 'Stand des Prototyps',
     tasksAvailable: 'Verfügbare Aufgaben',
     tasksOpen: 'Offene Aufgaben',
@@ -253,6 +289,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'read
     { id: 'planning-branches', label: t.navBranches },
     { id: 'planning-dimensions', label: t.navDimensions },
     { id: 'planning-method', label: t.navMethod },
+    { id: 'planning-pilot-project', label: t.navPilotProject },
     { id: 'planning-status', label: t.navStatus },
     { id: 'planning-journal-register', label: t.navJournal },
     { id: 'planning-register', label: t.navRegister }
@@ -338,6 +375,38 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'read
       </section>
 
       <ProjectMinimumMethod language={language} />
+
+      <section id="planning-pilot-project" className="scroll-mt-20 rounded-lg border border-blue-700/60 bg-slate-800 p-5" aria-labelledby="pilot-project-title">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-4xl">
+            <p className="text-xs font-semibold uppercase text-blue-300">{t.pilotProjectEyebrow}</p>
+            <div className="mt-2 flex items-start gap-3">
+              <FolderKanban className="mt-0.5 shrink-0 text-blue-300" size={22} aria-hidden="true" />
+              <div>
+                <h3 id="pilot-project-title" className="text-lg font-semibold text-slate-100">{t.pilotProjectTitle}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-300">{t.pilotProjectBody}</p>
+              </div>
+            </div>
+          </div>
+          <span className="w-fit rounded-full border border-amber-700 bg-amber-950/40 px-3 py-1 text-xs font-semibold text-amber-200">
+            {t.pilotProjectStatus}
+          </span>
+        </div>
+
+        <div className="mt-5 grid gap-3 lg:grid-cols-3">
+          {[
+            [t.pilotProjectObjective, t.pilotProjectObjectiveBody],
+            [t.pilotProjectSources, t.pilotProjectSourcesBody],
+            [t.pilotProjectNext, t.pilotProjectNextBody]
+          ].map(([label, body]) => (
+            <div key={label} className="rounded-lg border border-slate-700 bg-slate-950/30 p-4">
+              <p className="text-xs font-semibold uppercase text-slate-400">{label}</p>
+              <p className="mt-2 text-sm leading-6 text-slate-200">{body}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-4 text-xs font-medium text-slate-400">{t.pilotProjectOwner}</p>
+      </section>
 
       <section id="planning-status" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="current-title">
         <div className="flex items-center gap-3">

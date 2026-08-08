@@ -59,6 +59,19 @@ test('renders the planner model in German', () => {
   expect(screen.getByText('Offene Aufgaben')).toBeInTheDocument();
 });
 
+test('presents module standardisation as a sourced project candidate without fake persistence', () => {
+  const { rerender } = render(<PlanningOverview language="FR" tasksTotal={8} openTasks={6} completedTasks={2} />);
+
+  expect(screen.getByRole('button', { name: 'Projet pilote' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Standardisation des modules métier M3S' })).toBeInTheDocument();
+  expect(screen.getByText('Cadré · non enregistré en base')).toBeInTheDocument();
+  expect(screen.getByText(/Skill Codex build-m3s-business-module/)).toBeInTheDocument();
+
+  rerender(<PlanningOverview language="DE" tasksTotal={8} openTasks={6} completedTasks={2} />);
+  expect(screen.getByRole('heading', { name: 'Standardisierung der M3S-Fachmodule' })).toBeInTheDocument();
+  expect(screen.getByText('Strukturiert · nicht in der Datenbank gespeichert')).toBeInTheDocument();
+});
+
 test('does not turn an unavailable task summary into a zero total or zero completion', () => {
   render(<PlanningOverview language="EN" tasksTotal={null} completedTasks={null} tasksStatus="unavailable" />);
 
