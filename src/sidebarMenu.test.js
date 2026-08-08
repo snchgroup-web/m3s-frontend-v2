@@ -28,6 +28,7 @@ test('keeps the Dashboard parent as its overview and preserves its three child v
     '/?view=map'
   ]);
   expect(dashboard.children.map(item => item.id)).toContain('global-steering');
+  expect(dashboard.children.find(item => item.id === 'global-intelligence').label.FR).toBe('Daily Intelligence');
   expect(administration.icon).toBe('Briefcase');
   expect(planning.icon).toBe('ClipboardList');
 });

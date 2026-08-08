@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import DashboardPilotageNavigation, { renderSandboxedHtmlArtifact, resolveDashboardView } from './DashboardPilotageNavigation';
+import DashboardPilotageNavigation, { renderReferenceArtifact, renderSandboxedHtmlArtifact, resolveDashboardView } from './DashboardPilotageNavigation';
 import api from './api';
 
 let mockLocation = { pathname: '/', search: '' };
@@ -46,10 +46,10 @@ test('keeps Intelligence honest when no edition is published', async () => {
   const onNavigate = jest.fn();
   renderDashboardNavigation({ language: 'EN', onNavigate });
 
-  fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Daily Intelligence' }));
   expect(await screen.findByText('No published edition')).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: /Open Monitoring & KM/ }));
-  expect(onNavigate).toHaveBeenCalledWith('/ged?tab=knowledge');
+  expect(onNavigate).toHaveBeenCalledWith('/ged?tab=knowledge&returnTo=dashboard-daily-intelligence');
 });
 
 test('shows the real edition and its three secured artifacts', async () => {
@@ -59,10 +59,10 @@ test('shows the real edition and its three secured artifacts', async () => {
   });
   renderDashboardNavigation();
 
-  fireEvent.click(screen.getByRole('tab', { name: 'Intelligence 2SG' }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Daily Intelligence' }));
   expect(await screen.findByText('Édition disponible')).toBeInTheDocument();
   expect(screen.getByText(/2026-08-07/)).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: /Ouvrir le Dashboard/ })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Ouvrir le Daily Intelligence/ })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /Ouvrir le PDF/ })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /Ouvrir le référentiel/ })).toBeInTheDocument();
 });
@@ -77,14 +77,14 @@ test('retries metadata loading after leaving the Intelligence tab mid-request', 
     });
   renderDashboardNavigation({ language: 'EN' });
 
-  fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Daily Intelligence' }));
   expect(api.getLatestIntelligence).toHaveBeenCalledTimes(1);
   fireEvent.click(screen.getByRole('tab', { name: 'Steering' }));
 
   await act(async () => {
     resolveFirstRequest({ success: true, data: null });
   });
-  fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Daily Intelligence' }));
 
   expect(api.getLatestIntelligence).toHaveBeenCalledTimes(2);
   expect(await screen.findByText('Edition available')).toBeInTheDocument();
@@ -99,32 +99,50 @@ test('allows retrying metadata after a transient request failure', async () => {
     });
   renderDashboardNavigation({ language: 'EN' });
 
-  fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Daily Intelligence' }));
   expect(await screen.findByText('The Intelligence source is temporarily unavailable.')).toBeInTheDocument();
   fireEvent.click(screen.getByRole('tab', { name: 'Steering' }));
-  fireEvent.click(screen.getByRole('tab', { name: '2SG Intelligence' }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Daily Intelligence' }));
 
   expect(api.getLatestIntelligence).toHaveBeenCalledTimes(2);
   expect(await screen.findByText('Edition available')).toBeInTheDocument();
 });
 
 test('renders HTML artifacts in an opaque sandbox without same-origin access', () => {
-  const frame = { style: {}, setAttribute: jest.fn() };
+  const artifactDocument = document.implementation.createHTMLDocument();
   const target = {
     opener: {},
-    document: {
-      title: '',
-      body: { style: {}, replaceChildren: jest.fn() },
-      createElement: jest.fn(() => frame)
-    }
+    document: artifactDocument
   };
 
-  expect(renderSandboxedHtmlArtifact(target, 'blob:m3s-intelligence')).toBe(true);
-  const sandboxValue = frame.setAttribute.mock.calls.find(([name]) => name === 'sandbox')[1];
+  expect(renderSandboxedHtmlArtifact(target, 'blob:m3s-intelligence', {
+    title: '2SG Daily Intelligence Dashboard',
+    returnUrl: 'https://m3s.local/?view=intelligence',
+    returnLabel: 'Revenir au Daily Intelligence'
+  })).toBe(true);
+  const frame = artifactDocument.querySelector('iframe');
+  const sandboxValue = frame.getAttribute('sandbox');
   expect(sandboxValue).toContain('allow-scripts');
   expect(sandboxValue).not.toContain('allow-same-origin');
-  expect(target.document.body.replaceChildren).toHaveBeenCalledWith(frame);
+  expect(artifactDocument.querySelector('a').textContent).toBe('Revenir au Daily Intelligence');
+  expect(artifactDocument.querySelector('main').contains(frame)).toBe(true);
   expect(target.opener).toBeNull();
+});
+
+test('renders the UTF-8 reference in a readable document with a return action', () => {
+  const artifactDocument = document.implementation.createHTMLDocument();
+  const target = { opener: {}, document: artifactDocument };
+
+  expect(renderReferenceArtifact(target, '# Référentiel\n\n- Mémoire stratégique\n- État du système', {
+    title: 'Référentiel du 2SG Daily Intelligence Dashboard',
+    returnUrl: 'https://m3s.local/?view=intelligence',
+    returnLabel: 'Revenir au Daily Intelligence'
+  })).toBe(true);
+
+  expect(artifactDocument.body.textContent).toContain('Référentiel');
+  expect(artifactDocument.body.textContent).toContain('Mémoire stratégique');
+  expect(artifactDocument.querySelectorAll('li')).toHaveLength(2);
+  expect(artifactDocument.querySelector('a').getAttribute('href')).toBe('https://m3s.local/?view=intelligence');
 });
 
 test('opens real function routes from the trilingual function map', () => {
@@ -140,7 +158,7 @@ test('opens real function routes from the trilingual function map', () => {
 test('opens a dashboard view directly from the governed URL', async () => {
   renderDashboardNavigation({}, '/?view=intelligence');
 
-  expect(screen.getByRole('tab', { name: 'Intelligence 2SG' })).toHaveAttribute('aria-selected', 'true');
+  expect(screen.getByRole('tab', { name: 'Daily Intelligence' })).toHaveAttribute('aria-selected', 'true');
   expect(await screen.findByText('Aucune édition publiée')).toBeInTheDocument();
 });
 

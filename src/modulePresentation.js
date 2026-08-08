@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 
 export const modulePresentation = {
-  dashboard: { icon: LayoutDashboard, color: 'text-amber-400', bg: 'bg-amber-500/15', border: 'border-amber-500/30' },
+  dashboard: { icon: LayoutDashboard, color: 'text-blue-400', bg: 'bg-blue-500/15', border: 'border-blue-500/30' },
   administration: { icon: Briefcase, color: 'text-cyan-400', bg: 'bg-cyan-500/15', border: 'border-cyan-500/30' },
   finances: { icon: WalletCards, color: 'text-emerald-400', bg: 'bg-emerald-500/15', border: 'border-emerald-500/30' },
   rh: { icon: UsersRound, color: 'text-violet-400', bg: 'bg-violet-500/15', border: 'border-violet-500/30' },

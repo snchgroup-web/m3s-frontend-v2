@@ -776,8 +776,13 @@ const GED = () => {
     'finance-glossary': {
       href: '/finance?tab=glossary',
       labels: { FR: 'Revenir au Glossaire Finances', EN: 'Return to the Finance Glossary', DE: 'Zum Glossar Finanzen zurückkehren' }
+    },
+    'dashboard-daily-intelligence': {
+      href: '/?view=intelligence',
+      labels: { FR: 'Revenir au Daily Intelligence', EN: 'Return to Daily Intelligence', DE: 'Zur Daily Intelligence zurückkehren' }
     }
   };
+  const hasExplicitGlossaryReturnTarget = Boolean(glossaryReturnTargets[requestedGlossaryReturnTo]);
   const glossaryReturnTarget = glossaryReturnTargets[requestedGlossaryReturnTo] || {
     href: '/administration?tab=institution',
     labels: { FR: 'Revenir à la page Institution', EN: 'Return to the Institution page', DE: 'Zur Institution-Seite zurückkehren' }
@@ -1544,6 +1549,18 @@ const GED = () => {
 
         {activeTab === 'knowledge' && (
           <div className="space-y-6">
+            {!requestedGlossaryTermId && hasExplicitGlossaryReturnTarget && (
+              <nav aria-label={glossaryReturnTarget.labels[language] || glossaryReturnTarget.labels.FR}>
+                <button
+                  type="button"
+                  onClick={() => navigate(glossaryReturnTarget.href)}
+                  className="inline-flex min-h-11 items-center gap-2 rounded-md border border-blue-500/60 bg-blue-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                >
+                  <ArrowLeft size={17} aria-hidden="true" />
+                  {glossaryReturnTarget.labels[language] || glossaryReturnTarget.labels.FR}
+                </button>
+              </nav>
+            )}
             {requestedGlossaryTermId && (
               <GlossaryEntryPanel
                 termId={requestedGlossaryTermId}
