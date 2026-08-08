@@ -70,9 +70,10 @@ const COPY = {
     agendaBody: 'Vue consolidée des échéances, réunions, jalons et rappels.',
     currentTitle: 'État du prototype',
     tasksAvailable: 'Tâches disponibles',
+    tasksOpen: 'Tâches ouvertes',
     tasksCompleted: 'Tâches terminées',
     completion: 'Progression documentaire',
-    currentBody: 'Le registre des tâches est utilisable localement et la méthode minimale V0.1 est visible en lecture seule. La lecture API doit être rétablie et la persistance des modifications ajoutée. Les projets, phases, dépendances, jalons, chronologies et agendas seront raccordés après validation du modèle de données.',
+    currentBody: 'Le registre des tâches est utilisable et la synthèse API officielle alimente les compteurs de tâches disponibles, ouvertes et terminées. La persistance des modifications reste à raccorder. Les projets, phases, dépendances, jalons, chronologies et agendas seront raccordés après validation du modèle de données.',
     registerTitle: 'Registre des tâches et actions'
   },
   EN: {
@@ -126,9 +127,10 @@ const COPY = {
     agendaBody: 'A consolidated view of deadlines, meetings, milestones and reminders.',
     currentTitle: 'Prototype status',
     tasksAvailable: 'Available tasks',
+    tasksOpen: 'Open tasks',
     tasksCompleted: 'Completed tasks',
     completion: 'Documented completion',
-    currentBody: 'The task register is usable locally and the minimum V0.1 method is visible in read-only mode. API reading must be restored and change persistence added. Projects, phases, dependencies, milestones, timelines and agendas will be connected after the data model is approved.',
+    currentBody: 'The task register is usable and the official API summary supplies the available, open and completed task counters. Change persistence still needs to be connected. Projects, phases, dependencies, milestones, timelines and agendas will be connected after the data model is approved.',
     registerTitle: 'Task and action register'
   },
   DE: {
@@ -182,9 +184,10 @@ const COPY = {
     agendaBody: 'Zusammengeführte Ansicht von Fristen, Sitzungen, Meilensteinen und Erinnerungen.',
     currentTitle: 'Stand des Prototyps',
     tasksAvailable: 'Verfügbare Aufgaben',
+    tasksOpen: 'Offene Aufgaben',
     tasksCompleted: 'Abgeschlossene Aufgaben',
     completion: 'Dokumentierter Fortschritt',
-    currentBody: 'Das Aufgabenregister ist lokal nutzbar und die minimale Methode V0.1 ist im Lesemodus sichtbar. Der API-Lesezugriff muss wiederhergestellt und die Speicherung von Änderungen ergänzt werden. Projekte, Phasen, Abhängigkeiten, Meilensteine, Zeitachsen und Agenden werden nach Freigabe des Datenmodells angebunden.',
+    currentBody: 'Das Aufgabenregister ist nutzbar und die offizielle API-Zusammenfassung liefert die Zähler für verfügbare, offene und abgeschlossene Aufgaben. Die Speicherung von Änderungen muss noch angebunden werden. Projekte, Phasen, Abhängigkeiten, Meilensteine, Zeitachsen und Agenden werden nach Freigabe des Datenmodells angebunden.',
     registerTitle: 'Aufgaben- und Aktionsregister'
   }
 };
@@ -233,12 +236,13 @@ const Metric = ({ label, value }) => (
   </div>
 );
 
-const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'ready', completedTasks = 0, children }) => {
+const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'ready', openTasks = null, completedTasks = 0, children }) => {
   const t = COPY[language] || COPY.FR;
   const tasksReady = tasksStatus === 'ready'
     && Number.isFinite(tasksTotal)
     && Number.isFinite(completedTasks);
   const taskTotalValue = tasksReady ? tasksTotal : '—';
+  const openTaskValue = tasksReady && Number.isFinite(openTasks) ? openTasks : '—';
   const completedTaskValue = tasksReady ? completedTasks : '—';
   const completion = tasksReady
     ? (tasksTotal > 0 ? `${Math.round((completedTasks / tasksTotal) * 100)} %` : '0 %')
@@ -340,8 +344,9 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'read
           <ListChecks className="text-emerald-300" size={22} aria-hidden="true" />
           <h3 id="current-title" className="text-lg font-semibold text-white">{t.currentTitle}</h3>
         </div>
-        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <Metric label={t.tasksAvailable} value={taskTotalValue} />
+          <Metric label={t.tasksOpen} value={openTaskValue} />
           <Metric label={t.tasksCompleted} value={completedTaskValue} />
           <Metric label={t.completion} value={completion} />
         </div>
