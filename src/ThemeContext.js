@@ -20,11 +20,15 @@ export const ThemeProvider = ({ children }) => {
   }, [isDarkMode]);
 
   const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
+    setIsDarkMode(current => !current);
+  };
+
+  const setTheme = (theme) => {
+    setIsDarkMode(theme === 'dark');
   };
 
   return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme: isDarkMode ? 'dark' : 'light', isDarkMode, setTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

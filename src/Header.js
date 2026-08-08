@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChevronRight, CloudSun, Globe2, LogOut, Menu, Moon, Sun, SunMedium } from 'lucide-react';
+import { Check, ChevronRight, CloudSun, Globe2, LogOut, Menu, Moon, Settings2, Sun, SunMedium } from 'lucide-react';
 import { useTheme } from './ThemeContext';
 import { useLanguage } from './LanguageContext';
 import { useAuth } from './AuthContext';
@@ -27,10 +27,13 @@ const Header = ({ onOpenMenu }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { language, setLanguage } = useLanguage();
-  const { isDarkMode, toggleTheme } = useTheme();
+  const { isDarkMode, setTheme } = useTheme();
   const { user, logout } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentRate, setCurrentRate] = useState(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const settingsRef = useRef(null);
+  const settingsButtonRef = useRef(null);
   const moduleId = moduleIdFromPath(location.pathname);
   const moduleItem = menuData.menu.find((item) => item.id === moduleId) || menuData.menu[0];
   const activeMenu = resolveActiveMenuLocation(menuData, location.pathname, location.search);
@@ -56,10 +59,30 @@ const Header = ({ onOpenMenu }) => {
       .catch(() => setCurrentRate(null));
   }, []);
 
+  useEffect(() => {
+    if (!settingsOpen) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (!settingsRef.current?.contains(event.target)) setSettingsOpen(false);
+    };
+    const handleKeyDown = (event) => {
+      if (event.key !== 'Escape') return;
+      setSettingsOpen(false);
+      settingsButtonRef.current?.focus();
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [settingsOpen]);
+
   const translations = {
-    FR: { sunny: 'Ensoleillé', cloudy: 'Nuageux', logout: 'Déconnexion', light: 'Mode clair', dark: 'Mode sombre' },
-    EN: { sunny: 'Sunny', cloudy: 'Cloudy', logout: 'Logout', light: 'Light mode', dark: 'Dark mode' },
-    DE: { sunny: 'Sonnig', cloudy: 'Bewölkt', logout: 'Abmelden', light: 'Heller Modus', dark: 'Dunkler Modus' }
+    FR: { sunny: 'Ensoleillé', cloudy: 'Nuageux', logout: 'Déconnexion', settings: 'Paramètres d’affichage', appearance: 'Apparence', language: 'Langue', light: 'Clair', dark: 'Sombre', active: 'Actif' },
+    EN: { sunny: 'Sunny', cloudy: 'Cloudy', logout: 'Logout', settings: 'Display settings', appearance: 'Appearance', language: 'Language', light: 'Light', dark: 'Dark', active: 'Active' },
+    DE: { sunny: 'Sonnig', cloudy: 'Bewölkt', logout: 'Abmelden', settings: 'Anzeigeeinstellungen', appearance: 'Darstellung', language: 'Sprache', light: 'Hell', dark: 'Dunkel', active: 'Aktiv' }
   };
   const t = translations[language] || translations.FR;
   const locale = language === 'DE' ? 'de-CH' : language === 'EN' ? 'en-GB' : 'fr-CH';
@@ -116,14 +139,63 @@ const Header = ({ onOpenMenu }) => {
         </div>
 
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-          <button onClick={toggleTheme} className="icon-button" title={isDarkMode ? t.light : t.dark} aria-label={isDarkMode ? t.light : t.dark}>
-            {isDarkMode ? <Sun size={19} className="text-amber-400" /> : <Moon size={19} className="text-indigo-500" />}
-          </button>
-          <div className="flex items-center gap-1 border-l border-slate-700 pl-2">
-            <Globe2 size={17} className="text-sky-400 hidden sm:block" />
-            <select value={language} onChange={(event) => setLanguage(event.target.value)} className="header-select" aria-label="Langue">
-              <option value="FR">FR</option><option value="EN">EN</option><option value="DE">DE</option>
-            </select>
+          <div ref={settingsRef} className="relative">
+            <button
+              ref={settingsButtonRef}
+              type="button"
+              className="icon-button"
+              title={t.settings}
+              aria-label={t.settings}
+              aria-haspopup="dialog"
+              aria-expanded={settingsOpen}
+              onClick={() => setSettingsOpen(current => !current)}
+            >
+              <Settings2 size={19} className="text-sky-400" />
+            </button>
+            {settingsOpen && (
+              <div className="header-settings-panel absolute right-0 top-11 z-50 w-72 max-w-[calc(100vw-1rem)] rounded-md border border-slate-600 bg-slate-800 p-3 text-slate-100 shadow-xl" role="dialog" aria-label={t.settings}>
+                <h2 className="text-sm font-semibold text-slate-100">{t.settings}</h2>
+                <div className="mt-3">
+                  <p className="text-xs font-semibold uppercase text-slate-400">{t.appearance}</p>
+                  <div className="mt-2 grid grid-cols-2 gap-2">
+                    {[
+                      { id: 'light', label: t.light, icon: Sun },
+                      { id: 'dark', label: t.dark, icon: Moon }
+                    ].map(({ id, label, icon: ThemeIcon }) => {
+                      const selected = (id === 'dark') === isDarkMode;
+                      return (
+                        <button
+                          key={id}
+                          type="button"
+                          className={`header-settings-choice flex min-h-11 items-center justify-between gap-2 rounded-md border px-3 py-2 text-sm font-semibold transition ${selected ? 'header-settings-choice--active border-blue-500 bg-blue-700 text-white' : 'border-slate-600 bg-slate-700 text-slate-200 hover:border-blue-400 hover:bg-slate-600'}`}
+                          aria-pressed={selected}
+                          onClick={() => setTheme(id)}
+                        >
+                          <span className="flex items-center gap-2"><ThemeIcon size={17} aria-hidden="true" />{label}</span>
+                          {selected && <Check size={16} aria-label={t.active} />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="mt-4 border-t border-slate-700 pt-3">
+                  <p className="flex items-center gap-2 text-xs font-semibold uppercase text-slate-400"><Globe2 size={15} aria-hidden="true" />{t.language}</p>
+                  <div className="mt-2 grid grid-cols-3 gap-2">
+                    {['FR', 'EN', 'DE'].map(option => (
+                      <button
+                        key={option}
+                        type="button"
+                        className={`header-settings-choice min-h-10 rounded-md border px-2 py-2 text-sm font-semibold transition ${language === option ? 'header-settings-choice--active border-blue-500 bg-blue-700 text-white' : 'border-slate-600 bg-slate-700 text-slate-200 hover:border-blue-400 hover:bg-slate-600'}`}
+                        aria-pressed={language === option}
+                        onClick={() => setLanguage(option)}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           <button onClick={handleLogout} className="icon-button text-red-400" title={t.logout} aria-label={t.logout}>
             <LogOut size={19} />
