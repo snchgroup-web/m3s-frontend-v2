@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { AlertCircle, Lock, Mail } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Lock, Mail } from 'lucide-react';
 import { useAuth } from './AuthContext';
+import { useLanguage } from './LanguageContext';
 
 const demoAccounts = [
   { email: 'cheikh@seneswiss.sn', password: 'manager123', name: 'Cheikh', role: 'Manager' },
@@ -13,14 +14,26 @@ const Login = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { login, error, loading, demoAuthEnabled } = useAuth();
+  const { language } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [localError, setLocalError] = useState('');
   const [sessionExpired] = useState(() => searchParams.get('session') === 'expired' || localStorage.getItem('session_expired') === 'true');
+  const [logoutSuccess] = useState(() => sessionStorage.getItem('logout_success') === 'true');
+
+  const logoutMessages = {
+    FR: 'Déconnexion effectuée avec succès.',
+    EN: 'You have logged out successfully.',
+    DE: 'Sie wurden erfolgreich abgemeldet.'
+  };
 
   useEffect(() => {
     if (sessionExpired) localStorage.removeItem('session_expired');
   }, [sessionExpired]);
+
+  useEffect(() => {
+    if (logoutSuccess) sessionStorage.removeItem('logout_success');
+  }, [logoutSuccess]);
 
   const submitLogin = async (loginEmail, loginPassword) => {
     const result = await login(loginEmail, loginPassword);
@@ -69,6 +82,13 @@ const Login = () => {
 
         <div className="login-panel bg-slate-800 rounded-lg shadow-2xl p-8 border border-slate-700">
           <h2 className="text-2xl font-semibold text-white mb-6">Connexion</h2>
+
+          {logoutSuccess && !(error || localError) && (
+            <div className="m3s-feedback m3s-feedback--success mb-4 flex items-start gap-3 p-4" role="status">
+              <CheckCircle2 size={20} className="mt-0.5 flex-shrink-0" aria-hidden="true" />
+              <p className="text-sm font-medium">{logoutMessages[language] || logoutMessages.FR}</p>
+            </div>
+          )}
 
           {sessionExpired && !(error || localError) && (
             <div className="login-session-alert mb-4 p-4 bg-amber-900/60 border border-amber-700 rounded flex items-start space-x-3">
