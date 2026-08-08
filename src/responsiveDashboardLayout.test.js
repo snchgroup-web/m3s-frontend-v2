@@ -34,6 +34,7 @@ describe('responsive dashboard shell', () => {
 
   test('keeps management copy readable and Intelligence actions aligned in light mode', () => {
     expect(pilotageSource).toContain('management-principle-body');
+    expect(pilotageSource).toContain('flex items-center gap-2.5');
     expect(pilotageSource).toContain('intelligence-actions mt-4 grid grid-cols-2');
     expect(pilotageSource).toContain('intelligence-action--success');
     expect(pilotageSource).toContain('intelligence-action--primary');

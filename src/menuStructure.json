@@ -23,9 +23,9 @@
         {
           "id": "global-intelligence",
           "label": {
-            "FR": "Intelligence 2SG",
-            "EN": "2SG Intelligence",
-            "DE": "2SG Intelligence"
+            "FR": "Daily Intelligence",
+            "EN": "Daily Intelligence",
+            "DE": "Daily Intelligence"
           },
           "icon": "BrainCircuit",
           "path": "/?view=intelligence"

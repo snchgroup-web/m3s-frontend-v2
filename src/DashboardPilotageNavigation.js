@@ -25,25 +25,27 @@ const translations = {
     eyebrow: 'PILOTAGE GLOBAL 2SG / M3S',
     title: 'Décider avec une vue d’ensemble fiable',
     subtitle: 'Le tableau de bord global relie la situation opérationnelle, l’intelligence stratégique et les fonctions métier sans remplacer leurs tableaux de bord locaux.',
-    tabs: { overview: 'Pilotage', intelligence: 'Intelligence 2SG', map: 'Carte des fonctions' },
+    tabs: { overview: 'Pilotage', intelligence: 'Daily Intelligence', map: 'Carte des fonctions' },
     management: [
       ['Piloter', 'Fixer les objectifs et contrôler les résultats.'],
       ['Organiser', 'Répartir et coordonner le travail.'],
       ['Animer', 'Mobiliser les personnes et faire circuler l’information.'],
       ['Diriger', 'Prendre les décisions nécessaires à la réalisation des objectifs.']
     ],
-    intelligenceTitle: '2SG Intelligence Dashboard',
+    intelligenceTitle: '2SG Daily Intelligence Dashboard',
     intelligenceStatus: 'Édition disponible',
     intelligenceUnavailable: 'Aucune édition publiée',
     intelligenceLoading: 'Vérification de la dernière édition...',
     intelligenceError: 'La source Intelligence est momentanément indisponible.',
     intelligenceBody: 'La dernière livraison validée est conservée dans M3S et reste accessible uniquement après connexion.',
     intelligenceEdition: 'Édition',
-    openHtml: 'Ouvrir le Dashboard',
+    openHtml: 'Ouvrir le Daily Intelligence',
     openPdf: 'Ouvrir le PDF',
     openReference: 'Ouvrir le référentiel',
     intelligenceAreas: ['Mémoire stratégique', 'État du système', 'Radar & veille', 'Opportunités', 'Agenda', 'Journal de bord', 'Recommandations'],
     knowledgeAction: 'Ouvrir Veille & KM',
+    returnToIntelligence: 'Revenir au Daily Intelligence',
+    referenceTitle: 'Référentiel du 2SG Daily Intelligence Dashboard',
     mapTitle: 'Fonctions reliées au pilotage global',
     mapBody: 'Chaque accès ouvre la fonction concernée. Son tableau de bord local conserve le pilotage métier détaillé.',
     open: 'Ouvrir',
@@ -53,25 +55,27 @@ const translations = {
     eyebrow: '2SG / M3S GLOBAL STEERING',
     title: 'Decide from a reliable overall view',
     subtitle: 'The global dashboard connects operational status, strategic intelligence and business functions without replacing their local dashboards.',
-    tabs: { overview: 'Steering', intelligence: '2SG Intelligence', map: 'Function map' },
+    tabs: { overview: 'Steering', intelligence: 'Daily Intelligence', map: 'Function map' },
     management: [
       ['Steer', 'Set objectives and monitor results.'],
       ['Organise', 'Allocate and coordinate work.'],
       ['Mobilise', 'Engage people and circulate information.'],
       ['Direct', 'Make the decisions required to achieve objectives.']
     ],
-    intelligenceTitle: '2SG Intelligence Dashboard',
+    intelligenceTitle: '2SG Daily Intelligence Dashboard',
     intelligenceStatus: 'Edition available',
     intelligenceUnavailable: 'No published edition',
     intelligenceLoading: 'Checking the latest edition...',
     intelligenceError: 'The Intelligence source is temporarily unavailable.',
     intelligenceBody: 'The latest validated delivery is retained in M3S and remains accessible only after sign-in.',
     intelligenceEdition: 'Edition',
-    openHtml: 'Open Dashboard',
+    openHtml: 'Open Daily Intelligence',
     openPdf: 'Open PDF',
     openReference: 'Open reference',
     intelligenceAreas: ['Strategic memory', 'System status', 'Radar & monitoring', 'Opportunities', 'Agenda', 'Logbook', 'Recommendations'],
     knowledgeAction: 'Open Monitoring & KM',
+    returnToIntelligence: 'Return to Daily Intelligence',
+    referenceTitle: '2SG Daily Intelligence Dashboard reference',
     mapTitle: 'Functions connected to global steering',
     mapBody: 'Each access opens the relevant function. Its local dashboard retains detailed business steering.',
     open: 'Open',
@@ -81,25 +85,27 @@ const translations = {
     eyebrow: 'GLOBALE 2SG-/M3S-STEUERUNG',
     title: 'Mit einer verlässlichen Gesamtübersicht entscheiden',
     subtitle: 'Das globale Dashboard verbindet operative Lage, strategische Intelligenz und Unternehmensfunktionen, ohne deren lokale Dashboards zu ersetzen.',
-    tabs: { overview: 'Steuerung', intelligence: '2SG Intelligence', map: 'Funktionskarte' },
+    tabs: { overview: 'Steuerung', intelligence: 'Daily Intelligence', map: 'Funktionskarte' },
     management: [
       ['Steuern', 'Ziele festlegen und Ergebnisse kontrollieren.'],
       ['Organisieren', 'Arbeit verteilen und koordinieren.'],
       ['Mobilisieren', 'Menschen einbinden und Informationen weitergeben.'],
       ['Leiten', 'Die für die Zielerreichung nötigen Entscheidungen treffen.']
     ],
-    intelligenceTitle: '2SG Intelligence Dashboard',
+    intelligenceTitle: '2SG Daily Intelligence Dashboard',
     intelligenceStatus: 'Ausgabe verfügbar',
     intelligenceUnavailable: 'Keine veröffentlichte Ausgabe',
     intelligenceLoading: 'Letzte Ausgabe wird geprüft...',
     intelligenceError: 'Die Intelligence-Quelle ist vorübergehend nicht verfügbar.',
     intelligenceBody: 'Die letzte validierte Lieferung wird in M3S aufbewahrt und ist nur nach der Anmeldung zugänglich.',
     intelligenceEdition: 'Ausgabe',
-    openHtml: 'Dashboard öffnen',
+    openHtml: 'Daily Intelligence öffnen',
     openPdf: 'PDF öffnen',
     openReference: 'Referenz öffnen',
     intelligenceAreas: ['Strategisches Gedächtnis', 'Systemstatus', 'Radar & Monitoring', 'Chancen', 'Agenda', 'Arbeitsjournal', 'Empfehlungen'],
     knowledgeAction: 'Monitoring & KM öffnen',
+    returnToIntelligence: 'Zur Daily Intelligence zurückkehren',
+    referenceTitle: 'Referenz des 2SG Daily Intelligence Dashboard',
     mapTitle: 'Mit der globalen Steuerung verbundene Funktionen',
     mapBody: 'Jeder Zugang öffnet die betreffende Funktion. Das lokale Dashboard behält die detaillierte Fachsteuerung.',
     open: 'Öffnen',
@@ -124,19 +130,182 @@ export const resolveDashboardView = (search = '') => {
   return ['overview', 'intelligence', 'map'].includes(view) ? view : 'overview';
 };
 
-export const renderSandboxedHtmlArtifact = (target, url) => {
-  if (!target?.document?.body) return false;
+const appendInlineReferenceText = (documentRef, node, value) => {
+  String(value || '').split(/(\*\*[^*]+\*\*|`[^`]+`)/g).filter(Boolean).forEach((part) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      const strong = documentRef.createElement('strong');
+      strong.textContent = part.slice(2, -2);
+      node.appendChild(strong);
+      return;
+    }
+    if (part.startsWith('`') && part.endsWith('`')) {
+      const code = documentRef.createElement('code');
+      code.textContent = part.slice(1, -1);
+      Object.assign(code.style, { background: '#e2e8f0', borderRadius: '4px', padding: '2px 5px' });
+      node.appendChild(code);
+      return;
+    }
+    node.appendChild(documentRef.createTextNode(part));
+  });
+};
+
+const createArtifactShell = (target, { title, returnUrl, returnLabel }) => {
+  if (!target?.document?.body) return null;
+  const documentRef = target.document;
   target.opener = null;
-  target.document.title = '2SG Intelligence Dashboard';
-  Object.assign(target.document.body.style, { margin: '0', minHeight: '100vh', background: '#f8fafc' });
+  documentRef.title = title;
+  Object.assign(documentRef.body.style, {
+    margin: '0',
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    background: '#f8fafc',
+    color: '#172033',
+    fontFamily: 'Segoe UI, Arial, sans-serif'
+  });
+
+  const toolbar = documentRef.createElement('header');
+  Object.assign(toolbar.style, {
+    position: 'sticky',
+    top: '0',
+    zIndex: '2',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '16px',
+    minHeight: '58px',
+    padding: '10px 16px',
+    boxSizing: 'border-box',
+    background: '#0f2d5c',
+    color: '#f8fafc',
+    boxShadow: '0 2px 8px rgba(15, 23, 42, .18)'
+  });
+  const heading = documentRef.createElement('strong');
+  heading.textContent = title;
+  Object.assign(heading.style, { fontSize: '15px', fontWeight: '600', lineHeight: '1.35' });
+  const returnLink = documentRef.createElement('a');
+  returnLink.href = returnUrl;
+  returnLink.textContent = returnLabel;
+  Object.assign(returnLink.style, {
+    flexShrink: '0',
+    border: '1px solid #93c5fd',
+    borderRadius: '6px',
+    padding: '9px 12px',
+    color: '#ffffff',
+    background: '#1d4ed8',
+    fontSize: '14px',
+    fontWeight: '600',
+    textDecoration: 'none'
+  });
+  toolbar.append(heading, returnLink);
+
+  const content = documentRef.createElement('main');
+  Object.assign(content.style, { flex: '1', minHeight: '0' });
+  documentRef.body.replaceChildren(toolbar, content);
+  return content;
+};
+
+export const renderSandboxedHtmlArtifact = (target, url, options = {}) => {
+  if (!target?.document?.body) return false;
+  const content = createArtifactShell(target, {
+    title: options.title || '2SG Daily Intelligence Dashboard',
+    returnUrl: options.returnUrl || '/',
+    returnLabel: options.returnLabel || 'Retour'
+  });
   const frame = target.document.createElement('iframe');
   frame.src = url;
-  frame.title = '2SG Intelligence Dashboard';
+  frame.title = options.title || '2SG Daily Intelligence Dashboard';
   frame.referrerPolicy = 'no-referrer';
   frame.setAttribute('sandbox', 'allow-scripts allow-forms allow-modals allow-popups allow-downloads');
-  frame.setAttribute('aria-label', '2SG Intelligence Dashboard');
-  Object.assign(frame.style, { display: 'block', width: '100%', height: '100vh', border: '0' });
-  target.document.body.replaceChildren(frame);
+  frame.setAttribute('aria-label', options.title || '2SG Daily Intelligence Dashboard');
+  Object.assign(frame.style, { display: 'block', width: '100%', height: '100%', minHeight: 'calc(100vh - 58px)', border: '0' });
+  content.appendChild(frame);
+  return true;
+};
+
+export const renderReferenceArtifact = (target, markdown, options = {}) => {
+  if (!target?.document?.body) return false;
+  const documentRef = target.document;
+  const title = options.title || '2SG Daily Intelligence Dashboard reference';
+  const content = createArtifactShell(target, {
+    title,
+    returnUrl: options.returnUrl || '/',
+    returnLabel: options.returnLabel || 'Back'
+  });
+  Object.assign(content.style, { overflow: 'auto', padding: '20px 16px 48px' });
+
+  const article = documentRef.createElement('article');
+  Object.assign(article.style, {
+    maxWidth: '980px',
+    margin: '0 auto',
+    padding: 'clamp(18px, 4vw, 42px)',
+    boxSizing: 'border-box',
+    border: '1px solid #d7e0eb',
+    borderRadius: '8px',
+    background: '#ffffff',
+    boxShadow: '0 8px 26px rgba(30, 41, 59, .08)',
+    lineHeight: '1.65'
+  });
+
+  let currentList = null;
+  let currentListType = '';
+  const closeList = () => {
+    currentList = null;
+    currentListType = '';
+  };
+  String(markdown || '').replace(/^\uFEFF/, '').split(/\r?\n/).forEach((rawLine) => {
+    const line = rawLine.trim();
+    if (!line) {
+      closeList();
+      return;
+    }
+    if (/^---+$/.test(line)) {
+      closeList();
+      const rule = documentRef.createElement('hr');
+      Object.assign(rule.style, { border: '0', borderTop: '1px solid #d7e0eb', margin: '24px 0' });
+      article.appendChild(rule);
+      return;
+    }
+    const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+    if (headingMatch) {
+      closeList();
+      const level = Math.min(headingMatch[1].length + 1, 6);
+      const headingNode = documentRef.createElement(`h${level}`);
+      appendInlineReferenceText(documentRef, headingNode, headingMatch[2]);
+      Object.assign(headingNode.style, {
+        margin: level <= 2 ? '28px 0 12px' : '22px 0 8px',
+        color: '#0f2d5c',
+        fontSize: level <= 2 ? 'clamp(22px, 4vw, 30px)' : level === 3 ? '20px' : '17px',
+        fontWeight: '600',
+        lineHeight: '1.3'
+      });
+      article.appendChild(headingNode);
+      return;
+    }
+    const listMatch = line.match(/^([-*]|\d+\.)\s+(.+)$/);
+    if (listMatch) {
+      const listType = /\d/.test(listMatch[1]) ? 'ol' : 'ul';
+      if (!currentList || currentListType !== listType) {
+        currentList = documentRef.createElement(listType);
+        currentListType = listType;
+        Object.assign(currentList.style, { margin: '10px 0 16px', paddingLeft: '28px' });
+        article.appendChild(currentList);
+      }
+      const item = documentRef.createElement('li');
+      appendInlineReferenceText(documentRef, item, listMatch[2]);
+      Object.assign(item.style, { margin: '5px 0' });
+      currentList.appendChild(item);
+      return;
+    }
+    closeList();
+    const paragraph = documentRef.createElement(line.startsWith('>') ? 'blockquote' : 'p');
+    appendInlineReferenceText(documentRef, paragraph, line.replace(/^>\s?/, ''));
+    Object.assign(paragraph.style, line.startsWith('>')
+      ? { margin: '12px 0', padding: '10px 16px', borderLeft: '3px solid #2563eb', background: '#eff6ff' }
+      : { margin: '8px 0' });
+    article.appendChild(paragraph);
+  });
+  content.appendChild(article);
   return true;
 };
 
@@ -193,8 +362,15 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
     try {
       const { blob } = await api.getLatestIntelligenceArtifact(artifactType);
       const url = URL.createObjectURL(blob);
+      const artifactOptions = {
+        title: artifactType === 'reference' ? t.referenceTitle : t.intelligenceTitle,
+        returnUrl: `${window.location.origin}/?view=intelligence`,
+        returnLabel: t.returnToIntelligence
+      };
       if (artifactType === 'html' && target) {
-        renderSandboxedHtmlArtifact(target, url);
+        renderSandboxedHtmlArtifact(target, url, artifactOptions);
+      } else if (artifactType === 'reference' && target) {
+        renderReferenceArtifact(target, await blob.text(), artifactOptions);
       } else if (target) {
         target.location.href = url;
       } else {
@@ -227,7 +403,7 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
     <section className="global-pilotage rounded-lg border border-slate-700 bg-slate-800 p-3 shadow-lg sm:p-5" aria-labelledby="global-pilotage-title">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <div className="max-w-3xl">
-          <p className="text-xs font-semibold uppercase text-amber-300">{t.eyebrow}</p>
+          <p className="text-xs font-semibold uppercase text-blue-300">{t.eyebrow}</p>
           <h2 id="global-pilotage-title" className="mt-1 text-xl font-semibold text-slate-100 sm:text-2xl">{t.title}</h2>
           <p className="mt-2 text-sm leading-6 text-slate-300">{t.subtitle}</p>
         </div>
@@ -253,12 +429,14 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
       </div>
 
       {activeView === 'overview' && (
-        <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
           {t.management.map(([title, body], index) => (
-            <article key={title} className="management-principle-card rounded-md border border-slate-700 bg-slate-900/35 p-4">
-              <div className="management-principle-index mb-3 inline-flex h-8 w-8 items-center justify-center rounded-md bg-blue-950 text-sm font-bold text-blue-300">{index + 1}</div>
-              <h3 className="management-principle-title text-base font-semibold text-slate-100">{title}</h3>
-              <p className="management-principle-body mt-1 text-sm leading-5 text-slate-400">{body}</p>
+            <article key={title} className="management-principle-card rounded-md border border-slate-700 bg-slate-900/35 p-3">
+              <div className="flex items-center gap-2.5">
+                <div className="management-principle-index inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-blue-950 text-sm font-bold text-blue-300">{index + 1}</div>
+                <h3 className="management-principle-title text-base font-semibold text-slate-100">{title}</h3>
+              </div>
+              <p className="management-principle-body mt-2 text-sm leading-5 text-slate-400">{body}</p>
             </article>
           ))}
         </div>
@@ -268,7 +446,7 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
         <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[1.1fr_1fr]">
           <article className="intelligence-card rounded-md border p-3 sm:p-4">
             <div className="flex flex-wrap items-center gap-3">
-              <BookOpenText className="text-amber-300" size={22} aria-hidden="true" />
+              <BookOpenText className="text-blue-300" size={22} aria-hidden="true" />
               <h3 className="text-lg font-semibold text-slate-100">{t.intelligenceTitle}</h3>
               <span className={`intelligence-status-badge rounded-full border px-2.5 py-1 text-xs font-semibold ${intelligenceReady ? 'intelligence-status-badge--ready border-emerald-700 text-emerald-200' : 'intelligence-status-badge--pending border-amber-700 text-amber-200'}`}>{intelligenceLabel}</span>
             </div>
@@ -291,13 +469,13 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
                 <button type="button" onClick={() => openArtifact('reference')} className="intelligence-action inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-center text-sm font-semibold text-slate-100 hover:border-blue-400 hover:bg-slate-600">
                   <FileText size={16} aria-hidden="true" />{t.openReference}
                 </button>
-                <button type="button" onClick={() => onNavigate('/ged?tab=knowledge')} className="intelligence-action intelligence-action--primary inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-blue-700 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-blue-600">
+                <button type="button" onClick={() => onNavigate('/ged?tab=knowledge&returnTo=dashboard-daily-intelligence')} className="intelligence-action intelligence-action--primary inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-blue-700 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-blue-600">
                   {t.knowledgeAction}<ArrowRight size={16} aria-hidden="true" />
                 </button>
               </div>
             )}
             {!intelligenceReady && (
-              <button type="button" onClick={() => onNavigate('/ged?tab=knowledge')} className="intelligence-action intelligence-action--primary mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-600">
+              <button type="button" onClick={() => onNavigate('/ged?tab=knowledge&returnTo=dashboard-daily-intelligence')} className="intelligence-action intelligence-action--primary mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-600">
                 {t.knowledgeAction}<ArrowRight size={16} aria-hidden="true" />
               </button>
             )}

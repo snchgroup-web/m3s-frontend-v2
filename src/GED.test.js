@@ -123,6 +123,14 @@ test('returns from a central Finance term to the originating local glossary', as
   expect(mockNavigate).toHaveBeenCalledWith('/finance?tab=glossary');
 });
 
+test('returns from Monitoring and KM to the Daily Intelligence view', async () => {
+  renderGed('knowledge', 'FR', '&returnTo=dashboard-daily-intelligence');
+
+  const returnButton = await screen.findByRole('button', { name: 'Revenir au Daily Intelligence' });
+  fireEvent.click(returnButton);
+  expect(mockNavigate).toHaveBeenCalledWith('/?view=intelligence');
+});
+
 test('renders the English pilot labels from the shared language context', async () => {
   renderGed('outils-documents', 'EN');
 
