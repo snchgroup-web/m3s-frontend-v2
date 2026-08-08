@@ -696,7 +696,7 @@ const Admin = () => {
               <JournalTaskRegister language={language} />
             </PlanningOverview>
             <div className="flex justify-end mb-4">
-              <button onClick={openNewTaskModal} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
+              <button onClick={openNewTaskModal} className="m3s-success-button flex min-h-11 items-center gap-2 px-4">
                 <Plus size={20} /> {t.nouvelleTache}
               </button>
             </div>
@@ -965,7 +965,7 @@ const Admin = () => {
 
             <div className="mt-6 grid grid-cols-2 gap-3">
               <button type="button" onClick={() => setShowTaskModal(false)} className="administration-modal__cancel min-h-11 rounded-md bg-slate-700 px-4 py-2 font-medium text-white transition hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400">{t.annuler}</button>
-              <button type="submit" className="administration-modal__primary min-h-11 rounded-md bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">{editingTaskId ? t.modifier : t.creer}</button>
+              <button type="submit" className={`${editingTaskId ? 'm3s-primary-button' : 'm3s-success-button'} administration-modal__primary min-h-11 px-4`}>{editingTaskId ? t.modifier : t.creer}</button>
             </div>
           </form>
         </div>
