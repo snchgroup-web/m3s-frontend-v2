@@ -1204,6 +1204,195 @@ const GLOSSARY_CONTEXT = {
         detailedDefinition: 'The recipient of aid, a donation, project or social service, recorded only with necessary data and appropriate access rights. A beneficiary is not automatically a customer; identity, reason, decision, evidence and confidentiality must be proportionate to the required follow-up.'
       }
     }
+  },
+  'PROD-COMMANDE-CLIENT': {
+    version: 'V5.2-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Commande client',
+        shortDefinition: 'Demande acceptée précisant ce qui doit être fourni à un client et dans quelles conditions.',
+        detailedDefinition: 'Enregistrement reliant le client, le produit ou service attendu, les quantités, dates, conditions et preuves d’acceptation. La commande déclenche ou planifie l’exécution ; elle ne constitue à elle seule ni une livraison, ni une facture, ni un paiement.'
+      },
+      DE: {
+        term: 'Kundenauftrag',
+        shortDefinition: 'Angenommene Anfrage, die festlegt, was einem Kunden unter welchen Bedingungen geliefert werden soll.',
+        detailedDefinition: 'Datensatz, der Kunde, erwartetes Produkt oder Leistung, Mengen, Termine, Bedingungen und Annahmenachweise verbindet. Der Auftrag löst die Ausführung aus oder plant sie; allein ist er weder Lieferung noch Rechnung oder Zahlung.'
+      },
+      EN: {
+        term: 'Customer order',
+        shortDefinition: 'An accepted request specifying what must be supplied to a customer and under which conditions.',
+        detailedDefinition: 'A record linking the customer, expected product or service, quantities, dates, conditions and acceptance evidence. The order triggers or plans execution; by itself it is neither delivery, invoice nor payment.'
+      }
+    }
+  },
+  'PROD-ORDRE-FABRICATION': {
+    version: 'V5.2-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Ordre de fabrication',
+        shortDefinition: 'Instruction interne autorisée pour produire une quantité définie selon un cadre identifié.',
+        detailedDefinition: 'Objet de pilotage portant une référence, un produit, une quantité, des dates, des étapes, des responsables et les contrôles attendus. Il peut découler d’une commande ou d’un besoin interne et ne prouve pas que la fabrication est terminée ou conforme.'
+      },
+      DE: {
+        term: 'Fertigungsauftrag',
+        shortDefinition: 'Autorisierte interne Anweisung, eine festgelegte Menge nach einem identifizierten Rahmen herzustellen.',
+        detailedDefinition: 'Steuerungsobjekt mit Referenz, Produkt, Menge, Terminen, Schritten, Verantwortlichen und erwarteten Kontrollen. Es kann aus einem Kundenauftrag oder internem Bedarf entstehen und belegt weder Abschluss noch Konformität der Fertigung.'
+      },
+      EN: {
+        term: 'Manufacturing order',
+        shortDefinition: 'An authorised internal instruction to produce a defined quantity under an identified framework.',
+        detailedDefinition: 'A steering object carrying a reference, product, quantity, dates, steps, owners and expected controls. It may arise from a customer order or internal need and does not prove that manufacturing is complete or compliant.'
+      }
+    }
+  },
+  'PROD-LOT-PRODUCTION': {
+    version: 'V5.2-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Lot de production',
+        shortDefinition: 'Ensemble d’unités fabriquées dans des conditions communes et suivies sous une même référence.',
+        detailedDefinition: 'Regroupement utilisé pour relier quantité, période, ressources, composants, contrôles, incidents et résultats de fabrication. Le lot facilite la traçabilité ; sa présence ne garantit ni disponibilité en stock ni conformité sans preuve de contrôle.'
+      },
+      DE: {
+        term: 'Produktionslos',
+        shortDefinition: 'Gruppe von Einheiten, die unter gemeinsamen Bedingungen gefertigt und unter einer Referenz verfolgt werden.',
+        detailedDefinition: 'Zusammenfassung zur Verknüpfung von Menge, Zeitraum, Ressourcen, Komponenten, Kontrollen, Vorfällen und Fertigungsergebnissen. Das Los unterstützt die Rückverfolgbarkeit; es garantiert weder Lagerverfügbarkeit noch Konformität ohne Prüfnachweis.'
+      },
+      EN: {
+        term: 'Production batch',
+        shortDefinition: 'A group of units manufactured under common conditions and tracked under one reference.',
+        detailedDefinition: 'A grouping used to link quantity, period, resources, components, controls, incidents and manufacturing results. The batch supports traceability; it guarantees neither stock availability nor compliance without control evidence.'
+      }
+    }
+  },
+  'PROD-FABRICATION': {
+    version: 'V5.2-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Fabrication',
+        shortDefinition: 'Transformation contrôlée de ressources en un produit ou résultat attendu.',
+        detailedDefinition: 'Exécution d’opérations planifiées mobilisant matières, équipements, compétences, temps et contrôles. La fabrication doit rester reliée à son ordre, ses étapes, quantités, responsables, écarts et preuves ; elle se distingue de l’achat, du stockage et de la livraison.'
+      },
+      DE: {
+        term: 'Fertigung',
+        shortDefinition: 'Kontrollierte Umwandlung von Ressourcen in ein erwartetes Produkt oder Ergebnis.',
+        detailedDefinition: 'Ausführung geplanter Vorgänge mit Material, Ausrüstung, Fähigkeiten, Zeit und Kontrollen. Die Fertigung bleibt mit Auftrag, Schritten, Mengen, Verantwortlichen, Abweichungen und Nachweisen verbunden und unterscheidet sich von Einkauf, Lagerung und Lieferung.'
+      },
+      EN: {
+        term: 'Manufacturing',
+        shortDefinition: 'The controlled transformation of resources into an expected product or result.',
+        detailedDefinition: 'The execution of planned operations using materials, equipment, skills, time and controls. Manufacturing remains linked to its order, steps, quantities, owners, deviations and evidence, and differs from purchasing, storage and delivery.'
+      }
+    }
+  },
+  'PROD-NOMENCLATURE': {
+    version: 'V5.2-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Nomenclature de fabrication',
+        shortDefinition: 'Liste structurée des composants et quantités nécessaires à un produit défini.',
+        detailedDefinition: 'Référence versionnée décrivant matières, pièces, sous-ensembles et quantités théoriques nécessaires. Elle sert à préparer et contrôler la fabrication, mais ne confirme ni la disponibilité réelle des composants ni leur consommation effective.'
+      },
+      DE: {
+        term: 'Stückliste',
+        shortDefinition: 'Strukturierte Liste der Komponenten und Mengen, die für ein definiertes Produkt erforderlich sind.',
+        detailedDefinition: 'Versionierte Referenz für Materialien, Teile, Baugruppen und theoretisch benötigte Mengen. Sie unterstützt Vorbereitung und Kontrolle der Fertigung, bestätigt aber weder die tatsächliche Verfügbarkeit noch den realen Verbrauch.'
+      },
+      EN: {
+        term: 'Bill of materials',
+        shortDefinition: 'A structured list of components and quantities required for a defined product.',
+        detailedDefinition: 'A versioned reference describing materials, parts, subassemblies and theoretical quantities required. It supports manufacturing preparation and control but confirms neither actual component availability nor actual consumption.'
+      }
+    }
+  },
+  'PROD-GAMME-OPERATOIRE': {
+    version: 'V5.2-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Gamme opératoire',
+        shortDefinition: 'Séquence définie des opérations, ressources et contrôles nécessaires à une fabrication.',
+        detailedDefinition: 'Cadre versionné indiquant l’ordre des étapes, les moyens, compétences, temps ou critères attendus. La gamme guide l’exécution ; le suivi réel doit encore enregistrer les dates, responsables, résultats, incidents et écarts observés.'
+      },
+      DE: {
+        term: 'Arbeitsplan',
+        shortDefinition: 'Definierte Abfolge von Vorgängen, Ressourcen und Kontrollen für eine Fertigung.',
+        detailedDefinition: 'Versionierter Rahmen mit Reihenfolge der Schritte, Mitteln, Fähigkeiten, Zeiten oder erwarteten Kriterien. Der Arbeitsplan führt die Ausführung; die tatsächliche Verfolgung muss Termine, Verantwortliche, Ergebnisse, Vorfälle und Abweichungen erfassen.'
+      },
+      EN: {
+        term: 'Routing',
+        shortDefinition: 'A defined sequence of operations, resources and controls required for manufacturing.',
+        detailedDefinition: 'A versioned framework indicating the order of steps, means, skills, times or expected criteria. The routing guides execution; actual tracking must still record dates, owners, results, incidents and observed deviations.'
+      }
+    }
+  },
+  'PROD-CONTROLE-QUALITE': {
+    version: 'V5.2-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Contrôle qualité',
+        shortDefinition: 'Vérification documentée d’un résultat par rapport à des critères acceptés.',
+        detailedDefinition: 'Contrôle réalisé à une étape définie sur un produit, un lot ou une livraison, avec méthode, critères, responsable, date et résultat. Il peut accepter, réserver ou signaler une non-conformité ; il ne remplace pas automatiquement la réception du client.'
+      },
+      DE: {
+        term: 'Qualitätskontrolle',
+        shortDefinition: 'Dokumentierte Prüfung eines Ergebnisses anhand anerkannter Kriterien.',
+        detailedDefinition: 'Prüfung an einem festgelegten Schritt für Produkt, Los oder Lieferung mit Methode, Kriterien, Verantwortung, Datum und Ergebnis. Sie kann freigeben, Vorbehalte festhalten oder eine Abweichung melden und ersetzt nicht automatisch die Kundenabnahme.'
+      },
+      EN: {
+        term: 'Quality control',
+        shortDefinition: 'A documented verification of a result against accepted criteria.',
+        detailedDefinition: 'A control performed at a defined step on a product, batch or delivery, with method, criteria, owner, date and result. It may accept, reserve or flag a nonconformity and does not automatically replace customer acceptance.'
+      }
+    }
+  },
+  'PROD-FOURNISSEUR': {
+    version: 'V5.2-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Fournisseur',
+        shortDefinition: 'Partie externe qui propose ou fournit un bien, une matière ou un service à 2SG.',
+        detailedDefinition: 'Personne ou organisation reliée à des offres, commandes, livraisons, factures, paiements et évaluations selon le besoin. Une mention dans une dépense ou un stock peut identifier un fournisseur candidat ; sa qualification et son statut exigent des preuves et responsabilités adaptées.'
+      },
+      DE: {
+        term: 'Lieferant',
+        shortDefinition: 'Externe Partei, die 2SG Waren, Material oder Leistungen anbietet oder liefert.',
+        detailedDefinition: 'Person oder Organisation, die je nach Bedarf mit Angeboten, Bestellungen, Lieferungen, Rechnungen, Zahlungen und Bewertungen verbunden ist. Eine Erwähnung in Ausgabe oder Bestand kann einen Lieferantenkandidaten anzeigen; Qualifizierung und Status benötigen geeignete Nachweise und Zuständigkeiten.'
+      },
+      EN: {
+        term: 'Supplier',
+        shortDefinition: 'An external party offering or supplying goods, materials or services to 2SG.',
+        detailedDefinition: 'A person or organisation linked as needed to quotes, orders, deliveries, invoices, payments and evaluations. A mention in an expense or stock record may identify a candidate supplier; qualification and status require appropriate evidence and responsibilities.'
+      }
+    }
+  },
+  'PROD-LIVRAISON': {
+    version: 'V5.2-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Livraison',
+        shortDefinition: 'Remise tracée d’un produit ou résultat à un destinataire identifié.',
+        detailedDefinition: 'Événement reliant commande, quantités remises, date, lieu, état, transport, destinataire et preuve. Une livraison peut être partielle ou assortie de réserves ; elle ne signifie pas automatiquement réception définitive, facturation correcte ou paiement.'
+      },
+      DE: {
+        term: 'Lieferung',
+        shortDefinition: 'Nachvollziehbare Übergabe eines Produkts oder Ergebnisses an einen identifizierten Empfänger.',
+        detailedDefinition: 'Ereignis, das Auftrag, übergebene Mengen, Datum, Ort, Zustand, Transport, Empfänger und Nachweis verbindet. Eine Lieferung kann teilweise oder unter Vorbehalt erfolgen und bedeutet nicht automatisch endgültige Abnahme, korrekte Rechnungsstellung oder Zahlung.'
+      },
+      EN: {
+        term: 'Delivery',
+        shortDefinition: 'A traceable handover of a product or result to an identified recipient.',
+        detailedDefinition: 'An event linking the order, handed-over quantities, date, place, condition, transport, recipient and evidence. A delivery may be partial or subject to reservations and does not automatically mean final acceptance, correct invoicing or payment.'
+      }
+    }
   }
 };
 

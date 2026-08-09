@@ -147,6 +147,14 @@ test('returns from a central CRM term to the originating Commercial & CRM glossa
   expect(mockNavigate).toHaveBeenCalledWith('/crm?tab=glossary');
 });
 
+test('returns from a central Production term to the originating Production glossary', async () => {
+  renderGed('knowledge', 'FR', '&term=PROD-COMMANDE-CLIENT&returnTo=production-glossary');
+
+  const returnButton = await screen.findByRole('button', { name: 'Revenir au Glossaire Production' });
+  fireEvent.click(returnButton);
+  expect(mockNavigate).toHaveBeenCalledWith('/production?tab=glossary');
+});
+
 test('returns from Monitoring and KM to the Daily Intelligence view', async () => {
   renderGed('knowledge', 'FR', '&returnTo=dashboard-daily-intelligence');
 
