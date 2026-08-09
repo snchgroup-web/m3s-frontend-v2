@@ -87,3 +87,50 @@ test('keeps the CRM pilot read-only and preserves validated sources', async () =
   expect(screen.getByText('Nächstes Teilpaket')).toBeInTheDocument();
   expect(screen.getByText('Nur lesen')).toBeInTheDocument();
 });
+
+test('preserves confirmed zero values when both extracts are available', async () => {
+  mockSearch = '?tab=overview';
+  mockLanguage = 'EN';
+  api.getSocialFinance.mockResolvedValue({ data: [], timestamp: '2026-08-09T08:00:00.000Z' });
+  api.getInventory.mockResolvedValue({ data: [], timestamp: '2026-08-09T08:01:00.000Z' });
+
+  render(<CRM />);
+
+  expect(await screen.findByText('2/2')).toBeInTheDocument();
+  expect(screen.getByText(/Finance Social: Available/)).toBeInTheDocument();
+  expect(screen.getByText(/Stocks & Assets: Available/)).toBeInTheDocument();
+  expect(screen.getByText('0 CHF')).toBeInTheDocument();
+  expect(screen.getByText(/up to 300 social flows and 500 stock items/i)).toBeInTheDocument();
+});
+
+test('does not turn unavailable CRM sources into zero values', async () => {
+  mockSearch = '?tab=overview';
+  mockLanguage = 'EN';
+  api.getSocialFinance.mockRejectedValue(new Error('social unavailable'));
+  api.getInventory.mockRejectedValue(new Error('inventory unavailable'));
+
+  render(<CRM />);
+
+  expect(await screen.findByText('0/2')).toBeInTheDocument();
+  expect(screen.getByText('Finance Social: Unavailable')).toBeInTheDocument();
+  expect(screen.getByText('Stocks & Assets: Unavailable')).toBeInTheDocument();
+  expect(screen.queryByText('0 CHF')).not.toBeInTheDocument();
+});
+
+test('keeps an available social extract when inventory is unavailable', async () => {
+  mockSearch = '?tab=overview';
+  mockLanguage = 'EN';
+  api.getSocialFinance.mockResolvedValue({
+    data: [{ id: 'SOC-1', montant_chf: 125, montant_cfa: 87500, description: 'Aide sociale' }],
+    timestamp: '2026-08-09T08:00:00.000Z'
+  });
+  api.getInventory.mockRejectedValue(new Error('inventory unavailable'));
+
+  render(<CRM />);
+
+  expect(await screen.findByText('1/2')).toBeInTheDocument();
+  expect(screen.getByText(/Finance Social: Available/)).toBeInTheDocument();
+  expect(screen.getByText('Stocks & Assets: Unavailable')).toBeInTheDocument();
+  expect(screen.getByText('125 CHF')).toBeInTheDocument();
+  expect(screen.queryByText('0 CHF')).not.toBeInTheDocument();
+});
