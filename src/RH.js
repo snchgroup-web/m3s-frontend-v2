@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { CheckCircle2, Info, Plus, Edit2, Trash2, X } from 'lucide-react';
 import { api } from './api';
 import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
@@ -55,7 +55,25 @@ const RH = () => {
       dateEmbauche: 'Date d\'Embauche',
       selectionner: 'Sélectionner',
       nonRenseigne: 'Non renseigné',
-      glossary: 'Glossaire'
+      glossary: 'Glossaire',
+      localDraftTitle: 'Registre local de travail',
+      localDraftBody: "Ces fiches restent dans la session en cours. Elles ne sont ni enregistrées dans le backend, ni versées dans un dossier RH officiel.",
+      localDraftCount: count => `${count} brouillon${count > 1 ? 's' : ''} local${count > 1 ? 'aux' : ''}`,
+      requiredMessage: 'Renseignez le nom et l’adresse e-mail avant de poursuivre.',
+      confirmCreateTitle: 'Confirmer l’ajout du brouillon',
+      confirmCreateBody: 'Ajouter « {name} » à ce registre local ? Aucune donnée ne sera enregistrée dans le backend.',
+      confirmUpdateTitle: 'Confirmer la modification',
+      confirmUpdateBody: 'Modifier le brouillon local « {name} » ? Cette modification disparaîtra à la fin de la session.',
+      confirmDeleteTitle: 'Confirmer la suppression',
+      confirmDeleteBody: 'Supprimer le brouillon local « {name} » ? Cette action concerne uniquement la session en cours.',
+      confirm: 'Oui, confirmer',
+      decline: 'Non, revenir',
+      createdSuccess: 'Brouillon « {name} » ajouté localement avec succès. Aucun enregistrement backend n’a été créé.',
+      updatedSuccess: 'Brouillon « {name} » modifié localement avec succès. Aucun enregistrement backend n’a été modifié.',
+      deletedSuccess: 'Brouillon « {name} » supprimé localement avec succès. Aucun dossier RH officiel n’a été supprimé.',
+      editDraft: 'Modifier le brouillon {name}',
+      deleteDraft: 'Supprimer le brouillon {name}',
+      closeMessage: 'Fermer le message'
     },
     EN: {
       title: 'Human Resources',
@@ -95,7 +113,25 @@ const RH = () => {
       dateEmbauche: 'Hire Date',
       selectionner: 'Select',
       nonRenseigne: 'Not provided',
-      glossary: 'Glossary'
+      glossary: 'Glossary',
+      localDraftTitle: 'Local working register',
+      localDraftBody: 'These records remain in the current session. They are neither saved to the backend nor added to an official HR file.',
+      localDraftCount: count => `${count} local draft${count === 1 ? '' : 's'}`,
+      requiredMessage: 'Enter a name and email address before continuing.',
+      confirmCreateTitle: 'Confirm draft creation',
+      confirmCreateBody: 'Add “{name}” to this local register? No data will be saved to the backend.',
+      confirmUpdateTitle: 'Confirm update',
+      confirmUpdateBody: 'Update the local draft “{name}”? This change will disappear at the end of the session.',
+      confirmDeleteTitle: 'Confirm deletion',
+      confirmDeleteBody: 'Delete the local draft “{name}”? This action applies only to the current session.',
+      confirm: 'Yes, confirm',
+      decline: 'No, go back',
+      createdSuccess: 'Draft “{name}” added locally. No backend record was created.',
+      updatedSuccess: 'Draft “{name}” updated locally. No backend record was changed.',
+      deletedSuccess: 'Draft “{name}” deleted locally. No official HR file was deleted.',
+      editDraft: 'Edit draft {name}',
+      deleteDraft: 'Delete draft {name}',
+      closeMessage: 'Close message'
     },
     DE: {
       title: 'Personalwesen',
@@ -135,7 +171,25 @@ const RH = () => {
       dateEmbauche: 'Einstellungsdatum',
       selectionner: 'Auswählen',
       nonRenseigne: 'Nicht angegeben',
-      glossary: 'Glossar'
+      glossary: 'Glossar',
+      localDraftTitle: 'Lokales Arbeitsregister',
+      localDraftBody: 'Diese Einträge bleiben in der aktuellen Sitzung. Sie werden weder im Backend gespeichert noch einer offiziellen Personalakte hinzugefügt.',
+      localDraftCount: count => `${count} lokale${count === 1 ? 'r Entwurf' : ' Entwürfe'}`,
+      requiredMessage: 'Geben Sie einen Namen und eine E-Mail-Adresse ein, bevor Sie fortfahren.',
+      confirmCreateTitle: 'Entwurf hinzufügen bestätigen',
+      confirmCreateBody: '„{name}“ zu diesem lokalen Register hinzufügen? Im Backend werden keine Daten gespeichert.',
+      confirmUpdateTitle: 'Änderung bestätigen',
+      confirmUpdateBody: 'Den lokalen Entwurf „{name}“ ändern? Diese Änderung endet mit der aktuellen Sitzung.',
+      confirmDeleteTitle: 'Löschen bestätigen',
+      confirmDeleteBody: 'Den lokalen Entwurf „{name}“ löschen? Diese Aktion betrifft nur die aktuelle Sitzung.',
+      confirm: 'Ja, bestätigen',
+      decline: 'Nein, zurück',
+      createdSuccess: 'Entwurf „{name}“ wurde lokal hinzugefügt. Es wurde kein Backend-Eintrag erstellt.',
+      updatedSuccess: 'Entwurf „{name}“ wurde lokal geändert. Es wurde kein Backend-Eintrag geändert.',
+      deletedSuccess: 'Entwurf „{name}“ wurde lokal gelöscht. Es wurde keine offizielle Personalakte gelöscht.',
+      editDraft: 'Entwurf {name} bearbeiten',
+      deleteDraft: 'Entwurf {name} löschen',
+      closeMessage: 'Meldung schließen'
     }
   };
 
@@ -260,10 +314,12 @@ const RH = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [employes, setEmployes] = useState([]);
   const [benevoles, setBenevoles] = useState([]);
-  const [membres, setMembres] = useState([]);
+  const [, setMembres] = useState([]);
   const [directoryCount, setDirectoryCount] = useState(null);
   const [directoryStatus, setDirectoryStatus] = useState('loading');
   const [showModal, setShowModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
+  const [feedback, setFeedback] = useState(null);
   const [modalType, setModalType] = useState('employe'); // 'employe', 'benevole', 'membre'
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
@@ -336,12 +392,15 @@ const RH = () => {
 
   // Gestion formulaire
   const handleFormChange = (field, value) => {
+    if (feedback?.tone === 'error') setFeedback(null);
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSave = () => {
+  const interpolateName = (template, name) => template.replace('{name}', name || t.nonRenseigne);
+
+  const requestSave = () => {
     if (!formData.nom || !formData.email) {
-      alert('Veuillez remplir tous les champs obligatoires');
+      setFeedback({ tone: 'error', message: t.requiredMessage });
       return;
     }
 
@@ -352,29 +411,14 @@ const RH = () => {
       typeMembre: modalType === 'membre' ? (formData.typeMembre || 'Associé') : ''
     };
 
-    if (modalType === 'employe') {
-      if (editingId) {
-        setEmployes(employes.map(e => e.id === editingId ? { ...normalizedData, id: editingId } : e));
-      } else {
-        setEmployes([...employes, { ...normalizedData, id: Date.now() }]);
-      }
-    } else if (modalType === 'benevole') {
-      if (editingId) {
-        setBenevoles(benevoles.map(b => b.id === editingId ? { ...normalizedData, id: editingId } : b));
-      } else {
-        setBenevoles([...benevoles, { ...normalizedData, id: Date.now() }]);
-      }
-    } else {
-      if (editingId) {
-        setMembres(membres.map(m => m.id === editingId ? { ...normalizedData, id: editingId } : m));
-      } else {
-        setMembres([...membres, { ...normalizedData, id: Date.now() }]);
-      }
-    }
-
-    setShowModal(false);
-    setEditingId(null);
-    setFormData({ nom: '', email: '', emailPerso: '', telephone: '', poste: '', departement: '', matricule: '', role: 'Utilisateur', typeMembre: 'Associé', dateEmbauche: new Date().toISOString().split('T')[0], statut: 'Actif' });
+    setFeedback(null);
+    setPendingAction({
+      kind: editingId ? 'update' : 'create',
+      type: modalType,
+      id: editingId,
+      data: normalizedData,
+      name: normalizedData.nom
+    });
   };
 
   const handleEdit = (type, item) => {
@@ -384,13 +428,38 @@ const RH = () => {
     setShowModal(true);
   };
 
-  const handleDelete = (type, id) => {
-    if (type === 'employe') setEmployes(employes.filter(e => e.id !== id));
-    else if (type === 'benevole') setBenevoles(benevoles.filter(b => b.id !== id));
-    else setMembres(membres.filter(m => m.id !== id));
+  const requestDelete = (type, item) => {
+    setFeedback(null);
+    setPendingAction({ kind: 'delete', type, id: item.id, name: item.nom });
+  };
+
+  const confirmPendingAction = () => {
+    if (!pendingAction) return;
+    const { kind, type, id, data, name } = pendingAction;
+    const updateRegister = (setter) => {
+      setter(current => {
+        if (kind === 'delete') return current.filter(item => item.id !== id);
+        if (kind === 'update') return current.map(item => item.id === id ? { ...data, id } : item);
+        return [...current, { ...data, id: Date.now() }];
+      });
+    };
+
+    if (type === 'employe') updateRegister(setEmployes);
+    else if (type === 'benevole') updateRegister(setBenevoles);
+    else updateRegister(setMembres);
+
+    const successKey = kind === 'create' ? 'createdSuccess' : kind === 'update' ? 'updatedSuccess' : 'deletedSuccess';
+    setFeedback({ tone: 'success', message: interpolateName(t[successKey], name) });
+    setPendingAction(null);
+    if (kind !== 'delete') {
+      setShowModal(false);
+      setEditingId(null);
+      setFormData({ nom: '', email: '', emailPerso: '', telephone: '', poste: '', departement: '', matricule: '', role: 'Utilisateur', typeMembre: 'Associé', dateEmbauche: new Date().toISOString().split('T')[0], statut: 'Actif' });
+    }
   };
 
   const openNewModal = (type) => {
+    setFeedback(null);
     setModalType(type);
     setEditingId(null);
     setFormData({ nom: '', email: '', emailPerso: '', telephone: '', poste: '', departement: '', matricule: '', role: 'Utilisateur', typeMembre: type === 'membre' ? 'Associé' : '', dateEmbauche: new Date().toISOString().split('T')[0], statut: 'Actif' });
@@ -399,9 +468,30 @@ const RH = () => {
 
   // Table réutilisable
   const PersonnelTable = ({ data, type, onEdit, onDelete, onAdd }) => (
-    <div>
-      <div className="flex justify-end mb-4">
-        <button onClick={() => onAdd(type)} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
+    <div className="m3s-design-scope space-y-4">
+      <section className="m3s-panel flex flex-col gap-3 border-l-2 p-4 sm:flex-row sm:items-center sm:justify-between" style={{ borderLeftColor: '#f59e0b' }}>
+        <div className="flex items-start gap-3">
+          <Info className="mt-0.5 shrink-0 text-amber-400" size={20} aria-hidden="true" />
+          <div>
+            <h2 className="m3s-panel-title">{t.localDraftTitle}</h2>
+            <p className="mt-1 text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{t.localDraftBody}</p>
+          </div>
+        </div>
+        <span className="m3s-draft-badge shrink-0 rounded-full px-3 py-1 text-xs font-semibold">{t.localDraftCount(data.length)}</span>
+      </section>
+
+      {feedback && (!showModal || feedback.tone === 'success') && (
+        <div className={`${feedback.tone === 'success' ? 'm3s-feedback m3s-feedback--success' : 'rounded-md border border-red-500/50 bg-red-950/30 text-red-100'} flex items-start justify-between gap-3 px-4 py-3`} role={feedback.tone === 'success' ? 'status' : 'alert'}>
+          <div className="flex items-start gap-2">
+            {feedback.tone === 'success' && <CheckCircle2 className="mt-0.5 shrink-0" size={18} aria-hidden="true" />}
+            <span className="text-sm leading-5">{feedback.message}</span>
+          </div>
+          <button type="button" className="shrink-0 rounded p-1 hover:bg-black/10" onClick={() => setFeedback(null)} aria-label={t.closeMessage}><X size={16} /></button>
+        </div>
+      )}
+
+      <div className="flex justify-end">
+        <button onClick={() => onAdd(type)} className="m3s-success-button flex min-h-11 items-center gap-2 px-4">
           <Plus size={20} /> {t.ajouter}
         </button>
       </div>
@@ -438,10 +528,10 @@ const RH = () => {
                     </span>
                   </td>
                   <td className="px-4 py-2 flex gap-2">
-                    <button onClick={() => onEdit(type, item)} className="p-1 hover:bg-slate-600 rounded">
+                    <button type="button" onClick={() => onEdit(type, item)} className="rounded p-2 hover:bg-slate-600" aria-label={interpolateName(t.editDraft, item.nom)}>
                       <Edit2 size={16} className="text-blue-400" />
                     </button>
-                    <button onClick={() => onDelete(type, item.id)} className="p-1 hover:bg-slate-600 rounded">
+                    <button type="button" onClick={() => onDelete(type, item)} className="rounded p-2 hover:bg-slate-600" aria-label={interpolateName(t.deleteDraft, item.nom)}>
                       <Trash2 size={16} className="text-red-400" />
                     </button>
                   </td>
@@ -456,7 +546,7 @@ const RH = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+      <div className="m3s-design-scope min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-8">
         <div className="mx-auto w-full max-w-[1800px]">
 
         {/* Tabs */}
@@ -487,12 +577,12 @@ const RH = () => {
 
         {/* Employés */}
         {activeTab === 'employes' && (
-          <PersonnelTable data={employes} type="employe" onEdit={handleEdit} onDelete={handleDelete} onAdd={openNewModal} />
+          <PersonnelTable data={employes} type="employe" onEdit={handleEdit} onDelete={requestDelete} onAdd={openNewModal} />
         )}
 
         {/* Bénévoles */}
         {activeTab === 'benevoles' && (
-          <PersonnelTable data={benevoles} type="benevole" onEdit={handleEdit} onDelete={handleDelete} onAdd={openNewModal} />
+          <PersonnelTable data={benevoles} type="benevole" onEdit={handleEdit} onDelete={requestDelete} onAdd={openNewModal} />
         )}
 
         {/* Annuaire interne RH-001 */}
@@ -509,12 +599,21 @@ const RH = () => {
       </div>
 
       {/* Modal Créer/Éditer */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-800 rounded-lg p-8 max-w-2xl w-full border border-slate-700 max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold text-white mb-6">
+      {showModal && !pendingAction && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="m3s-panel max-h-[90vh] w-full max-w-2xl overflow-y-auto p-5 sm:p-8" role="dialog" aria-modal="true" aria-labelledby="rh-draft-form-title">
+            <h2 id="rh-draft-form-title" className="m3s-page-title mb-6">
               {editingId ? `${t.modifier} ${getTypeLabel(modalType)}` : `${t.creer} ${getTypeLabel(modalType)}`}
             </h2>
+
+            {feedback?.tone === 'error' && (
+              <div className="mb-5 flex items-start justify-between gap-3 rounded-md border border-red-500/50 bg-red-950/30 px-4 py-3 text-red-100" role="alert">
+                <span className="text-sm leading-5">{feedback.message}</span>
+                <button type="button" className="shrink-0 rounded p-1 hover:bg-black/10" onClick={() => setFeedback(null)} aria-label={t.closeMessage}>
+                  <X size={16} />
+                </button>
+              </div>
+            )}
 
             <div className="space-y-4">
               <div>
@@ -595,10 +694,27 @@ const RH = () => {
             </div>
 
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">{t.annuler}</button>
-              <button onClick={handleSave} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">{editingId ? t.modifier : t.creer}</button>
+              <button type="button" onClick={() => setShowModal(false)} className="m3s-secondary-button min-h-11 flex-1 px-4">{t.annuler}</button>
+              <button type="button" onClick={requestSave} className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 flex-1 px-4`}>{editingId ? t.modifier : t.creer}</button>
             </div>
           </div>
+        </div>
+      )}
+
+      {pendingAction && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4">
+          <section className="m3s-panel w-full max-w-md p-5 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="rh-confirmation-title">
+            <h3 id="rh-confirmation-title" className="m3s-section-title">
+              {pendingAction.kind === 'create' ? t.confirmCreateTitle : pendingAction.kind === 'update' ? t.confirmUpdateTitle : t.confirmDeleteTitle}
+            </h3>
+            <p className="mt-3 text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>
+              {interpolateName(pendingAction.kind === 'create' ? t.confirmCreateBody : pendingAction.kind === 'update' ? t.confirmUpdateBody : t.confirmDeleteBody, pendingAction.name)}
+            </p>
+            <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+              <button type="button" className="m3s-secondary-button min-h-11 px-4" onClick={() => setPendingAction(null)}>{t.decline}</button>
+              <button type="button" className={`${pendingAction.kind === 'create' ? 'm3s-success-button' : pendingAction.kind === 'update' ? 'm3s-primary-button' : 'm3s-danger-button'} min-h-11 px-4`} onClick={confirmPendingAction}>{t.confirm}</button>
+            </div>
+          </section>
         </div>
       )}
     </>
