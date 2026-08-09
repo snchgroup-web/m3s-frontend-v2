@@ -70,3 +70,13 @@ test('keeps the Risks register read-only while Inventory remains editable', asyn
     expect(api.getRealEstateFinance).toHaveBeenCalledWith(300, 0);
   });
 });
+
+test('connects the Stock & Assets business frame to the overview', async () => {
+  render(<Actifs />);
+
+  await screen.findByText('Read-only monitoring register');
+  fireEvent.click(screen.getByRole('button', { name: 'Overview' }));
+
+  expect(screen.getByRole('heading', { name: 'Know what 2SG owns, where it is and which control applies' })).toBeInTheDocument();
+  expect(screen.getByText(/does not replace accounting, legal title/)).toBeInTheDocument();
+});
