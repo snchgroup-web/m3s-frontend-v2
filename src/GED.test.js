@@ -131,6 +131,14 @@ test('returns from a central asset term to the originating Stock & Assets glossa
   expect(mockNavigate).toHaveBeenCalledWith('/actifs?tab=glossary');
 });
 
+test('returns from a central people term to the originating Human Resources glossary', async () => {
+  renderGed('knowledge', 'FR', '&term=RH-MEMBRE-FONDATEUR&returnTo=rh-glossary');
+
+  const returnButton = await screen.findByRole('button', { name: 'Revenir au Glossaire Ressources Humaines' });
+  fireEvent.click(returnButton);
+  expect(mockNavigate).toHaveBeenCalledWith('/rh?tab=glossary');
+});
+
 test('returns from Monitoring and KM to the Daily Intelligence view', async () => {
   renderGed('knowledge', 'FR', '&returnTo=dashboard-daily-intelligence');
 

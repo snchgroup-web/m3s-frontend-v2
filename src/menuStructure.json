@@ -265,6 +265,16 @@
           },
           "icon": "User",
           "path": "/rh?tab=myaccount"
+        },
+        {
+          "id": "rh-glossary",
+          "label": {
+            "FR": "Glossaire",
+            "EN": "Glossary",
+            "DE": "Glossar"
+          },
+          "icon": "BookOpen",
+          "path": "/rh?tab=glossary"
         }
       ]
     },

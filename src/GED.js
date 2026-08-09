@@ -781,6 +781,10 @@ const GED = () => {
       href: '/actifs?tab=glossary',
       labels: { FR: 'Revenir au Glossaire Stock & Actifs', EN: 'Return to the Stock & Assets Glossary', DE: 'Zum Glossar Anlagen & Vermögenswerte zurückkehren' }
     },
+    'rh-glossary': {
+      href: '/rh?tab=glossary',
+      labels: { FR: 'Revenir au Glossaire Ressources Humaines', EN: 'Return to the Human Resources Glossary', DE: 'Zum Glossar Personalwesen zurückkehren' }
+    },
     'dashboard-daily-intelligence': {
       href: '/?view=intelligence',
       labels: { FR: 'Revenir au Daily Intelligence', EN: 'Return to Daily Intelligence', DE: 'Zur Daily Intelligence zurückkehren' }

@@ -7,6 +7,7 @@ import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
 import MembersDirectory from './MembersDirectory';
+import RHGlossary from './RHGlossary';
 
 const RH = () => {
   const { language } = useLanguage();
@@ -51,7 +52,8 @@ const RH = () => {
       annuler: 'Annuler',
       dateEmbauche: 'Date d\'Embauche',
       selectionner: 'Sélectionner',
-      nonRenseigne: 'Non renseigné'
+      nonRenseigne: 'Non renseigné',
+      glossary: 'Glossaire'
     },
     EN: {
       title: 'Human Resources',
@@ -90,7 +92,8 @@ const RH = () => {
       annuler: 'Cancel',
       dateEmbauche: 'Hire Date',
       selectionner: 'Select',
-      nonRenseigne: 'Not provided'
+      nonRenseigne: 'Not provided',
+      glossary: 'Glossary'
     },
     DE: {
       title: 'Personalwesen',
@@ -129,7 +132,8 @@ const RH = () => {
       annuler: 'Abbrechen',
       dateEmbauche: 'Einstellungsdatum',
       selectionner: 'Auswählen',
-      nonRenseigne: 'Nicht angegeben'
+      nonRenseigne: 'Nicht angegeben',
+      glossary: 'Glossar'
     }
   };
 
@@ -284,7 +288,7 @@ const RH = () => {
     const tab = new URLSearchParams(location.search).get('tab');
     if (tab === 'membres') {
       setActiveTab('directory');
-    } else if (['overview', 'directory', 'employes', 'benevoles', 'teams', 'hours', 'competences', 'myaccount'].includes(tab)) {
+    } else if (['overview', 'directory', 'employes', 'benevoles', 'teams', 'hours', 'competences', 'myaccount', 'glossary'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
@@ -510,7 +514,8 @@ const RH = () => {
             { tab: 'overview', label: t.overview },
             { tab: 'directory', label: `${t.membres} (${totalMembres})` },
             { tab: 'employes', label: `${t.employes} (${totalEmployes})` },
-            { tab: 'benevoles', label: `${t.benevoles} (${totalBenevoles})` }
+            { tab: 'benevoles', label: `${t.benevoles} (${totalBenevoles})` },
+            { tab: 'glossary', label: t.glossary }
           ]}
         />
 
@@ -580,7 +585,11 @@ const RH = () => {
           <MembersDirectory onLoaded={setDirectoryCount} />
         )}
 
-        <ChildTabPlaceholder moduleId="rh" language={language} activeTab={activeTab} handledTabs={['overview', 'directory', 'employes', 'benevoles']} />
+        {activeTab === 'glossary' && (
+          <RHGlossary language={language} />
+        )}
+
+        <ChildTabPlaceholder moduleId="rh" language={language} activeTab={activeTab} handledTabs={['overview', 'directory', 'employes', 'benevoles', 'glossary']} />
         </div>
       </div>
 
