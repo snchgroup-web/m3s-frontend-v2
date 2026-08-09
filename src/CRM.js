@@ -86,7 +86,15 @@ const dictionaries = {
     clientsFields: ['Identité et segment', 'Offre ou pack', 'Responsable et historique', 'Statut et prochaine action'],
     salesFields: ['Prospect ou client', 'Offre et montants CFA / CHF', 'Phase et probabilité', 'Responsable, action et échéance'],
     commercialBoundary: 'CRM suit la relation et l’opportunité. Finance suit la facturation, Production l’exécution et GED les pièces liées.',
-    writesUnavailable: 'Ajouts et modifications seront activés plus tard avec schéma validé, droits, confirmations et traçabilité.'
+    writesUnavailable: 'Ajouts et modifications seront activés plus tard avec schéma validé, droits, confirmations et traçabilité.',
+    sourceScope: 'Périmètre : extraits chargés, jusqu’à 300 flux sociaux et 500 éléments de stock. Ces valeurs ne constituent pas des totaux globaux.',
+    sourceAvailability: 'Disponibilité des sources',
+    sourcesAvailable: 'sources accessibles',
+    available: 'Disponible',
+    unavailable: 'Indisponible',
+    loadingLabel: 'Chargement',
+    loadedExtract: 'Extrait chargé',
+    readAt: 'Lu le'
   },
   EN: {
     overview: 'Overview',
@@ -151,7 +159,15 @@ const dictionaries = {
     clientsFields: ['Identity and segment', 'Offer or pack', 'Owner and history', 'Status and next action'],
     salesFields: ['Prospect or client', 'Offer and CFA / CHF amounts', 'Phase and probability', 'Owner, action and deadline'],
     commercialBoundary: 'CRM tracks the relationship and opportunity. Finance handles invoicing, Production handles delivery and GED keeps related documents.',
-    writesUnavailable: 'Create and edit actions will return later with a validated schema, permissions, confirmations and traceability.'
+    writesUnavailable: 'Create and edit actions will return later with a validated schema, permissions, confirmations and traceability.',
+    sourceScope: 'Scope: loaded extracts, up to 300 social flows and 500 stock items. These values are not global totals.',
+    sourceAvailability: 'Source availability',
+    sourcesAvailable: 'sources available',
+    available: 'Available',
+    unavailable: 'Unavailable',
+    loadingLabel: 'Loading',
+    loadedExtract: 'Loaded extract',
+    readAt: 'Read on'
   },
   DE: {
     overview: 'Übersicht',
@@ -216,7 +232,15 @@ const dictionaries = {
     clientsFields: ['Identität und Segment', 'Offerte oder Paket', 'Verantwortung und Verlauf', 'Status und nächste Aktion'],
     salesFields: ['Interessent oder Kunde', 'Offerte und Beträge CFA / CHF', 'Phase und Wahrscheinlichkeit', 'Verantwortung, Aktion und Termin'],
     commercialBoundary: 'CRM verfolgt Beziehung und Verkaufschance. Finanzen bearbeitet Rechnungen, Produktion die Ausführung und GED die zugehörigen Dokumente.',
-    writesUnavailable: 'Erstellen und Bearbeiten werden später mit validiertem Schema, Rechten, Bestätigungen und Nachverfolgung aktiviert.'
+    writesUnavailable: 'Erstellen und Bearbeiten werden später mit validiertem Schema, Rechten, Bestätigungen und Nachverfolgung aktiviert.',
+    sourceScope: 'Umfang: geladene Auszüge mit bis zu 300 Sozialflüssen und 500 Bestandselementen. Diese Werte sind keine Gesamtsummen.',
+    sourceAvailability: 'Verfügbarkeit der Quellen',
+    sourcesAvailable: 'Quellen verfügbar',
+    available: 'Verfügbar',
+    unavailable: 'Nicht verfügbar',
+    loadingLabel: 'Wird geladen',
+    loadedExtract: 'Geladener Auszug',
+    readAt: 'Gelesen am'
   }
 };
 
@@ -439,8 +463,8 @@ const CRM = () => {
   const [activeTab, setActiveTab] = useState(tabs.includes(queryTab) ? queryTab : 'overview');
   const [beneficiaires, setBeneficiaires] = useState([]);
   const [dons, setDons] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [loadError, setLoadError] = useState('');
+  const [sourceStatus, setSourceStatus] = useState({ social: 'loading', inventory: 'loading' });
+  const [sourceTimestamps, setSourceTimestamps] = useState({ social: '', inventory: '' });
   const [selectedRecord, setSelectedRecord] = useState(null);
 
   const t = dictionaries[language] || dictionaries.FR;
@@ -464,34 +488,32 @@ const CRM = () => {
     let isMounted = true;
 
     const loadValidatedData = async () => {
-      setLoading(true);
-      setLoadError('');
-      try {
-        const [socialResponse, inventoryResponse] = await Promise.all([
-          api.getSocialFinance(300, 0).catch((error) => ({ error })),
-          api.getInventory(500, 0).catch((error) => ({ error }))
-        ]);
+      setSourceStatus({ social: 'loading', inventory: 'loading' });
 
-        if (!isMounted) return;
+      const [socialResult, inventoryResult] = await Promise.allSettled([
+        api.getSocialFinance(300, 0),
+        api.getInventory(500, 0)
+      ]);
 
-        const socialRows = Array.isArray(socialResponse?.data) ? socialResponse.data : [];
-        const inventoryRows = Array.isArray(inventoryResponse?.data) ? inventoryResponse.data : [];
+      if (!isMounted) return;
 
-        setBeneficiaires(socialRows.map(normalizeSocialRow));
-        setDons(inventoryRows.filter(isDonationCandidate).map(normalizeInventoryDonation));
+      const socialResponse = socialResult.status === 'fulfilled' ? socialResult.value : null;
+      const inventoryResponse = inventoryResult.status === 'fulfilled' ? inventoryResult.value : null;
+      const socialAvailable = Array.isArray(socialResponse?.data);
+      const inventoryAvailable = Array.isArray(inventoryResponse?.data);
+      const socialRows = socialAvailable ? socialResponse.data : [];
+      const inventoryRows = inventoryAvailable ? inventoryResponse.data : [];
 
-        if (socialResponse?.error || inventoryResponse?.error) {
-          setLoadError('Certaines sources validées ne sont pas joignables pour le moment.');
-        }
-      } catch (error) {
-        if (!isMounted) return;
-        console.error('Erreur chargement CRM validé:', error);
-        setBeneficiaires([]);
-        setDons([]);
-        setLoadError(error.message || 'Erreur de chargement');
-      } finally {
-        if (isMounted) setLoading(false);
-      }
+      setBeneficiaires(socialRows.map(normalizeSocialRow));
+      setDons(inventoryRows.filter(isDonationCandidate).map(normalizeInventoryDonation));
+      setSourceStatus({
+        social: socialAvailable ? 'available' : 'unavailable',
+        inventory: inventoryAvailable ? 'available' : 'unavailable'
+      });
+      setSourceTimestamps({
+        social: socialAvailable ? socialResponse.timestamp || '' : '',
+        inventory: inventoryAvailable ? inventoryResponse.timestamp || '' : ''
+      });
     };
 
     loadValidatedData();
@@ -502,6 +524,8 @@ const CRM = () => {
 
   const formatChf = (value) => `${numberValue(value).toLocaleString('fr-CH', { maximumFractionDigits: 2 })} CHF`;
   const formatCfa = (value) => `${Math.round(numberValue(value)).toLocaleString('fr-CH')} CFA`;
+  const formatSourceCount = (status, value) => status === 'available' ? value : status === 'loading' ? '…' : '—';
+  const formatSourceMoney = (status, value, formatter) => status === 'available' ? formatter(value) : status === 'loading' ? '…' : '—';
   const formatDate = (value) => {
     if (!value) return '-';
     try {
@@ -558,6 +582,41 @@ const CRM = () => {
       <Info size={18} className="mt-0.5 shrink-0 text-blue-300" />
       <span>{children}</span>
     </div>
+  );
+
+  const sourceStatusLabel = (status) => (
+    status === 'available' ? t.available : status === 'loading' ? t.loadingLabel : t.unavailable
+  );
+  const sourceStatusClass = (status) => (
+    status === 'available'
+      ? 'border-emerald-400/40 bg-emerald-500/10 text-emerald-200'
+      : status === 'loading'
+        ? 'border-blue-400/40 bg-blue-500/10 text-blue-200'
+        : 'border-amber-400/40 bg-amber-500/10 text-amber-200'
+  );
+  const availableSourceCount = Object.values(sourceStatus).filter((status) => status === 'available').length;
+  const sourcesLoading = Object.values(sourceStatus).some((status) => status === 'loading');
+
+  const SourceStatusPanel = () => (
+    <section className="mb-6 rounded-lg border border-slate-700 bg-slate-800 p-4" aria-label={t.sourceAvailability}>
+      <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+        <div>
+          <h2 className="text-sm font-semibold text-slate-100">{t.sourceAvailability}</h2>
+          <p className="mt-1 text-sm leading-6 text-slate-300">{t.sourceScope}</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { key: 'social', label: t.financeSocialSource },
+            { key: 'inventory', label: t.inventorySource }
+          ].map((source) => (
+            <span key={source.key} className={`rounded-md border px-3 py-2 text-xs font-semibold ${sourceStatusClass(sourceStatus[source.key])}`}>
+              {source.label}: {sourceStatusLabel(sourceStatus[source.key])}
+              {sourceTimestamps[source.key] && ` · ${t.readAt} ${formatDate(sourceTimestamps[source.key])}`}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 
   const NextRegister = ({ title, purpose, fields, icon: Icon }) => (
@@ -713,15 +772,15 @@ const CRM = () => {
     <div className="min-h-screen bg-slate-900 p-8">
       <div className="mx-auto w-full max-w-[1800px]">
         <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-5">
-          <StandardKpiCard label={t.validatedSources} value="2" secondary="Finance + Stocks" icon={Target} color="text-blue-400" />
-          <StandardKpiCard label={t.socialFlows} value={beneficiaires.length} secondary={t.financeSocialSource} icon={HeartHandshake} color="text-cyan-400" />
-          <StandardKpiCard label={t.totalSocial} value={formatChf(socialTotals.chf)} secondary={formatCfa(socialTotals.cfa)} icon={TrendingUp} color="text-emerald-400" />
-          <StandardKpiCard label={t.inKindDonations} value={dons.length} secondary={`${formatChf(donsTotals.chf)} / ${formatCfa(donsTotals.cfa)}`} icon={Gift} color="text-purple-400" />
+          <StandardKpiCard label={t.validatedSources} value={sourcesLoading ? '…' : `${availableSourceCount}/2`} secondary={t.sourcesAvailable} icon={Target} color="text-blue-400" />
+          <StandardKpiCard label={t.socialFlows} value={formatSourceCount(sourceStatus.social, beneficiaires.length)} secondary={`${t.financeSocialSource} · ${t.loadedExtract}`} icon={HeartHandshake} color="text-cyan-400" />
+          <StandardKpiCard label={t.totalSocial} value={formatSourceMoney(sourceStatus.social, socialTotals.chf, formatChf)} secondary={sourceStatus.social === 'available' ? `${formatCfa(socialTotals.cfa)} · ${t.loadedExtract}` : sourceStatusLabel(sourceStatus.social)} icon={TrendingUp} color="text-emerald-400" />
+          <StandardKpiCard label={t.inKindDonations} value={formatSourceCount(sourceStatus.inventory, dons.length)} secondary={sourceStatus.inventory === 'available' ? `${formatChf(donsTotals.chf)} / ${formatCfa(donsTotals.cfa)} · ${t.loadedExtract}` : sourceStatusLabel(sourceStatus.inventory)} icon={Gift} color="text-purple-400" />
           <StandardKpiCard label={t.toBuild} value="3" secondary={`${t.prospects} / ${t.clients} / ${t.ventes}`} icon={Users} color="text-amber-400" />
         </div>
 
-        {loadError && <Notice>{loadError}</Notice>}
-        <Notice>{loading ? `${t.sourceNotice} Chargement...` : t.sourceNotice}</Notice>
+        <SourceStatusPanel />
+        <Notice>{t.sourceNotice}</Notice>
 
         <div className="mb-6 min-w-0">
           <ModulePageTabs
@@ -801,9 +860,9 @@ const CRM = () => {
             rows={dons}
             emptyText={t.noDonationRows}
             summaryItems={[
-              { label: t.inKindDonations, value: dons.length, secondary: t.inventorySource },
-              { label: t.amountChf, value: formatChf(donsTotals.chf) },
-              { label: t.amountCfa, value: formatCfa(donsTotals.cfa) }
+              { label: t.inKindDonations, value: formatSourceCount(sourceStatus.inventory, dons.length), secondary: `${t.inventorySource} · ${t.loadedExtract}` },
+              { label: t.amountChf, value: formatSourceMoney(sourceStatus.inventory, donsTotals.chf, formatChf) },
+              { label: t.amountCfa, value: formatSourceMoney(sourceStatus.inventory, donsTotals.cfa, formatCfa) }
             ]}
             columns={[t.ref, t.date, t.donor, t.designation, t.nature, t.amountChf, t.amountCfa, t.quantity, t.unit, t.destination, 'DAS', t.status, t.comment, t.source]}
             renderRow={(item) => (
@@ -834,9 +893,9 @@ const CRM = () => {
             rows={beneficiaires}
             emptyText={t.noBeneficiaryRows}
             summaryItems={[
-              { label: t.socialFlows, value: beneficiaires.length, secondary: t.financeSocialSource },
-              { label: t.amountChf, value: formatChf(socialTotals.chf) },
-              { label: t.amountCfa, value: formatCfa(socialTotals.cfa) }
+              { label: t.socialFlows, value: formatSourceCount(sourceStatus.social, beneficiaires.length), secondary: `${t.financeSocialSource} · ${t.loadedExtract}` },
+              { label: t.amountChf, value: formatSourceMoney(sourceStatus.social, socialTotals.chf, formatChf) },
+              { label: t.amountCfa, value: formatSourceMoney(sourceStatus.social, socialTotals.cfa, formatCfa) }
             ]}
             columns={[t.ref, t.date, t.beneficiary, t.designation, t.aidType, t.amountChf, t.amountCfa, t.fxRate, t.agent, t.team, t.department, t.phase, t.country, t.comment, t.source]}
             renderRow={(item) => (
