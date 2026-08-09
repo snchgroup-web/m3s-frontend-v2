@@ -123,6 +123,14 @@ test('returns from a central Finance term to the originating local glossary', as
   expect(mockNavigate).toHaveBeenCalledWith('/finance?tab=glossary');
 });
 
+test('returns from a central asset term to the originating Stock & Assets glossary', async () => {
+  renderGed('knowledge', 'FR', '&term=ACTIF-ACTIF&returnTo=stock-assets-glossary');
+
+  const returnButton = await screen.findByRole('button', { name: 'Revenir au Glossaire Stock & Actifs' });
+  fireEvent.click(returnButton);
+  expect(mockNavigate).toHaveBeenCalledWith('/actifs?tab=glossary');
+});
+
 test('returns from Monitoring and KM to the Daily Intelligence view', async () => {
   renderGed('knowledge', 'FR', '&returnTo=dashboard-daily-intelligence');
 

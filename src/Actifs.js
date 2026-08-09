@@ -13,6 +13,7 @@ import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import TableControls from './TableControls';
 import { getDasFromLegacyBu, translateDas, translateLegacyBu } from './strategicMapping';
 import StockAssetsFrame from './StockAssetsFrame';
+import StockAssetsGlossary from './StockAssetsGlossary';
 
 const CATEGORY_VALUES = [
   'Véhicule',
@@ -151,7 +152,7 @@ const Actifs = () => {
 
   const translations = {
     FR: {
-      overview: "Vue d'ensemble", inventory: 'Inventaire', immobilisations: 'Immobilisations', risks: 'Risques',
+      overview: "Vue d'ensemble", inventory: 'Inventaire', immobilisations: 'Immobilisations', risks: 'Risques', glossary: 'Glossaire',
       articles: 'Articles en base', stockValue: 'Valeur estimée', purchaseCost: "Coût d'achat", totalQuantity: 'Quantité totale',
       categories: 'catégories', units: 'unités', valueByCategory: 'Valeur CHF par catégorie',
       valueByFunction: 'Valeur CHF par DAS stratégique', article: 'Article', reference: 'Réf.', category: 'Catégorie',
@@ -177,7 +178,7 @@ const Actifs = () => {
       addLand: 'Ajouter terrain', addStockAsset: 'Ajouter une ligne stock', realEstateFinanceSource: 'Financement immobilier', landPurchaseLines: '2 flux achat terrain'
     },
     EN: {
-      overview: 'Overview', inventory: 'Inventory', immobilisations: 'Fixed Assets', risks: 'Risks',
+      overview: 'Overview', inventory: 'Inventory', immobilisations: 'Fixed Assets', risks: 'Risks', glossary: 'Glossary',
       articles: 'Database items', stockValue: 'Estimated value', purchaseCost: 'Purchase cost', totalQuantity: 'Total quantity',
       categories: 'categories', units: 'units', valueByCategory: 'CHF value by category',
       valueByFunction: 'CHF value by strategic DAS', article: 'Item', reference: 'Ref.', category: 'Category',
@@ -203,7 +204,7 @@ const Actifs = () => {
       addLand: 'Add plot', addStockAsset: 'Add stock line', realEstateFinanceSource: 'Real estate financing', landPurchaseLines: '2 land purchase flows'
     },
     DE: {
-      overview: 'Übersicht', inventory: 'Bestand', immobilisations: 'Anlagevermögen', risks: 'Risiken',
+      overview: 'Übersicht', inventory: 'Bestand', immobilisations: 'Anlagevermögen', risks: 'Risiken', glossary: 'Glossar',
       articles: 'Artikel in der Datenbank', stockValue: 'Geschätzter Wert', purchaseCost: 'Anschaffungskosten', totalQuantity: 'Gesamtmenge',
       categories: 'Kategorien', units: 'Einheiten', valueByCategory: 'CHF-Wert nach Kategorie',
       valueByFunction: 'CHF-Wert nach strategischem DAS', article: 'Artikel', reference: 'Ref.', category: 'Kategorie',
@@ -239,7 +240,7 @@ const Actifs = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    setActiveTab(['overview', 'inventory', 'immobilisations', 'risques'].includes(tab) ? tab : 'overview');
+    setActiveTab(['overview', 'inventory', 'immobilisations', 'risques', 'glossary'].includes(tab) ? tab : 'overview');
   }, [location.search]);
 
   useEffect(() => {
@@ -518,7 +519,8 @@ const Actifs = () => {
               { tab: 'overview', label: t.overview },
               { tab: 'inventory', label: `${t.inventory} (${inventaire.length})` },
               { tab: 'immobilisations', label: `${t.immobilisations} (${terrainSummary.quantite} ${t.terrainUnit})` },
-              { tab: 'risques', label: `${t.risks} (${articlesRisques.length})` }
+              { tab: 'risques', label: `${t.risks} (${articlesRisques.length})` },
+              { tab: 'glossary', label: t.glossary }
             ]}
           />
 
@@ -676,7 +678,11 @@ const Actifs = () => {
             </div>
           )}
 
-          <ChildTabPlaceholder moduleId="stock" language={language} activeTab={activeTab} handledTabs={['inventory', 'overview', 'immobilisations', 'risques']} />
+          {!loading && activeTab === 'glossary' && (
+            <StockAssetsGlossary language={language} />
+          )}
+
+          <ChildTabPlaceholder moduleId="stock" language={language} activeTab={activeTab} handledTabs={['inventory', 'overview', 'immobilisations', 'risques', 'glossary']} />
         </div>
       </div>
 

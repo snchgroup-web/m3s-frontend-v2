@@ -411,6 +411,16 @@
           },
           "icon": "AlertTriangle",
           "path": "/actifs?tab=risques"
+        },
+        {
+          "id": "glossary",
+          "label": {
+            "FR": "Glossaire",
+            "EN": "Glossary",
+            "DE": "Glossar"
+          },
+          "icon": "BookOpen",
+          "path": "/actifs?tab=glossary"
         }
       ]
     },
