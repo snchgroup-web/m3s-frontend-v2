@@ -596,6 +596,195 @@ const GLOSSARY_CONTEXT = {
       }
     }
   },
+  'RH-MEMBRE-FONDATEUR': {
+    version: 'V5.5',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Membre fondateur',
+        shortDefinition: 'Personne à l’origine de 2SG qui porte durablement le projet et participe à sa gouvernance fondatrice.',
+        detailedDefinition: 'Statut institutionnel attribué aux personnes ayant initié, constitué et soutenu durablement 2SG. Selon la règle candidate actuelle, les membres fondateurs disposent des droits d’administration M3S, sans que cela autorise l’accès aux espaces personnels d’autrui ni aux informations spécialement restreintes.'
+      },
+      DE: {
+        term: 'Gründungsmitglied',
+        shortDefinition: 'Person, die 2SG mitbegründet hat, das Projekt dauerhaft trägt und an seiner Gründungsgouvernance mitwirkt.',
+        detailedDefinition: 'Institutioneller Status für Personen, die 2SG initiiert, gegründet und dauerhaft unterstützt haben. Nach der derzeitigen Kandidatenregel verfügen Gründungsmitglieder über M3S-Administrationsrechte, jedoch nicht automatisch über Zugriff auf persönliche Bereiche anderer oder besonders geschützte Informationen.'
+      },
+      EN: {
+        term: 'Founding member',
+        shortDefinition: 'A person who originated 2SG, supports the project over time and participates in its founding governance.',
+        detailedDefinition: 'An institutional status for people who initiated, established and have durably supported 2SG. Under the current candidate rule, founding members hold M3S administration rights, without automatic access to another person’s private area or specifically restricted information.'
+      }
+    }
+  },
+  'RH-MEMBRE-ASSOCIE': {
+    version: 'V5.5',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Membre associé',
+        shortDefinition: 'Membre de 2SG qui porte une fonction ou une contribution reconnue sans disposer du droit d’administration global.',
+        detailedDefinition: 'Statut institutionnel distinct du membre fondateur et du personnel d’appui. Le membre associé dispose de droits utilisateur et de droits fonctionnels élargis dans son propre périmètre. Toute dérogation supplémentaire doit être autorisée, limitée et traçable.'
+      },
+      DE: {
+        term: 'Assoziiertes Mitglied',
+        shortDefinition: '2SG-Mitglied mit anerkannter Funktion oder Mitwirkung, jedoch ohne globales Administrationsrecht.',
+        detailedDefinition: 'Institutioneller Status, der sich von Gründungsmitglied und Unterstützungspersonal unterscheidet. Ein assoziiertes Mitglied verfügt über Benutzerrechte und erweiterte funktionale Rechte im eigenen Bereich. Jede zusätzliche Ausnahme muss genehmigt, begrenzt und nachvollziehbar sein.'
+      },
+      EN: {
+        term: 'Associate member',
+        shortDefinition: 'A 2SG member with a recognised function or contribution but no global administration right.',
+        detailedDefinition: 'An institutional status distinct from a founding member and support staff. An associate member has user rights and expanded functional rights within their own scope. Any additional exception must be authorised, limited and traceable.'
+      }
+    }
+  },
+  'RH-PERSONNEL-APPUI': {
+    version: 'V5.5',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Personnel d’appui',
+        shortDefinition: 'Personne mobilisée pour soutenir l’exécution pratique, logistique, technique ou quotidienne des activités.',
+        detailedDefinition: 'Personne employée, mandatée ou engagée selon un cadre à documenter pour réaliser des tâches d’appui. Ce statut ne confère ni la qualité de membre associé ni des droits d’administration. Le rattachement opérationnel, les horaires, la rémunération, les obligations et les preuves contractuelles doivent être précisés séparément.'
+      },
+      DE: {
+        term: 'Unterstützungspersonal',
+        shortDefinition: 'Person zur praktischen, logistischen, technischen oder täglichen Unterstützung der Tätigkeiten.',
+        detailedDefinition: 'Person, die in einem zu dokumentierenden Rahmen beschäftigt, beauftragt oder eingesetzt wird, um Unterstützungsaufgaben zu erfüllen. Dieser Status verleiht weder die Stellung eines assoziierten Mitglieds noch Administrationsrechte. Operative Zuordnung, Arbeitszeiten, Vergütung, Pflichten und Vertragsnachweise sind gesondert festzuhalten.'
+      },
+      EN: {
+        term: 'Support staff',
+        shortDefinition: 'A person engaged to support the practical, logistical, technical or day-to-day execution of activities.',
+        detailedDefinition: 'A person employed, mandated or otherwise engaged under a framework that must be documented to perform support tasks. This status grants neither associate membership nor administration rights. Operational reporting, hours, remuneration, duties and contractual evidence must be specified separately.'
+      }
+    }
+  },
+  'RH-FONCTION-ENTREPRISE': {
+    version: 'V5.5',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Fonction d’entreprise',
+        shortDefinition: 'Ensemble stable de responsabilités et capacités nécessaires au fonctionnement de 2SG.',
+        detailedDefinition: 'Domaine durable comme Administration, Finances, Ressources Humaines ou Production, défini par sa finalité, ses processus, décisions, compétences et résultats. Une fonction ne se confond ni avec une personne, ni avec un département, ni avec un projet, ni avec le module M3S qui l’outille.'
+      },
+      DE: {
+        term: 'Unternehmensfunktion',
+        shortDefinition: 'Dauerhafter Verantwortungs- und Fähigkeitsbereich, der für das Funktionieren von 2SG erforderlich ist.',
+        detailedDefinition: 'Beständiger Bereich wie Verwaltung, Finanzen, Personalwesen oder Produktion, definiert durch Zweck, Prozesse, Entscheidungen, Kompetenzen und Ergebnisse. Eine Funktion ist weder eine Person noch eine Abteilung, ein Projekt oder das M3S-Modul, das sie unterstützt.'
+      },
+      EN: {
+        term: 'Business function',
+        shortDefinition: 'A stable set of responsibilities and capabilities required for 2SG to operate.',
+        detailedDefinition: 'A durable domain such as Administration, Finance, Human Resources or Production, defined by its purpose, processes, decisions, skills and outcomes. A function is not a person, department, project or the M3S module that supports it.'
+      }
+    }
+  },
+  'RH-ROLE': {
+    version: 'V5.5',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Rôle',
+        shortDefinition: 'Contribution attendue d’une personne ou d’un groupe dans une situation, un processus ou une fonction.',
+        detailedDefinition: 'Ensemble cohérent d’attentes, d’actions et de décisions confiées dans un périmètre donné. Un rôle peut évoluer, être partagé ou temporaire ; il ne se confond ni avec la personne, ni avec son statut de membre, ni avec un droit technique dans M3S.'
+      },
+      DE: {
+        term: 'Rolle',
+        shortDefinition: 'Erwarteter Beitrag einer Person oder Gruppe in einer Situation, einem Prozess oder einer Funktion.',
+        detailedDefinition: 'Zusammenhängende Erwartungen, Handlungen und Entscheidungen innerhalb eines festgelegten Bereichs. Eine Rolle kann sich ändern, geteilt oder befristet sein; sie ist weder mit der Person, ihrem Mitgliedsstatus noch mit einem technischen M3S-Recht gleichzusetzen.'
+      },
+      EN: {
+        term: 'Role',
+        shortDefinition: 'The expected contribution of a person or group in a situation, process or function.',
+        detailedDefinition: 'A coherent set of expectations, actions and decisions assigned within a defined scope. A role may evolve, be shared or temporary; it is not the person, their membership status or a technical permission in M3S.'
+      }
+    }
+  },
+  'RH-RESPONSABILITE-FONCTIONNELLE': {
+    version: 'V5.5',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Responsabilité fonctionnelle',
+        shortDefinition: 'Obligation de piloter un domaine ou un processus et de rendre compte des décisions et résultats relevant de ce périmètre.',
+        detailedDefinition: 'Responsabilité attribuée pour organiser, décider, valider ou contrôler dans un champ métier déterminé. Dans la gouvernance horizontale de 2SG, elle ne crée pas une supériorité hiérarchique générale sur les autres membres ; les personnels d’appui peuvent toutefois avoir un rattachement opérationnel explicite.'
+      },
+      DE: {
+        term: 'Funktionale Verantwortung',
+        shortDefinition: 'Pflicht, einen Bereich oder Prozess zu steuern und über Entscheidungen und Ergebnisse dieses Bereichs Rechenschaft abzulegen.',
+        detailedDefinition: 'Zugewiesene Verantwortung für Organisation, Entscheidung, Freigabe oder Kontrolle in einem bestimmten Fachbereich. In der horizontalen Governance von 2SG begründet sie keine allgemeine hierarchische Überordnung gegenüber anderen Mitgliedern; Unterstützungspersonal kann jedoch ausdrücklich operativ zugeordnet sein.'
+      },
+      EN: {
+        term: 'Functional responsibility',
+        shortDefinition: 'The duty to steer a domain or process and account for the decisions and outcomes within that scope.',
+        detailedDefinition: 'Assigned responsibility to organise, decide, approve or control within a defined business field. In the horizontal governance of 2SG, it does not create general hierarchical authority over other members; support staff may nevertheless have an explicit operational reporting line.'
+      }
+    }
+  },
+  'RH-DELEGATION': {
+    version: 'V5.5',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Délégation fonctionnelle',
+        shortDefinition: 'Autorisation limitée accordée pour exécuter ou décider dans un périmètre, une durée et des conditions déterminés.',
+        detailedDefinition: 'Mécanisme par lequel une personne ou instance compétente confie temporairement une action ou un niveau d’autorisation. La délégation doit préciser l’objet, le bénéficiaire, les limites, la durée, la preuve d’autorisation et la reddition attendue ; elle ne devient pas un droit permanent implicite.'
+      },
+      DE: {
+        term: 'Funktionale Delegation',
+        shortDefinition: 'Begrenzte Ermächtigung zum Handeln oder Entscheiden innerhalb eines festgelegten Umfangs, Zeitraums und bestimmter Bedingungen.',
+        detailedDefinition: 'Mechanismus, durch den eine zuständige Person oder Instanz vorübergehend eine Handlung oder Berechtigungsstufe überträgt. Gegenstand, begünstigte Person, Grenzen, Dauer, Genehmigungsnachweis und erwartete Rechenschaft müssen festgelegt sein; daraus entsteht kein stillschweigendes Dauerrecht.'
+      },
+      EN: {
+        term: 'Functional delegation',
+        shortDefinition: 'A limited authorisation to act or decide within a defined scope, period and set of conditions.',
+        detailedDefinition: 'A mechanism through which a competent person or body temporarily assigns an action or level of authority. It must state the purpose, beneficiary, limits, duration, evidence of approval and expected accountability; it does not become an implicit permanent right.'
+      }
+    }
+  },
+  'RH-EQUIPE': {
+    version: 'V5.5',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Équipe',
+        shortDefinition: 'Groupe de personnes coordonné autour d’un territoire, d’une mission ou d’un ensemble de résultats communs.',
+        detailedDefinition: 'Regroupement opérationnel comme Team Sénégal ou Team Zürich, utilisé pour coordonner les activités et les échanges. L’appartenance à une équipe ne définit pas à elle seule le statut institutionnel, le rôle, la fonction, la hiérarchie ou les droits d’accès de ses membres.'
+      },
+      DE: {
+        term: 'Team',
+        shortDefinition: 'Koordinierte Personengruppe für ein Gebiet, einen Auftrag oder gemeinsame Ergebnisse.',
+        detailedDefinition: 'Operative Gruppierung wie Team Senegal oder Team Zürich zur Koordination von Tätigkeiten und Austausch. Die Teamzugehörigkeit legt für sich allein weder institutionellen Status, Rolle, Funktion, Hierarchie noch Zugriffsrechte der Mitglieder fest.'
+      },
+      EN: {
+        term: 'Team',
+        shortDefinition: 'A coordinated group of people organised around a territory, mission or shared outcomes.',
+        detailedDefinition: 'An operational grouping such as Team Senegal or Team Zurich used to coordinate activities and exchanges. Team membership alone does not determine institutional status, role, function, hierarchy or access rights.'
+      }
+    }
+  },
+  'RH-COMPETENCE': {
+    version: 'V5.5',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Compétence',
+        shortDefinition: 'Capacité mobilisable combinant connaissances, savoir-faire et comportements pour produire un résultat attendu.',
+        detailedDefinition: 'Capacité démontrée ou à développer dans un contexte donné. Elle peut être acquise par expérience, formation, pratique ou accompagnement et doit être reliée à des preuves adaptées. Une compétence ne se réduit ni à un diplôme, ni à un poste, ni à un droit d’accès.'
+      },
+      DE: {
+        term: 'Kompetenz',
+        shortDefinition: 'Einsetzbare Fähigkeit aus Wissen, Können und Verhalten zur Erzielung eines erwarteten Ergebnisses.',
+        detailedDefinition: 'In einem bestimmten Kontext nachgewiesene oder zu entwickelnde Fähigkeit. Sie kann durch Erfahrung, Ausbildung, Praxis oder Begleitung erworben werden und ist mit geeigneten Nachweisen zu verbinden. Kompetenz ist weder nur ein Abschluss noch eine Stelle oder ein Zugriffsrecht.'
+      },
+      EN: {
+        term: 'Competency',
+        shortDefinition: 'An applicable capability combining knowledge, know-how and behaviours to produce an expected outcome.',
+        detailedDefinition: 'A capability demonstrated or developed in a given context. It may be acquired through experience, training, practice or support and should be linked to appropriate evidence. A competency is not merely a qualification, position or access right.'
+      }
+    }
+  },
   'STOCK-STOCK': {
     version: 'V5.3',
     status: 'candidate',
