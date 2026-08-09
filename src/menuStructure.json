@@ -337,6 +337,16 @@
           },
           "icon": "Smile",
           "path": "/crm?tab=beneficiaires"
+        },
+        {
+          "id": "crm-glossary",
+          "label": {
+            "FR": "Glossaire",
+            "EN": "Glossary",
+            "DE": "Glossar"
+          },
+          "icon": "BookOpen",
+          "path": "/crm?tab=glossary"
         }
       ]
     },

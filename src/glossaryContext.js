@@ -1015,6 +1015,195 @@ const GLOSSARY_CONTEXT = {
         detailedDefinition: 'A short, structured checkpoint where owners compare actual status with the expected outcome and identify changes, the next milestone, blockers, committed, paid and remaining amounts, and missing evidence. The review produces a recorded decision or traceable actions and does not replace acceptance or audit.'
       }
     }
+  },
+  'CRM-PROSPECT': {
+    version: 'V5.1-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Prospect',
+        shortDefinition: 'Personne ou organisation correspondant à une cible et susceptible d’entrer dans une relation commerciale.',
+        detailedDefinition: 'Contact identifié comme potentiellement intéressé par une offre 2SG, mais dont le besoin, le pouvoir de décision, les moyens ou le calendrier restent à qualifier. Un prospect n’est ni un client acquis ni une vente et doit conserver sa source ainsi que la prochaine action attendue.'
+      },
+      DE: {
+        term: 'Interessent',
+        shortDefinition: 'Person oder Organisation, die einer Zielgruppe entspricht und eine Geschäftsbeziehung eingehen könnte.',
+        detailedDefinition: 'Ein Kontakt mit möglichem Interesse an einem 2SG-Angebot, dessen Bedarf, Entscheidungsbefugnis, Mittel oder Zeitplan noch zu qualifizieren sind. Ein Interessent ist weder ein gewonnener Kunde noch ein Verkauf; Quelle und nächste Aktion müssen nachvollziehbar bleiben.'
+      },
+      EN: {
+        term: 'Prospect',
+        shortDefinition: 'A person or organisation matching a target profile and potentially entering a commercial relationship.',
+        detailedDefinition: 'A contact identified as potentially interested in a 2SG offer, whose need, decision authority, means or timing still require qualification. A prospect is neither an acquired customer nor a sale, and its source and next action must remain traceable.'
+      }
+    }
+  },
+  'CRM-LEAD': {
+    version: 'V5.1-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Lead',
+        shortDefinition: 'Signal ou contact commercial entrant qui doit encore être vérifié et qualifié.',
+        detailedDefinition: 'Coordonnée, recommandation, demande ou manifestation d’intérêt recueillie par un canal identifié. Le lead précède généralement le prospect qualifié : il peut être pertinent, incomplet, doublonné ou hors cible et ne doit pas être présenté comme une opportunité confirmée.'
+      },
+      DE: {
+        term: 'Lead',
+        shortDefinition: 'Eingehendes geschäftliches Signal oder Kontakt, der noch geprüft und qualifiziert werden muss.',
+        detailedDefinition: 'Kontaktdaten, Empfehlung, Anfrage oder Interessenbekundung aus einem identifizierten Kanal. Ein Lead liegt gewöhnlich vor dem qualifizierten Interessenten; er kann relevant, unvollständig, doppelt oder außerhalb der Zielgruppe sein und ist keine bestätigte Verkaufschance.'
+      },
+      EN: {
+        term: 'Lead',
+        shortDefinition: 'An incoming commercial signal or contact that still requires verification and qualification.',
+        detailedDefinition: 'Contact details, a referral, request or expression of interest collected through an identified channel. A lead usually precedes a qualified prospect; it may be relevant, incomplete, duplicated or out of scope and must not be presented as a confirmed opportunity.'
+      }
+    }
+  },
+  'CRM-CLIENT': {
+    version: 'V5.1-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Client',
+        shortDefinition: 'Personne ou organisation engagée dans une relation commerciale établie avec 2SG.',
+        detailedDefinition: 'Partie ayant accepté ou acquis une offre, avec une preuve adaptée comme un accord, une commande, un contrat ou une facture. Le client se distingue du prospect et du bénéficiaire social ; son statut doit rester relié aux offres, échanges, pièces et responsabilités autorisées.'
+      },
+      DE: {
+        term: 'Kunde',
+        shortDefinition: 'Person oder Organisation in einer bestehenden Geschäftsbeziehung mit 2SG.',
+        detailedDefinition: 'Partei, die ein Angebot angenommen oder erworben hat, belegt etwa durch Vereinbarung, Bestellung, Vertrag oder Rechnung. Der Kunde unterscheidet sich vom Interessenten und vom sozialen Begünstigten; sein Status bleibt mit Angeboten, Austausch, Dokumenten und Zuständigkeiten verknüpft.'
+      },
+      EN: {
+        term: 'Customer',
+        shortDefinition: 'A person or organisation engaged in an established commercial relationship with 2SG.',
+        detailedDefinition: 'A party that has accepted or acquired an offer, supported by appropriate evidence such as an agreement, order, contract or invoice. A customer differs from a prospect and a social beneficiary; its status remains linked to authorised offers, exchanges, documents and responsibilities.'
+      }
+    }
+  },
+  'CRM-OPPORTUNITE': {
+    version: 'V5.1-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Opportunité commerciale',
+        shortDefinition: 'Possibilité qualifiée de proposer une offre à un prospect ou à un client.',
+        detailedDefinition: 'Dossier de pilotage reliant un besoin, une offre pressentie, un montant estimé, une phase, une probabilité, un responsable, une échéance et une prochaine action. Une opportunité est une hypothèse commerciale suivie ; elle ne constitue ni une vente ni un revenu acquis.'
+      },
+      DE: {
+        term: 'Verkaufschance',
+        shortDefinition: 'Qualifizierte Möglichkeit, einem Interessenten oder Kunden ein Angebot zu unterbreiten.',
+        detailedDefinition: 'Steuerungsobjekt, das Bedarf, mögliches Angebot, Schätzbetrag, Phase, Wahrscheinlichkeit, Verantwortung, Termin und nächste Aktion verbindet. Eine Verkaufschance ist eine verfolgte geschäftliche Hypothese und weder ein Verkauf noch ein gesicherter Ertrag.'
+      },
+      EN: {
+        term: 'Commercial opportunity',
+        shortDefinition: 'A qualified possibility to propose an offer to a prospect or customer.',
+        detailedDefinition: 'A steering record linking a need, possible offer, estimated amount, stage, probability, owner, deadline and next action. An opportunity is a tracked commercial hypothesis; it is neither a sale nor secured revenue.'
+      }
+    }
+  },
+  'CRM-PIPELINE': {
+    version: 'V5.1-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Pipeline commercial',
+        shortDefinition: 'Vue ordonnée des opportunités selon leur phase d’avancement.',
+        detailedDefinition: 'Instrument de pilotage montrant les opportunités ouvertes, leurs montants estimés, probabilités, responsables, échéances et blocages. Le pipeline aide à prioriser et prévoir ; il ne transforme pas une estimation en commande, en facture ou en revenu certain.'
+      },
+      DE: {
+        term: 'Vertriebspipeline',
+        shortDefinition: 'Geordnete Sicht auf Verkaufschancen nach ihrem Bearbeitungsstand.',
+        detailedDefinition: 'Steuerungsinstrument für offene Verkaufschancen mit Schätzbeträgen, Wahrscheinlichkeiten, Verantwortlichen, Terminen und Blockaden. Die Pipeline unterstützt Priorisierung und Vorschau; sie macht aus einer Schätzung keine Bestellung, Rechnung oder sicheren Ertrag.'
+      },
+      EN: {
+        term: 'Sales pipeline',
+        shortDefinition: 'An ordered view of opportunities by their stage of progress.',
+        detailedDefinition: 'A steering instrument showing open opportunities, estimated amounts, probabilities, owners, deadlines and blockers. The pipeline supports prioritisation and forecasting; it does not turn an estimate into an order, invoice or certain revenue.'
+      }
+    }
+  },
+  'CRM-VENTE': {
+    version: 'V5.1-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Vente',
+        shortDefinition: 'Opération commerciale acceptée par le client et appuyée par une preuve vérifiable.',
+        detailedDefinition: 'Résultat commercial confirmé par une commande, un contrat, une acceptation ou une autre pièce adaptée. Le CRM suit la relation et le passage à la vente ; Finance traite la facturation et l’encaissement, Production l’exécution et la GED conserve les pièces.'
+      },
+      DE: {
+        term: 'Verkauf',
+        shortDefinition: 'Vom Kunden angenommener Geschäftsvorgang mit überprüfbarem Nachweis.',
+        detailedDefinition: 'Geschäftsergebnis, das durch Bestellung, Vertrag, Annahme oder einen anderen geeigneten Beleg bestätigt ist. Das CRM verfolgt Beziehung und Verkaufsabschluss; Finanzen bearbeitet Rechnung und Zahlung, Produktion die Ausführung und die DMS die Belege.'
+      },
+      EN: {
+        term: 'Sale',
+        shortDefinition: 'A commercial transaction accepted by the customer and supported by verifiable evidence.',
+        detailedDefinition: 'A commercial outcome confirmed by an order, contract, acceptance or other appropriate evidence. CRM tracks the relationship and conversion to sale; Finance handles invoicing and collection, Production handles delivery and the DMS keeps the records.'
+      }
+    }
+  },
+  'CRM-PROCHAINE-ACTION': {
+    version: 'V5.1-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Prochaine action CRM',
+        shortDefinition: 'Action datée et attribuée qui doit faire progresser une relation ou une opportunité.',
+        detailedDefinition: 'Étape concrète à réaliser après le dernier échange, avec un responsable, une échéance et un résultat attendu. Elle peut être un appel, une relance, une rencontre, un envoi d’offre ou une décision ; elle évite qu’un contact reste ouvert sans suite traçable.'
+      },
+      DE: {
+        term: 'Nächste CRM-Aktion',
+        shortDefinition: 'Datierte und zugewiesene Aktion zur Weiterentwicklung einer Beziehung oder Verkaufschance.',
+        detailedDefinition: 'Konkreter Schritt nach dem letzten Austausch mit Verantwortlichem, Termin und erwartetem Ergebnis. Dies kann ein Anruf, eine Erinnerung, ein Treffen, ein Angebot oder eine Entscheidung sein und verhindert Kontakte ohne nachvollziehbare Folge.'
+      },
+      EN: {
+        term: 'Next CRM action',
+        shortDefinition: 'A dated and assigned action intended to move a relationship or opportunity forward.',
+        detailedDefinition: 'A concrete step after the latest exchange, with an owner, due date and expected result. It may be a call, follow-up, meeting, offer or decision and prevents a contact from remaining open without a traceable next step.'
+      }
+    }
+  },
+  'SOC-DONATEUR': {
+    version: 'V5.1-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Donateur',
+        shortDefinition: 'Personne ou organisation qui apporte volontairement de l’argent, un bien ou un service sans contrepartie commerciale équivalente.',
+        detailedDefinition: 'Source d’un don financier, matériel ou en service, identifiée selon le niveau de preuve disponible et les règles de confidentialité. Le donateur ne doit pas être assimilé automatiquement à un client, partenaire ou membre ; le don reste relié à sa date, sa nature, sa valeur et sa destination.'
+      },
+      DE: {
+        term: 'Spender',
+        shortDefinition: 'Person oder Organisation, die freiwillig Geld, Sachwerte oder Leistungen ohne gleichwertige geschäftliche Gegenleistung bereitstellt.',
+        detailedDefinition: 'Quelle einer Geld-, Sach- oder Leistungsspende, identifiziert nach Beleglage und Vertraulichkeitsregeln. Ein Spender ist nicht automatisch Kunde, Partner oder Mitglied; die Spende bleibt mit Datum, Art, Wert und Zweck verbunden.'
+      },
+      EN: {
+        term: 'Donor',
+        shortDefinition: 'A person or organisation voluntarily providing money, goods or services without equivalent commercial consideration.',
+        detailedDefinition: 'The source of a financial, in-kind or service donation, identified according to available evidence and confidentiality rules. A donor is not automatically a customer, partner or member; the donation remains linked to its date, nature, value and destination.'
+      }
+    }
+  },
+  'SOC-BENEFICIAIRE': {
+    version: 'V5.1-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Bénéficiaire',
+        shortDefinition: 'Personne, groupe ou organisation recevant un appui, un service ou un avantage lié à l’action de 2SG.',
+        detailedDefinition: 'Destinataire d’une aide, d’un don, d’un projet ou d’un service social, enregistré uniquement avec les données nécessaires et les droits adaptés. Un bénéficiaire n’est pas automatiquement un client ; son identité, le motif, la décision, la preuve et la confidentialité doivent être proportionnés au suivi attendu.'
+      },
+      DE: {
+        term: 'Begünstigter',
+        shortDefinition: 'Person, Gruppe oder Organisation, die Unterstützung, eine Leistung oder einen Vorteil aus der Tätigkeit von 2SG erhält.',
+        detailedDefinition: 'Empfänger von Hilfe, Spende, Projekt oder sozialer Leistung, erfasst nur mit notwendigen Daten und angemessenen Rechten. Ein Begünstigter ist nicht automatisch Kunde; Identität, Grund, Entscheidung, Nachweis und Vertraulichkeit müssen dem erforderlichen Nachweis entsprechen.'
+      },
+      EN: {
+        term: 'Beneficiary',
+        shortDefinition: 'A person, group or organisation receiving support, a service or a benefit through 2SG activity.',
+        detailedDefinition: 'The recipient of aid, a donation, project or social service, recorded only with necessary data and appropriate access rights. A beneficiary is not automatically a customer; identity, reason, decision, evidence and confidentiality must be proportionate to the required follow-up.'
+      }
+    }
   }
 };
 

@@ -134,3 +134,14 @@ test('keeps an available social extract when inventory is unavailable', async ()
   expect(screen.getByText('125 CHF')).toBeInTheDocument();
   expect(screen.queryByText('0 CHF')).not.toBeInTheDocument();
 });
+
+test('opens the governed local CRM glossary from the module tab', async () => {
+  renderCRM('glossary', 'FR');
+
+  expect(await screen.findByRole('heading', { level: 2, name: 'Glossaire Commercial & CRM' })).toBeInTheDocument();
+  expect(screen.getByText('9 termes')).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Examiner dans le Glossaire central' })).toHaveAttribute(
+    'href',
+    '/ged?tab=knowledge&term=CRM-PROSPECT&returnTo=crm-glossary'
+  );
+});

@@ -139,6 +139,14 @@ test('returns from a central people term to the originating Human Resources glos
   expect(mockNavigate).toHaveBeenCalledWith('/rh?tab=glossary');
 });
 
+test('returns from a central CRM term to the originating Commercial & CRM glossary', async () => {
+  renderGed('knowledge', 'FR', '&term=CRM-PROSPECT&returnTo=crm-glossary');
+
+  const returnButton = await screen.findByRole('button', { name: 'Revenir au Glossaire Commercial & CRM' });
+  fireEvent.click(returnButton);
+  expect(mockNavigate).toHaveBeenCalledWith('/crm?tab=glossary');
+});
+
 test('returns from Monitoring and KM to the Daily Intelligence view', async () => {
   renderGed('knowledge', 'FR', '&returnTo=dashboard-daily-intelligence');
 

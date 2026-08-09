@@ -19,6 +19,7 @@ import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import TableControls from './TableControls';
 import { StandardActionsCell, StandardKpiCard, StandardRecordSheetModal } from './StandardUI';
+import CRMGlossary from './CRMGlossary';
 import api from './api';
 import { isLegacyBuCode, translateDas } from './strategicMapping';
 
@@ -94,7 +95,8 @@ const dictionaries = {
     unavailable: 'Indisponible',
     loadingLabel: 'Chargement',
     loadedExtract: 'Extrait chargé',
-    readAt: 'Lu le'
+    readAt: 'Lu le',
+    glossary: 'Glossaire'
   },
   EN: {
     overview: 'Overview',
@@ -167,7 +169,8 @@ const dictionaries = {
     unavailable: 'Unavailable',
     loadingLabel: 'Loading',
     loadedExtract: 'Loaded extract',
-    readAt: 'Read on'
+    readAt: 'Read on',
+    glossary: 'Glossary'
   },
   DE: {
     overview: 'Übersicht',
@@ -240,7 +243,8 @@ const dictionaries = {
     unavailable: 'Nicht verfügbar',
     loadingLabel: 'Wird geladen',
     loadedExtract: 'Geladener Auszug',
-    readAt: 'Gelesen am'
+    readAt: 'Gelesen am',
+    glossary: 'Glossar'
   }
 };
 
@@ -329,7 +333,7 @@ const valueLabels = {
 };
 
 const chartColors = ['#38bdf8', '#34d399', '#f59e0b', '#a78bfa', '#fb7185', '#22d3ee'];
-const tabs = ['overview', 'prospects', 'clients', 'ventes', 'dons', 'beneficiaires'];
+const tabs = ['overview', 'prospects', 'clients', 'ventes', 'dons', 'beneficiaires', 'glossary'];
 
 const designationTerms = {
   EN: [
@@ -794,7 +798,8 @@ const CRM = () => {
               { tab: 'clients', label: `${t.clients} (0)` },
               { tab: 'ventes', label: `${t.ventes} (0)` },
               { tab: 'dons', label: `${t.dons} (${dons.length})` },
-              { tab: 'beneficiaires', label: `${t.beneficiaires} (${beneficiaires.length})` }
+              { tab: 'beneficiaires', label: `${t.beneficiaires} (${beneficiaires.length})` },
+              { tab: 'glossary', label: t.glossary }
             ]}
           />
         </div>
@@ -919,6 +924,8 @@ const CRM = () => {
             )}
           />
         )}
+
+        {activeTab === 'glossary' && <CRMGlossary language={language} />}
 
         <ChildTabPlaceholder moduleId="commercial" language={language} activeTab={activeTab} handledTabs={tabs} />
       </div>
