@@ -25,6 +25,7 @@ jest.mock('recharts', () => ({
 jest.mock('./api', () => ({
   __esModule: true,
   default: {
+    getFinanceDashboard: jest.fn(),
     getExpenses: jest.fn(),
     getIncome: jest.fn(),
     getFxHistory: jest.fn(),
@@ -36,6 +37,10 @@ jest.mock('./api', () => ({
 beforeEach(() => {
   localStorage.clear();
   jest.clearAllMocks();
+  api.getFinanceDashboard.mockResolvedValue({
+    success: true,
+    data: { total_income_count: 0, total_income: null, total_expense_count: 0, total_expenses: null }
+  });
   api.getExpenses.mockResolvedValue({ data: [] });
   api.getIncome.mockResolvedValue({ data: [] });
   api.getFxHistory.mockResolvedValue({ data: [] });

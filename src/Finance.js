@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, LabelList } from 'recharts';
-import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound } from 'lucide-react';
+import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound, Database, AlertTriangle, LoaderCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
@@ -23,6 +23,35 @@ const DEPARTMENT_OPTIONS = [
 ];
 const PROJECT_PHASE_OPTIONS = ['Conception', 'Mise en Place', 'Consolidation', 'Dynamisation'];
 const COUNTRY_OPTIONS = ['CH', 'SN', 'FR', 'ISR'];
+
+const parseFiniteNumber = (value) => {
+  if (value === null || value === undefined || value === '') return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+};
+
+const normalizeFinanceSummary = (response) => {
+  if (response?.success === false || !response?.data) return null;
+
+  const incomeCount = parseFiniteNumber(response.data.total_income_count);
+  const expenseCount = parseFiniteNumber(response.data.total_expense_count);
+  const rawIncome = parseFiniteNumber(response.data.total_income);
+  const rawExpenses = parseFiniteNumber(response.data.total_expenses);
+
+  if (incomeCount === null || expenseCount === null || incomeCount < 0 || expenseCount < 0) return null;
+
+  const totalIncome = incomeCount === 0 ? 0 : rawIncome;
+  const totalExpenses = expenseCount === 0 ? 0 : rawExpenses;
+  if (totalIncome === null || totalExpenses === null) return null;
+
+  return {
+    totalIncome,
+    totalExpenses,
+    incomeCount,
+    expenseCount,
+    timestamp: response.timestamp || null
+  };
+};
 
 const createEmptyFinanceForm = () => ({
   description: '',
@@ -63,6 +92,9 @@ const Finance = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [recettes, setRecettes] = useState([]);
   const [depenses, setDepenses] = useState([]);
+  const [financeSummary, setFinanceSummary] = useState(null);
+  const [financeSummaryStatus, setFinanceSummaryStatus] = useState('loading');
+  const [financeExtractStatus, setFinanceExtractStatus] = useState('loading');
   const [socialRows, setSocialRows] = useState([]);
   const [socialSummary, setSocialSummary] = useState({});
   const [socialError, setSocialError] = useState('');
@@ -103,10 +135,23 @@ const Finance = () => {
     FR: {
       title: 'Finances',
       subtitle: 'Gestion des Recettes, Dépenses et Taux de Change',
-      totalRecettes: 'Total Recettes',
-      totalDepenses: 'Total Dépenses',
+      totalRecettes: 'Recettes globales',
+      totalDepenses: 'Dépenses globales',
       soldeNet: 'Solde Net',
       tauxFX: 'Taux FX (CFA/CHF)',
+      sourceLoading: 'Chargement des totaux globaux...',
+      sourceAvailable: 'Totaux globaux disponibles',
+      sourceUnavailable: 'Totaux globaux indisponibles',
+      missingNotZero: 'Aucune valeur manquante n’est remplacée par zéro.',
+      globalSource: 'Source : BigQuery via /finance/dashboard',
+      sourceRead: 'Lecture API',
+      incomeRecords: 'recettes',
+      expenseRecords: 'dépenses',
+      loadedExtract: 'extrait chargé pour les tableaux et graphiques',
+      extractPartial: 'extrait partiel : une source d’écritures est indisponible',
+      extractUnavailable: 'extrait des écritures indisponible',
+      maxPerRegister: 'maximum 200 par registre',
+      chartScope: 'extrait chargé',
       overview: 'Vue d\'ensemble',
       recettes: 'Recettes',
       depenses: 'Dépenses',
@@ -208,10 +253,23 @@ const Finance = () => {
     EN: {
       title: 'Finance',
       subtitle: 'Revenue, Expense & Foreign Exchange Management',
-      totalRecettes: 'Total Revenue',
-      totalDepenses: 'Total Expenses',
+      totalRecettes: 'Global revenue',
+      totalDepenses: 'Global expenses',
       soldeNet: 'Net Balance',
       tauxFX: 'FX Rate (CFA/CHF)',
+      sourceLoading: 'Loading global totals...',
+      sourceAvailable: 'Global totals available',
+      sourceUnavailable: 'Global totals unavailable',
+      missingNotZero: 'No missing value is replaced with zero.',
+      globalSource: 'Source: BigQuery via /finance/dashboard',
+      sourceRead: 'API read',
+      incomeRecords: 'revenue entries',
+      expenseRecords: 'expense entries',
+      loadedExtract: 'loaded extract for tables and charts',
+      extractPartial: 'partial extract: one transaction source is unavailable',
+      extractUnavailable: 'transaction extract unavailable',
+      maxPerRegister: 'maximum 200 per register',
+      chartScope: 'loaded extract',
       overview: 'Overview',
       recettes: 'Revenue',
       depenses: 'Expenses',
@@ -313,10 +371,23 @@ const Finance = () => {
     DE: {
       title: 'Finanzen',
       subtitle: 'Verwaltung von Einnahmen, Ausgaben und Wechselkursen',
-      totalRecettes: 'Gesamteinnahmen',
-      totalDepenses: 'Gesamtausgaben',
+      totalRecettes: 'Globale Einnahmen',
+      totalDepenses: 'Globale Ausgaben',
       soldeNet: 'Nettosaldo',
       tauxFX: 'Wechselkurs (CFA/CHF)',
+      sourceLoading: 'Globale Summen werden geladen...',
+      sourceAvailable: 'Globale Summen verfügbar',
+      sourceUnavailable: 'Globale Summen nicht verfügbar',
+      missingNotZero: 'Fehlende Werte werden nicht durch null ersetzt.',
+      globalSource: 'Quelle: BigQuery über /finance/dashboard',
+      sourceRead: 'API-Abruf',
+      incomeRecords: 'Einnahmen',
+      expenseRecords: 'Ausgaben',
+      loadedExtract: 'geladener Auszug für Tabellen und Diagramme',
+      extractPartial: 'Teilauszug: Eine Buchungsquelle ist nicht verfügbar',
+      extractUnavailable: 'Buchungsauszug nicht verfügbar',
+      maxPerRegister: 'höchstens 200 je Register',
+      chartScope: 'geladener Auszug',
       overview: 'Übersicht',
       recettes: 'Einnahmen',
       depenses: 'Ausgaben',
@@ -560,52 +631,41 @@ const Finance = () => {
 
   // Phase 2: Load real data from BigQuery via API
   const loadFinanceData = useCallback(async () => {
-    try {
-      console.log('Fetching real finance data from API...');
-      const [expensesRes, incomeRes] = await Promise.all([
-        api.getExpenses(200, 0),
-        api.getIncome(200, 0)
-      ]);
+    setFinanceSummary(null);
+    setFinanceSummaryStatus('loading');
+    setFinanceExtractStatus('loading');
 
-        // Format expenses data
-        const expensesData = Array.isArray(expensesRes?.data) ? expensesRes.data : [];
-        const formattedExpenses = expensesData.map(item => ({
-          id: item.id,
-          description: item.description || item.name || 'Transaction',
-          montant: parseFloat(item.montant || item.amount) || 0,
-          categorie: item.category || item.categorie || 'Opérationnel',
-          date: item.date_created || item.created_at || new Date().toISOString().split('T')[0],
-          devise: 'CHF',
-          status: item.status || item.statut || 'completed'
-        }));
+    const [dashboardResult, expensesResult, incomeResult] = await Promise.allSettled([
+      api.getFinanceDashboard(),
+      api.getExpenses(200, 0),
+      api.getIncome(200, 0)
+    ]);
 
-        // Format income data
-        const incomeData = Array.isArray(incomeRes?.data) ? incomeRes.data : [];
-        const formattedIncome = incomeData.map(item => ({
-          id: item.id,
-          description: item.description || item.name || 'Transaction',
-          montant: parseFloat(item.montant || item.amount) || 0,
-          categorie: item.category || item.categorie || 'Ventes',
-          date: item.date_created || item.created_at || new Date().toISOString().split('T')[0],
-          devise: 'CHF',
-          status: item.status || item.statut || 'completed'
-        }));
+    const summary = dashboardResult.status === 'fulfilled'
+      ? normalizeFinanceSummary(dashboardResult.value)
+      : null;
+    setFinanceSummary(summary);
+    setFinanceSummaryStatus(summary ? 'available' : 'unavailable');
 
-        const normalizedExpenses = expensesData.map((item, index) =>
-          normalizeFinanceRow(item, 'DEP', 'Operationnel', index)
-        );
-        const normalizedIncome = incomeData.map((item, index) =>
-          normalizeFinanceRow(item, 'REC', 'Ventes', index)
-        );
+    const expensesData = expensesResult.status === 'fulfilled' && Array.isArray(expensesResult.value?.data)
+      ? expensesResult.value.data
+      : null;
+    const incomeData = incomeResult.status === 'fulfilled' && Array.isArray(incomeResult.value?.data)
+      ? incomeResult.value.data
+      : null;
 
-      console.log(`Loaded ${normalizedExpenses.length} expenses and ${normalizedIncome.length} income from BigQuery`);
-      setDepenses(normalizedExpenses.length ? normalizedExpenses : formattedExpenses);
-      setRecettes(normalizedIncome.length ? normalizedIncome : formattedIncome);
-    } catch (error) {
-      console.error('Error fetching finance data:', error);
-      setDepenses([]);
-      setRecettes([]);
-    }
+    const normalizedExpenses = (expensesData || []).map((item, index) =>
+      normalizeFinanceRow(item, 'DEP', 'Operationnel', index)
+    );
+    const normalizedIncome = (incomeData || []).map((item, index) =>
+      normalizeFinanceRow(item, 'REC', 'Ventes', index)
+    );
+
+    setDepenses(normalizedExpenses);
+    setRecettes(normalizedIncome);
+    setFinanceExtractStatus(
+      expensesData && incomeData ? 'available' : (expensesData || incomeData ? 'partial' : 'unavailable')
+    );
   }, [normalizeFinanceRow]);
 
   useEffect(() => {
@@ -1073,12 +1133,24 @@ const Finance = () => {
     const category = normalizeCategoryKey(row.categorie);
     return category !== 'AIDE SOCIALE MENAGE' && category !== 'AIDE SOCIALE';
   }), [recettesAffichees]);
-  const totalRecettes = recettesExploitation.reduce((sum, r) => sum + toNumber(r.montantChf ?? r.montant), 0);
-  const totalDepenses = depensesAffichees.reduce((sum, d) => sum + toNumber(d.montantChf ?? d.montant), 0);
-  const solde = totalRecettes - totalDepenses;
+  const totalRecettes = financeSummary?.totalIncome ?? null;
+  const totalDepenses = financeSummary?.totalExpenses ?? null;
+  const solde = Number.isFinite(totalRecettes) && Number.isFinite(totalDepenses)
+    ? totalRecettes - totalDepenses
+    : null;
+  const soldeNegatif = Number.isFinite(solde) && solde < 0;
+  const financeSummaryReadAt = financeSummary?.timestamp && !Number.isNaN(new Date(financeSummary.timestamp).getTime())
+    ? new Intl.DateTimeFormat(
+      language === 'DE' ? 'de-CH' : language === 'EN' ? 'en-GB' : 'fr-CH',
+      { dateStyle: 'short', timeStyle: 'short' }
+    ).format(new Date(financeSummary.timestamp))
+    : null;
   const latestHistoricalFx = getHistoricalCfaPerChf(new Date().toISOString().split('T')[0]);
   const tauxChfCfa = tauxDuJour.CHF_CFA || latestHistoricalFx?.cfaPerChf || null;
-  const formatCfaWithCurrentRate = (chfAmount) => tauxChfCfa ? Math.round(chfAmount * tauxChfCfa).toLocaleString() : '-';
+  const formatGlobalChf = (value) => Number.isFinite(value) ? `${value.toLocaleString()} CHF` : '— CHF';
+  const formatCfaWithCurrentRate = (chfAmount) => Number.isFinite(chfAmount) && tauxChfCfa
+    ? Math.round(chfAmount * tauxChfCfa).toLocaleString()
+    : '—';
 
   const socialRowsAffichees = useMemo(() => {
     const dedicatedRows = socialRows.map(applyHistoricalFx);
@@ -1506,7 +1578,7 @@ const Finance = () => {
               <div>
                 <p className="text-green-400 text-sm font-medium">{t.totalRecettes}</p>
                 <div className="mt-1 leading-tight">
-                  <p className="text-green-300 text-xl font-bold">{totalRecettes.toLocaleString()} CHF</p>
+                  <p data-testid="finance-total-income" className="text-green-300 text-xl font-bold">{formatGlobalChf(totalRecettes)}</p>
                   <p className="text-slate-300 text-sm font-semibold mt-1">{formatCfaWithCurrentRate(totalRecettes)} CFA</p>
                 </div>
               </div>
@@ -1519,7 +1591,7 @@ const Finance = () => {
               <div>
                 <p className="text-red-400 text-sm font-medium">{t.totalDepenses}</p>
                 <div className="mt-1 leading-tight">
-                  <p className="text-red-300 text-xl font-bold">{totalDepenses.toLocaleString()} CHF</p>
+                  <p data-testid="finance-total-expenses" className="text-red-300 text-xl font-bold">{formatGlobalChf(totalDepenses)}</p>
                   <p className="text-slate-300 text-sm font-semibold mt-1">{formatCfaWithCurrentRate(totalDepenses)} CFA</p>
                 </div>
               </div>
@@ -1527,16 +1599,16 @@ const Finance = () => {
             </div>
           </div>
 
-          <div className={`bg-slate-800 rounded-lg p-5 border border-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${solde >= 0 ? 'hover:border-blue-500/60' : 'hover:border-orange-500/60'}`}>
+          <div className={`bg-slate-800 rounded-lg p-5 border border-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${soldeNegatif ? 'hover:border-orange-500/60' : 'hover:border-blue-500/60'}`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`${solde >= 0 ? 'text-blue-400' : 'text-orange-400'} text-sm font-medium`}>{t.soldeNet}</p>
+                <p className={`${soldeNegatif ? 'text-orange-400' : 'text-blue-400'} text-sm font-medium`}>{t.soldeNet}</p>
                 <div className="mt-1 leading-tight">
-                  <p className={`${solde >= 0 ? 'text-blue-300' : 'text-orange-300'} text-xl font-bold`}>{solde.toLocaleString()} CHF</p>
+                  <p data-testid="finance-net-balance" className={`${soldeNegatif ? 'text-orange-300' : 'text-blue-300'} text-xl font-bold`}>{formatGlobalChf(solde)}</p>
                   <p className="text-slate-300 text-sm font-semibold mt-1">{formatCfaWithCurrentRate(solde)} CFA</p>
                 </div>
               </div>
-              <DollarSign size={28} className={solde >= 0 ? 'text-blue-400' : 'text-orange-400'} />
+              <DollarSign size={28} className={soldeNegatif ? 'text-orange-400' : 'text-blue-400'} />
             </div>
           </div>
 
@@ -1548,6 +1620,51 @@ const Finance = () => {
               </div>
               <ArrowRightLeft size={28} className="text-purple-400" />
             </div>
+          </div>
+        </div>
+
+        <div
+          role="status"
+          data-testid="finance-source-status"
+          className={`mb-6 flex items-start gap-3 rounded-lg border px-4 py-3 ${
+            financeSummaryStatus === 'available'
+              ? 'border-emerald-700/60 bg-emerald-950/30 text-emerald-100'
+              : financeSummaryStatus === 'loading'
+                ? 'border-blue-700/60 bg-blue-950/30 text-blue-100'
+                : 'border-amber-700/60 bg-amber-950/30 text-amber-100'
+          }`}
+        >
+          {financeSummaryStatus === 'loading' ? (
+            <LoaderCircle size={20} className="mt-0.5 shrink-0 animate-spin" aria-hidden="true" />
+          ) : financeSummaryStatus === 'available' ? (
+            <Database size={20} className="mt-0.5 shrink-0" aria-hidden="true" />
+          ) : (
+            <AlertTriangle size={20} className="mt-0.5 shrink-0" aria-hidden="true" />
+          )}
+          <div className="min-w-0 text-sm">
+            <p className="font-semibold">
+              {financeSummaryStatus === 'loading'
+                ? t.sourceLoading
+                : financeSummaryStatus === 'available'
+                  ? t.sourceAvailable
+                  : t.sourceUnavailable}
+            </p>
+            <p className="mt-1 text-slate-300">
+              {financeSummaryStatus === 'available'
+                ? `${financeSummary.incomeCount.toLocaleString()} ${t.incomeRecords} · ${financeSummary.expenseCount.toLocaleString()} ${t.expenseRecords} · ${t.globalSource}${financeSummaryReadAt ? ` · ${t.sourceRead} : ${financeSummaryReadAt}` : ''}`
+                : financeSummaryStatus === 'unavailable'
+                  ? `${t.missingNotZero} ${t.globalSource}`
+                  : t.globalSource}
+            </p>
+            {financeExtractStatus !== 'loading' && (
+              <p className="mt-1 text-slate-400">
+                {financeExtractStatus === 'available'
+                  ? `${recettes.length.toLocaleString()} ${t.incomeRecords} · ${depenses.length.toLocaleString()} ${t.expenseRecords} · ${t.loadedExtract} (${t.maxPerRegister}).`
+                  : financeExtractStatus === 'partial'
+                    ? `${t.extractPartial} (${recettes.length.toLocaleString()} ${t.incomeRecords} · ${depenses.length.toLocaleString()} ${t.expenseRecords}).`
+                    : `${t.extractUnavailable}.`}
+              </p>
+            )}
           </div>
         </div>
 
@@ -1567,7 +1684,7 @@ const Finance = () => {
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">{t.tendance} (CHF)</h3>
+              <h3 className="text-white font-bold mb-4">{t.tendance} (CHF) · {t.chartScope}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={annualFinanceData} margin={{ top: 8, right: 10, left: 8, bottom: 0 }} barGap={5}>
                   <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
@@ -1582,7 +1699,7 @@ const Finance = () => {
             </div>
 
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">{t.tendance} (CFA)</h3>
+              <h3 className="text-white font-bold mb-4">{t.tendance} (CFA) · {t.chartScope}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={annualFinanceData} margin={{ top: 8, right: 10, left: 12, bottom: 0 }} barGap={5}>
                   <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
