@@ -596,6 +596,195 @@ const GLOSSARY_CONTEXT = {
       }
     }
   },
+  'STOCK-STOCK': {
+    version: 'V5.3',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Stock',
+        shortDefinition: "Ensemble d'articles suivis en quantité et par emplacement pour être utilisés, distribués, consommés ou vendus.",
+        detailedDefinition: "Catégorie de suivi opérationnel qui rend visibles les quantités, unités, localisations, états et mouvements d'articles. L'inscription d'un bien dans le stock M3S ne constitue ni une qualification comptable définitive, ni une preuve juridique de propriété."
+      },
+      DE: {
+        term: 'Bestand',
+        shortDefinition: 'Gesamtheit der nach Menge und Standort geführten Artikel zur Nutzung, Verteilung, zum Verbrauch oder Verkauf.',
+        detailedDefinition: 'Operative Nachverfolgungskategorie für Mengen, Einheiten, Standorte, Zustände und Bewegungen von Artikeln. Die Aufnahme eines Gutes in den M3S-Bestand stellt weder eine endgültige buchhalterische Einordnung noch einen rechtlichen Eigentumsnachweis dar.'
+      },
+      EN: {
+        term: 'Stock',
+        shortDefinition: 'A set of items tracked by quantity and location for use, distribution, consumption or sale.',
+        detailedDefinition: 'An operational monitoring category that makes item quantities, units, locations, conditions and movements visible. Recording an item in M3S stock is neither a final accounting classification nor legal proof of ownership.'
+      }
+    }
+  },
+  'STOCK-INVENTAIRE': {
+    version: 'V5.3',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Inventaire',
+        shortDefinition: 'Relevé structuré et daté des biens observés ou enregistrés, avec leurs quantités, états et localisations.',
+        detailedDefinition: "Liste de contrôle permettant de comparer les biens enregistrés aux biens réellement présents. Un inventaire fiable indique sa date, son périmètre, la personne responsable et les écarts constatés ; il ne remplace pas la comptabilité ni les justificatifs d'acquisition."
+      },
+      DE: {
+        term: 'Inventar',
+        shortDefinition: 'Strukturierte und datierte Erfassung beobachteter oder registrierter Güter mit Mengen, Zuständen und Standorten.',
+        detailedDefinition: 'Kontrollliste zum Vergleich der registrierten mit den tatsächlich vorhandenen Gütern. Ein verlässliches Inventar nennt Datum, Umfang, verantwortliche Person und festgestellte Abweichungen; es ersetzt weder die Buchhaltung noch Erwerbsnachweise.'
+      },
+      EN: {
+        term: 'Inventory',
+        shortDefinition: 'A structured, dated record of observed or registered items with their quantities, conditions and locations.',
+        detailedDefinition: 'A control list used to compare recorded items with those actually present. A reliable inventory states its date, scope, owner and identified discrepancies; it does not replace accounting records or acquisition evidence.'
+      }
+    }
+  },
+  'STOCK-LOCALISATION': {
+    version: 'V5.3',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: "Localisation d'un bien",
+        shortDefinition: "Dernier lieu connu et vérifié où un bien est conservé, utilisé ou déclaré en transit.",
+        detailedDefinition: "Information opérationnelle à dater et à actualiser lors de chaque transfert. Elle doit distinguer un emplacement vérifié d'une localisation seulement déclarée et signaler explicitement les biens en transit ou dont l'emplacement reste à confirmer."
+      },
+      DE: {
+        term: 'Standort eines Gutes',
+        shortDefinition: 'Letzter bekannter und geprüfter Ort, an dem ein Gut aufbewahrt, genutzt oder als unterwegs gemeldet wird.',
+        detailedDefinition: 'Operative Information, die bei jeder Verlagerung zu datieren und zu aktualisieren ist. Ein geprüfter Standort muss von einer lediglich gemeldeten Angabe unterschieden werden; Güter im Transit oder mit ungeklärtem Standort sind ausdrücklich zu kennzeichnen.'
+      },
+      EN: {
+        term: 'Asset location',
+        shortDefinition: 'The last known and verified place where an item is stored, used or reported in transit.',
+        detailedDefinition: 'Operational information that must be dated and updated whenever an item moves. A verified location must be distinguished from a merely reported one, and items in transit or awaiting location confirmation must be identified explicitly.'
+      }
+    }
+  },
+  'STOCK-ETAT-BIEN': {
+    version: 'V5.3',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: "État d'un bien",
+        shortDefinition: "Condition physique ou fonctionnelle observée pour un bien à une date donnée.",
+        detailedDefinition: "Qualification de suivi telle que neuf, bon état, seconde main ou à réparer. Elle doit être datée et, lorsque le risque le justifie, accompagnée d'une photo ou d'un contrôle ; elle ne détermine pas à elle seule la valeur financière du bien."
+      },
+      DE: {
+        term: 'Zustand eines Gutes',
+        shortDefinition: 'Zu einem bestimmten Datum beobachteter physischer oder funktionaler Zustand eines Gutes.',
+        detailedDefinition: 'Nachverfolgungsangabe wie neu, guter Zustand, gebraucht oder zu reparieren. Sie ist zu datieren und bei entsprechendem Risiko durch Foto oder Kontrolle zu belegen; allein bestimmt sie nicht den finanziellen Wert des Gutes.'
+      },
+      EN: {
+        term: 'Item condition',
+        shortDefinition: 'The physical or functional condition observed for an item on a given date.',
+        detailedDefinition: 'A monitoring classification such as new, good condition, second-hand or needs repair. It must be dated and, where risk warrants it, supported by a photograph or inspection; by itself it does not determine the item’s financial value.'
+      }
+    }
+  },
+  'ACTIF-ACTIF': {
+    version: 'V5.3',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Actif',
+        shortDefinition: "Ressource contrôlée ou utilisée par 2SG pour soutenir ses activités et produire une utilité future.",
+        detailedDefinition: "Bien matériel, immatériel ou immobilier suivi parce qu'il contribue durablement aux activités de 2SG. Sa présence dans le registre opérationnel ne vaut ni reconnaissance comptable automatique, ni preuve de propriété ; ces dimensions nécessitent leurs sources et validations propres."
+      },
+      DE: {
+        term: 'Vermögenswert',
+        shortDefinition: 'Von 2SG kontrollierte oder genutzte Ressource zur Unterstützung der Tätigkeiten und zur Schaffung künftigen Nutzens.',
+        detailedDefinition: 'Materielles, immaterielles oder unbewegliches Gut, das wegen seines dauerhaften Beitrags zu den Tätigkeiten von 2SG nachverfolgt wird. Die Aufnahme in das operative Register bedeutet weder automatische bilanzielle Anerkennung noch Eigentumsnachweis; dafür sind eigene Quellen und Freigaben erforderlich.'
+      },
+      EN: {
+        term: 'Asset',
+        shortDefinition: 'A resource controlled or used by 2SG to support its activities and provide future benefit.',
+        detailedDefinition: 'A tangible, intangible or real-estate resource tracked because it contributes durably to 2SG activities. Inclusion in the operational register is neither automatic accounting recognition nor proof of ownership; those dimensions require their own sources and approvals.'
+      }
+    }
+  },
+  'ACTIF-IMMOBILISATION': {
+    version: 'V5.3',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Immobilisation',
+        shortDefinition: "Bien durable destiné à servir les activités au-delà d'un cycle d'utilisation courant.",
+        detailedDefinition: "Catégorie candidate utilisée par le module pour isoler les biens durables, notamment immobiliers. La qualification comptable, la durée d'amortissement et la valeur au bilan relèvent de Finances et d'une validation compétente ; l'étiquette locale ne les établit pas."
+      },
+      DE: {
+        term: 'Anlagegut',
+        shortDefinition: 'Dauerhaftes Gut, das den Tätigkeiten über einen gewöhnlichen Nutzungszyklus hinaus dienen soll.',
+        detailedDefinition: 'Im Modul verwendete Kandidatenkategorie zur Abgrenzung dauerhafter Güter, insbesondere Immobilien. Bilanzielle Einordnung, Abschreibungsdauer und Bilanzwert fallen in den Finanzbereich und erfordern fachliche Freigabe; die lokale Kennzeichnung legt sie nicht fest.'
+      },
+      EN: {
+        term: 'Fixed asset',
+        shortDefinition: 'A durable item intended to support activities beyond a normal operating cycle.',
+        detailedDefinition: 'A candidate category used by the module to distinguish durable resources, especially real estate. Accounting classification, depreciation period and balance-sheet value belong to Finance and require competent validation; the local label does not establish them.'
+      }
+    }
+  },
+  'ACTIF-COUT-ACQUISITION': {
+    version: 'V5.3',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: "Coût d'acquisition",
+        shortDefinition: "Montant documenté engagé pour obtenir un bien, avec ses composantes et sa devise rendues visibles.",
+        detailedDefinition: "Valeur historique fondée sur une facture, un reçu, un contrat ou une autre preuve. Le prix principal, les frais, taxes, transport et change doivent rester séparables lorsque leur traitement n'est pas validé ; le coût d'acquisition ne doit pas être confondu avec la valeur actuelle ou estimée."
+      },
+      DE: {
+        term: 'Anschaffungskosten',
+        shortDefinition: 'Dokumentierter Betrag für den Erwerb eines Gutes mit sichtbaren Bestandteilen und Währung.',
+        detailedDefinition: 'Historischer Wert auf Grundlage von Rechnung, Beleg, Vertrag oder anderem Nachweis. Hauptpreis, Gebühren, Steuern, Transport und Währungsumrechnung müssen getrennt nachvollziehbar bleiben, solange ihre Behandlung nicht validiert ist; Anschaffungskosten sind nicht mit aktuellem oder geschätztem Wert gleichzusetzen.'
+      },
+      EN: {
+        term: 'Acquisition cost',
+        shortDefinition: 'The documented amount committed to obtain an item, with its components and currency made visible.',
+        detailedDefinition: 'A historical value supported by an invoice, receipt, contract or other evidence. Principal price, fees, taxes, transport and foreign exchange must remain distinguishable until their treatment is validated; acquisition cost must not be confused with current or estimated value.'
+      }
+    }
+  },
+  'ACTIF-VALEUR-ESTIMEE': {
+    version: 'V5.3',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Valeur estimée',
+        shortDefinition: "Montant indicatif attribué à un bien selon une source, une date et une méthode explicites.",
+        detailedDefinition: "Estimation de pilotage destinée à donner un ordre de grandeur. Elle doit indiquer son auteur ou sa source, sa date, sa devise et sa méthode ; elle ne remplace ni une expertise professionnelle, ni une valeur comptable, assurée ou juridiquement reconnue."
+      },
+      DE: {
+        term: 'Geschätzter Wert',
+        shortDefinition: 'Richtwert eines Gutes auf Grundlage einer ausdrücklich genannten Quelle, eines Datums und einer Methode.',
+        detailedDefinition: 'Steuerungsschätzung zur Angabe einer Größenordnung. Autor oder Quelle, Datum, Währung und Methode müssen sichtbar sein; sie ersetzt weder ein professionelles Gutachten noch einen Buch-, Versicherungs- oder rechtlich anerkannten Wert.'
+      },
+      EN: {
+        term: 'Estimated value',
+        shortDefinition: 'An indicative amount assigned to an item using an explicit source, date and method.',
+        detailedDefinition: 'A management estimate intended to provide an order of magnitude. Its author or source, date, currency and method must be visible; it does not replace a professional valuation, book value, insured value or legally recognised value.'
+      }
+    }
+  },
+  'ACTIF-REGISTRE-FONCIER': {
+    version: 'V5.3',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Registre foncier opérationnel',
+        shortDefinition: "Vue de suivi des terrains et parcelles reliée aux projets, titulaires déclarés, coûts et sources disponibles.",
+        detailedDefinition: "Registre interne permettant à 2SG de retrouver les références, emplacements, flux d'acquisition et documents associés aux biens fonciers. Il ne remplace ni le cadastre, ni un titre foncier, ni une attestation officielle, ni le contrôle d'un professionnel compétent."
+      },
+      DE: {
+        term: 'Operatives Grundstücksregister',
+        shortDefinition: 'Nachverfolgungssicht für Grundstücke und Parzellen mit Projekten, gemeldeten Inhabern, Kosten und verfügbaren Quellen.',
+        detailedDefinition: 'Internes Register, mit dem 2SG Referenzen, Standorte, Erwerbsflüsse und zugehörige Dokumente von Grundstücken auffinden kann. Es ersetzt weder Kataster noch Eigentumstitel, amtliche Bescheinigung oder Prüfung durch eine fachkundige Person.'
+      },
+      EN: {
+        term: 'Operational land register',
+        shortDefinition: 'A monitoring view of land and plots linked to projects, declared holders, costs and available sources.',
+        detailedDefinition: 'An internal register enabling 2SG to retrieve references, locations, acquisition flows and documents associated with land assets. It does not replace the cadastre, a land title, an official certificate or review by a competent professional.'
+      }
+    }
+  },
   'PROJ-JALON': {
     version: 'V5.1',
     status: 'validated',

@@ -3,8 +3,10 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import Actifs from './Actifs';
 import api from './api';
 
+let mockLocationSearch = '?tab=risques';
+
 jest.mock('react-router-dom', () => ({
-  useLocation: () => ({ search: '?tab=risques' })
+  useLocation: () => ({ search: mockLocationSearch })
 }), { virtual: true });
 
 jest.mock('./LanguageContext', () => ({
@@ -35,6 +37,7 @@ jest.mock('./api', () => ({
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockLocationSearch = '?tab=risques';
   api.getInventory.mockResolvedValue({
     data: [{
       source_id: 'ART-001',
@@ -79,4 +82,12 @@ test('connects the Stock & Assets business frame to the overview', async () => {
 
   expect(screen.getByRole('heading', { name: 'Know what 2SG owns, where it is and which control applies' })).toBeInTheDocument();
   expect(screen.getByText(/does not replace accounting, legal title/)).toBeInTheDocument();
+});
+
+test('opens the local Stock & Assets glossary from the governed child tab', async () => {
+  mockLocationSearch = '?tab=glossary';
+  render(<Actifs />);
+
+  expect(await screen.findByRole('heading', { level: 2, name: 'Stock & Assets Glossary' })).toBeInTheDocument();
+  expect(screen.getByText('9 terms')).toBeInTheDocument();
 });

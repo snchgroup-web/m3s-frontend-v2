@@ -777,6 +777,10 @@ const GED = () => {
       href: '/finance?tab=glossary',
       labels: { FR: 'Revenir au Glossaire Finances', EN: 'Return to the Finance Glossary', DE: 'Zum Glossar Finanzen zurückkehren' }
     },
+    'stock-assets-glossary': {
+      href: '/actifs?tab=glossary',
+      labels: { FR: 'Revenir au Glossaire Stock & Actifs', EN: 'Return to the Stock & Assets Glossary', DE: 'Zum Glossar Anlagen & Vermögenswerte zurückkehren' }
+    },
     'dashboard-daily-intelligence': {
       href: '/?view=intelligence',
       labels: { FR: 'Revenir au Daily Intelligence', EN: 'Return to Daily Intelligence', DE: 'Zur Daily Intelligence zurückkehren' }
