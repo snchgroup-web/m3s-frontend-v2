@@ -12,6 +12,7 @@ import api from './api';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import TableControls from './TableControls';
 import { getDasFromLegacyBu, translateDas, translateLegacyBu } from './strategicMapping';
+import StockAssetsFrame from './StockAssetsFrame';
 
 const CATEGORY_VALUES = [
   'Véhicule',
@@ -524,34 +525,37 @@ const Actifs = () => {
           {loading && <div className="py-16 text-center text-slate-400">Chargement...</div>}
 
           {!loading && activeTab === 'overview' && (
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
-              <div className="rounded-lg bg-slate-800 p-5">
-                <h3 className="mb-1 font-bold text-white">{t.valueByCategory}</h3>
-                <p className="mb-5 text-xs text-slate-500">{t.allRealData}</p>
-                <ResponsiveContainer width="100%" height={360}>
-                  <BarChart data={categoryChart} layout="vertical" margin={{ left: 20, right: 30 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={false} />
-                    <XAxis type="number" stroke="#94a3b8" tickFormatter={(value) => formatAmount(value, 'fr-CH', 0)} />
-                    <YAxis dataKey="label" type="category" width={160} stroke="#94a3b8" tick={{ fontSize: 12 }} />
-                    <Tooltip formatter={(value) => [`${formatAmount(value)} CHF`, t.valueCHF]} contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
-                    <Bar dataKey="valeur" radius={[0, 5, 5, 0]}>
-                      {categoryChart.map((entry, index) => <Cell key={entry.key} fill={CHART_COLORS[index % CHART_COLORS.length]} />)}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="rounded-lg bg-slate-800 p-5">
-                <h3 className="mb-1 font-bold text-white">{t.valueByFunction}</h3>
-                <p className="mb-5 text-xs text-slate-500">{t.allRealData}</p>
-                <ResponsiveContainer width="100%" height={360}>
-                  <BarChart data={functionChart} margin={{ left: 10, right: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-                    <XAxis dataKey="label" stroke="#94a3b8" tick={{ fontSize: 11 }} interval={0} />
-                    <YAxis stroke="#94a3b8" tickFormatter={(value) => formatAmount(value, 'fr-CH', 0)} />
-                    <Tooltip formatter={(value) => [`${formatAmount(value)} CHF`, t.valueCHF]} contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
-                    <Bar dataKey="valeur" fill="#38bdf8" radius={[5, 5, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+            <div>
+              <StockAssetsFrame language={language} />
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+                <div className="rounded-lg bg-slate-800 p-5">
+                  <h3 className="mb-1 font-bold text-white">{t.valueByCategory}</h3>
+                  <p className="mb-5 text-xs text-slate-500">{t.allRealData}</p>
+                  <ResponsiveContainer width="100%" height={360}>
+                    <BarChart data={categoryChart} layout="vertical" margin={{ left: 20, right: 30 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={false} />
+                      <XAxis type="number" stroke="#94a3b8" tickFormatter={(value) => formatAmount(value, 'fr-CH', 0)} />
+                      <YAxis dataKey="label" type="category" width={160} stroke="#94a3b8" tick={{ fontSize: 12 }} />
+                      <Tooltip formatter={(value) => [`${formatAmount(value)} CHF`, t.valueCHF]} contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
+                      <Bar dataKey="valeur" radius={[0, 5, 5, 0]}>
+                        {categoryChart.map((entry, index) => <Cell key={entry.key} fill={CHART_COLORS[index % CHART_COLORS.length]} />)}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="rounded-lg bg-slate-800 p-5">
+                  <h3 className="mb-1 font-bold text-white">{t.valueByFunction}</h3>
+                  <p className="mb-5 text-xs text-slate-500">{t.allRealData}</p>
+                  <ResponsiveContainer width="100%" height={360}>
+                    <BarChart data={functionChart} margin={{ left: 10, right: 20 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                      <XAxis dataKey="label" stroke="#94a3b8" tick={{ fontSize: 11 }} interval={0} />
+                      <YAxis stroke="#94a3b8" tickFormatter={(value) => formatAmount(value, 'fr-CH', 0)} />
+                      <Tooltip formatter={(value) => [`${formatAmount(value)} CHF`, t.valueCHF]} contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
+                      <Bar dataKey="valeur" fill="#38bdf8" radius={[5, 5, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
           )}
