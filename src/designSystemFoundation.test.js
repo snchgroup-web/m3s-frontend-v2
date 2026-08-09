@@ -8,6 +8,8 @@ const headerSource = fs.readFileSync(path.join(__dirname, 'Header.js'), 'utf8');
 const tableSource = fs.readFileSync(path.join(__dirname, 'TableControls.js'), 'utf8');
 const administrationSource = fs.readFileSync(path.join(__dirname, 'Administration.js'), 'utf8');
 const standardUiSource = fs.readFileSync(path.join(__dirname, 'StandardUI.js'), 'utf8');
+const dateInputSource = fs.readFileSync(path.join(__dirname, 'LocalizedDateInput.js'), 'utf8');
+const journalTaskSource = fs.readFileSync(path.join(__dirname, 'JournalTaskRegister.js'), 'utf8');
 
 describe('global M3S design foundations', () => {
   test('scopes shared typography and theme tokens to every module page', () => {
@@ -47,6 +49,16 @@ describe('global M3S design foundations', () => {
     expect(standardUiSource).toContain('m3s-success-button min-h-11 w-full gap-2 px-4 py-2');
     expect(administrationSource).toContain('<StandardCreateButton onClick={openNewTaskModal}>');
     expect(administrationSource).toContain("editingTaskId ? 'm3s-primary-button' : 'm3s-success-button'");
+  });
+
+  test('keeps custom and native date selectors visible in both themes', () => {
+    expect(dateInputSource).toContain('m3s-date-input__control');
+    expect(dateInputSource).toContain('m3s-date-input__icon');
+    expect(dateInputSource).toContain('m3s-date-picker__day');
+    expect(designSystemCss).toContain('html.dark .m3s-date-input__icon');
+    expect(designSystemCss).toContain('.m3s-date-picker__day.is-selected');
+    expect(designSystemCss).toContain('html.dark .m3s-native-date::-webkit-calendar-picker-indicator');
+    expect(journalTaskSource).toContain('m3s-field m3s-native-date');
   });
 
   test('loads the shared foundation without changing the CDN Tailwind pipeline', () => {

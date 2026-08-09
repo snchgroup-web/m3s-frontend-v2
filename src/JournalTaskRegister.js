@@ -504,7 +504,7 @@ const JournalTaskRegister = ({ language = 'FR' }) => {
               </label>
               <label>
                 <FieldLabel>{t.deadline}</FieldLabel>
-                <input type="date" value={form.deadline} onChange={event => setForm(current => ({ ...current, deadline: event.target.value }))} className="w-full rounded-md border border-slate-600 bg-slate-900 px-3 py-2.5 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30" />
+                <input type="date" value={form.deadline} onChange={event => setForm(current => ({ ...current, deadline: event.target.value }))} className="m3s-field m3s-native-date w-full px-3 py-2.5" />
               </label>
               <label>
                 <FieldLabel>{t.priority}</FieldLabel>

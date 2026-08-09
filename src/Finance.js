@@ -1912,7 +1912,7 @@ const Finance = () => {
                   </div>
                   <label className="block text-sm text-slate-300 mt-4">
                     <span className="block mb-1">{t.dateReference}</span>
-                    <LocalizedDateInput value={converterDate} onChange={(date) => { setConverterDate(date); setConversionResult(null); }} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                    <LocalizedDateInput value={converterDate} onChange={(date) => { setConverterDate(date); setConversionResult(null); }} className="w-full" />
                   </label>
                   <div className="mt-4 px-4 py-3 border border-slate-600 rounded bg-slate-900/60">
                     <p className="text-xs text-slate-400">{t.tauxApplique}</p>
@@ -2313,7 +2313,7 @@ const Finance = () => {
                 </label>
                 <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.date}</span>
-                  <LocalizedDateInput value={immoFormData.date} onChange={(date) => handleImmoFormChange('date', date)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                  <LocalizedDateInput value={immoFormData.date} onChange={(date) => handleImmoFormChange('date', date)} className="w-full" />
                 </label>
 
                 <label className="text-sm text-slate-300">
@@ -2448,7 +2448,7 @@ const Finance = () => {
                 <LocalizedDateInput
                   value={formData.date}
                   onChange={(date) => handleFormChange('date', date)}
-                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
+                  className="w-full"
                 />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <label className="text-sm text-slate-300">
@@ -2524,7 +2524,7 @@ const Finance = () => {
                 <LocalizedDateInput
                   value={fxFormData.date}
                   onChange={(date) => handleFxFormChange('date', date)}
-                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
+                  className="w-full"
                 />
                 <input
                   type="text"
