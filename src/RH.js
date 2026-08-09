@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CheckCircle2, Info, Plus, Edit2, Trash2, X } from 'lucide-react';
+import { CheckCircle2, Info, Edit2, Trash2, X } from 'lucide-react';
 import { api } from './api';
 import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
@@ -9,6 +9,7 @@ import TableControls from './TableControls';
 import MembersDirectory from './MembersDirectory';
 import RHGlossary from './RHGlossary';
 import RHOverview from './RHOverview';
+import { StandardCreateButton } from './StandardUI';
 
 const RH = () => {
   const { language } = useLanguage();
@@ -491,9 +492,7 @@ const RH = () => {
       )}
 
       <div className="flex justify-end">
-        <button onClick={() => onAdd(type)} className="m3s-success-button flex min-h-11 items-center gap-2 px-4">
-          <Plus size={20} /> {t.ajouter}
-        </button>
+        <StandardCreateButton onClick={() => onAdd(type)}>{t.ajouter}</StandardCreateButton>
       </div>
       <TableControls
         rows={data}

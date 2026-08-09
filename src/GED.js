@@ -11,7 +11,6 @@ import {
   FileText,
   Folder,
   HelpCircle,
-  Plus,
   Search,
   ShieldCheck,
   Trash2,
@@ -28,6 +27,7 @@ import { getOfferTaxonomy } from './offerTaxonomy';
 import { getDigitalOffersTaxonomyData } from './taxonomyDataProvider';
 import { GlossaryEntryPanel } from './GlossaryHelp';
 import ITSupportGlossary from './ITSupportGlossary';
+import { StandardCreateButton } from './StandardUI';
 
 const GED = () => {
   const { language } = useLanguage();
@@ -1240,9 +1240,9 @@ const GED = () => {
         {activeTab === 'documents' && (
           <div>
             <div className="flex justify-end mb-4">
-              <button onClick={() => { setEditingId(null); setModalType('document'); setFormData({ nom: '', type: 'PDF', dossier: '', dateCreation: new Date().toISOString().split('T')[0], taille: '', statut: 'Actif' }); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
-                <Plus size={20} /> {t.nouvelDocument}
-              </button>
+              <StandardCreateButton onClick={() => { setEditingId(null); setModalType('document'); setFormData({ nom: '', type: 'PDF', dossier: '', dateCreation: new Date().toISOString().split('T')[0], taille: '', statut: 'Actif' }); setShowModal(true); }}>
+                {t.nouvelDocument}
+              </StandardCreateButton>
             </div>
             <TableControls rows={documents} renderTable={(visibleRows) => (
               <table className="min-w-full text-sm">
@@ -1284,9 +1284,9 @@ const GED = () => {
         {activeTab === 'dossiers' && (
           <div>
             <div className="flex justify-end mb-4">
-              <button onClick={() => { setEditingId(null); setModalType('dossier'); setFormData({ nom: '', type: 'PDF', dossier: '', dateCreation: new Date().toISOString().split('T')[0], taille: '', statut: 'Actif' }); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
-                <Plus size={20} /> {t.nouveauDossier}
-              </button>
+              <StandardCreateButton onClick={() => { setEditingId(null); setModalType('dossier'); setFormData({ nom: '', type: 'PDF', dossier: '', dateCreation: new Date().toISOString().split('T')[0], taille: '', statut: 'Actif' }); setShowModal(true); }}>
+                {t.nouveauDossier}
+              </StandardCreateButton>
             </div>
             <TableControls rows={dossiers} renderTable={(visibleRows) => (
               <table className="min-w-full text-sm">
@@ -2115,7 +2115,7 @@ const GED = () => {
  
             <div className="flex gap-3 mt-6">
               <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">{t.annuler}</button>
-              <button onClick={handleSave} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">{t.creer}</button>
+              <button onClick={handleSave} className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 flex-1 px-4`}>{t.creer}</button>
             </div>
           </div>
         </div>

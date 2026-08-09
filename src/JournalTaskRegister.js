@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { AlertCircle, Edit2, FileText, Plus, Save, Trash2, X } from 'lucide-react';
+import { AlertCircle, Edit2, FileText, Save, Trash2, X } from 'lucide-react';
+import { StandardCreateButton } from './StandardUI';
 
 const STORAGE_KEY = 'm3s:planning:journal-candidates:v1';
 
@@ -379,9 +380,7 @@ const JournalTaskRegister = ({ language = 'FR' }) => {
           <h3 id="planning-journal-title" className="mt-2 text-xl font-bold text-white">{t.title}</h3>
           <p className="mt-2 text-sm leading-6 text-slate-300">{t.body}</p>
         </div>
-        <button type="button" onClick={openNew} style={{ color: '#fff' }} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-400">
-          <Plus size={18} color="#fff" aria-hidden="true" /> <span style={{ color: '#fff' }}>{t.newTask}</span>
-        </button>
+        <StandardCreateButton onClick={openNew}>{t.newTask}</StandardCreateButton>
       </div>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-3">

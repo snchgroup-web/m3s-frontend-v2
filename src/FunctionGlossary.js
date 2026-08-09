@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { BookOpen, CheckCircle2, ExternalLink, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
+import { BookOpen, CheckCircle2, ExternalLink, Pencil, Search, Trash2, X } from 'lucide-react';
 import { getGlossaryContextEntry } from './glossaryContext';
+import { StandardCreateButton } from './StandardUI';
 
 const SUPPORTED_LANGUAGES = ['FR', 'DE', 'EN'];
 
@@ -262,9 +263,7 @@ const FunctionGlossary = ({
               <p className="mt-2 max-w-4xl text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{t.intro}</p>
             </div>
           </div>
-          <button type="button" className="m3s-success-button inline-flex min-h-11 shrink-0 items-center justify-center gap-2 px-4" onClick={() => openProposal()}>
-            <Plus size={17} aria-hidden="true" /> {t.add}
-          </button>
+          <StandardCreateButton className="shrink-0" onClick={() => openProposal()}>{t.add}</StandardCreateButton>
         </div>
       </header>
 

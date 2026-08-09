@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Plus, Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck, Wrench } from 'lucide-react';
+import { Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck, Wrench } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
 import { api } from './api';
-import { StandardActionsCell, StandardRecordSheetModal } from './StandardUI';
+import { StandardActionsCell, StandardCreateButton, StandardRecordSheetModal } from './StandardUI';
 import { isLegacyBuCode, translateDas } from './strategicMapping';
 import ProductionGlossary from './ProductionGlossary';
 
@@ -956,9 +956,9 @@ const Production = () => {
           <div>
             <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <p className="text-sm text-slate-300">{t.registreFournisseurs}</p>
-              <button onClick={() => { setEditingId(null); setModalType('fournisseur'); setFormData(getDefaultFormData('fournisseur')); setShowModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
-                <Plus size={20} /> {t.preparationFournisseur}
-              </button>
+              <StandardCreateButton onClick={() => { setEditingId(null); setModalType('fournisseur'); setFormData(getDefaultFormData('fournisseur')); setShowModal(true); }}>
+                {t.preparationFournisseur}
+              </StandardCreateButton>
             </div>
             {fournisseursError && (
               <div className="mb-4 rounded-lg border border-red-700 bg-red-950/40 px-4 py-3 text-sm text-red-200">
@@ -1165,7 +1165,7 @@ const Production = () => {
  
             <div className="flex gap-3 mt-6">
               <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">{t.annuler}</button>
-              <button onClick={handleSave} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">{t.creer}</button>
+              <button onClick={handleSave} className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 flex-1 px-4`}>{t.creer}</button>
             </div>
           </div>
         </div>

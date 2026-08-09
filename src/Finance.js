@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, LabelList } from 'recharts';
-import { Plus, Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound, Database, AlertTriangle, LoaderCircle } from 'lucide-react';
+import { Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound, Database, AlertTriangle, LoaderCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
@@ -9,6 +9,7 @@ import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
 import { isLegacyBuCode, translateDas } from './strategicMapping';
 import FinanceGlossary from './FinanceGlossary';
+import { StandardCreateButton } from './StandardUI';
 
 const TEAM_OPTIONS = ['Team_ZH', 'Team_SN'];
 const AGENT_OPTIONS = ['Cheikh', 'Chantal', 'Pape', 'Gnilane Diouf', 'Gnilane Ndiaye', 'Ibou'];
@@ -1738,9 +1739,7 @@ const Finance = () => {
         {activeTab === 'recettes' && (
           <div>
             <div className="flex justify-end mb-4">
-              <button onClick={() => openNewModal('recette')} className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
-                <Plus size={20} /> {t.nouvelleRecette}
-              </button>
+              <StandardCreateButton onClick={() => openNewModal('recette')}>{t.nouvelleRecette}</StandardCreateButton>
             </div>
             <TableControls
               rows={recettesAffichees}
@@ -1802,9 +1801,7 @@ const Finance = () => {
         {activeTab === 'depenses' && (
           <div>
             <div className="flex justify-end mb-4">
-              <button onClick={() => openNewModal('depense')} className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition">
-                <Plus size={20} /> {t.nouvelleDepense}
-              </button>
+              <StandardCreateButton onClick={() => openNewModal('depense')}>{t.nouvelleDepense}</StandardCreateButton>
             </div>
             <TableControls
               rows={depensesAffichees}
@@ -1986,7 +1983,7 @@ const Finance = () => {
                   <select value={filterDevise} onChange={(e) => setFilterDevise(e.target.value)} className="px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
                     <option value="">{t.filtreDevise}</option><option value="CHF">CHF</option><option value="CFA">CFA</option><option value="USD">USD</option><option value="EUR">EUR</option>
                   </select>
-                  <button onClick={openNewFxModal} className="flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition"><Plus size={20} /> {t.nouveauTaux}</button>
+                  <StandardCreateButton onClick={openNewFxModal}>{t.nouveauTaux}</StandardCreateButton>
                 </div>
                 <TableControls rows={filteredFxHistory} renderTable={(visibleRows) => (
                   <table className="min-w-full text-sm">
@@ -2011,9 +2008,7 @@ const Finance = () => {
                 </div>
                 <p className="max-w-3xl text-sm text-slate-400">{t.socialSubtitle}</p>
               </div>
-              <button onClick={openNewSocialModal} className="flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-white transition hover:bg-emerald-700">
-                <Plus size={19} /> {t.nouveauFluxSocial}
-              </button>
+              <StandardCreateButton onClick={openNewSocialModal}>{t.nouveauFluxSocial}</StandardCreateButton>
             </section>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -2225,9 +2220,7 @@ const Finance = () => {
                 <section className="bg-slate-800 rounded-lg p-6 border border-slate-700 min-w-0">
                     <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                       <h3 className="text-white font-bold">{t.historiqueImmo}</h3>
-                      <button onClick={openNewImmoModal} className="flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition">
-                        <Plus size={18} /> {t.nouvelleOperationImmo}
-                      </button>
+                      <StandardCreateButton onClick={openNewImmoModal}>{t.nouvelleOperationImmo}</StandardCreateButton>
                     </div>
                     <TableControls
                       rows={immoTransactions}
@@ -2409,7 +2402,7 @@ const Finance = () => {
               </div>
               <div className="flex justify-end gap-3 mt-6">
                 <button onClick={() => setShowImmoModal(false)} disabled={savingImmo} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg disabled:opacity-50">{t.annuler}</button>
-                <button onClick={handleImmoSave} disabled={savingImmo} className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg disabled:opacity-50">{t.enregistrer}</button>
+                <button onClick={handleImmoSave} disabled={savingImmo} className={`${editingImmoId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 px-4`}>{t.enregistrer}</button>
               </div>
             </div>
           </div>
@@ -2496,7 +2489,7 @@ const Finance = () => {
                 </div>
                 <div className="flex gap-4 justify-end">
                   <button onClick={() => { setShowModal(false); setSocialModal(false); }} disabled={savingFinance} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg disabled:opacity-50">{t.annuler}</button>
-                  <button onClick={handleSave} disabled={savingFinance} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50">{editingId ? t.enregistrer : t.creer}</button>
+                  <button onClick={handleSave} disabled={savingFinance} className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 px-4`}>{editingId ? t.enregistrer : t.creer}</button>
                 </div>
               </div>
             </div>
@@ -2542,7 +2535,7 @@ const Finance = () => {
                 />
                 <div className="flex gap-4 justify-end">
                   <button onClick={() => setShowFxModal(false)} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg">{t.annuler}</button>
-                  <button onClick={handleFxSave} className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg">{t.creer}</button>
+                  <button onClick={handleFxSave} className={`${editingFxId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 px-4`}>{editingFxId ? t.enregistrer : t.creer}</button>
                 </div>
               </div>
             </div>
