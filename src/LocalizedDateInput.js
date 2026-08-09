@@ -6,17 +6,26 @@ const localeByLanguage = { FR: 'fr-CH', EN: 'en-US', DE: 'de-CH' };
 
 const calendarText = {
   FR: {
-    placeholder: 'Selectionner une date',
+    placeholder: 'Sélectionner une date',
+    calendarLabel: 'Sélecteur de date',
+    previousMonth: 'Mois précédent',
+    nextMonth: 'Mois suivant',
     today: "Aujourd'hui",
     weekdays: ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di']
   },
   EN: {
     placeholder: 'Select a date',
+    calendarLabel: 'Date picker',
+    previousMonth: 'Previous month',
+    nextMonth: 'Next month',
     today: 'Today',
     weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
   },
   DE: {
-    placeholder: 'Datum auswaehlen',
+    placeholder: 'Datum auswählen',
+    calendarLabel: 'Datumsauswahl',
+    previousMonth: 'Vorheriger Monat',
+    nextMonth: 'Nächster Monat',
     today: 'Heute',
     weekdays: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
   }
@@ -94,39 +103,44 @@ const LocalizedDateInput = ({ value, onChange, className = '' }) => {
   };
 
   return (
-    <div className="relative">
+    <div className="m3s-date-input relative">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`${className} flex items-center justify-between text-left`}
+        aria-label={`${text.placeholder}${formattedValue ? ` : ${formattedValue}` : ''}`}
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+        className={`${className} m3s-date-input__control flex items-center justify-between gap-3 text-left`}
       >
-        <span className={formattedValue ? 'text-white' : 'text-slate-400'}>
+        <span className={`m3s-date-input__value${formattedValue ? '' : ' is-placeholder'}`}>
           {formattedValue || text.placeholder}
         </span>
-        <CalendarDays size={18} className="text-blue-300" />
+        <CalendarDays size={18} className="m3s-date-input__icon" aria-hidden="true" />
       </button>
 
       {isOpen && (
-        <div className="absolute z-[70] mt-2 w-80 rounded-lg border border-slate-600 bg-slate-800 p-4 shadow-xl">
+        <div role="dialog" aria-label={text.calendarLabel} className="m3s-date-picker absolute z-[70] mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-lg p-4 shadow-xl">
           <div className="mb-3 flex items-center justify-between">
             <button
               type="button"
               onClick={() => moveMonth(-1)}
-              className="rounded p-1 text-slate-300 hover:bg-slate-700 hover:text-white"
+              aria-label={text.previousMonth}
+              className="m3s-date-picker__nav rounded p-2"
             >
               <ChevronLeft size={18} />
             </button>
-            <div className="text-sm font-semibold capitalize text-white">{monthLabel}</div>
+            <div className="m3s-date-picker__month text-sm font-semibold capitalize">{monthLabel}</div>
             <button
               type="button"
               onClick={() => moveMonth(1)}
-              className="rounded p-1 text-slate-300 hover:bg-slate-700 hover:text-white"
+              aria-label={text.nextMonth}
+              className="m3s-date-picker__nav rounded p-2"
             >
               <ChevronRight size={18} />
             </button>
           </div>
 
-          <div className="grid grid-cols-7 gap-1 text-center text-xs text-slate-400">
+          <div className="m3s-date-picker__weekdays grid grid-cols-7 gap-1 text-center text-xs">
             {text.weekdays.map(day => (
               <div key={day} className="py-1 font-semibold">{day}</div>
             ))}
@@ -143,14 +157,14 @@ const LocalizedDateInput = ({ value, onChange, className = '' }) => {
                   key={toIsoDate(date)}
                   type="button"
                   onClick={() => selectDate(date)}
-                  className={`h-9 rounded text-sm transition ${
+                  className={`m3s-date-picker__day h-9 rounded text-sm transition ${
                     isSelected
-                      ? 'bg-blue-600 text-white'
+                      ? 'is-selected'
                       : isToday
-                        ? 'border border-blue-500 text-blue-200'
+                        ? 'is-today'
                         : isCurrentMonth
-                          ? 'text-slate-100 hover:bg-slate-700'
-                          : 'text-slate-600 hover:bg-slate-700'
+                          ? 'is-current-month'
+                          : 'is-outside-month'
                   }`}
                 >
                   {date.getDate()}
@@ -162,7 +176,7 @@ const LocalizedDateInput = ({ value, onChange, className = '' }) => {
           <button
             type="button"
             onClick={() => selectDate(today)}
-            className="mt-3 w-full rounded bg-slate-700 px-3 py-2 text-sm text-white hover:bg-slate-600"
+            className="m3s-date-picker__today mt-3 min-h-11 w-full rounded px-3 py-2 text-sm font-semibold"
           >
             {text.today}
           </button>

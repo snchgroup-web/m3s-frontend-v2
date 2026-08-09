@@ -2110,7 +2110,7 @@ const GED = () => {
                 <option value="Word">{translateDocumentType('Word')}</option>
                 <option value="Excel">{translateDocumentType('Excel')}</option>
               </select>
-              <LocalizedDateInput value={formData.dateCreation} onChange={(date) => handleFormChange('dateCreation', date)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
+              <LocalizedDateInput value={formData.dateCreation} onChange={(date) => handleFormChange('dateCreation', date)} className="w-full" />
             </div>
  
             <div className="flex gap-3 mt-6">

@@ -107,6 +107,103 @@ html.dark {
   outline-offset: 1px;
 }
 
+.m3s-design-scope .m3s-date-input__control {
+  min-height: 2.75rem;
+  width: 100%;
+  border: 1px solid var(--m3s-border-strong);
+  border-radius: 0.5rem;
+  background: var(--m3s-surface-panel);
+  color: var(--m3s-text-primary);
+  padding: 0.625rem 0.75rem;
+}
+
+.m3s-design-scope .m3s-date-input__control:hover {
+  border-color: var(--m3s-row-accent);
+}
+
+.m3s-design-scope .m3s-date-input__control:focus-visible {
+  border-color: var(--m3s-focus);
+}
+
+.m3s-date-input__value {
+  min-width: 0;
+  color: var(--m3s-text-primary);
+}
+
+.m3s-date-input__value.is-placeholder {
+  color: var(--m3s-text-secondary);
+}
+
+.m3s-date-input__icon {
+  flex: 0 0 auto;
+  color: #2563eb;
+}
+
+html.dark .m3s-date-input__icon {
+  color: #93c5fd;
+}
+
+.m3s-design-scope .m3s-date-picker {
+  border: 1px solid var(--m3s-border-strong);
+  background: var(--m3s-surface-panel);
+  color: var(--m3s-text-primary);
+  box-shadow: var(--m3s-shadow-panel);
+}
+
+.m3s-date-picker__month,
+.m3s-date-picker__day.is-current-month {
+  color: var(--m3s-text-primary);
+}
+
+.m3s-date-picker__weekdays,
+.m3s-date-picker__day.is-outside-month {
+  color: var(--m3s-text-secondary);
+}
+
+.m3s-date-picker__nav,
+.m3s-date-picker__today {
+  border: 1px solid var(--m3s-border);
+  background: var(--m3s-surface-raised);
+  color: var(--m3s-text-primary);
+}
+
+.m3s-date-picker__nav:hover,
+.m3s-date-picker__today:hover,
+.m3s-date-picker__day:hover {
+  background: var(--m3s-row-hover);
+}
+
+.m3s-date-picker__day.is-today {
+  border: 1px solid var(--m3s-row-accent);
+  color: var(--m3s-row-accent);
+  font-weight: 600;
+}
+
+.m3s-date-picker__day.is-selected,
+.m3s-date-picker__day.is-selected:hover {
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.m3s-native-date {
+  color-scheme: light;
+}
+
+html.dark .m3s-native-date {
+  color-scheme: dark;
+}
+
+.m3s-native-date::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.82;
+}
+
+html.dark .m3s-native-date::-webkit-calendar-picker-indicator {
+  opacity: 0.92;
+}
+
 .m3s-table-shell {
   overflow: hidden;
   border: 1px solid var(--m3s-border);
