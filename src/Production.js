@@ -9,6 +9,7 @@ import TableControls from './TableControls';
 import { api } from './api';
 import { StandardActionsCell, StandardRecordSheetModal } from './StandardUI';
 import { isLegacyBuCode, translateDas } from './strategicMapping';
+import ProductionGlossary from './ProductionGlossary';
 
 const Production = () => {
   const { language } = useLanguage();
@@ -23,6 +24,7 @@ const Production = () => {
       commandes: 'Commandes',
       fournisseurs: 'Fournisseurs',
       stocks: 'Stocks',
+      glossary: 'Glossaire',
       totalCommandes: 'Total Commandes',
       commandesLivrees: 'Commandes Livrées',
       totalFournisseurs: 'Fournisseurs',
@@ -93,6 +95,7 @@ const Production = () => {
       commandes: 'Orders',
       fournisseurs: 'Suppliers',
       stocks: 'Stock',
+      glossary: 'Glossary',
       totalCommandes: 'Total Orders',
       commandesLivrees: 'Delivered Orders',
       totalFournisseurs: 'Suppliers',
@@ -163,6 +166,7 @@ const Production = () => {
       commandes: 'Bestellungen',
       fournisseurs: 'Lieferanten',
       stocks: 'Lagerbestand',
+      glossary: 'Glossar',
       totalCommandes: 'Gesamtbestellungen',
       commandesLivrees: 'Gelieferte Bestellungen',
       totalFournisseurs: 'Lieferanten',
@@ -601,7 +605,7 @@ const Production = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'commandes', 'fournisseurs', 'stocks', 'manufacturing'].includes(tab)) {
+    if (['overview', 'commandes', 'fournisseurs', 'stocks', 'manufacturing', 'glossary'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
@@ -831,7 +835,8 @@ const Production = () => {
             { tab: 'overview', label: t.overview },
             { tab: 'commandes', label: t.commandes },
             { tab: 'fournisseurs', label: t.fournisseurs },
-            { tab: 'stocks', label: t.stocks }
+            { tab: 'stocks', label: t.stocks },
+            { tab: 'glossary', label: t.glossary }
           ]}
         />
  
@@ -1063,7 +1068,9 @@ const Production = () => {
           </div>
         )}
 
-        <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'commandes', 'manufacturing', 'fournisseurs', 'stocks']} />
+        {activeTab === 'glossary' && <ProductionGlossary language={language} />}
+
+        <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'commandes', 'manufacturing', 'fournisseurs', 'stocks', 'glossary']} />
         </div>
       </div>
 

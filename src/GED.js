@@ -789,6 +789,10 @@ const GED = () => {
       href: '/crm?tab=glossary',
       labels: { FR: 'Revenir au Glossaire Commercial & CRM', EN: 'Return to the Commercial & CRM Glossary', DE: 'Zum Glossar Vertrieb & CRM zurückkehren' }
     },
+    'production-glossary': {
+      href: '/production?tab=glossary',
+      labels: { FR: 'Revenir au Glossaire Production', EN: 'Return to the Production Glossary', DE: 'Zum Glossar Produktion zurückkehren' }
+    },
     'dashboard-daily-intelligence': {
       href: '/?view=intelligence',
       labels: { FR: 'Revenir au Daily Intelligence', EN: 'Return to Daily Intelligence', DE: 'Zur Daily Intelligence zurückkehren' }

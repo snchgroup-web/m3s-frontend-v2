@@ -84,3 +84,14 @@ test('keeps the connected suppliers register available separately', async () => 
   expect(api.getExpenses).toHaveBeenCalledWith(500, 0);
   expect(api.getInventory).toHaveBeenCalledWith(500, 0);
 });
+
+test('renders the local Production glossary from the governed tab', async () => {
+  renderProduction('glossary', 'FR');
+
+  expect(await screen.findByRole('heading', { level: 2, name: 'Glossaire Production' })).toBeInTheDocument();
+  expect(screen.getByText('9 termes')).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Examiner dans le Glossaire central' })).toHaveAttribute(
+    'href',
+    '/ged?tab=knowledge&term=PROD-COMMANDE-CLIENT&returnTo=production-glossary'
+  );
+});

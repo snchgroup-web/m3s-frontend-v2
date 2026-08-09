@@ -389,6 +389,16 @@
           },
           "icon": "Truck",
           "path": "/production?tab=fournisseurs"
+        },
+        {
+          "id": "production-glossary",
+          "label": {
+            "FR": "Glossaire",
+            "EN": "Glossary",
+            "DE": "Glossar"
+          },
+          "icon": "BookOpen",
+          "path": "/production?tab=glossary"
         }
       ]
     },
