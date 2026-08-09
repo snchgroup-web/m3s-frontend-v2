@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Edit2, Trash2 } from 'lucide-react';
+import { ArrowLeft, Edit2, Trash2 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
@@ -14,6 +14,7 @@ import AdministrationGlossary from './AdministrationGlossary';
 import ProcessProcedureArchiveOverview from './ProcessProcedureArchiveOverview';
 import AdministrationDashboardOverview from './AdministrationDashboardOverview';
 import AdministrationArchitectureOverview from './AdministrationArchitectureOverview';
+import { StandardCreateButton } from './StandardUI';
 import {
   buildAdministrationTabPath,
   resolveAdministrationTab,
@@ -696,9 +697,7 @@ const Admin = () => {
               <JournalTaskRegister language={language} />
             </PlanningOverview>
             <div className="flex justify-end mb-4">
-              <button onClick={openNewTaskModal} className="m3s-success-button flex min-h-11 items-center gap-2 px-4">
-                <Plus size={20} /> {t.nouvelleTache}
-              </button>
+              <StandardCreateButton onClick={openNewTaskModal}>{t.nouvelleTache}</StandardCreateButton>
             </div>
             <TableControls rows={tasks} renderTable={(visibleRows) => (
               <table className="min-w-full text-sm">
@@ -774,9 +773,9 @@ const Admin = () => {
         {activeTab === 'users' && (
           <div>
             <div className="flex justify-end mb-4">
-              <button onClick={() => { setEditingId(null); setUserFormData({ nom: '', email: '', role: 'Viewer', statut: 'Actif', dateCreation: new Date().toISOString().split('T')[0] }); setShowUserModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
-                <Plus size={20} /> {t.newUser}
-              </button>
+              <StandardCreateButton onClick={() => { setEditingId(null); setUserFormData({ nom: '', email: '', role: 'Viewer', statut: 'Actif', dateCreation: new Date().toISOString().split('T')[0] }); setShowUserModal(true); }}>
+                {t.newUser}
+              </StandardCreateButton>
             </div>
             <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
               <table className="w-full text-sm">
@@ -834,9 +833,9 @@ const Admin = () => {
         {activeTab === 'roles' && (
           <div>
             <div className="flex justify-end mb-4">
-              <button onClick={() => { setEditingId(null); setRoleFormData({ nom: '', permissions: [], description: '' }); setShowRoleModal(true); }} className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
-                <Plus size={20} /> {t.newRole}
-              </button>
+              <StandardCreateButton onClick={() => { setEditingId(null); setRoleFormData({ nom: '', permissions: [], description: '' }); setShowRoleModal(true); }}>
+                {t.newRole}
+              </StandardCreateButton>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {roles.map(r => (
@@ -1017,7 +1016,7 @@ const Admin = () => {
 
             <div className="mt-6 grid grid-cols-2 gap-3">
               <button type="button" onClick={() => setShowUserModal(false)} className="administration-modal__cancel min-h-11 rounded-md bg-slate-700 px-4 py-2 font-medium text-white transition hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400">{t.annuler}</button>
-              <button type="submit" className="administration-modal__primary min-h-11 rounded-md bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">{editingId ? t.modifier : t.creer}</button>
+              <button type="submit" className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} administration-modal__primary min-h-11 px-4`}>{editingId ? t.modifier : t.creer}</button>
             </div>
           </form>
         </div>
@@ -1056,7 +1055,7 @@ const Admin = () => {
 
             <div className="mt-6 grid grid-cols-2 gap-3">
               <button type="button" onClick={() => setShowRoleModal(false)} className="administration-modal__cancel min-h-11 rounded-md bg-slate-700 px-4 py-2 font-medium text-white transition hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400">{t.annuler}</button>
-              <button type="submit" className="administration-modal__primary min-h-11 rounded-md bg-purple-600 px-4 py-2 font-semibold text-white transition hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400">{editingId ? t.modifier : t.creer}</button>
+              <button type="submit" className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} administration-modal__primary min-h-11 px-4`}>{editingId ? t.modifier : t.creer}</button>
             </div>
           </form>
         </div>

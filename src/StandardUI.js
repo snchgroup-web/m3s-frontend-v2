@@ -1,5 +1,22 @@
 import React from 'react';
-import { Edit2, Eye, Trash2, X } from 'lucide-react';
+import { Edit2, Eye, Plus, Trash2, X } from 'lucide-react';
+
+export const StandardCreateButton = ({
+  children,
+  icon: Icon = Plus,
+  className = '',
+  type = 'button',
+  ...props
+}) => (
+  <button
+    type={type}
+    className={`m3s-success-button min-h-11 w-full gap-2 px-4 py-2 text-center text-sm font-semibold leading-5 sm:w-auto sm:shrink-0 sm:whitespace-nowrap ${className}`.trim()}
+    {...props}
+  >
+    {Icon && <Icon size={18} className="shrink-0" aria-hidden="true" />}
+    <span>{children}</span>
+  </button>
+);
 
 export const StandardKpiCard = ({ label, value, secondary, icon: Icon, color = 'text-blue-400' }) => (
   <div className="m3s-panel min-h-[118px] p-5 transition hover:-translate-y-0.5 hover:border-slate-500">

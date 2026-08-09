@@ -7,6 +7,7 @@ const layoutSource = fs.readFileSync(path.join(__dirname, 'Layout.js'), 'utf8');
 const headerSource = fs.readFileSync(path.join(__dirname, 'Header.js'), 'utf8');
 const tableSource = fs.readFileSync(path.join(__dirname, 'TableControls.js'), 'utf8');
 const administrationSource = fs.readFileSync(path.join(__dirname, 'Administration.js'), 'utf8');
+const standardUiSource = fs.readFileSync(path.join(__dirname, 'StandardUI.js'), 'utf8');
 
 describe('global M3S design foundations', () => {
   test('scopes shared typography and theme tokens to every module page', () => {
@@ -42,7 +43,9 @@ describe('global M3S design foundations', () => {
     expect(designSystemCss).toContain('.m3s-feedback--success');
     expect(designSystemCss).toContain('html.dark .m3s-glossary-status--validated');
     expect(designSystemCss).toContain('html.dark .m3s-draft-badge');
-    expect(administrationSource).toContain('m3s-success-button flex min-h-11 items-center gap-2 px-4');
+    expect(standardUiSource).toContain('export const StandardCreateButton');
+    expect(standardUiSource).toContain('m3s-success-button min-h-11 w-full gap-2 px-4 py-2');
+    expect(administrationSource).toContain('<StandardCreateButton onClick={openNewTaskModal}>');
     expect(administrationSource).toContain("editingTaskId ? 'm3s-primary-button' : 'm3s-success-button'");
   });
 
