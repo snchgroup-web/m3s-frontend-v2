@@ -137,7 +137,7 @@ const MembersDirectory = ({ onLoaded }) => {
         if (cancelled) return;
         setMembers([]);
         setError(requestError);
-        onLoaded?.(0);
+        onLoaded?.(null);
       } finally {
         if (!cancelled) setLoading(false);
       }

@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
-import { Plus, Edit2, Trash2, Users, User, Heart, Users2 } from 'lucide-react';
+import React, { useCallback, useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { api } from './api';
 import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
 import MembersDirectory from './MembersDirectory';
 import RHGlossary from './RHGlossary';
+import RHOverview from './RHOverview';
 
 const RH = () => {
   const { language } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Translations
   const translations = {
@@ -218,18 +220,11 @@ const RH = () => {
         'Événements': 'Veranstaltungen',
         'Général': 'Allgemein'
       }
-    },
-    // Category names (Employé, Bénévole, Membre in charts)
-    categories: {
-      FR: { 'Employés': 'Employés', 'Bénévoles': 'Bénévoles', 'Membres': 'Membres' },
-      EN: { 'Employés': 'Employees', 'Bénévoles': 'Volunteers', 'Membres': 'Members' },
-      DE: { 'Employés': 'Mitarbeiter', 'Bénévoles': 'Freiwillige', 'Membres': 'Mitglieder' }
     }
   };
 
   const translatePosition = (position) => dataTranslations.positions[language]?.[position] || position;
   const translateDepartment = (dept) => dataTranslations.departments[language]?.[dept] || dept;
-  const translateCategory = (category) => dataTranslations.categories[language]?.[category] || category;
   const normalizeRole = (value) => {
     const text = String(value || '').trim().toLowerCase();
     if (text === 'admin' || text === 'administrator' || text === 'administrateur') return 'Admin';
@@ -266,7 +261,8 @@ const RH = () => {
   const [employes, setEmployes] = useState([]);
   const [benevoles, setBenevoles] = useState([]);
   const [membres, setMembres] = useState([]);
-  const [directoryCount, setDirectoryCount] = useState(0);
+  const [directoryCount, setDirectoryCount] = useState(null);
+  const [directoryStatus, setDirectoryStatus] = useState('loading');
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('employe'); // 'employe', 'benevole', 'membre'
   const [editingId, setEditingId] = useState(null);
@@ -295,44 +291,48 @@ const RH = () => {
     }
   }, [location.search]);
 
-  // Charger uniquement les donnees de demonstration hors annuaire.
-  // RH-001 est isole dans MembersDirectory et ne se replie jamais sur /api/users.
   useEffect(() => {
-    setEmployes([
-      { id: 'EMP-001', nom: 'Jean Dupont', email: 'jean.dupont@seneswiss.sn', telephone: '+221 77 123 4567', poste: 'D\u00e9veloppeur', departement: 'IT', role: 'Utilisateur', typeMembre: '', dateEmbauche: '2024-01-15', statut: 'Actif' },
-      { id: 'EMP-002', nom: 'Marie Sall', email: 'marie.sall@seneswiss.sn', telephone: '+221 77 234 5678', poste: 'Responsable Finance', departement: 'Finance', role: 'Utilisateur', typeMembre: '', dateEmbauche: '2023-06-01', statut: 'Actif' },
-    ]);
-    setBenevoles([]);
-    setMembres([]);
+    let cancelled = false;
+
+    const loadDirectoryCount = async () => {
+      setDirectoryStatus('loading');
+      try {
+        const response = await api.getMembersDirectory(1, 0);
+        if (cancelled) return;
+        const rows = Array.isArray(response?.data) ? response.data : [];
+        setDirectoryCount(Number.isFinite(response?.total) ? response.total : rows.length);
+        setDirectoryStatus('available');
+      } catch (error) {
+        if (cancelled) return;
+        setDirectoryCount(null);
+        setDirectoryStatus('unavailable');
+      }
+    };
+
+    loadDirectoryCount();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  // Calculs KPIs
+  const handleDirectoryLoaded = useCallback((count) => {
+    if (Number.isFinite(count)) {
+      setDirectoryCount(count);
+      setDirectoryStatus('available');
+      return;
+    }
+    setDirectoryCount(null);
+    setDirectoryStatus('unavailable');
+  }, []);
+
+  const handleTabSelect = (tab) => {
+    setActiveTab(tab);
+    navigate(`/rh?tab=${encodeURIComponent(tab)}`);
+  };
+
   const totalEmployes = employes.filter(e => e.statut === 'Actif').length;
   const totalBenevoles = benevoles.filter(b => b.statut === 'Actif').length;
-  const totalMembres = directoryCount;
-  const totalPersonnes = totalEmployes + totalBenevoles + totalMembres;
-
-  // Données pour charts
-  const staffDistribution = [
-    { name: translateCategory('Employés'), nameKey: 'Employés', value: totalEmployes },
-    { name: translateCategory('Bénévoles'), nameKey: 'Bénévoles', value: totalBenevoles },
-    { name: translateCategory('Membres'), nameKey: 'Membres', value: totalMembres },
-  ];
-
-  const monthlyData = [
-    { mois: 'Jan', employes: 3, benevoles: 2, membres: 4 },
-    { mois: 'Fév', employes: 3, benevoles: 2, membres: 4 },
-    { mois: 'Mar', employes: 3, benevoles: 3, membres: 5 },
-    { mois: 'Avr', employes: totalEmployes, benevoles: totalBenevoles, membres: totalMembres },
-  ];
-
-  const departementStats = [
-    { dept: translateDepartment('IT'), deptKey: 'IT', count: employes.filter(e => e.departement === 'IT').length + benevoles.filter(b => b.departement === 'IT').length },
-    { dept: translateDepartment('Finance'), deptKey: 'Finance', count: employes.filter(e => e.departement === 'Finance').length },
-    { dept: translateDepartment('RH'), deptKey: 'RH', count: employes.filter(e => e.departement === 'RH').length },
-    { dept: translateDepartment('Gestion'), deptKey: 'Gestion', count: employes.filter(e => e.departement === 'Gestion').length },
-    { dept: translateDepartment('Social'), deptKey: 'Social', count: benevoles.filter(b => b.departement === 'Social').length },
-  ];
+  const totalMembresLabel = directoryStatus === 'available' ? directoryCount : '—';
 
   // Gestion formulaire
   const handleFormChange = (field, value) => {
@@ -397,8 +397,6 @@ const RH = () => {
     setShowModal(true);
   };
 
-  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
-
   // Table réutilisable
   const PersonnelTable = ({ data, type, onEdit, onDelete, onAdd }) => (
     <div>
@@ -461,58 +459,15 @@ const RH = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
         <div className="mx-auto w-full max-w-[1800px]">
 
-        {/* KPIs */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-blue-200 text-sm">{t.totalEmployes}</p>
-                <p className="text-white text-2xl font-bold">{totalEmployes}</p>
-              </div>
-              <User size={32} className="text-blue-400" />
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-green-200 text-sm">{t.totalBenevoles}</p>
-                <p className="text-white text-2xl font-bold">{totalBenevoles}</p>
-              </div>
-              <Heart size={32} className="text-green-400" />
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-purple-200 text-sm">{t.totalMembres}</p>
-                <p className="text-white text-2xl font-bold">{totalMembres}</p>
-              </div>
-              <Users2 size={32} className="text-purple-400" />
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-6 border border-orange-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-orange-200 text-sm">{t.totalPersonnes}</p>
-                <p className="text-white text-2xl font-bold">{totalPersonnes}</p>
-              </div>
-              <Users size={32} className="text-orange-400" />
-            </div>
-          </div>
-        </div>
-
         {/* Tabs */}
         <ModulePageTabs
           moduleId="rh"
           language={language}
           activeTab={activeTab}
-          onSelect={setActiveTab}
+          onSelect={handleTabSelect}
           tabs={[
             { tab: 'overview', label: t.overview },
-            { tab: 'directory', label: `${t.membres} (${totalMembres})` },
+            { tab: 'directory', label: `${t.membres} (${totalMembresLabel})` },
             { tab: 'employes', label: `${t.employes} (${totalEmployes})` },
             { tab: 'benevoles', label: `${t.benevoles} (${totalBenevoles})` },
             { tab: 'glossary', label: t.glossary }
@@ -521,53 +476,13 @@ const RH = () => {
 
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Distribution Personnel */}
-            <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">{t.distribution}</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie data={staffDistribution} cx="50%" cy="50%" labelLine={false} label={({ name, value }) => `${name}: ${value}`} outerRadius={80} fill="#8884d8" dataKey="value">
-                    {staffDistribution.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Évolution Mensuelle */}
-            <div className="lg:col-span-2 bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">{t.evolution}</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={monthlyData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-                  <XAxis dataKey="mois" stroke="#94a3b8" />
-                  <YAxis stroke="#94a3b8" />
-                  <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
-                  <Legend />
-                  <Bar dataKey="employes" name={t.employes} fill="#3b82f6" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="benevoles" name={t.benevoles} fill="#10b981" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="membres" name={t.membres} fill="#8b5cf6" radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Statistiques par Département */}
-            <div className="lg:col-span-3 bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">{t.departements}</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={departementStats}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-                  <XAxis dataKey="dept" stroke="#94a3b8" />
-                  <YAxis stroke="#94a3b8" />
-                  <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
-                  <Bar dataKey="count" fill="#f59e0b" radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+          <RHOverview
+            language={language}
+            directoryCount={directoryCount}
+            directoryStatus={directoryStatus}
+            employeeDraftCount={employes.length}
+            volunteerDraftCount={benevoles.length}
+          />
         )}
 
         {/* Employés */}
@@ -582,7 +497,7 @@ const RH = () => {
 
         {/* Annuaire interne RH-001 */}
         {activeTab === 'directory' && (
-          <MembersDirectory onLoaded={setDirectoryCount} />
+          <MembersDirectory onLoaded={handleDirectoryLoaded} />
         )}
 
         {activeTab === 'glossary' && (
