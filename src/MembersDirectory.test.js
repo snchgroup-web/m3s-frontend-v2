@@ -116,9 +116,11 @@ test('shows and searches a translated position in English', async () => {
 test('explains a forbidden pilot without exposing legacy data', async () => {
   const error = Object.assign(new Error('Accès refusé'), { status: 403 });
   api.getMembersDirectory.mockRejectedValue(error);
-  renderDirectory();
+  const onLoaded = jest.fn();
+  renderDirectory({ onLoaded });
 
   expect(await screen.findByText('Accès restreint')).toBeInTheDocument();
   expect(screen.getByText(/réservé aux rôles autorisés/i)).toBeInTheDocument();
+  expect(onLoaded).toHaveBeenCalledWith(null);
   await waitFor(() => expect(screen.queryByText('Cheikh Ndiaye')).not.toBeInTheDocument());
 });
