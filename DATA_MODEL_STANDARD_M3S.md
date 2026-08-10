@@ -1,7 +1,8 @@
 # M3S - Standard de structuration des tables
 
-Date: 2026-06-19
-Statut: document de cadrage avant migration/chargement Fin Immo
+Date d'origine: 2026-06-19
+Revision: 2026-08-10
+Statut: standard candidat transversal avant toute migration de donnees
 
 ## Objectif
 
@@ -30,11 +31,15 @@ Ces colonnes devraient exister sur toutes les tables metier importantes.
 | `id` | STRING | Identifiant technique unique. |
 | `ref` | STRING | Numero de reference lisible, ex. `FIN-DEP-2026-0001`. |
 | `date_operation` | DATE | Date principale de l'operation. |
-| `agent_id` | STRING | Agent/responsable de la saisie ou de l'action. |
+| `agent_id` | STRING | Auteur de la saisie ou acteur de l'evenement ; ne remplace pas une affectation de responsabilite. |
 | `team_id` | STRING | Equipe ou BU rattachee. |
-| `departement_id` | STRING | Departement/fonction metier. |
+| `fonction_id` | STRING | Fonction d'entreprise proprietaire du traitement. |
+| `departement_id` | STRING | Champ historique conserve comme alias de migration jusqu'a validation du mapping vers `fonction_id`. |
 | `module_id` | STRING | Module M3S concerne: `FINANCE`, `RH`, `GED`, etc. |
-| `phase_projet_id` | STRING | Phase projet standardisee. |
+| `dossier_id` | STRING | Dossier de suivi lorsqu'il existe. |
+| `projet_id` | STRING | Projet auquel l'enregistrement contribue lorsqu'il existe. |
+| `phase_projet_id` | STRING | Phase projet standardisee ; ancien nom a rapprocher de `phase_id`. |
+| `tache_id` | STRING | Tache executee ou concernee lorsqu'elle est connue. |
 | `statut` | STRING | Statut canonique: `A_FAIRE`, `EN_COURS`, `TERMINE`, etc. |
 | `source` | STRING | Origine de la donnee: manuel, BigQuery, Genspark, Excel, API. |
 | `source_ref` | STRING | Reference externe optionnelle. |
@@ -174,23 +179,198 @@ Colonnes specifiques:
 - colonnes communes
 - colonnes financieres multidevise
 
-## Relations principales
+## Socle relationnel transversal V1
+
+### Lecture métier simplifiée
+
+Le modèle relie le pilotage, l'exécution, la finance, les stocks, les actifs et les preuves sans confondre leurs responsabilités.
+
+```mermaid
+flowchart LR
+  BESOIN["Besoin ou incident"] --> DOSSIER["Dossier suivi"]
+  DOSSIER --> PROJET["Projet"]
+  PROJET --> PHASE["Phase"]
+  PHASE --> TACHE["Activité ou tâche"]
+  TACHE --> ACHAT["Achat"]
+  ACHAT --> DEPENSE["Dépense reconnue"]
+  DEPENSE --> PAIEMENT["Paiement ou règlement"]
+  ACHAT --> STOCK["Entrée ou sortie de stock"]
+  ACHAT --> ACTIF["Création ou amélioration d'un actif"]
+  ACTIF --> INTERVENTION["Intervention sur actif"]
+  AGENT["Agent, responsable ou validateur"] --> TACHE
+  AGENT --> ACHAT
+  PREUVE["Document ou preuve GED"] --> DOSSIER
+  PREUVE --> TACHE
+  PREUVE --> DEPENSE
+  PREUVE --> PAIEMENT
+  FX["Taux FX réellement appliqué"] --> DEPENSE
+  FX --> PAIEMENT
+```
+
+Règles de lecture :
+
+- un dossier peut exister sans projet, par exemple un contentieux, une obligation ou un incident ;
+- un projet peut être découpé en phases, activités, tâches et actions, mais aucun niveau vide ne doit être créé artificiellement ;
+- un achat décrit la commande ou l'acquisition ; une dépense décrit l'impact financier ; un paiement décrit le règlement effectif ;
+- un achat stockable génère un mouvement de stock après réception, tandis qu'un bien durable peut créer ou améliorer un actif ;
+- une preuve reste conservée dans la GED et est reliée à l'objet métier concerné ;
+- le taux TFX courant est indicatif ; la dépense et le paiement conservent le taux réellement appliqué par Ria, la banque, le fournisseur ou une autre source.
+
+### Objets de pilotage
+
+| Objet | Finalité | Champs de relation principaux |
+| --- | --- | --- |
+| `portefeuilles` | Regrouper les grands dossiers, chantiers et projets. | `portefeuille_id`, `fonction_id`, `responsable_agent_id` |
+| `dossiers` | Suivre une affaire, une obligation, un incident ou un chantier. | `dossier_id`, `portefeuille_id`, `type_dossier`, `statut`, `confidentialite` |
+| `projets` | Piloter un résultat délimité dans le temps. | `projet_id`, `dossier_id`, `responsable_agent_id`, `statut` |
+| `phases_projet` | Découper un projet en séquences gouvernées. | `phase_id`, `projet_id`, `phase_referentiel_id`, `ordre` |
+| `activites` | Regrouper un travail cohérent dans une phase. | `activite_id`, `phase_id`, `responsable_agent_id` |
+| `taches` | Décrire une unité de travail suivie. | `tache_id`, `activite_id`, `statut`, `priorite`, `echeance` |
+| `actions` | Consigner une action élémentaire lorsque ce niveau est utile. | `action_id`, `tache_id`, `agent_id`, `statut` |
+| `jalons` | Matérialiser une décision, une livraison, une réception ou un contrôle sans durée propre. | `jalon_id`, `projet_id`, `phase_id`, `date_cible` |
+
+### Personnes, fonctions et responsabilités
+
+Le champ `agent_id` des colonnes communes trace l'auteur de la saisie ou de l'événement. Il ne doit pas être utilisé seul pour déduire le responsable, le contrôleur ou le validateur.
+
+| Objet | Finalité | Champs de relation principaux |
+| --- | --- | --- |
+| `agents` | Identifier une personne ou un acteur autorisé. | `agent_id`, `team_id`, `fonction_id`, `statut` |
+| `fonctions_entreprise` | Porter la fonction métier : Administration, Finances, RH, etc. | `fonction_id`, `module_id`, libellés FR/DE/EN |
+| `roles` | Décrire un rôle applicatif ou métier réutilisable. | `role_id`, `type_role`, `niveau_acces` |
+| `affectations` | Relier un agent à un objet avec une responsabilité précise. | `affectation_id`, `agent_id`, `objet_type`, `objet_id`, `responsabilite`, `date_debut`, `date_fin` |
+
+Pour les nouvelles structures, `fonction_id` est préféré à `departement_id`. Le champ historique `departement_id` doit être conservé comme alias de migration jusqu'à validation du mapping, sans suppression immédiate.
+
+Responsabilités canoniques candidates :
+
+```text
+PORTEUR
+RESPONSABLE
+EXECUTANT
+CONTROLEUR
+VALIDATEUR
+DECIDEUR
+INFORME
+```
+
+### Achats, dépenses et paiements
+
+| Objet | Finalité | Champs de relation principaux |
+| --- | --- | --- |
+| `fournisseurs` | Identifier le fournisseur ou prestataire. | `fournisseur_id`, `type_fournisseur`, `statut_verification` |
+| `achats` | Décrire la demande, commande ou acquisition. | `achat_id`, `fournisseur_id`, `dossier_id`, `projet_id`, `tache_id`, `statut` |
+| `lignes_achat` | Détailler articles, services, quantités et prix. | `ligne_achat_id`, `achat_id`, `article_id`, `type_ligne`, montants |
+| `depenses` | Reconnaître et classer l'impact financier. | `depense_id`, `achat_id`, `categorie_id`, `fx_rate_id`, rattachements de pilotage |
+| `paiements` | Tracer le règlement réellement exécuté. | `paiement_id`, `fournisseur_id`, `date_paiement`, montants, frais, `fx_rate_id`, preuve |
+| `paiement_depenses` | Affecter un paiement à une ou plusieurs dépenses. | `paiement_id`, `depense_id`, `montant_affecte` |
+
+Règles :
+
+- une dépense peut être réglée en plusieurs paiements ;
+- un paiement peut couvrir plusieurs dépenses, à condition que l'affectation soit explicite ;
+- les frais de transfert ou bancaires sont séparés du montant envoyé ;
+- `montant_origine`, `devise_origine`, `montant_chf`, `montant_cfa`, `taux_fx`, `date_taux_fx` et `source_taux_fx` sont conservés sur l'événement monétaire qui fait foi ;
+- un indicateur TFX ne doit jamais réécrire un paiement historique.
+
+### Stocks, actifs et interventions
+
+| Objet | Finalité | Champs de relation principaux |
+| --- | --- | --- |
+| `articles` | Définir un produit, matériau ou consommable. | `article_id`, `categorie_id`, `unite`, `stockable` |
+| `mouvements_stock` | Tracer une entrée, sortie, transfert ou correction. | `mouvement_id`, `article_id`, `ligne_achat_id`, `type_mouvement`, `quantite`, `projet_id`, `tache_id` |
+| `actifs` | Identifier un bien durable, patrimonial ou numérique. | `actif_id`, `ligne_achat_id`, `type_actif`, `responsable_agent_id`, `statut` |
+| `interventions` | Suivre des travaux, réparations, contrôles ou entretiens. | `intervention_id`, `actif_id`, `dossier_id`, `projet_id`, `fournisseur_id`, `statut` |
+| `receptions` | Formaliser la réception quantitative et qualitative. | `reception_id`, `achat_id` ou `intervention_id`, `date_reception`, `resultat`, `validateur_agent_id` |
+
+Le cas Villa LR1 peut utiliser ce modèle comme pilote sans devenir la définition générale : le bien est un actif, les avants et le mini-forage sont des interventions, leurs achats et paiements restent des objets financiers séparés, et la réception exige ses propres preuves.
+
+### Documents, preuves, journaux et rapports
+
+| Objet | Finalité | Champs de relation principaux |
+| --- | --- | --- |
+| `documents` | Référencer un document conservé dans la GED. | `document_id`, `ged_uri`, `type_document`, `version`, `statut_validation`, `confidentialite` |
+| `preuves` | Qualifier le rôle probant d'un document pour un objet. | `preuve_id`, `document_id`, `objet_type`, `objet_id`, `type_preuve`, `date_verification` |
+| `journal_entrees` | Consigner faits, décisions, résultats et points de reprise. | `journal_entree_id`, `date_session`, `type_entree`, `objet_type`, `objet_id`, `source_ref` |
+| `rapports` | Produire une synthèse journalière, hebdomadaire, mensuelle ou d'activité. | `rapport_id`, `type_rapport`, `periode_debut`, `periode_fin`, `statut_validation`, `document_id` |
+| `rapport_sources` | Relier un rapport à ses journaux et preuves. | `rapport_id`, `source_type`, `source_id`, `niveau_confiance` |
+
+Les journaux et preuves sont des sources ; un rapport est une publication dérivée. Une correction de rapport ne doit pas réécrire silencieusement les sources historiques.
+
+### Diagramme relationnel V1
 
 ```mermaid
 erDiagram
-  agents ||--o{ recettes : saisit
-  agents ||--o{ depenses : saisit
-  agents ||--o{ fin_immo : saisit
-  teams ||--o{ agents : regroupe
-  departements ||--o{ agents : rattache
-  modules ||--o{ categories : organise
-  categories ||--o{ recettes : classe
-  categories ||--o{ depenses : classe
-  categories ||--o{ fin_immo : classe
-  taux_fx_historiques ||--o{ recettes : convertit
-  taux_fx_historiques ||--o{ depenses : convertit
-  taux_fx_historiques ||--o{ fin_immo : convertit
+  PORTEFEUILLES ||--o{ DOSSIERS : regroupe
+  DOSSIERS o|--o{ PROJETS : cadre
+  PROJETS ||--o{ PHASES_PROJET : decoupe
+  PHASES_PROJET ||--o{ ACTIVITES : organise
+  ACTIVITES ||--o{ TACHES : contient
+  TACHES ||--o{ ACTIONS : detaille
+  PROJETS ||--o{ JALONS : jalonne
+
+  TEAMS ||--o{ AGENTS : regroupe
+  FONCTIONS_ENTREPRISE ||--o{ AGENTS : rattache
+  MODULES ||--o{ FONCTIONS_ENTREPRISE : outille
+  AGENTS ||--o{ AFFECTATIONS : assume
+  DOSSIERS ||--o{ AFFECTATIONS : attribue
+  PROJETS ||--o{ AFFECTATIONS : attribue
+  TACHES ||--o{ AFFECTATIONS : attribue
+
+  FOURNISSEURS ||--o{ ACHATS : recoit
+  ACHATS ||--|{ LIGNES_ACHAT : detaille
+  ACHATS o|--o{ DEPENSES : genere
+  FOURNISSEURS ||--o{ PAIEMENTS : recoit
+  PAIEMENTS ||--o{ PAIEMENT_DEPENSES : affecte
+  DEPENSES ||--o{ PAIEMENT_DEPENSES : est_reglee_par
+  TAUX_FX_HISTORIQUES ||--o{ DEPENSES : convertit
+  TAUX_FX_HISTORIQUES ||--o{ PAIEMENTS : convertit
+
+  ARTICLES ||--o{ LIGNES_ACHAT : decrit
+  LIGNES_ACHAT o|--o{ MOUVEMENTS_STOCK : alimente
+  LIGNES_ACHAT o|--o{ ACTIFS : immobilise
+  ACTIFS ||--o{ INTERVENTIONS : concerne
+  ACHATS o|--o{ RECEPTIONS : receptionne
+  INTERVENTIONS o|--o{ RECEPTIONS : controle
+
+  DOCUMENTS ||--o{ PREUVES : supporte
+  DOSSIERS ||--o{ PREUVES : documente
+  PROJETS ||--o{ PREUVES : documente
+  TACHES ||--o{ PREUVES : documente
+  DEPENSES ||--o{ PREUVES : justifie
+  PAIEMENTS ||--o{ PREUVES : justifie
+  INTERVENTIONS ||--o{ PREUVES : justifie
+
+  JOURNAL_ENTREES ||--o{ RAPPORT_SOURCES : source
+  RAPPORTS ||--o{ RAPPORT_SOURCES : consolide
+  RAPPORTS o|--|| DOCUMENTS : publie
 ```
+
+### Contrat minimal de rattachement
+
+Les objets transactionnels ne doivent pas tous exiger toutes les clés. En revanche, chaque enregistrement doit expliquer son rattachement sans texte libre ambigu.
+
+| Champ | Règle |
+| --- | --- |
+| `dossier_id` | Utilisé lorsqu'un dossier administratif, juridique, patrimonial ou d'intervention porte le suivi. |
+| `projet_id` | Utilisé lorsque l'opération contribue à un projet défini. |
+| `phase_id` | Utilisé lorsque la phase est connue et gouvernée. |
+| `activite_id` | Utilisé pour un regroupement opérationnel stable. |
+| `tache_id` | Utilisé lorsque l'opération exécute une tâche précise. |
+| `agent_id` | Auteur ou acteur de l'événement ; la responsabilité détaillée reste dans `affectations`. |
+| `fonction_id` | Fonction d'entreprise propriétaire du traitement. |
+| `module_id` | Module M3S dans lequel l'objet est géré ou affiché. |
+| `document_id` | Pièce maîtresse ou justificatif, conservé dans la GED. |
+
+### Portes avant migration
+
+1. Valider les noms des objets avec les fonctions métier concernées.
+2. Cartographier les tables et endpoints existants vers ce modèle.
+3. Distinguer champs disponibles, calculables, manquants et sensibles.
+4. Valider les cardinalités sur trois cas réels : Villa LR1, TFX et un dossier administratif.
+5. Produire un dictionnaire de données versionné avec propriétaires et statuts.
+6. Préparer les migrations sans suppression de champ historique.
+7. Modifier BigQuery, backend et frontend uniquement dans des micro-lots séparés et réversibles.
 
 ## Convention de nommage
 
