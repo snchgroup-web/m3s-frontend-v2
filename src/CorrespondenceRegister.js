@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Edit2, FileInput, FileLock2, Plus, Search, Trash2, X } from 'lucide-react';
+import { useAuth } from './AuthContext';
 
-const STORAGE_KEY = 'm3s-administration-correspondence-v1';
+const STORAGE_KEY_PREFIX = 'm3s-administration-correspondence-v1';
 
 const COPY = {
   FR: {
@@ -27,17 +28,28 @@ const LOCAL_WARNING = {
 
 const today = () => new Date().toISOString().slice(0, 10);
 const defaultForm = () => ({ date: today(), directionIndex: 0, channelIndex: 1, sender: '', recipient: '', subject: '', categoryIndex: 1, confidentialityIndex: 1, person: '', ged: '', evidence: '', owner: '', next: '', statusIndex: 0, deadline: '' });
-const loadItems = () => { try { const items = JSON.parse(window.localStorage.getItem(STORAGE_KEY)); return Array.isArray(items) ? items : []; } catch { return []; } };
+const getStorageKey = user => {
+  const userIdentifier = user?.id || user?.email || user?.name || 'anonymous';
+  const tenantIdentifier = user?.tenantId || user?.organizationId || '2sg';
+  return `${STORAGE_KEY_PREFIX}:${encodeURIComponent(tenantIdentifier)}:${encodeURIComponent(userIdentifier)}`;
+};
+const loadItems = storageKey => { try { const items = JSON.parse(window.localStorage.getItem(storageKey)); return Array.isArray(items) ? items : []; } catch { return []; } };
 
 const CorrespondenceRegister = ({ language = 'FR' }) => {
+  const { user } = useAuth();
   const t = COPY[language] || COPY.FR;
-  const [items, setItems] = useState(loadItems);
+  const storageKey = useMemo(() => getStorageKey(user), [user]);
+  const [items, setItems] = useState(() => loadItems(storageKey));
   const [query, setQuery] = useState('');
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(defaultForm);
   const [message, setMessage] = useState('');
   const visible = useMemo(() => items.filter(item => `${item.subject} ${item.sender} ${item.recipient} ${item.person} ${item.ged}`.toLowerCase().includes(query.trim().toLowerCase())), [items, query]);
-  const persist = next => { setItems(next); window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); };
+  useEffect(() => {
+    setItems(loadItems(storageKey));
+  }, [storageKey]);
+
+  const persist = next => { setItems(next); window.localStorage.setItem(storageKey, JSON.stringify(next)); };
   const open = (item = null) => { setEditing(item?.id || 'new'); setForm(item ? { ...item } : defaultForm()); setMessage(''); };
   const prepareCv = () => { const base = defaultForm(); setEditing('new'); setForm({ ...base, channelIndex: 0, subject: t.cvSubject, categoryIndex: 0, confidentialityIndex: 2, statusIndex: 1, next: t.cvNext }); setMessage(''); };
   const close = () => { setEditing(null); setForm(defaultForm()); };
