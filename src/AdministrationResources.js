@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { BookMarked, Database, Edit2, FolderLock, HardDrive, Library, Loader2, Plus, Search, ShieldAlert, Trash2, X } from 'lucide-react';
 import api from './api';
 import { useAuth } from './AuthContext';
+import { ADMINISTRATION_RESOURCES_WRITE_PERMISSION, hasPermission } from './accessControl';
 import { isDemoSession, resourceFromApi, resourceToApi } from './administrationRegistryAdapters';
 import ActionConfirmationDialog from './ActionConfirmationDialog';
 
@@ -11,7 +12,7 @@ const COPY = {
   FR: {
     eyebrow: 'RESSOURCES ADMINISTRATIVES · REGISTRE GOUVERNÉ', title: 'Sources, favoris et références de la fonction',
     intro: 'Ce registre qualifie les ressources utiles sans remplacer la GED, le registre LEGAL ni les sources officielles. Les dossiers de favoris restent une base initiale non exhaustive.',
-    add: 'Ajouter une ressource', search: 'Rechercher une ressource', all: 'Toutes les familles', empty: 'Aucune ressource ne correspond aux filtres.',
+    add: 'Ajouter une ressource', search: 'Rechercher une ressource', all: 'Toutes les familles', empty: 'Aucune ressource ne correspond aux filtres.', readOnly: 'Lecture seule',
     edit: 'Modifier', delete: 'Supprimer', close: 'Fermer', cancel: 'Annuler', save: 'Enregistrer', update: 'Modifier',
     confirmCreateTitle: 'Confirmer l’ajout', confirmCreate: 'Oui, ajouter', confirmUpdateTitle: 'Confirmer la modification', confirmUpdate: 'Oui, modifier', confirmDeleteTitle: 'Confirmer la suppression', confirmDelete: 'Oui, supprimer', decline: 'Non',
     confirmCreateBody: 'Ajouter « {title} » au registre des ressources ?', confirmUpdateBody: 'Enregistrer les modifications de « {title} » ?', confirmDeleteBody: 'Supprimer « {title} » du registre des ressources ?',
@@ -24,7 +25,7 @@ const COPY = {
   EN: {
     eyebrow: 'ADMINISTRATIVE RESOURCES · GOVERNED REGISTER', title: 'Function sources, bookmarks and references',
     intro: 'This register qualifies useful resources without replacing the DMS, the LEGAL register or official sources. Bookmark folders remain an initial, non-exhaustive base.',
-    add: 'Add resource', search: 'Search resources', all: 'All families', empty: 'No resource matches the filters.',
+    add: 'Add resource', search: 'Search resources', all: 'All families', empty: 'No resource matches the filters.', readOnly: 'Read only',
     edit: 'Edit', delete: 'Delete', close: 'Close', cancel: 'Cancel', save: 'Save', update: 'Update',
     confirmCreateTitle: 'Confirm addition', confirmCreate: 'Yes, add', confirmUpdateTitle: 'Confirm update', confirmUpdate: 'Yes, update', confirmDeleteTitle: 'Confirm deletion', confirmDelete: 'Yes, delete', decline: 'No',
     confirmCreateBody: 'Add “{title}” to the resource register?', confirmUpdateBody: 'Save the changes to “{title}”?', confirmDeleteBody: 'Delete “{title}” from the resource register?', saved: 'Resource saved successfully.', deleted: 'Resource deleted successfully.', required: 'Complete the required fields.', saveFailed: 'Unable to save. Check your permissions or try again.', deleteFailed: 'Unable to delete. Check your permissions or try again.',
@@ -35,7 +36,7 @@ const COPY = {
   DE: {
     eyebrow: 'VERWALTUNGSRESSOURCEN · GESTEUERTES REGISTER', title: 'Quellen, Favoriten und Referenzen der Funktion',
     intro: 'Dieses Register qualifiziert nützliche Ressourcen, ohne DMS, LEGAL-Register oder amtliche Quellen zu ersetzen. Favoritenordner bleiben eine erste, nicht abschließende Grundlage.',
-    add: 'Ressource hinzufügen', search: 'Ressourcen suchen', all: 'Alle Familien', empty: 'Keine Ressource entspricht den Filtern.',
+    add: 'Ressource hinzufügen', search: 'Ressourcen suchen', all: 'Alle Familien', empty: 'Keine Ressource entspricht den Filtern.', readOnly: 'Nur Lesen',
     edit: 'Bearbeiten', delete: 'Löschen', close: 'Schließen', cancel: 'Abbrechen', save: 'Speichern', update: 'Ändern',
     confirmCreateTitle: 'Hinzufügen bestätigen', confirmCreate: 'Ja, hinzufügen', confirmUpdateTitle: 'Änderung bestätigen', confirmUpdate: 'Ja, ändern', confirmDeleteTitle: 'Löschen bestätigen', confirmDelete: 'Ja, löschen', decline: 'Nein',
     confirmCreateBody: '„{title}“ zum Ressourcenregister hinzufügen?', confirmUpdateBody: 'Änderungen an „{title}“ speichern?', confirmDeleteBody: '„{title}“ aus dem Ressourcenregister löschen?', saved: 'Ressource erfolgreich gespeichert.', deleted: 'Ressource erfolgreich gelöscht.', required: 'Pflichtfelder ausfüllen.', saveFailed: 'Speichern nicht möglich. Berechtigungen prüfen oder erneut versuchen.', deleteFailed: 'Löschen nicht möglich. Berechtigungen prüfen oder erneut versuchen.',
@@ -109,6 +110,8 @@ const AdministrationResources = ({ language = 'FR' }) => {
   const [form, setForm] = useState(emptyForm);
   const [message, setMessage] = useState('');
   const [pendingAction, setPendingAction] = useState(null);
+  const hasWritePermission = hasPermission(user?.permissions, ADMINISTRATION_RESOURCES_WRITE_PERMISSION);
+  const canWrite = hasWritePermission && (sourceState === 'backend' || sourceState === 'local');
 
   useEffect(() => {
     let active = true;
@@ -149,17 +152,18 @@ const AdministrationResources = ({ language = 'FR' }) => {
     window.localStorage.setItem(storageKey, JSON.stringify(next));
   };
 
-  const openCreate = () => { setEditing('new'); setForm(emptyForm); setMessage(''); };
-  const openEdit = item => { setEditing(item.id); setForm({ ...item }); setMessage(''); };
+  const openCreate = () => { if (!canWrite) return; setEditing('new'); setForm(emptyForm); setMessage(''); };
+  const openEdit = item => { if (!canWrite) return; setEditing(item.id); setForm({ ...item }); setMessage(''); };
   const close = () => { setEditing(null); setForm(emptyForm); };
   const save = event => {
     event.preventDefault();
+    if (!canWrite) return;
     if (!form.title.trim() || !form.authority.trim() || !form.location.trim()) { setMessage(t.required); return; }
     setPendingAction({ type: editing === 'new' ? 'create' : 'update', editing, form: { ...form } });
   };
-  const remove = item => setPendingAction({ type: 'delete', item });
+  const remove = item => { if (canWrite) setPendingAction({ type: 'delete', item }); };
   const confirmPendingAction = async () => {
-    if (!pendingAction) return;
+    if (!pendingAction || !canWrite) return;
     const action = pendingAction;
     setBusy(true);
     try {
@@ -200,7 +204,6 @@ const AdministrationResources = ({ language = 'FR' }) => {
     delete: { title: t.confirmDeleteTitle, body: t.confirmDeleteBody, confirm: t.confirmDelete }
   }[pendingAction.type] : null;
   const confirmationTitle = pendingAction?.type === 'delete' ? pendingAction.item.title : pendingAction?.form.title;
-  const canWrite = sourceState === 'backend' || sourceState === 'local';
   const SourceIcon = sourceState === 'backend' ? Database : sourceState === 'local' ? HardDrive : sourceState === 'forbidden' ? ShieldAlert : Loader2;
 
   return (
@@ -208,7 +211,7 @@ const AdministrationResources = ({ language = 'FR' }) => {
       <header className="m3s-panel p-5 sm:p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-4xl"><p className="text-xs font-bold uppercase text-cyan-300">{t.eyebrow}</p><h2 id="administration-resources-title" className="m3s-page-title mt-2">{t.title}</h2><p className="mt-3 text-sm leading-6 text-slate-300">{t.intro}</p></div>
-          <div className="flex flex-col items-start gap-2 lg:items-end"><span className="inline-flex items-center gap-2 rounded-full border border-slate-600 px-3 py-1.5 text-xs font-semibold text-slate-300"><SourceIcon size={15} className={sourceState === 'loading' ? 'animate-spin' : ''} />{sourceText[sourceState]}</span><button type="button" className="m3s-success-button min-h-11 gap-2 px-4" onClick={openCreate} disabled={!canWrite || busy}><Plus size={18} />{t.add}</button></div>
+          <div className="flex flex-col items-start gap-2 lg:items-end"><span className="inline-flex items-center gap-2 rounded-full border border-slate-600 px-3 py-1.5 text-xs font-semibold text-slate-300"><SourceIcon size={15} className={sourceState === 'loading' ? 'animate-spin' : ''} />{sourceText[sourceState]}</span>{!hasWritePermission && <span className="rounded-full border border-slate-600 px-3 py-1.5 text-xs font-semibold text-slate-300">{t.readOnly}</span>}{hasWritePermission && <button type="button" className="m3s-success-button min-h-11 gap-2 px-4" onClick={openCreate} disabled={!canWrite || busy}><Plus size={18} />{t.add}</button>}</div>
         </div>
       </header>
 
@@ -228,7 +231,7 @@ const AdministrationResources = ({ language = 'FR' }) => {
             <p className="mt-2 text-sm font-medium text-cyan-200">{t.families[item.familyIndex]}</p>
             <p className="mt-2 text-sm leading-6 text-slate-400">{item.note}</p>
             <dl className="mt-4 space-y-2 border-t border-slate-700 pt-3 text-sm"><div><dt className="text-xs uppercase text-slate-500">{t.fields.authority}</dt><dd className="mt-1 text-slate-300">{item.authority}</dd></div><div><dt className="text-xs uppercase text-slate-500">{t.fields.location}</dt><dd className="mt-1 break-words text-slate-300">{item.location}</dd></div></dl>
-            {item.sourceKind !== 'baseline' && <div className="mt-auto flex flex-wrap gap-2 pt-4"><button type="button" className="m3s-secondary-button min-h-10 gap-2 px-3" onClick={() => openEdit(item)} disabled={busy}><Edit2 size={16} />{t.edit}</button><button type="button" className="m3s-danger-button min-h-10 gap-2 px-3" onClick={() => remove(item)} disabled={busy}><Trash2 size={16} />{t.delete}</button></div>}
+            {canWrite && item.sourceKind !== 'baseline' && <div className="mt-auto flex flex-wrap gap-2 pt-4"><button type="button" className="m3s-secondary-button min-h-10 gap-2 px-3" onClick={() => openEdit(item)} disabled={busy}><Edit2 size={16} />{t.edit}</button><button type="button" className="m3s-danger-button min-h-10 gap-2 px-3" onClick={() => remove(item)} disabled={busy}><Trash2 size={16} />{t.delete}</button></div>}
           </article>
         ))}
         {!visible.length && <div className="m3s-panel col-span-full p-8 text-center text-slate-400"><Library className="mx-auto mb-3" />{t.empty}</div>}
@@ -236,7 +239,7 @@ const AdministrationResources = ({ language = 'FR' }) => {
 
       <aside className="rounded-lg border border-amber-800 bg-amber-950/20 p-4 text-sm leading-6 text-amber-100"><FolderLock className="mr-2 inline" size={18} />{t.boundary}</aside>
 
-      {editing && (
+      {canWrite && editing && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4" role="presentation">
           <form onSubmit={save} className="m3s-panel max-h-[92vh] w-full max-w-3xl overflow-y-auto p-5 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="resource-form-title">
             <div className="flex items-start justify-between gap-3"><h2 id="resource-form-title" className="m3s-page-title">{editing === 'new' ? t.add : t.edit}</h2><button type="button" className="m3s-icon-button" onClick={close} aria-label={t.close}><X size={20} /></button></div>

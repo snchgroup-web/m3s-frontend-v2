@@ -2,6 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import AdministrationResources from './AdministrationResources';
 import api from './api';
+import { ADMINISTRATION_RESOURCES_WRITE_PERMISSION } from './accessControl';
 
 let mockAuth;
 jest.mock('./AuthContext', () => ({ useAuth: () => mockAuth }));
@@ -16,7 +17,7 @@ jest.mock('./api', () => ({
 }));
 
 beforeEach(() => {
-  mockAuth = { token: 'demo_session_test', user: { email: 'cheikh@seneswiss.sn', tenantId: '2sg' } };
+  mockAuth = { token: 'demo_session_test', user: { email: 'manager.demo@m3s.local', tenantId: '2sg', permissions: [ADMINISTRATION_RESOURCES_WRITE_PERMISSION] } };
   localStorage.clear();
   jest.clearAllMocks();
 });
@@ -102,4 +103,24 @@ test('uses the isolated local pilot when the backend tables are unavailable', as
   render(<AdministrationResources language="FR" />);
   expect(await screen.findByText('Ressource locale isolée')).toBeInTheDocument();
   expect(screen.getAllByText('Pilote local · backend indisponible').length).toBeGreaterThanOrEqual(1);
+});
+
+test('keeps resources readable but removes mutation commands without write permission', async () => {
+  mockAuth = { token: 'demo_session_test', user: { id: 'user-demo', tenantId: '2sg', permissions: [] } };
+  localStorage.setItem(
+    'm3s-administration-resources-v2:2sg:user-demo',
+    JSON.stringify([{
+      id: 'RES-READ', title: 'Ressource consultable', familyIndex: 2,
+      authority: 'Administration 2SG', location: 'GED / Administration',
+      statusIndex: 1, reviewIndex: 0, confidentialityIndex: 1, note: 'Lecture autorisée.'
+    }])
+  );
+
+  render(<AdministrationResources language="FR" />);
+
+  expect(await screen.findByText('Ressource consultable')).toBeInTheDocument();
+  expect(screen.getByText('Lecture seule')).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Ajouter une ressource' })).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Modifier' })).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Supprimer' })).not.toBeInTheDocument();
 });

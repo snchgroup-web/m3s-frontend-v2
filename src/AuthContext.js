@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { DEMO_ACCOUNTS, findDemoAccount } from './demoAuth';
 
 const AuthContext = createContext();
 const isLocalHost = typeof window !== 'undefined'
@@ -66,52 +67,59 @@ export const AuthProvider = ({ children }) => {
     return () => window.removeEventListener('m3s:session-expired', handleExpiredSession);
   }, []);
 
-  // Comptes de démonstration locaux, uniquement pour le développement.
-  const demoAccounts = {
-    'cheikh@seneswiss.sn': { password: 'manager123', name: 'Cheikh', role: 'Manager' },
-    'chantal@seneswiss.sn': { password: 'finance123', name: 'Chantal', role: 'Admin Finance' },
-    'pape@seneswiss.sn': { password: 'admin123', name: 'Pape', role: 'Administrateur' }
-  };
-
   const login = async (email, password) => {
     setLoading(true);
     setError('');
 
     try {
-      if (!demoAuthEnabled) {
-        const response = await fetch(`${API_BASE_URL}/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-        const result = await response.json();
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const result = await response.json();
 
-        if (!response.ok || !result.success) {
-          const message = result.error || 'Email ou mot de passe incorrect';
-          setError(message);
-          return { success: false, error: message };
-        }
-
-        setToken(result.token);
-        setUser(result.user);
-        localStorage.setItem('token', result.token);
-        localStorage.setItem('user', JSON.stringify(result.user));
-
-        return { success: true };
+      if (!response.ok || !result.success) {
+        const message = result.error || 'Email ou mot de passe incorrect';
+        setError(message);
+        return { success: false, error: message };
       }
 
-      const account = demoAccounts[email];
-      if (!account || account.password !== password) {
-        const message = 'Email ou mot de passe incorrect';
+      setToken(result.token);
+      setUser(result.user);
+      localStorage.setItem('token', result.token);
+      localStorage.setItem('user', JSON.stringify(result.user));
+
+      return { success: true };
+    } catch {
+      const message = 'Erreur de connexion';
+      setError(message);
+      return { success: false, error: message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loginDemo = async email => {
+    setLoading(true);
+    setError('');
+
+    try {
+      const account = demoAuthEnabled ? findDemoAccount(email) : null;
+      if (!account) {
+        const message = 'Compte de démonstration indisponible';
         setError(message);
         return { success: false, error: message };
       }
 
       const fakeToken = `demo_session_${Date.now()}_${Math.random()}`;
       const sessionUser = {
+        id: account.id,
+        tenantId: 'demo-local',
         email,
         name: account.name,
-        role: account.role
+        role: account.role,
+        permissions: [...account.permissions]
       };
 
       setToken(fakeToken);
@@ -139,7 +147,18 @@ export const AuthProvider = ({ children }) => {
   const isAuthenticated = Boolean(token && user);
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout, error, loading, isAuthenticated, demoAuthEnabled }}>
+    <AuthContext.Provider value={{
+      token,
+      user,
+      login,
+      loginDemo,
+      logout,
+      error,
+      loading,
+      isAuthenticated,
+      demoAuthEnabled,
+      demoAccounts: DEMO_ACCOUNTS
+    }}>
       {children}
     </AuthContext.Provider>
   );
