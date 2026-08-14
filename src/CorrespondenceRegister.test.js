@@ -2,6 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import CorrespondenceRegister from './CorrespondenceRegister';
 import api from './api';
+import { ADMINISTRATION_CORRESPONDENCE_WRITE_PERMISSION } from './accessControl';
 
 let mockCurrentUser;
 let mockToken;
@@ -17,7 +18,7 @@ jest.mock('./api', () => ({
 }));
 
 beforeEach(() => {
-  mockCurrentUser = { email: 'cheikh@seneswiss.sn', tenantId: '2sg' };
+  mockCurrentUser = { email: 'manager.demo@m3s.local', tenantId: '2sg', permissions: [ADMINISTRATION_CORRESPONDENCE_WRITE_PERMISSION] };
   mockToken = 'demo_session_test';
   localStorage.clear();
   jest.clearAllMocks();
@@ -84,7 +85,7 @@ test('does not reveal local correspondence when backend access is forbidden', as
 
 test('creates correspondence through the backend without copying it to local storage', async () => {
   mockToken = 'signed-token';
-  mockCurrentUser = { id: 'USR-1', email: 'cheikh@seneswiss.sn', tenantId: '2sg' };
+  mockCurrentUser = { id: 'USR-1', email: 'manager.demo@m3s.local', tenantId: '2sg', permissions: [ADMINISTRATION_CORRESPONDENCE_WRITE_PERMISSION] };
   api.getAdministrationCorrespondence.mockResolvedValue({ success: true, source: 'bigquery', data: [] });
   api.createAdministrationCorrespondence.mockResolvedValue({
     success: true,
@@ -111,4 +112,28 @@ test('creates correspondence through the backend without copying it to local sto
   expect(await screen.findByText('Courrier backend')).toBeInTheDocument();
   expect(api.createAdministrationCorrespondence).toHaveBeenCalledTimes(1);
   expect(localStorage.getItem('m3s-administration-correspondence-v1:2sg:USR-1')).toBeNull();
+});
+
+test('keeps correspondence readable but removes mutation commands without write permission', async () => {
+  mockCurrentUser = { id: 'user-demo', tenantId: '2sg', permissions: [] };
+  localStorage.setItem(
+    'm3s-administration-correspondence-v1:2sg:user-demo',
+    JSON.stringify([{
+      id: 'COR-READ', date: '2026-08-14', directionIndex: 0, channelIndex: 1,
+      sender: 'Partenaire', recipient: 'Administration', subject: 'Courrier consultable',
+      categoryIndex: 1, confidentialityIndex: 1, person: '', ged: '', evidence: '',
+      owner: 'Administration', next: '', statusIndex: 0, deadline: ''
+    }])
+  );
+
+  render(<CorrespondenceRegister language="FR" />);
+
+  const subject = await screen.findByText('Courrier consultable');
+  expect(screen.getByText('Lecture seule')).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Ajouter un courrier' })).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Préparer une réception de CV' })).not.toBeInTheDocument();
+  expect(screen.queryByTitle('Modifier')).not.toBeInTheDocument();
+  expect(screen.queryByTitle('Supprimer')).not.toBeInTheDocument();
+  fireEvent.click(subject);
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 });

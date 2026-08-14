@@ -4,16 +4,10 @@ import { AlertCircle, CheckCircle2, Lock, Mail } from 'lucide-react';
 import { useAuth } from './AuthContext';
 import { useLanguage } from './LanguageContext';
 
-const demoAccounts = [
-  { email: 'cheikh@seneswiss.sn', password: 'manager123', name: 'Cheikh', role: 'Manager' },
-  { email: 'chantal@seneswiss.sn', password: 'finance123', name: 'Chantal', role: 'Admin Finance' },
-  { email: 'pape@seneswiss.sn', password: 'admin123', name: 'Pape', role: 'Administrateur' }
-];
-
 const Login = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { login, error, loading, demoAuthEnabled } = useAuth();
+  const { login, loginDemo, error, loading, demoAuthEnabled, demoAccounts } = useAuth();
   const { language } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -61,8 +55,15 @@ const Login = () => {
   const demoLogin = async (account) => {
     setLocalError('');
     setEmail(account.email);
-    setPassword(account.password);
-    await submitLogin(account.email, account.password);
+    setPassword('');
+    const result = await loginDemo(account.email);
+
+    if (result.success) {
+      const next = searchParams.get('next');
+      navigate(next?.startsWith('/') && !next.startsWith('//') ? next : '/');
+    } else {
+      setLocalError(result.error || 'Erreur de connexion');
+    }
   };
 
   return (
