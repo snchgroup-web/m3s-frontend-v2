@@ -37,9 +37,10 @@ test('shows the seven governed Administration components and opens the selected 
   expect(within(completedTasksMetric).getByText('566')).toBeInTheDocument();
   const componentsMetric = screen.getByText('Structured components').closest('button');
   expect(within(componentsMetric).getByText('7')).toBeInTheDocument();
-  const complianceMetric = screen.getByText('Compliance & legal').closest('button');
-  expect(within(complianceMetric).getByText('Matter reported')).toBeInTheDocument();
-  expect(within(complianceMetric).queryByText('1')).not.toBeInTheDocument();
+  const complianceMetric = screen.getByText('LEGAL documentary progress').closest('button');
+  expect(within(complianceMetric).getByText('1 / 6')).toBeInTheDocument();
+  expect(within(complianceMetric).getByText('Inventory established')).toBeInTheDocument();
+  expect(within(complianceMetric).getByText('Controlled baseline')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Processes & Procedures' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Architecture & Relationships' })).toBeInTheDocument();
   expect(screen.getAllByRole('heading', { level: 4 }).map(heading => heading.textContent)).toEqual([
