@@ -13,6 +13,7 @@ import {
   UserCheck
 } from 'lucide-react';
 import InternalSectionNav from './InternalSectionNav';
+import { LEGAL_DOCUMENTARY_BASELINE, LEGAL_DOCUMENTARY_STAGES } from './legalDocumentaryProgress';
 
 const COPY = {
   FR: {
@@ -23,12 +24,26 @@ const COPY = {
     targetModel: 'Modèle cible',
     noClaim: 'Aucune conformité déclarée',
     navLabel: 'Navigation dans Conformité',
+    navProgress: 'Avancement',
     navFramework: 'Périmètre',
     navRegister: 'Registres',
     navControls: 'Contrôles & preuves',
     navResponsibilities: 'Responsabilités',
     navBoundaries: 'Frontières',
     backToTop: 'Revenir en haut',
+    progressTitle: 'Avancement documentaire LEGAL',
+    progressBody: 'Point de départ gouverné du dossier : l’inventaire est établi ; l’applicabilité, la rédaction, la relecture, la validation et l’adoption restent à conduire.',
+    progressStage: 'Étape 1 sur 6',
+    progressStageName: 'Inventaire établi',
+    progressLabel: 'Maturité documentaire',
+    progressStages: ['Inventaire', 'Applicabilité', 'Rédaction', 'Relecture', 'Validation', 'Adoption / publication'],
+    inventoryMetric: 'Éléments suivis',
+    candidateMetric: 'Pièces candidates',
+    officialSourcesMetric: 'Sources officielles',
+    nextActionTitle: 'Prochaine action P0',
+    nextAction: 'Qualifier l’applicabilité par activité, territoire, offre et canal avant toute rédaction.',
+    progressCaution: 'Cet indicateur mesure la préparation documentaire. Il ne mesure ni ne certifie la conformité juridique de 2SG.',
+    sourceLabel: 'Source gouvernée',
     frameworkTitle: 'Périmètre de conformité à organiser',
     frameworkBody: 'La conformité est transversale. Administration tient les registres et les échéances ; la gouvernance et les fonctions compétentes valident le fond dans leur domaine.',
     institutional: 'Conformité associative',
@@ -90,12 +105,26 @@ const COPY = {
     targetModel: 'Target model',
     noClaim: 'No compliance claim',
     navLabel: 'Compliance navigation',
+    navProgress: 'Progress',
     navFramework: 'Scope',
     navRegister: 'Registers',
     navControls: 'Controls & evidence',
     navResponsibilities: 'Responsibilities',
     navBoundaries: 'Boundaries',
     backToTop: 'Back to top',
+    progressTitle: 'LEGAL documentary progress',
+    progressBody: 'Governed baseline for the file: the inventory is established; applicability, drafting, review, validation and adoption still have to be completed.',
+    progressStage: 'Stage 1 of 6',
+    progressStageName: 'Inventory established',
+    progressLabel: 'Documentary maturity',
+    progressStages: ['Inventory', 'Applicability', 'Drafting', 'Review', 'Validation', 'Adoption / publication'],
+    inventoryMetric: 'Tracked items',
+    candidateMetric: 'Candidate documents',
+    officialSourcesMetric: 'Official sources',
+    nextActionTitle: 'Next P0 action',
+    nextAction: 'Qualify applicability by activity, territory, offer and channel before drafting.',
+    progressCaution: 'This indicator measures documentary readiness. It neither measures nor certifies 2SG legal compliance.',
+    sourceLabel: 'Governed source',
     frameworkTitle: 'Compliance scope to organise',
     frameworkBody: 'Compliance is cross-functional. Administration maintains registers and deadlines; governance and competent functions validate substance in their domain.',
     institutional: 'Association compliance',
@@ -157,12 +186,26 @@ const COPY = {
     targetModel: 'Zielmodell',
     noClaim: 'Keine Konformität behauptet',
     navLabel: 'Navigation innerhalb der Compliance',
+    navProgress: 'Fortschritt',
     navFramework: 'Umfang',
     navRegister: 'Register',
     navControls: 'Kontrollen & Nachweise',
     navResponsibilities: 'Verantwortungen',
     navBoundaries: 'Abgrenzung',
     backToTop: 'Nach oben',
+    progressTitle: 'Dokumentationsfortschritt LEGAL',
+    progressBody: 'Gesteuerter Ausgangspunkt des Dossiers: Das Inventar ist erstellt; Anwendbarkeit, Entwurf, Prüfung, Validierung und Verabschiedung stehen noch aus.',
+    progressStage: 'Stufe 1 von 6',
+    progressStageName: 'Inventar erstellt',
+    progressLabel: 'Dokumentarischer Reifegrad',
+    progressStages: ['Inventar', 'Anwendbarkeit', 'Entwurf', 'Prüfung', 'Validierung', 'Verabschiedung / Veröffentlichung'],
+    inventoryMetric: 'Erfasste Elemente',
+    candidateMetric: 'Kandidatendokumente',
+    officialSourcesMetric: 'Amtliche Quellen',
+    nextActionTitle: 'Nächste P0-Maßnahme',
+    nextAction: 'Die Anwendbarkeit nach Tätigkeit, Gebiet, Angebot und Kanal vor jeder Ausarbeitung klären.',
+    progressCaution: 'Diese Kennzahl misst die dokumentarische Vorbereitung. Sie misst oder bestätigt keine rechtliche Konformität von 2SG.',
+    sourceLabel: 'Gesteuerte Quelle',
     frameworkTitle: 'Zu organisierender Compliance-Umfang',
     frameworkBody: 'Compliance ist bereichsübergreifend. Die Verwaltung führt Register und Fristen; Governance und zuständige Funktionen validieren die Inhalte ihres Bereichs.',
     institutional: 'Vereinskonformität',
@@ -229,6 +272,7 @@ const Card = ({ icon: Icon, title, body }) => (
 const ComplianceOverview = ({ language = 'FR' }) => {
   const t = COPY[language] || COPY.FR;
   const navItems = [
+    { id: 'compliance-progress', label: t.navProgress },
     { id: 'compliance-framework', label: t.navFramework },
     { id: 'compliance-register', label: t.navRegister },
     { id: 'compliance-controls', label: t.navControls },
@@ -272,6 +316,70 @@ const ComplianceOverview = ({ language = 'FR' }) => {
       </header>
 
       <InternalSectionNav ariaLabel={t.navLabel} items={navItems} topId="compliance-top" backToTopLabel={t.backToTop} refreshKey={language} />
+
+      <section id="compliance-progress" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="compliance-progress-title">
+        <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+          <div className="max-w-4xl">
+            <p className="text-xs font-bold uppercase text-emerald-300">{t.progressStage}</p>
+            <h3 id="compliance-progress-title" className="mt-2 text-xl font-semibold text-slate-100">{t.progressTitle}</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-400">{t.progressBody}</p>
+          </div>
+          <span className="self-start rounded-full border border-emerald-700 bg-emerald-950 px-3 py-1 text-xs font-semibold text-emerald-100">{t.progressStageName}</span>
+        </div>
+
+        <div className="mt-5" role="progressbar" aria-label={t.progressLabel} aria-valuemin="0" aria-valuemax="100" aria-valuenow={LEGAL_DOCUMENTARY_BASELINE.percentage}>
+          <div className="flex items-center justify-between gap-3 text-sm font-semibold text-slate-200">
+            <span>{t.progressLabel}</span>
+            <span>{LEGAL_DOCUMENTARY_BASELINE.percentage}%</span>
+          </div>
+          <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-slate-950" aria-hidden="true">
+            <div className="h-full rounded-full bg-emerald-500" style={{ width: `${LEGAL_DOCUMENTARY_BASELINE.percentage}%` }} />
+          </div>
+        </div>
+
+        <ol className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-6">
+          {LEGAL_DOCUMENTARY_STAGES.map((stage, index) => {
+            const isCurrent = index + 1 === LEGAL_DOCUMENTARY_BASELINE.currentStage;
+            return (
+              <li
+                key={stage}
+                aria-current={isCurrent ? 'step' : undefined}
+                className={`flex min-h-14 items-center gap-2 rounded-md border px-3 py-2 text-sm font-semibold ${isCurrent ? 'border-emerald-700 bg-emerald-950/35 text-emerald-100' : 'border-slate-700 bg-slate-950/25 text-slate-400'}`}
+              >
+                <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs ${isCurrent ? 'bg-emerald-800 text-emerald-50' : 'bg-slate-800 text-slate-300'}`}>{index + 1}</span>
+                <span>{t.progressStages[index]}</span>
+              </li>
+            );
+          })}
+        </ol>
+
+        <div className="mt-5 grid gap-3 sm:grid-cols-3">
+          {[
+            [t.inventoryMetric, LEGAL_DOCUMENTARY_BASELINE.inventoryCount, FileSearch],
+            [t.candidateMetric, LEGAL_DOCUMENTARY_BASELINE.candidateCount, FileCheck2],
+            [t.officialSourcesMetric, LEGAL_DOCUMENTARY_BASELINE.officialSourceCount, Landmark]
+          ].map(([label, value, Icon]) => (
+            <article key={label} className="rounded-md border border-slate-700 bg-slate-950/35 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-sm font-medium text-slate-400">{label}</p>
+                <Icon size={19} className="text-blue-300" aria-hidden="true" />
+              </div>
+              <p className="mt-2 text-2xl font-semibold text-slate-100">{value}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+          <aside className="min-w-0 rounded-md border border-blue-800 bg-blue-950/25 p-4">
+            <p className="text-xs font-bold uppercase text-blue-300">{t.nextActionTitle}</p>
+            <p className="mt-2 text-sm leading-6 text-slate-200">{t.nextAction}</p>
+          </aside>
+          <aside className="min-w-0 rounded-md border border-amber-800 bg-amber-950/20 p-4">
+            <p className="text-sm font-semibold leading-6 text-amber-100">{t.progressCaution}</p>
+            <p className="mt-2 break-all text-xs leading-5 text-slate-400">{t.sourceLabel} · {LEGAL_DOCUMENTARY_BASELINE.sourceFile} · {LEGAL_DOCUMENTARY_BASELINE.asOf}</p>
+          </aside>
+        </div>
+      </section>
 
       <section id="compliance-framework" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="compliance-framework-title">
         <h3 id="compliance-framework-title" className="text-xl font-semibold text-slate-100">{t.frameworkTitle}</h3>

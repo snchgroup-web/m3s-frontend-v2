@@ -12,6 +12,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { getAdministrationGlossaryTerms } from './AdministrationGlossary';
+import { LEGAL_DOCUMENTARY_BASELINE } from './legalDocumentaryProgress';
 
 const COPY = {
   FR: {
@@ -24,14 +25,14 @@ const COPY = {
       completed: 'Tâches terminées',
       components: 'Composantes structurées',
       glossary: 'Termes du glossaire',
-      compliance: 'Conformité & juridique',
-      complianceValue: 'Dossier signalé'
+      compliance: 'Avancement documentaire LEGAL',
+      complianceDetail: 'Inventaire établi'
     },
     sources: {
       tasks: 'API M3S · registre des tâches',
       components: 'Architecture Administration',
       glossary: 'Glossaire central 2SG',
-      compliance: 'Cadrage Conformité'
+      compliance: 'Inventaire gouverné · 14-08-2026'
     },
     loading: 'Chargement de la source',
     unavailable: 'Source indisponible',
@@ -40,7 +41,7 @@ const COPY = {
     coverageTitle: 'Couverture fonctionnelle',
     coverageBody: 'Sept composantes organisent actuellement la fonction Administration. Leur niveau de maturité reste visible sans transformer un cadrage en donnée opérationnelle.',
     open: 'Ouvrir',
-    statuses: { structured: 'Structurée', connected: 'Connectée', framed: 'Cadrée', governed: 'Gouverné' },
+    statuses: { structured: 'Structurée', connected: 'Connectée', framed: 'Cadrée', governed: 'Gouverné', documentaryBaseline: 'Point de départ contrôlé' },
     components: {
       institution: ['Institution', 'Identité, vision, gouvernance et ressources.'],
       planning: ['Planification & Projets', 'Tâches raccordées à l’API ; modèle projet encore progressif.'],
@@ -69,14 +70,14 @@ const COPY = {
       completed: 'Completed tasks',
       components: 'Structured components',
       glossary: 'Glossary terms',
-      compliance: 'Compliance & legal',
-      complianceValue: 'Matter reported'
+      compliance: 'LEGAL documentary progress',
+      complianceDetail: 'Inventory established'
     },
     sources: {
       tasks: 'M3S API · task register',
       components: 'Administration architecture',
       glossary: '2SG Central Glossary',
-      compliance: 'Compliance framing'
+      compliance: 'Governed inventory · 2026-08-14'
     },
     loading: 'Loading source',
     unavailable: 'Source unavailable',
@@ -85,7 +86,7 @@ const COPY = {
     coverageTitle: 'Functional coverage',
     coverageBody: 'Seven components currently organise the Administration function. Their maturity remains visible without presenting framing as operational data.',
     open: 'Open',
-    statuses: { structured: 'Structured', connected: 'Connected', framed: 'Framed', governed: 'Governed' },
+    statuses: { structured: 'Structured', connected: 'Connected', framed: 'Framed', governed: 'Governed', documentaryBaseline: 'Controlled baseline' },
     components: {
       institution: ['Institution', 'Identity, vision, governance and resources.'],
       planning: ['Planning & Projects', 'Tasks connected to the API; project model remains progressive.'],
@@ -114,14 +115,14 @@ const COPY = {
       completed: 'Abgeschlossene Aufgaben',
       components: 'Strukturierte Komponenten',
       glossary: 'Glossarbegriffe',
-      compliance: 'Compliance & Recht',
-      complianceValue: 'Fall gemeldet'
+      compliance: 'Dokumentationsfortschritt LEGAL',
+      complianceDetail: 'Inventar erstellt'
     },
     sources: {
       tasks: 'M3S-API · Aufgabenregister',
       components: 'Architektur Verwaltung',
       glossary: 'Zentrales 2SG-Glossar',
-      compliance: 'Compliance-Rahmen'
+      compliance: 'Gesteuertes Inventar · 14.08.2026'
     },
     loading: 'Quelle wird geladen',
     unavailable: 'Quelle nicht verfügbar',
@@ -130,7 +131,7 @@ const COPY = {
     coverageTitle: 'Funktionale Abdeckung',
     coverageBody: 'Sieben Komponenten strukturieren derzeit die Verwaltungsfunktion. Ihr Reifegrad bleibt sichtbar, ohne einen Rahmen als operative Daten darzustellen.',
     open: 'Öffnen',
-    statuses: { structured: 'Strukturiert', connected: 'Verbunden', framed: 'Gerahmt', governed: 'Gesteuert' },
+    statuses: { structured: 'Strukturiert', connected: 'Verbunden', framed: 'Gerahmt', governed: 'Gesteuert', documentaryBaseline: 'Kontrollierter Ausgangspunkt' },
     components: {
       institution: ['Institution', 'Identität, Vision, Governance und Ressourcen.'],
       planning: ['Planung & Projekte', 'Aufgaben sind an die API angebunden; das Projektmodell wird schrittweise ergänzt.'],
@@ -212,7 +213,7 @@ const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, t
         <MetricCard icon={CheckCircle2} label={t.metrics.completed} value={completedValue} source={t.sources.tasks} state={taskState} tone="bg-emerald-950 text-emerald-300" openLabel={t.open} onOpen={() => onNavigate?.('planning')} />
         <MetricCard icon={Network} label={t.metrics.components} value={components.length} source={t.sources.components} state={t.statuses.structured} tone="bg-cyan-950 text-cyan-300" openLabel={t.open} onOpen={() => onNavigate?.('architecture')} />
         <MetricCard icon={BookOpenText} label={t.metrics.glossary} value={glossaryCount} source={t.sources.glossary} state={t.statuses.governed} tone="bg-violet-950 text-violet-300" openLabel={t.open} onOpen={() => onNavigate?.('glossary')} />
-        <MetricCard icon={ShieldCheck} label={t.metrics.compliance} value={t.metrics.complianceValue} source={t.sources.compliance} state={t.statuses.framed} tone="bg-amber-950 text-amber-300" openLabel={t.open} onOpen={() => onNavigate?.('compliance')} />
+        <MetricCard icon={ShieldCheck} label={t.metrics.compliance} value={`${LEGAL_DOCUMENTARY_BASELINE.currentStage} / ${LEGAL_DOCUMENTARY_BASELINE.totalStages}`} detail={t.metrics.complianceDetail} source={t.sources.compliance} state={t.statuses.documentaryBaseline} tone="bg-amber-950 text-amber-300" openLabel={t.open} onOpen={() => onNavigate?.('compliance')} />
       </div>
 
       <section className="rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="administration-coverage-title">
