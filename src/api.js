@@ -466,6 +466,10 @@ export const api = {
     { method: 'DELETE' }
   ),
 
+  getAdministrationAudit: (limite = 100, decalage = 0) => administrationFetch(
+    `/administration/audit?limit=${limite}&offset=${decalage}`
+  ),
+
   // ============================================================================
   // APPELS API TAUX DE CHANGE
   // ============================================================================

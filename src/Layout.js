@@ -7,12 +7,14 @@ import {
   Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
   Wrench, Truck, Box, AlertTriangle, Eye, FileText, Brain, Database, BookOpen,
   Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft, ContactRound, ShieldCheck,
-  MessageSquare, Network, ClipboardList, LayoutDashboard, BrainCircuit, Library, Bot
+  MessageSquare, Network, ClipboardList, LayoutDashboard, BrainCircuit, Library, Bot, ScrollText
 } from 'lucide-react';
 import menuData from './menuStructure.json';
 import Header from './Header';
 import { ModuleIcon, modulePresentation } from './modulePresentation';
 import { getSidebarMenuGroups, resolveActiveMenuLocation } from './sidebarMenu';
+import { useAuth } from './AuthContext';
+import { hasPermission } from './accessControl';
 
 // Mapping des icônes
 const iconMap = {
@@ -20,7 +22,7 @@ const iconMap = {
   Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
   Wrench, Truck, Box, AlertTriangle, Eye, FileText, Brain, Database, BookOpen,
   Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft, ContactRound, ShieldCheck,
-  MessageSquare, Network, ClipboardList, LayoutDashboard, BrainCircuit, Library, Bot
+  MessageSquare, Network, ClipboardList, LayoutDashboard, BrainCircuit, Library, Bot, ScrollText
 };
 
 const sidebarGroups = getSidebarMenuGroups(menuData);
@@ -29,6 +31,8 @@ const Layout = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const { user } = useAuth();
+  const canViewChild = child => hasPermission(user?.permissions, child?.requiredPermission);
   const [sidebarOpen, setSidebarOpen] = useState(() => (
     typeof window === 'undefined' || window.innerWidth >= 1024
   ));
@@ -173,7 +177,7 @@ const Layout = ({ children }) => {
                       return (
                     <button
                       onClick={() => {
-                        const hasChildren = item.children && item.children.length > 0;
+                        const hasChildren = item.children && item.children.some(canViewChild);
                         const isExpanded = Boolean(expandedMenus[item.id]);
 
                         handleMenuItemClick(item.path);
@@ -197,7 +201,7 @@ const Layout = ({ children }) => {
                           <ModuleIcon moduleId={item.id} size={18} />
                         </div>
 
-                        {sidebarOpen && item.children && item.children.length > 0 && (
+                        {sidebarOpen && item.children && item.children.some(canViewChild) && (
                           <div className="flex-shrink-0">
                             {expandedMenus[item.id] ? (
                               <ChevronDown size={16} className="text-blue-400" />
@@ -217,9 +221,9 @@ const Layout = ({ children }) => {
                       );
                     })()}
 
-                    {sidebarOpen && expandedMenus[item.id] && item.children && item.children.length > 0 && (
+                    {sidebarOpen && expandedMenus[item.id] && item.children && item.children.some(canViewChild) && (
                       <div className="sidebar-submenu ml-6 space-y-1 bg-slate-700 bg-opacity-30 rounded my-1 py-1 px-2">
-                        {item.children.map(child => {
+                        {item.children.filter(canViewChild).map(child => {
                           const childActive = activeMenu.child?.id === child.id;
                           return (
                           <button

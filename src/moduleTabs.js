@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import menuData from './menuStructure.json';
+import { filterAuthorizedItems } from './accessControl';
 
 export const centerTabHorizontally = (container, activeButton) => {
   if (!container || !activeButton) return;
@@ -40,20 +41,20 @@ export const getPathTab = (path, fallback) => {
   return new URLSearchParams(query).get('tab') || fallback;
 };
 
-export const getModuleChildren = (moduleId) => {
+export const getModuleChildren = (moduleId, permissions = []) => {
   const module = menuData.menu.find(item => item.id === moduleId);
-  return module?.children || [];
+  return filterAuthorizedItems(module?.children || [], permissions);
 };
 
-export const getModuleChildTabs = (moduleId, language) =>
-  getModuleChildren(moduleId).map(child => ({
+export const getModuleChildTabs = (moduleId, language, permissions = []) =>
+  getModuleChildren(moduleId, permissions).map(child => ({
     id: child.id,
     tab: getPathTab(child.path, child.id),
     label: child.label?.[language] || child.label?.FR || child.id
   }));
 
-export const getModuleChildTabIds = (moduleId) =>
-  getModuleChildren(moduleId).map(child => getPathTab(child.path, child.id));
+export const getModuleChildTabIds = (moduleId, permissions = []) =>
+  getModuleChildren(moduleId, permissions).map(child => getPathTab(child.path, child.id));
 
 export const ModuleChildTabs = ({ moduleId, language, activeTab, onSelect }) => {
   const tabs = getModuleChildTabs(moduleId, language);
@@ -74,7 +75,7 @@ export const ModuleChildTabs = ({ moduleId, language, activeTab, onSelect }) => 
   );
 };
 
-export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs = [] }) => {
+export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs = [], permissions = [] }) => {
   const activeButtonRef = useRef(null);
   const tabListRef = useRef(null);
   const mergedTabs = [];
@@ -90,7 +91,7 @@ export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs =
   const overviewTab = explicitTabs.get('overview');
   if (overviewTab) addTab(overviewTab);
 
-  getModuleChildTabs(moduleId, language).forEach(childTab => {
+  getModuleChildTabs(moduleId, language, permissions).forEach(childTab => {
     addTab(explicitTabs.get(childTab.tab) || childTab);
   });
 
@@ -118,10 +119,10 @@ export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs =
   );
 };
 
-export const ChildTabPlaceholder = ({ moduleId, language, activeTab, handledTabs = [] }) => {
+export const ChildTabPlaceholder = ({ moduleId, language, activeTab, handledTabs = [], permissions = [] }) => {
   if (handledTabs.includes(activeTab)) return null;
 
-  const child = getModuleChildTabs(moduleId, language).find(tab => tab.tab === activeTab);
+  const child = getModuleChildTabs(moduleId, language, permissions).find(tab => tab.tab === activeTab);
   if (!child) return null;
 
   const t = placeholderText[language] || placeholderText.FR;

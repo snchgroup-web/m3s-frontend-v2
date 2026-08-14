@@ -112,7 +112,7 @@ describe('light-mode accent border selectors', () => {
 
   test('highlights Administration table rows without changing their layout', () => {
     expect(indexHtml).toContain('html:not(.dark) .administration-table-row:hover{background-color:#eef6ff!important;box-shadow:inset 3px 0 #3b82f6}');
-    expect((administrationSource.match(/administration-table-row/g) || [])).toHaveLength(3);
+    expect((administrationSource.match(/administration-table-row/g) || [])).toHaveLength(2);
     expect(administrationSource).toContain('transition-colors hover:bg-blue-950/35');
     expect(administrationSource).toContain('onClick={() => handleEditTask(task)}');
     expect(administrationSource).toContain('onClick={() => handleEditUser(u)}');

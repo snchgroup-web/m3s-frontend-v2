@@ -1,4 +1,5 @@
 import { centerTabHorizontally, getModuleChildTabs } from './moduleTabs';
+import { ADMINISTRATION_AUDIT_PERMISSION } from './accessControl';
 
 test('centers the active tab horizontally without invoking vertical scrolling', () => {
   const scrollTo = jest.fn();
@@ -47,4 +48,10 @@ test('orders Administration tabs from institutional framing to execution and glo
     'assistant',
     'glossary'
   ]);
+});
+
+test('shows the Administration audit tab only with its explicit permission', () => {
+  expect(getModuleChildTabs('administration', 'FR').map(tab => tab.tab)).not.toContain('audit');
+  expect(getModuleChildTabs('administration', 'FR', [ADMINISTRATION_AUDIT_PERMISSION]).map(tab => tab.tab))
+    .toContain('audit');
 });
