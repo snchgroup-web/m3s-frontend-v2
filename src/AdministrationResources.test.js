@@ -18,13 +18,12 @@ jest.mock('./api', () => ({
 beforeEach(() => {
   mockAuth = { token: 'demo_session_test', user: { email: 'cheikh@seneswiss.sn', tenantId: '2sg' } };
   localStorage.clear();
-  jest.spyOn(window, 'confirm').mockReturnValue(true);
   jest.clearAllMocks();
 });
 
 afterEach(() => jest.restoreAllMocks());
 
-test('shows the governed resource baseline and adds a local resource with confirmation', () => {
+test('shows the governed resource baseline and adds a local resource after M3S confirmation', () => {
   render(<AdministrationResources language="FR" />);
 
   expect(screen.getByText('Inventaire documentaire gouverné 2SG/M3S')).toBeInTheDocument();
@@ -35,9 +34,27 @@ test('shows the governed resource baseline and adds a local resource with confir
   fireEvent.change(screen.getByLabelText('URL ou emplacement GED *'), { target: { value: 'GED / Administration / Manuel' } });
   fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
 
-  expect(window.confirm).toHaveBeenCalled();
+  expect(screen.getByRole('dialog', { name: 'Confirmer l’ajout' })).toBeInTheDocument();
+  expect(screen.queryByText('Manuel administratif', { selector: 'h3' })).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, ajouter' }));
   expect(screen.getByText('Manuel administratif')).toBeInTheDocument();
   expect(screen.getByRole('status')).toHaveTextContent('Ressource enregistrée avec succès.');
+});
+
+test('keeps a resource until deletion is confirmed', () => {
+  render(<AdministrationResources language="FR" />);
+  fireEvent.click(screen.getByRole('button', { name: 'Ajouter une ressource' }));
+  fireEvent.change(screen.getByLabelText('Titre *'), { target: { value: 'Ressource à supprimer' } });
+  fireEvent.change(screen.getByLabelText('Autorité ou propriétaire *'), { target: { value: 'Administration 2SG' } });
+  fireEvent.change(screen.getByLabelText('URL ou emplacement GED *'), { target: { value: 'GED / Test' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, ajouter' }));
+
+  fireEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
+  expect(screen.getByRole('dialog', { name: 'Confirmer la suppression' })).toBeInTheDocument();
+  expect(screen.getByText('Ressource à supprimer')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, supprimer' }));
+  expect(screen.queryByText('Ressource à supprimer')).not.toBeInTheDocument();
 });
 
 test('localizes the preloaded resource content without translating user entries', () => {

@@ -20,7 +20,6 @@ beforeEach(() => {
   mockCurrentUser = { email: 'cheikh@seneswiss.sn', tenantId: '2sg' };
   mockToken = 'demo_session_test';
   localStorage.clear();
-  jest.spyOn(window, 'confirm').mockReturnValue(true);
   jest.clearAllMocks();
 });
 
@@ -38,7 +37,7 @@ test('prepares a restricted WhatsApp CV record without accepting the file itself
   expect(screen.queryByLabelText(/fichier/i)).not.toBeInTheDocument();
 });
 
-test('saves correspondence metadata after human confirmation', () => {
+test('saves correspondence metadata after M3S confirmation', () => {
   render(<CorrespondenceRegister language="FR" />);
   fireEvent.click(screen.getByRole('button', { name: 'Ajouter un courrier' }));
   fireEvent.change(screen.getByLabelText('Expéditeur *'), { target: { value: 'Partenaire' } });
@@ -46,7 +45,8 @@ test('saves correspondence metadata after human confirmation', () => {
   fireEvent.change(screen.getByLabelText('Objet *'), { target: { value: 'Dossier reçu' } });
   fireEvent.change(screen.getByLabelText('Responsable du suivi *'), { target: { value: 'Cheikh' } });
   fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
-  expect(window.confirm).toHaveBeenCalled();
+  expect(screen.getByRole('dialog', { name: 'Confirmer l’ajout' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, ajouter' }));
   expect(screen.getByText('Dossier reçu')).toBeInTheDocument();
 });
 
@@ -58,6 +58,7 @@ test('isolates correspondence metadata between authenticated users', () => {
   fireEvent.change(screen.getByLabelText('Objet *'), { target: { value: 'Dossier privé Cheikh' } });
   fireEvent.change(screen.getByLabelText('Responsable du suivi *'), { target: { value: 'Cheikh' } });
   fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, ajouter' }));
   firstSession.unmount();
 
   mockCurrentUser = { email: 'chantal@seneswiss.sn', tenantId: '2sg' };
@@ -105,6 +106,7 @@ test('creates correspondence through the backend without copying it to local sto
   fireEvent.change(screen.getByLabelText('Objet *'), { target: { value: 'Courrier backend' } });
   fireEvent.change(screen.getByLabelText('Responsable du suivi *'), { target: { value: 'Cheikh' } });
   fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, ajouter' }));
 
   expect(await screen.findByText('Courrier backend')).toBeInTheDocument();
   expect(api.createAdministrationCorrespondence).toHaveBeenCalledTimes(1);
