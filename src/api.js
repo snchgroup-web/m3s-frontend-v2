@@ -48,6 +48,31 @@ const apiFetch = async (url, options = {}) => {
   return response;
 };
 
+const administrationFetch = async (path, options = {}) => {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...options,
+    headers: {
+      ...getAuthHeaders(),
+      ...(options.headers || {})
+    }
+  });
+  let payload = null;
+  try {
+    payload = await response.json();
+  } catch {
+    payload = null;
+  }
+
+  if (response.status === 401) clearExpiredSession();
+  if (!response.ok) {
+    const error = new Error(payload?.error || `HTTP ${response.status}`);
+    error.status = response.status;
+    error.code = payload?.code || 'ADMIN_REGISTRY_ERROR';
+    throw error;
+  }
+  return payload;
+};
+
 // Gestion des erreurs centralisée
 const handleError = (erreur, endpoint) => {
   console.error(`Erreur API [${endpoint}]:`, erreur);
@@ -399,6 +424,47 @@ export const api = {
 
     return payload;
   },
+
+  // Administration - registres sécurisés de métadonnées
+  getAdministrationResources: (limite = 200, decalage = 0) => administrationFetch(
+    `/administration/resources?limit=${limite}&offset=${decalage}`
+  ),
+
+  createAdministrationResource: data => administrationFetch('/administration/resources', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }),
+
+  updateAdministrationResource: (id, data) => administrationFetch(
+    `/administration/resources/${encodeURIComponent(id)}`,
+    { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }
+  ),
+
+  deleteAdministrationResource: id => administrationFetch(
+    `/administration/resources/${encodeURIComponent(id)}`,
+    { method: 'DELETE' }
+  ),
+
+  getAdministrationCorrespondence: (limite = 200, decalage = 0) => administrationFetch(
+    `/administration/correspondence?limit=${limite}&offset=${decalage}`
+  ),
+
+  createAdministrationCorrespondence: data => administrationFetch('/administration/correspondence', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }),
+
+  updateAdministrationCorrespondence: (id, data) => administrationFetch(
+    `/administration/correspondence/${encodeURIComponent(id)}`,
+    { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }
+  ),
+
+  deleteAdministrationCorrespondence: id => administrationFetch(
+    `/administration/correspondence/${encodeURIComponent(id)}`,
+    { method: 'DELETE' }
+  ),
 
   // ============================================================================
   // APPELS API TAUX DE CHANGE

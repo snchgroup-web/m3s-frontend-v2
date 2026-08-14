@@ -102,3 +102,35 @@ test('downloads a secured Intelligence artifact as a blob', async () => {
     expect.objectContaining({ headers: {} })
   );
 });
+
+test('loads Administration resources with authentication', async () => {
+  const payload = { success: true, data: [{ id: 'RES-1' }], source: 'bigquery' };
+  localStorage.setItem('token', 'test-token');
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    status: 200,
+    json: jest.fn().mockResolvedValue(payload)
+  });
+
+  await expect(api.getAdministrationResources(20, 5)).resolves.toEqual(payload);
+  expect(global.fetch).toHaveBeenCalledWith(
+    expect.stringMatching(/\/administration\/resources\?limit=20&offset=5$/),
+    expect.objectContaining({ headers: { Authorization: 'Bearer test-token' } })
+  );
+});
+
+test('preserves Administration access denial without expiring the session', async () => {
+  localStorage.setItem('token', 'test-token');
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: false,
+    status: 403,
+    json: jest.fn().mockResolvedValue({ code: 'ADMIN_REGISTRY_FORBIDDEN', error: 'Access denied' })
+  });
+
+  await expect(api.getAdministrationCorrespondence()).rejects.toMatchObject({
+    status: 403,
+    code: 'ADMIN_REGISTRY_FORBIDDEN'
+  });
+  expect(localStorage.getItem('token')).toBe('test-token');
+  expect(localStorage.getItem('session_expired')).toBeNull();
+});
