@@ -51,7 +51,7 @@ const COPY = {
       compliance: ['Conformité', 'Obligations et dossier juridique signalé, sans conclusion inventée.'],
       processes: ['Processus & Procédures', 'Cycle, manuel cible, dossiers et archives cadrés.'],
       architecture: ['Architecture & Relations', 'Couches, objets, échanges, systèmes et sources maîtresses structurés.'],
-      resources: ['Ressources', 'Sources, favoris et références qualifiés dans un registre local gouverné.'],
+      resources: ['Ressources', 'Sources, favoris et références qualifiés dans un registre gouverné, avec origine des données visible.'],
       assistant: ['Assistant administratif', 'Prototype de préparation contrôlée, sans action autonome ni accès implicite.'],
       glossary: ['Glossaire', 'Définitions locales réutilisées depuis le Glossaire central 2SG.']
     },
@@ -60,7 +60,7 @@ const COPY = {
     boundaryTitle: 'Frontières et prochaines connexions',
     boundaryItems: [
       'Les pièces, versions et preuves restent conservées dans la GED.',
-      'Les écritures locales de Ressources et Courrier restent des prototypes ; la GED et les registres maîtres conservent les preuves.',
+      'Ressources et Courrier utilisent le backend sécurisé lorsqu’il est disponible ; le repli local reste un pilote isolé et la GED conserve les preuves.',
       'Les indicateurs futurs devront afficher définition, source, date de mise à jour et responsable.'
     ]
   },
@@ -98,7 +98,7 @@ const COPY = {
       compliance: ['Compliance', 'Obligations and a reported legal matter, without invented conclusions.'],
       processes: ['Processes & Procedures', 'Cycle, target manual, files and archives are framed.'],
       architecture: ['Architecture & Relationships', 'Layers, objects, exchanges, systems and master sources are structured.'],
-      resources: ['Resources', 'Sources, bookmarks and references qualified in a governed local register.'],
+      resources: ['Resources', 'Sources, bookmarks and references qualified in a governed register with visible data origin.'],
       assistant: ['Administrative assistant', 'Controlled preparation prototype with no autonomous action or implicit access.'],
       glossary: ['Glossary', 'Local definitions reused from the 2SG Central Glossary.']
     },
@@ -107,7 +107,7 @@ const COPY = {
     boundaryTitle: 'Boundaries and next connections',
     boundaryItems: [
       'Evidence, versions and records remain stored in the DMS.',
-      'Local Resource and Correspondence writes remain prototypes; the DMS and master registers retain evidence.',
+      'Resources and Correspondence use the secure backend when available; local fallback remains an isolated pilot and the DMS retains evidence.',
       'Future indicators must display their definition, source, update date and owner.'
     ]
   },
@@ -145,7 +145,7 @@ const COPY = {
       compliance: ['Compliance', 'Pflichten und ein gemeldeter Rechtsfall, ohne erfundene Schlussfolgerung.'],
       processes: ['Prozesse & Verfahren', 'Ablauf, Zielhandbuch, Akten und Archive sind gerahmt.'],
       architecture: ['Architektur & Beziehungen', 'Ebenen, Objekte, Austausch, Systeme und Masterquellen sind strukturiert.'],
-      resources: ['Ressourcen', 'Quellen, Favoriten und Referenzen in einem gesteuerten lokalen Register qualifiziert.'],
+      resources: ['Ressourcen', 'Quellen, Favoriten und Referenzen in einem gesteuerten Register mit sichtbarer Datenherkunft qualifiziert.'],
       assistant: ['Verwaltungsassistent', 'Kontrollierter Vorbereitungsprototyp ohne autonome Aktion oder impliziten Zugriff.'],
       glossary: ['Glossar', 'Lokale Definitionen werden aus dem zentralen 2SG-Glossar übernommen.']
     },
@@ -154,7 +154,7 @@ const COPY = {
     boundaryTitle: 'Abgrenzungen und nächste Anbindungen',
     boundaryItems: [
       'Nachweise, Versionen und Unterlagen bleiben im DMS gespeichert.',
-      'Lokale Einträge für Ressourcen und Korrespondenz bleiben Prototypen; Nachweise verbleiben im DMS und in den Masterregistern.',
+      'Ressourcen und Korrespondenz nutzen das sichere Backend, sobald es verfügbar ist; der lokale Rückfall bleibt ein isolierter Pilot und Nachweise verbleiben im DMS.',
       'Künftige Kennzahlen müssen Definition, Quelle, Aktualisierungsdatum und Verantwortung anzeigen.'
     ]
   }
