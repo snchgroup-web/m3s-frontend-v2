@@ -8,7 +8,7 @@ const mockSetLanguage = jest.fn();
 const mockSetTheme = jest.fn();
 const mockLogout = jest.fn();
 let mockLanguage = 'FR';
-let mockIsDarkMode = true;
+let mockTheme = 'standard';
 let mockUser = { name: 'Cheikh', role: 'Manager' };
 
 jest.mock('react-router-dom', () => ({
@@ -21,7 +21,7 @@ jest.mock('./LanguageContext', () => ({
 }));
 
 jest.mock('./ThemeContext', () => ({
-  useTheme: () => ({ isDarkMode: mockIsDarkMode, setTheme: mockSetTheme })
+  useTheme: () => ({ theme: mockTheme, setTheme: mockSetTheme })
 }));
 
 jest.mock('./AuthContext', () => ({
@@ -36,7 +36,7 @@ jest.mock('./api', () => ({
 beforeEach(() => {
   jest.clearAllMocks();
   mockLanguage = 'FR';
-  mockIsDarkMode = true;
+  mockTheme = 'standard';
   mockUser = { name: 'Cheikh', role: 'Manager' };
   sessionStorage.clear();
   api.getFxHistory.mockReturnValue(new Promise(() => {}));
@@ -52,13 +52,18 @@ test('groups theme and language choices in one display settings panel', async ()
 
   const panel = screen.getByRole('dialog', { name: 'Paramètres d’affichage' });
   expect(panel).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: /Sombre/ })).toHaveAttribute('aria-pressed', 'true');
+  expect(screen.getByRole('button', { name: /^Standard/ })).toHaveAttribute('aria-pressed', 'true');
+  expect(screen.getByRole('button', { name: 'Sombre profond' })).toHaveAttribute('aria-pressed', 'false');
   expect(screen.getByRole('button', { name: 'FR' })).toHaveAttribute('aria-pressed', 'true');
 
   fireEvent.click(screen.getByRole('button', { name: /Clair/ }));
   expect(mockSetTheme).toHaveBeenCalledWith('light');
   expect(screen.queryByRole('dialog', { name: 'Paramètres d’affichage' })).not.toBeInTheDocument();
   expect(trigger).toHaveFocus();
+
+  fireEvent.click(trigger);
+  fireEvent.click(screen.getByRole('button', { name: 'Sombre profond' }));
+  expect(mockSetTheme).toHaveBeenCalledWith('deep');
 
   fireEvent.click(trigger);
   fireEvent.click(screen.getByRole('button', { name: 'EN' }));

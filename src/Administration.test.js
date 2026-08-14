@@ -12,6 +12,8 @@ test.each([
   ['compliance', 'compliance'],
   ['processes', 'processes'],
   ['architecture', 'architecture'],
+  ['resources', 'resources'],
+  ['assistant', 'assistant'],
   ['glossary', 'glossary'],
   ['tasks', 'planning'],
   ['projects', 'planning'],

@@ -1,9 +1,16 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import CommunicationOverview from './CommunicationOverview';
+import { AuthProvider } from './AuthContext';
+
+const renderCommunication = language => render(
+  <AuthProvider>
+    <CommunicationOverview language={language} />
+  </AuthProvider>
+);
 
 test('renders the governed communication and correspondence model in French', () => {
-  render(<CommunicationOverview language="FR" />);
+  renderCommunication('FR');
 
   expect(screen.getByRole('heading', { name: 'Communication institutionnelle & courrier officiel' })).toBeInTheDocument();
   expect(screen.getByRole('navigation', { name: 'Navigation dans Communication et Courrier' })).toBeInTheDocument();
@@ -16,7 +23,7 @@ test('renders the governed communication and correspondence model in French', ()
 });
 
 test('renders the German communication boundaries', () => {
-  render(<CommunicationOverview language="DE" />);
+  renderCommunication('DE');
 
   expect(screen.getByRole('heading', { name: 'Institutionelle Kommunikation & offizielle Korrespondenz' })).toBeInTheDocument();
   expect(screen.getByText('Demonstrationsdaten')).toBeInTheDocument();
@@ -30,7 +37,7 @@ test('uses the communication internal navigation', () => {
   const originalScrollIntoView = window.HTMLElement.prototype.scrollIntoView;
   window.HTMLElement.prototype.scrollIntoView = scrollIntoView;
 
-  render(<CommunicationOverview language="EN" />);
+  renderCommunication('EN');
   fireEvent.click(screen.getByRole('button', { name: 'Workflow' }));
 
   expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });

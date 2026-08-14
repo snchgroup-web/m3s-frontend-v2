@@ -27,6 +27,20 @@ html.dark {
   --m3s-shadow-panel: 0 10px 28px rgba(0, 0, 0, 0.28);
 }
 
+html.dark.deep-theme {
+  --m3s-surface-page: #0d0d0f;
+  --m3s-surface-panel: #171719;
+  --m3s-surface-raised: #202024;
+  --m3s-text-primary: #f4f4f5;
+  --m3s-text-secondary: #b8b8c0;
+  --m3s-border: #343438;
+  --m3s-border-strong: #505057;
+  --m3s-row-hover: rgba(59, 130, 246, 0.16);
+  --m3s-row-accent: #60a5fa;
+  --m3s-focus: #8cc9f6;
+  --m3s-shadow-panel: 0 10px 28px rgba(0, 0, 0, 0.42);
+}
+
 .m3s-design-scope {
   min-width: 0;
   font-family: var(--m3s-font-ui);

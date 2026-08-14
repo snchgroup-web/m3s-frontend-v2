@@ -7,9 +7,11 @@ import {
   CheckCircle2,
   ClipboardList,
   FolderKanban,
+  Library,
   Mail,
   Network,
-  ShieldCheck
+  ShieldCheck,
+  Bot
 } from 'lucide-react';
 import { getAdministrationGlossaryTerms } from './AdministrationGlossary';
 import { LEGAL_DOCUMENTARY_BASELINE } from './legalDocumentaryProgress';
@@ -39,7 +41,7 @@ const COPY = {
     confirmedZero: 'Zéro confirmé par la source',
     available: 'Source disponible',
     coverageTitle: 'Couverture fonctionnelle',
-    coverageBody: 'Sept composantes organisent actuellement la fonction Administration. Leur niveau de maturité reste visible sans transformer un cadrage en donnée opérationnelle.',
+    coverageBody: 'Neuf composantes organisent actuellement la fonction Administration. Leur niveau de maturité reste visible sans transformer un cadrage en donnée opérationnelle.',
     open: 'Ouvrir',
     statuses: { structured: 'Structurée', connected: 'Connectée', framed: 'Cadrée', governed: 'Gouverné', documentaryBaseline: 'Point de départ contrôlé' },
     components: {
@@ -49,6 +51,8 @@ const COPY = {
       compliance: ['Conformité', 'Obligations et dossier juridique signalé, sans conclusion inventée.'],
       processes: ['Processus & Procédures', 'Cycle, manuel cible, dossiers et archives cadrés.'],
       architecture: ['Architecture & Relations', 'Couches, objets, échanges, systèmes et sources maîtresses structurés.'],
+      resources: ['Ressources', 'Sources, favoris et références qualifiés dans un registre local gouverné.'],
+      assistant: ['Assistant administratif', 'Prototype de préparation contrôlée, sans action autonome ni accès implicite.'],
       glossary: ['Glossaire', 'Définitions locales réutilisées depuis le Glossaire central 2SG.']
     },
     readingTitle: 'Règle de lecture des indicateurs',
@@ -56,7 +60,7 @@ const COPY = {
     boundaryTitle: 'Frontières et prochaines connexions',
     boundaryItems: [
       'Les pièces, versions et preuves restent conservées dans la GED.',
-      'Les registres Communication, Conformité et Processus restent en lecture seule tant que leurs données ne sont pas raccordées.',
+      'Les écritures locales de Ressources et Courrier restent des prototypes ; la GED et les registres maîtres conservent les preuves.',
       'Les indicateurs futurs devront afficher définition, source, date de mise à jour et responsable.'
     ]
   },
@@ -84,7 +88,7 @@ const COPY = {
     confirmedZero: 'Zero confirmed by source',
     available: 'Source available',
     coverageTitle: 'Functional coverage',
-    coverageBody: 'Seven components currently organise the Administration function. Their maturity remains visible without presenting framing as operational data.',
+    coverageBody: 'Nine components currently organise the Administration function. Their maturity remains visible without presenting framing as operational data.',
     open: 'Open',
     statuses: { structured: 'Structured', connected: 'Connected', framed: 'Framed', governed: 'Governed', documentaryBaseline: 'Controlled baseline' },
     components: {
@@ -94,6 +98,8 @@ const COPY = {
       compliance: ['Compliance', 'Obligations and a reported legal matter, without invented conclusions.'],
       processes: ['Processes & Procedures', 'Cycle, target manual, files and archives are framed.'],
       architecture: ['Architecture & Relationships', 'Layers, objects, exchanges, systems and master sources are structured.'],
+      resources: ['Resources', 'Sources, bookmarks and references qualified in a governed local register.'],
+      assistant: ['Administrative assistant', 'Controlled preparation prototype with no autonomous action or implicit access.'],
       glossary: ['Glossary', 'Local definitions reused from the 2SG Central Glossary.']
     },
     readingTitle: 'Indicator reading rule',
@@ -101,7 +107,7 @@ const COPY = {
     boundaryTitle: 'Boundaries and next connections',
     boundaryItems: [
       'Evidence, versions and records remain stored in the DMS.',
-      'Communication, Compliance and Process registers remain read-only until their data sources are connected.',
+      'Local Resource and Correspondence writes remain prototypes; the DMS and master registers retain evidence.',
       'Future indicators must display their definition, source, update date and owner.'
     ]
   },
@@ -129,7 +135,7 @@ const COPY = {
     confirmedZero: 'Null durch die Quelle bestätigt',
     available: 'Quelle verfügbar',
     coverageTitle: 'Funktionale Abdeckung',
-    coverageBody: 'Sieben Komponenten strukturieren derzeit die Verwaltungsfunktion. Ihr Reifegrad bleibt sichtbar, ohne einen Rahmen als operative Daten darzustellen.',
+    coverageBody: 'Neun Komponenten strukturieren derzeit die Verwaltungsfunktion. Ihr Reifegrad bleibt sichtbar, ohne einen Rahmen als operative Daten darzustellen.',
     open: 'Öffnen',
     statuses: { structured: 'Strukturiert', connected: 'Verbunden', framed: 'Gerahmt', governed: 'Gesteuert', documentaryBaseline: 'Kontrollierter Ausgangspunkt' },
     components: {
@@ -139,6 +145,8 @@ const COPY = {
       compliance: ['Compliance', 'Pflichten und ein gemeldeter Rechtsfall, ohne erfundene Schlussfolgerung.'],
       processes: ['Prozesse & Verfahren', 'Ablauf, Zielhandbuch, Akten und Archive sind gerahmt.'],
       architecture: ['Architektur & Beziehungen', 'Ebenen, Objekte, Austausch, Systeme und Masterquellen sind strukturiert.'],
+      resources: ['Ressourcen', 'Quellen, Favoriten und Referenzen in einem gesteuerten lokalen Register qualifiziert.'],
+      assistant: ['Verwaltungsassistent', 'Kontrollierter Vorbereitungsprototyp ohne autonome Aktion oder impliziten Zugriff.'],
       glossary: ['Glossar', 'Lokale Definitionen werden aus dem zentralen 2SG-Glossar übernommen.']
     },
     readingTitle: 'Leseregel für Kennzahlen',
@@ -146,7 +154,7 @@ const COPY = {
     boundaryTitle: 'Abgrenzungen und nächste Anbindungen',
     boundaryItems: [
       'Nachweise, Versionen und Unterlagen bleiben im DMS gespeichert.',
-      'Register für Kommunikation, Compliance und Prozesse bleiben schreibgeschützt, bis ihre Datenquellen angebunden sind.',
+      'Lokale Einträge für Ressourcen und Korrespondenz bleiben Prototypen; Nachweise verbleiben im DMS und in den Masterregistern.',
       'Künftige Kennzahlen müssen Definition, Quelle, Aktualisierungsdatum und Verantwortung anzeigen.'
     ]
   }
@@ -197,6 +205,8 @@ const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, t
     { id: 'compliance', icon: ShieldCheck, status: t.statuses.framed },
     { id: 'planning', icon: FolderKanban, status: tasksReady ? t.statuses.connected : t.unavailable },
     { id: 'communication', icon: Mail, status: t.statuses.framed },
+    { id: 'resources', icon: Library, status: t.statuses.governed },
+    { id: 'assistant', icon: Bot, status: t.statuses.framed },
     { id: 'glossary', icon: BookOpenText, status: `${glossaryCount} ${t.metrics.glossary.toLowerCase()}` }
   ];
 
@@ -220,11 +230,10 @@ const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, t
         <h3 id="administration-coverage-title" className="text-xl font-semibold text-slate-100">{t.coverageTitle}</h3>
         <p className="mt-2 max-w-5xl text-sm leading-6 text-slate-400">{t.coverageBody}</p>
         <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-12">
-          {components.map(({ id, icon: Icon, status }, index) => {
+          {components.map(({ id, icon: Icon, status }) => {
             const [title, body] = t.components[id];
-            const wideSpan = index < 3 ? 'xl:col-span-4' : 'xl:col-span-3';
             return (
-              <article key={id} className={`flex min-h-44 flex-col rounded-lg border border-slate-700 bg-slate-900/45 p-4 ${wideSpan} ${HOVER_CARD_CLASSES}`}>
+              <article key={id} className={`flex min-h-44 flex-col rounded-lg border border-slate-700 bg-slate-900/45 p-4 xl:col-span-4 ${HOVER_CARD_CLASSES}`}>
                 <div className="flex items-start justify-between gap-3">
                   <Icon size={21} className="text-blue-300" aria-hidden="true" />
                   <span className="rounded-full border border-slate-600 bg-slate-900 px-2.5 py-1 text-xs font-semibold text-slate-300">{status}</span>
