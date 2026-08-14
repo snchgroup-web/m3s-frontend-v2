@@ -133,6 +133,17 @@
           "path": "/administration?tab=assistant"
         },
         {
+          "id": "administration-audit",
+          "label": {
+            "FR": "Journal d’audit",
+            "EN": "Audit log",
+            "DE": "Auditprotokoll"
+          },
+          "icon": "ScrollText",
+          "path": "/administration?tab=audit",
+          "requiredPermission": "administration:audit:read"
+        },
+        {
           "id": "administration-glossary",
           "label": {
             "FR": "Glossaire",

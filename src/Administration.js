@@ -16,7 +16,10 @@ import AdministrationDashboardOverview from './AdministrationDashboardOverview';
 import AdministrationArchitectureOverview from './AdministrationArchitectureOverview';
 import AdministrationResources from './AdministrationResources';
 import AdministrativeAssistant from './AdministrativeAssistant';
+import AdministrationAuditLog from './AdministrationAuditLog';
 import { StandardCreateButton } from './StandardUI';
+import { useAuth } from './AuthContext';
+import { ADMINISTRATION_AUDIT_PERMISSION, hasPermission } from './accessControl';
 import {
   buildAdministrationTabPath,
   resolveAdministrationTab,
@@ -25,8 +28,11 @@ import {
 
 const Admin = () => {
   const { language } = useLanguage();
+  const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const permissions = Array.isArray(user?.permissions) ? user.permissions : [];
+  const canReadAudit = hasPermission(permissions, ADMINISTRATION_AUDIT_PERMISSION);
 
   // Translations
   const translations = {
@@ -41,7 +47,7 @@ const Admin = () => {
       overview: 'Vue d\'ensemble',
       users: 'Utilisateurs',
       roles: 'Rôles',
-      audit: 'Audit Log',
+      audit: 'Journal d’audit',
       tasks: 'Tâches & Actions',
       planning: 'Planification & Projets',
       roleDistribution: 'Distribution des Rôles',
@@ -109,7 +115,7 @@ const Admin = () => {
       overview: 'Overview',
       users: 'Users',
       roles: 'Roles',
-      audit: 'Audit Log',
+      audit: 'Audit log',
       tasks: 'Tasks & Actions',
       planning: 'Planning & Projects',
       roleDistribution: 'Role Distribution',
@@ -177,7 +183,7 @@ const Admin = () => {
       overview: 'Übersicht',
       users: 'Benutzer',
       roles: 'Rollen',
-      audit: 'Audit-Protokoll',
+      audit: 'Auditprotokoll',
       tasks: 'Aufgaben & Aktionen',
       planning: 'Planung & Projekte',
       roleDistribution: 'Rollenverteilung',
@@ -238,14 +244,8 @@ const Admin = () => {
 
   const t = translations[language];
 
-  // Data translations for audit actions, days, and roles
+  // Data translations for days, roles, and task fields
   const dataTranslations = {
-    // Audit Actions
-    auditActions: {
-      FR: { 'LOGIN': 'Connexion', 'CREATE': 'Création', 'UPDATE': 'Modification', 'DELETE': 'Suppression', 'READ': 'Lecture', 'EXPORT': 'Exportation', 'LOGIN_FAILED': 'Échec Connexion' },
-      EN: { 'LOGIN': 'Login', 'CREATE': 'Create', 'UPDATE': 'Update', 'DELETE': 'Delete', 'READ': 'Read', 'EXPORT': 'Export', 'LOGIN_FAILED': 'Login Failed' },
-      DE: { 'LOGIN': 'Anmeldung', 'CREATE': 'Erstellen', 'UPDATE': 'Aktualisierung', 'DELETE': 'Löschung', 'READ': 'Lesen', 'EXPORT': 'Exportieren', 'LOGIN_FAILED': 'Anmeldung Fehlgeschlagen' }
-    },
     // Days of Week
     days: {
       FR: { 'Lun': 'Lun', 'Mar': 'Mar', 'Mer': 'Mer', 'Jeu': 'Jeu', 'Ven': 'Ven' },
@@ -332,7 +332,6 @@ const Admin = () => {
     }
   };
 
-  const translateAuditAction = (action) => dataTranslations.auditActions[language]?.[action] || action;
   const translateRole = (role) => dataTranslations.roles[language]?.[role] || role;
   const translateRoleDescription = (desc) => dataTranslations.roleDescriptions[language]?.[desc] || desc;
   const normalizeLookupKey = (value) => String(value || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
@@ -390,7 +389,6 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
-  const [auditLogs, setAuditLogs] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [taskSummary, setTaskSummary] = useState({ total: null, open: null, completed: null });
   const [taskSummaryStatus, setTaskSummaryStatus] = useState('loading');
@@ -421,9 +419,13 @@ const Admin = () => {
   });
 
   useEffect(() => {
-    const tab = new URLSearchParams(location.search).get('tab');
-    setActiveTab(resolveAdministrationTab(tab));
-  }, [location.search]);
+    const requestedTab = new URLSearchParams(location.search).get('tab');
+    const resolvedTab = resolveAdministrationTab(requestedTab, { canReadAudit });
+    setActiveTab(resolvedTab);
+    if (requestedTab === 'audit' && !canReadAudit) {
+      navigate(buildAdministrationTabPath('overview'), { replace: true });
+    }
+  }, [canReadAudit, location.search, navigate]);
 
   useEffect(() => {
     const loadTasks = async () => {
@@ -488,16 +490,6 @@ const Admin = () => {
       { id: 6, nom: 'Viewer', permissions: ['Read'], description: 'Lecture seule' },
     ]);
 
-    setAuditLogs([
-      { id: 1, utilisateur: 'Cheikh Sall', action: 'LOGIN', module: 'Auth', timestamp: '2026-04-22 15:30:00', statut: 'Success' },
-      { id: 2, utilisateur: 'Chantal Ba', action: 'CREATE', module: 'Finance', timestamp: '2026-04-22 15:25:00', statut: 'Success' },
-      { id: 3, utilisateur: 'Pape Ndiaye', action: 'UPDATE', module: 'Users', timestamp: '2026-04-22 15:20:00', statut: 'Success' },
-      { id: 4, utilisateur: 'Gnilane Diop', action: 'READ', module: 'Dashboard', timestamp: '2026-04-22 15:15:00', statut: 'Success' },
-      { id: 5, utilisateur: 'Ibou Seck', action: 'DELETE', module: 'Finance', timestamp: '2026-04-22 15:10:00', statut: 'Success' },
-      { id: 6, utilisateur: 'Cheikh Sall', action: 'EXPORT', module: 'Finance', timestamp: '2026-04-22 15:05:00', statut: 'Success' },
-      { id: 7, utilisateur: 'Chantal Ba', action: 'LOGIN', module: 'Auth', timestamp: '2026-04-22 14:45:00', statut: 'Success' },
-      { id: 8, utilisateur: 'Pape Ndiaye', action: 'LOGIN_FAILED', module: 'Auth', timestamp: '2026-04-22 14:30:00', statut: 'Failed' },
-    ]);
   }, []);
 
   // Calculs KPIs
@@ -653,6 +645,7 @@ const Admin = () => {
           language={language}
           activeTab={activeTab}
           onSelect={handleTabSelect}
+          permissions={permissions}
           tabs={[
             { tab: 'overview', label: t.overview },
             { tab: 'institution', label: t.institution },
@@ -662,7 +655,8 @@ const Admin = () => {
             { tab: 'processes', label: t.processes },
             { tab: 'architecture', label: t.architecture },
             { tab: 'resources', label: t.resources },
-            { tab: 'assistant', label: t.assistant }
+            { tab: 'assistant', label: t.assistant },
+            ...(canReadAudit ? [{ tab: 'audit', label: t.audit }] : [])
           ]}
         />
 
@@ -787,6 +781,10 @@ const Admin = () => {
           <AdministrativeAssistant language={language} />
         )}
 
+        {activeTab === 'audit' && canReadAudit && (
+          <AdministrationAuditLog language={language} />
+        )}
+
         {/* Utilisateurs */}
         {activeTab === 'users' && (
           <div>
@@ -886,39 +884,7 @@ const Admin = () => {
           </div>
         )}
 
-        {/* Audit Log */}
-        {activeTab === 'audit' && (
-          <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-slate-700">
-                <tr>
-                  <th className="px-4 py-2 text-left text-white font-bold">{t.utilisateur}</th>
-                  <th className="px-4 py-2 text-left text-white font-bold">{t.action}</th>
-                  <th className="px-4 py-2 text-left text-white font-bold">{t.module}</th>
-                  <th className="px-4 py-2 text-left text-white font-bold">{t.timestamp}</th>
-                  <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {auditLogs.map(log => (
-                  <tr key={log.id} className="administration-table-row border-t border-slate-700 transition-colors hover:bg-blue-950/35">
-                    <td className="px-4 py-2 text-slate-300">{log.utilisateur}</td>
-                    <td className="px-4 py-2 text-slate-400">{translateAuditAction(log.action)}</td>
-                    <td className="px-4 py-2 text-slate-400">{log.module}</td>
-                    <td className="px-4 py-2 text-slate-400 text-xs">{log.timestamp}</td>
-                    <td className="px-4 py-2">
-                      <span className={`px-2 py-1 rounded text-xs font-semibold ${log.statut === 'Success' ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'}`}>
-                        {log.statut === 'Success' ? t.success : t.failed}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} handledTabs={['overview', 'institution', 'planning', 'communication', 'compliance', 'processes', 'architecture', 'resources', 'assistant', 'glossary']} />
+        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} permissions={permissions} handledTabs={['overview', 'institution', 'planning', 'communication', 'compliance', 'processes', 'architecture', 'resources', 'assistant', 'audit', 'glossary']} />
         </div>
       </div>
 

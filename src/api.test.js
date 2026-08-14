@@ -134,3 +134,19 @@ test('preserves Administration access denial without expiring the session', asyn
   expect(localStorage.getItem('token')).toBe('test-token');
   expect(localStorage.getItem('session_expired')).toBeNull();
 });
+
+test('loads the restricted Administration audit log with authentication', async () => {
+  const payload = { success: true, data: [{ id: 'AUD-1' }], source: 'bigquery' };
+  localStorage.setItem('token', 'test-token');
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    status: 200,
+    json: jest.fn().mockResolvedValue(payload)
+  });
+
+  await expect(api.getAdministrationAudit(25, 10)).resolves.toEqual(payload);
+  expect(global.fetch).toHaveBeenCalledWith(
+    expect.stringMatching(/\/administration\/audit\?limit=25&offset=10$/),
+    expect.objectContaining({ headers: { Authorization: 'Bearer test-token' } })
+  );
+});

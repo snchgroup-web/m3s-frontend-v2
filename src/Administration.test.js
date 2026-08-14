@@ -23,6 +23,11 @@ test.each([
   expect(resolveAdministrationTab(input)).toBe(expected);
 });
 
+test('opens the audit route only when the dedicated permission is available', () => {
+  expect(resolveAdministrationTab('audit')).toBe('overview');
+  expect(resolveAdministrationTab('audit', { canReadAudit: true })).toBe('audit');
+});
+
 test('keeps a visible return path when a component is opened from the Administration overview', () => {
   expect(buildAdministrationTabPath('processes', { fromOverview: true }))
     .toBe('/administration?tab=processes&returnTo=overview');
