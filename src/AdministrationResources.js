@@ -3,6 +3,7 @@ import { BookMarked, Database, Edit2, FolderLock, HardDrive, Library, Loader2, P
 import api from './api';
 import { useAuth } from './AuthContext';
 import { isDemoSession, resourceFromApi, resourceToApi } from './administrationRegistryAdapters';
+import ActionConfirmationDialog from './ActionConfirmationDialog';
 
 const STORAGE_KEY_PREFIX = 'm3s-administration-resources-v2';
 
@@ -12,7 +13,8 @@ const COPY = {
     intro: 'Ce registre qualifie les ressources utiles sans remplacer la GED, le registre LEGAL ni les sources officielles. Les dossiers de favoris restent une base initiale non exhaustive.',
     add: 'Ajouter une ressource', search: 'Rechercher une ressource', all: 'Toutes les familles', empty: 'Aucune ressource ne correspond aux filtres.',
     edit: 'Modifier', delete: 'Supprimer', close: 'Fermer', cancel: 'Annuler', save: 'Enregistrer', update: 'Modifier',
-    confirmSave: 'Confirmer l’enregistrement de cette ressource ?', confirmDelete: 'Confirmer la suppression de cette ressource ?',
+    confirmCreateTitle: 'Confirmer l’ajout', confirmCreate: 'Oui, ajouter', confirmUpdateTitle: 'Confirmer la modification', confirmUpdate: 'Oui, modifier', confirmDeleteTitle: 'Confirmer la suppression', confirmDelete: 'Oui, supprimer', decline: 'Non',
+    confirmCreateBody: 'Ajouter « {title} » au registre des ressources ?', confirmUpdateBody: 'Enregistrer les modifications de « {title} » ?', confirmDeleteBody: 'Supprimer « {title} » du registre des ressources ?',
     saved: 'Ressource enregistrée avec succès.', deleted: 'Ressource supprimée avec succès.', required: 'Complétez les champs obligatoires.', saveFailed: 'Enregistrement impossible. Vérifiez vos droits ou réessayez.', deleteFailed: 'Suppression impossible. Vérifiez vos droits ou réessayez.',
     fields: { title: 'Titre', family: 'Famille', authority: 'Autorité ou propriétaire', location: 'URL ou emplacement GED', status: 'Statut de la source', review: 'Statut de revue', confidentiality: 'Confidentialité', note: 'Note' },
     sourceStatus: ['Officielle', 'Interne gouvernée', 'À qualifier'], reviewStatus: ['Contrôlée', 'À revoir', 'À compléter'], confidentiality: ['Public', 'Interne', 'Restreint'],
@@ -24,7 +26,8 @@ const COPY = {
     intro: 'This register qualifies useful resources without replacing the DMS, the LEGAL register or official sources. Bookmark folders remain an initial, non-exhaustive base.',
     add: 'Add resource', search: 'Search resources', all: 'All families', empty: 'No resource matches the filters.',
     edit: 'Edit', delete: 'Delete', close: 'Close', cancel: 'Cancel', save: 'Save', update: 'Update',
-    confirmSave: 'Confirm saving this resource?', confirmDelete: 'Confirm deletion of this resource?', saved: 'Resource saved successfully.', deleted: 'Resource deleted successfully.', required: 'Complete the required fields.', saveFailed: 'Unable to save. Check your permissions or try again.', deleteFailed: 'Unable to delete. Check your permissions or try again.',
+    confirmCreateTitle: 'Confirm addition', confirmCreate: 'Yes, add', confirmUpdateTitle: 'Confirm update', confirmUpdate: 'Yes, update', confirmDeleteTitle: 'Confirm deletion', confirmDelete: 'Yes, delete', decline: 'No',
+    confirmCreateBody: 'Add “{title}” to the resource register?', confirmUpdateBody: 'Save the changes to “{title}”?', confirmDeleteBody: 'Delete “{title}” from the resource register?', saved: 'Resource saved successfully.', deleted: 'Resource deleted successfully.', required: 'Complete the required fields.', saveFailed: 'Unable to save. Check your permissions or try again.', deleteFailed: 'Unable to delete. Check your permissions or try again.',
     fields: { title: 'Title', family: 'Family', authority: 'Authority or owner', location: 'URL or DMS location', status: 'Source status', review: 'Review status', confidentiality: 'Confidentiality', note: 'Note' },
     sourceStatus: ['Official', 'Governed internal', 'To qualify'], reviewStatus: ['Controlled', 'To review', 'To complete'], confidentiality: ['Public', 'Internal', 'Restricted'],
     families: ['LEGAL & Regulatory', 'Institution & Governance', 'Processes & Methods', 'Planning & Projects'], boundary: 'A bookmark makes access easier. It proves neither currency, applicability nor legal compliance.'
@@ -34,7 +37,8 @@ const COPY = {
     intro: 'Dieses Register qualifiziert nützliche Ressourcen, ohne DMS, LEGAL-Register oder amtliche Quellen zu ersetzen. Favoritenordner bleiben eine erste, nicht abschließende Grundlage.',
     add: 'Ressource hinzufügen', search: 'Ressourcen suchen', all: 'Alle Familien', empty: 'Keine Ressource entspricht den Filtern.',
     edit: 'Bearbeiten', delete: 'Löschen', close: 'Schließen', cancel: 'Abbrechen', save: 'Speichern', update: 'Ändern',
-    confirmSave: 'Speichern dieser Ressource bestätigen?', confirmDelete: 'Löschen dieser Ressource bestätigen?', saved: 'Ressource erfolgreich gespeichert.', deleted: 'Ressource erfolgreich gelöscht.', required: 'Pflichtfelder ausfüllen.', saveFailed: 'Speichern nicht möglich. Berechtigungen prüfen oder erneut versuchen.', deleteFailed: 'Löschen nicht möglich. Berechtigungen prüfen oder erneut versuchen.',
+    confirmCreateTitle: 'Hinzufügen bestätigen', confirmCreate: 'Ja, hinzufügen', confirmUpdateTitle: 'Änderung bestätigen', confirmUpdate: 'Ja, ändern', confirmDeleteTitle: 'Löschen bestätigen', confirmDelete: 'Ja, löschen', decline: 'Nein',
+    confirmCreateBody: '„{title}“ zum Ressourcenregister hinzufügen?', confirmUpdateBody: 'Änderungen an „{title}“ speichern?', confirmDeleteBody: '„{title}“ aus dem Ressourcenregister löschen?', saved: 'Ressource erfolgreich gespeichert.', deleted: 'Ressource erfolgreich gelöscht.', required: 'Pflichtfelder ausfüllen.', saveFailed: 'Speichern nicht möglich. Berechtigungen prüfen oder erneut versuchen.', deleteFailed: 'Löschen nicht möglich. Berechtigungen prüfen oder erneut versuchen.',
     fields: { title: 'Titel', family: 'Familie', authority: 'Behörde oder Eigentümer', location: 'URL oder DMS-Ablage', status: 'Quellenstatus', review: 'Prüfstatus', confidentiality: 'Vertraulichkeit', note: 'Notiz' },
     sourceStatus: ['Amtlich', 'Intern gesteuert', 'Zu qualifizieren'], reviewStatus: ['Kontrolliert', 'Zu prüfen', 'Zu ergänzen'], confidentiality: ['Öffentlich', 'Intern', 'Eingeschränkt'],
     families: ['LEGAL & Regulierung', 'Institution & Governance', 'Prozesse & Methoden', 'Planung & Projekte'], boundary: 'Ein Favorit erleichtert den Zugriff. Er belegt weder Aktualität noch Anwendbarkeit oder Rechtskonformität.'
@@ -104,6 +108,7 @@ const AdministrationResources = ({ language = 'FR' }) => {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [message, setMessage] = useState('');
+  const [pendingAction, setPendingAction] = useState(null);
 
   useEffect(() => {
     let active = true;
@@ -147,48 +152,54 @@ const AdministrationResources = ({ language = 'FR' }) => {
   const openCreate = () => { setEditing('new'); setForm(emptyForm); setMessage(''); };
   const openEdit = item => { setEditing(item.id); setForm({ ...item }); setMessage(''); };
   const close = () => { setEditing(null); setForm(emptyForm); };
-  const save = async event => {
+  const save = event => {
     event.preventDefault();
     if (!form.title.trim() || !form.authority.trim() || !form.location.trim()) { setMessage(t.required); return; }
-    if (!window.confirm(t.confirmSave)) return;
-    const { contentKey, sourceKind, ...editableFields } = form;
-    const item = { ...editableFields, id: editing === 'new' ? `RES-${Date.now()}` : editing, sourceKind: sourceState };
+    setPendingAction({ type: editing === 'new' ? 'create' : 'update', editing, form: { ...form } });
+  };
+  const remove = item => setPendingAction({ type: 'delete', item });
+  const confirmPendingAction = async () => {
+    if (!pendingAction) return;
+    const action = pendingAction;
     setBusy(true);
     try {
-      if (sourceState === 'backend') {
-        const result = editing === 'new'
-          ? await api.createAdministrationResource(resourceToApi(item))
-          : await api.updateAdministrationResource(editing, resourceToApi(item));
-        const savedItem = resourceFromApi(result.data);
-        setResources(editing === 'new' ? [savedItem, ...resources] : resources.map(current => current.id === editing ? savedItem : current));
-      } else if (sourceState === 'local') {
-        persist(editing === 'new' ? [item, ...resources] : resources.map(current => current.id === editing ? item : current));
+      if (action.type === 'delete') {
+        if (sourceState === 'backend') await api.deleteAdministrationResource(action.item.id);
+        const nextResources = resources.filter(current => current.id !== action.item.id);
+        if (sourceState === 'local') window.localStorage.setItem(storageKey, JSON.stringify(nextResources));
+        setResources(nextResources);
+        setMessage(t.deleted);
       } else {
-        setMessage(t.saveFailed);
-        return;
+        const { contentKey, sourceKind, ...editableFields } = action.form;
+        const item = { ...editableFields, id: action.editing === 'new' ? `RES-${Date.now()}` : action.editing, sourceKind: sourceState };
+        if (sourceState === 'backend') {
+          const result = action.type === 'create'
+            ? await api.createAdministrationResource(resourceToApi(item))
+            : await api.updateAdministrationResource(action.editing, resourceToApi(item));
+          const savedItem = resourceFromApi(result.data);
+          setResources(action.type === 'create' ? [savedItem, ...resources] : resources.map(current => current.id === action.editing ? savedItem : current));
+        } else if (sourceState === 'local') {
+          persist(action.type === 'create' ? [item, ...resources] : resources.map(current => current.id === action.editing ? item : current));
+        } else {
+          setMessage(t.saveFailed);
+          return;
+        }
+        close();
+        setMessage(t.saved);
       }
-      close();
-      setMessage(t.saved);
     } catch {
-      setMessage(t.saveFailed);
+      setMessage(action.type === 'delete' ? t.deleteFailed : t.saveFailed);
     } finally {
       setBusy(false);
+      setPendingAction(null);
     }
   };
-  const remove = async item => {
-    if (!window.confirm(t.confirmDelete)) return;
-    setBusy(true);
-    try {
-      if (sourceState === 'backend') await api.deleteAdministrationResource(item.id);
-      if (sourceState === 'local') window.localStorage.setItem(storageKey, JSON.stringify(resources.filter(current => current.id !== item.id)));
-      setResources(resources.filter(current => current.id !== item.id));
-      setMessage(t.deleted);
-    } catch {
-      setMessage(t.deleteFailed);
-    } finally {
-      setBusy(false);
-    }
-  };
+  const confirmation = pendingAction ? {
+    create: { title: t.confirmCreateTitle, body: t.confirmCreateBody, confirm: t.confirmCreate },
+    update: { title: t.confirmUpdateTitle, body: t.confirmUpdateBody, confirm: t.confirmUpdate },
+    delete: { title: t.confirmDeleteTitle, body: t.confirmDeleteBody, confirm: t.confirmDelete }
+  }[pendingAction.type] : null;
+  const confirmationTitle = pendingAction?.type === 'delete' ? pendingAction.item.title : pendingAction?.form.title;
   const canWrite = sourceState === 'backend' || sourceState === 'local';
   const SourceIcon = sourceState === 'backend' ? Database : sourceState === 'local' ? HardDrive : sourceState === 'forbidden' ? ShieldAlert : Loader2;
 
@@ -242,6 +253,19 @@ const AdministrationResources = ({ language = 'FR' }) => {
             <div className="mt-6 flex flex-col-reverse gap-3 border-t border-slate-700 pt-4 sm:flex-row sm:justify-end"><button type="button" className="m3s-secondary-button min-h-11 px-4" onClick={close} disabled={busy}>{t.cancel}</button><button type="submit" className="m3s-success-button min-h-11 px-4" disabled={busy}>{editing === 'new' ? t.save : t.update}</button></div>
           </form>
         </div>
+      )}
+      {pendingAction && confirmation && (
+        <ActionConfirmationDialog
+          id="resource-confirmation"
+          title={confirmation.title}
+          body={confirmation.body.replace('{title}', confirmationTitle || '')}
+          cancelLabel={t.decline}
+          confirmLabel={confirmation.confirm}
+          action={pendingAction.type}
+          busy={busy}
+          onCancel={() => setPendingAction(null)}
+          onConfirm={confirmPendingAction}
+        />
       )}
     </section>
   );
