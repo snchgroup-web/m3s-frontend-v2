@@ -43,6 +43,8 @@ test('orders Administration tabs from institutional framing to execution and glo
     'compliance',
     'planning',
     'communication',
+    'resources',
+    'assistant',
     'glossary'
   ]);
 });

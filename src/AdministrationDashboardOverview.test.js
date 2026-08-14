@@ -16,7 +16,7 @@ test('distinguishes a confirmed zero from an unavailable task source', () => {
   expect(screen.getAllByText('Source indisponible').length).toBeGreaterThanOrEqual(2);
 });
 
-test('shows the seven governed Administration components and opens the selected one', () => {
+test('shows the nine governed Administration components and opens the selected one', () => {
   const onNavigate = jest.fn();
   render(
     <AdministrationDashboardOverview
@@ -36,7 +36,7 @@ test('shows the seven governed Administration components and opens the selected 
   expect(within(trackedTasksMetric).getByText('Open : 88')).toBeInTheDocument();
   expect(within(completedTasksMetric).getByText('566')).toBeInTheDocument();
   const componentsMetric = screen.getByText('Structured components').closest('button');
-  expect(within(componentsMetric).getByText('7')).toBeInTheDocument();
+  expect(within(componentsMetric).getByText('9')).toBeInTheDocument();
   const complianceMetric = screen.getByText('LEGAL documentary progress').closest('button');
   expect(within(complianceMetric).getByText('1 / 6')).toBeInTheDocument();
   expect(within(complianceMetric).getByText('Inventory established')).toBeInTheDocument();
@@ -50,6 +50,8 @@ test('shows the seven governed Administration components and opens the selected 
     'Compliance',
     'Planning & Projects',
     'Communication & Correspondence',
+    'Resources',
+    'Administrative assistant',
     'Glossary'
   ]);
 
@@ -57,7 +59,7 @@ test('shows the seven governed Administration components and opens the selected 
   expect(onNavigate).toHaveBeenCalledWith('planning');
 
   const openButtons = screen.getAllByRole('button', { name: 'Open' });
-  expect(openButtons).toHaveLength(7);
+  expect(openButtons).toHaveLength(9);
   fireEvent.click(openButtons[2]);
   expect(onNavigate).toHaveBeenCalledWith('processes');
 });

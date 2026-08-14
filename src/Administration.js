@@ -14,6 +14,8 @@ import AdministrationGlossary from './AdministrationGlossary';
 import ProcessProcedureArchiveOverview from './ProcessProcedureArchiveOverview';
 import AdministrationDashboardOverview from './AdministrationDashboardOverview';
 import AdministrationArchitectureOverview from './AdministrationArchitectureOverview';
+import AdministrationResources from './AdministrationResources';
+import AdministrativeAssistant from './AdministrativeAssistant';
 import { StandardCreateButton } from './StandardUI';
 import {
   buildAdministrationTabPath,
@@ -88,6 +90,8 @@ const Admin = () => {
       processes: 'Processus & Procédures',
       architecture: 'Architecture & Relations',
       compliance: 'Conformité',
+      resources: 'Ressources',
+      assistant: 'Assistant administratif',
       complianceTracked: 'dossier suivi',
       backToOverview: 'Revenir à la vue d’ensemble',
       tachesTerminees: 'Tâches terminées',
@@ -154,6 +158,8 @@ const Admin = () => {
       processes: 'Processes & Procedures',
       architecture: 'Architecture & Relationships',
       compliance: 'Compliance',
+      resources: 'Resources',
+      assistant: 'Administrative assistant',
       complianceTracked: 'tracked matter',
       backToOverview: 'Return to overview',
       tachesTerminees: 'Completed tasks',
@@ -220,6 +226,8 @@ const Admin = () => {
       processes: 'Prozesse & Verfahren',
       architecture: 'Architektur & Beziehungen',
       compliance: 'Compliance',
+      resources: 'Ressourcen',
+      assistant: 'Verwaltungsassistent',
       complianceTracked: 'verfolgter Fall',
       backToOverview: 'Zur Übersicht zurückkehren',
       tachesTerminees: 'Abgeschlossene Aufgaben',
@@ -652,7 +660,9 @@ const Admin = () => {
             { tab: 'communication', label: t.communication },
             { tab: 'compliance', label: t.compliance },
             { tab: 'processes', label: t.processes },
-            { tab: 'architecture', label: t.architecture }
+            { tab: 'architecture', label: t.architecture },
+            { tab: 'resources', label: t.resources },
+            { tab: 'assistant', label: t.assistant }
           ]}
         />
 
@@ -767,6 +777,14 @@ const Admin = () => {
 
         {activeTab === 'architecture' && (
           <AdministrationArchitectureOverview language={language} />
+        )}
+
+        {activeTab === 'resources' && (
+          <AdministrationResources language={language} />
+        )}
+
+        {activeTab === 'assistant' && (
+          <AdministrativeAssistant language={language} />
         )}
 
         {/* Utilisateurs */}
@@ -900,7 +918,7 @@ const Admin = () => {
           </div>
         )}
 
-        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} handledTabs={['overview', 'institution', 'planning', 'communication', 'compliance', 'processes', 'architecture', 'glossary']} />
+        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} handledTabs={['overview', 'institution', 'planning', 'communication', 'compliance', 'processes', 'architecture', 'resources', 'assistant', 'glossary']} />
         </div>
       </div>
 

@@ -16,6 +16,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import InternalSectionNav from './InternalSectionNav';
+import CorrespondenceRegister from './CorrespondenceRegister';
 
 const COPY = {
   FR: {
@@ -342,6 +343,7 @@ const CommunicationOverview = ({ language = 'FR' }) => {
             </article>
           ))}
         </div>
+        <CorrespondenceRegister language={language} />
       </section>
 
       <section id="communication-workflow" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="communication-workflow-title">

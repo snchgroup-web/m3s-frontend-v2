@@ -27,7 +27,7 @@ const Header = ({ onOpenMenu }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { language, setLanguage } = useLanguage();
-  const { isDarkMode, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const { user, logout } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentRate, setCurrentRate] = useState(null);
@@ -133,15 +133,15 @@ const Header = ({ onOpenMenu }) => {
 
   const translations = {
     FR: {
-      sunny: 'Ensoleillé', cloudy: 'Nuageux', logout: 'Déconnexion', settings: 'Paramètres d’affichage', appearance: 'Apparence', language: 'Langue', light: 'Clair', dark: 'Sombre', active: 'Actif',
+      sunny: 'Ensoleillé', cloudy: 'Nuageux', logout: 'Déconnexion', settings: 'Paramètres d’affichage', appearance: 'Apparence', language: 'Langue', light: 'Clair', standard: 'Standard', deep: 'Sombre profond', active: 'Actif',
       languageLoading: 'Chargement de la langue en cours…', logoutConfirmTitle: 'Confirmer la déconnexion', logoutConfirmBody: 'Voulez-vous vraiment vous déconnecter de M3S ?', cancel: 'Annuler', confirmLogout: 'Se déconnecter', profilePhoto: 'Photo de profil'
     },
     EN: {
-      sunny: 'Sunny', cloudy: 'Cloudy', logout: 'Logout', settings: 'Display settings', appearance: 'Appearance', language: 'Language', light: 'Light', dark: 'Dark', active: 'Active',
+      sunny: 'Sunny', cloudy: 'Cloudy', logout: 'Logout', settings: 'Display settings', appearance: 'Appearance', language: 'Language', light: 'Light', standard: 'Standard', deep: 'Deep dark', active: 'Active',
       languageLoading: 'Applying language…', logoutConfirmTitle: 'Confirm logout', logoutConfirmBody: 'Do you really want to log out of M3S?', cancel: 'Cancel', confirmLogout: 'Log out', profilePhoto: 'Profile photo'
     },
     DE: {
-      sunny: 'Sonnig', cloudy: 'Bewölkt', logout: 'Abmelden', settings: 'Anzeigeeinstellungen', appearance: 'Darstellung', language: 'Sprache', light: 'Hell', dark: 'Dunkel', active: 'Aktiv',
+      sunny: 'Sonnig', cloudy: 'Bewölkt', logout: 'Abmelden', settings: 'Anzeigeeinstellungen', appearance: 'Darstellung', language: 'Sprache', light: 'Hell', standard: 'Standard', deep: 'Tiefdunkel', active: 'Aktiv',
       languageLoading: 'Sprache wird geladen…', logoutConfirmTitle: 'Abmeldung bestätigen', logoutConfirmBody: 'Möchten Sie sich wirklich von M3S abmelden?', cancel: 'Abbrechen', confirmLogout: 'Abmelden', profilePhoto: 'Profilfoto'
     }
   };
@@ -230,12 +230,13 @@ const Header = ({ onOpenMenu }) => {
                 <h2 className="text-sm font-semibold text-slate-100">{t.settings}</h2>
                 <div className="mt-3">
                   <p className="text-xs font-semibold uppercase text-slate-400">{t.appearance}</p>
-                  <div className="mt-2 grid grid-cols-2 gap-2">
+                  <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
                     {[
                       { id: 'light', label: t.light, icon: Sun },
-                      { id: 'dark', label: t.dark, icon: Moon }
+                      { id: 'standard', label: t.standard, icon: SunMedium },
+                      { id: 'deep', label: t.deep, icon: Moon }
                     ].map(({ id, label, icon: ThemeIcon }) => {
-                      const selected = (id === 'dark') === isDarkMode;
+                      const selected = theme === id;
                       return (
                         <button
                           key={id}

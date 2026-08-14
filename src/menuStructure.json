@@ -113,6 +113,26 @@
           "path": "/administration?tab=communication"
         },
         {
+          "id": "administration-resources",
+          "label": {
+            "FR": "Ressources",
+            "EN": "Resources",
+            "DE": "Ressourcen"
+          },
+          "icon": "Library",
+          "path": "/administration?tab=resources"
+        },
+        {
+          "id": "administration-assistant",
+          "label": {
+            "FR": "Assistant administratif",
+            "EN": "Administrative assistant",
+            "DE": "Verwaltungsassistent"
+          },
+          "icon": "Bot",
+          "path": "/administration?tab=assistant"
+        },
+        {
           "id": "administration-glossary",
           "label": {
             "FR": "Glossaire",

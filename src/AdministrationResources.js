@@ -1,0 +1,172 @@
+import React, { useMemo, useState } from 'react';
+import { BookMarked, Edit2, FolderLock, Library, Plus, Search, Trash2, X } from 'lucide-react';
+
+const STORAGE_KEY = 'm3s-administration-resources-v1';
+
+const COPY = {
+  FR: {
+    eyebrow: 'RESSOURCES ADMINISTRATIVES · REGISTRE LOCAL', title: 'Sources, favoris et références de la fonction',
+    intro: 'Ce registre qualifie les ressources utiles sans remplacer la GED, le registre LEGAL ni les sources officielles. Les dossiers de favoris restent une base initiale non exhaustive.',
+    add: 'Ajouter une ressource', search: 'Rechercher une ressource', all: 'Toutes les familles', empty: 'Aucune ressource ne correspond aux filtres.',
+    edit: 'Modifier', delete: 'Supprimer', close: 'Fermer', cancel: 'Annuler', save: 'Enregistrer', update: 'Modifier',
+    confirmSave: 'Confirmer l’enregistrement de cette ressource ?', confirmDelete: 'Confirmer la suppression de cette ressource locale ?',
+    saved: 'Ressource enregistrée avec succès.', deleted: 'Ressource supprimée avec succès.', required: 'Complétez les champs obligatoires.',
+    fields: { title: 'Titre', family: 'Famille', authority: 'Autorité ou propriétaire', location: 'URL ou emplacement GED', status: 'Statut de la source', review: 'Statut de revue', confidentiality: 'Confidentialité', note: 'Note' },
+    sourceStatus: ['Officielle', 'Interne gouvernée', 'À qualifier'], reviewStatus: ['Contrôlée', 'À revoir', 'À compléter'], confidentiality: ['Public', 'Interne', 'Restreint'],
+    families: ['LEGAL & Réglementaire', 'Institution & Gouvernance', 'Processus & Méthodes', 'Planification & Projets'],
+    boundary: 'Un favori facilite l’accès. Il ne prouve ni l’actualité, ni l’applicabilité, ni la conformité juridique d’une règle.'
+  },
+  EN: {
+    eyebrow: 'ADMINISTRATIVE RESOURCES · LOCAL REGISTER', title: 'Function sources, bookmarks and references',
+    intro: 'This register qualifies useful resources without replacing the DMS, the LEGAL register or official sources. Bookmark folders remain an initial, non-exhaustive base.',
+    add: 'Add resource', search: 'Search resources', all: 'All families', empty: 'No resource matches the filters.',
+    edit: 'Edit', delete: 'Delete', close: 'Close', cancel: 'Cancel', save: 'Save', update: 'Update',
+    confirmSave: 'Confirm saving this resource?', confirmDelete: 'Confirm deletion of this local resource?', saved: 'Resource saved successfully.', deleted: 'Resource deleted successfully.', required: 'Complete the required fields.',
+    fields: { title: 'Title', family: 'Family', authority: 'Authority or owner', location: 'URL or DMS location', status: 'Source status', review: 'Review status', confidentiality: 'Confidentiality', note: 'Note' },
+    sourceStatus: ['Official', 'Governed internal', 'To qualify'], reviewStatus: ['Controlled', 'To review', 'To complete'], confidentiality: ['Public', 'Internal', 'Restricted'],
+    families: ['LEGAL & Regulatory', 'Institution & Governance', 'Processes & Methods', 'Planning & Projects'], boundary: 'A bookmark makes access easier. It proves neither currency, applicability nor legal compliance.'
+  },
+  DE: {
+    eyebrow: 'VERWALTUNGSRESSOURCEN · LOKALES REGISTER', title: 'Quellen, Favoriten und Referenzen der Funktion',
+    intro: 'Dieses Register qualifiziert nützliche Ressourcen, ohne DMS, LEGAL-Register oder amtliche Quellen zu ersetzen. Favoritenordner bleiben eine erste, nicht abschließende Grundlage.',
+    add: 'Ressource hinzufügen', search: 'Ressourcen suchen', all: 'Alle Familien', empty: 'Keine Ressource entspricht den Filtern.',
+    edit: 'Bearbeiten', delete: 'Löschen', close: 'Schließen', cancel: 'Abbrechen', save: 'Speichern', update: 'Ändern',
+    confirmSave: 'Speichern dieser Ressource bestätigen?', confirmDelete: 'Löschen dieser lokalen Ressource bestätigen?', saved: 'Ressource erfolgreich gespeichert.', deleted: 'Ressource erfolgreich gelöscht.', required: 'Pflichtfelder ausfüllen.',
+    fields: { title: 'Titel', family: 'Familie', authority: 'Behörde oder Eigentümer', location: 'URL oder DMS-Ablage', status: 'Quellenstatus', review: 'Prüfstatus', confidentiality: 'Vertraulichkeit', note: 'Notiz' },
+    sourceStatus: ['Amtlich', 'Intern gesteuert', 'Zu qualifizieren'], reviewStatus: ['Kontrolliert', 'Zu prüfen', 'Zu ergänzen'], confidentiality: ['Öffentlich', 'Intern', 'Eingeschränkt'],
+    families: ['LEGAL & Regulierung', 'Institution & Governance', 'Prozesse & Methoden', 'Planung & Projekte'], boundary: 'Ein Favorit erleichtert den Zugriff. Er belegt weder Aktualität noch Anwendbarkeit oder Rechtskonformität.'
+  }
+};
+
+const SEED = [
+  { id: 'RES-001', contentKey: 'inventory', title: 'Inventaire documentaire gouverné 2SG/M3S', familyIndex: 0, authority: 'Administration 2SG / GED', location: 'GED / Administration / LEGAL / Inventaire gouverné', statusIndex: 1, reviewIndex: 0, confidentialityIndex: 1, note: 'Registre de statut documentaire. Validation sur le fond, signature et adoption restent distinctes.' },
+  { id: 'RES-002', contentKey: 'swissLegal', title: 'Favoris officiels LEGAL - Suisse', familyIndex: 0, authority: 'SECO et autorités compétentes', location: 'Favoris Administration / LEGAL / Suisse', statusIndex: 2, reviewIndex: 2, confidentialityIndex: 0, note: 'Base initiale non exhaustive à qualifier par obligation, territoire et date.' },
+  { id: 'RES-003', contentKey: 'senegalLegal', title: 'Favoris officiels LEGAL - Sénégal', familyIndex: 0, authority: 'PFPDT, CDP et autorités compétentes', location: 'Favoris Administration / LEGAL / Sénégal', statusIndex: 2, reviewIndex: 2, confidentialityIndex: 0, note: 'CDP et applicabilité des sources à confirmer. Ne constitue pas un avis juridique.' },
+  { id: 'RES-004', contentKey: 'administrationPilot', title: 'Pilote Administration M3S', familyIndex: 2, authority: '2SG / M3S', location: 'GED / Référentiels / Administration pilote', statusIndex: 1, reviewIndex: 0, confidentialityIndex: 1, note: 'Capital réutilisable pour les autres fonctions M3S.' }
+];
+
+const SEED_CONTENT = {
+  EN: {
+    inventory: { title: '2SG/M3S governed document inventory', authority: '2SG Administration / DMS', location: 'DMS / Administration / LEGAL / Governed inventory', note: 'Document status register. Substantive validation, signature and adoption remain distinct.' },
+    swissLegal: { title: 'Official LEGAL bookmarks - Switzerland', authority: 'SECO and competent authorities', location: 'Administration bookmarks / LEGAL / Switzerland', note: 'Initial non-exhaustive base to qualify by obligation, territory and date.' },
+    senegalLegal: { title: 'Official LEGAL bookmarks - Senegal', authority: 'PFPDT, CDP and competent authorities', location: 'Administration bookmarks / LEGAL / Senegal', note: 'CDP sources and applicability remain to be confirmed. This is not legal advice.' },
+    administrationPilot: { title: 'M3S Administration pilot', authority: '2SG / M3S', location: 'DMS / Reference frameworks / Administration pilot', note: 'Reusable capital for other M3S functions.' }
+  },
+  DE: {
+    inventory: { title: 'Gesteuertes 2SG/M3S-Dokumenteninventar', authority: '2SG-Verwaltung / DMS', location: 'DMS / Verwaltung / LEGAL / Gesteuertes Inventar', note: 'Register der Dokumentenstatus. Inhaltliche Validierung, Unterzeichnung und Verabschiedung bleiben getrennt.' },
+    swissLegal: { title: 'Amtliche LEGAL-Favoriten - Schweiz', authority: 'SECO und zuständige Behörden', location: 'Favoriten Verwaltung / LEGAL / Schweiz', note: 'Erste, nicht abschließende Grundlage, nach Pflicht, Gebiet und Datum zu qualifizieren.' },
+    senegalLegal: { title: 'Amtliche LEGAL-Favoriten - Senegal', authority: 'PFPDT, CDP und zuständige Behörden', location: 'Favoriten Verwaltung / LEGAL / Senegal', note: 'CDP-Quellen und Anwendbarkeit sind zu bestätigen. Dies ist keine Rechtsberatung.' },
+    administrationPilot: { title: 'M3S-Verwaltungspilot', authority: '2SG / M3S', location: 'DMS / Referenzrahmen / Verwaltungspilot', note: 'Wiederverwendbares Kapital für weitere M3S-Funktionen.' }
+  }
+};
+
+const localizeResource = (item, language) => {
+  const translated = item.contentKey ? SEED_CONTENT[language]?.[item.contentKey] : null;
+  return translated ? { ...item, ...translated } : item;
+};
+
+const emptyForm = { title: '', familyIndex: 0, authority: '', location: '', statusIndex: 2, reviewIndex: 2, confidentialityIndex: 1, note: '' };
+
+const loadResources = () => {
+  try {
+    const stored = JSON.parse(window.localStorage.getItem(STORAGE_KEY));
+    return Array.isArray(stored) ? stored : SEED;
+  } catch {
+    return SEED;
+  }
+};
+
+const AdministrationResources = ({ language = 'FR' }) => {
+  const t = COPY[language] || COPY.FR;
+  const [resources, setResources] = useState(loadResources);
+  const [query, setQuery] = useState('');
+  const [familyFilter, setFamilyFilter] = useState('all');
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState(emptyForm);
+  const [message, setMessage] = useState('');
+
+  const visible = useMemo(() => resources.map(item => localizeResource(item, language)).filter(item => {
+    const matchesFamily = familyFilter === 'all' || String(item.familyIndex) === familyFilter;
+    const haystack = `${item.title} ${item.authority} ${item.location} ${item.note}`.toLowerCase();
+    return matchesFamily && haystack.includes(query.trim().toLowerCase());
+  }), [familyFilter, language, query, resources]);
+
+  const persist = next => {
+    setResources(next);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  };
+
+  const openCreate = () => { setEditing('new'); setForm(emptyForm); setMessage(''); };
+  const openEdit = item => { setEditing(item.id); setForm({ ...item }); setMessage(''); };
+  const close = () => { setEditing(null); setForm(emptyForm); };
+  const save = event => {
+    event.preventDefault();
+    if (!form.title.trim() || !form.authority.trim() || !form.location.trim()) { setMessage(t.required); return; }
+    if (!window.confirm(t.confirmSave)) return;
+    const { contentKey, ...editableFields } = form;
+    const item = { ...editableFields, id: editing === 'new' ? `RES-${Date.now()}` : editing };
+    persist(editing === 'new' ? [item, ...resources] : resources.map(current => current.id === editing ? item : current));
+    close();
+    setMessage(t.saved);
+  };
+  const remove = item => {
+    if (!window.confirm(t.confirmDelete)) return;
+    persist(resources.filter(current => current.id !== item.id));
+    setMessage(t.deleted);
+  };
+
+  return (
+    <section className="administration-resources administration-overview space-y-5" aria-labelledby="administration-resources-title">
+      <header className="m3s-panel p-5 sm:p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-4xl"><p className="text-xs font-bold uppercase text-cyan-300">{t.eyebrow}</p><h2 id="administration-resources-title" className="m3s-page-title mt-2">{t.title}</h2><p className="mt-3 text-sm leading-6 text-slate-300">{t.intro}</p></div>
+          <button type="button" className="m3s-success-button min-h-11 gap-2 px-4" onClick={openCreate}><Plus size={18} />{t.add}</button>
+        </div>
+      </header>
+
+      {message && <p className="rounded-md border border-emerald-700 bg-emerald-950/25 px-4 py-3 text-sm font-semibold text-emerald-200" role="status">{message}</p>}
+
+      <div className="m3s-panel grid gap-3 p-4 sm:grid-cols-[minmax(0,1fr)_260px]">
+        <label className="relative"><Search className="absolute left-3 top-3 text-slate-500" size={18} /><span className="sr-only">{t.search}</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder={t.search} className="m3s-field min-h-11 w-full pl-10" /></label>
+        <select value={familyFilter} onChange={event => setFamilyFilter(event.target.value)} className="m3s-field min-h-11"><option value="all">{t.all}</option>{t.families.map((label, index) => <option key={label} value={index}>{label}</option>)}</select>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {visible.map(item => (
+          <article key={item.id} className="m3s-panel flex min-h-72 flex-col p-5 transition hover:-translate-y-0.5 hover:border-blue-500/70 hover:shadow-lg">
+            <div className="flex items-start justify-between gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-md bg-cyan-950 text-cyan-300"><BookMarked size={21} /></span><span className="rounded-full border border-slate-600 px-2.5 py-1 text-xs font-semibold text-slate-300">{t.reviewStatus[item.reviewIndex]}</span></div>
+            <h3 className="mt-4 text-lg font-semibold text-slate-100">{item.title}</h3>
+            <p className="mt-2 text-sm font-medium text-cyan-200">{t.families[item.familyIndex]}</p>
+            <p className="mt-2 text-sm leading-6 text-slate-400">{item.note}</p>
+            <dl className="mt-4 space-y-2 border-t border-slate-700 pt-3 text-sm"><div><dt className="text-xs uppercase text-slate-500">{t.fields.authority}</dt><dd className="mt-1 text-slate-300">{item.authority}</dd></div><div><dt className="text-xs uppercase text-slate-500">{t.fields.location}</dt><dd className="mt-1 break-words text-slate-300">{item.location}</dd></div></dl>
+            <div className="mt-auto flex flex-wrap gap-2 pt-4"><button type="button" className="m3s-secondary-button min-h-10 gap-2 px-3" onClick={() => openEdit(item)}><Edit2 size={16} />{t.edit}</button><button type="button" className="m3s-danger-button min-h-10 gap-2 px-3" onClick={() => remove(item)}><Trash2 size={16} />{t.delete}</button></div>
+          </article>
+        ))}
+        {!visible.length && <div className="m3s-panel col-span-full p-8 text-center text-slate-400"><Library className="mx-auto mb-3" />{t.empty}</div>}
+      </div>
+
+      <aside className="rounded-lg border border-amber-800 bg-amber-950/20 p-4 text-sm leading-6 text-amber-100"><FolderLock className="mr-2 inline" size={18} />{t.boundary}</aside>
+
+      {editing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4" role="presentation">
+          <form onSubmit={save} className="m3s-panel max-h-[92vh] w-full max-w-3xl overflow-y-auto p-5 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="resource-form-title">
+            <div className="flex items-start justify-between gap-3"><h2 id="resource-form-title" className="m3s-page-title">{editing === 'new' ? t.add : t.edit}</h2><button type="button" className="m3s-icon-button" onClick={close} aria-label={t.close}><X size={20} /></button></div>
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              <label className="sm:col-span-2"><span className="m3s-field-label">{t.fields.title} *</span><input className="m3s-field mt-1 w-full" value={form.title} onChange={event => setForm({ ...form, title: event.target.value })} /></label>
+              <label><span className="m3s-field-label">{t.fields.family} *</span><select className="m3s-field mt-1 w-full" value={form.familyIndex} onChange={event => setForm({ ...form, familyIndex: Number(event.target.value) })}>{t.families.map((label, index) => <option key={label} value={index}>{label}</option>)}</select></label>
+              <label><span className="m3s-field-label">{t.fields.authority} *</span><input className="m3s-field mt-1 w-full" value={form.authority} onChange={event => setForm({ ...form, authority: event.target.value })} /></label>
+              <label className="sm:col-span-2"><span className="m3s-field-label">{t.fields.location} *</span><input className="m3s-field mt-1 w-full" value={form.location} onChange={event => setForm({ ...form, location: event.target.value })} /></label>
+              <label><span className="m3s-field-label">{t.fields.status}</span><select className="m3s-field mt-1 w-full" value={form.statusIndex} onChange={event => setForm({ ...form, statusIndex: Number(event.target.value) })}>{t.sourceStatus.map((label, index) => <option key={label} value={index}>{label}</option>)}</select></label>
+              <label><span className="m3s-field-label">{t.fields.review}</span><select className="m3s-field mt-1 w-full" value={form.reviewIndex} onChange={event => setForm({ ...form, reviewIndex: Number(event.target.value) })}>{t.reviewStatus.map((label, index) => <option key={label} value={index}>{label}</option>)}</select></label>
+              <label><span className="m3s-field-label">{t.fields.confidentiality}</span><select className="m3s-field mt-1 w-full" value={form.confidentialityIndex} onChange={event => setForm({ ...form, confidentialityIndex: Number(event.target.value) })}>{t.confidentiality.map((label, index) => <option key={label} value={index}>{label}</option>)}</select></label>
+              <label className="sm:col-span-2"><span className="m3s-field-label">{t.fields.note}</span><textarea className="m3s-field mt-1 min-h-24 w-full" value={form.note} onChange={event => setForm({ ...form, note: event.target.value })} /></label>
+            </div>
+            <div className="mt-6 flex flex-col-reverse gap-3 border-t border-slate-700 pt-4 sm:flex-row sm:justify-end"><button type="button" className="m3s-secondary-button min-h-11 px-4" onClick={close}>{t.cancel}</button><button type="submit" className="m3s-success-button min-h-11 px-4">{editing === 'new' ? t.save : t.update}</button></div>
+          </form>
+        </div>
+      )}
+    </section>
+  );
+};
+
+export default AdministrationResources;

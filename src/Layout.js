@@ -7,7 +7,7 @@ import {
   Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
   Wrench, Truck, Box, AlertTriangle, Eye, FileText, Brain, Database, BookOpen,
   Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft, ContactRound, ShieldCheck,
-  MessageSquare, Network, ClipboardList, LayoutDashboard, BrainCircuit
+  MessageSquare, Network, ClipboardList, LayoutDashboard, BrainCircuit, Library, Bot
 } from 'lucide-react';
 import menuData from './menuStructure.json';
 import Header from './Header';
@@ -20,7 +20,7 @@ const iconMap = {
   Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
   Wrench, Truck, Box, AlertTriangle, Eye, FileText, Brain, Database, BookOpen,
   Code, HelpCircle, Book, TrendingDown, Wallet, ArrowRightLeft, ContactRound, ShieldCheck,
-  MessageSquare, Network, ClipboardList, LayoutDashboard, BrainCircuit
+  MessageSquare, Network, ClipboardList, LayoutDashboard, BrainCircuit, Library, Bot
 };
 
 const sidebarGroups = getSidebarMenuGroups(menuData);

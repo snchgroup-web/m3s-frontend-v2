@@ -3,32 +3,40 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') !== 'light');
+  const [theme, setThemeState] = useState(() => {
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme === 'light' || storedTheme === 'deep') return storedTheme;
+    return 'standard';
+  });
 
-  // Update localStorage and HTML class when theme changes
   useEffect(() => {
     const htmlElement = document.documentElement;
-    if (isDarkMode) {
+    if (theme !== 'light') {
       htmlElement.classList.add('dark');
-      htmlElement.dataset.theme = 'dark';
-      localStorage.setItem('theme', 'dark');
     } else {
       htmlElement.classList.remove('dark');
-      htmlElement.dataset.theme = 'light';
-      localStorage.setItem('theme', 'light');
     }
-  }, [isDarkMode]);
+    htmlElement.classList.toggle('deep-theme', theme === 'deep');
+    htmlElement.dataset.theme = theme;
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   const toggleTheme = () => {
-    setIsDarkMode(current => !current);
+    setThemeState(current => current === 'light' ? 'standard' : 'light');
   };
 
-  const setTheme = (theme) => {
-    setIsDarkMode(theme === 'dark');
+  const setTheme = (nextTheme) => {
+    if (nextTheme === 'dark') {
+      setThemeState('standard');
+      return;
+    }
+    setThemeState(['light', 'standard', 'deep'].includes(nextTheme) ? nextTheme : 'standard');
   };
+
+  const isDarkMode = theme !== 'light';
 
   return (
-    <ThemeContext.Provider value={{ theme: isDarkMode ? 'dark' : 'light', isDarkMode, setTheme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, isDarkMode, setTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
