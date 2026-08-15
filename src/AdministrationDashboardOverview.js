@@ -14,6 +14,7 @@ import {
   Bot
 } from 'lucide-react';
 import { getAdministrationGlossaryTerms } from './AdministrationGlossary';
+import AdministrationPortfolioOverview from './AdministrationPortfolioOverview';
 import { LEGAL_DOCUMENTARY_BASELINE } from './legalDocumentaryProgress';
 
 const COPY = {
@@ -225,6 +226,8 @@ const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, t
         <MetricCard icon={BookOpenText} label={t.metrics.glossary} value={glossaryCount} source={t.sources.glossary} state={t.statuses.governed} tone="bg-violet-950 text-violet-300" openLabel={t.open} onOpen={() => onNavigate?.('glossary')} />
         <MetricCard icon={ShieldCheck} label={t.metrics.compliance} value={`${LEGAL_DOCUMENTARY_BASELINE.currentStage} / ${LEGAL_DOCUMENTARY_BASELINE.totalStages}`} detail={t.metrics.complianceDetail} source={t.sources.compliance} state={t.statuses.documentaryBaseline} tone="bg-amber-950 text-amber-300" openLabel={t.open} onOpen={() => onNavigate?.('compliance')} />
       </div>
+
+      <AdministrationPortfolioOverview language={language} />
 
       <section className="rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="administration-coverage-title">
         <h3 id="administration-coverage-title" className="text-xl font-semibold text-slate-100">{t.coverageTitle}</h3>
