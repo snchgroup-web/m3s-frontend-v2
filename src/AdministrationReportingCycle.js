@@ -9,10 +9,11 @@ import {
   Landmark,
   ShieldCheck
 } from 'lucide-react';
+import AdministrationWeeklyReview from './AdministrationWeeklyReview';
 
 const COPY = {
   FR: {
-    eyebrow: 'MODÈLE CANDIDAT · AUCUN RAPPORT GÉNÉRÉ',
+    eyebrow: 'CYCLE CADRÉ · REVUE PILOTE DISPONIBLE',
     title: 'Cycle gouverné des rapports d’activité',
     intro: 'Les journaux existants restent les traces quotidiennes. Les rapports consolident ces sources par période sans les remplacer, les réécrire ni inventer de résultats.',
     stages: [
@@ -50,11 +51,11 @@ const COPY = {
       'Le Daily Intelligence Dashboard aide au pilotage ; il ne devient une source institutionnelle qu’après validation.'
     ],
     stateTitle: 'État du dispositif',
-    stateBody: 'Le journal quotidien existe. Les revues hebdomadaires, rapports mensuels et rapports d’activité restent un modèle cible jusqu’à validation de leur format, de leurs responsables et de leur emplacement GED.',
+    stateBody: 'Le journal quotidien existe et une première revue hebdomadaire pilote à couverture partielle est disponible. Elle reste une synthèse de travail ; les rapports mensuels et institutionnels demeurent un modèle cible.',
     source: 'Sources de cadrage : journaux de bord 2SG/M3S, règles de statut documentaire, Processus & Procédures Administration et gouvernance GED.'
   },
   EN: {
-    eyebrow: 'CANDIDATE MODEL · NO REPORT GENERATED',
+    eyebrow: 'FRAMED CYCLE · PILOT REVIEW AVAILABLE',
     title: 'Governed activity reporting cycle',
     intro: 'Existing journals remain the daily records. Reports consolidate these sources by period without replacing them, rewriting them or inventing results.',
     stages: [
@@ -92,11 +93,11 @@ const COPY = {
       'The Daily Intelligence Dashboard supports steering; it becomes an institutional source only after validation.'
     ],
     stateTitle: 'Current maturity',
-    stateBody: 'The daily journal exists. Weekly reviews, monthly reports and activity reports remain a target model until their format, owners and DMS location are validated.',
+    stateBody: 'The daily journal exists and a first weekly pilot review with partial coverage is available. It remains a working synthesis; monthly and institutional reports remain a target model.',
     source: 'Framing sources: 2SG/M3S work journals, documentary status rules, Administration Processes & Procedures, and DMS governance.'
   },
   DE: {
-    eyebrow: 'KANDIDATENMODELL · KEIN BERICHT ERZEUGT',
+    eyebrow: 'GERAHMTER ZYKLUS · PILOTRÜCKBLICK VERFÜGBAR',
     title: 'Gesteuerter Tätigkeitsberichtszyklus',
     intro: 'Bestehende Journale bleiben die täglichen Nachweise. Berichte konsolidieren diese Quellen nach Zeitraum, ohne sie zu ersetzen, umzuschreiben oder Ergebnisse zu erfinden.',
     stages: [
@@ -134,7 +135,7 @@ const COPY = {
       'Das Daily Intelligence Dashboard unterstützt die Steuerung; es wird erst nach Validierung zur institutionellen Quelle.'
     ],
     stateTitle: 'Stand des Verfahrens',
-    stateBody: 'Das Tagesjournal besteht bereits. Wochenrückblicke, Monatsberichte und Tätigkeitsberichte bleiben ein Zielmodell, bis Format, Verantwortungen und DMS-Ablage validiert sind.',
+    stateBody: 'Das Tagesjournal besteht und ein erster Pilot-Wochenrückblick mit teilweiser Abdeckung ist verfügbar. Er bleibt eine Arbeitsübersicht; Monats- und institutionelle Berichte bleiben ein Zielmodell.',
     source: 'Rahmenquellen: 2SG-/M3S-Arbeitsjournale, Regeln für Dokumentenstatus, Prozesse & Verfahren der Verwaltung und DMS-Governance.'
   }
 };
@@ -225,6 +226,8 @@ const AdministrationReportingCycle = ({ language = 'FR' }) => {
           <p className="mt-3 text-sm leading-6 text-slate-300">{t.stateBody}</p>
         </aside>
       </div>
+
+      <AdministrationWeeklyReview language={language} />
 
       <p className="mt-5 border-t border-slate-700 pt-4 text-xs leading-5 text-slate-400">{t.source}</p>
     </section>
