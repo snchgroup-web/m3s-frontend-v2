@@ -11,6 +11,7 @@ import { isLegacyBuCode, translateDas } from './strategicMapping';
 import FinanceGlossary from './FinanceGlossary';
 import { StandardCreateButton } from './StandardUI';
 import FinanceFunctionFrame from './FinanceFunctionFrame';
+import FinanceArchitecture from './FinanceArchitecture';
 
 const TEAM_OPTIONS = ['Team_ZH', 'Team_SN'];
 const AGENT_OPTIONS = ['Cheikh', 'Chantal', 'Pape', 'Gnilane Diouf', 'Gnilane Ndiaye', 'Ibou'];
@@ -155,6 +156,7 @@ const Finance = () => {
       maxPerRegister: 'maximum 200 par registre',
       chartScope: 'extrait chargé',
       overview: 'Vue d\'ensemble',
+      architecture: 'Architecture & relations',
       recettes: 'Recettes',
       depenses: 'Dépenses',
       fx: 'Historique FX',
@@ -273,6 +275,7 @@ const Finance = () => {
       maxPerRegister: 'maximum 200 per register',
       chartScope: 'loaded extract',
       overview: 'Overview',
+      architecture: 'Architecture & relations',
       recettes: 'Revenue',
       depenses: 'Expenses',
       fx: 'FX History',
@@ -391,6 +394,7 @@ const Finance = () => {
       maxPerRegister: 'höchstens 200 je Register',
       chartScope: 'geladener Auszug',
       overview: 'Übersicht',
+      architecture: 'Architektur & Beziehungen',
       recettes: 'Einnahmen',
       depenses: 'Ausgaben',
       fx: 'Wechselkurshistorie',
@@ -494,7 +498,7 @@ const Finance = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'recettes', 'depenses', 'fx', 'budget', 'social', 'immobilier', 'glossary'].includes(tab)) {
+    if (['overview', 'architecture', 'recettes', 'depenses', 'fx', 'budget', 'social', 'immobilier', 'glossary'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
@@ -1679,6 +1683,7 @@ const Finance = () => {
           onSelect={setActiveTab}
           tabs={[
             { tab: 'overview', label: t.overview },
+            { tab: 'architecture', label: t.architecture },
             { tab: 'recettes', label: t.recettes },
             { tab: 'depenses', label: t.depenses },
             { tab: 'fx', label: t.fx }
@@ -1738,6 +1743,8 @@ const Finance = () => {
             </div>
           </div>
         )}
+
+        {activeTab === 'architecture' && <FinanceArchitecture language={language} />}
 
         {activeTab === 'recettes' && (
           <div>
@@ -2303,7 +2310,7 @@ const Finance = () => {
 
         {activeTab === 'glossary' && <FinanceGlossary language={language} />}
 
-        <ChildTabPlaceholder moduleId="finances" language={language} activeTab={activeTab} handledTabs={['overview', 'recettes', 'depenses', 'fx', 'social', 'immobilier', 'glossary']} />
+        <ChildTabPlaceholder moduleId="finances" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'recettes', 'depenses', 'fx', 'social', 'immobilier', 'glossary']} />
 
         {showImmoModal && (
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
