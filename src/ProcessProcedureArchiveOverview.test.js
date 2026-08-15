@@ -11,6 +11,8 @@ test('renders the cautious French process, procedure and archive model', () => {
   expect(screen.getByRole('heading', { name: 'Vocabulaire de travail commun' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Structure cible du manuel de procédures' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Modèle de registre des dossiers et archives' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Cycle gouverné des rapports d’activité' })).toBeInTheDocument();
+  expect(screen.getByText('MODÈLE CANDIDAT · AUCUN RAPPORT GÉNÉRÉ')).toBeInTheDocument();
   expect(screen.getByText(/ne représentent ni dossiers ouverts ni statuts officiels/i)).toBeInTheDocument();
 });
 
@@ -30,7 +32,7 @@ test('preserves the selected section when the language changes', () => {
   window.HTMLElement.prototype.scrollIntoView = scrollIntoView;
 
   const { rerender } = render(<ProcessProcedureArchiveOverview language="EN" />);
-  fireEvent.click(screen.getByRole('button', { name: 'Files & archives' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Reports' }));
   rerender(<ProcessProcedureArchiveOverview language="DE" />);
 
   expect(scrollIntoView).toHaveBeenNthCalledWith(1, { behavior: 'smooth', block: 'start' });

@@ -554,6 +554,69 @@ const GLOSSARY_CONTEXT = {
       }
     }
   },
+  'ADM-RAPPORT-ACTIVITE': {
+    version: 'V5.6-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Rapport d’activité',
+        shortDefinition: 'Synthèse périodique, sourcée et validée des résultats, décisions, risques et suites d’une activité.',
+        detailedDefinition: 'Document consolidé pour une période déterminée à partir de journaux, registres, indicateurs et preuves identifiables. Il distingue les faits des interprétations, indique ses responsables et son statut, et ne devient institutionnel qu’après la validation ou l’adoption requise.'
+      },
+      DE: {
+        term: 'Tätigkeitsbericht',
+        shortDefinition: 'Periodische, belegte und validierte Synthese von Ergebnissen, Entscheidungen, Risiken und Folgeschritten einer Tätigkeit.',
+        detailedDefinition: 'Für einen bestimmten Zeitraum konsolidiertes Dokument auf Grundlage identifizierbarer Journale, Register, Kennzahlen und Nachweise. Es trennt Fakten von Interpretationen, nennt Verantwortungen und Status und wird erst nach der erforderlichen Validierung oder Annahme institutionell.'
+      },
+      EN: {
+        term: 'Activity report',
+        shortDefinition: 'A periodic, sourced and validated synthesis of an activity’s results, decisions, risks and next steps.',
+        detailedDefinition: 'A document consolidated for a defined period from identifiable journals, registers, indicators and evidence. It separates facts from interpretations, states its owners and status, and becomes institutional only after the required validation or adoption.'
+      }
+    }
+  },
+  'ADM-PERIODE-REFERENCE': {
+    version: 'V5.6-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Période de référence',
+        shortDefinition: 'Intervalle daté auquel se rapportent les faits, mesures et conclusions d’un document ou indicateur.',
+        detailedDefinition: 'Date ou intervalle de début et de fin définissant ce qui entre dans une synthèse, un rapport ou une mesure. La période de référence doit rester distincte de la date de rédaction, de validation ou de publication afin d’éviter les comparaisons trompeuses.'
+      },
+      DE: {
+        term: 'Bezugszeitraum',
+        shortDefinition: 'Datierter Zeitraum, auf den sich Fakten, Messwerte und Aussagen eines Dokuments oder einer Kennzahl beziehen.',
+        detailedDefinition: 'Datum oder Intervall mit Beginn und Ende, das festlegt, welche Inhalte in eine Synthese, einen Bericht oder eine Messung einfließen. Der Bezugszeitraum ist von Erstellungs-, Validierungs- und Veröffentlichungsdatum zu unterscheiden, um irreführende Vergleiche zu vermeiden.'
+      },
+      EN: {
+        term: 'Reference period',
+        shortDefinition: 'The dated interval to which the facts, measurements and conclusions of a document or indicator relate.',
+        detailedDefinition: 'A date or start-to-end interval defining what is included in a synthesis, report or measurement. The reference period remains distinct from drafting, validation and publication dates to prevent misleading comparisons.'
+      }
+    }
+  },
+  'ADM-VERSION-CONSOLIDEE': {
+    version: 'V5.6-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Version consolidée',
+        shortDefinition: 'Version réunissant plusieurs contributions ou sources contrôlées, sans effacer leur provenance.',
+        detailedDefinition: 'État d’un document obtenu après regroupement, dédoublonnage et contrôle de contributions identifiées. Une version consolidée n’est pas automatiquement validée, signée ou adoptée ; son statut, ses sources, son auteur et son validateur doivent rester visibles.'
+      },
+      DE: {
+        term: 'Konsolidierte Version',
+        shortDefinition: 'Version, die mehrere geprüfte Beiträge oder Quellen zusammenführt, ohne deren Herkunft zu verbergen.',
+        detailedDefinition: 'Dokumentenstand nach Zusammenführung, Dublettenbereinigung und Prüfung identifizierter Beiträge. Eine konsolidierte Version ist nicht automatisch validiert, unterzeichnet oder angenommen; Status, Quellen, Autor und validierende Stelle müssen sichtbar bleiben.'
+      },
+      EN: {
+        term: 'Consolidated version',
+        shortDefinition: 'A version that combines several controlled contributions or sources without obscuring their provenance.',
+        detailedDefinition: 'A document state produced after combining, deduplicating and checking identified contributions. A consolidated version is not automatically validated, signed or adopted; its status, sources, author and validator must remain visible.'
+      }
+    }
+  },
   'ADM-CONFORMITE': {
     version: 'V5.4',
     status: 'candidate',
