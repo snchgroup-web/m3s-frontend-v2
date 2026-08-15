@@ -52,7 +52,7 @@ export const ADMINISTRATION_GLOSSARY_GROUPS = Object.freeze([
   {
     id: 'planning',
     labels: { FR: 'Planification & Projets', EN: 'Planning & Projects', DE: 'Planung & Projekte' },
-    termIds: ['PROJ-JALON', 'PROJ-REVUE']
+    termIds: ['PROJ-JALON', 'PROJ-REVUE', 'ADM-PORTEFEUILLE-DOSSIERS', 'ADM-DERNIERE-VERIFICATION']
   },
   {
     id: 'communication',

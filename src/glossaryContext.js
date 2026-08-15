@@ -407,6 +407,48 @@ const GLOSSARY_CONTEXT = {
       }
     }
   },
+  'ADM-PORTEFEUILLE-DOSSIERS': {
+    version: 'V5.7-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Portefeuille des grands dossiers et chantiers',
+        shortDefinition: 'Vue consolidée des affaires, projets, incidents et chantiers prioritaires à piloter transversalement.',
+        detailedDefinition: 'Regroupement gouverné d’objets de nature différente qui nécessitent une vision commune de leur responsable, dernier état vérifié, prochaine action, risque, source et date. Le portefeuille facilite l’arbitrage sans transformer tous les objets en projets ni inventer un pourcentage d’avancement commun.'
+      },
+      DE: {
+        term: 'Portfolio wichtiger Akten und Vorhaben',
+        shortDefinition: 'Konsolidierte Sicht auf prioritäre Vorgänge, Projekte, Vorfälle und Vorhaben zur funktionsübergreifenden Steuerung.',
+        detailedDefinition: 'Gesteuerte Zusammenführung unterschiedlicher Objekte, die eine gemeinsame Sicht auf Verantwortung, letzten geprüften Stand, nächsten Schritt, Risiko, Quelle und Datum benötigen. Das Portfolio unterstützt Entscheidungen, ohne alle Objekte zu Projekten zu erklären oder einen gemeinsamen Fortschrittswert zu erfinden.'
+      },
+      EN: {
+        term: 'Portfolio of major files and workstreams',
+        shortDefinition: 'A consolidated view of priority matters, projects, incidents and workstreams requiring cross-functional steering.',
+        detailedDefinition: 'A governed grouping of different types of objects that need a shared view of their owner, latest verified state, next action, risk, source and date. The portfolio supports decisions without turning every object into a project or inventing a common progress percentage.'
+      }
+    }
+  },
+  'ADM-DERNIERE-VERIFICATION': {
+    version: 'V5.7-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Date de dernière vérification',
+        shortDefinition: 'Date à laquelle l’état affiché d’un dossier a été contrôlé pour la dernière fois à partir de sa source.',
+        detailedDefinition: 'Repère de fraîcheur documentaire qui indique quand la source soutenant un état a été consultée ou confirmée. Elle ne prouve ni que le dossier n’a pas évolué depuis, ni que son contenu est complet ; un état ancien doit être actualisé avant une décision importante.'
+      },
+      DE: {
+        term: 'Datum der letzten Prüfung',
+        shortDefinition: 'Datum, an dem der angezeigte Stand einer Akte zuletzt anhand ihrer Quelle geprüft wurde.',
+        detailedDefinition: 'Dokumentarischer Aktualitätshinweis, der festhält, wann die Quelle eines angezeigten Stands zuletzt eingesehen oder bestätigt wurde. Er beweist weder, dass sich der Vorgang seither nicht geändert hat, noch dass er vollständig ist; ein älterer Stand ist vor wichtigen Entscheidungen zu aktualisieren.'
+      },
+      EN: {
+        term: 'Last verification date',
+        shortDefinition: 'The date on which a file’s displayed state was last checked against its source.',
+        detailedDefinition: 'A documentary freshness marker recording when the source supporting a displayed state was last consulted or confirmed. It does not prove that the matter has not changed since or that the record is complete; an older state must be refreshed before an important decision.'
+      }
+    }
+  },
   'ADM-ARCHITECTURE-FONCTIONNELLE': {
     version: 'V5.4',
     status: 'candidate',

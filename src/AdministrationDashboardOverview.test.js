@@ -43,7 +43,8 @@ test('shows the nine governed Administration components and opens the selected o
   expect(within(complianceMetric).getByText('Controlled baseline')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Processes & Procedures' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Architecture & Relationships' })).toBeInTheDocument();
-  expect(screen.getAllByRole('heading', { level: 4 }).map(heading => heading.textContent)).toEqual([
+  const functionalCoverage = screen.getByRole('region', { name: 'Functional coverage' });
+  expect(within(functionalCoverage).getAllByRole('heading', { level: 4 }).map(heading => heading.textContent)).toEqual([
     'Institution',
     'Architecture & Relationships',
     'Processes & Procedures',
