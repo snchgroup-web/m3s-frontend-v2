@@ -407,6 +407,111 @@ const GLOSSARY_CONTEXT = {
       }
     }
   },
+  'FIN-ECRITURE-FINANCIERE': {
+    version: 'V5.8-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Écriture financière',
+        shortDefinition: 'Enregistrement daté d’une recette ou d’une dépense avec ses montants, sa devise et ses références disponibles.',
+        detailedDefinition: 'Objet observé dans le module Finances M3S pour consigner une recette ou une dépense avec identifiant, référence, description, date, montants, devises, taux appliqué, catégorie et autres libellés disponibles. Cette écriture opérationnelle ne prouve pas à elle seule une qualification comptable, un paiement effectif ou un mouvement bancaire ; ces éléments exigent une source et un rapprochement adaptés.'
+      },
+      DE: {
+        term: 'Finanzbuchung',
+        shortDefinition: 'Datierter Eintrag einer Einnahme oder Ausgabe mit Beträgen, Währung und verfügbaren Referenzen.',
+        detailedDefinition: 'Im M3S-Finanzmodul beobachtetes Objekt zur Erfassung einer Einnahme oder Ausgabe mit Kennung, Referenz, Beschreibung, Datum, Beträgen, Währungen, angewandtem Kurs, Kategorie und weiteren verfügbaren Bezeichnungen. Diese operative Buchung belegt allein weder eine buchhalterische Einordnung noch eine tatsächliche Zahlung oder Bankbewegung; dafür sind geeignete Quellen und ein Abgleich erforderlich.'
+      },
+      EN: {
+        term: 'Financial entry',
+        shortDefinition: 'A dated revenue or expense record with its amounts, currency and available references.',
+        detailedDefinition: 'An object observed in the M3S Finance module for recording revenue or expense with an identifier, reference, description, date, amounts, currencies, applied rate, category and other available labels. This operational entry does not by itself prove an accounting classification, an effective payment or a bank movement; those require appropriate sources and reconciliation.'
+      }
+    }
+  },
+  'FIN-AGREGAT-GLOBAL': {
+    version: 'V5.8-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Agrégat global',
+        shortDefinition: 'Indicateur consolidé calculé sur le périmètre complet défini par une source dédiée.',
+        detailedDefinition: 'Valeur synthétique provenant d’une source conçue pour couvrir l’ensemble du périmètre annoncé, par exemple un total de recettes ou de dépenses. Elle ne doit pas être reconstruite à partir de la seule page visible d’un registre. Un zéro réel reste différent d’une donnée indisponible, vide ou non chargée.'
+      },
+      DE: {
+        term: 'Globales Aggregat',
+        shortDefinition: 'Konsolidierter Indikator, der über den vollständigen, von einer eigenen Quelle definierten Umfang berechnet wird.',
+        detailedDefinition: 'Zusammengefasster Wert aus einer Quelle, die den gesamten angekündigten Umfang abdecken soll, etwa die Summe der Einnahmen oder Ausgaben. Er darf nicht allein aus der sichtbaren Registerseite rekonstruiert werden. Ein tatsächlicher Nullwert unterscheidet sich von nicht verfügbaren, leeren oder nicht geladenen Daten.'
+      },
+      EN: {
+        term: 'Global aggregate',
+        shortDefinition: 'A consolidated indicator calculated over the full scope defined by a dedicated source.',
+        detailedDefinition: 'A summary value from a source designed to cover the entire stated scope, such as total revenue or expense. It must not be rebuilt from only the visible page of a register. A real zero remains distinct from data that is unavailable, empty or not loaded.'
+      }
+    }
+  },
+  'FIN-EXTRAIT-CHARGE': {
+    version: 'V5.8-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Extrait chargé',
+        shortDefinition: 'Sous-ensemble d’enregistrements actuellement reçu ou affiché après pagination, limite ou filtre.',
+        detailedDefinition: 'Partie des données disponible dans la vue courante, souvent limitée par une page, un nombre maximal de lignes ou des critères de recherche. Sa somme décrit uniquement cet extrait tant que la source ne garantit pas un périmètre complet ; elle ne doit donc pas être présentée comme un total global.'
+      },
+      DE: {
+        term: 'Geladener Auszug',
+        shortDefinition: 'Teilmenge der aktuell empfangenen oder angezeigten Einträge nach Seitenteilung, Begrenzung oder Filter.',
+        detailedDefinition: 'Der in der aktuellen Ansicht verfügbare Teil der Daten, häufig begrenzt durch eine Seite, eine Höchstzahl von Zeilen oder Suchkriterien. Seine Summe beschreibt nur diesen Auszug, solange die Quelle keinen vollständigen Umfang garantiert, und darf daher nicht als globaler Gesamtwert dargestellt werden.'
+      },
+      EN: {
+        term: 'Loaded extract',
+        shortDefinition: 'The subset of records currently received or displayed after pagination, limits or filters.',
+        detailedDefinition: 'The portion of data available in the current view, often limited by a page, maximum row count or search criteria. Its sum describes only that extract unless the source guarantees complete scope, so it must not be presented as a global total.'
+      }
+    }
+  },
+  'DATA-RELATION-REFERENTIELLE': {
+    version: 'V5.8-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Relation référentielle',
+        shortDefinition: 'Lien contrôlé entre deux objets gouvernés au moyen d’identifiants stables et vérifiables.',
+        detailedDefinition: 'Relation qui rattache, par exemple, une dépense à un projet, une tâche, un actif, un fournisseur ou un document GED à l’aide d’une clé gouvernée. Un nom libre, un libellé ou un nom de fichier peut aider à lire les données, mais ne prouve pas à lui seul l’existence d’une relation référentielle.'
+      },
+      DE: {
+        term: 'Referenzbeziehung',
+        shortDefinition: 'Kontrollierte Verbindung zwischen zwei geregelten Objekten mittels stabiler und überprüfbarer Kennungen.',
+        detailedDefinition: 'Beziehung, die beispielsweise eine Ausgabe über einen geregelten Schlüssel mit einem Projekt, einer Aufgabe, einem Vermögenswert, einem Lieferanten oder einem DMS-Dokument verbindet. Ein Freitextname, eine Bezeichnung oder ein Dateiname erleichtert die Lesung, belegt allein jedoch keine Referenzbeziehung.'
+      },
+      EN: {
+        term: 'Referential relationship',
+        shortDefinition: 'A controlled link between two governed objects using stable, verifiable identifiers.',
+        detailedDefinition: 'A relationship linking, for example, an expense to a project, task, asset, supplier or DMS document through a governed key. A free-text name, label or file name may aid reading, but does not by itself prove that a referential relationship exists.'
+      }
+    }
+  },
+  'FIN-JUSTIFICATIF-FINANCIER': {
+    version: 'V5.8-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Justificatif financier',
+        shortDefinition: 'Pièce fiable utilisée pour soutenir et rapprocher une opération financière enregistrée.',
+        detailedDefinition: 'Document ou trace comme une facture, un reçu, un relevé, une confirmation de transfert ou une preuve de paiement, conservé avec sa date, sa provenance, sa version et son niveau d’accès. Le justificatif soutient le contrôle d’une opération, mais ne signifie pas automatiquement que celle-ci est approuvée, correctement imputée ou juridiquement conforme.'
+      },
+      DE: {
+        term: 'Finanzbeleg',
+        shortDefinition: 'Verlässlicher Nachweis zur Begründung und Abstimmung eines erfassten Finanzvorgangs.',
+        detailedDefinition: 'Dokument oder Spur wie Rechnung, Quittung, Auszug, Überweisungsbestätigung oder Zahlungsnachweis, aufbewahrt mit Datum, Herkunft, Version und Zugriffsstufe. Der Beleg unterstützt die Kontrolle eines Vorgangs, bedeutet jedoch nicht automatisch, dass dieser genehmigt, korrekt zugeordnet oder rechtlich konform ist.'
+      },
+      EN: {
+        term: 'Financial supporting evidence',
+        shortDefinition: 'Reliable evidence used to support and reconcile a recorded financial operation.',
+        detailedDefinition: 'A document or trace such as an invoice, receipt, statement, transfer confirmation or proof of payment, retained with its date, provenance, version and access level. The evidence supports control of an operation, but does not automatically mean that it is approved, correctly allocated or legally compliant.'
+      }
+    }
+  },
   'ADM-PORTEFEUILLE-DOSSIERS': {
     version: 'V5.7-candidate',
     status: 'candidate',
