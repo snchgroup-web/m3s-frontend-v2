@@ -10,6 +10,7 @@ import TableControls from './TableControls';
 import { isLegacyBuCode, translateDas } from './strategicMapping';
 import FinanceGlossary from './FinanceGlossary';
 import { StandardCreateButton } from './StandardUI';
+import FinanceFunctionFrame from './FinanceFunctionFrame';
 
 const TEAM_OPTIONS = ['Team_ZH', 'Team_SN'];
 const AGENT_OPTIONS = ['Cheikh', 'Chantal', 'Pape', 'Gnilane Diouf', 'Gnilane Ndiaye', 'Ibou'];
@@ -1572,6 +1573,8 @@ const Finance = () => {
     <>
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
         <div className="mx-auto w-full max-w-[1800px]">
+
+        {activeTab === 'overview' && <FinanceFunctionFrame language={language} />}
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-8">
           <div className="bg-slate-800 rounded-lg p-5 border border-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-green-500/60">
