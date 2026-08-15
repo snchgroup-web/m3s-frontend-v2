@@ -4,7 +4,7 @@ import AdministrationGlossary, { getAdministrationGlossaryTerms } from './Admini
 
 test.each(['FR', 'DE', 'EN'])('reuses all central Administration definitions in %s', language => {
   const terms = getAdministrationGlossaryTerms(language);
-  expect(terms).toHaveLength(23);
+  expect(terms).toHaveLength(26);
   terms.forEach(term => {
     expect(term.id).toBeTruthy();
     expect(term.term).toBeTruthy();
@@ -23,6 +23,9 @@ test('covers every Administration component and keeps unvalidated business terms
     'ADM-PROCESSUS',
     'ADM-PROCEDURE',
     'ADM-MANUEL-PROCEDURES',
+    'ADM-RAPPORT-ACTIVITE',
+    'ADM-PERIODE-REFERENCE',
+    'ADM-VERSION-CONSOLIDEE',
     'ADM-CONFORMITE',
     'ADM-CORRESPONDANCE'
   ]));

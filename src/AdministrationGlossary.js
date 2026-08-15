@@ -32,7 +32,17 @@ export const ADMINISTRATION_GLOSSARY_GROUPS = Object.freeze([
   {
     id: 'processes',
     labels: { FR: 'Processus & Procédures', EN: 'Processes & Procedures', DE: 'Prozesse & Verfahren' },
-    termIds: ['ADM-PROCESSUS', 'ADM-PROCEDURE', 'ADM-MANUEL-PROCEDURES', 'ADM-DOSSIER', 'ADM-ARCHIVE', 'ADM-CONTROLE']
+    termIds: [
+      'ADM-PROCESSUS',
+      'ADM-PROCEDURE',
+      'ADM-MANUEL-PROCEDURES',
+      'ADM-DOSSIER',
+      'ADM-ARCHIVE',
+      'ADM-CONTROLE',
+      'ADM-RAPPORT-ACTIVITE',
+      'ADM-PERIODE-REFERENCE',
+      'ADM-VERSION-CONSOLIDEE'
+    ]
   },
   {
     id: 'compliance',

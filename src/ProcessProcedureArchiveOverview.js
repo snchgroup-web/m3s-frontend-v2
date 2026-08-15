@@ -16,6 +16,7 @@ import {
   UserCheck
 } from 'lucide-react';
 import InternalSectionNav from './InternalSectionNav';
+import AdministrationReportingCycle from './AdministrationReportingCycle';
 
 const COPY = {
   FR: {
@@ -24,7 +25,7 @@ const COPY = {
     subtitle: 'Vue de cadrage en lecture seule pour structurer les processus administratifs, leurs procédures, les dossiers d’exécution et leur archivage. Elle décrit un modèle cible et ne crée aucun registre officiel.',
     badges: ['Lecture seule', 'Modèle cible', 'Aucun registre officiel'],
     navLabel: 'Navigation dans Processus, Procédures et Archives',
-    nav: ['Cycle', 'Définitions', 'Manuel', 'Dossiers & archives', 'Responsabilités', 'Frontières'],
+    nav: ['Cycle', 'Définitions', 'Manuel', 'Dossiers & archives', 'Rapports', 'Responsabilités', 'Frontières'],
     backToTop: 'Revenir en haut',
     cycleTitle: 'Chaîne administrative gouvernée',
     cycleBody: 'Chaque étape produit une information utile à la suivante. La preuve et l’archive se préparent dès la conception du processus.',
@@ -104,7 +105,7 @@ const COPY = {
     subtitle: 'Read-only framing view for organising administrative processes, their procedures, execution files and archiving. It describes a target model and creates no official register.',
     badges: ['Read-only', 'Target model', 'No official register'],
     navLabel: 'Processes, Procedures and Archives navigation',
-    nav: ['Cycle', 'Definitions', 'Manual', 'Files & archives', 'Responsibilities', 'Boundaries'],
+    nav: ['Cycle', 'Definitions', 'Manual', 'Files & archives', 'Reports', 'Responsibilities', 'Boundaries'],
     backToTop: 'Back to top',
     cycleTitle: 'Governed administrative chain',
     cycleBody: 'Each stage produces useful information for the next. Evidence and archiving are prepared from process design onwards.',
@@ -184,7 +185,7 @@ const COPY = {
     subtitle: 'Schreibgeschützte Rahmenansicht zur Strukturierung administrativer Prozesse, ihrer Verfahren, Ausführungsakten und Archivierung. Sie beschreibt ein Zielmodell und erstellt kein offizielles Register.',
     badges: ['Schreibgeschützt', 'Zielmodell', 'Kein offizielles Register'],
     navLabel: 'Navigation in Prozesse, Verfahren und Archive',
-    nav: ['Ablauf', 'Definitionen', 'Handbuch', 'Akten & Archive', 'Verantwortungen', 'Abgrenzung'],
+    nav: ['Ablauf', 'Definitionen', 'Handbuch', 'Akten & Archive', 'Berichte', 'Verantwortungen', 'Abgrenzung'],
     backToTop: 'Nach oben',
     cycleTitle: 'Gesteuerte Verwaltungskette',
     cycleBody: 'Jede Stufe erzeugt nützliche Informationen für die nächste. Nachweise und Archivierung werden bereits bei der Prozessgestaltung vorbereitet.',
@@ -270,7 +271,7 @@ const InfoCard = ({ icon: Icon, title, body }) => (
 
 const ProcessProcedureArchiveOverview = ({ language = 'FR' }) => {
   const t = COPY[language] || COPY.FR;
-  const sectionIds = ['process-cycle', 'process-definitions', 'process-manual', 'process-records', 'process-responsibilities', 'process-boundaries'];
+  const sectionIds = ['process-cycle', 'process-definitions', 'process-manual', 'process-records', 'process-reports', 'process-responsibilities', 'process-boundaries'];
   const navItems = sectionIds.map((id, index) => ({ id, label: t.nav[index] }));
 
   return (
@@ -376,6 +377,8 @@ const ProcessProcedureArchiveOverview = ({ language = 'FR' }) => {
           </ul>
         </div>
       </section>
+
+      <AdministrationReportingCycle language={language} />
 
       <section id="process-responsibilities" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="process-responsibilities-title">
         <h3 id="process-responsibilities-title" className="text-xl font-semibold text-slate-100">{t.responsibilitiesTitle}</h3>
