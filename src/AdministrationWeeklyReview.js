@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import {
   AlertTriangle,
+  Archive,
   CalendarRange,
   CheckCircle2,
   ChevronDown,
+  ClipboardCheck,
   FileClock,
   FileText,
-  ListChecks
+  ListChecks,
+  ShieldCheck,
+  UsersRound
 } from 'lucide-react';
 
 const COPY = {
@@ -60,6 +64,18 @@ const COPY = {
       'M3S_JOURNAL_DE_BORD_2026-08-14.md',
       'M3S_JOURNAL_DE_BORD_2026-08-15.md'
     ],
+    governanceTitle: 'Circuit documentaire proposé',
+    governanceIntro: 'Ce circuit sépare la consolidation administrative, la validation du fond, la décision de gouvernance et la conservation des preuves.',
+    governanceSteps: [
+      ['Administration', 'Consolide les journaux, nomme la version et prépare la revue.', 'Responsable proposé'],
+      ['Fonctions concernées', 'Vérifient les faits et résultats qui relèvent de leur périmètre.', 'Validation du fond'],
+      ['Gouvernance', 'Approuve ou refuse la promotion en rapport institutionnel.', 'Décision humaine'],
+      ['GED', 'Conserve le corpus source, la version, les validations et le rapport approuvé.', 'Après approbation']
+    ],
+    gedTitle: 'Emplacement GED candidat',
+    gedPath: 'GED/Administration/Rapports_activite/2026/Hebdomadaires/2SG-ADM-RH-2026-W33-PILOTE',
+    gedStatus: 'À confirmer par Cheikh',
+    promotionRule: 'Tant que le propriétaire, le circuit et l’emplacement GED ne sont pas confirmés, cette revue reste une synthèse de travail provisoire.',
     caution: 'Cette revue est une synthèse de travail à contrôler par Cheikh et la fonction responsable. Elle n’est ni signée, ni adoptée, ni archivée comme rapport institutionnel.'
   },
   EN: {
@@ -112,6 +128,18 @@ const COPY = {
       'M3S_JOURNAL_DE_BORD_2026-08-14.md',
       'M3S_JOURNAL_DE_BORD_2026-08-15.md'
     ],
+    governanceTitle: 'Proposed document workflow',
+    governanceIntro: 'This workflow separates administrative consolidation, content validation, governance decision and evidence retention.',
+    governanceSteps: [
+      ['Administration', 'Consolidates journals, names the version and prepares the review.', 'Proposed owner'],
+      ['Relevant functions', 'Check the facts and results within their scope.', 'Content validation'],
+      ['Governance', 'Approves or refuses promotion to an institutional report.', 'Human decision'],
+      ['DMS', 'Retains the source corpus, version, validations and approved report.', 'After approval']
+    ],
+    gedTitle: 'Candidate DMS location',
+    gedPath: 'GED/Administration/Rapports_activite/2026/Hebdomadaires/2SG-ADM-RH-2026-W33-PILOTE',
+    gedStatus: 'To be confirmed by Cheikh',
+    promotionRule: 'Until the owner, workflow and DMS location are confirmed, this review remains a provisional working synthesis.',
     caution: 'This review is a working synthesis to be checked by Cheikh and the owning function. It is neither signed, adopted nor archived as an institutional report.'
   },
   DE: {
@@ -164,9 +192,23 @@ const COPY = {
       'M3S_JOURNAL_DE_BORD_2026-08-14.md',
       'M3S_JOURNAL_DE_BORD_2026-08-15.md'
     ],
+    governanceTitle: 'Vorgeschlagener Dokumentenprozess',
+    governanceIntro: 'Dieser Prozess trennt administrative Konsolidierung, fachliche Prüfung, Governance-Entscheidung und Nachweisaufbewahrung.',
+    governanceSteps: [
+      ['Verwaltung', 'Konsolidiert die Journale, benennt die Version und bereitet den Rückblick vor.', 'Vorgeschlagene Verantwortung'],
+      ['Betroffene Funktionen', 'Prüfen die Fakten und Ergebnisse in ihrem Zuständigkeitsbereich.', 'Fachliche Prüfung'],
+      ['Governance', 'Genehmigt oder verweigert die Hochstufung zum institutionellen Bericht.', 'Menschliche Entscheidung'],
+      ['DMS', 'Bewahrt Quellkorpus, Version, Prüfungen und genehmigten Bericht auf.', 'Nach Genehmigung']
+    ],
+    gedTitle: 'Vorgeschlagener DMS-Ablageort',
+    gedPath: 'GED/Administration/Rapports_activite/2026/Hebdomadaires/2SG-ADM-RH-2026-W33-PILOTE',
+    gedStatus: 'Von Cheikh zu bestätigen',
+    promotionRule: 'Bis Verantwortung, Prozess und DMS-Ablage bestätigt sind, bleibt dieser Rückblick eine vorläufige Arbeitsübersicht.',
     caution: 'Dieser Rückblick ist eine Arbeitsübersicht, die von Cheikh und der verantwortlichen Funktion zu prüfen ist. Er ist weder unterzeichnet noch angenommen oder als institutioneller Bericht archiviert.'
   }
 };
+
+const GOVERNANCE_ICONS = [ClipboardCheck, UsersRound, ShieldCheck, Archive];
 
 const AdministrationWeeklyReview = ({ language = 'FR' }) => {
   const [sourcesOpen, setSourcesOpen] = useState(false);
@@ -264,6 +306,43 @@ const AdministrationWeeklyReview = ({ language = 'FR' }) => {
             ))}
           </ol>
         </div>
+      </div>
+
+      <div className="mt-6 border-t border-slate-700 pt-5">
+        <div className="flex items-start gap-3">
+          <ShieldCheck className="mt-0.5 shrink-0 text-cyan-300" size={20} aria-hidden="true" />
+          <div>
+            <h5 className="font-semibold text-slate-100">{t.governanceTitle}</h5>
+            <p className="mt-1 max-w-5xl text-sm leading-5 text-slate-300">{t.governanceIntro}</p>
+          </div>
+        </div>
+        <ol className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {t.governanceSteps.map(([label, detail, status], index) => {
+            const StepIcon = GOVERNANCE_ICONS[index];
+            return (
+              <li key={label} className="min-h-40 border border-slate-700 bg-slate-900/35 p-4 transition-colors hover:border-sky-600 hover:bg-slate-900/60">
+                <div className="flex items-center justify-between gap-3">
+                  <StepIcon className="shrink-0 text-cyan-300" size={19} aria-hidden="true" />
+                  <span className="text-xs font-semibold text-slate-400">{index + 1}/4</span>
+                </div>
+                <h6 className="mt-3 text-sm font-semibold text-slate-100">{label}</h6>
+                <p className="mt-2 text-sm leading-5 text-slate-300">{detail}</p>
+                <p className="mt-3 text-xs font-semibold uppercase text-cyan-300">{status}</p>
+              </li>
+            );
+          })}
+        </ol>
+
+        <div className="mt-4 grid gap-4 border border-dashed border-sky-700 bg-sky-950/15 p-4 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div>
+            <p className="text-xs font-semibold uppercase text-cyan-300">{t.gedTitle}</p>
+            <p className="mt-2 break-all font-mono text-xs leading-5 text-slate-200">{t.gedPath}</p>
+          </div>
+          <span className="w-fit border border-amber-700 bg-amber-950/30 px-3 py-2 text-xs font-semibold text-amber-100">
+            {t.gedStatus}
+          </span>
+        </div>
+        <p className="mt-3 border-l-2 border-sky-600 pl-3 text-xs leading-5 text-slate-400">{t.promotionRule}</p>
       </div>
 
       <div className="mt-5 border-t border-slate-700 pt-4">
