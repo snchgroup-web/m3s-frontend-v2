@@ -166,6 +166,16 @@
       "path": "/finance",
       "children": [
         {
+          "id": "finance-architecture",
+          "label": {
+            "FR": "Architecture & Relations",
+            "EN": "Architecture & Relations",
+            "DE": "Architektur & Beziehungen"
+          },
+          "icon": "Network",
+          "path": "/finance?tab=architecture"
+        },
+        {
           "id": "recettes",
           "label": {
             "FR": "Recettes",
