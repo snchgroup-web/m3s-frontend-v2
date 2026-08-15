@@ -15,6 +15,13 @@ test('frames the French reporting cycle and identifies the provisional pilot rev
   expect(screen.getByRole('heading', { name: 'Revue hebdomadaire du 10 au 15 août 2026' })).toBeInTheDocument();
   expect(screen.getByText('3 journaux disponibles · 3 journées sans journal')).toBeInTheDocument();
   expect(screen.getByText(/n’est pas assimilée à une absence de travail/i)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Circuit documentaire proposé' })).toBeInTheDocument();
+  expect(screen.getByText('Responsable proposé')).toBeInTheDocument();
+  expect(screen.getByText('Validation du fond')).toBeInTheDocument();
+  expect(screen.getByText('Décision humaine')).toBeInTheDocument();
+  expect(screen.getByText('À confirmer par Cheikh')).toBeInTheDocument();
+  expect(screen.getByText(/GED\/Administration\/Rapports_activite/)).toBeInTheDocument();
+  expect(screen.getByText(/reste une synthèse de travail provisoire/i)).toBeInTheDocument();
   expect(screen.queryByText('M3S_JOURNAL_DE_BORD_2026-08-10.md')).not.toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: /Afficher les journaux sources/i }));
   expect(screen.getByText('M3S_JOURNAL_DE_BORD_2026-08-10.md')).toBeInTheDocument();
@@ -27,5 +34,7 @@ test('renders the German responsibilities and documentary caution', () => {
   expect(screen.getByText('Wer macht was?')).toBeInTheDocument();
   expect(screen.getByText(/Keine Kennzahl, keinen Fortschrittsgrad/i)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Wochenrückblick vom 10. bis 15. August 2026' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Vorgeschlagener Dokumentenprozess' })).toBeInTheDocument();
+  expect(screen.getByText('Von Cheikh zu bestätigen')).toBeInTheDocument();
   expect(screen.getByText(/bleibt eine Arbeitsübersicht/i)).toBeInTheDocument();
 });
