@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import FinanceArchitecture from './FinanceArchitecture';
 
 test('distinguishes observed Finance relations from candidate data-model links', () => {
@@ -16,4 +16,22 @@ test('distinguishes observed Finance relations from candidate data-model links',
   rerender(<FinanceArchitecture language="DE" />);
   expect(screen.getByRole('heading', { name: 'Objekte, Quellen und ihre Wiederverwendung sichtbar machen' })).toBeInTheDocument();
   expect(screen.getByText('Noch nicht nachgewiesene Beziehungen')).toBeInTheDocument();
+});
+
+test('opens governed glossary help without promoting candidate Finance definitions', () => {
+  render(<FinanceArchitecture language="FR" />);
+
+  fireEvent.click(screen.getByRole('button', { name: 'Définition du Glossaire : Écriture financière' }));
+  expect(screen.getByRole('dialog', { name: 'Écriture financière' })).toBeInTheDocument();
+  expect(screen.getByText('Définition proposée')).toBeInTheDocument();
+  expect(screen.getByText('Publication dans le Glossaire après validation')).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: 'Fermer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Définition du Glossaire : Taux de change appliqué' }));
+  expect(screen.getByRole('dialog', { name: 'Taux de change appliqué' })).toBeInTheDocument();
+  expect(screen.getByText('Définition validée')).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Voir dans le Glossaire' })).toHaveAttribute(
+    'href',
+    '/ged?tab=knowledge&term=FIN-TAUX-CHANGE-APPLIQUE'
+  );
 });

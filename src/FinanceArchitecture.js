@@ -1,5 +1,21 @@
 import React from 'react';
 import { ArrowRight, Boxes, CircleAlert, Database, FileCheck2, Link2, Network } from 'lucide-react';
+import GlossaryHelp from './GlossaryHelp';
+
+const OBJECT_TERM_IDS = [
+  'FIN-ECRITURE-FINANCIERE',
+  'FIN-TAUX-CHANGE-APPLIQUE',
+  null,
+  null
+];
+
+const RELATION_TERM_IDS = [
+  'FIN-AGREGAT-GLOBAL',
+  'FIN-EXTRAIT-CHARGE',
+  null,
+  null,
+  null
+];
 
 const COPY = {
   FR: {
@@ -157,10 +173,13 @@ const FinanceArchitecture = ({ language = 'FR' }) => {
       <section aria-labelledby="finance-objects-title">
         <h4 id="finance-objects-title" className="m3s-panel-title flex items-center gap-2"><Boxes size={18} aria-hidden="true" />{t.objectsTitle}</h4>
         <div className="mt-3 grid gap-3 lg:grid-cols-2">
-          {t.objects.map(([name, type, body]) => (
+          {t.objects.map(([name, type, body], index) => (
             <article key={name} className="m3s-panel p-4 transition hover:-translate-y-0.5 hover:border-emerald-500/60">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h5 className="m3s-panel-title">{name}</h5>
+                <div className="flex min-w-0 items-start gap-2">
+                  <h5 className="m3s-panel-title min-w-0">{name}</h5>
+                  {OBJECT_TERM_IDS[index] && <GlossaryHelp termId={OBJECT_TERM_IDS[index]} language={language} />}
+                </div>
                 <span className="inline-flex rounded-full border px-3 py-1 text-xs font-semibold" style={{ borderColor: 'var(--m3s-border-strong)', color: 'var(--m3s-text-secondary)' }}>{type}</span>
               </div>
               <p className="mt-3 text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{body}</p>
@@ -176,14 +195,17 @@ const FinanceArchitecture = ({ language = 'FR' }) => {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead style={{ background: 'var(--m3s-surface-raised)', color: 'var(--m3s-text-secondary)' }}><tr>{t.relationHeaders.map(header => <th key={header} className="px-4 py-3 text-xs uppercase">{header}</th>)}</tr></thead>
-            <tbody>{t.relations.map(row => <tr key={row[0]} className="border-t transition hover:bg-blue-500/5" style={{ borderColor: 'var(--m3s-border)' }}>{row.map((cell, index) => <td key={`${row[0]}-${index}`} className={`px-4 py-3 ${index === 0 ? 'font-mono text-xs' : ''}`} style={{ color: index === 0 ? 'var(--m3s-row-accent)' : 'var(--m3s-text-secondary)' }}>{cell}</td>)}</tr>)}</tbody>
+            <tbody>{t.relations.map((row, rowIndex) => <tr key={row[0]} className="border-t transition hover:bg-blue-500/5" style={{ borderColor: 'var(--m3s-border)' }}>{row.map((cell, cellIndex) => <td key={`${row[0]}-${cellIndex}`} className={`px-4 py-3 ${cellIndex === 0 ? 'font-mono text-xs' : ''}`} style={{ color: cellIndex === 0 ? 'var(--m3s-row-accent)' : 'var(--m3s-text-secondary)' }}>{cellIndex === 3 && RELATION_TERM_IDS[rowIndex] ? <span className="flex items-center gap-2"><span>{cell}</span><GlossaryHelp termId={RELATION_TERM_IDS[rowIndex]} language={language} /></span> : cell}</td>)}</tr>)}</tbody>
           </table>
         </div>
       </section>
 
       <section className="m3s-panel p-4" aria-labelledby="finance-gaps-title">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h4 id="finance-gaps-title" className="m3s-panel-title flex items-center gap-2"><CircleAlert size={18} aria-hidden="true" />{t.gapsTitle}</h4>
+          <div className="flex items-center gap-2">
+            <h4 id="finance-gaps-title" className="m3s-panel-title flex items-center gap-2"><CircleAlert size={18} aria-hidden="true" />{t.gapsTitle}</h4>
+            <GlossaryHelp termId="DATA-RELATION-REFERENTIELLE" language={language} />
+          </div>
           <span className="inline-flex rounded-full border border-amber-500 px-3 py-1 text-xs font-semibold text-amber-600 dark:text-amber-300">{t.candidate}</span>
         </div>
         <p className="mt-2 text-sm" style={{ color: 'var(--m3s-text-secondary)' }}>{t.gapsIntro}</p>
@@ -193,7 +215,10 @@ const FinanceArchitecture = ({ language = 'FR' }) => {
       </section>
 
       <aside className="m3s-panel p-4" aria-label={t.evidenceTitle}>
-        <h4 className="m3s-panel-title flex items-center gap-2"><FileCheck2 size={18} aria-hidden="true" />{t.evidenceTitle}</h4>
+        <div className="flex items-center gap-2">
+          <h4 className="m3s-panel-title flex items-center gap-2"><FileCheck2 size={18} aria-hidden="true" />{t.evidenceTitle}</h4>
+          <GlossaryHelp termId="FIN-JUSTIFICATIF-FINANCIER" language={language} />
+        </div>
         <p className="mt-2 text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{t.evidence}</p>
       </aside>
 
