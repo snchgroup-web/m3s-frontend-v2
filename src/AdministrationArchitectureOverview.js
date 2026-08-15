@@ -10,10 +10,13 @@ import {
   Layers3,
   LockKeyhole,
   Network,
+  Route,
   ServerCog,
+  TableProperties,
   UsersRound
 } from 'lucide-react';
 import InternalSectionNav from './InternalSectionNav';
+import { ADMINISTRATION_DATA_MAPPING } from './administrationDataMapping';
 
 const COPY = {
   FR: {
@@ -22,7 +25,7 @@ const COPY = {
     subtitle: 'Cette vue décrit l’architecture fonctionnelle cible d’Administration, ses objets, ses échanges et ses systèmes d’appui. Elle ne constitue ni un organigramme hiérarchique ni une décision d’achat logiciel.',
     badges: ['Lecture seule', 'Modèle réutilisable', 'Sources visibles'],
     navLabel: 'Navigation dans Architecture et Relations',
-    nav: ['Modèle', 'Couches', 'Objets', 'Relations', 'Systèmes', 'Sources'],
+    nav: ['Modèle', 'Couches', 'Objets', 'Relations', 'Systèmes', 'Données', 'Sources'],
     backToTop: 'Revenir en haut',
     modelTitle: 'Patron réutilisable d’une application métier M3S',
     modelBody: 'Chaque fonction doit pouvoir être lue selon la même chaîne. Ce patron permettra d’accélérer les prochains modules sans recopier leur contenu métier.',
@@ -74,6 +77,12 @@ const COPY = {
       ['Courrier & communication', 'Parcours et frontières définis, registre encore en lecture seule.', 'framed', Network],
       ['Manuel de procédures', 'Structure cible définie, procédures officielles à gouverner.', 'target', FileCheck2]
     ],
+    dataTitle: 'Raccordement au modèle relationnel transversal V1',
+    dataBody: 'Cette cartographie confronte les objets cibles aux tables et endpoints réellement observés. Elle indique un état de raccordement, pas une migration déjà réalisée.',
+    dataDate: 'Inventaire contrôlé au 15-08-2026',
+    dataHeaders: ['Domaine', 'Objet cible V1', 'Implémentation observée', 'Endpoints', 'Écart principal'],
+    dataStatuses: { connected: 'Raccordé', partial: 'Partiel', qualify: 'À qualifier', target: 'Cible' },
+    dataSource: 'Sources : standard candidat DATA_MODEL_STANDARD_M3S, frontend f3b09cc et backend 6560023. Aucun schéma de production n’est modifié par cette vue.',
     sourcesTitle: 'Sources maîtresses et règle de preuve',
     sourcesBody: 'L’interface résume et relie. La source maîtresse demeure dans le document, le référentiel, la GED ou le système autorisé qui porte la donnée.',
     sources: [
@@ -94,7 +103,7 @@ const COPY = {
     subtitle: 'This view describes Administration’s target functional architecture, objects, exchanges and supporting systems. It is neither a hierarchical organisation chart nor a software purchasing decision.',
     badges: ['Read-only', 'Reusable model', 'Visible sources'],
     navLabel: 'Architecture and Relationships navigation',
-    nav: ['Model', 'Layers', 'Objects', 'Relationships', 'Systems', 'Sources'],
+    nav: ['Model', 'Layers', 'Objects', 'Relationships', 'Systems', 'Data', 'Sources'],
     backToTop: 'Back to top',
     modelTitle: 'Reusable pattern for an M3S business application',
     modelBody: 'Every function should be readable through the same chain. This pattern will accelerate future modules without copying their business content.',
@@ -146,6 +155,12 @@ const COPY = {
       ['Correspondence & communication', 'Flow and boundaries defined; register still read-only.', 'framed', Network],
       ['Procedures manual', 'Target structure defined; official procedures to govern.', 'target', FileCheck2]
     ],
+    dataTitle: 'Connection to the cross-functional relational model V1',
+    dataBody: 'This map compares target objects with the tables and endpoints actually observed. It shows connection status, not a completed migration.',
+    dataDate: 'Inventory reviewed on 15 Aug 2026',
+    dataHeaders: ['Domain', 'V1 target object', 'Observed implementation', 'Endpoints', 'Main gap'],
+    dataStatuses: { connected: 'Connected', partial: 'Partial', qualify: 'To qualify', target: 'Target' },
+    dataSource: 'Sources: candidate standard DATA_MODEL_STANDARD_M3S, frontend f3b09cc and backend 6560023. This view does not modify any production schema.',
     sourcesTitle: 'Master sources and evidence rule',
     sourcesBody: 'The interface summarises and links. The master source remains the document, repository, DMS or authorised system that carries the data.',
     sources: [
@@ -166,7 +181,7 @@ const COPY = {
     subtitle: 'Diese Ansicht beschreibt die funktionale Zielarchitektur der Verwaltung, ihre Objekte, Austauschbeziehungen und unterstützenden Systeme. Sie ist weder ein hierarchisches Organigramm noch eine Software-Kaufentscheidung.',
     badges: ['Schreibgeschützt', 'Wiederverwendbares Modell', 'Sichtbare Quellen'],
     navLabel: 'Navigation in Architektur und Beziehungen',
-    nav: ['Modell', 'Ebenen', 'Objekte', 'Beziehungen', 'Systeme', 'Quellen'],
+    nav: ['Modell', 'Ebenen', 'Objekte', 'Beziehungen', 'Systeme', 'Daten', 'Quellen'],
     backToTop: 'Nach oben',
     modelTitle: 'Wiederverwendbares Muster einer M3S-Fachanwendung',
     modelBody: 'Jede Funktion soll über dieselbe Kette lesbar sein. Dieses Muster beschleunigt künftige Module, ohne deren Fachinhalte zu kopieren.',
@@ -218,6 +233,12 @@ const COPY = {
       ['Korrespondenz & Kommunikation', 'Ablauf und Grenzen definiert; Register noch schreibgeschützt.', 'framed', Network],
       ['Verfahrenshandbuch', 'Zielstruktur definiert; offizielle Verfahren zu steuern.', 'target', FileCheck2]
     ],
+    dataTitle: 'Anbindung an das funktionsübergreifende relationale Modell V1',
+    dataBody: 'Diese Übersicht vergleicht Zielobjekte mit den tatsächlich festgestellten Tabellen und Endpunkten. Sie zeigt den Anbindungsstand, nicht eine abgeschlossene Migration.',
+    dataDate: 'Bestand geprüft am 15.08.2026',
+    dataHeaders: ['Bereich', 'V1-Zielobjekt', 'Festgestellte Umsetzung', 'Endpunkte', 'Wichtigste Lücke'],
+    dataStatuses: { connected: 'Angebunden', partial: 'Teilweise', qualify: 'Zu klären', target: 'Ziel' },
+    dataSource: 'Quellen: Standardentwurf DATA_MODEL_STANDARD_M3S, Frontend f3b09cc und Backend 6560023. Diese Ansicht ändert kein Produktionsschema.',
     sourcesTitle: 'Masterquellen und Nachweisregel',
     sourcesBody: 'Die Oberfläche fasst zusammen und verknüpft. Masterquelle bleibt das Dokument, Referenzwerk, DMS oder autorisierte System, das die Daten trägt.',
     sources: [
@@ -241,9 +262,27 @@ const SectionTitle = ({ id, title, body }) => (
   </div>
 );
 
+const DATA_STATUS_CLASSES = {
+  connected: 'border-emerald-700 bg-emerald-950/35 text-emerald-200',
+  partial: 'border-blue-700 bg-blue-950/35 text-blue-200',
+  qualify: 'border-amber-700 bg-amber-950/35 text-amber-200',
+  target: 'border-dashed border-slate-600 bg-slate-900/45 text-slate-300'
+};
+
+const DataStatus = ({ status, label }) => (
+  <span className={`inline-flex min-h-6 items-center whitespace-nowrap rounded-full border px-2 py-0.5 text-[11px] font-semibold leading-4 ${DATA_STATUS_CLASSES[status]}`}>
+    {label}
+  </span>
+);
+
+const MobileLabel = ({ children }) => (
+  <span className="mb-1 block text-[11px] font-semibold uppercase leading-4 text-slate-400 lg:hidden">{children}</span>
+);
+
 const AdministrationArchitectureOverview = ({ language = 'FR' }) => {
   const t = COPY[language] || COPY.FR;
-  const ids = ['admin-architecture-model', 'admin-architecture-layers', 'admin-architecture-objects', 'admin-architecture-relations', 'admin-architecture-systems', 'admin-architecture-sources'];
+  const dataMapping = ADMINISTRATION_DATA_MAPPING[language] || ADMINISTRATION_DATA_MAPPING.FR;
+  const ids = ['admin-architecture-model', 'admin-architecture-layers', 'admin-architecture-objects', 'admin-architecture-relations', 'admin-architecture-systems', 'admin-architecture-data', 'admin-architecture-sources'];
   const navItems = ids.map((id, index) => ({ id, label: t.nav[index] }));
 
   return (
@@ -305,7 +344,38 @@ const AdministrationArchitectureOverview = ({ language = 'FR' }) => {
       </section>
 
       <section id={ids[5]} className="scroll-mt-24 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby={`${ids[5]}-title`}>
-        <SectionTitle id={ids[5]} title={t.sourcesTitle} body={t.sourcesBody} />
+        <SectionTitle id={ids[5]} title={t.dataTitle} body={t.dataBody} />
+        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-400">
+          <span className="inline-flex items-center gap-2 font-semibold text-slate-300"><Route size={16} className="text-cyan-300" aria-hidden="true" />{t.dataDate}</span>
+          {Object.entries(t.dataStatuses).map(([status, label]) => (
+            <DataStatus key={status} status={status} label={label} />
+          ))}
+        </div>
+
+        <div className="mt-5 overflow-hidden rounded-lg border border-slate-700" role="table" aria-label={t.dataTitle}>
+          <div className="hidden grid-cols-[0.85fr_1.15fr_1.25fr_1.1fr_1.35fr] gap-4 bg-slate-900 px-4 py-3 text-xs font-semibold uppercase text-slate-300 lg:grid" role="row">
+            {t.dataHeaders.map(header => <span key={header} role="columnheader">{header}</span>)}
+          </div>
+          <div role="rowgroup">
+            {dataMapping.map((item, index) => (
+              <div key={item.domain} className={`grid gap-3 border-t border-slate-700 px-4 py-4 first:border-t-0 lg:grid-cols-[0.85fr_1.15fr_1.25fr_1.1fr_1.35fr] lg:gap-4 ${index % 2 ? 'bg-slate-900/25' : 'bg-slate-800'}`} role="row">
+                <div role="cell">
+                  <MobileLabel>{t.dataHeaders[0]}</MobileLabel>
+                  <div className="flex flex-wrap items-center gap-2"><span className="font-semibold text-slate-100">{item.domain}</span><DataStatus status={item.status} label={t.dataStatuses[item.status]} /></div>
+                </div>
+                <div role="cell"><MobileLabel>{t.dataHeaders[1]}</MobileLabel><code className="text-xs leading-5 text-cyan-200">{item.target}</code></div>
+                <div role="cell"><MobileLabel>{t.dataHeaders[2]}</MobileLabel><span className="text-sm leading-6 text-slate-300">{item.implementation}</span></div>
+                <div role="cell"><MobileLabel>{t.dataHeaders[3]}</MobileLabel><code className="break-words text-xs leading-5 text-blue-200">{item.endpoints}</code></div>
+                <div role="cell"><MobileLabel>{t.dataHeaders[4]}</MobileLabel><span className="text-sm leading-6 text-slate-400">{item.gap}</span></div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <p className="mt-4 flex gap-2 text-xs leading-5 text-slate-500"><TableProperties size={16} className="mt-0.5 shrink-0" aria-hidden="true" />{t.dataSource}</p>
+      </section>
+
+      <section id={ids[6]} className="scroll-mt-24 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby={`${ids[6]}-title`}>
+        <SectionTitle id={ids[6]} title={t.sourcesTitle} body={t.sourcesBody} />
         <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">{t.sources.map(([title, body]) => <article key={title} className="rounded-lg border border-slate-700 bg-slate-900/45 p-4"><h4 className="font-semibold text-slate-100">{title}</h4><p className="mt-2 text-sm leading-6 text-slate-400">{body}</p></article>)}</div>
         <aside className="mt-5 rounded-lg border border-emerald-800 bg-emerald-950/20 p-5"><div className="flex gap-3"><UsersRound size={22} className="mt-0.5 shrink-0 text-emerald-300" aria-hidden="true" /><div><h3 className="font-semibold text-slate-100">{t.ruleTitle}</h3><p className="mt-2 text-sm leading-6 text-slate-300">{t.ruleBody}</p></div></div></aside>
         <p className="mt-5 border-t border-slate-700 pt-4 text-xs leading-5 text-slate-500">{t.sourceNote}</p>
