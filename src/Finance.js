@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, LabelList } from 'recharts';
-import { Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound, Database, AlertTriangle, CheckCircle2, LoaderCircle } from 'lucide-react';
+import { Edit2, Trash2, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound, Database, AlertTriangle, CheckCircle2, LoaderCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
@@ -11,6 +11,7 @@ import { isLegacyBuCode, translateDas } from './strategicMapping';
 import FinanceGlossary from './FinanceGlossary';
 import { StandardCreateButton } from './StandardUI';
 import FinanceFunctionFrame from './FinanceFunctionFrame';
+import FinanceOverviewIndicators from './FinanceOverviewIndicators';
 import FinanceArchitecture from './FinanceArchitecture';
 import FinanceProcessControls from './FinanceProcessControls';
 import ActionConfirmationDialog from './ActionConfirmationDialog';
@@ -649,6 +650,7 @@ const Finance = () => {
 
   const formatCell = (value) => value || '-';
   const formatAmount = (value) => toNumber(value).toLocaleString();
+  const formatOptionalAmount = (value) => Number.isFinite(value) ? value.toLocaleString() : '—';
   const formatDateForDisplay = (value) => {
     const isoDate = cleanDate(value);
     const match = isoDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -1229,7 +1231,6 @@ const Finance = () => {
   const solde = Number.isFinite(totalRecettes) && Number.isFinite(totalDepenses)
     ? totalRecettes - totalDepenses
     : null;
-  const soldeNegatif = Number.isFinite(solde) && solde < 0;
   const financeSummaryReadAt = financeSummary?.timestamp && !Number.isNaN(new Date(financeSummary.timestamp).getTime())
     ? new Intl.DateTimeFormat(
       language === 'DE' ? 'de-CH' : language === 'EN' ? 'en-GB' : 'fr-CH',
@@ -1238,22 +1239,22 @@ const Finance = () => {
     : null;
   const latestHistoricalFx = getHistoricalCfaPerChf(new Date().toISOString().split('T')[0]);
   const tauxChfCfa = tauxDuJour.CHF_CFA || latestHistoricalFx?.cfaPerChf || null;
-  const formatGlobalChf = (value) => Number.isFinite(value) ? `${value.toLocaleString()} CHF` : '— CHF';
   const formatCfaWithCurrentRate = (chfAmount) => Number.isFinite(chfAmount) && tauxChfCfa
     ? Math.round(chfAmount * tauxChfCfa).toLocaleString()
     : '—';
 
   const socialRowsAffichees = useMemo(() => {
-    const dedicatedRows = socialRows.map(applyHistoricalFx);
-    if (dedicatedRows.length) return dedicatedRows;
-    return recettesAffichees.filter((row) => {
-      const category = normalizeCategoryKey(row.categorie);
-      return category === 'AIDE SOCIALE MENAGE' || category === 'AIDE SOCIALE';
-    });
-  }, [socialRows, recettesAffichees, applyHistoricalFx]);
-  const socialTotalChf = socialRowsAffichees.reduce((sum, row) => sum + toNumber(row.montantChf), 0);
-  const socialTotalCfaHistorique = socialRowsAffichees.reduce((sum, row) => sum + toNumber(row.montantCfa), 0);
-  const socialTotalCfaActuel = tauxChfCfa ? socialTotalChf * tauxChfCfa : 0;
+    return socialRows.map(applyHistoricalFx);
+  }, [socialRows, applyHistoricalFx]);
+  const socialRowsTotalChf = socialRowsAffichees.reduce((sum, row) => sum + toNumber(row.montantChf), 0);
+  const socialRowsTotalCfaHistorique = socialRowsAffichees.reduce((sum, row) => sum + toNumber(row.montantCfa), 0);
+  const socialTotalChf = socialAccessState === 'available'
+    ? parseFiniteNumber(socialSummary.total_chf) ?? (socialRowsAffichees.length ? socialRowsTotalChf : null)
+    : null;
+  const socialTotalCfaHistorique = socialAccessState === 'available'
+    ? parseFiniteNumber(socialSummary.total_cfa_historique) ?? (socialRowsAffichees.length ? socialRowsTotalCfaHistorique : null)
+    : null;
+  const socialTotalCfaActuel = Number.isFinite(socialTotalChf) && tauxChfCfa ? socialTotalChf * tauxChfCfa : null;
   const socialYears = socialRowsAffichees
     .map((row) => cleanDate(row.date).slice(0, 4))
     .filter((year) => /^\d{4}$/.test(year));
@@ -1702,13 +1703,14 @@ const Finance = () => {
       return matchesDevise;
     }), [fxHistory, filterDevise]);
 
-  const immoInvestiChf = toNumber(immoSummary.investissements_realises_chf);
-  const immoInvestiCfa = toNumber(immoSummary.investissements_realises_cfa);
-  const immoRemboursementsDirects = toNumber(immoSummary.remboursements_directs_chf);
-  const immoRemboursementsTotal = toNumber(immoSummary.remboursements_total_chf);
-  const immoPartCheikh = toNumber(immoSummary.part_cheikh_chf);
-  const immoSoldeOuvert = toNumber(immoSummary.solde_ouvert_cheikh_chf);
-  const immoEquivalentTauxJour = tauxChfCfa ? Math.round(immoInvestiChf * tauxChfCfa) : null;
+  const immoValue = (key) => immoAccessState === 'available' ? parseFiniteNumber(immoSummary[key]) : null;
+  const immoInvestiChf = immoValue('investissements_realises_chf');
+  const immoInvestiCfa = immoValue('investissements_realises_cfa');
+  const immoRemboursementsDirects = immoValue('remboursements_directs_chf');
+  const immoRemboursementsTotal = immoValue('remboursements_total_chf');
+  const immoPartCheikh = immoValue('part_cheikh_chf');
+  const immoSoldeOuvert = immoValue('solde_ouvert_cheikh_chf');
+  const immoEquivalentTauxJour = Number.isFinite(immoInvestiChf) && tauxChfCfa ? Math.round(immoInvestiChf * tauxChfCfa) : null;
   const immoStatusClass = (status) => {
     const key = normalizeCategoryKey(status);
     if (['REMBOURSE', 'PAYE'].includes(key)) return 'bg-green-900/50 text-green-300';
@@ -1729,56 +1731,22 @@ const Finance = () => {
 
         {activeTab === 'overview' && <FinanceFunctionFrame language={language} />}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-8">
-          <div className="bg-slate-800 rounded-lg p-5 border border-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-green-500/60">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-green-400 text-sm font-medium">{t.totalRecettes}</p>
-                <div className="mt-1 leading-tight">
-                  <p data-testid="finance-total-income" className="text-green-300 text-xl font-bold">{formatGlobalChf(totalRecettes)}</p>
-                  <p className="text-slate-300 text-sm font-semibold mt-1">{formatCfaWithCurrentRate(totalRecettes)} CFA</p>
-                </div>
-              </div>
-              <TrendingUp size={28} className="text-green-400" />
-            </div>
-          </div>
-
-          <div className="bg-slate-800 rounded-lg p-5 border border-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-red-500/60">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-red-400 text-sm font-medium">{t.totalDepenses}</p>
-                <div className="mt-1 leading-tight">
-                  <p data-testid="finance-total-expenses" className="text-red-300 text-xl font-bold">{formatGlobalChf(totalDepenses)}</p>
-                  <p className="text-slate-300 text-sm font-semibold mt-1">{formatCfaWithCurrentRate(totalDepenses)} CFA</p>
-                </div>
-              </div>
-              <TrendingDown size={28} className="text-red-400" />
-            </div>
-          </div>
-
-          <div className={`bg-slate-800 rounded-lg p-5 border border-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${soldeNegatif ? 'hover:border-orange-500/60' : 'hover:border-blue-500/60'}`}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className={`${soldeNegatif ? 'text-orange-400' : 'text-blue-400'} text-sm font-medium`}>{t.soldeNet}</p>
-                <div className="mt-1 leading-tight">
-                  <p data-testid="finance-net-balance" className={`${soldeNegatif ? 'text-orange-300' : 'text-blue-300'} text-xl font-bold`}>{formatGlobalChf(solde)}</p>
-                  <p className="text-slate-300 text-sm font-semibold mt-1">{formatCfaWithCurrentRate(solde)} CFA</p>
-                </div>
-              </div>
-              <DollarSign size={28} className={soldeNegatif ? 'text-orange-400' : 'text-blue-400'} />
-            </div>
-          </div>
-
-          <div className="bg-slate-800 rounded-lg p-5 border border-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-purple-500/60">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-purple-400 text-sm font-medium">{t.tauxFX}</p>
-                <p className="text-purple-300 text-xl font-bold mt-1">1 CHF = {tauxChfCfa ? Number(tauxChfCfa).toLocaleString() : '-'} CFA</p>
-              </div>
-              <ArrowRightLeft size={28} className="text-purple-400" />
-            </div>
-          </div>
-        </div>
+        <FinanceOverviewIndicators
+          language={language}
+          financeState={financeSummaryStatus}
+          totalIncome={totalRecettes}
+          totalExpenses={totalDepenses}
+          netBalance={solde}
+          currentRate={parseFiniteNumber(tauxChfCfa)}
+          realEstateState={immoAccessState}
+          realEstateFunding={immoInvestiChf}
+          realEstateFundingCfa={immoInvestiCfa}
+          reimbursements={immoRemboursementsTotal}
+          outstandingBalance={immoSoldeOuvert}
+          socialState={socialAccessState}
+          socialTotal={socialTotalChf}
+          socialTotalCfa={socialTotalCfaHistorique}
+        />
 
         <div
           role="status"
@@ -2213,7 +2181,7 @@ const Finance = () => {
               </div>
               <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-blue-500/60">
                 <p className="text-sm font-medium text-blue-400">{t.socialCurrentCfa}</p>
-                <p className="mt-2 text-2xl font-bold text-white">{socialTotalCfaActuel ? Math.round(socialTotalCfaActuel).toLocaleString() : '-'} CFA</p>
+                <p className="mt-2 text-2xl font-bold text-white">{Number.isFinite(socialTotalCfaActuel) ? Math.round(socialTotalCfaActuel).toLocaleString() : '—'} CFA</p>
                 <p className="mt-1 text-xs text-slate-500">1 CHF = {tauxChfCfa ? Number(tauxChfCfa).toLocaleString() : '-'} CFA</p>
               </div>
               <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-violet-500/60">
@@ -2357,11 +2325,11 @@ const Finance = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 shrink-0">
                       <div className="rounded-md px-3 py-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                         <p className="text-xs uppercase text-slate-400">{t.totalInvesti}</p>
-                        <p className="text-2xl font-bold text-cyan-300 whitespace-nowrap">{formatAmount(immoInvestiChf)} CHF</p>
+                        <p className="text-2xl font-bold text-cyan-300 whitespace-nowrap">{formatOptionalAmount(immoInvestiChf)} CHF</p>
                       </div>
                       <div className="rounded-md px-3 py-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                         <p className="text-xs uppercase text-slate-400">{t.montantsHistoriques}</p>
-                        <p className="text-2xl font-bold text-orange-400 whitespace-nowrap">{formatAmount(immoInvestiCfa)} CFA</p>
+                        <p className="text-2xl font-bold text-orange-400 whitespace-nowrap">{formatOptionalAmount(immoInvestiCfa)} CFA</p>
                       </div>
                     </div>
                   </div>
@@ -2372,28 +2340,28 @@ const Finance = () => {
                     <div className="py-3 xl:pr-4 rounded-md px-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                       <p className="text-xs uppercase text-slate-400 mb-1">{t.remboursementsDirects}</p>
                       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatAmount(immoRemboursementsDirects)} CHF</p>
+                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatOptionalAmount(immoRemboursementsDirects)} CHF</p>
                         <p className="text-xl font-bold text-orange-400 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoRemboursementsDirects)} CFA</p>
                       </div>
                     </div>
                     <div className="py-3 xl:px-4 rounded-md px-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                       <p className="text-xs uppercase text-slate-400 mb-1">{t.remboursementsTotal}</p>
                       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatAmount(immoRemboursementsTotal)} CHF</p>
+                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatOptionalAmount(immoRemboursementsTotal)} CHF</p>
                         <p className="text-xl font-bold text-orange-400 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoRemboursementsTotal)} CFA</p>
                       </div>
                     </div>
                     <div className="py-3 xl:px-4 rounded-md px-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                       <p className="text-xs uppercase text-slate-400 mb-1">{t.soldeOuvert}</p>
                       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatAmount(immoSoldeOuvert)} CHF</p>
+                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatOptionalAmount(immoSoldeOuvert)} CHF</p>
                         <p className="text-xl font-bold text-orange-400 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoSoldeOuvert)} CFA</p>
                       </div>
                     </div>
                     <div className="py-3 xl:pl-4 rounded-md px-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                       <p className="text-xs uppercase text-slate-400 mb-1">{t.partCheikh}</p>
                       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatAmount(immoPartCheikh)} CHF</p>
+                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatOptionalAmount(immoPartCheikh)} CHF</p>
                         <p className="text-xl font-bold text-orange-400 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoPartCheikh)} CFA</p>
                       </div>
                     </div>
