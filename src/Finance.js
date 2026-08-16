@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, LabelList } from 'recharts';
-import { Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound, Database, AlertTriangle, LoaderCircle } from 'lucide-react';
+import { Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound, Database, AlertTriangle, CheckCircle2, LoaderCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
@@ -13,6 +13,7 @@ import { StandardCreateButton } from './StandardUI';
 import FinanceFunctionFrame from './FinanceFunctionFrame';
 import FinanceArchitecture from './FinanceArchitecture';
 import FinanceProcessControls from './FinanceProcessControls';
+import ActionConfirmationDialog from './ActionConfirmationDialog';
 
 const TEAM_OPTIONS = ['Team_ZH', 'Team_SN'];
 const AGENT_OPTIONS = ['Cheikh', 'Chantal', 'Pape', 'Gnilane Diouf', 'Gnilane Ndiaye', 'Ibou'];
@@ -125,6 +126,9 @@ const Finance = () => {
   const [socialModal, setSocialModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [savingFinance, setSavingFinance] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
+  const [confirmingAction, setConfirmingAction] = useState(false);
+  const [feedback, setFeedback] = useState(null);
   const [fxFormData, setFxFormData] = useState({
     devise_from: 'CHF',
     devise_to: 'CFA',
@@ -254,7 +258,23 @@ const Finance = () => {
       documentRef: 'Document / Référence',
       remboursementCheikh: 'Remboursement Cheikh',
       enregistrer: 'Enregistrer',
-      supprimerConfirmation: 'Supprimer définitivement cette opération Fin Immo ?'
+      confirmCreateTitle: 'Confirmer l’ajout',
+      confirmUpdateTitle: 'Confirmer la modification',
+      confirmDeleteTitle: 'Confirmer la suppression',
+      confirmCreateBody: 'Ajouter « {label} » ?',
+      confirmUpdateBody: 'Enregistrer les modifications de « {label} » ?',
+      confirmDeleteBody: 'Supprimer définitivement « {label} » ?',
+      confirmCreate: 'Oui, ajouter',
+      confirmUpdate: 'Oui, modifier',
+      confirmDelete: 'Oui, supprimer',
+      decline: 'Non',
+      operationLabel: 'Opération financière',
+      savedSuccess: '« {label} » a été enregistrée avec succès.',
+      updatedSuccess: '« {label} » a été modifiée avec succès.',
+      deletedSuccess: '« {label} » a été supprimée avec succès.',
+      fxSavedSuccess: 'Le taux « {label} » a été enregistré localement avec succès.',
+      fxUpdatedSuccess: 'Le taux « {label} » a été modifié localement avec succès.',
+      fxDeletedSuccess: 'Le taux « {label} » a été supprimé localement avec succès.'
     },
     EN: {
       title: 'Finance',
@@ -374,7 +394,23 @@ const Finance = () => {
       documentRef: 'Document / Reference',
       remboursementCheikh: 'Reimbursement to Cheikh',
       enregistrer: 'Save',
-      supprimerConfirmation: 'Permanently delete this real estate operation?'
+      confirmCreateTitle: 'Confirm addition',
+      confirmUpdateTitle: 'Confirm update',
+      confirmDeleteTitle: 'Confirm deletion',
+      confirmCreateBody: 'Add “{label}”?',
+      confirmUpdateBody: 'Save the changes to “{label}”?',
+      confirmDeleteBody: 'Permanently delete “{label}”?',
+      confirmCreate: 'Yes, add',
+      confirmUpdate: 'Yes, update',
+      confirmDelete: 'Yes, delete',
+      decline: 'No',
+      operationLabel: 'Financial operation',
+      savedSuccess: '“{label}” was saved successfully.',
+      updatedSuccess: '“{label}” was updated successfully.',
+      deletedSuccess: '“{label}” was deleted successfully.',
+      fxSavedSuccess: 'The rate “{label}” was saved locally.',
+      fxUpdatedSuccess: 'The rate “{label}” was updated locally.',
+      fxDeletedSuccess: 'The rate “{label}” was deleted locally.'
     },
     DE: {
       title: 'Finanzen',
@@ -494,11 +530,28 @@ const Finance = () => {
       documentRef: 'Dokument / Referenz',
       remboursementCheikh: 'Rückzahlung an Cheikh',
       enregistrer: 'Speichern',
-      supprimerConfirmation: 'Diesen Immobilienvorgang dauerhaft löschen?'
+      confirmCreateTitle: 'Hinzufügen bestätigen',
+      confirmUpdateTitle: 'Änderung bestätigen',
+      confirmDeleteTitle: 'Löschen bestätigen',
+      confirmCreateBody: '„{label}“ hinzufügen?',
+      confirmUpdateBody: 'Änderungen an „{label}“ speichern?',
+      confirmDeleteBody: '„{label}“ dauerhaft löschen?',
+      confirmCreate: 'Ja, hinzufügen',
+      confirmUpdate: 'Ja, ändern',
+      confirmDelete: 'Ja, löschen',
+      decline: 'Nein',
+      operationLabel: 'Finanzvorgang',
+      savedSuccess: '„{label}“ wurde erfolgreich gespeichert.',
+      updatedSuccess: '„{label}“ wurde erfolgreich geändert.',
+      deletedSuccess: '„{label}“ wurde erfolgreich gelöscht.',
+      fxSavedSuccess: 'Der Kurs „{label}“ wurde lokal gespeichert.',
+      fxUpdatedSuccess: 'Der Kurs „{label}“ wurde lokal geändert.',
+      fxDeletedSuccess: 'Der Kurs „{label}“ wurde lokal gelöscht.'
     }
   };
 
   const t = translations[language];
+  const withLabel = (template, label) => template.replace('{label}', label || t.operationLabel);
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
@@ -1353,77 +1406,88 @@ const Finance = () => {
     setShowImmoModal(true);
   };
 
-  const handleImmoSave = async () => {
+  const handleImmoSave = () => {
     if (!immoFormData.date || !immoFormData.designation.trim()) {
       alert(t.remplirChamps);
       return;
     }
+    let montantChf = toNumber(immoFormData.montantChf);
+    let montantCfa = toNumber(immoFormData.montantCfa);
+    let tauxFx = montantChf > 0 && montantCfa > 0
+      ? montantCfa / montantChf
+      : toNumber(immoFormData.tauxFx);
+    if (!tauxFx) tauxFx = getHistoricalCfaPerChf(immoFormData.date)?.cfaPerChf || 0;
+    if (montantChf > 0 && !montantCfa && tauxFx) montantCfa = montantChf * tauxFx;
+    if (montantCfa > 0 && !montantChf && tauxFx) montantChf = montantCfa / tauxFx;
+
+    const payload = {
+      date_operation: immoFormData.date,
+      designation: immoFormData.designation,
+      montant_chf: montantChf,
+      montant_cfa: montantCfa,
+      taux_fx: tauxFx || null,
+      part_cheikh_chf: toNumber(immoFormData.partCheikhChf),
+      remboursement_cheikh_chf: toNumber(immoFormData.remboursementCheikhChf),
+      type_operation: immoFormData.typeOperation,
+      perimetre: immoFormData.perimetre,
+      categorie: immoFormData.categorie,
+      projet: immoFormData.projet,
+      document_ref: immoFormData.documentRef,
+      statut: immoFormData.statut,
+      agent: immoFormData.agent,
+      team: immoFormData.team,
+      departement: immoFormData.departement,
+      phase_projet: immoFormData.phaseProjet,
+      source_file: 'M3S App',
+      enrichi_genspark: false
+    };
+    setFeedback(null);
+    setPendingAction({
+      scope: 'immo',
+      action: editingImmoId !== null ? 'update' : 'create',
+      itemId: editingImmoId,
+      label: immoFormData.designation.trim(),
+      payload
+    });
+  };
+
+  const executeImmoSave = async (action) => {
     setSavingImmo(true);
     try {
-      let montantChf = toNumber(immoFormData.montantChf);
-      let montantCfa = toNumber(immoFormData.montantCfa);
-      let tauxFx = montantChf > 0 && montantCfa > 0
-        ? montantCfa / montantChf
-        : toNumber(immoFormData.tauxFx);
-      if (!tauxFx) tauxFx = getHistoricalCfaPerChf(immoFormData.date)?.cfaPerChf || 0;
-      if (montantChf > 0 && !montantCfa && tauxFx) montantCfa = montantChf * tauxFx;
-      if (montantCfa > 0 && !montantChf && tauxFx) montantChf = montantCfa / tauxFx;
-
-      const payload = {
-        date_operation: immoFormData.date,
-        designation: immoFormData.designation,
-        montant_chf: montantChf,
-        montant_cfa: montantCfa,
-        taux_fx: tauxFx || null,
-        part_cheikh_chf: toNumber(immoFormData.partCheikhChf),
-        remboursement_cheikh_chf: toNumber(immoFormData.remboursementCheikhChf),
-        type_operation: immoFormData.typeOperation,
-        perimetre: immoFormData.perimetre,
-        categorie: immoFormData.categorie,
-        projet: immoFormData.projet,
-        document_ref: immoFormData.documentRef,
-        statut: immoFormData.statut,
-        agent: immoFormData.agent,
-        team: immoFormData.team,
-        departement: immoFormData.departement,
-        phase_projet: immoFormData.phaseProjet,
-        source_file: 'M3S App',
-        enrichi_genspark: false
-      };
-      if (editingImmoId) await api.updateRealEstateFinance(editingImmoId, payload);
-      else await api.createRealEstateFinance(payload);
+      if (action.itemId !== null) await api.updateRealEstateFinance(action.itemId, action.payload);
+      else await api.createRealEstateFinance(action.payload);
       await loadRealEstateFinance();
       setShowImmoModal(false);
       setEditingImmoId(null);
-    } catch (error) {
-      alert(error.message);
+      setFeedback({ tone: 'success', message: withLabel(action.action === 'update' ? t.updatedSuccess : t.savedSuccess, action.label) });
     } finally {
       setSavingImmo(false);
     }
   };
 
-  const handleImmoDelete = async (id) => {
-    if (!window.confirm(t.supprimerConfirmation)) return;
-    try {
-      await api.deleteRealEstateFinance(id);
-      await loadRealEstateFinance();
-    } catch (error) {
-      alert(error.message);
-    }
+  const handleImmoDelete = (id, label) => {
+    setFeedback(null);
+    setPendingAction({ scope: 'immo', action: 'delete', itemId: id, label: label || id || t.operationLabel });
+  };
+
+  const executeImmoDelete = async (action) => {
+    await api.deleteRealEstateFinance(action.itemId);
+    await loadRealEstateFinance();
+    setFeedback({ tone: 'success', message: withLabel(t.deletedSuccess, action.label) });
   };
 
   const handleFormChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!formData.description || !formData.montant) {
-      alert('Veuillez remplir tous les champs');
+      alert(t.remplirChamps);
       return;
     }
     const historicalRate = getHistoricalCfaPerChf(formData.date);
     if (!historicalRate?.cfaPerChf) {
-      alert(`Aucun taux FX historique exact n'est disponible pour le ${formatDateForDisplay(formData.date)}.`);
+      alert(`${t.aucunTauxDate} : ${formatDateForDisplay(formData.date)}.`);
       return;
     }
 
@@ -1451,21 +1515,33 @@ const Finance = () => {
       fournisseur: formData.fournisseur || ''
     };
 
+    setFeedback(null);
+    setPendingAction({
+      scope: 'finance',
+      action: editingId !== null ? 'update' : 'create',
+      itemId: editingId,
+      type: modalType,
+      socialModal,
+      label: formData.description.trim(),
+      payload
+    });
+  };
+
+  const executeFinanceSave = async (action) => {
     setSavingFinance(true);
     try {
-      if (modalType === 'recette') {
-        if (editingId) await api.updateIncome(editingId, payload);
-        else await api.createIncome(payload);
-      } else if (editingId) await api.updateExpense(editingId, payload);
-      else await api.createExpense(payload);
+      if (action.type === 'recette') {
+        if (action.itemId !== null) await api.updateIncome(action.itemId, action.payload);
+        else await api.createIncome(action.payload);
+      } else if (action.itemId !== null) await api.updateExpense(action.itemId, action.payload);
+      else await api.createExpense(action.payload);
       await loadFinanceData();
-      if (socialModal) await loadSocialData();
+      if (action.socialModal) await loadSocialData();
       setShowModal(false);
       setEditingId(null);
       setSocialModal(false);
       setFormData(createEmptyFinanceForm());
-    } catch (error) {
-      alert(error.message);
+      setFeedback({ tone: 'success', message: withLabel(action.action === 'update' ? t.updatedSuccess : t.savedSuccess, action.label) });
     } finally {
       setSavingFinance(false);
     }
@@ -1483,16 +1559,17 @@ const Finance = () => {
     setShowModal(true);
   };
 
-  const handleDelete = async (type, id) => {
-    if (!window.confirm(t.supprimerConfirmation)) return;
-    try {
-      if (type === 'recette') await api.deleteIncome(id);
-      else await api.deleteExpense(id);
-      await loadFinanceData();
-      if (activeTab === 'social') await loadSocialData();
-    } catch (error) {
-      alert(error.message);
-    }
+  const handleDelete = (type, id, label) => {
+    setFeedback(null);
+    setPendingAction({ scope: 'finance', action: 'delete', type, itemId: id, label: label || id || t.operationLabel, socialModal: activeTab === 'social' });
+  };
+
+  const executeFinanceDelete = async (action) => {
+    if (action.type === 'recette') await api.deleteIncome(action.itemId);
+    else await api.deleteExpense(action.itemId);
+    await loadFinanceData();
+    if (action.socialModal) await loadSocialData();
+    setFeedback({ tone: 'success', message: withLabel(t.deletedSuccess, action.label) });
   };
 
   const openNewModal = (type) => {
@@ -1525,19 +1602,29 @@ const Finance = () => {
 
   const handleFxSave = () => {
     if (!fxFormData.devise_from || !fxFormData.devise_to || !fxFormData.rate) {
-      alert('Please fill all fields');
+      alert(t.remplirChamps);
       return;
     }
+    setFeedback(null);
+    setPendingAction({
+      scope: 'fx',
+      action: editingFxId !== null ? 'update' : 'create',
+      itemId: editingFxId,
+      label: `${fxFormData.devise_from} → ${fxFormData.devise_to}`,
+      payload: { ...fxFormData, rate: parseFloat(fxFormData.rate) }
+    });
+  };
 
-    if (editingFxId) {
-      setFxHistory(fxHistory.map(fx => fx.id === editingFxId ? { ...fxFormData, id: editingFxId, rate: parseFloat(fxFormData.rate) } : fx));
+  const executeFxSave = (action) => {
+    if (action.itemId !== null) {
+      setFxHistory(current => current.map(fx => fx.id === action.itemId ? { ...action.payload, id: action.itemId } : fx));
     } else {
-      setFxHistory([...fxHistory, { ...fxFormData, id: `FX-${Date.now()}`, rate: parseFloat(fxFormData.rate) }]);
+      setFxHistory(current => [...current, { ...action.payload, id: `FX-${Date.now()}` }]);
     }
-
     setShowFxModal(false);
     setEditingFxId(null);
     setFxFormData({ devise_from: 'CHF', devise_to: 'CFA', rate: '', date: new Date().toISOString().split('T')[0], source: 'Manual' });
+    setFeedback({ tone: 'success', message: withLabel(action.action === 'update' ? t.fxUpdatedSuccess : t.fxSavedSuccess, action.label) });
   };
 
   const handleFxEdit = (fx) => {
@@ -1546,8 +1633,33 @@ const Finance = () => {
     setShowFxModal(true);
   };
 
-  const handleFxDelete = (id) => {
-    setFxHistory(fxHistory.filter(fx => fx.id !== id));
+  const handleFxDelete = (id, label) => {
+    setFeedback(null);
+    setPendingAction({ scope: 'fx', action: 'delete', itemId: id, label: label || id || t.operationLabel });
+  };
+
+  const executeFxDelete = (action) => {
+    setFxHistory(current => current.filter(fx => fx.id !== action.itemId));
+    setFeedback({ tone: 'success', message: withLabel(t.fxDeletedSuccess, action.label) });
+  };
+
+  const confirmPendingAction = async () => {
+    if (!pendingAction) return;
+    const action = pendingAction;
+    setConfirmingAction(true);
+    try {
+      if (action.scope === 'immo' && action.action === 'delete') await executeImmoDelete(action);
+      else if (action.scope === 'immo') await executeImmoSave(action);
+      else if (action.scope === 'finance' && action.action === 'delete') await executeFinanceDelete(action);
+      else if (action.scope === 'finance') await executeFinanceSave(action);
+      else if (action.scope === 'fx' && action.action === 'delete') executeFxDelete(action);
+      else if (action.scope === 'fx') executeFxSave(action);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setConfirmingAction(false);
+      setPendingAction(null);
+    }
   };
 
   const openNewFxModal = () => {
@@ -1576,6 +1688,11 @@ const Finance = () => {
     if (['PLANIFIE', 'REPORTE'].includes(key)) return 'bg-blue-900/50 text-blue-300';
     return 'bg-slate-700 text-slate-300';
   };
+  const confirmation = pendingAction ? {
+    create: { title: t.confirmCreateTitle, body: t.confirmCreateBody, confirm: t.confirmCreate },
+    update: { title: t.confirmUpdateTitle, body: t.confirmUpdateBody, confirm: t.confirmUpdate },
+    delete: { title: t.confirmDeleteTitle, body: t.confirmDeleteBody, confirm: t.confirmDelete }
+  }[pendingAction.action] : null;
 
   return (
     <>
@@ -1695,6 +1812,13 @@ const Finance = () => {
           ]}
         />
 
+        {feedback && (
+          <div className="m3s-feedback m3s-feedback--success mb-6 flex items-start gap-3 px-4 py-3" role="status">
+            <CheckCircle2 className="mt-0.5 shrink-0" size={18} aria-hidden="true" />
+            <p className="text-sm font-semibold leading-6">{feedback.message}</p>
+          </div>
+        )}
+
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
@@ -1802,7 +1926,7 @@ const Finance = () => {
                           <button onClick={(event) => { event.stopPropagation(); handleEdit('recette', r); }} className="p-1 hover:bg-slate-600 rounded">
                             <Edit2 size={18} className="text-blue-400" />
                           </button>
-                          <button onClick={(event) => { event.stopPropagation(); handleDelete('recette', r.id); }} className="p-1 hover:bg-slate-600 rounded">
+                          <button onClick={(event) => { event.stopPropagation(); handleDelete('recette', r.id, r.description); }} className="p-1 hover:bg-slate-600 rounded">
                             <Trash2 size={18} className="text-red-400" />
                           </button>
                         </td>
@@ -1864,7 +1988,7 @@ const Finance = () => {
                           <button onClick={(event) => { event.stopPropagation(); handleEdit('depense', d); }} className="p-1 hover:bg-slate-600 rounded">
                             <Edit2 size={18} className="text-blue-400" />
                           </button>
-                          <button onClick={(event) => { event.stopPropagation(); handleDelete('depense', d.id); }} className="p-1 hover:bg-slate-600 rounded">
+                          <button onClick={(event) => { event.stopPropagation(); handleDelete('depense', d.id, d.description); }} className="p-1 hover:bg-slate-600 rounded">
                             <Trash2 size={18} className="text-red-400" />
                           </button>
                         </td>
@@ -2005,7 +2129,7 @@ const Finance = () => {
                 <TableControls rows={filteredFxHistory} renderTable={(visibleRows) => (
                   <table className="min-w-full text-sm">
                     <thead className="sticky top-0 z-10 bg-slate-700"><tr><th className="px-4 py-3 text-left text-white font-bold">{t.id}</th><th className="px-4 py-3 text-left text-white font-bold">{t.date}</th><th className="px-4 py-3 text-left text-white font-bold">{t.deviseBase}</th><th className="px-4 py-3 text-left text-white font-bold">{t.deviseCible}</th><th className="px-4 py-3 text-left text-white font-bold">{t.taux}</th><th className="px-4 py-3 text-left text-white font-bold">{t.source}</th><th className="px-4 py-3 text-left text-white font-bold">{t.actions}</th></tr></thead>
-                    <tbody>{visibleRows.map(fx => <tr key={fx.id} className="border-t border-slate-700 hover:bg-slate-700/50"><td className="px-4 py-3 text-slate-300 text-xs">{fx.id}</td><td className="px-4 py-3 text-slate-300 whitespace-nowrap">{formatDateForDisplay(fx.date)}</td><td className="px-4 py-3 text-blue-400 font-bold">{fx.devise_from}</td><td className="px-4 py-3 text-green-400 font-bold">{fx.devise_to}</td><td className="px-4 py-3 text-purple-400 font-bold">{parseFloat(fx.rate).toLocaleString(undefined, { maximumFractionDigits: fx.rate < 1 ? 6 : 2 })}</td><td className="px-4 py-3 text-slate-400">{fx.source}</td><td className="px-4 py-3 flex gap-2"><button onClick={() => handleFxEdit(fx)} className="p-1 hover:bg-slate-600 rounded"><Edit2 size={16} className="text-blue-400" /></button><button onClick={() => handleFxDelete(fx.id)} className="p-1 hover:bg-slate-600 rounded"><Trash2 size={16} className="text-red-400" /></button></td></tr>)}</tbody>
+                    <tbody>{visibleRows.map(fx => <tr key={fx.id} className="border-t border-slate-700 hover:bg-slate-700/50"><td className="px-4 py-3 text-slate-300 text-xs">{fx.id}</td><td className="px-4 py-3 text-slate-300 whitespace-nowrap">{formatDateForDisplay(fx.date)}</td><td className="px-4 py-3 text-blue-400 font-bold">{fx.devise_from}</td><td className="px-4 py-3 text-green-400 font-bold">{fx.devise_to}</td><td className="px-4 py-3 text-purple-400 font-bold">{parseFloat(fx.rate).toLocaleString(undefined, { maximumFractionDigits: fx.rate < 1 ? 6 : 2 })}</td><td className="px-4 py-3 text-slate-400">{fx.source}</td><td className="px-4 py-3 flex gap-2"><button onClick={() => handleFxEdit(fx)} className="p-1 hover:bg-slate-600 rounded"><Edit2 size={16} className="text-blue-400" /></button><button onClick={() => handleFxDelete(fx.id, `${fx.devise_from} → ${fx.devise_to}`)} className="p-1 hover:bg-slate-600 rounded"><Trash2 size={16} className="text-red-400" /></button></td></tr>)}</tbody>
                   </table>
                 )} />
               </div>
@@ -2128,7 +2252,7 @@ const Finance = () => {
                           <td className="px-4 py-3">
                             <div className="flex gap-2">
                               <button onClick={(event) => { event.stopPropagation(); handleEdit('recette', row); }} className="rounded p-1 hover:bg-slate-600" title={t.modifier}><Edit2 size={17} className="text-blue-400" /></button>
-                              <button onClick={(event) => { event.stopPropagation(); handleDelete('recette', row.id); }} className="rounded p-1 hover:bg-slate-600" title={t.actions}><Trash2 size={17} className="text-red-400" /></button>
+                              <button onClick={(event) => { event.stopPropagation(); handleDelete('recette', row.id, row.description); }} className="rounded p-1 hover:bg-slate-600" title={t.actions}><Trash2 size={17} className="text-red-400" /></button>
                             </div>
                           </td>
                         </tr>
@@ -2298,7 +2422,7 @@ const Finance = () => {
                                     <button onClick={(event) => { event.stopPropagation(); handleImmoEdit(item); }} className="p-1 hover:bg-slate-600 rounded" title={t.modifier}>
                                       <Edit2 size={17} className="text-blue-400" />
                                     </button>
-                                    <button onClick={(event) => { event.stopPropagation(); handleImmoDelete(item.id); }} className="p-1 hover:bg-slate-600 rounded" title={t.actions}>
+                                    <button onClick={(event) => { event.stopPropagation(); handleImmoDelete(item.id, item.designation); }} className="p-1 hover:bg-slate-600 rounded" title={t.actions}>
                                       <Trash2 size={17} className="text-red-400" />
                                     </button>
                                   </div>
@@ -2557,6 +2681,20 @@ const Finance = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {pendingAction && confirmation && (
+          <ActionConfirmationDialog
+            id="finance-action-confirmation"
+            title={confirmation.title}
+            body={withLabel(confirmation.body, pendingAction.label)}
+            cancelLabel={t.decline}
+            confirmLabel={confirmation.confirm}
+            action={pendingAction.action}
+            busy={confirmingAction}
+            onCancel={() => setPendingAction(null)}
+            onConfirm={confirmPendingAction}
+          />
         )}
 
         </div>
