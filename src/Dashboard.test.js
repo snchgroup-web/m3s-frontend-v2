@@ -35,6 +35,8 @@ jest.mock('./api', () => ({
     getUsers: jest.fn(),
     getIncome: jest.fn(),
     getExpenses: jest.fn(),
+    getSocialFinance: jest.fn(),
+    getRealEstateFinance: jest.fn(),
     getFxHistory: jest.fn()
   }
 }));
@@ -48,13 +50,23 @@ beforeEach(() => {
   api.getUsers.mockResolvedValue({ data: [{ id: 1 }, { id: 2 }, { id: 3 }] });
   api.getIncome.mockResolvedValue({
     data: [
-      { category: 'PRESTATION', montant_chf: 300, date: '2026-01-01' },
-      { category: 'DON', montant_chf: 100, date: '2026-01-02' },
-      { category: 'FINANCEMENT', montant_chf: 200, date: '2026-01-03' }
+      { category: 'PRESTATION', montant_chf: 300, montant_cfa: 180000, date: '2026-01-01' },
+      { category: 'DON', montant_chf: 100, montant_cfa: 60000, date: '2026-01-02' },
+      { category: 'FINANCEMENT', montant_chf: 200, montant_cfa: 120000, date: '2026-01-03' }
     ]
   });
   api.getExpenses.mockResolvedValue({
-    data: [{ category: 'OUTILS', montant_chf: 50, date: '2026-01-04' }]
+    data: [{ category: 'OUTILS', montant_chf: 50, montant_cfa: 30000, date: '2026-01-04' }]
+  });
+  api.getSocialFinance.mockResolvedValue({ data: [], summary: { total_chf: 0, total_cfa_historique: 0 } });
+  api.getRealEstateFinance.mockResolvedValue({
+    data: [],
+    summary: {
+      investissements_realises_chf: 12000,
+      investissements_realises_cfa: 7800000,
+      remboursements_total_chf: 3000,
+      solde_ouvert_cheikh_chf: 9000
+    }
   });
   api.getFxHistory.mockResolvedValue({ taux_du_jour: { CHF_CFA: 600 } });
 });
@@ -81,6 +93,11 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   expect(screen.getByRole('heading', { name: 'Cross-functional analysis' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Documented financial trend' })).toBeInTheDocument();
   expect(screen.getByLabelText('Global indicators')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Open module: Revenue' })).toHaveTextContent('600 CHF');
+  expect(screen.getByRole('button', { name: 'Open module: Revenue' })).toHaveTextContent('360 000 CFA');
+  expect(screen.getByRole('button', { name: 'Open module: Total real estate funding' })).toHaveTextContent('12 000 CHF');
+  expect(screen.getByRole('button', { name: 'Open module: Reclassified social flows' })).toHaveTextContent('0 CHF');
+  expect(screen.getByRole('button', { name: 'Open module: Reclassified social flows' })).toHaveTextContent('0 CFA');
   expect(screen.queryByRole('heading', { name: 'Module Statistics' })).not.toBeInTheDocument();
   expect(screen.queryByRole('heading', { name: 'Human Resources' })).not.toBeInTheDocument();
 
@@ -111,7 +128,8 @@ test('does not turn unavailable sources into real zeroes', async () => {
   expect(await screen.findByText(/Some live data is temporarily unavailable/)).toBeInTheDocument();
   expect(screen.getAllByText('Unavailable').length).toBeGreaterThan(0);
   expect(screen.getByText('No financial series is available yet.')).toBeInTheDocument();
-  expect(screen.queryByText('0 CHF')).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Open module: Revenue' })).toHaveTextContent('— CHF');
+  expect(screen.getByRole('button', { name: 'Open module: Revenue' })).not.toHaveTextContent('0 CHF');
 });
 
 test('treats an empty users response as a real zero-user state', async () => {
