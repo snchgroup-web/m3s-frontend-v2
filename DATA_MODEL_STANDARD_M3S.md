@@ -422,6 +422,22 @@ Propriétaires: Finances pour le sens métier, IT & Support pour les contrats et
 
 Ce dictionnaire V0.1 qualifie les correspondances observées. Il ne vaut ni inventaire BigQuery complet, ni validation du backend, ni schéma de production, ni autorisation de migration.
 
+### Audit des contrats backend Finance V0.1
+
+Date du contrôle: 2026-08-16
+
+Source contrôlée en lecture seule: `m3s-backend/server.js`, révision publiée `6560023`. Le service publié a également été interrogé sans jeton sur un endpoint Finance ; la réponse `401` confirme que l'authentification est active. Aucune donnée métier n'a été lue.
+
+| Porte contrôlée | Constat observé | Qualification | Décision avant migration |
+| --- | --- | --- | --- |
+| Accès aux routes Finance | Les routes `/api/*` passent par l'authentification lorsque `API_REQUIRE_AUTH=true`; le service publié refuse l'appel Finance sans jeton. | Contrôle actif | Conserver l'authentification et ajouter une règle d'autorisation propre à la fonction Finance avant d'exposer des champs sensibles à tous les utilisateurs authentifiés. |
+| Taux des dépenses | Le taux retourné par `/finance/expenses` est calculé par division des montants CFA et CHF. Le contrat d'écriture ne conserve pas séparément la date et la source du taux appliqué. | À transformer | Ajouter ultérieurement des champs historiques explicites sans recalculer ni écraser les opérations existantes. |
+| Taux des recettes | Le contrat d'écriture alimente actuellement le taux de référence automatique et le taux appliqué depuis une même valeur fournie. | Ambiguïté métier | Séparer taux de référence TFX et taux réellement appliqué avant toute migration. |
+| Relations métier | Fonction, équipe, agent, phase, fournisseur, projet et document sont principalement conservés ou retournés comme libellés. | Relation manquante | Créer ou raccorder les identifiants canoniques avant le remplacement progressif des textes historiques. |
+| Données individuelles immobilières | Le contrat immobilier contient des champs de répartition individuelle ; leurs valeurs n'ont pas été consultées et ne sont pas reproduites dans le frontend. | Sensible | Définir finalité, rôles autorisés, durée de conservation et stratégie de migration vers des affectations gouvernées. |
+
+Cet audit confirme la disponibilité technique des routes et l'authentification du service publié. Il ne valide ni la qualité des données BigQuery, ni les permissions fonctionnelles, ni les règles comptables, ni la conformité juridique des traitements.
+
 ## Convention de nommage
 
 On evite les anglicismes inutiles dans les donnees metier francophones.
