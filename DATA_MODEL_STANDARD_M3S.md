@@ -1,8 +1,8 @@
 # M3S - Standard de structuration des tables
 
 Date d'origine: 2026-06-19
-Revision: 2026-08-10
-Statut: standard candidat transversal avant toute migration de donnees
+Revision: 2026-08-16
+Statut: standard relationnel V1 valide au niveau cadrage/interface sur trois cas pilotes; migration de production non autorisee
 
 ## Objectif
 
@@ -57,16 +57,18 @@ Toutes les tables contenant un montant doivent contenir ces colonnes, meme si l'
 | `devise_origine` | STRING | `CHF` ou `CFA` principalement. |
 | `montant_chf` | NUMERIC | Montant converti en CHF. |
 | `montant_cfa` | NUMERIC | Montant converti en CFA. |
-| `taux_fx` | NUMERIC | Taux utilise pour la conversion. |
-| `date_taux_fx` | DATE | Date du taux applique. |
-| `source_taux_fx` | STRING | Source du taux: BCEAO, Wise.com, manuel, etc. |
-| `fx_rate_id` | STRING | Lien vers la table historique des taux. |
+| `taux_applique` | NUMERIC | Taux effectivement utilise pour l'operation historique. |
+| `date_taux_applique` | DATE | Date du taux effectivement applique. |
+| `source_taux_applique` | STRING | Prestataire, fournisseur ou source qui a applique le taux. |
+| `reference_fx_rate_id` | STRING | Lien optionnel vers un taux historique independant utilise uniquement pour comparaison. |
+| `taux_fx` | NUMERIC | Champ historique a mapper vers `taux_applique`, sans suppression avant migration gouvernee. |
 
 Regle:
 
-- Si `devise_origine = CHF`, `montant_chf = montant_origine` et `montant_cfa = montant_origine * taux_fx`.
-- Si `devise_origine = CFA`, `montant_cfa = montant_origine` et `montant_chf = montant_origine / taux_fx`.
-- Le taux courant est un indicateur; les operations historiques doivent conserver le taux utilise au moment de l'operation.
+- Si `devise_origine = CHF`, `montant_chf = montant_origine` et `montant_cfa = montant_origine * taux_applique`.
+- Si `devise_origine = CFA`, `montant_cfa = montant_origine` et `montant_chf = montant_origine / taux_applique`.
+- Le taux de reference courant ou historique est un indicateur independant; les operations conservent le taux effectivement applique au moment de l'evenement.
+- Le taux de reference ne corrige ni ne reecrit retrospectivement une operation historique.
 
 ## Phases projet standard
 
@@ -92,7 +94,8 @@ Ces tables evitent les valeurs libres et les divergences entre modules.
 | `email` | Email principal. |
 | `role_id` | Role applicatif/metier. |
 | `team_id` | Equipe rattachee. |
-| `departement_id` | Departement rattache. |
+| `fonction_id` | Fonction d'entreprise principale. |
+| `departement_id` | Rattachement historique a mapper, sans l'utiliser pour les nouvelles structures. |
 | `statut` | Actif/Inactif. |
 
 ### `teams`
@@ -104,13 +107,21 @@ Ces tables evitent les valeurs libres et les divergences entre modules.
 | `pays` | Pays principal si applicable. |
 | `responsable_agent_id` | Responsable. |
 
-### `departements`
+### `fonctions_entreprise`
 
 | Champ | Description |
 | --- | --- |
-| `departement_id` | Identifiant departement. |
-| `nom` | Finance, RH, Operations, IT, Commercial, etc. |
+| `fonction_id` | Identifiant de la fonction d'entreprise. |
+| `nom` | Administration, Finances, RH, Operations, IT, Commercial, etc. |
 | `module_id` | Module principal rattache. |
+
+### `departements` - heritage de migration
+
+| Champ | Description |
+| --- | --- |
+| `departement_id` | Identifiant historique conserve pour tracabilite. |
+| `fonction_id_cible` | Fonction d'entreprise cible apres mapping valide. |
+| `statut_mapping` | A qualifier, confirme ou remplace. |
 
 ### `modules`
 
@@ -214,7 +225,7 @@ Règles de lecture :
 - un achat décrit la commande ou l'acquisition ; une dépense décrit l'impact financier ; un paiement décrit le règlement effectif ;
 - un achat stockable génère un mouvement de stock après réception, tandis qu'un bien durable peut créer ou améliorer un actif ;
 - une preuve reste conservée dans la GED et est reliée à l'objet métier concerné ;
-- le taux TFX courant est indicatif ; la dépense et le paiement conservent le taux réellement appliqué par Ria, la banque, le fournisseur ou une autre source.
+- le taux TFX courant est indicatif ; la depense et le paiement conservent le taux reellement applique par le prestataire, la banque, le fournisseur ou une autre source autorisee.
 
 ### Objets de pilotage
 
@@ -261,16 +272,19 @@ INFORME
 | `fournisseurs` | Identifier le fournisseur ou prestataire. | `fournisseur_id`, `type_fournisseur`, `statut_verification` |
 | `achats` | Décrire la demande, commande ou acquisition. | `achat_id`, `fournisseur_id`, `dossier_id`, `projet_id`, `tache_id`, `statut` |
 | `lignes_achat` | Détailler articles, services, quantités et prix. | `ligne_achat_id`, `achat_id`, `article_id`, `type_ligne`, montants |
-| `depenses` | Reconnaître et classer l'impact financier. | `depense_id`, `achat_id`, `categorie_id`, `fx_rate_id`, rattachements de pilotage |
-| `paiements` | Tracer le règlement réellement exécuté. | `paiement_id`, `fournisseur_id`, `date_paiement`, montants, frais, `fx_rate_id`, preuve |
+| `depenses` | Reconnaître et classer l'impact financier. | `depense_id`, `achat_id`, `categorie_id`, taux applique et rattachements de pilotage |
+| `paiements` | Tracer le règlement réellement exécuté. | `paiement_id`, `fournisseur_id`, `date_paiement`, montants, taux applique et preuve |
+| `frais_paiement` | Distinguer les frais du montant transfere ou regle. | `frais_id`, `paiement_id`, `type_frais`, montants et devises |
+| `paiement_affectations` | Ventiler un paiement vers plusieurs objets ou destinations avant rapprochement comptable. | `affectation_id`, `paiement_id`, `objet_type`, `objet_id`, montants affectes |
 | `paiement_depenses` | Affecter un paiement à une ou plusieurs dépenses. | `paiement_id`, `depense_id`, `montant_affecte` |
 
 Règles :
 
 - une dépense peut être réglée en plusieurs paiements ;
 - un paiement peut couvrir plusieurs dépenses, à condition que l'affectation soit explicite ;
-- les frais de transfert ou bancaires sont séparés du montant envoyé ;
-- `montant_origine`, `devise_origine`, `montant_chf`, `montant_cfa`, `taux_fx`, `date_taux_fx` et `source_taux_fx` sont conservés sur l'événement monétaire qui fait foi ;
+- les frais de transfert ou bancaires sont des objets separes du montant envoye ;
+- une affectation de paiement explique une destination sans creer automatiquement une depense reconnue ;
+- `montant_origine`, `devise_origine`, `montant_chf`, `montant_cfa`, `taux_applique`, `date_taux_applique` et `source_taux_applique` sont conserves sur l'evenement monetaire qui fait foi ;
 - un indicateur TFX ne doit jamais réécrire un paiement historique.
 
 ### Stocks, actifs et interventions
@@ -321,10 +335,12 @@ erDiagram
   ACHATS ||--|{ LIGNES_ACHAT : detaille
   ACHATS o|--o{ DEPENSES : genere
   FOURNISSEURS ||--o{ PAIEMENTS : recoit
+  PAIEMENTS ||--o{ FRAIS_PAIEMENT : comporte
+  PAIEMENTS ||--o{ PAIEMENT_AFFECTATIONS : ventile
   PAIEMENTS ||--o{ PAIEMENT_DEPENSES : affecte
   DEPENSES ||--o{ PAIEMENT_DEPENSES : est_reglee_par
-  TAUX_FX_HISTORIQUES ||--o{ DEPENSES : convertit
-  TAUX_FX_HISTORIQUES ||--o{ PAIEMENTS : convertit
+  TAUX_FX_HISTORIQUES o|--o{ DEPENSES : compare
+  TAUX_FX_HISTORIQUES o|--o{ PAIEMENTS : compare
 
   ARTICLES ||--o{ LIGNES_ACHAT : decrit
   LIGNES_ACHAT o|--o{ MOUVEMENTS_STOCK : alimente
@@ -362,15 +378,24 @@ Les objets transactionnels ne doivent pas tous exiger toutes les clés. En revan
 | `module_id` | Module M3S dans lequel l'objet est géré ou affiché. |
 | `document_id` | Pièce maîtresse ou justificatif, conservé dans la GED. |
 
-### Portes avant migration
+### Registre de validation des cas pilotes
+
+| Cas pilote | Relations controlees | Resultat au 16-08-2026 |
+| --- | --- | --- |
+| Villa LR1 | Un actif, plusieurs interventions, tâches, contrôles et preuves GED. | Valide au niveau cadrage/interface. |
+| Transfert TFX | Taux applique, taux de reference, frais, preuves et affectations multiples. | Valide au niveau cadrage/interface. |
+| Mission externe | Signal, dossier, affectations, livrables, contrôles et décision humaine. | Valide au niveau cadrage/interface. |
+
+Cette validation 3/3 confirme la cohérence fonctionnelle des cardinalités. Elle ne vaut ni migration, ni homologation du schéma de production, ni autorisation d'exposer des données sensibles.
+
+### Portes restant à franchir avant migration
 
 1. Valider les noms des objets avec les fonctions métier concernées.
 2. Cartographier les tables et endpoints existants vers ce modèle.
 3. Distinguer champs disponibles, calculables, manquants et sensibles.
-4. Valider les cardinalités sur trois cas réels : Villa LR1, TFX et un dossier administratif.
-5. Produire un dictionnaire de données versionné avec propriétaires et statuts.
-6. Préparer les migrations sans suppression de champ historique.
-7. Modifier BigQuery, backend et frontend uniquement dans des micro-lots séparés et réversibles.
+4. Produire un dictionnaire de données versionné avec propriétaires et statuts.
+5. Préparer les migrations sans suppression de champ historique.
+6. Modifier BigQuery, backend et frontend uniquement dans des micro-lots séparés et réversibles.
 
 ## Convention de nommage
 
@@ -401,7 +426,7 @@ Exemples:
 1. Inventorier les tables actuelles BigQuery et fichiers sources.
 2. Creer un mapping source -> standard pour chaque table.
 3. Nettoyer les noms de colonnes et valeurs canoniques.
-4. Creer ou completer les referentiels: agents, teams, departements, categories, phases, taux FX.
+4. Creer ou completer les referentiels: agents, teams, fonctions d'entreprise, categories, phases et taux FX.
 5. Recharger les tables propres dans BigQuery.
 6. Adapter les endpoints backend pour renvoyer les champs standards.
 7. Adapter le frontend pour afficher les colonnes standards.
@@ -415,5 +440,5 @@ Avant chargement Fin Immo:
 - definir le mapping `depenses`;
 - definir le mapping `fin_immo`;
 - verifier les taux FX historiques;
-- valider les colonnes communes avec Agent, Team, Departement, Phase Projet, Reference.
+- valider les colonnes communes avec Agent, Team, Fonction d'entreprise, Phase Projet et Reference.
 

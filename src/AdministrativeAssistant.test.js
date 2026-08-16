@@ -9,6 +9,8 @@ test('frames the assistant as preparation-only and preserves human authority', (
   expect(screen.getByText('Non connecté · aucune action autonome')).toBeInTheDocument();
   expect(screen.getAllByText(/Ne valide, ne signe et n’adopte aucun document/).length).toBeGreaterThanOrEqual(1);
   expect(screen.getAllByText(/N’envoie aucun courrier/).length).toBeGreaterThanOrEqual(1);
+  expect(screen.getByRole('heading', { name: 'Mission externe bornée et contrôlée' })).toBeInTheDocument();
+  expect(screen.getByText(/CAS PILOTE RELATIONNEL 3\/3/)).toBeInTheDocument();
 });
 
 test('prepares a bounded external mission without sending it', () => {
