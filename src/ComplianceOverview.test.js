@@ -9,13 +9,11 @@ test('renders the cautious compliance model in French', () => {
   expect(screen.getByRole('navigation', { name: 'Navigation dans Conformité' })).toBeInTheDocument();
   expect(screen.getByText('Aucune conformité déclarée')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Avancement documentaire LEGAL' })).toBeInTheDocument();
-  expect(screen.getByRole('progressbar', { name: 'Maturité documentaire' })).toHaveAttribute('aria-valuenow', '17');
+  expect(screen.getByLabelText('Maturité documentaire')).toHaveTextContent('—');
   expect(screen.getByText('Applicabilité')).toBeInTheDocument();
   expect(screen.getByText('Adoption / publication')).toBeInTheDocument();
-  expect(screen.getByText('Inventaire').closest('li')).toHaveAttribute('aria-current', 'step');
-  expect(screen.getByText('31')).toBeInTheDocument();
-  expect(screen.getByText('13')).toBeInTheDocument();
-  expect(screen.getByText('7')).toBeInTheDocument();
+  expect(screen.getByText('Inventaire').closest('li')).not.toHaveAttribute('aria-current');
+  expect(screen.getByText('Accès contrôlé')).toBeInTheDocument();
   expect(screen.getByText(/ne mesure ni ne certifie la conformité juridique/i)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Registres des obligations et dossiers juridiques' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Conformité de l’association à vérifier' })).toBeInTheDocument();
@@ -31,7 +29,7 @@ test('renders the German compliance boundaries', () => {
   expect(screen.getByRole('heading', { name: 'Rechtliche, regulatorische & institutionelle Compliance' })).toBeInTheDocument();
   expect(screen.getByText('Keine Konformität behauptet')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Dokumentationsfortschritt LEGAL' })).toBeInTheDocument();
-  expect(screen.getByRole('progressbar', { name: 'Dokumentarischer Reifegrad' })).toHaveAttribute('aria-valuenow', '17');
+  expect(screen.getByLabelText('Dokumentarischer Reifegrad')).toHaveTextContent('—');
   expect(screen.getByRole('button', { name: 'Nach oben' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Villa LR1 — Fall A. Kane' })).toBeInTheDocument();
   expect(screen.getByText(/Weder Haftung noch Verfahrensausgang/i)).toBeInTheDocument();

@@ -12,7 +12,7 @@ test('distinguishes a confirmed zero from an unavailable task source', () => {
 
   rerender(<AdministrationDashboardOverview language="FR" tasksTotal={null} tasksStatus="unavailable" completedTasks={null} />);
 
-  expect(screen.getAllByText('—')).toHaveLength(2);
+  expect(screen.getAllByText('—')).toHaveLength(3);
   expect(screen.getAllByText('Source indisponible').length).toBeGreaterThanOrEqual(2);
 });
 
@@ -38,9 +38,9 @@ test('shows the nine governed Administration components and opens the selected o
   const componentsMetric = screen.getByText('Structured components').closest('button');
   expect(within(componentsMetric).getByText('9')).toBeInTheDocument();
   const complianceMetric = screen.getByText('LEGAL documentary progress').closest('button');
-  expect(within(complianceMetric).getByText('1 / 6')).toBeInTheDocument();
-  expect(within(complianceMetric).getByText('Inventory established')).toBeInTheDocument();
-  expect(within(complianceMetric).getByText('Controlled baseline')).toBeInTheDocument();
+  expect(within(complianceMetric).getByText('—')).toBeInTheDocument();
+  expect(within(complianceMetric).getByText('Details loaded after authorisation')).toBeInTheDocument();
+  expect(within(complianceMetric).getByText('Controlled access')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Processes & Procedures' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Architecture & Relationships' })).toBeInTheDocument();
   const functionalCoverage = screen.getByRole('region', { name: 'Functional coverage' });

@@ -15,7 +15,6 @@ import {
 } from 'lucide-react';
 import { getAdministrationGlossaryTerms } from './AdministrationGlossary';
 import AdministrationPortfolioOverview from './AdministrationPortfolioOverview';
-import { LEGAL_DOCUMENTARY_BASELINE } from './legalDocumentaryProgress';
 
 const COPY = {
   FR: {
@@ -29,7 +28,7 @@ const COPY = {
       components: 'Composantes structurées',
       glossary: 'Termes du glossaire',
       compliance: 'Avancement documentaire LEGAL',
-      complianceDetail: 'Inventaire établi'
+      complianceDetail: 'Détails chargés après autorisation'
     },
     sources: {
       tasks: 'API M3S · registre des tâches',
@@ -44,7 +43,7 @@ const COPY = {
     coverageTitle: 'Couverture fonctionnelle',
     coverageBody: 'Neuf composantes organisent actuellement la fonction Administration. Leur niveau de maturité reste visible sans transformer un cadrage en donnée opérationnelle.',
     open: 'Ouvrir',
-    statuses: { structured: 'Structurée', connected: 'Connectée', framed: 'Cadrée', governed: 'Gouverné', documentaryBaseline: 'Point de départ contrôlé' },
+    statuses: { structured: 'Structurée', connected: 'Connectée', framed: 'Cadrée', governed: 'Gouverné', documentaryBaseline: 'Accès contrôlé' },
     components: {
       institution: ['Institution', 'Identité, vision, gouvernance et ressources.'],
       planning: ['Planification & Projets', 'Tâches raccordées à l’API ; modèle projet encore progressif.'],
@@ -76,7 +75,7 @@ const COPY = {
       components: 'Structured components',
       glossary: 'Glossary terms',
       compliance: 'LEGAL documentary progress',
-      complianceDetail: 'Inventory established'
+      complianceDetail: 'Details loaded after authorisation'
     },
     sources: {
       tasks: 'M3S API · task register',
@@ -91,7 +90,7 @@ const COPY = {
     coverageTitle: 'Functional coverage',
     coverageBody: 'Nine components currently organise the Administration function. Their maturity remains visible without presenting framing as operational data.',
     open: 'Open',
-    statuses: { structured: 'Structured', connected: 'Connected', framed: 'Framed', governed: 'Governed', documentaryBaseline: 'Controlled baseline' },
+    statuses: { structured: 'Structured', connected: 'Connected', framed: 'Framed', governed: 'Governed', documentaryBaseline: 'Controlled access' },
     components: {
       institution: ['Institution', 'Identity, vision, governance and resources.'],
       planning: ['Planning & Projects', 'Tasks connected to the API; project model remains progressive.'],
@@ -123,7 +122,7 @@ const COPY = {
       components: 'Strukturierte Komponenten',
       glossary: 'Glossarbegriffe',
       compliance: 'Dokumentationsfortschritt LEGAL',
-      complianceDetail: 'Inventar erstellt'
+      complianceDetail: 'Details nach Autorisierung geladen'
     },
     sources: {
       tasks: 'M3S-API · Aufgabenregister',
@@ -138,7 +137,7 @@ const COPY = {
     coverageTitle: 'Funktionale Abdeckung',
     coverageBody: 'Neun Komponenten strukturieren derzeit die Verwaltungsfunktion. Ihr Reifegrad bleibt sichtbar, ohne einen Rahmen als operative Daten darzustellen.',
     open: 'Öffnen',
-    statuses: { structured: 'Strukturiert', connected: 'Verbunden', framed: 'Gerahmt', governed: 'Gesteuert', documentaryBaseline: 'Kontrollierter Ausgangspunkt' },
+    statuses: { structured: 'Strukturiert', connected: 'Verbunden', framed: 'Gerahmt', governed: 'Gesteuert', documentaryBaseline: 'Kontrollierter Zugriff' },
     components: {
       institution: ['Institution', 'Identität, Vision, Governance und Ressourcen.'],
       planning: ['Planung & Projekte', 'Aufgaben sind an die API angebunden; das Projektmodell wird schrittweise ergänzt.'],
@@ -224,7 +223,7 @@ const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, t
         <MetricCard icon={CheckCircle2} label={t.metrics.completed} value={completedValue} source={t.sources.tasks} state={taskState} tone="bg-emerald-950 text-emerald-300" openLabel={t.open} onOpen={() => onNavigate?.('planning')} />
         <MetricCard icon={Network} label={t.metrics.components} value={components.length} source={t.sources.components} state={t.statuses.structured} tone="bg-cyan-950 text-cyan-300" openLabel={t.open} onOpen={() => onNavigate?.('architecture')} />
         <MetricCard icon={BookOpenText} label={t.metrics.glossary} value={glossaryCount} source={t.sources.glossary} state={t.statuses.governed} tone="bg-violet-950 text-violet-300" openLabel={t.open} onOpen={() => onNavigate?.('glossary')} />
-        <MetricCard icon={ShieldCheck} label={t.metrics.compliance} value={`${LEGAL_DOCUMENTARY_BASELINE.currentStage} / ${LEGAL_DOCUMENTARY_BASELINE.totalStages}`} detail={t.metrics.complianceDetail} source={t.sources.compliance} state={t.statuses.documentaryBaseline} tone="bg-amber-950 text-amber-300" openLabel={t.open} onOpen={() => onNavigate?.('compliance')} />
+        <MetricCard icon={ShieldCheck} label={t.metrics.compliance} value="—" detail={t.metrics.complianceDetail} source={t.sources.compliance} state={t.statuses.documentaryBaseline} tone="bg-amber-950 text-amber-300" openLabel={t.open} onOpen={() => onNavigate?.('compliance')} />
       </div>
 
       <AdministrationPortfolioOverview language={language} />

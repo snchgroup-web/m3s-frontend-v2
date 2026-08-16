@@ -4,7 +4,7 @@ import GlossaryHelp from './GlossaryHelp';
 
 const OBJECT_TERM_IDS = [
   'FIN-ECRITURE-FINANCIERE',
-  'FIN-TAUX-CHANGE-APPLIQUE',
+  'FIN-TAUX-CHANGE-REFERENCE',
   null,
   null
 ];

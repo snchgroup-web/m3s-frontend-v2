@@ -27,11 +27,9 @@ test('opens governed glossary help without promoting candidate Finance definitio
   expect(screen.getByText('Publication dans le Glossaire après validation')).toBeInTheDocument();
 
   fireEvent.click(screen.getByRole('button', { name: 'Fermer' }));
-  fireEvent.click(screen.getByRole('button', { name: 'Définition du Glossaire : Taux de change appliqué' }));
-  expect(screen.getByRole('dialog', { name: 'Taux de change appliqué' })).toBeInTheDocument();
-  expect(screen.getByText('Définition validée')).toBeInTheDocument();
-  expect(screen.getByRole('link', { name: 'Voir dans le Glossaire' })).toHaveAttribute(
-    'href',
-    '/ged?tab=knowledge&term=FIN-TAUX-CHANGE-APPLIQUE'
-  );
+  fireEvent.click(screen.getByRole('button', { name: 'Définition du Glossaire : Taux de change de référence' }));
+  expect(screen.getByRole('dialog', { name: 'Taux de change de référence' })).toBeInTheDocument();
+  expect(screen.getByText('Définition proposée')).toBeInTheDocument();
+  expect(screen.getByText('Publication dans le Glossaire après validation')).toBeInTheDocument();
+  expect(screen.queryByRole('link', { name: 'Voir dans le Glossaire' })).not.toBeInTheDocument();
 });

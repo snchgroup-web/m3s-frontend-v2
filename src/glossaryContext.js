@@ -407,6 +407,27 @@ const GLOSSARY_CONTEXT = {
       }
     }
   },
+  'FIN-TAUX-CHANGE-REFERENCE': {
+    version: 'V5.8-candidate',
+    status: 'candidate',
+    translations: {
+      FR: {
+        term: 'Taux de change de référence',
+        shortDefinition: 'Taux daté provenant d’une source identifiée, utilisé pour comparer ou convertir à titre indicatif.',
+        detailedDefinition: 'Le taux de change de référence est une valeur datée issue d’une source identifiée, par exemple l’historique /fx-rates. Il sert à la lecture, à la comparaison ou à l’explication d’un écart. Il ne remplace jamais le taux réellement appliqué par un prestataire à une transaction, qui doit être conservé avec l’écriture financière concernée.'
+      },
+      DE: {
+        term: 'Referenzwechselkurs',
+        shortDefinition: 'Datierter Kurs aus einer benannten Quelle, der zum Vergleich oder zur indikativen Umrechnung dient.',
+        detailedDefinition: 'Der Referenzwechselkurs ist ein datierter Wert aus einer benannten Quelle, zum Beispiel der Historie /fx-rates. Er dient der Anzeige, dem Vergleich oder der Erklärung einer Abweichung. Er ersetzt niemals den tatsächlich von einem Dienstleister auf eine Transaktion angewandten Kurs, der mit der betreffenden Finanzbuchung aufzubewahren ist.'
+      },
+      EN: {
+        term: 'Reference exchange rate',
+        shortDefinition: 'Dated rate from an identified source, used for comparison or indicative conversion.',
+        detailedDefinition: 'A reference exchange rate is a dated value from an identified source, such as the /fx-rates history. It supports display, comparison or explanation of a variance. It never replaces the rate actually applied by a provider to a transaction, which must be retained with the related financial entry.'
+      }
+    }
+  },
   'FIN-ECRITURE-FINANCIERE': {
     version: 'V5.8-candidate',
     status: 'candidate',

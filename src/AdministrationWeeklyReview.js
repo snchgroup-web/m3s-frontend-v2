@@ -218,9 +218,9 @@ const AdministrationWeeklyReview = ({ language = 'FR' }) => {
     <section className="mt-6 border-t border-slate-700 pt-6" aria-labelledby="weekly-review-title">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="flex items-start gap-3">
-          <CalendarRange className="mt-0.5 shrink-0 text-violet-300" size={22} aria-hidden="true" />
+          <CalendarRange className="mt-0.5 shrink-0 text-violet-700 dark:text-violet-300" size={22} aria-hidden="true" />
           <div>
-            <p className="text-xs font-bold uppercase text-violet-300">{t.eyebrow}</p>
+            <p className="text-xs font-bold uppercase text-violet-700 dark:text-violet-300">{t.eyebrow}</p>
             <h4 id="weekly-review-title" className="mt-1 text-lg font-semibold text-slate-100">{t.title}</h4>
             <p className="mt-2 max-w-5xl text-sm leading-6 text-slate-300">{t.intro}</p>
           </div>
