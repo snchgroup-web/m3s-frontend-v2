@@ -6,12 +6,13 @@ test('distinguishes observed Finance relations from candidate data-model links',
   const { rerender } = render(<FinanceArchitecture language="FR" />);
 
   expect(screen.getByRole('heading', { name: 'Voir les objets, les sources et leurs réutilisations' })).toBeInTheDocument();
-  expect(screen.getByText('/finance/dashboard')).toBeInTheDocument();
-  expect(screen.getByText('/finance/social')).toBeInTheDocument();
+  expect(screen.getAllByText('/finance/dashboard')).toHaveLength(2);
+  expect(screen.getAllByText('/finance/social').length).toBeGreaterThanOrEqual(1);
   expect(screen.getByText('Commercial & CRM')).toBeInTheDocument();
   expect(screen.getByText(/phase_projet.*libellé/)).toBeInTheDocument();
   expect(screen.getByText(/Aucun lien.*task_id.*project_id.*asset_id.*ged_document_id/)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Cas pilote relationnel : transfert CHF/CFA' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Cartographie source/API vers le standard M3S' })).toBeInTheDocument();
   expect(screen.getByText(/aucune migration de données/i)).toBeInTheDocument();
 
   rerender(<FinanceArchitecture language="DE" />);

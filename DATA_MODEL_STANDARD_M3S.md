@@ -397,6 +397,31 @@ Cette validation 3/3 confirme la cohérence fonctionnelle des cardinalités. Ell
 5. Préparer les migrations sans suppression de champ historique.
 6. Modifier BigQuery, backend et frontend uniquement dans des micro-lots séparés et réversibles.
 
+### Dictionnaire Finance source vers standard V0.1
+
+Date du relevé: 2026-08-16
+
+Périmètre contrôlé: contrats `src/api.js`, normalisations et payloads `src/Finance.js`
+
+Propriétaires: Finances pour le sens métier, IT & Support pour les contrats et transformations, GED pour les preuves, membres fondateurs pour toute autorisation de migration.
+
+| Source/API | Champs observés | Cible standard | Qualification | Décision V0.1 |
+| --- | --- | --- | --- | --- |
+| `/finance/dashboard` | `total_income_count`, `total_income`, `total_expense_count`, `total_expenses` | Indicateurs agrégés | Direct | Conserver comme lecture globale, sans fabriquer de lignes transactionnelles. |
+| `/finance/income`, `/finance/expenses` | `id` ou `source_id` | `id` | Direct avec alias | Choisir une clé source canonique avant migration. |
+| `/finance/income`, `/finance/expenses` | `ref`, `reference`, `numero_ref`, `source_ref` ou repli sur `source_id` | `ref`, `source_ref` | À transformer | Séparer la référence M3S de la référence externe. |
+| `/finance/income`, `/finance/expenses` | Plusieurs variantes de date | `date_operation` | À transformer | Valider l'ordre de priorité des dates avec Finances. |
+| `/finance/income`, `/finance/expenses` | Plusieurs variantes de montant et devise | `montant_origine`, `devise_origine`, `montant_chf`, `montant_cfa` | Mixte | Interdire les replis ambigus entre montant et devise ; conserver les montants historiques. |
+| `/finance/income`, `/finance/expenses` | `taux_fx`, `taux` ou `fx_rate` | `taux_applique` | Champ historique à mapper | Ne pas supprimer `taux_fx` avant une migration gouvernée. |
+| `/finance/income`, `/finance/expenses` | Variantes de date et source du taux | `date_taux_applique`, `source_taux_applique` | À transformer | Rendre la date et la source appliquées explicites et distinctes de TFX. |
+| `/finance/income`, `/finance/expenses` | Catégorie, agent, équipe, département, phase et fournisseur en texte | Identifiants référentiels | Relation manquante | Créer ou raccorder les référentiels avant de remplacer les textes. |
+| `/fx-rates` | Identifiant, date, devises, taux et source sous plusieurs alias | `taux_fx_historiques` | À transformer | Conserver cette série comme référence datée indépendante. |
+| `/finance/real-estate` | Noyau opérationnel et financier | `fin_immo` | À transformer | Aligner les noms sans charger de nouvelle donnée. |
+| `/finance/real-estate` | Périmètre, projet, référence documentaire et responsables en texte | Clés de dossier, projet, document, agents et phase | Relation manquante | Valider les relations métier avant remplacement. |
+| `/finance/social`, `/finance/real-estate` | Bénéficiaires ou répartitions individuelles | Identifiants gouvernés à accès restreint | Sensible | Ne pas exposer les valeurs ; valider finalité, droits et durée de conservation. |
+
+Ce dictionnaire V0.1 qualifie les correspondances observées. Il ne vaut ni inventaire BigQuery complet, ni validation du backend, ni schéma de production, ni autorisation de migration.
+
 ## Convention de nommage
 
 On evite les anglicismes inutiles dans les donnees metier francophones.
