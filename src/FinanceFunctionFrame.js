@@ -3,9 +3,9 @@ import { Database, Network, ShieldCheck, WalletCards } from 'lucide-react';
 
 const COPY = {
   FR: {
-    eyebrow: 'Finances · cadrage fonctionnel V1',
-    title: 'Tracer les ressources, les engagements et les preuves financières',
-    subtitle: 'Ce cadre relie les mouvements financiers, les taux appliqués, les responsabilités et les justificatifs sans transformer le module en comptabilité certifiée.',
+    eyebrow: 'Fonction d’entreprise / Finances',
+    title: '2SG - Finances et pilotage des ressources',
+    subtitle: 'Tracer les ressources, les engagements et les preuves financières. Cette vue relie les mouvements financiers, les taux appliqués, les responsabilités et les justificatifs sans transformer le module en comptabilité certifiée.',
     cards: [
       ['Finalité', 'Enregistrer, rapprocher et expliquer les recettes, dépenses, financements, remboursements et flux sociaux de 2SG.'],
       ['Sources opérationnelles', 'BigQuery via les API Finance porte les écritures ; /finance/dashboard fournit les agrégats globaux ; la GED conserve les justificatifs.'],
@@ -21,9 +21,9 @@ const COPY = {
     sourceNote: 'Sources de cadrage : Document Directeur Global 2SG V4, briefing Administration pilote et contrats API Finance observés. Statut : cadrage fonctionnel en lecture seule.'
   },
   EN: {
-    eyebrow: 'Finance · functional framing V1',
-    title: 'Trace resources, commitments and financial evidence',
-    subtitle: 'This frame connects financial movements, applied rates, responsibilities and supporting evidence without presenting the module as certified accounting.',
+    eyebrow: 'Business function / Finance',
+    title: '2SG - Finance and resource steering',
+    subtitle: 'Trace resources, commitments and financial evidence. This view connects financial movements, applied rates, responsibilities and supporting evidence without presenting the module as certified accounting.',
     cards: [
       ['Purpose', 'Record, reconcile and explain 2SG revenue, expenses, funding, reimbursements and social flows.'],
       ['Operational sources', 'BigQuery through the Finance APIs carries entries; /finance/dashboard provides global aggregates; the DMS retains supporting evidence.'],
@@ -39,9 +39,9 @@ const COPY = {
     sourceNote: 'Framing sources: 2SG Global Director Document V4, Administration pilot briefing and observed Finance API contracts. Status: read-only functional framing.'
   },
   DE: {
-    eyebrow: 'Finanzen · funktionaler Rahmen V1',
-    title: 'Ressourcen, Verpflichtungen und Finanznachweise nachvollziehen',
-    subtitle: 'Dieser Rahmen verbindet Finanzbewegungen, angewandte Kurse, Verantwortungen und Belege, ohne das Modul als zertifizierte Buchhaltung darzustellen.',
+    eyebrow: 'Unternehmensfunktion / Finanzen',
+    title: '2SG - Finanzen und Ressourcensteuerung',
+    subtitle: 'Ressourcen, Verpflichtungen und Finanznachweise nachvollziehen. Diese Ansicht verbindet Finanzbewegungen, angewandte Kurse, Verantwortungen und Belege, ohne das Modul als zertifizierte Buchhaltung darzustellen.',
     cards: [
       ['Zweck', 'Einnahmen, Ausgaben, Finanzierungen, Rückzahlungen und soziale Flüsse von 2SG erfassen, abstimmen und erklären.'],
       ['Operative Quellen', 'BigQuery führt die Buchungen über die Finanz-APIs; /finance/dashboard liefert globale Aggregate; das DMS bewahrt Belege auf.'],
@@ -67,7 +67,7 @@ const FinanceFunctionFrame = ({ language = 'FR' }) => {
     <section aria-labelledby="finance-function-frame-title" className="m3s-design-scope mb-6">
       <div className="max-w-5xl">
         <p className="text-xs font-semibold uppercase" style={{ color: 'var(--m3s-row-accent)' }}>{t.eyebrow}</p>
-        <h3 id="finance-function-frame-title" className="m3s-section-title mt-2">{t.title}</h3>
+        <h2 id="finance-function-frame-title" className="m3s-page-title mt-2">{t.title}</h2>
         <p className="mt-2 text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{t.subtitle}</p>
       </div>
 
