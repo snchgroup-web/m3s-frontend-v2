@@ -176,6 +176,16 @@
           "path": "/finance?tab=architecture"
         },
         {
+          "id": "finance-processes",
+          "label": {
+            "FR": "Processus & Contrôles",
+            "EN": "Processes & Controls",
+            "DE": "Prozesse & Kontrollen"
+          },
+          "icon": "ListChecks",
+          "path": "/finance?tab=processes"
+        },
+        {
           "id": "recettes",
           "label": {
             "FR": "Recettes",
