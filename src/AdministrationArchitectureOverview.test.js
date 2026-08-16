@@ -12,6 +12,7 @@ test('renders the reusable Administration architecture in French', () => {
   expect(screen.getByText('Document Directeur Global V4')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Raccordement au modèle relationnel transversal V1' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Contrat minimal de relations communes' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Cas pilote : Villa LR1' })).toBeInTheDocument();
   expect(screen.getByText('Inventaire contrôlé au 15-08-2026')).toBeInTheDocument();
   expect(screen.getByText('administration_resources')).toBeInTheDocument();
   expect(screen.getByText('GET /api/administration/audit')).toBeInTheDocument();
