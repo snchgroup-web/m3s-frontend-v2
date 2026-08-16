@@ -104,10 +104,12 @@ const Finance = () => {
   const [socialRows, setSocialRows] = useState([]);
   const [socialSummary, setSocialSummary] = useState({});
   const [socialError, setSocialError] = useState('');
+  const [socialAccessState, setSocialAccessState] = useState('loading');
   const [fxHistory, setFxHistory] = useState([]);
   const [immoTransactions, setImmoTransactions] = useState([]);
   const [immoSummary, setImmoSummary] = useState({});
   const [immoError, setImmoError] = useState('');
+  const [immoAccessState, setImmoAccessState] = useState('loading');
   const [showImmoModal, setShowImmoModal] = useState(false);
   const [editingImmoId, setEditingImmoId] = useState(null);
   const [immoFormData, setImmoFormData] = useState(createEmptyImmoForm);
@@ -177,6 +179,10 @@ const Finance = () => {
       socialAnnualChf: 'Flux sociaux par année (CHF)',
       socialAnnualCfa: 'Flux sociaux historiques par année (CFA)',
       socialNotice: 'Ces flux restent traçables dans la source financière, mais sont exclus des recettes d’exploitation.',
+      restrictedAccessTitle: 'Accès Finance restreint',
+      socialRestrictedAccess: 'Les flux sociaux nécessitent une permission Finance dédiée.',
+      immoRestrictedAccess: 'Les données de financement immobilier nécessitent une permission Finance dédiée.',
+      restrictedNoSubstitute: 'Aucune valeur n’est affichée ou remplacée par zéro.',
       socialNature: 'Nature',
       beneficiaire: 'Bénéficiaire',
       nouveauFluxSocial: 'Nouveau flux social',
@@ -313,6 +319,10 @@ const Finance = () => {
       socialAnnualChf: 'Social flows by year (CHF)',
       socialAnnualCfa: 'Historical social flows by year (CFA)',
       socialNotice: 'These flows remain traceable in the finance source but are excluded from operating revenue.',
+      restrictedAccessTitle: 'Restricted Finance access',
+      socialRestrictedAccess: 'Social finance flows require a dedicated Finance permission.',
+      immoRestrictedAccess: 'Real estate finance data requires a dedicated Finance permission.',
+      restrictedNoSubstitute: 'No value is displayed or replaced with zero.',
       socialNature: 'Nature',
       beneficiaire: 'Beneficiary',
       nouveauFluxSocial: 'New social flow',
@@ -449,6 +459,10 @@ const Finance = () => {
       socialAnnualChf: 'Soziale Flüsse pro Jahr (CHF)',
       socialAnnualCfa: 'Historische soziale Flüsse pro Jahr (CFA)',
       socialNotice: 'Diese Flüsse bleiben in der Finanzquelle nachvollziehbar, sind aber von den Betriebseinnahmen ausgeschlossen.',
+      restrictedAccessTitle: 'Eingeschränkter Finanzzugriff',
+      socialRestrictedAccess: 'Soziale Finanzflüsse erfordern eine eigene Finanzberechtigung.',
+      immoRestrictedAccess: 'Immobilienfinanzdaten erfordern eine eigene Finanzberechtigung.',
+      restrictedNoSubstitute: 'Es wird kein Wert angezeigt oder durch null ersetzt.',
       socialNature: 'Art',
       beneficiaire: 'Begünstigte',
       nouveauFluxSocial: 'Neuer sozialer Fluss',
@@ -744,17 +758,20 @@ const Finance = () => {
   }, [loadFinanceData]);
 
   const loadSocialData = useCallback(async () => {
+    setSocialAccessState('loading');
     try {
       const response = await api.getSocialFinance(200, 0);
       const rows = Array.isArray(response?.data) ? response.data : [];
       setSocialRows(rows.map((item, index) => normalizeFinanceRow(item, 'SOC', 'Aide Sociale Ménage', index)));
       setSocialSummary(response?.summary || {});
       setSocialError('');
+      setSocialAccessState('available');
     } catch (error) {
       console.error('Social finance error:', error);
       setSocialRows([]);
       setSocialSummary({});
-      setSocialError(error.message);
+      setSocialError(error.status === 403 ? '' : error.message);
+      setSocialAccessState(error.status === 403 ? 'forbidden' : 'unavailable');
     }
   }, [normalizeFinanceRow]);
 
@@ -1167,6 +1184,7 @@ const Finance = () => {
   }, []);
 
   const loadRealEstateFinance = useCallback(async () => {
+    setImmoAccessState('loading');
     try {
       const response = await api.getRealEstateFinance(200, 0);
       const rows = Array.isArray(response?.data) ? response.data : [];
@@ -1183,11 +1201,13 @@ const Finance = () => {
       })));
       setImmoSummary(response?.summary || {});
       setImmoError('');
+      setImmoAccessState('available');
     } catch (error) {
       console.error('Real Estate Finance error:', error);
       setImmoTransactions([]);
       setImmoSummary({});
-      setImmoError(error.message);
+      setImmoError(error.status === 403 ? '' : error.message);
+      setImmoAccessState(error.status === 403 ? 'forbidden' : 'unavailable');
     }
   // cleanDate and toNumber are stable helpers within this component.
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -2157,9 +2177,31 @@ const Finance = () => {
                 </div>
                 <p className="max-w-3xl text-sm text-slate-400">{t.socialSubtitle}</p>
               </div>
-              <StandardCreateButton onClick={openNewSocialModal}>{t.nouveauFluxSocial}</StandardCreateButton>
+              {socialAccessState === 'available' && (
+                <StandardCreateButton onClick={openNewSocialModal}>{t.nouveauFluxSocial}</StandardCreateButton>
+              )}
             </section>
 
+            {socialAccessState !== 'available' ? (
+              <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-8 text-center" role="status">
+                {socialAccessState === 'loading' ? (
+                  <LoaderCircle size={36} className="mx-auto mb-3 animate-spin text-amber-300" />
+                ) : (
+                  <AlertTriangle size={36} className="mx-auto mb-3 text-amber-300" />
+                )}
+                <p className="font-semibold text-white">
+                  {socialAccessState === 'forbidden' ? t.restrictedAccessTitle : t.sourceUnavailable}
+                </p>
+                <p className="mx-auto mt-2 max-w-2xl text-sm text-slate-300">
+                  {socialAccessState === 'loading'
+                    ? t.sourceLoading
+                    : socialAccessState === 'forbidden'
+                      ? `${t.socialRestrictedAccess} ${t.restrictedNoSubstitute}`
+                      : `${socialError || t.sourceUnavailable} ${t.missingNotZero}`}
+                </p>
+              </div>
+            ) : (
+              <>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-emerald-500/60">
                 <p className="text-sm font-medium text-emerald-400">{t.socialTitle}</p>
@@ -2270,12 +2312,32 @@ const Finance = () => {
                 )}
               />
             </section>
+              </>
+            )}
           </div>
         )}
 
         {activeTab === 'immobilier' && (
           <div className="space-y-6">
-            {immoTransactions.length === 0 ? (
+            {immoAccessState !== 'available' ? (
+              <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-8 text-center" role="status">
+                {immoAccessState === 'loading' ? (
+                  <LoaderCircle size={36} className="mx-auto mb-3 animate-spin text-amber-300" />
+                ) : (
+                  <AlertTriangle size={36} className="mx-auto mb-3 text-amber-300" />
+                )}
+                <p className="font-semibold text-white">
+                  {immoAccessState === 'forbidden' ? t.restrictedAccessTitle : t.sourceUnavailable}
+                </p>
+                <p className="mx-auto mt-2 max-w-2xl text-sm text-slate-300">
+                  {immoAccessState === 'loading'
+                    ? t.sourceLoading
+                    : immoAccessState === 'forbidden'
+                      ? `${t.immoRestrictedAccess} ${t.restrictedNoSubstitute}`
+                      : `${immoError || t.sourceUnavailable} ${t.missingNotZero}`}
+                </p>
+              </div>
+            ) : immoTransactions.length === 0 ? (
               <div className="bg-slate-800 border border-slate-700 rounded-lg p-8 text-center">
                 <Building2 size={36} className="mx-auto mb-3 text-orange-400" />
                 <p className="text-white font-semibold">{t.aucuneDonneeImmo}</p>
