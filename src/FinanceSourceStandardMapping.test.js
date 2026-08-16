@@ -28,7 +28,9 @@ test('shows the read-only backend audit without exposing business data', () => {
   expect(screen.getByRole('heading', { name: 'Audit des contrats backend' })).toBeInTheDocument();
   expect(screen.getByText(/réponse 401/)).toBeInTheDocument();
   expect(screen.getByText(/taux de référence et le taux appliqué depuis une même valeur/)).toBeInTheDocument();
-  expect(screen.getByText(/aucun contrôle d’accès propre à la fonction Finance/)).toBeInTheDocument();
+  expect(screen.getByText('Autorisations Finance explicites')).toBeInTheDocument();
+  expect(screen.getByText(/Les 14 routes distinguent lecture, écriture, flux sociaux et financement immobilier/)).toBeInTheDocument();
+  expect(screen.queryByText(/aucun contrôle d’accès propre à la fonction Finance/)).not.toBeInTheDocument();
   expect(screen.getByText(/Aucune donnée métier n’a été lue/)).toBeInTheDocument();
   expect(screen.queryByText(/part_cheikh|remboursement_cheikh|Ria|590|540/i)).not.toBeInTheDocument();
 });

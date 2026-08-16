@@ -154,7 +154,7 @@ const BACKEND_GATES = [
   { key: 'expenseRate', status: 'derived' },
   { key: 'incomeRate', status: 'derived' },
   { key: 'relations', status: 'missing' },
-  { key: 'roleScope', status: 'sensitive' }
+  { key: 'roleScope', status: 'direct' }
 ];
 
 const COPY = {
@@ -188,17 +188,17 @@ const COPY = {
       sensitive: 'Valeurs masquées dans cette vue ; droits et finalité à valider.'
     },
     backendTitle: 'Audit des contrats backend',
-    backendIntro: 'Contrôle en lecture seule de la révision backend publiée. Ces portes qualifient la préparation ; elles ne déclenchent aucune migration.',
+    backendIntro: 'Contrôle en lecture seule des révisions backend et frontend gouvernées. Ces portes qualifient la préparation ; elles ne déclenchent aucune migration.',
     backendGates: {
       access: { title: 'Authentification active', detail: 'Le backend publié refuse sans jeton les appels Finance contrôlés avec une réponse 401.' },
       expenseRate: { title: 'Taux des dépenses à expliciter', detail: 'Le taux retourné est calculé depuis les montants CHF/CFA ; sa date et sa source appliquée ne sont pas stockées dans ce contrat.' },
       incomeRate: { title: 'Deux sens de taux confondus', detail: 'Le contrat d’écriture des recettes alimente aujourd’hui le taux de référence et le taux appliqué depuis une même valeur.' },
       relations: { title: 'Identifiants relationnels absents', detail: 'Fonction, équipe, agent, phase, fournisseur, projet et document restent majoritairement portés par des libellés.' },
-      roleScope: { title: 'Restriction Finance à définir', detail: 'L’authentification est active, mais aucun contrôle d’accès propre à la fonction Finance n’est observé sur ces routes.' }
+      roleScope: { title: 'Autorisations Finance explicites', detail: 'Les 14 routes distinguent lecture, écriture, flux sociaux et financement immobilier. Les deux périmètres sensibles exigent une permission dédiée.' }
     },
     governanceTitle: 'Gouvernance de la cartographie',
     governance: 'Finances valide le sens métier ; IT & Support contrôle les contrats et transformations ; la GED gouverne les preuves ; les membres fondateurs autorisent toute migration. Ce V0.1 est un relevé de correspondance, pas un schéma de production.',
-    source: 'Sources contrôlées : frontend src/api.js et src/Finance.js ; backend server.js, révision 6560023 ; contrôle d’accès du service publié le 16-08-2026. Aucune donnée métier n’a été lue.'
+    source: 'Sources contrôlées : frontend src/api.js et src/Finance.js, révisions c099be9 et 3d84191 ; backend server.js et financeAccess.js, révision 6981993. Aucune donnée métier n’a été lue.'
   },
   EN: {
     eyebrow: 'FINANCE DICTIONARY · V0.1 · 2026-08-16',
@@ -230,17 +230,17 @@ const COPY = {
       sensitive: 'Values hidden in this view; rights and purpose to validate.'
     },
     backendTitle: 'Backend contract audit',
-    backendIntro: 'Read-only review of the published backend revision. These gates assess readiness; they do not trigger any migration.',
+    backendIntro: 'Read-only review of the governed backend and frontend revisions. These gates assess readiness; they do not trigger any migration.',
     backendGates: {
       access: { title: 'Authentication active', detail: 'The published backend rejects the checked Finance calls without a token with a 401 response.' },
       expenseRate: { title: 'Expense rate to make explicit', detail: 'The returned rate is calculated from CHF/CFA amounts; its applied date and source are not stored in this contract.' },
       incomeRate: { title: 'Two rate meanings conflated', detail: 'The income write contract currently feeds the reference rate and applied rate from the same value.' },
       relations: { title: 'Relational identifiers missing', detail: 'Function, team, agent, phase, supplier, project and document are still mostly carried as labels.' },
-      roleScope: { title: 'Finance restriction to define', detail: 'Authentication is active, but no Finance-specific access control was observed on these routes.' }
+      roleScope: { title: 'Explicit Finance permissions', detail: 'The 14 routes distinguish read, write, social flows and real estate finance. Both sensitive scopes require a dedicated permission.' }
     },
     governanceTitle: 'Mapping governance',
     governance: 'Finance validates business meaning; IT & Support controls contracts and transformations; DMS governs evidence; founding members authorize any migration. This V0.1 is a correspondence register, not a production schema.',
-    source: 'Controlled sources: frontend src/api.js and src/Finance.js; backend server.js revision 6560023; published-service access check on 2026-08-16. No business data was read.'
+    source: 'Controlled sources: frontend src/api.js and src/Finance.js, revisions c099be9 and 3d84191; backend server.js and financeAccess.js, revision 6981993. No business data was read.'
   },
   DE: {
     eyebrow: 'FINANZ-DATENWÖRTERBUCH · V0.1 · 16.08.2026',
@@ -272,17 +272,17 @@ const COPY = {
       sensitive: 'Werte in dieser Ansicht verborgen; Rechte und Zweck validieren.'
     },
     backendTitle: 'Prüfung der Backend-Verträge',
-    backendIntro: 'Nur-lesender Abgleich der veröffentlichten Backend-Revision. Diese Prüfpunkte bewerten die Bereitschaft und lösen keine Migration aus.',
+    backendIntro: 'Nur-lesender Abgleich der gesteuerten Backend- und Frontend-Revisionen. Diese Prüfpunkte bewerten die Bereitschaft und lösen keine Migration aus.',
     backendGates: {
       access: { title: 'Authentifizierung aktiv', detail: 'Das veröffentlichte Backend weist die geprüften Finanzaufrufe ohne Token mit einer 401-Antwort zurück.' },
       expenseRate: { title: 'Ausgabenkurs zu präzisieren', detail: 'Der ausgegebene Kurs wird aus den CHF/CFA-Beträgen berechnet; Datum und Quelle des angewandten Kurses werden in diesem Vertrag nicht gespeichert.' },
       incomeRate: { title: 'Zwei Kursbedeutungen vermischt', detail: 'Der Schreibvertrag für Einnahmen befüllt Referenzkurs und angewandten Kurs derzeit aus demselben Wert.' },
       relations: { title: 'Beziehungskennungen fehlen', detail: 'Funktion, Team, Person, Phase, Lieferant, Projekt und Dokument werden überwiegend noch als Bezeichnungen geführt.' },
-      roleScope: { title: 'Finanz-Beschränkung zu definieren', detail: 'Die Authentifizierung ist aktiv, aber für diese Routen wurde keine funktionsspezifische Finanz-Zugriffskontrolle festgestellt.' }
+      roleScope: { title: 'Explizite Finanzberechtigungen', detail: 'Die 14 Routen unterscheiden Lesen, Schreiben, soziale Flüsse und Immobilienfinanzierung. Beide sensiblen Bereiche erfordern eine eigene Berechtigung.' }
     },
     governanceTitle: 'Governance der Zuordnung',
     governance: 'Finanzen validiert die fachliche Bedeutung; IT & Support kontrolliert Verträge und Transformationen; das DMS verwaltet Nachweise; Gründungsmitglieder genehmigen jede Migration. V0.1 ist ein Zuordnungsregister, kein Produktionsschema.',
-    source: 'Geprüfte Quellen: Frontend src/api.js und src/Finance.js; Backend server.js, Revision 6560023; Zugriffskontrolle des veröffentlichten Dienstes am 16.08.2026. Es wurden keine Fachdaten gelesen.'
+    source: 'Geprüfte Quellen: Frontend src/api.js und src/Finance.js, Revisionen c099be9 und 3d84191; Backend server.js und financeAccess.js, Revision 6981993. Es wurden keine Fachdaten gelesen.'
   }
 };
 
