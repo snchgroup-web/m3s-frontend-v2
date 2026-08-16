@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, LabelList } from 'recharts';
 import { Edit2, Trash2, DollarSign, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound, Database, AlertTriangle, CheckCircle2, LoaderCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
@@ -94,6 +94,7 @@ const createEmptyImmoForm = () => ({
 const Finance = () => {
   const { language } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [recettes, setRecettes] = useState([]);
   const [depenses, setDepenses] = useState([]);
@@ -561,6 +562,13 @@ const Finance = () => {
       setActiveTab('overview');
     }
   }, [location.search]);
+
+  const selectFinanceTab = (tab) => {
+    setActiveTab(tab);
+    const params = new URLSearchParams(location.search);
+    params.set('tab', tab);
+    navigate({ pathname: location.pathname, search: `?${params.toString()}` });
+  };
 
   const cleanDate = (value) => {
     if (!value) return new Date().toISOString().split('T')[0];
@@ -1801,7 +1809,7 @@ const Finance = () => {
           moduleId="finances"
           language={language}
           activeTab={activeTab}
-          onSelect={setActiveTab}
+          onSelect={selectFinanceTab}
           tabs={[
             { tab: 'overview', label: t.overview },
             { tab: 'architecture', label: t.architecture },

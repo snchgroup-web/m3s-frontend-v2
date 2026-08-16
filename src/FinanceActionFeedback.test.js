@@ -7,7 +7,8 @@ import api from './api';
 let mockSearch = '?tab=recettes';
 
 jest.mock('react-router-dom', () => ({
-  useLocation: () => ({ search: mockSearch })
+  useLocation: () => ({ pathname: '/finance', search: mockSearch }),
+  useNavigate: () => jest.fn()
 }), { virtual: true });
 
 jest.mock('recharts', () => ({

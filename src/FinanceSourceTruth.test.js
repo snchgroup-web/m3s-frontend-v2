@@ -5,7 +5,8 @@ import Finance from './Finance';
 import api from './api';
 
 jest.mock('react-router-dom', () => ({
-  useLocation: () => ({ search: '?tab=overview' })
+  useLocation: () => ({ pathname: '/finance', search: '?tab=overview' }),
+  useNavigate: () => jest.fn()
 }), { virtual: true });
 
 jest.mock('recharts', () => ({
