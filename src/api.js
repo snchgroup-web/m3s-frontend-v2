@@ -41,7 +41,7 @@ const apiFetch = async (url, options = {}) => {
     }
   });
 
-  if (response.status === 401 || response.status === 403) {
+  if (response.status === 401) {
     clearExpiredSession();
   }
 
@@ -76,7 +76,23 @@ const administrationFetch = async (path, options = {}) => {
 // Gestion des erreurs centralisée
 const handleError = (erreur, endpoint) => {
   console.error(`Erreur API [${endpoint}]:`, erreur);
-  throw new Error(`Impossible de récupérer ${endpoint}: ${erreur.message}`);
+  const wrappedError = new Error(`Impossible de récupérer ${endpoint}: ${erreur.message}`);
+  wrappedError.status = erreur.status;
+  wrappedError.code = erreur.code;
+  throw wrappedError;
+};
+
+const createApiError = async (response, fallbackCode = 'API_REQUEST_FAILED') => {
+  let payload = null;
+  try {
+    payload = await response.json();
+  } catch {
+    payload = null;
+  }
+  const error = new Error(payload?.error || `HTTP ${response.status}`);
+  error.status = response.status;
+  error.code = payload?.code || fallbackCode;
+  return error;
 };
 
 // ============================================================================
@@ -187,7 +203,7 @@ export const api = {
       const res = await apiFetch(
         `${API_BASE_URL}/finance/social?limit=${limite}&offset=${decalage}`
       );
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) throw await createApiError(res, 'FINANCE_SOCIAL_REQUEST_FAILED');
       return await res.json();
     } catch (erreur) {
       handleError(erreur, '/finance/social');
@@ -200,7 +216,7 @@ export const api = {
       const res = await apiFetch(
         `${API_BASE_URL}/finance/real-estate?limit=${limite}&offset=${decalage}`
       );
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) throw await createApiError(res, 'FINANCE_REAL_ESTATE_REQUEST_FAILED');
       return await res.json();
     } catch (erreur) {
       handleError(erreur, '/finance/real-estate');
