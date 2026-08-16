@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, Boxes, CircleAlert, Database, FileCheck2, Link2, Network } from 'lucide-react';
 import GlossaryHelp from './GlossaryHelp';
+import TfxRelationPilot from './TfxRelationPilot';
 
 const OBJECT_TERM_IDS = [
   'FIN-ECRITURE-FINANCIERE',
@@ -187,6 +188,8 @@ const FinanceArchitecture = ({ language = 'FR' }) => {
           ))}
         </div>
       </section>
+
+      <TfxRelationPilot language={language} />
 
       <section className="m3s-panel overflow-hidden" aria-labelledby="finance-relations-title">
         <div className="p-4">

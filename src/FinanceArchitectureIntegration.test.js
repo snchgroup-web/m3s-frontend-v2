@@ -1,11 +1,14 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { LanguageProvider } from './LanguageContext';
 import Finance from './Finance';
 import api from './api';
 
+const mockNavigate = jest.fn();
+
 jest.mock('react-router-dom', () => ({
-  useLocation: () => ({ search: '?tab=architecture' })
+  useLocation: () => ({ pathname: '/finance', search: '?tab=architecture' }),
+  useNavigate: () => mockNavigate
 }), { virtual: true });
 
 jest.mock('recharts', () => ({
@@ -55,4 +58,17 @@ test('opens the observed Finance architecture from its governed child tab', asyn
   expect(await screen.findByRole('heading', { name: 'Voir les objets, les sources et leurs réutilisations' })).toBeInTheDocument();
   expect(screen.getAllByRole('button', { name: 'Architecture & relations' }).length).toBeGreaterThan(0);
   expect(screen.queryByRole('heading', { name: 'Tracer les ressources, les engagements et les preuves financières' })).not.toBeInTheDocument();
+});
+
+test('keeps the selected Finance child in the URL', async () => {
+  render(
+    <LanguageProvider>
+      <Finance />
+    </LanguageProvider>
+  );
+
+  await screen.findByRole('heading', { name: 'Voir les objets, les sources et leurs réutilisations' });
+  fireEvent.click(screen.getByRole('button', { name: 'Processus & contrôles' }));
+
+  expect(mockNavigate).toHaveBeenCalledWith({ pathname: '/finance', search: '?tab=processes' });
 });
