@@ -1,12 +1,19 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import ExternalMissionRegister, { STORAGE_KEY_PREFIX } from './ExternalMissionRegister';
+import { api } from './api';
+
+jest.mock('./api', () => ({
+  api: { getMembersDirectory: jest.fn() }
+}));
 
 const storageKey = `${STORAGE_KEY_PREFIX}:2sg:USR-1`;
 
 beforeEach(() => {
   localStorage.clear();
-  localStorage.setItem('user', JSON.stringify({ id: 'USR-1', tenantId: '2sg' }));
+  localStorage.setItem('user', JSON.stringify({ id: 'USR-1', tenantId: '2sg', name: 'Cheikh' }));
+  api.getMembersDirectory.mockReset();
+  api.getMembersDirectory.mockReturnValue(new Promise(() => {}));
 });
 
 test('records and restores a prepared mission with traceability references', async () => {
@@ -63,4 +70,39 @@ test('keeps the register labels trilingual', () => {
   expect(screen.getByText('Delegated mission tracking')).toBeInTheDocument();
   rerender(<ExternalMissionRegister language="DE" enabled={false} draft={null} />);
   expect(screen.getByText('Nachverfolgung delegierter Aufgaben')).toBeInTheDocument();
+});
+
+test('shows required-field errors inside the form', () => {
+  render(<ExternalMissionRegister language="FR" enabled draft={{ title: '', service: 'work', sensitivity: 'internal' }} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Ajouter la mission préparée' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+
+  expect(screen.getByRole('alert')).toHaveTextContent('Merci de remplir tous les champs obligatoires');
+  expect(screen.getByRole('alert')).toHaveTextContent('Intitulé non sensible');
+  expect(screen.getByRole('alert')).toHaveTextContent('Responsable 2SG');
+  expect(screen.getByLabelText('Intitulé non sensible *')).toHaveAttribute('aria-invalid', 'true');
+  expect(screen.getByLabelText('Responsable 2SG *')).toHaveAttribute('aria-invalid', 'true');
+});
+
+test('loads active owners from the secured member directory', async () => {
+  api.getMembersDirectory.mockResolvedValue({
+    data: [
+      { person_id: 'PER-1', display_name: 'Cheikh Ndiaye', position: 'Manager et coordinateur général de 2SG - architecte fonctionnel M3S', active: true },
+      { person_id: 'PER-3', display_name: 'Gnilane Diouf', position: 'Cheffe de projets', active: true }
+    ]
+  });
+  render(<ExternalMissionRegister language="FR" enabled draft={{ title: 'Mission annuaire', service: 'work', sensitivity: 'internal' }} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Ajouter la mission préparée' }));
+
+  expect(await screen.findByRole('option', { name: /Gnilane Diouf — Cheffe de projets/i })).toBeInTheDocument();
+  expect(api.getMembersDirectory).toHaveBeenCalledWith(100, 0);
+});
+
+test('requires a sent date and fills today when the state leaves prepared', () => {
+  render(<ExternalMissionRegister language="FR" enabled draft={{ title: 'Mission envoyée', service: 'work', sensitivity: 'internal' }} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Ajouter la mission préparée' }));
+  fireEvent.change(screen.getByLabelText('Responsable 2SG *'), { target: { value: 'Cheikh' } });
+  fireEvent.change(screen.getByLabelText('État'), { target: { value: 'sent' } });
+
+  expect(screen.getByLabelText('Date d’envoi *')).toHaveValue(new Date().toLocaleDateString('en-CA'));
 });
