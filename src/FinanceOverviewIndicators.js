@@ -19,7 +19,7 @@ const COPY = {
     realEstateFunding: 'Financement immobilier total',
     reimbursements: 'Remboursements immobiliers',
     outstanding: 'Solde restant ouvert',
-    social: 'Flux sociaux totaux',
+    social: 'Flux sociaux reclassés',
     loading: 'Chargement de la source',
     unavailable: 'Source indisponible',
     restricted: 'Accès restreint',
@@ -38,7 +38,7 @@ const COPY = {
     realEstateFunding: 'Total real estate funding',
     reimbursements: 'Real estate reimbursements',
     outstanding: 'Outstanding balance',
-    social: 'Total social flows',
+    social: 'Reclassified social flows',
     loading: 'Loading source',
     unavailable: 'Source unavailable',
     restricted: 'Restricted access',
@@ -57,7 +57,7 @@ const COPY = {
     realEstateFunding: 'Immobilienfinanzierung gesamt',
     reimbursements: 'Immobilienrückzahlungen',
     outstanding: 'Offener Restsaldo',
-    social: 'Soziale Flüsse gesamt',
+    social: 'Neu klassifizierte soziale Flüsse',
     loading: 'Quelle wird geladen',
     unavailable: 'Quelle nicht verfügbar',
     restricted: 'Eingeschränkter Zugriff',
@@ -95,18 +95,41 @@ const stateLabel = (state, value, copy, source) => {
   return source;
 };
 
-const IndicatorCard = ({ label, value, unit = 'CHF', state, detail, source, icon: Icon, tone, locale, testId }) => {
+const IndicatorCard = ({
+  label,
+  value,
+  unit = 'CHF',
+  secondaryValue,
+  secondaryUnit,
+  state,
+  source,
+  icon: Icon,
+  tone,
+  locale,
+  testId
+}) => {
   const style = TONES[tone];
   const copy = COPY[locale === 'de-CH' ? 'DE' : locale === 'en-GB' ? 'EN' : 'FR'];
-  const displayValue = state === 'loading' ? '…' : formatAmount(value, unit, locale);
+  const displayValue = state === 'loading' ? `… ${unit}` : formatAmount(value, unit, locale);
+  const displaySecondaryValue = state === 'loading'
+    ? `… ${secondaryUnit}`
+    : state === 'available'
+      ? formatAmount(secondaryValue, secondaryUnit, locale)
+      : `— ${secondaryUnit}`;
 
   return (
     <article className={`m3s-panel min-h-[8.5rem] p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${style.hover}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-sm font-medium" style={{ color: style.color }}>{label}</p>
-          <p data-testid={testId} className="mt-2 text-xl font-semibold" style={{ color: 'var(--m3s-text-primary)' }}>{displayValue}</p>
-          {detail && <p className="mt-1 text-xs font-medium" style={{ color: 'var(--m3s-text-secondary)' }}>{detail}</p>}
+          <p data-testid={testId} className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-xl font-semibold">
+            <span style={{ color: 'var(--m3s-status-info)' }}>{displayValue}</span>
+            {secondaryUnit && (
+              <span style={{ color: 'var(--m3s-status-warning)' }}>
+                ≈ {displaySecondaryValue}
+              </span>
+            )}
+          </p>
         </div>
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg" style={{ background: `color-mix(in srgb, ${style.color} 14%, transparent)`, color: style.color }}>
           <Icon size={21} aria-hidden="true" />
@@ -121,14 +144,19 @@ const FinanceOverviewIndicators = ({
   language = 'FR',
   financeState,
   totalIncome,
+  totalIncomeCfa,
   totalExpenses,
+  totalExpensesCfa,
   netBalance,
+  netBalanceCfa,
   currentRate,
   realEstateState,
   realEstateFunding,
   realEstateFundingCfa,
   reimbursements,
+  reimbursementsCfa,
   outstandingBalance,
+  outstandingBalanceCfa,
   socialState,
   socialTotal,
   socialTotalCfa
@@ -136,21 +164,19 @@ const FinanceOverviewIndicators = ({
   const t = COPY[language] || COPY.FR;
   const locale = language === 'DE' ? 'de-CH' : language === 'EN' ? 'en-GB' : 'fr-CH';
   const rateState = Number.isFinite(currentRate) ? 'available' : 'unavailable';
-  const cfaDetail = (value) => Number.isFinite(value)
-    ? `${formatAmount(value, 'CFA', locale)} · ${t.historicalCfa}`
-    : null;
-  const availableDetail = (state, value) => state === 'available' ? cfaDetail(value) : null;
+  const historicalSource = (source) => `${source} · ${t.historicalCfa}`;
+  const currentRateSource = (source) => `${source} · ${t.currentRate}`;
 
   return (
     <section aria-label={language === 'DE' ? 'Finanzkennzahlen' : language === 'EN' ? 'Finance indicators' : 'Indicateurs financiers'} className="m3s-design-scope mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      <IndicatorCard label={t.income} value={totalIncome} state={financeState} source={t.globalSource} icon={TrendingUp} tone="green" locale={locale} testId="finance-total-income" />
-      <IndicatorCard label={t.expenses} value={totalExpenses} state={financeState} source={t.globalSource} icon={TrendingDown} tone="red" locale={locale} testId="finance-total-expenses" />
-      <IndicatorCard label={t.balance} value={netBalance} state={financeState} source={t.globalSource} icon={CircleDollarSign} tone="blue" locale={locale} testId="finance-net-balance" />
+      <IndicatorCard label={t.income} value={totalIncome} secondaryValue={totalIncomeCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} icon={TrendingUp} tone="green" locale={locale} testId="finance-total-income" />
+      <IndicatorCard label={t.expenses} value={totalExpenses} secondaryValue={totalExpensesCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} icon={TrendingDown} tone="red" locale={locale} testId="finance-total-expenses" />
+      <IndicatorCard label={t.balance} value={netBalance} secondaryValue={netBalanceCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} icon={CircleDollarSign} tone="blue" locale={locale} testId="finance-net-balance" />
       <IndicatorCard label={t.rate} value={currentRate} unit="CFA / CHF" state={rateState} source={t.currentRate} icon={ArrowRightLeft} tone="violet" locale={locale} testId="finance-current-rate" />
-      <IndicatorCard label={t.realEstateFunding} value={realEstateFunding} state={realEstateState} detail={availableDetail(realEstateState, realEstateFundingCfa)} source={t.realEstateSource} icon={Building2} tone="cyan" locale={locale} testId="finance-real-estate-funding" />
-      <IndicatorCard label={t.reimbursements} value={reimbursements} state={realEstateState} source={t.realEstateSource} icon={HandCoins} tone="teal" locale={locale} testId="finance-real-estate-reimbursements" />
-      <IndicatorCard label={t.outstanding} value={outstandingBalance} state={realEstateState} source={t.realEstateSource} icon={Landmark} tone="amber" locale={locale} testId="finance-real-estate-outstanding" />
-      <IndicatorCard label={t.social} value={socialTotal} state={socialState} detail={availableDetail(socialState, socialTotalCfa)} source={t.socialSource} icon={HeartHandshake} tone="pink" locale={locale} testId="finance-social-total" />
+      <IndicatorCard label={t.realEstateFunding} value={realEstateFunding} secondaryValue={realEstateFundingCfa} secondaryUnit="CFA" state={realEstateState} source={historicalSource(t.realEstateSource)} icon={Building2} tone="cyan" locale={locale} testId="finance-real-estate-funding" />
+      <IndicatorCard label={t.reimbursements} value={reimbursements} secondaryValue={reimbursementsCfa} secondaryUnit="CFA" state={realEstateState} source={currentRateSource(t.realEstateSource)} icon={HandCoins} tone="teal" locale={locale} testId="finance-real-estate-reimbursements" />
+      <IndicatorCard label={t.outstanding} value={outstandingBalance} secondaryValue={outstandingBalanceCfa} secondaryUnit="CFA" state={realEstateState} source={currentRateSource(t.realEstateSource)} icon={Landmark} tone="amber" locale={locale} testId="finance-real-estate-outstanding" />
+      <IndicatorCard label={t.social} value={socialTotal} secondaryValue={socialTotalCfa} secondaryUnit="CFA" state={socialState} source={historicalSource(t.socialSource)} icon={HeartHandshake} tone="pink" locale={locale} testId="finance-social-total" />
     </section>
   );
 };

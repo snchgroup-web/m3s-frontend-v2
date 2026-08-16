@@ -42,17 +42,23 @@ const normalizeFinanceSummary = (response) => {
   const incomeCount = parseFiniteNumber(response.data.total_income_count);
   const expenseCount = parseFiniteNumber(response.data.total_expense_count);
   const rawIncome = parseFiniteNumber(response.data.total_income);
+  const rawIncomeCfa = parseFiniteNumber(response.data.total_income_cfa);
   const rawExpenses = parseFiniteNumber(response.data.total_expenses);
+  const rawExpensesCfa = parseFiniteNumber(response.data.total_expenses_cfa);
 
   if (incomeCount === null || expenseCount === null || incomeCount < 0 || expenseCount < 0) return null;
 
   const totalIncome = incomeCount === 0 ? 0 : rawIncome;
+  const totalIncomeCfa = incomeCount === 0 ? 0 : rawIncomeCfa;
   const totalExpenses = expenseCount === 0 ? 0 : rawExpenses;
+  const totalExpensesCfa = expenseCount === 0 ? 0 : rawExpensesCfa;
   if (totalIncome === null || totalExpenses === null) return null;
 
   return {
     totalIncome,
+    totalIncomeCfa,
     totalExpenses,
+    totalExpensesCfa,
     incomeCount,
     expenseCount,
     timestamp: response.timestamp || null
@@ -1227,9 +1233,14 @@ const Finance = () => {
     return category !== 'AIDE SOCIALE MENAGE' && category !== 'AIDE SOCIALE';
   }), [recettesAffichees]);
   const totalRecettes = financeSummary?.totalIncome ?? null;
+  const totalRecettesCfa = financeSummary?.totalIncomeCfa ?? null;
   const totalDepenses = financeSummary?.totalExpenses ?? null;
+  const totalDepensesCfa = financeSummary?.totalExpensesCfa ?? null;
   const solde = Number.isFinite(totalRecettes) && Number.isFinite(totalDepenses)
     ? totalRecettes - totalDepenses
+    : null;
+  const soldeCfa = Number.isFinite(totalRecettesCfa) && Number.isFinite(totalDepensesCfa)
+    ? totalRecettesCfa - totalDepensesCfa
     : null;
   const financeSummaryReadAt = financeSummary?.timestamp && !Number.isNaN(new Date(financeSummary.timestamp).getTime())
     ? new Intl.DateTimeFormat(
@@ -1735,14 +1746,19 @@ const Finance = () => {
           language={language}
           financeState={financeSummaryStatus}
           totalIncome={totalRecettes}
+          totalIncomeCfa={totalRecettesCfa}
           totalExpenses={totalDepenses}
+          totalExpensesCfa={totalDepensesCfa}
           netBalance={solde}
+          netBalanceCfa={soldeCfa}
           currentRate={parseFiniteNumber(tauxChfCfa)}
           realEstateState={immoAccessState}
           realEstateFunding={immoInvestiChf}
           realEstateFundingCfa={immoInvestiCfa}
           reimbursements={immoRemboursementsTotal}
+          reimbursementsCfa={Number.isFinite(immoRemboursementsTotal) && tauxChfCfa ? Math.round(immoRemboursementsTotal * tauxChfCfa) : null}
           outstandingBalance={immoSoldeOuvert}
+          outstandingBalanceCfa={Number.isFinite(immoSoldeOuvert) && tauxChfCfa ? Math.round(immoSoldeOuvert * tauxChfCfa) : null}
           socialState={socialAccessState}
           socialTotal={socialTotalChf}
           socialTotalCfa={socialTotalCfaHistorique}
