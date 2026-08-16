@@ -10,7 +10,7 @@ import {
   Waves
 } from 'lucide-react';
 
-export const ADMINISTRATION_PORTFOLIO_AS_OF = '2026-08-15';
+export const ADMINISTRATION_PORTFOLIO_AS_OF = '2026-08-16';
 
 const COPY = {
   FR: {
@@ -43,18 +43,18 @@ const COPY = {
       windows: {
         type: 'Chantier Villa LR1',
         title: 'Avants de fenêtres',
-        status: 'Réception à actualiser',
-        summary: 'Les preuves d’exécution existent, mais le dernier état consolidé ne suffit pas à confirmer l’étanchéité ni la clôture.',
-        next: 'Confirmer le contrôle d’étanchéité, les réserves éventuelles, la réception et le statut du solde.',
-        source: 'M3S_JOURNAL_DE_BORD_2026-08-04.md · preuves terrain'
+        status: 'Étanchéité confirmée · peinture restante',
+        summary: 'La pluie a servi de contrôle en conditions réelles et aucune infiltration n’a été signalée. Le délai annoncé n’a pas été respecté ; la peinture reste la dernière finition.',
+        next: 'Achever la peinture, indexer les photos et vidéos dans la GED, puis consigner les réserves éventuelles, la réception finale et le statut du solde.',
+        source: 'Point terrain Cheikh / Ibou du 16-08-2026 · environ 15 photos et vidéos à indexer'
       },
       water: {
         type: 'Incident Villa LR1',
         title: 'Mini-forage · alimentation en eau',
-        status: 'Réception à actualiser',
-        summary: 'L’intervention d’urgence est documentée ; profondeur, essais, caractéristiques finales et réception restent à confirmer.',
-        next: 'Actualiser les mesures, essais de pompage, réserves, réception humaine et statut du paiement final.',
-        source: 'M3S_FICHE_INCIDENT_ALIMENTATION_EAU_VILLA_LR1_2026-07-30.md'
+        status: 'Eau rétablie · protection à terminer',
+        summary: 'Le mini-forage a été exécuté dans le délai, l’eau est revenue et le débit a été contrôlé dans la villa. La satisfaction sur cette intervention est confirmée.',
+        next: 'Faire réaliser par le maçon les deux rangées de briques de protection de chaque côté et poser un couvercle, puis documenter et réceptionner cette finition séparée.',
+        source: 'Point terrain Cheikh / Ibou du 16-08-2026 · preuves photos et vidéos à indexer'
       },
       directors: {
         type: 'Gouvernance documentaire',
@@ -97,8 +97,8 @@ const COPY = {
     items: {
       tfx: { type: 'Cross-functional tool', title: 'TFX · exchange rates', status: 'Rule documented · connection pending', summary: 'The current rate is an indicator; each transaction keeps the rate actually applied, its date and its source.', next: 'Connect the current TFX source without rewriting providers’ historical rates.', source: 'M3S_JOURNAL_DE_BORD_2026-08-10.md' },
       legal: { type: 'Protected file', title: 'LEGAL · restricted access', status: 'Protected metadata', summary: 'The detailed file remains outside the client bundle.' },
-      windows: { type: 'Villa LR1 workstream', title: 'Window awnings', status: 'Acceptance to refresh', summary: 'Execution evidence exists, but the latest consolidated state does not confirm watertightness or closure.', next: 'Confirm the watertightness check, any reservations, acceptance and balance status.', source: 'M3S_JOURNAL_DE_BORD_2026-08-04.md · field evidence' },
-      water: { type: 'Villa LR1 incident', title: 'Mini-borehole · water supply', status: 'Acceptance to refresh', summary: 'The emergency intervention is documented; final depth, tests, specifications and acceptance remain to be confirmed.', next: 'Refresh measurements, pumping tests, reservations, human acceptance and final payment status.', source: 'M3S_FICHE_INCIDENT_ALIMENTATION_EAU_VILLA_LR1_2026-07-30.md' },
+      windows: { type: 'Villa LR1 workstream', title: 'Window awnings', status: 'Watertightness confirmed · painting pending', summary: 'Rain provided a real-condition check and no water ingress was reported. The announced deadline was missed; painting is the final remaining finish.', next: 'Complete the painting, index the photos and videos in the DMS, then record any reservations, final acceptance and balance status.', source: 'Cheikh / Ibou field checkpoint, 16 Aug 2026 · about 15 photos and videos to index' },
+      water: { type: 'Villa LR1 incident', title: 'Mini-borehole · water supply', status: 'Water restored · protection pending', summary: 'The mini-borehole was completed on time, water supply was restored and flow was checked throughout the villa. Satisfaction with this intervention is confirmed.', next: 'Have the mason build two protective brick rows on each side and install a cover, then document and accept this separate finishing work.', source: 'Cheikh / Ibou field checkpoint, 16 Aug 2026 · photo and video evidence to index' },
       directors: { type: 'Document governance', title: 'Governing documents', status: 'Inventory to consolidate', summary: 'Current strategic sources are identified, while evidence of approval, signature or adoption remains separate.', next: 'Complete missing metadata and evidence without promoting or rewriting sources.', source: 'M3S_JOURNAL_DE_BORD_2026-08-14.md' },
       references: { type: 'Document governance', title: 'Functional reference documents', status: 'Alignment to plan', summary: 'The main reference documents exist; several predate the latest strategic documents.', next: 'Set the alignment order, owner, master version and approval evidence for each reference document.', source: 'M3S_PLAN_ALIGNEMENT_REFERENTIEL_FONCTIONNEL_2026-07-05.md · checked 2026-08-14' },
       daily: { type: 'Daily steering', title: 'Daily Intelligence Dashboard', status: 'Master source to stabilise', summary: 'Deliveries exist, but memory, agenda, journal and priorities should come from one shared current state.', next: 'Connect editorial components to a single master source before any further extension.', source: 'M3S_JOURNAL_DE_BORD_2026-08-10.md' }
@@ -119,8 +119,8 @@ const COPY = {
     items: {
       tfx: { type: 'Funktionsübergreifendes Werkzeug', title: 'TFX · Wechselkurse', status: 'Regel dokumentiert · Anbindung ausstehend', summary: 'Der aktuelle Kurs dient als Kennzahl; jede Transaktion behält den tatsächlich angewandten Kurs, sein Datum und seine Quelle.', next: 'Die aktuelle TFX-Quelle anbinden, ohne historische Dienstleisterkurse umzuschreiben.', source: 'M3S_JOURNAL_DE_BORD_2026-08-10.md' },
       legal: { type: 'Geschützte Akte', title: 'LEGAL · eingeschränkter Zugriff', status: 'Geschützte Metadaten', summary: 'Die detaillierte Akte bleibt außerhalb des Client-Bundles.' },
-      windows: { type: 'Vorhaben Villa LR1', title: 'Fenstervordächer', status: 'Abnahme zu aktualisieren', summary: 'Ausführungsnachweise liegen vor; der letzte konsolidierte Stand bestätigt weder Dichtheit noch Abschluss.', next: 'Dichtheitsprüfung, mögliche Vorbehalte, Abnahme und Restzahlungsstatus bestätigen.', source: 'M3S_JOURNAL_DE_BORD_2026-08-04.md · Geländenachweise' },
-      water: { type: 'Vorfall Villa LR1', title: 'Mini-Bohrung · Wasserversorgung', status: 'Abnahme zu aktualisieren', summary: 'Die Notmaßnahme ist dokumentiert; Endtiefe, Prüfungen, Merkmale und Abnahme sind noch zu bestätigen.', next: 'Messungen, Pumpversuche, Vorbehalte, menschliche Abnahme und Endzahlungsstatus aktualisieren.', source: 'M3S_FICHE_INCIDENT_ALIMENTATION_EAU_VILLA_LR1_2026-07-30.md' },
+      windows: { type: 'Vorhaben Villa LR1', title: 'Fenstervordächer', status: 'Dichtheit bestätigt · Anstrich ausstehend', summary: 'Regen diente als Prüfung unter realen Bedingungen; es wurde kein Wassereintritt gemeldet. Die angekündigte Frist wurde überschritten, der Anstrich bleibt die letzte Ausführung.', next: 'Anstrich abschließen, Fotos und Videos im DMS indexieren und danach mögliche Vorbehalte, Endabnahme und Restzahlungsstatus dokumentieren.', source: 'Geländestand Cheikh / Ibou vom 16.08.2026 · rund 15 Fotos und Videos zu indexieren' },
+      water: { type: 'Vorfall Villa LR1', title: 'Mini-Bohrung · Wasserversorgung', status: 'Wasser wiederhergestellt · Schutz ausstehend', summary: 'Die Mini-Bohrung wurde fristgerecht ausgeführt, die Wasserversorgung ist wiederhergestellt und der Durchfluss wurde in der Villa geprüft. Die Zufriedenheit mit dieser Intervention ist bestätigt.', next: 'Durch den Maurer auf beiden Seiten je zwei schützende Ziegelreihen und eine Abdeckung erstellen lassen; diese getrennte Abschlussarbeit anschließend dokumentieren und abnehmen.', source: 'Geländestand Cheikh / Ibou vom 16.08.2026 · Foto- und Videonachweise zu indexieren' },
       directors: { type: 'Dokumentensteuerung', title: 'Leitende Dokumente', status: 'Inventar zu konsolidieren', summary: 'Die aktuellen strategischen Quellen sind identifiziert; Nachweise für Freigabe, Unterzeichnung oder Annahme bleiben getrennt.', next: 'Fehlende Metadaten und Nachweise ergänzen, ohne Quellen hochzustufen oder umzuschreiben.', source: 'M3S_JOURNAL_DE_BORD_2026-08-14.md' },
       references: { type: 'Dokumentensteuerung', title: 'Funktionale Referenzdokumente', status: 'Ausrichtung zu planen', summary: 'Die wichtigsten Referenzdokumente bestehen; mehrere sind älter als die neuesten strategischen Dokumente.', next: 'Reihenfolge der Ausrichtung, Verantwortung, Masterversion und Freigabenachweis je Referenz festlegen.', source: 'M3S_PLAN_ALIGNEMENT_REFERENTIEL_FONCTIONNEL_2026-07-05.md · geprüft am 14.08.2026' },
       daily: { type: 'Tägliche Steuerung', title: 'Daily Intelligence Dashboard', status: 'Masterquelle zu stabilisieren', summary: 'Lieferungen bestehen, doch Gedächtnis, Agenda, Journal und Prioritäten sollen aus einem gemeinsamen aktuellen Stand stammen.', next: 'Redaktionelle Komponenten vor jeder Erweiterung an eine einzige Masterquelle anbinden.', source: 'M3S_JOURNAL_DE_BORD_2026-08-10.md' }
@@ -131,8 +131,8 @@ const COPY = {
 const ITEMS = [
   { id: 'tfx', checkedOn: '2026-08-10', icon: RefreshCw, confidentiality: 'internal', tone: 'border-cyan-800 bg-cyan-950/20 text-cyan-300' },
   { id: 'legal', checkedOn: null, icon: Scale, confidentiality: 'restricted', tone: 'border-amber-800 bg-amber-950/20 text-amber-300' },
-  { id: 'windows', checkedOn: '2026-08-04', icon: Landmark, confidentiality: 'internal', tone: 'border-blue-800 bg-blue-950/20 text-blue-300' },
-  { id: 'water', checkedOn: '2026-08-01', icon: Waves, confidentiality: 'internal', tone: 'border-cyan-800 bg-cyan-950/20 text-cyan-300' },
+  { id: 'windows', checkedOn: '2026-08-16', icon: Landmark, confidentiality: 'internal', tone: 'border-blue-800 bg-blue-950/20 text-blue-300' },
+  { id: 'water', checkedOn: '2026-08-16', icon: Waves, confidentiality: 'internal', tone: 'border-cyan-800 bg-cyan-950/20 text-cyan-300' },
   { id: 'directors', checkedOn: '2026-08-14', icon: FileCheck2, confidentiality: 'internal', tone: 'border-violet-800 bg-violet-950/20 text-violet-300' },
   { id: 'references', checkedOn: '2026-08-14', icon: BookOpenCheck, confidentiality: 'internal', tone: 'border-emerald-800 bg-emerald-950/20 text-emerald-300' },
   { id: 'daily', checkedOn: '2026-08-10', icon: FolderKanban, confidentiality: 'internal', tone: 'border-slate-600 bg-slate-900/35 text-slate-300' }
