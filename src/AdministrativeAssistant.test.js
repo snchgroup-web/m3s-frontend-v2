@@ -11,6 +11,43 @@ test('frames the assistant as preparation-only and preserves human authority', (
   expect(screen.getAllByText(/N’envoie aucun courrier/).length).toBeGreaterThanOrEqual(1);
 });
 
+test('prepares a bounded external mission without sending it', () => {
+  render(<AdministrativeAssistant language="FR" />);
+
+  expect(screen.getByText('Portefeuille des missions externes')).toBeInTheDocument();
+  expect(screen.getByText(/uniquement après micro-test concluant/)).toBeInTheDocument();
+  fireEvent.click(screen.getAllByRole('button', { name: 'Préparer la mission' })[1]);
+
+  expect(screen.getByLabelText('Service destinataire')).toHaveValue('work');
+  expect(screen.getByLabelText('Sensibilité')).toHaveValue('internal');
+  expect(screen.getByLabelText('Type de soutien')).toHaveValue('5');
+  expect(screen.getByText(/Service destinataire: ChatGPT Work/)).toBeInTheDocument();
+  expect(screen.getAllByText(/préparer uniquement les projets manquants ou incomplets/).length).toBeGreaterThanOrEqual(1);
+});
+
+test('blocks clipboard export for restricted content', async () => {
+  const originalClipboard = navigator.clipboard;
+  const writeText = jest.fn();
+  Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } });
+  render(<AdministrativeAssistant language="FR" />);
+  fireEvent.change(screen.getByLabelText('Sensibilité'), { target: { value: 'restricted' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Copier la consigne' }));
+
+  await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Copie désactivée'));
+  expect(writeText).not.toHaveBeenCalled();
+  Object.defineProperty(navigator, 'clipboard', { configurable: true, value: originalClipboard });
+});
+
+test('reuses the governed product-test protocol without opening Production', () => {
+  render(<AdministrativeAssistant language="FR" />);
+  fireEvent.click(screen.getAllByRole('button', { name: 'Préparer la mission' })[2]);
+
+  expect(screen.getAllByText(/M3S-INSTR-DIGITAL-TEST-001 V1/).length).toBeGreaterThanOrEqual(1);
+  expect(screen.getAllByText(/24 à 40 heures sur 7 à 10 jours/).length).toBeGreaterThanOrEqual(1);
+  expect(screen.getAllByText(/Aucun lancement, achat, compte, publicité, paiement/).length).toBeGreaterThanOrEqual(1);
+  expect(screen.getByText(/Passage Production : uniquement après micro-test concluant/)).toBeInTheDocument();
+});
+
 test('keeps the selected mission synchronized with the interface language', () => {
   const { rerender } = render(<AdministrativeAssistant language="FR" />);
   fireEvent.change(screen.getByLabelText('Type de soutien'), { target: { value: '1' } });
