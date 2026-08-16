@@ -149,11 +149,19 @@ const MAPPING_ROWS = [
   }
 ];
 
+const BACKEND_GATES = [
+  { key: 'access', status: 'direct' },
+  { key: 'expenseRate', status: 'derived' },
+  { key: 'incomeRate', status: 'derived' },
+  { key: 'relations', status: 'missing' },
+  { key: 'roleScope', status: 'sensitive' }
+];
+
 const COPY = {
   FR: {
     eyebrow: 'DICTIONNAIRE FINANCE · V0.1 · 16-08-2026',
     title: 'Cartographie source/API vers le standard M3S',
-    intro: 'Cette cartographie part uniquement des contrats et normalisations observés dans le frontend. Elle prépare les décisions de migration sans modifier le backend, BigQuery ni les données.',
+    intro: 'Cette cartographie rapproche les normalisations du frontend des contrats réellement servis par le backend. Elle prépare les décisions de migration sans modifier le backend, BigQuery ni les données.',
     legend: { direct: 'Direct', derived: 'À transformer', missing: 'Relation manquante', sensitive: 'Sensible' },
     summary: {
       direct: 'Champs déjà exploitables sous leur sens actuel',
@@ -179,14 +187,23 @@ const COPY = {
       realEstateRelations: 'Remplacer les libellés par des clés après validation métier.',
       sensitive: 'Valeurs masquées dans cette vue ; droits et finalité à valider.'
     },
+    backendTitle: 'Audit des contrats backend',
+    backendIntro: 'Contrôle en lecture seule de la révision backend publiée. Ces portes qualifient la préparation ; elles ne déclenchent aucune migration.',
+    backendGates: {
+      access: { title: 'Authentification active', detail: 'Le backend publié refuse sans jeton les appels Finance contrôlés avec une réponse 401.' },
+      expenseRate: { title: 'Taux des dépenses à expliciter', detail: 'Le taux retourné est calculé depuis les montants CHF/CFA ; sa date et sa source appliquée ne sont pas stockées dans ce contrat.' },
+      incomeRate: { title: 'Deux sens de taux confondus', detail: 'Le contrat d’écriture des recettes alimente aujourd’hui le taux de référence et le taux appliqué depuis une même valeur.' },
+      relations: { title: 'Identifiants relationnels absents', detail: 'Fonction, équipe, agent, phase, fournisseur, projet et document restent majoritairement portés par des libellés.' },
+      roleScope: { title: 'Restriction Finance à définir', detail: 'L’authentification est active, mais aucun contrôle d’accès propre à la fonction Finance n’est observé sur ces routes.' }
+    },
     governanceTitle: 'Gouvernance de la cartographie',
     governance: 'Finances valide le sens métier ; IT & Support contrôle les contrats et transformations ; la GED gouverne les preuves ; les membres fondateurs autorisent toute migration. Ce V0.1 est un relevé de correspondance, pas un schéma de production.',
-    source: 'Sources contrôlées : src/api.js, src/Finance.js, DATA_MODEL_STANDARD_M3S.md. Périmètre : frontend m3s-frontend-v2, révision du 16-08-2026.'
+    source: 'Sources contrôlées : frontend src/api.js et src/Finance.js ; backend server.js, révision 6560023 ; contrôle d’accès du service publié le 16-08-2026. Aucune donnée métier n’a été lue.'
   },
   EN: {
     eyebrow: 'FINANCE DICTIONARY · V0.1 · 2026-08-16',
     title: 'Source/API to M3S standard mapping',
-    intro: 'This mapping is based only on contracts and normalizations observed in the frontend. It prepares migration decisions without changing the backend, BigQuery or data.',
+    intro: 'This mapping reconciles frontend normalizations with contracts actually served by the backend. It prepares migration decisions without changing the backend, BigQuery or data.',
     legend: { direct: 'Direct', derived: 'To transform', missing: 'Missing relationship', sensitive: 'Sensitive' },
     summary: {
       direct: 'Fields already usable with their current meaning',
@@ -212,14 +229,23 @@ const COPY = {
       realEstateRelations: 'Replace labels with keys after business validation.',
       sensitive: 'Values hidden in this view; rights and purpose to validate.'
     },
+    backendTitle: 'Backend contract audit',
+    backendIntro: 'Read-only review of the published backend revision. These gates assess readiness; they do not trigger any migration.',
+    backendGates: {
+      access: { title: 'Authentication active', detail: 'The published backend rejects the checked Finance calls without a token with a 401 response.' },
+      expenseRate: { title: 'Expense rate to make explicit', detail: 'The returned rate is calculated from CHF/CFA amounts; its applied date and source are not stored in this contract.' },
+      incomeRate: { title: 'Two rate meanings conflated', detail: 'The income write contract currently feeds the reference rate and applied rate from the same value.' },
+      relations: { title: 'Relational identifiers missing', detail: 'Function, team, agent, phase, supplier, project and document are still mostly carried as labels.' },
+      roleScope: { title: 'Finance restriction to define', detail: 'Authentication is active, but no Finance-specific access control was observed on these routes.' }
+    },
     governanceTitle: 'Mapping governance',
     governance: 'Finance validates business meaning; IT & Support controls contracts and transformations; DMS governs evidence; founding members authorize any migration. This V0.1 is a correspondence register, not a production schema.',
-    source: 'Controlled sources: src/api.js, src/Finance.js, DATA_MODEL_STANDARD_M3S.md. Scope: m3s-frontend-v2 frontend, revision dated 2026-08-16.'
+    source: 'Controlled sources: frontend src/api.js and src/Finance.js; backend server.js revision 6560023; published-service access check on 2026-08-16. No business data was read.'
   },
   DE: {
     eyebrow: 'FINANZ-DATENWÖRTERBUCH · V0.1 · 16.08.2026',
     title: 'Zuordnung von Quelle/API zum M3S-Standard',
-    intro: 'Diese Zuordnung beruht ausschließlich auf im Frontend beobachteten Verträgen und Normalisierungen. Sie bereitet Migrationsentscheidungen vor, ohne Backend, BigQuery oder Daten zu ändern.',
+    intro: 'Diese Zuordnung gleicht Frontend-Normalisierungen mit den tatsächlich vom Backend bereitgestellten Verträgen ab. Sie bereitet Migrationsentscheidungen vor, ohne Backend, BigQuery oder Daten zu ändern.',
     legend: { direct: 'Direkt', derived: 'Zu transformieren', missing: 'Fehlende Beziehung', sensitive: 'Sensibel' },
     summary: {
       direct: 'Felder, die mit ihrer heutigen Bedeutung nutzbar sind',
@@ -245,9 +271,18 @@ const COPY = {
       realEstateRelations: 'Bezeichnungen nach Fachvalidierung durch Schlüssel ersetzen.',
       sensitive: 'Werte in dieser Ansicht verborgen; Rechte und Zweck validieren.'
     },
+    backendTitle: 'Prüfung der Backend-Verträge',
+    backendIntro: 'Nur-lesender Abgleich der veröffentlichten Backend-Revision. Diese Prüfpunkte bewerten die Bereitschaft und lösen keine Migration aus.',
+    backendGates: {
+      access: { title: 'Authentifizierung aktiv', detail: 'Das veröffentlichte Backend weist die geprüften Finanzaufrufe ohne Token mit einer 401-Antwort zurück.' },
+      expenseRate: { title: 'Ausgabenkurs zu präzisieren', detail: 'Der ausgegebene Kurs wird aus den CHF/CFA-Beträgen berechnet; Datum und Quelle des angewandten Kurses werden in diesem Vertrag nicht gespeichert.' },
+      incomeRate: { title: 'Zwei Kursbedeutungen vermischt', detail: 'Der Schreibvertrag für Einnahmen befüllt Referenzkurs und angewandten Kurs derzeit aus demselben Wert.' },
+      relations: { title: 'Beziehungskennungen fehlen', detail: 'Funktion, Team, Person, Phase, Lieferant, Projekt und Dokument werden überwiegend noch als Bezeichnungen geführt.' },
+      roleScope: { title: 'Finanz-Beschränkung zu definieren', detail: 'Die Authentifizierung ist aktiv, aber für diese Routen wurde keine funktionsspezifische Finanz-Zugriffskontrolle festgestellt.' }
+    },
     governanceTitle: 'Governance der Zuordnung',
     governance: 'Finanzen validiert die fachliche Bedeutung; IT & Support kontrolliert Verträge und Transformationen; das DMS verwaltet Nachweise; Gründungsmitglieder genehmigen jede Migration. V0.1 ist ein Zuordnungsregister, kein Produktionsschema.',
-    source: 'Geprüfte Quellen: src/api.js, src/Finance.js, DATA_MODEL_STANDARD_M3S.md. Umfang: Frontend m3s-frontend-v2, Revision vom 16.08.2026.'
+    source: 'Geprüfte Quellen: Frontend src/api.js und src/Finance.js; Backend server.js, Revision 6560023; Zugriffskontrolle des veröffentlichten Dienstes am 16.08.2026. Es wurden keine Fachdaten gelesen.'
   }
 };
 
@@ -309,6 +344,30 @@ const FinanceSourceStandardMapping = ({ language = 'FR' }) => {
           </tbody>
         </table>
       </div>
+
+      <section className="border-b p-4 sm:p-5" style={{ borderColor: 'var(--m3s-border)' }} aria-labelledby="finance-backend-audit-title">
+        <h5 id="finance-backend-audit-title" className="m3s-panel-title flex items-center gap-2">
+          <Braces size={18} aria-hidden="true" />{t.backendTitle}
+        </h5>
+        <p className="mt-2 max-w-5xl text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{t.backendIntro}</p>
+        <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          {BACKEND_GATES.map((gate) => {
+            const GateIcon = STATUS_META[gate.status].icon;
+            const copy = t.backendGates[gate.key];
+            return (
+              <article key={gate.key} className="border p-4" style={statusStyle(gate.status, 6)}>
+                <div className="flex flex-col items-start gap-2 sm:flex-row sm:justify-between sm:gap-3">
+                  <h6 className="text-sm font-semibold leading-5">{copy.title}</h6>
+                  <span className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold">
+                    <GateIcon size={15} aria-hidden="true" />{t.legend[gate.status]}
+                  </span>
+                </div>
+                <p className="mt-2 text-xs leading-5">{copy.detail}</p>
+              </article>
+            );
+          })}
+        </div>
+      </section>
 
       <aside className="p-4 sm:p-5" aria-label={t.governanceTitle}>
         <h5 className="m3s-panel-title flex items-center gap-2"><ShieldCheck size={18} aria-hidden="true" />{t.governanceTitle}</h5>
