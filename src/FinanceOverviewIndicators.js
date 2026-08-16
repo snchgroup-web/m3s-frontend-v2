@@ -78,7 +78,7 @@ const TONES = {
   cyan: { color: 'var(--m3s-status-info)', hover: 'hover:border-cyan-500/60' },
   teal: { color: 'var(--m3s-status-success)', hover: 'hover:border-teal-500/60' },
   amber: { color: 'var(--m3s-status-warning)', hover: 'hover:border-amber-500/60' },
-  pink: { color: 'var(--m3s-status-danger)', hover: 'hover:border-pink-500/60' }
+  social: { color: 'var(--m3s-status-social)', hover: 'hover:border-fuchsia-500/60' }
 };
 
 const formatAmount = (value, unit, locale) => (
@@ -176,7 +176,7 @@ const FinanceOverviewIndicators = ({
       <IndicatorCard label={t.realEstateFunding} value={realEstateFunding} secondaryValue={realEstateFundingCfa} secondaryUnit="CFA" state={realEstateState} source={historicalSource(t.realEstateSource)} icon={Building2} tone="cyan" locale={locale} testId="finance-real-estate-funding" />
       <IndicatorCard label={t.reimbursements} value={reimbursements} secondaryValue={reimbursementsCfa} secondaryUnit="CFA" state={realEstateState} source={currentRateSource(t.realEstateSource)} icon={HandCoins} tone="teal" locale={locale} testId="finance-real-estate-reimbursements" />
       <IndicatorCard label={t.outstanding} value={outstandingBalance} secondaryValue={outstandingBalanceCfa} secondaryUnit="CFA" state={realEstateState} source={currentRateSource(t.realEstateSource)} icon={Landmark} tone="amber" locale={locale} testId="finance-real-estate-outstanding" />
-      <IndicatorCard label={t.social} value={socialTotal} secondaryValue={socialTotalCfa} secondaryUnit="CFA" state={socialState} source={historicalSource(t.socialSource)} icon={HeartHandshake} tone="pink" locale={locale} testId="finance-social-total" />
+      <IndicatorCard label={t.social} value={socialTotal} secondaryValue={socialTotalCfa} secondaryUnit="CFA" state={socialState} source={historicalSource(t.socialSource)} icon={HeartHandshake} tone="social" locale={locale} testId="finance-social-total" />
     </section>
   );
 };

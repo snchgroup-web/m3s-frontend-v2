@@ -5,6 +5,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import {
   AlertTriangle,
   ArrowDownToLine,
+  ArrowRightLeft,
+  Building2,
   Files,
   Gift,
   HandCoins,
@@ -51,15 +53,20 @@ const withApiFallback = async (request, fallback = null) => {
   }
 };
 
-// Format currency with both CHF and CFA - returns object for separate display
-const formatDualCurrency = (chfAmount, exchangeRate) => {
-  if (!Number.isFinite(chfAmount)) {
-    return { chf: '—', cfa: '—' };
+const withApiResult = async (request) => {
+  try {
+    return { data: await request(), errorStatus: null };
+  } catch (error) {
+    console.warn('Dashboard API source unavailable:', error.message);
+    return { data: null, errorStatus: error.status || null };
   }
-  const cfaAmount = Math.round(chfAmount * (exchangeRate || 0));
+};
+
+// Format currency with both CHF and CFA - returns object for separate display
+const formatDualCurrency = (chfAmount, cfaAmount) => {
   return {
-    chf: chfAmount.toLocaleString(),
-    cfa: exchangeRate ? cfaAmount.toLocaleString() : '—'
+    chf: Number.isFinite(chfAmount) ? chfAmount.toLocaleString() : '—',
+    cfa: Number.isFinite(cfaAmount) ? cfaAmount.toLocaleString() : '—'
   };
 };
 
@@ -82,10 +89,11 @@ const kpiAccentClasses = {
 const kpiStatusClasses = {
   available: 'border-emerald-700/60 bg-emerald-950/35 text-emerald-300',
   unavailable: 'border-amber-700/60 bg-amber-950/30 text-amber-300',
+  restricted: 'border-violet-700/60 bg-violet-950/30 text-violet-300',
   disconnected: 'border-slate-600 bg-slate-900/45 text-slate-400'
 };
 
-const GlobalKpiCard = ({ label, value, secondary, source, status, statusLabel, icon: Icon, accent, onOpen, openLabel }) => (
+const GlobalKpiCard = ({ label, value, secondary, dualCurrency = false, source, status, statusLabel, icon: Icon, accent, onOpen, openLabel }) => (
   <button
     type="button"
     onClick={onOpen}
@@ -95,8 +103,17 @@ const GlobalKpiCard = ({ label, value, secondary, source, status, statusLabel, i
     <span className="flex items-start justify-between gap-3">
       <span className="min-w-0">
         <span className="block text-sm font-medium text-slate-300">{label}</span>
-        <span className="mt-2 block break-words text-lg font-semibold text-slate-100">{value}</span>
-        {secondary && <span className="mt-0.5 block break-words text-sm font-medium text-slate-400">{secondary}</span>}
+        {dualCurrency ? (
+          <span className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-lg font-semibold">
+            <span className="text-blue-300">{value}</span>
+            <span className="text-amber-300">≈ {secondary}</span>
+          </span>
+        ) : (
+          <>
+            <span className="mt-2 block break-words text-lg font-semibold text-slate-100">{value}</span>
+            {secondary && <span className="mt-0.5 block break-words text-sm font-medium text-slate-400">{secondary}</span>}
+          </>
+        )}
       </span>
       <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${kpiAccentClasses[accent]}`}>
         <Icon size={20} aria-hidden="true" />
@@ -133,10 +150,21 @@ const mockDataBaseRaw = {
     income: 'unavailable',
     expenses: 'unavailable',
     donations: 'unavailable',
-    financing: 'unavailable'
+    financing: 'unavailable',
+    fx: 'unavailable',
+    realEstate: 'unavailable',
+    social: 'unavailable'
   },
   moduleStats: {
-    finance: { revenue: null, expenses: null, balance: null, donations: null, financing: null, incomeCount: 0, expenseCount: 0 },
+    finance: {
+      revenue: null, revenueCfa: null, expenses: null, expensesCfa: null,
+      balance: null, balanceCfa: null, donations: null, donationsCfa: null,
+      financing: null, financingCfa: null, referenceRate: null,
+      realEstateFunding: null, realEstateFundingCfa: null,
+      reimbursements: null, reimbursementsCfa: null,
+      outstandingBalance: null, outstandingBalanceCfa: null,
+      social: null, socialCfa: null, incomeCount: 0, expenseCount: 0
+    },
     rh: { employees: null, volunteers: null, members: null, beneficiaries: null },
     crm: { prospects: null, clients: null, donations: null, suppliers: null },
     production: { orders: null, completed: null, pending: null, stocks: null },
@@ -179,6 +207,11 @@ const Dashboard = () => {
       stocks: 'Quantité en Stock',
       donations: 'Dons',
       financing: 'Financements',
+      referenceRate: 'Taux de référence',
+      realEstateFunding: 'Financement immobilier total',
+      realEstateReimbursements: 'Remboursements immobiliers',
+      outstandingBalance: 'Solde restant ouvert',
+      socialFlows: 'Flux sociaux reclassés',
       files: 'Fichiers',
       tasks: 'Tâches',
       beneficiaries: 'Bénéficiaires',
@@ -202,6 +235,7 @@ const Dashboard = () => {
       openTasks: 'Ouvertes',
       completedTasks: 'Terminées',
       unavailable: 'Indisponible',
+      restricted: 'Accès restreint',
       notConnected: 'Source non connectée',
       connectedData: 'Données connectées',
       loadingDashboard: 'Chargement du tableau de bord...',
@@ -227,6 +261,9 @@ const Dashboard = () => {
       financeBalance: 'Finance · Recettes et dépenses',
       financeDonations: 'Finance · Dons',
       financeFunding: 'Finance · Financements',
+      financeReferenceRate: 'Finance · Historique FX',
+      financeRealEstate: 'Finance · Registre immobilier',
+      financeSocial: 'Finance · Registre social',
       assetsInventory: 'Stock & Actifs · Inventaire'
     },
     EN: {
@@ -251,6 +288,11 @@ const Dashboard = () => {
       stocks: 'Stock Quantity',
       donations: 'Donations',
       financing: 'Financing',
+      referenceRate: 'Reference rate',
+      realEstateFunding: 'Total real estate funding',
+      realEstateReimbursements: 'Real estate reimbursements',
+      outstandingBalance: 'Outstanding balance',
+      socialFlows: 'Reclassified social flows',
       files: 'Files',
       tasks: 'Tasks',
       beneficiaries: 'Beneficiaries',
@@ -274,6 +316,7 @@ const Dashboard = () => {
       openTasks: 'Open',
       completedTasks: 'Completed',
       unavailable: 'Unavailable',
+      restricted: 'Restricted access',
       notConnected: 'Source not connected',
       connectedData: 'Connected data',
       loadingDashboard: 'Loading dashboard...',
@@ -299,6 +342,9 @@ const Dashboard = () => {
       financeBalance: 'Finance · Income and expenses',
       financeDonations: 'Finance · Donations',
       financeFunding: 'Finance · Financing',
+      financeReferenceRate: 'Finance · FX history',
+      financeRealEstate: 'Finance · Real estate register',
+      financeSocial: 'Finance · Social register',
       assetsInventory: 'Stock & Assets · Inventory'
     },
     DE: {
@@ -323,6 +369,11 @@ const Dashboard = () => {
       stocks: 'Lagermenge',
       donations: 'Spenden',
       financing: 'Finanzierung',
+      referenceRate: 'Referenzkurs',
+      realEstateFunding: 'Immobilienfinanzierung gesamt',
+      realEstateReimbursements: 'Immobilienrückzahlungen',
+      outstandingBalance: 'Offener Restsaldo',
+      socialFlows: 'Neu klassifizierte soziale Flüsse',
       files: 'Dateien',
       transactions: 'Transaktionen',
       netMonthly: 'Netto monatlich',
@@ -346,6 +397,7 @@ const Dashboard = () => {
       openTasks: 'Offen',
       completedTasks: 'Erledigt',
       unavailable: 'Nicht verfügbar',
+      restricted: 'Eingeschränkter Zugriff',
       notConnected: 'Quelle nicht verbunden',
       connectedData: 'Verbundene Daten',
       loadingDashboard: 'Dashboard wird geladen...',
@@ -371,6 +423,9 @@ const Dashboard = () => {
       financeBalance: 'Finanzen · Einnahmen und Ausgaben',
       financeDonations: 'Finanzen · Spenden',
       financeFunding: 'Finanzen · Finanzierung',
+      financeReferenceRate: 'Finanzen · Wechselkurshistorie',
+      financeRealEstate: 'Finanzen · Immobilienregister',
+      financeSocial: 'Finanzen · Sozialregister',
       assetsInventory: 'Bestand & Aktiven · Inventar'
     }
   };
@@ -403,7 +458,7 @@ const Dashboard = () => {
       try {
         setLoading(true);
 
-        const [financeDashboard, documentsCount, inventoryCount, tasksCount, users, income, expenses, fx] = await Promise.all([
+        const [financeDashboard, documentsCount, inventoryCount, tasksCount, users, income, expenses, fx, socialResult, realEstateResult] = await Promise.all([
           withApiFallback(() => api.getFinanceDashboard()),
           withApiFallback(() => api.getDocumentsCount()),
           withApiFallback(() => api.getInventoryCount()),
@@ -411,29 +466,67 @@ const Dashboard = () => {
           withApiFallback(() => api.getUsers(100, 0)),
           withApiFallback(() => api.getIncome(200, 0)),
           withApiFallback(() => api.getExpenses(200, 0)),
-          withApiFallback(() => api.getFxHistory(), {})
+          withApiFallback(() => api.getFxHistory(), {}),
+          withApiResult(() => api.getSocialFinance(200, 0)),
+          withApiResult(() => api.getRealEstateFinance(200, 0))
         ]);
 
+        const social = socialResult.data;
+        const realEstate = realEstateResult.data;
         const incomeAvailable = Array.isArray(income?.data);
         const expensesAvailable = Array.isArray(expenses?.data);
         const incomeRows = incomeAvailable ? income.data : [];
         const expenseRows = expensesAvailable ? expenses.data : [];
         const operatingIncomeRows = incomeRows.filter((row) => !String(row.category || '').toUpperCase().includes('AIDE SOCIALE'));
-        const dashboardIncome = financeDashboard?.data?.total_income;
-        const dashboardExpenses = financeDashboard?.data?.total_expenses;
-        const totalIncome = incomeAvailable
-          ? operatingIncomeRows.reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0)
-          : hasApiNumber(dashboardIncome) ? Number(dashboardIncome) : null;
-        const totalExpenses = expensesAvailable
-          ? expenseRows.reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0)
-          : hasApiNumber(dashboardExpenses) ? Number(dashboardExpenses) : null;
+        const dashboardSummary = financeDashboard?.data || {};
+        const aggregateValue = (summaryValue, summaryCount, rowsAvailable, rows, fieldSelector) => {
+          if (hasApiNumber(summaryCount) && Number(summaryCount) === 0) return 0;
+          if (hasApiNumber(summaryValue)) return Number(summaryValue);
+          if (!rowsAvailable) return null;
+          return rows.reduce((sum, row) => sum + numberFromApi(fieldSelector(row)), 0);
+        };
+        const totalIncome = aggregateValue(
+          dashboardSummary.total_income, dashboardSummary.total_income_count,
+          incomeAvailable, operatingIncomeRows, (row) => row.montant_chf ?? row.montant
+        );
+        const totalIncomeCfa = aggregateValue(
+          dashboardSummary.total_income_cfa, dashboardSummary.total_income_count,
+          incomeAvailable, operatingIncomeRows, (row) => row.montant_cfa
+        );
+        const totalExpenses = aggregateValue(
+          dashboardSummary.total_expenses, dashboardSummary.total_expense_count,
+          expensesAvailable, expenseRows, (row) => row.montant_chf ?? row.montant
+        );
+        const totalExpensesCfa = aggregateValue(
+          dashboardSummary.total_expenses_cfa, dashboardSummary.total_expense_count,
+          expensesAvailable, expenseRows, (row) => row.montant_cfa
+        );
         const donations = incomeAvailable
           ? incomeRows.filter((row) => String(row.category || '').toUpperCase().includes('DON')).reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0)
+          : null;
+        const donationsCfa = incomeAvailable
+          ? incomeRows.filter((row) => String(row.category || '').toUpperCase().includes('DON')).reduce((sum, row) => sum + numberFromApi(row.montant_cfa), 0)
           : null;
         const financing = incomeAvailable
           ? incomeRows.filter((row) => String(row.category || '').toUpperCase() === 'FINANCEMENT').reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0)
           : null;
+        const financingCfa = incomeAvailable
+          ? incomeRows.filter((row) => String(row.category || '').toUpperCase() === 'FINANCEMENT').reduce((sum, row) => sum + numberFromApi(row.montant_cfa), 0)
+          : null;
         const exchangeRate = numberFromApi(fx?.taux_du_jour?.CHF_CFA, 0);
+        const realEstateAvailable = Boolean(realEstate?.summary) && Array.isArray(realEstate?.data);
+        const realEstateValue = (key) => realEstateAvailable && hasApiNumber(realEstate.summary[key])
+          ? Number(realEstate.summary[key])
+          : null;
+        const realEstateFunding = realEstateValue('investissements_realises_chf');
+        const realEstateFundingCfa = realEstateValue('investissements_realises_cfa');
+        const reimbursements = realEstateValue('remboursements_total_chf');
+        const outstandingBalance = realEstateValue('solde_ouvert_cheikh_chf');
+        const reimbursementsCfa = Number.isFinite(reimbursements) && exchangeRate ? Math.round(reimbursements * exchangeRate) : null;
+        const outstandingBalanceCfa = Number.isFinite(outstandingBalance) && exchangeRate ? Math.round(outstandingBalance * exchangeRate) : null;
+        const socialAvailable = Array.isArray(social?.data) && Boolean(social?.summary);
+        const socialTotal = socialAvailable && hasApiNumber(social.summary.total_chf) ? Number(social.summary.total_chf) : null;
+        const socialTotalCfa = socialAvailable && hasApiNumber(social.summary.total_cfa_historique) ? Number(social.summary.total_cfa_historique) : null;
         const inventoryAvailable = hasApiNumber(inventoryCount?.total);
         const documentsAvailable = hasApiNumber(documentsCount?.total);
         const tasksAvailable = hasApiNumber(tasksCount?.total);
@@ -447,7 +540,7 @@ const Dashboard = () => {
         const tasksBlocked = hasApiNumber(tasksCount?.blocked) ? Number(tasksCount.blocked) : null;
         const tasksCancelled = hasApiNumber(tasksCount?.cancelled) ? Number(tasksCount.cancelled) : null;
         const userRows = usersAvailable ? users.data : [];
-        const financeAvailable = Number.isFinite(totalIncome) && Number.isFinite(totalExpenses);
+        const financeAvailable = [totalIncome, totalIncomeCfa, totalExpenses, totalExpensesCfa].every(Number.isFinite);
         const apiUnavailable = [
           financeDashboard,
           documentsCount,
@@ -463,6 +556,8 @@ const Dashboard = () => {
           || !usersAvailable
           || !incomeAvailable
           || !expensesAvailable
+          || (!social && socialResult.errorStatus !== 403)
+          || (!realEstate && realEstateResult.errorStatus !== 403)
           || fx?.success === false;
         setDataWarning(apiUnavailable);
 
@@ -491,17 +586,34 @@ const Dashboard = () => {
             income: incomeAvailable ? 'available' : 'unavailable',
             expenses: expensesAvailable ? 'available' : 'unavailable',
             donations: incomeAvailable ? 'available' : 'unavailable',
-            financing: incomeAvailable ? 'available' : 'unavailable'
+            financing: incomeAvailable ? 'available' : 'unavailable',
+            fx: exchangeRate ? 'available' : 'unavailable',
+            realEstate: realEstateAvailable ? 'available' : realEstateResult.errorStatus === 403 ? 'restricted' : 'unavailable',
+            social: socialAvailable ? 'available' : socialResult.errorStatus === 403 ? 'restricted' : 'unavailable'
           },
           moduleStats: {
             ...mockDataBase.moduleStats,
             finance: {
               ...mockDataBase.moduleStats.finance,
               revenue: totalIncome,
+              revenueCfa: totalIncomeCfa,
               expenses: totalExpenses,
+              expensesCfa: totalExpensesCfa,
               balance: financeAvailable ? totalIncome - totalExpenses : null,
+              balanceCfa: financeAvailable ? totalIncomeCfa - totalExpensesCfa : null,
               donations,
+              donationsCfa,
               financing,
+              financingCfa,
+              referenceRate: exchangeRate || null,
+              realEstateFunding,
+              realEstateFundingCfa,
+              reimbursements,
+              reimbursementsCfa,
+              outstandingBalance,
+              outstandingBalanceCfa,
+              social: socialTotal,
+              socialCfa: socialTotalCfa,
               incomeCount: incomeRows.length,
               expenseCount: expenseRows.length
             },
@@ -569,16 +681,23 @@ const Dashboard = () => {
     );
   }
 
-  const sourceState = (sourceKey) => dashboardData?.sourceStatus?.[sourceKey] === 'available'
-    ? { status: 'available', statusLabel: t.available }
-    : { status: 'unavailable', statusLabel: t.unavailable };
+  const sourceState = (sourceKey) => {
+    const sourceStatus = dashboardData?.sourceStatus?.[sourceKey];
+    if (sourceStatus === 'available') return { status: 'available', statusLabel: t.available };
+    if (sourceStatus === 'restricted') return { status: 'restricted', statusLabel: t.restricted };
+    return { status: 'unavailable', statusLabel: t.unavailable };
+  };
   const disconnectedState = { status: 'disconnected', statusLabel: t.sourceToConnect };
   const financeValues = {
-    revenue: formatDualCurrency(dashboardData?.moduleStats.finance.revenue, dashboardData.exchangeRate),
-    expenses: formatDualCurrency(dashboardData?.moduleStats.finance.expenses, dashboardData.exchangeRate),
-    balance: formatDualCurrency(dashboardData?.moduleStats.finance.balance, dashboardData.exchangeRate),
-    donations: formatDualCurrency(dashboardData?.moduleStats.finance.donations, dashboardData.exchangeRate),
-    financing: formatDualCurrency(dashboardData?.moduleStats.finance.financing, dashboardData.exchangeRate)
+    revenue: formatDualCurrency(dashboardData?.moduleStats.finance.revenue, dashboardData?.moduleStats.finance.revenueCfa),
+    expenses: formatDualCurrency(dashboardData?.moduleStats.finance.expenses, dashboardData?.moduleStats.finance.expensesCfa),
+    balance: formatDualCurrency(dashboardData?.moduleStats.finance.balance, dashboardData?.moduleStats.finance.balanceCfa),
+    donations: formatDualCurrency(dashboardData?.moduleStats.finance.donations, dashboardData?.moduleStats.finance.donationsCfa),
+    financing: formatDualCurrency(dashboardData?.moduleStats.finance.financing, dashboardData?.moduleStats.finance.financingCfa),
+    realEstateFunding: formatDualCurrency(dashboardData?.moduleStats.finance.realEstateFunding, dashboardData?.moduleStats.finance.realEstateFundingCfa),
+    reimbursements: formatDualCurrency(dashboardData?.moduleStats.finance.reimbursements, dashboardData?.moduleStats.finance.reimbursementsCfa),
+    outstandingBalance: formatDualCurrency(dashboardData?.moduleStats.finance.outstandingBalance, dashboardData?.moduleStats.finance.outstandingBalanceCfa),
+    social: formatDualCurrency(dashboardData?.moduleStats.finance.social, dashboardData?.moduleStats.finance.socialCfa)
   };
   const kpiGroups = [
     {
@@ -615,32 +734,58 @@ const Dashboard = () => {
       id: 'support',
       title: t.supportGroup,
       description: t.supportGroupBody,
-      gridClass: 'grid-cols-2 sm:grid-cols-3 xl:grid-cols-5',
+      gridClass: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',
       cards: [
         {
-          id: 'revenue', label: t.revenue, value: `${financeValues.revenue.chf} CHF`, secondary: `${financeValues.revenue.cfa} CFA`,
+          id: 'revenue', label: t.revenue, value: `${financeValues.revenue.chf} CHF`, secondary: `${financeValues.revenue.cfa} CFA`, dualCurrency: true,
           source: t.financeIncome, ...sourceState('income'), icon: HandCoins, accent: 'emerald',
           openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=recettes')
         },
         {
-          id: 'expenses', label: t.expenses, value: `${financeValues.expenses.chf} CHF`, secondary: `${financeValues.expenses.cfa} CFA`,
+          id: 'expenses', label: t.expenses, value: `${financeValues.expenses.chf} CHF`, secondary: `${financeValues.expenses.cfa} CFA`, dualCurrency: true,
           source: t.financeExpenses, ...sourceState('expenses'), icon: ArrowDownToLine, accent: 'red',
           openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=depenses')
         },
         {
-          id: 'balance', label: t.balance, value: `${financeValues.balance.chf} CHF`, secondary: `${financeValues.balance.cfa} CFA`,
+          id: 'balance', label: t.balance, value: `${financeValues.balance.chf} CHF`, secondary: `${financeValues.balance.cfa} CFA`, dualCurrency: true,
           source: t.financeBalance, ...sourceState('finance'), icon: Scale, accent: 'blue',
           openLabel: t.openModule, onOpen: () => handleModuleClick('/finance')
         },
         {
-          id: 'donations', label: t.donations, value: `${financeValues.donations.chf} CHF`, secondary: `${financeValues.donations.cfa} CFA`,
+          id: 'donations', label: t.donations, value: `${financeValues.donations.chf} CHF`, secondary: `${financeValues.donations.cfa} CFA`, dualCurrency: true,
           source: t.financeDonations, ...sourceState('donations'), icon: Gift, accent: 'amber',
           openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=recettes')
         },
         {
-          id: 'financing', label: t.financing, value: `${financeValues.financing.chf} CHF`, secondary: `${financeValues.financing.cfa} CFA`,
+          id: 'financing', label: t.financing, value: `${financeValues.financing.chf} CHF`, secondary: `${financeValues.financing.cfa} CFA`, dualCurrency: true,
           source: t.financeFunding, ...sourceState('financing'), icon: Landmark, accent: 'cyan',
           openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=recettes')
+        },
+        {
+          id: 'reference-rate', label: t.referenceRate,
+          value: Number.isFinite(dashboardData?.moduleStats.finance.referenceRate) ? `${formatCount(dashboardData.moduleStats.finance.referenceRate)} CFA / CHF` : '— CFA / CHF',
+          source: t.financeReferenceRate, ...sourceState('fx'), icon: ArrowRightLeft, accent: 'violet',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=fx')
+        },
+        {
+          id: 'real-estate-funding', label: t.realEstateFunding, value: `${financeValues.realEstateFunding.chf} CHF`, secondary: `${financeValues.realEstateFunding.cfa} CFA`, dualCurrency: true,
+          source: t.financeRealEstate, ...sourceState('realEstate'), icon: Building2, accent: 'sky',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=immobilier')
+        },
+        {
+          id: 'real-estate-reimbursements', label: t.realEstateReimbursements, value: `${financeValues.reimbursements.chf} CHF`, secondary: `${financeValues.reimbursements.cfa} CFA`, dualCurrency: true,
+          source: t.financeRealEstate, ...sourceState('realEstate'), icon: HandCoins, accent: 'teal',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=immobilier')
+        },
+        {
+          id: 'outstanding-balance', label: t.outstandingBalance, value: `${financeValues.outstandingBalance.chf} CHF`, secondary: `${financeValues.outstandingBalance.cfa} CFA`, dualCurrency: true,
+          source: t.financeRealEstate, ...sourceState('realEstate'), icon: Landmark, accent: 'amber',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=immobilier')
+        },
+        {
+          id: 'social-flows', label: t.socialFlows, value: `${financeValues.social.chf} CHF`, secondary: `${financeValues.social.cfa} CFA`, dualCurrency: true,
+          source: t.financeSocial, ...sourceState('social'), icon: HeartHandshake, accent: 'pink',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=social')
         }
       ]
     },
