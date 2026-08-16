@@ -28,7 +28,7 @@ test('records and restores a prepared mission with traceability references', asy
 
   expect(screen.getAllByText('Préparer les documents LEGAL manquants').length).toBeGreaterThan(0);
   await waitFor(() => expect(JSON.parse(localStorage.getItem(storageKey))).toEqual(expect.arrayContaining([
-    expect.objectContaining({ owner: 'Cheikh', taskRef: 'TASK-LEGAL-01', gedRef: 'GED-LEGAL-01', status: 'prepared' })
+    expect.objectContaining({ owner: 'Cheikh', taskRef: 'TASK-LEGAL-01', gedRef: 'GED-LEGAL-01', status: 'prepared', reviewOutcome: 'pending' })
   ])));
 
   view.unmount();
@@ -39,7 +39,7 @@ test('records and restores a prepared mission with traceability references', asy
 test('removes sensitive titles and references from restricted local records', async () => {
   render(<ExternalMissionRegister language="FR" enabled draft={{ title: 'CV nominatif confidentiel', service: 'cowork', sensitivity: 'restricted' }} />);
   fireEvent.click(screen.getByRole('button', { name: 'Ajouter la mission préparée' }));
-  expect(screen.getByText(/seuls le service, l’état, le responsable et les dates/i)).toBeInTheDocument();
+  expect(screen.getByText(/seuls le service, l’état, le verdict du contrôle, le responsable et les dates/i)).toBeInTheDocument();
   expect(screen.queryByLabelText('Référence GED')).not.toBeInTheDocument();
   fireEvent.change(screen.getByLabelText('Responsable 2SG *'), { target: { value: 'Cheikh' } });
   fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
@@ -60,9 +60,22 @@ test('updates the mission lifecycle after confirmation', () => {
   render(<ExternalMissionRegister language="FR" enabled draft={{ title: 'Autre mission', service: 'work', sensitivity: 'internal' }} />);
   fireEvent.click(screen.getAllByText('Mission de contrôle')[0]);
   fireEvent.change(screen.getByLabelText('État'), { target: { value: 'received' } });
+  fireEvent.change(screen.getByLabelText('Verdict du contrôle'), { target: { value: 'unverifiable' } });
   fireEvent.click(within(screen.getByRole('dialog', { name: 'Modifier' })).getByRole('button', { name: 'Modifier' }));
   fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
   expect(screen.getAllByText('Reçue').length).toBeGreaterThan(0);
+  expect(screen.getAllByText('Non vérifiable').length).toBeGreaterThan(0);
+});
+
+test('migrates existing local missions to a pending review outcome', () => {
+  localStorage.setItem(storageKey, JSON.stringify([{
+    id: 'EXT-OLD', title: 'Mission historique', service: 'work', sensitivity: 'internal', status: 'received', owner: 'Cheikh', sentDate: '2026-08-16', deadline: '', taskRef: '', gedRef: '', deliverableRef: ''
+  }]));
+
+  render(<ExternalMissionRegister language="FR" enabled={false} draft={null} />);
+
+  expect(screen.getAllByText('Non contrôlé').length).toBeGreaterThan(0);
+  expect(JSON.parse(localStorage.getItem(storageKey))[0]).toMatchObject({ reviewOutcome: 'pending' });
 });
 
 test('keeps the register labels trilingual', () => {
