@@ -18,6 +18,7 @@ import {
 import InternalSectionNav from './InternalSectionNav';
 import { ADMINISTRATION_DATA_MAPPING } from './administrationDataMapping';
 import TransversalRelationContract from './TransversalRelationContract';
+import VillaLr1RelationPilot from './VillaLr1RelationPilot';
 
 const COPY = {
   FR: {
@@ -354,6 +355,7 @@ const AdministrationArchitectureOverview = ({ language = 'FR' }) => {
         </div>
 
         <TransversalRelationContract language={language} />
+        <VillaLr1RelationPilot language={language} />
 
         <div className="mt-5 overflow-hidden rounded-lg border border-slate-700" role="table" aria-label={t.dataTitle}>
           <div className="hidden grid-cols-[0.85fr_1.15fr_1.25fr_1.1fr_1.35fr] gap-4 bg-slate-900 px-4 py-3 text-xs font-semibold uppercase text-slate-300 lg:grid" role="row">
