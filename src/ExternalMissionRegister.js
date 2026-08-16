@@ -16,13 +16,14 @@ const COPY = {
     selectOwner: 'Sélectionner un responsable', ownerLoading: 'Chargement de l’annuaire RH-001…', ownerFallback: 'Annuaire indisponible : seul l’utilisateur connecté peut être proposé.', ownerRule: 'Liste des membres actifs que votre rôle autorise à consulter. Ce choix n’accorde aucun droit supplémentaire.', optional: 'Facultatif',
     confirmCreateTitle: 'Confirmer l’ajout', confirmCreate: 'Oui, ajouter', confirmUpdateTitle: 'Confirmer la modification', confirmUpdate: 'Oui, modifier', confirmDeleteTitle: 'Confirmer la suppression', confirmDelete: 'Oui, supprimer', decline: 'Non',
     confirmCreateBody: 'Ajouter « {title} » au registre des missions ?', confirmUpdateBody: 'Enregistrer les modifications de « {title} » ?', confirmDeleteBody: 'Supprimer « {title} » du registre local ?',
-    restrictedTitle: 'Mission restreinte', restrictedRule: 'Mode restreint : seuls le service, l’état, le responsable et les dates sont conservés localement. Les références et le contenu restent dans la GED sécurisée.',
+    restrictedTitle: 'Mission restreinte', restrictedRule: 'Mode restreint : seuls le service, l’état, le verdict du contrôle, le responsable et les dates sont conservés localement. Les références et le contenu restent dans la GED sécurisée.',
     metrics: { total: 'Missions', active: 'En circulation', review: 'À contrôler', integrated: 'Intégrées' },
-    fields: { title: 'Intitulé non sensible', service: 'Service', sensitivity: 'Sensibilité', status: 'État', owner: 'Responsable 2SG', sentDate: 'Date d’envoi', deadline: 'Échéance', taskRef: 'Référence tâche M3S', gedRef: 'Référence GED', deliverableRef: 'Référence du livrable' },
-    help: { taskRef: 'Identifiant de la tâche qui pilote la mission, par ex. TASK-LEGAL-01. À renseigner après création dans Planification & Projets.', gedRef: 'Identifiant ou chemin du dossier/document source dans la GED, par ex. GED / LEGAL / CGU.', deliverableRef: 'Identifiant, nom de fichier ou lien contrôlé du résultat reçu. À renseigner lorsque le livrable existe.' },
+    fields: { title: 'Intitulé non sensible', service: 'Service', sensitivity: 'Sensibilité', status: 'État', reviewOutcome: 'Verdict du contrôle', owner: 'Responsable 2SG', sentDate: 'Date d’envoi', deadline: 'Échéance', taskRef: 'Référence tâche M3S', gedRef: 'Référence GED', deliverableRef: 'Référence du livrable' },
+    help: { reviewOutcome: 'Appréciation du livrable reçu. Elle reste distincte de l’état de circulation et ne remplace pas la décision humaine.', taskRef: 'Identifiant de la tâche qui pilote la mission, par ex. TASK-LEGAL-01. À renseigner après création dans Planification & Projets.', gedRef: 'Identifiant ou chemin du dossier/document source dans la GED, par ex. GED / LEGAL / CGU.', deliverableRef: 'Identifiant, nom de fichier ou lien contrôlé du résultat reçu. À renseigner lorsque le livrable existe.' },
     services: { cowork: 'Claude Cowork', work: 'ChatGPT Work', classic: 'ChatGPT Classic', genspark: 'Genspark' },
     sensitivities: { public: 'Public', internal: 'Interne', restricted: 'Restreint' },
-    statuses: { prepared: 'Préparée', sent: 'Envoyée', received: 'Reçue', review: 'En contrôle', integrated: 'Intégrée', archived: 'Archivée' }
+    statuses: { prepared: 'Préparée', sent: 'Envoyée', received: 'Reçue', review: 'En contrôle', integrated: 'Intégrée', archived: 'Archivée' },
+    reviewOutcomes: { pending: 'Non contrôlé', conform: 'Conforme au corpus', correction: 'À corriger', unverifiable: 'Non vérifiable' }
   },
   EN: {
     eyebrow: 'EXTERNAL MISSIONS · LOCAL REGISTER', title: 'Delegated mission tracking',
@@ -33,13 +34,14 @@ const COPY = {
     selectOwner: 'Select an owner', ownerLoading: 'Loading the RH-001 directory…', ownerFallback: 'Directory unavailable: only the signed-in user can be proposed.', ownerRule: 'Active members your role is allowed to view. This selection grants no additional permission.', optional: 'Optional',
     confirmCreateTitle: 'Confirm addition', confirmCreate: 'Yes, add', confirmUpdateTitle: 'Confirm update', confirmUpdate: 'Yes, update', confirmDeleteTitle: 'Confirm deletion', confirmDelete: 'Yes, delete', decline: 'No',
     confirmCreateBody: 'Add “{title}” to the mission register?', confirmUpdateBody: 'Save changes to “{title}”?', confirmDeleteBody: 'Delete “{title}” from the local register?',
-    restrictedTitle: 'Restricted mission', restrictedRule: 'Restricted mode: only service, state, owner and dates are stored locally. References and content remain in the secure DMS.',
+    restrictedTitle: 'Restricted mission', restrictedRule: 'Restricted mode: only service, state, review outcome, owner and dates are stored locally. References and content remain in the secure DMS.',
     metrics: { total: 'Missions', active: 'In circulation', review: 'To review', integrated: 'Integrated' },
-    fields: { title: 'Non-sensitive title', service: 'Service', sensitivity: 'Sensitivity', status: 'State', owner: '2SG owner', sentDate: 'Sent date', deadline: 'Deadline', taskRef: 'M3S task reference', gedRef: 'DMS reference', deliverableRef: 'Deliverable reference' },
-    help: { taskRef: 'Identifier of the task steering the mission, e.g. TASK-LEGAL-01. Fill it after creation in Planning & Projects.', gedRef: 'Identifier or path of the source folder/document in the DMS, e.g. DMS / LEGAL / Terms.', deliverableRef: 'Identifier, filename or controlled link for the received result. Fill it when the deliverable exists.' },
+    fields: { title: 'Non-sensitive title', service: 'Service', sensitivity: 'Sensitivity', status: 'State', reviewOutcome: 'Review outcome', owner: '2SG owner', sentDate: 'Sent date', deadline: 'Deadline', taskRef: 'M3S task reference', gedRef: 'DMS reference', deliverableRef: 'Deliverable reference' },
+    help: { reviewOutcome: 'Assessment of the received deliverable. It remains separate from circulation state and does not replace the human decision.', taskRef: 'Identifier of the task steering the mission, e.g. TASK-LEGAL-01. Fill it after creation in Planning & Projects.', gedRef: 'Identifier or path of the source folder/document in the DMS, e.g. DMS / LEGAL / Terms.', deliverableRef: 'Identifier, filename or controlled link for the received result. Fill it when the deliverable exists.' },
     services: { cowork: 'Claude Cowork', work: 'ChatGPT Work', classic: 'ChatGPT Classic', genspark: 'Genspark' },
     sensitivities: { public: 'Public', internal: 'Internal', restricted: 'Restricted' },
-    statuses: { prepared: 'Prepared', sent: 'Sent', received: 'Received', review: 'Under review', integrated: 'Integrated', archived: 'Archived' }
+    statuses: { prepared: 'Prepared', sent: 'Sent', received: 'Received', review: 'Under review', integrated: 'Integrated', archived: 'Archived' },
+    reviewOutcomes: { pending: 'Not reviewed', conform: 'Corpus-compliant', correction: 'Needs correction', unverifiable: 'Not verifiable' }
   },
   DE: {
     eyebrow: 'EXTERNE AUFGABEN · LOKALES REGISTER', title: 'Nachverfolgung delegierter Aufgaben',
@@ -50,17 +52,18 @@ const COPY = {
     selectOwner: 'Verantwortung auswählen', ownerLoading: 'RH-001-Verzeichnis wird geladen…', ownerFallback: 'Verzeichnis nicht verfügbar: Nur der angemeldete Benutzer kann vorgeschlagen werden.', ownerRule: 'Aktive Mitglieder, die Ihre Rolle anzeigen darf. Die Auswahl gewährt keine zusätzlichen Rechte.', optional: 'Optional',
     confirmCreateTitle: 'Hinzufügen bestätigen', confirmCreate: 'Ja, hinzufügen', confirmUpdateTitle: 'Änderung bestätigen', confirmUpdate: 'Ja, ändern', confirmDeleteTitle: 'Löschen bestätigen', confirmDelete: 'Ja, löschen', decline: 'Nein',
     confirmCreateBody: '„{title}“ zum Aufgabenregister hinzufügen?', confirmUpdateBody: 'Änderungen an „{title}“ speichern?', confirmDeleteBody: '„{title}“ aus dem lokalen Register löschen?',
-    restrictedTitle: 'Eingeschränkte Aufgabe', restrictedRule: 'Eingeschränkter Modus: Nur Dienst, Status, Verantwortung und Daten werden lokal gespeichert. Referenzen und Inhalte verbleiben im sicheren DMS.',
+    restrictedTitle: 'Eingeschränkte Aufgabe', restrictedRule: 'Eingeschränkter Modus: Nur Dienst, Status, Prüfergebnis, Verantwortung und Daten werden lokal gespeichert. Referenzen und Inhalte verbleiben im sicheren DMS.',
     metrics: { total: 'Aufgaben', active: 'Im Umlauf', review: 'Zu prüfen', integrated: 'Integriert' },
-    fields: { title: 'Nicht sensibler Titel', service: 'Dienst', sensitivity: 'Vertraulichkeit', status: 'Status', owner: '2SG-Verantwortung', sentDate: 'Sendedatum', deadline: 'Frist', taskRef: 'M3S-Aufgabenreferenz', gedRef: 'DMS-Referenz', deliverableRef: 'Ergebnisreferenz' },
-    help: { taskRef: 'Kennung der steuernden Aufgabe, z. B. TASK-LEGAL-01. Nach der Anlage in Planung & Projekte eintragen.', gedRef: 'Kennung oder Pfad des Quelldossiers/-dokuments im DMS, z. B. DMS / LEGAL / AGB.', deliverableRef: 'Kennung, Dateiname oder kontrollierter Link des Ergebnisses. Eintragen, sobald das Ergebnis vorliegt.' },
+    fields: { title: 'Nicht sensibler Titel', service: 'Dienst', sensitivity: 'Vertraulichkeit', status: 'Status', reviewOutcome: 'Prüfergebnis', owner: '2SG-Verantwortung', sentDate: 'Sendedatum', deadline: 'Frist', taskRef: 'M3S-Aufgabenreferenz', gedRef: 'DMS-Referenz', deliverableRef: 'Ergebnisreferenz' },
+    help: { reviewOutcome: 'Bewertung des eingegangenen Ergebnisses. Sie bleibt vom Umlaufstatus getrennt und ersetzt keine menschliche Entscheidung.', taskRef: 'Kennung der steuernden Aufgabe, z. B. TASK-LEGAL-01. Nach der Anlage in Planung & Projekte eintragen.', gedRef: 'Kennung oder Pfad des Quelldossiers/-dokuments im DMS, z. B. DMS / LEGAL / AGB.', deliverableRef: 'Kennung, Dateiname oder kontrollierter Link des Ergebnisses. Eintragen, sobald das Ergebnis vorliegt.' },
     services: { cowork: 'Claude Cowork', work: 'ChatGPT Work', classic: 'ChatGPT Classic', genspark: 'Genspark' },
     sensitivities: { public: 'Öffentlich', internal: 'Intern', restricted: 'Eingeschränkt' },
-    statuses: { prepared: 'Vorbereitet', sent: 'Gesendet', received: 'Eingegangen', review: 'In Prüfung', integrated: 'Integriert', archived: 'Archiviert' }
+    statuses: { prepared: 'Vorbereitet', sent: 'Gesendet', received: 'Eingegangen', review: 'In Prüfung', integrated: 'Integriert', archived: 'Archiviert' },
+    reviewOutcomes: { pending: 'Nicht geprüft', conform: 'Korpuskonform', correction: 'Zu korrigieren', unverifiable: 'Nicht verifizierbar' }
   }
 };
 
-const emptyForm = () => ({ title: '', service: 'work', sensitivity: 'internal', status: 'prepared', owner: '', sentDate: '', deadline: '', taskRef: '', gedRef: '', deliverableRef: '' });
+const emptyForm = () => ({ title: '', service: 'work', sensitivity: 'internal', status: 'prepared', reviewOutcome: 'pending', owner: '', sentDate: '', deadline: '', taskRef: '', gedRef: '', deliverableRef: '' });
 
 const getStorageKey = () => {
   try {
@@ -76,7 +79,7 @@ const getStorageKey = () => {
 const readItems = storageKey => {
   try {
     const stored = JSON.parse(window.localStorage.getItem(storageKey));
-    return Array.isArray(stored) ? stored : [];
+    return Array.isArray(stored) ? stored.map(item => ({ reviewOutcome: 'pending', ...item })) : [];
   } catch {
     return [];
   }
@@ -101,6 +104,13 @@ const statusTone = {
   review: 'border-amber-700 bg-amber-950/25 text-amber-200',
   integrated: 'border-emerald-700 bg-emerald-950/25 text-emerald-200',
   archived: 'border-violet-700 bg-violet-950/25 text-violet-200'
+};
+
+const reviewOutcomeTone = {
+  pending: 'border-slate-600 bg-slate-950/30 text-slate-300',
+  conform: 'border-emerald-700 bg-emerald-950/25 text-emerald-200',
+  correction: 'border-amber-700 bg-amber-950/25 text-amber-200',
+  unverifiable: 'border-violet-700 bg-violet-950/25 text-violet-200'
 };
 
 const ExternalMissionRegister = ({ language = 'FR', draft, enabled = false }) => {
@@ -243,6 +253,10 @@ const ExternalMissionRegister = ({ language = 'FR', draft, enabled = false }) =>
   const invalidFieldClass = key => fieldErrors[key] ? 'border-rose-500 focus:border-rose-400 focus:ring-rose-500/30' : '';
 
   const renderStatus = item => <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${statusTone[item.status] || statusTone.prepared}`}>{t.statuses[item.status] || t.statuses.prepared}</span>;
+  const renderReviewOutcome = item => {
+    const outcome = item.reviewOutcome || 'pending';
+    return <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${reviewOutcomeTone[outcome] || reviewOutcomeTone.pending}`}>{t.reviewOutcomes[outcome] || t.reviewOutcomes.pending}</span>;
+  };
 
   return (
     <section className="m3s-panel p-5 sm:p-6" aria-labelledby="external-mission-register-title">
@@ -265,9 +279,9 @@ const ExternalMissionRegister = ({ language = 'FR', draft, enabled = false }) =>
 
       {items.length > 0 ? <>
         <div className="mt-5 hidden overflow-hidden rounded-lg border border-slate-700 lg:block">
-          <div className="overflow-x-auto"><table className="w-full min-w-[980px] text-left text-sm"><thead className="bg-slate-950/60 text-xs uppercase text-slate-300"><tr><th className="px-4 py-3">ID</th><th className="px-4 py-3">{t.fields.title}</th><th className="px-4 py-3">{t.fields.service}</th><th className="px-4 py-3">{t.fields.status}</th><th className="px-4 py-3">{t.fields.owner}</th><th className="px-4 py-3">{t.fields.deadline}</th><th className="px-4 py-3">{t.actions}</th></tr></thead><tbody>{items.map(item => <tr key={item.id} className="cursor-pointer border-t border-slate-700 text-slate-300 transition hover:bg-blue-950/35" tabIndex={0} onClick={() => openEdit(item)} onKeyDown={event => { if (event.key === 'Enter') openEdit(item); }}><td className="px-4 py-3 font-mono text-xs text-cyan-200">{item.id}</td><td className="px-4 py-3"><p className="font-semibold text-slate-100">{displayTitle(item)}</p>{item.sensitivity !== 'restricted' && (item.taskRef || item.gedRef || item.deliverableRef) && <p className="mt-1 flex items-center gap-1 text-xs text-slate-400"><Link2 size={13} />{[item.taskRef, item.gedRef, item.deliverableRef].filter(Boolean).join(' · ')}</p>}</td><td className="px-4 py-3">{t.services[item.service]}</td><td className="px-4 py-3">{renderStatus(item)}</td><td className="px-4 py-3">{item.owner}</td><td className="px-4 py-3">{item.deadline || '—'}</td><td className="px-4 py-3"><div className="flex gap-2"><button type="button" className="m3s-icon-button text-blue-300" title={t.edit} onClick={event => { event.stopPropagation(); openEdit(item); }}><Edit2 size={16} /></button><button type="button" className="m3s-icon-button text-red-300" title={t.delete} onClick={event => { event.stopPropagation(); requestDelete(item); }}><Trash2 size={16} /></button></div></td></tr>)}</tbody></table></div>
+          <div className="overflow-x-auto"><table className="w-full min-w-[1120px] text-left text-sm"><thead className="bg-slate-950/60 text-xs uppercase text-slate-300"><tr><th className="px-4 py-3">ID</th><th className="px-4 py-3">{t.fields.title}</th><th className="px-4 py-3">{t.fields.service}</th><th className="px-4 py-3">{t.fields.status}</th><th className="px-4 py-3">{t.fields.reviewOutcome}</th><th className="px-4 py-3">{t.fields.owner}</th><th className="px-4 py-3">{t.fields.deadline}</th><th className="px-4 py-3">{t.actions}</th></tr></thead><tbody>{items.map(item => <tr key={item.id} className="cursor-pointer border-t border-slate-700 text-slate-300 transition hover:bg-blue-950/35" tabIndex={0} onClick={() => openEdit(item)} onKeyDown={event => { if (event.key === 'Enter') openEdit(item); }}><td className="px-4 py-3 font-mono text-xs text-cyan-200">{item.id}</td><td className="px-4 py-3"><p className="font-semibold text-slate-100">{displayTitle(item)}</p>{item.sensitivity !== 'restricted' && (item.taskRef || item.gedRef || item.deliverableRef) && <p className="mt-1 flex items-center gap-1 text-xs text-slate-400"><Link2 size={13} />{[item.taskRef, item.gedRef, item.deliverableRef].filter(Boolean).join(' · ')}</p>}</td><td className="px-4 py-3">{t.services[item.service]}</td><td className="px-4 py-3">{renderStatus(item)}</td><td className="px-4 py-3">{renderReviewOutcome(item)}</td><td className="px-4 py-3">{item.owner}</td><td className="px-4 py-3">{item.deadline || '—'}</td><td className="px-4 py-3"><div className="flex gap-2"><button type="button" className="m3s-icon-button text-blue-300" title={t.edit} onClick={event => { event.stopPropagation(); openEdit(item); }}><Edit2 size={16} /></button><button type="button" className="m3s-icon-button text-red-300" title={t.delete} onClick={event => { event.stopPropagation(); requestDelete(item); }}><Trash2 size={16} /></button></div></td></tr>)}</tbody></table></div>
         </div>
-        <div className="mt-5 grid gap-3 lg:hidden">{items.map(item => <article key={item.id} className="rounded-lg border border-slate-700 bg-slate-950/25 p-4" onClick={() => openEdit(item)}><div className="flex items-start justify-between gap-3"><div className="min-w-0"><p className="font-mono text-xs text-cyan-200">{item.id}</p><h4 className="mt-1 break-words font-semibold text-slate-100">{displayTitle(item)}</h4></div>{renderStatus(item)}</div><dl className="mt-4 grid grid-cols-2 gap-3 text-sm"><div><dt className="text-xs font-semibold uppercase text-slate-500">{t.fields.service}</dt><dd className="mt-1 text-slate-200">{t.services[item.service]}</dd></div><div><dt className="text-xs font-semibold uppercase text-slate-500">{t.fields.owner}</dt><dd className="mt-1 text-slate-200">{item.owner}</dd></div><div><dt className="text-xs font-semibold uppercase text-slate-500">{t.fields.deadline}</dt><dd className="mt-1 text-slate-200">{item.deadline || '—'}</dd></div><div><dt className="text-xs font-semibold uppercase text-slate-500">{t.fields.sensitivity}</dt><dd className="mt-1 text-slate-200">{t.sensitivities[item.sensitivity]}</dd></div></dl><div className="mt-4 flex justify-end gap-2"><button type="button" className="m3s-icon-button text-blue-300" aria-label={`${t.edit} : ${displayTitle(item)}`} onClick={event => { event.stopPropagation(); openEdit(item); }}><Edit2 size={17} /></button><button type="button" className="m3s-icon-button text-red-300" aria-label={`${t.delete} : ${displayTitle(item)}`} onClick={event => { event.stopPropagation(); requestDelete(item); }}><Trash2 size={17} /></button></div></article>)}</div>
+        <div className="mt-5 grid gap-3 lg:hidden">{items.map(item => <article key={item.id} className="rounded-lg border border-slate-700 bg-slate-950/25 p-4" onClick={() => openEdit(item)}><div className="flex items-start justify-between gap-3"><div className="min-w-0"><p className="font-mono text-xs text-cyan-200">{item.id}</p><h4 className="mt-1 break-words font-semibold text-slate-100">{displayTitle(item)}</h4></div>{renderStatus(item)}</div><div className="mt-3">{renderReviewOutcome(item)}</div><dl className="mt-4 grid grid-cols-2 gap-3 text-sm"><div><dt className="text-xs font-semibold uppercase text-slate-500">{t.fields.service}</dt><dd className="mt-1 text-slate-200">{t.services[item.service]}</dd></div><div><dt className="text-xs font-semibold uppercase text-slate-500">{t.fields.owner}</dt><dd className="mt-1 text-slate-200">{item.owner}</dd></div><div><dt className="text-xs font-semibold uppercase text-slate-500">{t.fields.deadline}</dt><dd className="mt-1 text-slate-200">{item.deadline || '—'}</dd></div><div><dt className="text-xs font-semibold uppercase text-slate-500">{t.fields.sensitivity}</dt><dd className="mt-1 text-slate-200">{t.sensitivities[item.sensitivity]}</dd></div></dl><div className="mt-4 flex justify-end gap-2"><button type="button" className="m3s-icon-button text-blue-300" aria-label={`${t.edit} : ${displayTitle(item)}`} onClick={event => { event.stopPropagation(); openEdit(item); }}><Edit2 size={17} /></button><button type="button" className="m3s-icon-button text-red-300" aria-label={`${t.delete} : ${displayTitle(item)}`} onClick={event => { event.stopPropagation(); requestDelete(item); }}><Trash2 size={17} /></button></div></article>)}</div>
       </> : <div className="mt-5 flex flex-col items-center rounded-lg border border-dashed border-slate-600 px-5 py-8 text-center"><Archive className="text-slate-500" size={28} /><p className="mt-3 max-w-xl text-sm leading-6 text-slate-400">{t.empty}</p></div>}
 
       {editingId && (
@@ -312,6 +326,11 @@ const ExternalMissionRegister = ({ language = 'FR', draft, enabled = false }) =>
               <label>
                 <span className="m3s-field-label">{t.fields.status}</span>
                 <select className="m3s-field mt-1 w-full" value={form.status} onChange={event => setStatus(event.target.value)}>{Object.entries(t.statuses).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
+              </label>
+              <label>
+                <span className="m3s-field-label">{t.fields.reviewOutcome}</span>
+                <select aria-label={t.fields.reviewOutcome} className="m3s-field mt-1 w-full" value={form.reviewOutcome} onChange={event => set('reviewOutcome', event.target.value)}>{Object.entries(t.reviewOutcomes).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
+                <p className="mt-1 text-xs leading-5 text-slate-400">{t.help.reviewOutcome}</p>
               </label>
               <label>
                 <span className="m3s-field-label">{t.fields.owner} *</span>
