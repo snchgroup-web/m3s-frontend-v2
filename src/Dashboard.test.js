@@ -32,7 +32,7 @@ jest.mock('./api', () => ({
     getDocumentsCount: jest.fn(),
     getInventoryCount: jest.fn(),
     getTasksCount: jest.fn(),
-    getUsers: jest.fn(),
+    getAuthAccountsCount: jest.fn(),
     getIncome: jest.fn(),
     getExpenses: jest.fn(),
     getSocialFinance: jest.fn(),
@@ -47,7 +47,7 @@ beforeEach(() => {
   api.getDocumentsCount.mockResolvedValue({ total: 12 });
   api.getInventoryCount.mockResolvedValue({ total: 8 });
   api.getTasksCount.mockResolvedValue({ total: 4, open: 2, completed: 2, blocked: 0, cancelled: 0 });
-  api.getUsers.mockResolvedValue({ data: [{ id: 1 }, { id: 2 }, { id: 3 }] });
+  api.getAuthAccountsCount.mockResolvedValue({ total: 3 });
   api.getIncome.mockResolvedValue({
     data: [
       { category: 'PRESTATION', montant_chf: 300, montant_cfa: 180000, date: '2026-01-01' },
@@ -78,7 +78,7 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   expect(screen.getByRole('heading', { name: 'Management & Governance' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Support functions' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Operations & Development' })).toBeInTheDocument();
-  expect(screen.getByText('Administration · Users')).toBeInTheDocument();
+  expect(screen.getByText('M3S · Authenticated accounts')).toBeInTheDocument();
   expect(screen.getByText('Administration · Task register')).toBeInTheDocument();
   expect(screen.getByText('Document Management · Documents')).toBeInTheDocument();
   expect(screen.getAllByText('Available').length).toBeGreaterThan(0);
@@ -111,7 +111,7 @@ test('shows connected KPI values and labels missing sources explicitly', async (
     expect(api.getDocumentsCount).toHaveBeenCalledTimes(1);
     expect(api.getInventoryCount).toHaveBeenCalledTimes(1);
     expect(api.getTasksCount).toHaveBeenCalledTimes(1);
-    expect(api.getUsers).toHaveBeenCalledWith(100, 0);
+    expect(api.getAuthAccountsCount).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -119,7 +119,7 @@ test('does not turn unavailable sources into real zeroes', async () => {
   api.getDocumentsCount.mockResolvedValue(null);
   api.getInventoryCount.mockResolvedValue(null);
   api.getTasksCount.mockResolvedValue(null);
-  api.getUsers.mockResolvedValue(null);
+  api.getAuthAccountsCount.mockResolvedValue(null);
   api.getIncome.mockResolvedValue(null);
   api.getExpenses.mockResolvedValue(null);
 
@@ -132,8 +132,8 @@ test('does not turn unavailable sources into real zeroes', async () => {
   expect(screen.getByRole('button', { name: 'Open module: Revenue' })).not.toHaveTextContent('0 CHF');
 });
 
-test('treats an empty users response as a real zero-user state', async () => {
-  api.getUsers.mockResolvedValue({ data: [] });
+test('treats a real zero-account response as an available state', async () => {
+  api.getAuthAccountsCount.mockResolvedValue({ total: 0 });
 
   render(<Dashboard />);
 

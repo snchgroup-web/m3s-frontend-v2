@@ -402,6 +402,17 @@ export const api = {
   // APPELS API UTILISATEURS (RH - Ressources Humaines)
   // ============================================================================
 
+  // Comptes M3S authentifies - Nombre total uniquement
+  getAuthAccountsCount: async () => {
+    try {
+      const res = await apiFetch(`${API_BASE_URL}/auth/accounts/count`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    } catch (erreur) {
+      handleError(erreur, '/auth/accounts/count');
+    }
+  },
+
   // Utilisateurs - Liste
   getUsers: async (limite = 100, decalage = 0) => {
     try {
