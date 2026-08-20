@@ -599,6 +599,16 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
                 <span className="text-base font-semibold text-slate-100">{t.globalHub}</span>
               </div>
               <div className="mx-auto h-6 w-px bg-blue-500/70" aria-hidden="true" />
+              <section className="function-family mx-auto max-w-4xl rounded-md border border-blue-500/60 bg-blue-950/30 p-3 sm:p-4" aria-labelledby="management-family-title">
+                <div className="flex items-start gap-3">
+                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-blue-950 text-blue-300"><LayoutDashboard size={21} aria-hidden="true" /></span>
+                  <div>
+                    <h4 id="management-family-title" className="text-sm font-semibold uppercase text-blue-300">{t.managementFamily[0]}</h4>
+                    <p className="mt-1 text-sm leading-5 text-slate-400">{t.managementFamily[1]}</p>
+                  </div>
+                </div>
+              </section>
+              <div className="mx-auto h-6 w-px bg-blue-500/70" aria-hidden="true" />
               <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
                 {Object.entries(t.functionGroups).map(([groupId, [groupTitle, groupBody]]) => (
                   <section key={groupId} className="function-family rounded-md border border-slate-700 bg-slate-900/20 p-3 sm:p-4" aria-labelledby={`function-family-${groupId}`}>
@@ -620,13 +630,6 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
                     </div>
                   </section>
                 ))}
-              </div>
-              <div className="mt-5 flex items-start gap-3 border-y border-slate-700 py-3">
-                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-blue-950 text-blue-300"><LayoutDashboard size={21} aria-hidden="true" /></span>
-                <div>
-                  <h4 className="text-sm font-semibold text-slate-100">{t.managementFamily[0]}</h4>
-                  <p className="mt-1 text-sm leading-5 text-slate-400">{t.managementFamily[1]}</p>
-                </div>
               </div>
             </div>
           )}
