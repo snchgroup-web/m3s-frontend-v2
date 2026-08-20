@@ -412,6 +412,102 @@ html.dark .m3s-glossary-status--validated {
   box-shadow: inset 3px 0 var(--m3s-row-accent);
 }
 
+/* Pilot global de carte mentale. Les cartes locales seront raccordées après validation. */
+.function-map-canvas {
+  position: relative;
+  overflow: hidden;
+  padding: 1rem;
+  border: 1px solid var(--m3s-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--m3s-surface-raised) 94%, var(--m3s-row-accent) 6%);
+}
+
+.function-map-hub,
+.function-map-management,
+.function-map-family,
+.function-map-node {
+  border: 1px solid var(--m3s-border);
+  background: var(--m3s-surface-panel);
+  color: var(--m3s-text-primary);
+}
+
+.function-map-hub,
+.function-map-management {
+  border-color: color-mix(in srgb, var(--m3s-row-accent) 70%, var(--m3s-border));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--m3s-row-accent) 16%, transparent), var(--m3s-shadow-panel);
+}
+
+.function-map-icon {
+  border: 1px solid color-mix(in srgb, var(--m3s-row-accent) 42%, var(--m3s-border));
+  background: color-mix(in srgb, var(--m3s-row-accent) 12%, var(--m3s-surface-raised));
+}
+
+.function-map-connector,
+.function-map-family-grid::before,
+.function-map-family::before {
+  background: color-mix(in srgb, var(--m3s-row-accent) 72%, var(--m3s-border));
+}
+
+.function-map-family {
+  position: relative;
+  box-shadow: var(--m3s-shadow-panel);
+}
+
+.function-map-family-header {
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--m3s-border);
+}
+
+.function-map-node {
+  box-shadow: inset 3px 0 color-mix(in srgb, var(--m3s-row-accent) 54%, transparent);
+}
+
+.function-map-node:hover,
+.function-map-node:focus-visible {
+  border-color: color-mix(in srgb, var(--m3s-row-accent) 72%, var(--m3s-border));
+  background: var(--m3s-row-hover);
+  box-shadow: inset 3px 0 var(--m3s-row-accent), 0 5px 16px color-mix(in srgb, var(--m3s-row-accent) 16%, transparent);
+}
+
+html.dark .function-map-canvas {
+  background: #0d1a2d;
+  box-shadow: inset 0 0 32px rgba(37, 99, 235, 0.08);
+}
+
+html.dark.deep-theme .function-map-canvas {
+  background: #111113;
+}
+
+html.dark .function-map-hub,
+html.dark .function-map-management {
+  box-shadow: 0 0 18px rgba(59, 130, 246, 0.12);
+}
+
+@media (min-width: 1280px) {
+  .function-map-family-grid {
+    position: relative;
+    padding-top: 1.5rem;
+  }
+
+  .function-map-family-grid::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 25%;
+    left: 25%;
+    height: 1px;
+  }
+
+  .function-map-family::before {
+    content: "";
+    position: absolute;
+    top: -1.5rem;
+    left: 50%;
+    width: 1px;
+    height: 1.5rem;
+  }
+}
+
 @media (max-width: 640px) {
   .m3s-page-title {
     font-size: 1.25rem;
@@ -421,5 +517,9 @@ html.dark .m3s-glossary-status--validated {
   .m3s-section-title {
     font-size: 1.125rem;
     line-height: 1.625rem;
+  }
+
+  .function-map-canvas {
+    padding: 0.75rem;
   }
 }

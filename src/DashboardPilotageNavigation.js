@@ -593,33 +593,37 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
           </div>
 
           {!selectedFunction && (
-            <div className="mt-5" aria-label={t.mapTitle}>
-              <div className="mx-auto flex max-w-sm items-center justify-center rounded-md border border-blue-500 bg-blue-950/55 px-4 py-3 text-center shadow-lg shadow-blue-950/20">
+            <div className="function-map-canvas mt-5" aria-label={t.mapTitle}>
+              <div className="function-map-hub mx-auto flex max-w-sm items-center justify-center rounded-md px-4 py-3 text-center">
                 <Network className="mr-2 text-blue-300" size={21} aria-hidden="true" />
                 <span className="text-base font-semibold text-slate-100">{t.globalHub}</span>
               </div>
-              <div className="mx-auto h-6 w-px bg-blue-500/70" aria-hidden="true" />
-              <section className="function-family mx-auto max-w-4xl rounded-md border border-blue-500/60 bg-blue-950/30 p-3 sm:p-4" aria-labelledby="management-family-title">
+              <div className="function-map-connector mx-auto h-6 w-px" aria-hidden="true" />
+              <section className="function-map-management mx-auto max-w-4xl rounded-md p-3 sm:p-4" aria-labelledby="management-family-title">
                 <div className="flex items-start gap-3">
-                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-blue-950 text-blue-300"><LayoutDashboard size={21} aria-hidden="true" /></span>
+                  <span className="function-map-icon inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-blue-300"><LayoutDashboard size={21} aria-hidden="true" /></span>
                   <div>
                     <h4 id="management-family-title" className="text-sm font-semibold uppercase text-blue-300">{t.managementFamily[0]}</h4>
                     <p className="mt-1 text-sm leading-5 text-slate-400">{t.managementFamily[1]}</p>
                   </div>
                 </div>
               </section>
-              <div className="mx-auto h-6 w-px bg-blue-500/70" aria-hidden="true" />
-              <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-                {Object.entries(t.functionGroups).map(([groupId, [groupTitle, groupBody]]) => (
-                  <section key={groupId} className="function-family rounded-md border border-slate-700 bg-slate-900/20 p-3 sm:p-4" aria-labelledby={`function-family-${groupId}`}>
-                    <div className="border-b border-slate-700 pb-3 text-center">
-                      <h4 id={`function-family-${groupId}`} className="text-sm font-semibold uppercase text-blue-300">{groupTitle}</h4>
-                      <p className="mt-1 text-sm leading-5 text-slate-400">{groupBody}</p>
+              <div className="function-map-connector mx-auto h-6 w-px" aria-hidden="true" />
+              <div className="function-map-family-grid grid grid-cols-1 gap-5 xl:grid-cols-2">
+                {Object.entries(t.functionGroups).map(([groupId, [groupTitle, groupBody]]) => {
+                  const GroupIcon = groupId === 'support' ? FolderCog : Factory;
+                  return (
+                  <section key={groupId} className={`function-map-family function-map-family--${groupId} rounded-md p-3 sm:p-4`} aria-labelledby={`function-family-${groupId}`}>
+                    <div className="function-map-family-header flex items-start gap-3 pb-3">
+                      <span className="function-map-icon inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-blue-300"><GroupIcon size={19} aria-hidden="true" /></span>
+                      <div>
+                        <h4 id={`function-family-${groupId}`} className="text-sm font-semibold uppercase text-blue-300">{groupTitle}</h4>
+                        <p className="mt-1 text-sm leading-5 text-slate-400">{groupBody}</p>
+                      </div>
                     </div>
-                    <div className="mx-auto h-4 w-px bg-slate-600" aria-hidden="true" />
-                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    <div className={`grid grid-cols-1 gap-2 ${groupId === 'support' ? 'sm:grid-cols-2' : ''}`}>
                       {functionDefinitions.filter(({ group }) => group === groupId).map(({ id, icon: Icon, color, background }) => (
-                        <button key={id} type="button" onClick={() => selectFunction(id)} aria-label={`${t.showLocalMap} : ${t.functions[id]}`} className="group flex min-h-16 items-center justify-between rounded-md border border-slate-700 bg-slate-900/45 p-3 text-left transition hover:-translate-y-0.5 hover:border-blue-400 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/70">
+                        <button key={id} type="button" onClick={() => selectFunction(id)} aria-label={`${t.showLocalMap} : ${t.functions[id]}`} className="function-map-node group flex min-h-14 items-center justify-between rounded-md p-3 text-left transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500/70">
                           <span className="flex min-w-0 items-center gap-3">
                             <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${background} ${color}`}><Icon size={20} aria-hidden="true" /></span>
                             <span className="text-sm font-semibold text-slate-100">{t.functions[id]}</span>
@@ -629,7 +633,7 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
                       ))}
                     </div>
                   </section>
-                ))}
+                );})}
               </div>
             </div>
           )}
