@@ -7,6 +7,7 @@ test('shows the seven sourced portfolio items without invented progress', () => 
 
   expect(ADMINISTRATION_PORTFOLIO_AS_OF).toBe('2026-08-16');
   expect(screen.getByRole('heading', { name: 'Grands dossiers et chantiers' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Grands dossiers et chantiers' }).closest('section')).toHaveAttribute('id', 'administration-portfolio');
   expect(screen.getAllByRole('heading', { level: 4 })).toHaveLength(7);
   expect(screen.getByRole('heading', { name: 'LEGAL · accès restreint' })).toBeInTheDocument();
   expect(screen.getByText(/ne sont pas intégrés au navigateur/i)).toBeInTheDocument();
