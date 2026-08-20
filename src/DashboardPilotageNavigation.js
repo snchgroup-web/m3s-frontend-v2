@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
+  ArrowLeft,
   ArrowRight,
   BookOpenText,
   BrainCircuit,
@@ -46,17 +47,31 @@ const translations = {
     knowledgeAction: 'Ouvrir Veille & KM',
     returnToIntelligence: 'Revenir au Daily Intelligence',
     referenceTitle: 'Référentiel du 2SG Daily Intelligence Dashboard',
-    mapTitle: 'Fonctions reliées au pilotage global',
-    mapBody: 'Chaque accès ouvre la fonction concernée. Son tableau de bord local conserve le pilotage métier détaillé.',
+    mapTitle: 'Carte mentale globale des fonctions',
+    mapBody: 'La carte relie 2SG/M3S à ses familles et fonctions. Sélectionnez une fonction pour afficher sa carte locale dans cette même vue.',
     managementFamily: ['Management & Gouvernance', 'Le Tableau de bord global constitue la couche de pilotage transversal de 2SG/M3S.'],
     functionGroups: {
       support: ['Fonctions support', 'Organiser, sécuriser et mettre les ressources à disposition.'],
       operations: ['Opérations & Développement', 'Développer les relations, produire et gérer les actifs.']
     },
-    open: 'Ouvrir',
+    globalHub: '2SG / M3S',
+    globalMap: 'Carte globale',
+    localMap: 'Carte locale',
+    localMapBody: 'Cette carte locale synthétise les composantes actuellement structurées de la fonction, sans quitter le pilotage global.',
+    showLocalMap: 'Afficher la carte locale',
+    backToGlobalMap: 'Revenir à la carte globale',
     functions: {
       administration: 'Administration', finance: 'Finances', rh: 'Ressources humaines',
       crm: 'Commercial & CRM', production: 'Production', assets: 'Stock & Actifs', it: 'IT & Support'
+    },
+    localNodes: {
+      administration: ['Vue d’ensemble', 'Institution', 'Architecture & Relations', 'Processus & Procédures', 'Conformité', 'Planification & Projets', 'Communication & Courrier', 'Ressources', 'Assistant administratif', 'Glossaire'],
+      finance: ['Vue d’ensemble', 'Architecture & relations', 'Processus & contrôles', 'Recettes', 'Dépenses', 'Social', 'Financement immobilier', 'Historique FX', 'Glossaire'],
+      rh: ['Vue d’ensemble', 'Répertoire', 'Employés', 'Bénévoles', 'Glossaire'],
+      it: ['Vue d’ensemble', 'Documents', 'Dossiers', 'Archives', 'Outils documents', 'Veille & KM', 'IA & Digital', 'Aide & Support', 'Glossaire'],
+      crm: ['Vue d’ensemble', 'Prospects', 'Clients', 'Ventes', 'Dons', 'Bénéficiaires', 'Glossaire'],
+      production: ['Vue d’ensemble', 'Commandes', 'Fournisseurs', 'Stocks', 'Glossaire'],
+      assets: ['Vue d’ensemble', 'Inventaire', 'Immobilisations', 'Risques', 'Glossaire']
     }
   },
   EN: {
@@ -84,17 +99,31 @@ const translations = {
     knowledgeAction: 'Open Monitoring & KM',
     returnToIntelligence: 'Return to Daily Intelligence',
     referenceTitle: '2SG Daily Intelligence Dashboard reference',
-    mapTitle: 'Functions connected to global steering',
-    mapBody: 'Each access opens the relevant function. Its local dashboard retains detailed business steering.',
+    mapTitle: 'Global function mind map',
+    mapBody: 'The map connects 2SG/M3S to its families and functions. Select a function to display its local map in this same view.',
     managementFamily: ['Management & Governance', 'The global Dashboard forms the cross-functional steering layer of 2SG/M3S.'],
     functionGroups: {
       support: ['Support functions', 'Organise, secure and make resources available.'],
       operations: ['Operations & Development', 'Develop relationships, deliver work and manage assets.']
     },
-    open: 'Open',
+    globalHub: '2SG / M3S',
+    globalMap: 'Global map',
+    localMap: 'Local map',
+    localMapBody: 'This local map summarises the function components currently structured without leaving global steering.',
+    showLocalMap: 'Show local map',
+    backToGlobalMap: 'Return to global map',
     functions: {
       administration: 'Administration', finance: 'Finance', rh: 'Human resources',
       crm: 'Commercial & CRM', production: 'Production', assets: 'Stock & Assets', it: 'IT & Support'
+    },
+    localNodes: {
+      administration: ['Overview', 'Institution', 'Architecture & Relationships', 'Processes & Procedures', 'Compliance', 'Planning & Projects', 'Communication & Correspondence', 'Resources', 'Administrative assistant', 'Glossary'],
+      finance: ['Overview', 'Architecture & relationships', 'Processes & controls', 'Income', 'Expenses', 'Social', 'Real estate finance', 'FX history', 'Glossary'],
+      rh: ['Overview', 'Directory', 'Employees', 'Volunteers', 'Glossary'],
+      it: ['Overview', 'Documents', 'Folders', 'Archives', 'Document tools', 'Monitoring & KM', 'AI & Digital', 'Help & Support', 'Glossary'],
+      crm: ['Overview', 'Prospects', 'Clients', 'Sales', 'Donations', 'Beneficiaries', 'Glossary'],
+      production: ['Overview', 'Orders', 'Suppliers', 'Stock', 'Glossary'],
+      assets: ['Overview', 'Inventory', 'Fixed assets', 'Risks', 'Glossary']
     }
   },
   DE: {
@@ -122,17 +151,31 @@ const translations = {
     knowledgeAction: 'Monitoring & KM öffnen',
     returnToIntelligence: 'Zur Daily Intelligence zurückkehren',
     referenceTitle: 'Referenz des 2SG Daily Intelligence Dashboard',
-    mapTitle: 'Mit der globalen Steuerung verbundene Funktionen',
-    mapBody: 'Jeder Zugang öffnet die betreffende Funktion. Das lokale Dashboard behält die detaillierte Fachsteuerung.',
+    mapTitle: 'Globale Mindmap der Funktionen',
+    mapBody: 'Die Karte verbindet 2SG/M3S mit seinen Bereichen und Funktionen. Wählen Sie eine Funktion, um ihre lokale Karte in derselben Ansicht anzuzeigen.',
     managementFamily: ['Management & Governance', 'Das globale Dashboard bildet die funktionsübergreifende Steuerungsebene von 2SG/M3S.'],
     functionGroups: {
       support: ['Unterstützungsfunktionen', 'Ressourcen organisieren, absichern und bereitstellen.'],
       operations: ['Betrieb & Entwicklung', 'Beziehungen entwickeln, Leistungen erbringen und Vermögenswerte verwalten.']
     },
-    open: 'Öffnen',
+    globalHub: '2SG / M3S',
+    globalMap: 'Globale Karte',
+    localMap: 'Lokale Karte',
+    localMapBody: 'Diese lokale Karte fasst die derzeit strukturierten Bestandteile der Funktion zusammen, ohne die globale Steuerung zu verlassen.',
+    showLocalMap: 'Lokale Karte anzeigen',
+    backToGlobalMap: 'Zur globalen Karte zurückkehren',
     functions: {
       administration: 'Verwaltung', finance: 'Finanzen', rh: 'Personalwesen',
       crm: 'Vertrieb & CRM', production: 'Produktion', assets: 'Bestand & Vermögenswerte', it: 'IT & Support'
+    },
+    localNodes: {
+      administration: ['Übersicht', 'Institution', 'Architektur & Beziehungen', 'Prozesse & Verfahren', 'Compliance', 'Planung & Projekte', 'Kommunikation & Korrespondenz', 'Ressourcen', 'Verwaltungsassistent', 'Glossar'],
+      finance: ['Übersicht', 'Architektur & Beziehungen', 'Prozesse & Kontrollen', 'Einnahmen', 'Ausgaben', 'Soziales', 'Immobilienfinanzierung', 'FX-Verlauf', 'Glossar'],
+      rh: ['Übersicht', 'Verzeichnis', 'Mitarbeitende', 'Freiwillige', 'Glossar'],
+      it: ['Übersicht', 'Dokumente', 'Ordner', 'Archive', 'Dokumentwerkzeuge', 'Monitoring & KM', 'KI & Digital', 'Hilfe & Support', 'Glossar'],
+      crm: ['Übersicht', 'Interessenten', 'Kunden', 'Verkäufe', 'Spenden', 'Begünstigte', 'Glossar'],
+      production: ['Übersicht', 'Bestellungen', 'Lieferanten', 'Lagerbestand', 'Glossar'],
+      assets: ['Übersicht', 'Bestand', 'Anlagevermögen', 'Risiken', 'Glossar']
     }
   }
 };
@@ -152,6 +195,11 @@ const tabIcons = { overview: LayoutDashboard, intelligence: BrainCircuit, map: N
 export const resolveDashboardView = (search = '') => {
   const view = new URLSearchParams(search).get('view');
   return ['overview', 'intelligence', 'map'].includes(view) ? view : 'overview';
+};
+
+export const resolveFunctionMapSelection = (search = '') => {
+  const functionId = new URLSearchParams(search).get('function');
+  return functionDefinitions.some(({ id }) => id === functionId) ? functionId : '';
 };
 
 const appendInlineReferenceText = (documentRef, node, value) => {
@@ -337,6 +385,7 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [activeView, setActiveView] = useState(() => resolveDashboardView(location.search));
+  const selectedFunction = resolveFunctionMapSelection(location.search);
   const [intelligenceState, setIntelligenceState] = useState({ status: 'idle', data: null });
   const [artifactError, setArtifactError] = useState('');
   const intelligenceRequested = useRef(false);
@@ -350,7 +399,16 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
     const nextView = resolveDashboardView(`?view=${view}`);
     const params = new URLSearchParams(location.search);
     params.set('view', nextView);
+    if (nextView !== 'map') params.delete('function');
     setActiveView(nextView);
+    navigate({ pathname: location.pathname, search: `?${params.toString()}` }, { replace: true });
+  };
+
+  const selectFunction = (functionId = '') => {
+    const params = new URLSearchParams(location.search);
+    params.set('view', 'map');
+    if (functionDefinitions.some(({ id }) => id === functionId)) params.set('function', functionId);
+    else params.delete('function');
     navigate({ pathname: location.pathname, search: `?${params.toString()}` }, { replace: true });
   };
 
@@ -521,34 +579,74 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
 
       {activeView === 'map' && (
         <div className="mt-5">
-          <h3 className="text-lg font-semibold text-slate-100">{t.mapTitle}</h3>
-          <p className="mt-1 text-sm text-slate-400">{t.mapBody}</p>
-          <div className="mt-4 flex items-start gap-3 border-y border-slate-700 py-3">
-            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-blue-950 text-blue-300"><LayoutDashboard size={21} aria-hidden="true" /></span>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h4 className="text-sm font-semibold text-slate-100">{t.managementFamily[0]}</h4>
-              <p className="mt-1 text-sm leading-5 text-slate-400">{t.managementFamily[1]}</p>
+              <p className="text-xs font-semibold uppercase text-blue-300">{selectedFunction ? t.localMap : t.globalMap}</p>
+              <h3 className="mt-1 text-lg font-semibold text-slate-100">{selectedFunction ? t.functions[selectedFunction] : t.mapTitle}</h3>
+              <p className="mt-1 max-w-4xl text-sm leading-6 text-slate-400">{selectedFunction ? t.localMapBody : t.mapBody}</p>
             </div>
+            {selectedFunction && (
+              <button type="button" onClick={() => selectFunction()} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-sm font-semibold text-slate-100 hover:border-blue-400 hover:bg-slate-600">
+                <ArrowLeft size={17} aria-hidden="true" />{t.backToGlobalMap}
+              </button>
+            )}
           </div>
-          <div className="mt-4 grid grid-cols-1 gap-5 xl:grid-cols-2">
-            {Object.entries(t.functionGroups).map(([groupId, [groupTitle, groupBody]]) => (
-              <section key={groupId} className="function-family border-t border-slate-700 pt-3" aria-labelledby={`function-family-${groupId}`}>
-                <h4 id={`function-family-${groupId}`} className="text-sm font-semibold uppercase text-blue-300">{groupTitle}</h4>
-                <p className="mt-1 text-sm leading-5 text-slate-400">{groupBody}</p>
-                <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  {functionDefinitions.filter(({ group }) => group === groupId).map(({ id, path, icon: Icon, color, background }) => (
-                    <button key={path} type="button" onClick={() => onNavigate(path)} aria-label={`${t.open} : ${t.functions[id]}`} className="group flex min-h-16 items-center justify-between rounded-md border border-slate-700 bg-slate-900/35 p-3 text-left hover:border-blue-400 hover:bg-slate-700">
-                      <span className="flex items-center gap-3">
-                        <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${background} ${color}`}><Icon size={20} aria-hidden="true" /></span>
-                        <span className="text-sm font-semibold text-slate-100">{t.functions[id]}</span>
-                      </span>
-                      <ArrowRight className="shrink-0 text-slate-500 group-hover:text-blue-300" size={17} aria-hidden="true" />
-                    </button>
-                  ))}
+
+          {!selectedFunction && (
+            <div className="mt-5" aria-label={t.mapTitle}>
+              <div className="mx-auto flex max-w-sm items-center justify-center rounded-md border border-blue-500 bg-blue-950/55 px-4 py-3 text-center shadow-lg shadow-blue-950/20">
+                <Network className="mr-2 text-blue-300" size={21} aria-hidden="true" />
+                <span className="text-base font-semibold text-slate-100">{t.globalHub}</span>
+              </div>
+              <div className="mx-auto h-6 w-px bg-blue-500/70" aria-hidden="true" />
+              <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+                {Object.entries(t.functionGroups).map(([groupId, [groupTitle, groupBody]]) => (
+                  <section key={groupId} className="function-family rounded-md border border-slate-700 bg-slate-900/20 p-3 sm:p-4" aria-labelledby={`function-family-${groupId}`}>
+                    <div className="border-b border-slate-700 pb-3 text-center">
+                      <h4 id={`function-family-${groupId}`} className="text-sm font-semibold uppercase text-blue-300">{groupTitle}</h4>
+                      <p className="mt-1 text-sm leading-5 text-slate-400">{groupBody}</p>
+                    </div>
+                    <div className="mx-auto h-4 w-px bg-slate-600" aria-hidden="true" />
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      {functionDefinitions.filter(({ group }) => group === groupId).map(({ id, icon: Icon, color, background }) => (
+                        <button key={id} type="button" onClick={() => selectFunction(id)} aria-label={`${t.showLocalMap} : ${t.functions[id]}`} className="group flex min-h-16 items-center justify-between rounded-md border border-slate-700 bg-slate-900/45 p-3 text-left transition hover:-translate-y-0.5 hover:border-blue-400 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/70">
+                          <span className="flex min-w-0 items-center gap-3">
+                            <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${background} ${color}`}><Icon size={20} aria-hidden="true" /></span>
+                            <span className="text-sm font-semibold text-slate-100">{t.functions[id]}</span>
+                          </span>
+                          <Network className="ml-2 shrink-0 text-slate-500 group-hover:text-blue-300" size={17} aria-hidden="true" />
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+                ))}
+              </div>
+              <div className="mt-5 flex items-start gap-3 border-y border-slate-700 py-3">
+                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-blue-950 text-blue-300"><LayoutDashboard size={21} aria-hidden="true" /></span>
+                <div>
+                  <h4 className="text-sm font-semibold text-slate-100">{t.managementFamily[0]}</h4>
+                  <p className="mt-1 text-sm leading-5 text-slate-400">{t.managementFamily[1]}</p>
                 </div>
-              </section>
-            ))}
-          </div>
+              </div>
+            </div>
+          )}
+
+          {selectedFunction && (
+            <section className="mt-5" aria-labelledby="local-function-map-title">
+              <div className="mx-auto flex max-w-sm items-center justify-center rounded-md border border-blue-500 bg-blue-950/55 px-4 py-3 text-center shadow-lg shadow-blue-950/20">
+                <span id="local-function-map-title" className="text-base font-semibold text-slate-100">{t.functions[selectedFunction]}</span>
+              </div>
+              <div className="mx-auto h-6 w-px bg-blue-500/70" aria-hidden="true" />
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {t.localNodes[selectedFunction].map((node, index) => (
+                  <div key={node} className="flex min-h-12 items-center gap-3 rounded-md border border-slate-700 bg-slate-900/35 px-3 py-2 text-sm font-medium text-slate-200">
+                    <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-blue-950 text-xs font-semibold text-blue-300">{index + 1}</span>
+                    <span>{node}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       )}
     </section>

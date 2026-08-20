@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import DashboardPilotageNavigation, { renderReferenceArtifact, renderSandboxedHtmlArtifact, resolveDashboardView } from './DashboardPilotageNavigation';
+import DashboardPilotageNavigation, { renderReferenceArtifact, renderSandboxedHtmlArtifact, resolveDashboardView, resolveFunctionMapSelection } from './DashboardPilotageNavigation';
 import api from './api';
 
 let mockLocation = { pathname: '/', search: '' };
@@ -145,7 +145,7 @@ test('renders the UTF-8 reference in a readable document with a return action', 
   expect(artifactDocument.querySelector('a').getAttribute('href')).toBe('https://m3s.local/?view=intelligence');
 });
 
-test('opens real function routes from the trilingual function map', () => {
+test('selects a local function map without leaving the global dashboard', () => {
   const onNavigate = jest.fn();
   renderDashboardNavigation({ language: 'DE', onNavigate });
 
@@ -153,9 +153,34 @@ test('opens real function routes from the trilingual function map', () => {
   expect(screen.getByRole('heading', { name: 'Management & Governance' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Unterstützungsfunktionen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Betrieb & Entwicklung' })).toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button', { name: 'Öffnen : Verwaltung' }));
-  expect(onNavigate).toHaveBeenCalledWith('/administration');
-  expect(screen.getByRole('button', { name: 'Öffnen : IT & Support' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Lokale Karte anzeigen : Verwaltung' }));
+  expect(onNavigate).not.toHaveBeenCalled();
+  expect(mockNavigate).toHaveBeenLastCalledWith(
+    { pathname: '/', search: '?view=map&function=administration' },
+    { replace: true }
+  );
+  expect(screen.getByRole('button', { name: 'Lokale Karte anzeigen : IT & Support' })).toBeInTheDocument();
+});
+
+test('opens a local function mind map directly from its governed URL', () => {
+  renderDashboardNavigation({ language: 'FR' }, '/?view=map&function=administration');
+
+  expect(screen.getByText('Carte locale')).toBeInTheDocument();
+  expect(screen.getAllByText('Administration').length).toBeGreaterThan(0);
+  expect(screen.getByText('Architecture & Relations')).toBeInTheDocument();
+  expect(screen.getByText('Processus & Procédures')).toBeInTheDocument();
+  expect(screen.getByText('Assistant administratif')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Revenir à la carte globale' })).toBeInTheDocument();
+});
+
+test('returns from a local function map to the global map', () => {
+  renderDashboardNavigation({}, '/?view=map&function=finance');
+
+  fireEvent.click(screen.getByRole('button', { name: 'Revenir à la carte globale' }));
+  expect(mockNavigate).toHaveBeenCalledWith(
+    { pathname: '/', search: '?view=map' },
+    { replace: true }
+  );
 });
 
 test('opens a dashboard view directly from the governed URL', async () => {
@@ -193,4 +218,13 @@ test.each([
   ['?view=unknown', 'overview']
 ])('resolves %p to the safe dashboard view %p', (search, expected) => {
   expect(resolveDashboardView(search)).toBe(expected);
+});
+
+test.each([
+  ['', ''],
+  ['?view=map&function=administration', 'administration'],
+  ['?view=map&function=finance', 'finance'],
+  ['?view=map&function=unknown', '']
+])('resolves function map selection %p safely', (search, expected) => {
+  expect(resolveFunctionMapSelection(search)).toBe(expected);
 });
