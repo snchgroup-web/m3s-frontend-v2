@@ -100,6 +100,12 @@ const createApiError = async (response, fallbackCode = 'API_REQUEST_FAILED') => 
 // ============================================================================
 
 export const api = {
+  getManagementPortfolioSummary: async () => {
+    const res = await apiFetch(`${API_BASE_URL}/management/portfolio/summary`);
+    if (!res.ok) throw await createApiError(res, 'MANAGEMENT_PORTFOLIO_SOURCE_UNAVAILABLE');
+    return res.json();
+  },
+
   getLatestIntelligence: async () => {
     const res = await apiFetch(`${API_BASE_URL}/intelligence/latest`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);

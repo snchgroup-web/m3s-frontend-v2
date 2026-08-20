@@ -148,7 +148,7 @@ const AdministrationPortfolioOverview = ({ language = 'FR' }) => {
   const [expandedId, setExpandedId] = useState(null);
 
   return (
-    <section className="py-1" aria-labelledby="administration-portfolio-title">
+    <section id="administration-portfolio" className="scroll-mt-28 py-1" aria-labelledby="administration-portfolio-title">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="text-xs font-bold uppercase text-blue-300">{t.eyebrow}</p>

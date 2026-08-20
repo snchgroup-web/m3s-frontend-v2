@@ -33,6 +33,7 @@ jest.mock('./api', () => ({
     getInventoryCount: jest.fn(),
     getTasksCount: jest.fn(),
     getAuthAccountsCount: jest.fn(),
+    getManagementPortfolioSummary: jest.fn(),
     getIncome: jest.fn(),
     getExpenses: jest.fn(),
     getSocialFinance: jest.fn(),
@@ -48,6 +49,9 @@ beforeEach(() => {
   api.getInventoryCount.mockResolvedValue({ total: 8 });
   api.getTasksCount.mockResolvedValue({ total: 4, open: 2, completed: 2, blocked: 0, cancelled: 0 });
   api.getAuthAccountsCount.mockResolvedValue({ total: 3 });
+  api.getManagementPortfolioSummary.mockResolvedValue({
+    data: { active_dossiers: 7, total_dossiers: 7, restricted_dossiers: 1, verified_on: '2026-08-20' }
+  });
   api.getIncome.mockResolvedValue({
     data: [
       { category: 'PRESTATION', montant_chf: 300, montant_cfa: 180000, date: '2026-01-01' },
@@ -75,6 +79,8 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   render(<Dashboard />);
 
   expect(await screen.findByText('M3S users')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Open module: Active major files' })).toHaveTextContent('7');
+  expect(screen.getByText('Management · Major-file portfolio')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Management & Governance' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Support functions' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Operations & Development' })).toBeInTheDocument();
@@ -105,6 +111,8 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   expect(mockNavigate).toHaveBeenCalledWith('/finance?tab=recettes');
   fireEvent.click(screen.getByRole('button', { name: 'Open module: Tracked tasks' }));
   expect(mockNavigate).toHaveBeenCalledWith('/administration?tab=planning');
+  fireEvent.click(screen.getByRole('button', { name: 'Open module: Active major files' }));
+  expect(mockNavigate).toHaveBeenCalledWith('/administration?tab=overview#administration-portfolio');
 
   await waitFor(() => {
     expect(api.getFinanceDashboard).toHaveBeenCalledTimes(1);
@@ -112,6 +120,7 @@ test('shows connected KPI values and labels missing sources explicitly', async (
     expect(api.getInventoryCount).toHaveBeenCalledTimes(1);
     expect(api.getTasksCount).toHaveBeenCalledTimes(1);
     expect(api.getAuthAccountsCount).toHaveBeenCalledTimes(1);
+    expect(api.getManagementPortfolioSummary).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -120,6 +129,7 @@ test('does not turn unavailable sources into real zeroes', async () => {
   api.getInventoryCount.mockResolvedValue(null);
   api.getTasksCount.mockResolvedValue(null);
   api.getAuthAccountsCount.mockResolvedValue(null);
+  api.getManagementPortfolioSummary.mockResolvedValue(null);
   api.getIncome.mockResolvedValue(null);
   api.getExpenses.mockResolvedValue(null);
 
@@ -130,6 +140,7 @@ test('does not turn unavailable sources into real zeroes', async () => {
   expect(screen.getByText('No financial series is available yet.')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Open module: Revenue' })).toHaveTextContent('— CHF');
   expect(screen.getByRole('button', { name: 'Open module: Revenue' })).not.toHaveTextContent('0 CHF');
+  expect(screen.getByRole('button', { name: 'Open module: Active major files' })).toHaveTextContent('—');
 });
 
 test('treats a real zero-account response as an available state', async () => {
@@ -179,11 +190,14 @@ test('keeps the real task total when the optional status summary is unavailable'
   expect(screen.queryByText(/Some live data is temporarily unavailable/)).not.toBeInTheDocument();
 });
 
-test('connects global steering navigation to real application routes', async () => {
+test('opens a local function map without leaving global steering', async () => {
   render(<Dashboard />);
 
   expect(await screen.findByRole('heading', { name: 'Decide from a reliable overall view' })).toBeInTheDocument();
   fireEvent.click(screen.getByRole('tab', { name: 'Function map' }));
-  fireEvent.click(screen.getByRole('button', { name: 'Open : Administration' }));
-  expect(mockNavigate).toHaveBeenCalledWith('/administration');
+  fireEvent.click(screen.getByRole('button', { name: 'Show local map : Administration' }));
+  expect(mockNavigate).toHaveBeenLastCalledWith(
+    { pathname: '/', search: '?view=map&function=administration' },
+    { replace: true }
+  );
 });

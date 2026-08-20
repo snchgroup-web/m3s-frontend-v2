@@ -8,6 +8,7 @@ import {
   ArrowRightLeft,
   Building2,
   Files,
+  FolderKanban,
   Gift,
   HandCoins,
   HeartHandshake,
@@ -147,6 +148,7 @@ const mockDataBaseRaw = {
     inventory: 'unavailable',
     tasks: 'unavailable',
     users: 'unavailable',
+    portfolio: 'unavailable',
     income: 'unavailable',
     expenses: 'unavailable',
     donations: 'unavailable',
@@ -171,6 +173,7 @@ const mockDataBaseRaw = {
     actifs: { total: null, depreciation: null },
     ged: { documents: null, recent: null },
     tasks: { total: null, open: null, completed: null, blocked: null, cancelled: null },
+    management: { activeDossiers: null },
     caseStudies: null
   }
 };
@@ -233,6 +236,7 @@ const Dashboard = () => {
       m3sUsers: 'Utilisateurs M3S',
       activeAccounts: 'Comptes actifs',
       trackedTasks: 'Tâches suivies',
+      activeMajorFiles: 'Grands dossiers actifs',
       openTasks: 'Ouvertes',
       completedTasks: 'Terminées',
       unavailable: 'Indisponible',
@@ -265,7 +269,8 @@ const Dashboard = () => {
       financeReferenceRate: 'Finance · Historique FX',
       financeRealEstate: 'Finance · Registre immobilier',
       financeSocial: 'Finance · Registre social',
-      assetsInventory: 'Stock & Actifs · Inventaire'
+      assetsInventory: 'Stock & Actifs · Inventaire',
+      majorFilesPortfolio: 'Management · Portefeuille des grands dossiers'
     },
     EN: {
       dashboard: 'Dashboard',
@@ -315,6 +320,7 @@ const Dashboard = () => {
       m3sUsers: 'M3S users',
       activeAccounts: 'Active accounts',
       trackedTasks: 'Tracked tasks',
+      activeMajorFiles: 'Active major files',
       openTasks: 'Open',
       completedTasks: 'Completed',
       unavailable: 'Unavailable',
@@ -347,7 +353,8 @@ const Dashboard = () => {
       financeReferenceRate: 'Finance · FX history',
       financeRealEstate: 'Finance · Real estate register',
       financeSocial: 'Finance · Social register',
-      assetsInventory: 'Stock & Assets · Inventory'
+      assetsInventory: 'Stock & Assets · Inventory',
+      majorFilesPortfolio: 'Management · Major-file portfolio'
     },
     DE: {
       dashboard: 'Dashboard',
@@ -397,6 +404,7 @@ const Dashboard = () => {
       m3sUsers: 'M3S-Benutzer',
       activeAccounts: 'Aktive Konten',
       trackedTasks: 'Verfolgte Aufgaben',
+      activeMajorFiles: 'Aktive wichtige Akten',
       openTasks: 'Offen',
       completedTasks: 'Erledigt',
       unavailable: 'Nicht verfügbar',
@@ -429,7 +437,8 @@ const Dashboard = () => {
       financeReferenceRate: 'Finanzen · Wechselkurshistorie',
       financeRealEstate: 'Finanzen · Immobilienregister',
       financeSocial: 'Finanzen · Sozialregister',
-      assetsInventory: 'Bestand & Aktiven · Inventar'
+      assetsInventory: 'Bestand & Aktiven · Inventar',
+      majorFilesPortfolio: 'Management · Portfolio wichtiger Akten'
     }
   };
 
@@ -461,12 +470,13 @@ const Dashboard = () => {
       try {
         setLoading(true);
 
-        const [financeDashboard, documentsCount, inventoryCount, tasksCount, authAccountsCount, income, expenses, fx, socialResult, realEstateResult] = await Promise.all([
+        const [financeDashboard, documentsCount, inventoryCount, tasksCount, authAccountsCount, portfolioSummary, income, expenses, fx, socialResult, realEstateResult] = await Promise.all([
           withApiFallback(() => api.getFinanceDashboard()),
           withApiFallback(() => api.getDocumentsCount()),
           withApiFallback(() => api.getInventoryCount()),
           withApiFallback(() => api.getTasksCount()),
           withApiFallback(() => api.getAuthAccountsCount()),
+          withApiFallback(() => api.getManagementPortfolioSummary()),
           withApiFallback(() => api.getIncome(200, 0)),
           withApiFallback(() => api.getExpenses(200, 0)),
           withApiFallback(() => api.getFxHistory(), {}),
@@ -535,6 +545,7 @@ const Dashboard = () => {
         const tasksAvailable = hasApiNumber(tasksCount?.total);
         const taskStatusesAvailable = hasApiNumber(tasksCount?.open) && hasApiNumber(tasksCount?.completed);
         const usersAvailable = hasApiNumber(authAccountsCount?.total);
+        const portfolioAvailable = hasApiNumber(portfolioSummary?.data?.active_dossiers);
         const inventoryTotal = inventoryAvailable ? Number(inventoryCount.total) : null;
         const documentsTotal = documentsAvailable ? Number(documentsCount.total) : null;
         const tasksTotal = tasksAvailable ? Number(tasksCount.total) : null;
@@ -543,6 +554,7 @@ const Dashboard = () => {
         const tasksBlocked = hasApiNumber(tasksCount?.blocked) ? Number(tasksCount.blocked) : null;
         const tasksCancelled = hasApiNumber(tasksCount?.cancelled) ? Number(tasksCount.cancelled) : null;
         const usersTotal = usersAvailable ? Number(authAccountsCount.total) : null;
+        const activeDossiers = portfolioAvailable ? Number(portfolioSummary.data.active_dossiers) : null;
         const financeAvailable = [totalIncome, totalIncomeCfa, totalExpenses, totalExpensesCfa].every(Number.isFinite);
         const apiUnavailable = [
           financeDashboard,
@@ -550,6 +562,7 @@ const Dashboard = () => {
           inventoryCount,
           tasksCount,
           authAccountsCount,
+          portfolioSummary,
           income,
           expenses
         ].some((response) => response === null)
@@ -557,6 +570,7 @@ const Dashboard = () => {
           || !inventoryAvailable
           || !tasksAvailable
           || !usersAvailable
+          || !portfolioAvailable
           || !incomeAvailable
           || !expensesAvailable
           || (!social && socialResult.errorStatus !== 403)
@@ -586,6 +600,7 @@ const Dashboard = () => {
             inventory: inventoryAvailable ? 'available' : 'unavailable',
             tasks: tasksAvailable ? 'available' : 'unavailable',
             users: usersAvailable ? 'available' : 'unavailable',
+            portfolio: portfolioAvailable ? 'available' : 'unavailable',
             income: incomeAvailable ? 'available' : 'unavailable',
             expenses: expensesAvailable ? 'available' : 'unavailable',
             donations: incomeAvailable ? 'available' : 'unavailable',
@@ -639,6 +654,10 @@ const Dashboard = () => {
             rh: {
               ...mockDataBase.moduleStats.rh,
               members: usersTotal
+            },
+            management: {
+              ...mockDataBase.moduleStats.management,
+              activeDossiers
             }
           }
         });
@@ -707,8 +726,13 @@ const Dashboard = () => {
       id: 'management',
       title: t.managementGroup,
       description: t.managementGroupBody,
-      gridClass: 'grid-cols-1 sm:grid-cols-3',
+      gridClass: 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4',
       cards: [
+        {
+          id: 'active-major-files', label: t.activeMajorFiles, value: formatCount(dashboardData?.moduleStats.management.activeDossiers),
+          source: t.majorFilesPortfolio, ...sourceState('portfolio'), icon: FolderKanban, accent: 'blue',
+          openLabel: t.openModule, onOpen: () => handleModuleClick('/administration?tab=overview#administration-portfolio')
+        },
         {
           id: 'users', label: t.m3sUsers, value: formatCount(dashboardData?.moduleStats.rh.members),
           secondary: dashboardData?.sourceStatus.users === 'available' ? t.activeAccounts : null,
