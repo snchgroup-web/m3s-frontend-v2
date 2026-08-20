@@ -150,9 +150,11 @@ test('selects a local function map without leaving the global dashboard', () => 
   renderDashboardNavigation({ language: 'DE', onNavigate });
 
   fireEvent.click(screen.getByRole('tab', { name: 'Funktionskarte' }));
-  expect(screen.getByRole('heading', { name: 'Management & Governance' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Unterstützungsfunktionen' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Betrieb & Entwicklung' })).toBeInTheDocument();
+  const managementHeading = screen.getByRole('heading', { name: 'Management & Governance' });
+  const supportHeading = screen.getByRole('heading', { name: 'Unterstützungsfunktionen' });
+  const operationsHeading = screen.getByRole('heading', { name: 'Betrieb & Entwicklung' });
+  expect(managementHeading.compareDocumentPosition(supportHeading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  expect(managementHeading.compareDocumentPosition(operationsHeading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   fireEvent.click(screen.getByRole('button', { name: 'Lokale Karte anzeigen : Verwaltung' }));
   expect(onNavigate).not.toHaveBeenCalled();
   expect(mockNavigate).toHaveBeenLastCalledWith(
