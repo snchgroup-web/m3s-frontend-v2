@@ -231,6 +231,7 @@ const Dashboard = () => {
       active: 'Actifs',
       persons: 'Personnes',
       m3sUsers: 'Utilisateurs M3S',
+      activeAccounts: 'Comptes actifs',
       trackedTasks: 'Tâches suivies',
       openTasks: 'Ouvertes',
       completedTasks: 'Terminées',
@@ -253,7 +254,7 @@ const Dashboard = () => {
       operationsGroupBody: 'Activité métier et relations opérationnelles, avec sources absentes signalées.',
       available: 'Disponible',
       sourceToConnect: 'À connecter',
-      administrationUsers: 'Administration · Utilisateurs',
+      authenticationAccounts: 'M3S · Comptes authentifiés',
       administrationTasks: 'Administration · Registre des tâches',
       gedDocuments: 'GED · Documents',
       financeIncome: 'Finance · Recettes',
@@ -312,6 +313,7 @@ const Dashboard = () => {
       active: 'Active',
       persons: 'Persons',
       m3sUsers: 'M3S users',
+      activeAccounts: 'Active accounts',
       trackedTasks: 'Tracked tasks',
       openTasks: 'Open',
       completedTasks: 'Completed',
@@ -334,7 +336,7 @@ const Dashboard = () => {
       operationsGroupBody: 'Business activity and operational relationships, with missing sources clearly marked.',
       available: 'Available',
       sourceToConnect: 'To connect',
-      administrationUsers: 'Administration · Users',
+      authenticationAccounts: 'M3S · Authenticated accounts',
       administrationTasks: 'Administration · Task register',
       gedDocuments: 'Document Management · Documents',
       financeIncome: 'Finance · Income',
@@ -393,6 +395,7 @@ const Dashboard = () => {
       currency: 'CHF',
       globalIndicators: 'Globale Kennzahlen',
       m3sUsers: 'M3S-Benutzer',
+      activeAccounts: 'Aktive Konten',
       trackedTasks: 'Verfolgte Aufgaben',
       openTasks: 'Offen',
       completedTasks: 'Erledigt',
@@ -415,7 +418,7 @@ const Dashboard = () => {
       operationsGroupBody: 'Fachliche Aktivität und operative Beziehungen; fehlende Quellen sind klar gekennzeichnet.',
       available: 'Verfügbar',
       sourceToConnect: 'Zu verbinden',
-      administrationUsers: 'Verwaltung · Benutzer',
+      authenticationAccounts: 'M3S · Authentifizierte Konten',
       administrationTasks: 'Verwaltung · Aufgabenregister',
       gedDocuments: 'Dokumentenverwaltung · Dokumente',
       financeIncome: 'Finanzen · Einnahmen',
@@ -458,12 +461,12 @@ const Dashboard = () => {
       try {
         setLoading(true);
 
-        const [financeDashboard, documentsCount, inventoryCount, tasksCount, users, income, expenses, fx, socialResult, realEstateResult] = await Promise.all([
+        const [financeDashboard, documentsCount, inventoryCount, tasksCount, authAccountsCount, income, expenses, fx, socialResult, realEstateResult] = await Promise.all([
           withApiFallback(() => api.getFinanceDashboard()),
           withApiFallback(() => api.getDocumentsCount()),
           withApiFallback(() => api.getInventoryCount()),
           withApiFallback(() => api.getTasksCount()),
-          withApiFallback(() => api.getUsers(100, 0)),
+          withApiFallback(() => api.getAuthAccountsCount()),
           withApiFallback(() => api.getIncome(200, 0)),
           withApiFallback(() => api.getExpenses(200, 0)),
           withApiFallback(() => api.getFxHistory(), {}),
@@ -531,7 +534,7 @@ const Dashboard = () => {
         const documentsAvailable = hasApiNumber(documentsCount?.total);
         const tasksAvailable = hasApiNumber(tasksCount?.total);
         const taskStatusesAvailable = hasApiNumber(tasksCount?.open) && hasApiNumber(tasksCount?.completed);
-        const usersAvailable = Array.isArray(users?.data);
+        const usersAvailable = hasApiNumber(authAccountsCount?.total);
         const inventoryTotal = inventoryAvailable ? Number(inventoryCount.total) : null;
         const documentsTotal = documentsAvailable ? Number(documentsCount.total) : null;
         const tasksTotal = tasksAvailable ? Number(tasksCount.total) : null;
@@ -539,14 +542,14 @@ const Dashboard = () => {
         const tasksCompleted = taskStatusesAvailable ? Number(tasksCount.completed) : null;
         const tasksBlocked = hasApiNumber(tasksCount?.blocked) ? Number(tasksCount.blocked) : null;
         const tasksCancelled = hasApiNumber(tasksCount?.cancelled) ? Number(tasksCount.cancelled) : null;
-        const userRows = usersAvailable ? users.data : [];
+        const usersTotal = usersAvailable ? Number(authAccountsCount.total) : null;
         const financeAvailable = [totalIncome, totalIncomeCfa, totalExpenses, totalExpensesCfa].every(Number.isFinite);
         const apiUnavailable = [
           financeDashboard,
           documentsCount,
           inventoryCount,
           tasksCount,
-          users,
+          authAccountsCount,
           income,
           expenses
         ].some((response) => response === null)
@@ -635,7 +638,7 @@ const Dashboard = () => {
             },
             rh: {
               ...mockDataBase.moduleStats.rh,
-              members: usersAvailable ? userRows.length : null
+              members: usersTotal
             }
           }
         });
@@ -708,8 +711,8 @@ const Dashboard = () => {
       cards: [
         {
           id: 'users', label: t.m3sUsers, value: formatCount(dashboardData?.moduleStats.rh.members),
-          secondary: dashboardData?.sourceStatus.users === 'available' ? t.members : null,
-          source: t.administrationUsers, ...sourceState('users'), icon: UsersRound, accent: 'violet',
+          secondary: dashboardData?.sourceStatus.users === 'available' ? t.activeAccounts : null,
+          source: t.authenticationAccounts, ...sourceState('users'), icon: UsersRound, accent: 'violet',
           openLabel: t.openModule, onOpen: () => handleModuleClick('/administration?tab=institution')
         },
         {
