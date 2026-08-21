@@ -64,7 +64,7 @@ const copy = {
       open: 'Ouvrir le Glossaire central',
       kpiTitle: 'Dictionnaire KPI du Tableau de bord',
       kpiBody: 'Chaque fiche sépare la définition, le périmètre, la source, la fraîcheur et l’action. Les règles de conversion CHF/CFA sont explicites sans modifier les valeurs.',
-      kpiGroups: { management: 'Management & Gouvernance', finance: 'Fonctions support · Finances' },
+      kpiGroups: { management: 'Management & Gouvernance', finance: 'Fonctions support · Finances', operations: 'Opérations & Développement' },
       fields: { definition: 'Définition', scope: 'Périmètre', source: 'Source', freshness: 'Fraîcheur', action: 'Action associée' },
       viewIndicator: 'Revenir à l’indicateur',
       terms: [
@@ -96,7 +96,7 @@ const copy = {
       eyebrow: 'STEERING VOCABULARY', title: 'Glossary', body: 'These local definitions support reading of the Global Dashboard. The 2SG Central Glossary remains the master source.', open: 'Open Central Glossary',
       kpiTitle: 'Dashboard KPI dictionary',
       kpiBody: 'Each record separates definition, scope, source, freshness and action. CHF/CFA conversion rules are explicit without changing values.',
-      kpiGroups: { management: 'Management & Governance', finance: 'Support functions · Finance' },
+      kpiGroups: { management: 'Management & Governance', finance: 'Support functions · Finance', operations: 'Operations & Development' },
       fields: { definition: 'Definition', scope: 'Scope', source: 'Source', freshness: 'Freshness', action: 'Associated action' },
       viewIndicator: 'Return to indicator',
       terms: [['Global Dashboard', 'Cross-functional steering view that consolidates information without replacing business applications.'], ['Indicator (KPI)', 'A defined, sourced and dated measure used to track an objective, result or risk.'], ['Master source', 'Governed source of record for a given item, rule or version.'], ['Freshness', 'Date or age of the latest available and checked data.'], ['Unavailable', 'Explicit state used when a real source does not respond or provides no reliable value.'], ['Function map', 'Mind map showing 2SG/M3S families, functions and local components.']]
@@ -121,7 +121,7 @@ const copy = {
       eyebrow: 'STEUERUNGSVOKABULAR', title: 'Glossar', body: 'Diese lokalen Definitionen erleichtern das Lesen des globalen Dashboards. Das zentrale 2SG-Glossar bleibt die Hauptquelle.', open: 'Zentrales Glossar öffnen',
       kpiTitle: 'KPI-Wörterbuch des Dashboards',
       kpiBody: 'Jeder Eintrag trennt Definition, Umfang, Quelle, Aktualität und Aktion. CHF/CFA-Umrechnungsregeln sind sichtbar, ohne Werte zu verändern.',
-      kpiGroups: { management: 'Management & Governance', finance: 'Unterstützungsfunktionen · Finanzen' },
+      kpiGroups: { management: 'Management & Governance', finance: 'Unterstützungsfunktionen · Finanzen', operations: 'Betrieb & Entwicklung' },
       fields: { definition: 'Definition', scope: 'Umfang', source: 'Quelle', freshness: 'Aktualität', action: 'Zugeordnete Aktion' },
       viewIndicator: 'Zur Kennzahl zurückkehren',
       terms: [['Globales Dashboard', 'Funktionsübergreifende Steuerungsansicht, die Informationen bündelt, ohne Fachanwendungen zu ersetzen.'], ['Kennzahl (KPI)', 'Definierte, belegte und datierte Messgröße zur Verfolgung eines Ziels, Ergebnisses oder Risikos.'], ['Hauptquelle', 'Geregelte maßgebliche Quelle für eine Information, Regel oder Version.'], ['Aktualität', 'Datum oder Alter der letzten verfügbaren und geprüften Daten.'], ['Nicht verfügbar', 'Expliziter Zustand, wenn eine reale Quelle nicht antwortet oder keinen verlässlichen Wert liefert.'], ['Funktionskarte', 'Mindmap der Bereiche, Funktionen und lokalen Komponenten von 2SG/M3S.']]

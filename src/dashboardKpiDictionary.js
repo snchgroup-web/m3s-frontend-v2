@@ -288,6 +288,105 @@ const financeDictionary = {
   ]
 };
 
+const operationsDictionary = {
+  FR: [
+    {
+      id: 'stocks', label: 'Quantité en stock',
+      definition: 'Somme des quantités des articles retournée par le service de comptage de l’inventaire.',
+      scope: 'Quantités enregistrées dans Stock & Actifs. Cet indicateur ne mesure ni la valeur du stock, ni sa disponibilité physique, ni son état.',
+      source: 'API Stock & Actifs · compteur d’inventaire · champ total.',
+      freshness: 'Actualisé au chargement du Tableau de bord lorsque la source répond avec un nombre valide.',
+      action: 'Ouvre le registre Inventaire dans Stock & Actifs.'
+    },
+    {
+      id: 'clients', label: 'Clients',
+      definition: 'Nombre de clients enregistrés dans le registre Commercial & CRM lorsque son compteur global sera raccordé.',
+      scope: 'Le compteur n’est pas connecté au Tableau de bord. La valeur reste indisponible et ne doit pas être interprétée comme zéro client.',
+      source: 'Source cible · Commercial & CRM · registre Clients ; raccordement à réaliser.',
+      freshness: 'Indisponible tant qu’un compteur source gouverné n’est pas exposé.',
+      action: 'Ouvre le registre Clients dans Commercial & CRM.'
+    },
+    {
+      id: 'orders', label: 'Commandes',
+      definition: 'Nombre de commandes enregistrées dans Production lorsque son compteur global sera raccordé.',
+      scope: 'Le compteur n’est pas connecté au Tableau de bord. La valeur reste indisponible et ne représente ni zéro commande ni les commandes livrées.',
+      source: 'Source cible · Production · registre Commandes ; raccordement à réaliser.',
+      freshness: 'Indisponible tant qu’un compteur source gouverné n’est pas exposé.',
+      action: 'Ouvre le registre Commandes dans Production.'
+    },
+    {
+      id: 'beneficiaries', label: 'Bénéficiaires',
+      definition: 'Nombre de bénéficiaires enregistrés dans le registre Commercial & CRM lorsque son compteur global sera raccordé.',
+      scope: 'Le compteur n’est pas connecté au Tableau de bord. La valeur reste indisponible et ne doit pas être confondue avec les utilisateurs M3S ou l’effectif RH.',
+      source: 'Source cible · Commercial & CRM · registre Bénéficiaires ; raccordement à réaliser.',
+      freshness: 'Indisponible tant qu’un compteur source gouverné n’est pas exposé.',
+      action: 'Ouvre le registre Bénéficiaires dans Commercial & CRM.'
+    },
+    {
+      id: 'suppliers', label: 'Fournisseurs',
+      definition: 'Nombre de fournisseurs enregistrés dans le registre Production lorsque son compteur global sera raccordé.',
+      scope: 'Le compteur n’est pas connecté au Tableau de bord. La valeur reste indisponible et ne mesure ni les fournisseurs actifs ni ceux évalués.',
+      source: 'Source cible · Production · registre Fournisseurs ; raccordement à réaliser.',
+      freshness: 'Indisponible tant qu’un compteur source gouverné n’est pas exposé.',
+      action: 'Ouvre le registre Fournisseurs dans Production.'
+    }
+  ],
+  EN: [
+    {
+      id: 'stocks', label: 'Stock quantity', definition: 'Sum of item quantities returned by the inventory count service.',
+      scope: 'Quantities recorded in Stock & Assets. This indicator measures neither stock value, physical availability nor condition.', source: 'Stock & Assets API · inventory count · total field.',
+      freshness: 'Refreshed when the Dashboard loads and the source returns a valid number.', action: 'Opens the Inventory register in Stock & Assets.'
+    },
+    {
+      id: 'clients', label: 'Clients', definition: 'Number of clients recorded in Commercial & CRM once its global counter is connected.',
+      scope: 'The counter is not connected to the Dashboard. The value remains unavailable and must not be read as zero clients.', source: 'Target source · Commercial & CRM · Clients register; connection pending.',
+      freshness: 'Unavailable until a governed source counter is exposed.', action: 'Opens the Clients register in Commercial & CRM.'
+    },
+    {
+      id: 'orders', label: 'Orders', definition: 'Number of orders recorded in Production once its global counter is connected.',
+      scope: 'The counter is not connected to the Dashboard. The value remains unavailable and represents neither zero orders nor delivered orders.', source: 'Target source · Production · Orders register; connection pending.',
+      freshness: 'Unavailable until a governed source counter is exposed.', action: 'Opens the Orders register in Production.'
+    },
+    {
+      id: 'beneficiaries', label: 'Beneficiaries', definition: 'Number of beneficiaries recorded in Commercial & CRM once its global counter is connected.',
+      scope: 'The counter is not connected to the Dashboard. The value remains unavailable and must not be confused with M3S users or HR headcount.', source: 'Target source · Commercial & CRM · Beneficiaries register; connection pending.',
+      freshness: 'Unavailable until a governed source counter is exposed.', action: 'Opens the Beneficiaries register in Commercial & CRM.'
+    },
+    {
+      id: 'suppliers', label: 'Suppliers', definition: 'Number of suppliers recorded in Production once its global counter is connected.',
+      scope: 'The counter is not connected to the Dashboard. The value remains unavailable and measures neither active nor assessed suppliers.', source: 'Target source · Production · Suppliers register; connection pending.',
+      freshness: 'Unavailable until a governed source counter is exposed.', action: 'Opens the Suppliers register in Production.'
+    }
+  ],
+  DE: [
+    {
+      id: 'stocks', label: 'Lagermenge', definition: 'Summe der Artikelmengen aus dem Inventarzähldienst.',
+      scope: 'In Lager & Vermögenswerte erfasste Mengen. Die Kennzahl misst weder Lagerwert, physische Verfügbarkeit noch Zustand.', source: 'API Lager & Vermögenswerte · Inventarzähler · Feld total.',
+      freshness: 'Beim Laden des Dashboards aktualisiert, wenn die Quelle eine gültige Zahl liefert.', action: 'Öffnet das Inventarregister in Lager & Vermögenswerte.'
+    },
+    {
+      id: 'clients', label: 'Kunden', definition: 'Anzahl der in Vertrieb & CRM erfassten Kunden, sobald der globale Zähler verbunden ist.',
+      scope: 'Der Zähler ist nicht mit dem Dashboard verbunden. Der Wert bleibt nicht verfügbar und darf nicht als null Kunden gelesen werden.', source: 'Zielquelle · Vertrieb & CRM · Kundenregister; Verbindung ausstehend.',
+      freshness: 'Nicht verfügbar, bis ein geregelter Quellzähler bereitsteht.', action: 'Öffnet das Kundenregister in Vertrieb & CRM.'
+    },
+    {
+      id: 'orders', label: 'Bestellungen', definition: 'Anzahl der in Produktion erfassten Bestellungen, sobald der globale Zähler verbunden ist.',
+      scope: 'Der Zähler ist nicht mit dem Dashboard verbunden. Der Wert bleibt nicht verfügbar und steht weder für null Bestellungen noch gelieferte Bestellungen.', source: 'Zielquelle · Produktion · Bestellregister; Verbindung ausstehend.',
+      freshness: 'Nicht verfügbar, bis ein geregelter Quellzähler bereitsteht.', action: 'Öffnet das Bestellregister in Produktion.'
+    },
+    {
+      id: 'beneficiaries', label: 'Begünstigte', definition: 'Anzahl der in Vertrieb & CRM erfassten Begünstigten, sobald der globale Zähler verbunden ist.',
+      scope: 'Der Zähler ist nicht mit dem Dashboard verbunden. Der Wert bleibt nicht verfügbar und ist weder M3S-Benutzerzahl noch Personalbestand.', source: 'Zielquelle · Vertrieb & CRM · Begünstigtenregister; Verbindung ausstehend.',
+      freshness: 'Nicht verfügbar, bis ein geregelter Quellzähler bereitsteht.', action: 'Öffnet das Begünstigtenregister in Vertrieb & CRM.'
+    },
+    {
+      id: 'suppliers', label: 'Lieferanten', definition: 'Anzahl der in Produktion erfassten Lieferanten, sobald der globale Zähler verbunden ist.',
+      scope: 'Der Zähler ist nicht mit dem Dashboard verbunden. Der Wert bleibt nicht verfügbar und misst weder aktive noch bewertete Lieferanten.', source: 'Zielquelle · Produktion · Lieferantenregister; Verbindung ausstehend.',
+      freshness: 'Nicht verfügbar, bis ein geregelter Quellzähler bereitsteht.', action: 'Öffnet das Lieferantenregister in Produktion.'
+    }
+  ]
+};
+
 export const getManagementKpiDefinitions = (language = 'FR') => managementDictionary[language] || managementDictionary.FR;
 
 export const getManagementKpiDefinition = (id, language = 'FR') => (
@@ -300,8 +399,15 @@ export const getFinanceKpiDefinition = (id, language = 'FR') => (
   getFinanceKpiDefinitions(language).find((item) => item.id === id) || null
 );
 
+export const getOperationsKpiDefinitions = (language = 'FR') => operationsDictionary[language] || operationsDictionary.FR;
+
+export const getOperationsKpiDefinition = (id, language = 'FR') => (
+  getOperationsKpiDefinitions(language).find((item) => item.id === id) || null
+);
+
 export const getDashboardKpiDefinitions = (language = 'FR') => ({
   management: getManagementKpiDefinitions(language),
-  finance: getFinanceKpiDefinitions(language)
+  finance: getFinanceKpiDefinitions(language),
+  operations: getOperationsKpiDefinitions(language)
 });
 

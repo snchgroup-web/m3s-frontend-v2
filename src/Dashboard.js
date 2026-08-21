@@ -25,7 +25,7 @@ import {
 import api from './api';
 import DashboardPilotageNavigation from './DashboardPilotageNavigation';
 import { getDashboardIndicatorDestination } from './dashboardNavigation';
-import { getFinanceKpiDefinition, getManagementKpiDefinition } from './dashboardKpiDictionary';
+import { getFinanceKpiDefinition, getManagementKpiDefinition, getOperationsKpiDefinition } from './dashboardKpiDictionary';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -767,6 +767,11 @@ const Dashboard = () => {
     helpLabel: t.explainIndicator,
     onHelp: () => handleIndicatorHelp(indicatorId)
   });
+  const operationsKpiHelp = indicatorId => ({
+    definition: getOperationsKpiDefinition(indicatorId, language)?.definition,
+    helpLabel: t.explainIndicator,
+    onHelp: () => handleIndicatorHelp(indicatorId)
+  });
   const kpiGroups = [
     {
       id: 'management',
@@ -880,27 +885,27 @@ const Dashboard = () => {
           id: 'stocks', label: t.stocks, value: formatCount(dashboardData?.moduleStats.production.stocks),
           secondary: dashboardData?.sourceStatus.inventory === 'available' ? t.quantity : null,
           source: t.assetsInventory, ...sourceState('inventory'), icon: Warehouse, accent: 'rose',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('stocks')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('stocks'), ...operationsKpiHelp('stocks')
         },
         {
           id: 'clients', label: t.clients, value: formatCount(dashboardData?.moduleStats.crm.clients),
           source: t.notConnected, ...disconnectedState, icon: UserRoundSearch, accent: 'teal',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('clients')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('clients'), ...operationsKpiHelp('clients')
         },
         {
           id: 'orders', label: t.orders, value: formatCount(dashboardData?.moduleStats.production.orders),
           source: t.notConnected, ...disconnectedState, icon: ShoppingCart, accent: 'lime',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('orders')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('orders'), ...operationsKpiHelp('orders')
         },
         {
           id: 'beneficiaries', label: t.beneficiaries, value: formatCount(dashboardData?.moduleStats.rh.beneficiaries),
           source: t.notConnected, ...disconnectedState, icon: HeartHandshake, accent: 'violet',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('beneficiaries')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('beneficiaries'), ...operationsKpiHelp('beneficiaries')
         },
         {
           id: 'suppliers', label: t.suppliers, value: formatCount(dashboardData?.moduleStats.crm.suppliers),
           source: t.notConnected, ...disconnectedState, icon: Truck, accent: 'sky',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('suppliers')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('suppliers'), ...operationsKpiHelp('suppliers')
         }
       ]
     }
