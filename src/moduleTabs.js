@@ -38,7 +38,8 @@ const placeholderText = {
 
 export const getPathTab = (path, fallback) => {
   const query = String(path || '').split('?')[1] || '';
-  return new URLSearchParams(query).get('tab') || fallback;
+  const params = new URLSearchParams(query);
+  return params.get('tab') || params.get('view') || fallback;
 };
 
 export const getModuleChildren = (moduleId, permissions = []) => {
@@ -75,7 +76,7 @@ export const ModuleChildTabs = ({ moduleId, language, activeTab, onSelect }) => 
   );
 };
 
-export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs = [], permissions = [] }) => {
+export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs = [], permissions = [], ariaLabel }) => {
   const activeButtonRef = useRef(null);
   const tabListRef = useRef(null);
   const mergedTabs = [];
@@ -104,12 +105,14 @@ export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs =
   if (!mergedTabs.length) return null;
 
   return (
-    <div ref={tabListRef} className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
+    <div ref={tabListRef} className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto" role="tablist" aria-label={ariaLabel}>
       {mergedTabs.map(tab => (
         <button
           key={tab.id || tab.tab}
           ref={activeTab === tab.tab ? activeButtonRef : null}
           onClick={() => onSelect(tab.tab)}
+          role="tab"
+          aria-selected={activeTab === tab.tab}
           className={`px-4 py-3 font-medium whitespace-nowrap ${activeTab === tab.tab ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400'}`}
         >
           {tab.label}
