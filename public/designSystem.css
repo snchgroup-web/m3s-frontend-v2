@@ -569,6 +569,74 @@ html.dark .function-map-management {
   box-shadow: 0 0 18px rgba(59, 130, 246, 0.12);
 }
 
+/* Cartes locales standardisées depuis le pilote global validé. */
+.function-map-local-canvas {
+  border: 1px solid var(--m3s-border);
+  background-color: color-mix(in srgb, var(--m3s-surface-raised) 96%, var(--function-accent, var(--m3s-row-accent)) 4%);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--m3s-border) 20%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--m3s-border) 20%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.function-map-local-hub,
+.function-map-local-components {
+  border: 1px solid color-mix(in srgb, var(--function-accent, var(--m3s-row-accent)) 58%, var(--m3s-border));
+  background: var(--m3s-surface-panel);
+  box-shadow: var(--m3s-shadow-panel);
+}
+
+.function-map-local-hub {
+  border-top: 3px solid var(--function-accent, var(--m3s-row-accent));
+}
+
+.function-map-local-hub-icon {
+  border: 1px solid color-mix(in srgb, var(--function-accent, var(--m3s-row-accent)) 42%, var(--m3s-border));
+}
+
+.function-map-local-connector {
+  background: color-mix(in srgb, var(--function-accent, var(--m3s-row-accent)) 72%, var(--m3s-border));
+}
+
+.function-map-local-components {
+  position: relative;
+}
+
+.function-map-local-components::before {
+  content: "";
+  position: absolute;
+  top: -1.5rem;
+  left: 50%;
+  width: 1px;
+  height: 1.5rem;
+  background: color-mix(in srgb, var(--function-accent, var(--m3s-row-accent)) 72%, var(--m3s-border));
+}
+
+.function-map-local-node {
+  border: 1px solid var(--m3s-border);
+  border-left: 3px solid color-mix(in srgb, var(--function-accent, var(--m3s-row-accent)) 72%, var(--m3s-border));
+  background: color-mix(in srgb, var(--function-accent, var(--m3s-row-accent)) 5%, var(--m3s-surface-raised));
+}
+
+.function-map-local-index {
+  background: color-mix(in srgb, var(--function-accent, var(--m3s-row-accent)) 14%, var(--m3s-surface-panel));
+  color: color-mix(in srgb, var(--function-accent, var(--m3s-row-accent)) 82%, var(--m3s-text-primary));
+}
+
+html.dark .function-map-local-canvas {
+  background-color: #0d1a2d;
+  background-image:
+    linear-gradient(rgba(96, 165, 250, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(96, 165, 250, 0.04) 1px, transparent 1px);
+}
+
+html.dark.deep-theme .function-map-local-canvas {
+  background-color: #111113;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.032) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.032) 1px, transparent 1px);
+}
+
 /* Socle visuel partagé par les fonctions métier issues du pilote Administration. */
 html:not(.dark) .m3s-business-module .text-slate-100,
 html:not(.dark) .m3s-business-module .text-slate-200 {
@@ -737,5 +805,9 @@ html:not(.dark) .m3s-business-module [class*="bg-rose-500/"] {
 
   .function-map-family + .function-map-family {
     margin-top: 0.25rem;
+  }
+
+  .function-map-local-canvas {
+    background-size: 20px 20px;
   }
 }

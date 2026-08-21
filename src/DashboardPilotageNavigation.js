@@ -388,6 +388,8 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
   const [artifactError, setArtifactError] = useState('');
   const intelligenceRequested = useRef(false);
   const t = translations[language] || translations.FR;
+  const selectedFunctionDefinition = functionDefinitions.find(({ id }) => id === selectedFunction);
+  const SelectedFunctionIcon = selectedFunctionDefinition?.icon || Network;
 
   useEffect(() => {
     setActiveView(resolveDashboardView(location.search));
@@ -641,18 +643,26 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
           )}
 
           {selectedFunction && (
-            <section className="mt-5" aria-labelledby="local-function-map-title">
-              <div className="mx-auto flex max-w-sm items-center justify-center rounded-md border border-blue-500 bg-blue-950/55 px-4 py-3 text-center shadow-lg shadow-blue-950/20">
-                <span id="local-function-map-title" className="text-base font-semibold text-slate-100">{t.functions[selectedFunction]}</span>
+            <section className="function-map-local-canvas mt-5 rounded-md p-3 sm:p-5" style={{ '--function-accent': selectedFunctionDefinition?.accent }} aria-labelledby="local-function-map-title">
+              <div className="function-map-local-hub mx-auto flex max-w-md items-center rounded-md px-4 py-3">
+                <span className={`function-map-local-hub-icon inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${selectedFunctionDefinition?.background || ''} ${selectedFunctionDefinition?.color || 'text-blue-300'}`}>
+                  <SelectedFunctionIcon size={21} aria-hidden="true" />
+                </span>
+                <span className="ml-3 min-w-0 text-left">
+                  <span className="block text-xs font-semibold uppercase text-blue-300">{t.globalHub}</span>
+                  <span id="local-function-map-title" className="block truncate text-base font-semibold text-slate-100">{t.functions[selectedFunction]}</span>
+                </span>
               </div>
-              <div className="mx-auto h-6 w-px bg-blue-500/70" aria-hidden="true" />
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="function-map-local-connector mx-auto h-6 w-px" aria-hidden="true" />
+              <div className="function-map-local-components rounded-md p-3 sm:p-4">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {t.localNodes[selectedFunction].map((node, index) => (
-                  <div key={node} className="flex min-h-12 items-center gap-3 rounded-md border border-slate-700 bg-slate-900/35 px-3 py-2 text-sm font-medium text-slate-200">
-                    <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-blue-950 text-xs font-semibold text-blue-300">{index + 1}</span>
+                  <div key={node} className="function-map-local-node flex min-h-12 items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-200">
+                    <span className="function-map-local-index inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-xs font-semibold">{index + 1}</span>
                     <span>{node}</span>
                   </div>
                 ))}
+                </div>
               </div>
             </section>
           )}
