@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   Workflow
 } from 'lucide-react';
+import DashboardIncidentRiskOverview from './DashboardIncidentRiskOverview';
 
 const copy = {
   FR: {
@@ -169,6 +170,7 @@ const DashboardGovernanceViews = ({ activeView, language = 'FR', onNavigate }) =
   const t = copy[language] || copy.FR;
   if (activeView === 'architecture') return <ArchitectureView data={t.architecture} />;
   if (activeView === 'processes') return <ProcessesView data={t.processes} />;
+  if (activeView === 'incidents') return <DashboardIncidentRiskOverview language={language} onNavigate={onNavigate} />;
   if (activeView === 'resources') return <ResourcesView data={t.resources} onNavigate={onNavigate} />;
   if (activeView === 'glossary') return <GlossaryView data={t.glossary} onNavigate={onNavigate} />;
   return null;

@@ -245,6 +245,7 @@ test.each([
   ['?view=map', 'map'],
   ['?view=architecture', 'architecture'],
   ['?view=processes', 'processes'],
+  ['?view=incidents', 'incidents'],
   ['?view=resources', 'resources'],
   ['?view=glossary', 'glossary'],
   ['?view=unknown', 'overview']

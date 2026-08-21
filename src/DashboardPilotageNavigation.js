@@ -188,7 +188,7 @@ const functionDefinitions = [
   { id: 'assets', group: 'operations', path: '/actifs', icon: Warehouse, color: 'text-rose-300', background: 'bg-rose-950/40' }
 ];
 
-const dashboardViews = ['overview', 'intelligence', 'map', 'architecture', 'processes', 'resources', 'glossary'];
+const dashboardViews = ['overview', 'intelligence', 'map', 'architecture', 'processes', 'incidents', 'resources', 'glossary'];
 
 export const resolveDashboardView = (search = '') => {
   const view = new URLSearchParams(search).get('view');

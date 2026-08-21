@@ -17,7 +17,7 @@ test('groups every global module once in the governed sidebar order', () => {
   expect(groups.flatMap(group => group.items)).toHaveLength(menuData.menu.length);
 });
 
-test('keeps the Dashboard parent as its overview and preserves its seven child views', () => {
+test('keeps the Dashboard parent as its overview and preserves its eight child views', () => {
   const dashboard = menuData.menu.find(item => item.id === 'dashboard');
   const administration = menuData.menu.find(item => item.id === 'administration');
   const planning = administration.children.find(item => item.id === 'planning');
@@ -28,6 +28,7 @@ test('keeps the Dashboard parent as its overview and preserves its seven child v
     '/?view=map',
     '/?view=architecture',
     '/?view=processes',
+    '/?view=incidents',
     '/?view=resources',
     '/?view=glossary'
   ]);
@@ -43,6 +44,7 @@ test.each([
   ['/', '?view=intelligence', 'dashboard', 'global-intelligence'],
   ['/', '?view=architecture', 'dashboard', 'global-architecture'],
   ['/', '?view=processes', 'dashboard', 'global-processes'],
+  ['/', '?view=incidents', 'dashboard', 'global-incidents'],
   ['/', '?view=resources', 'dashboard', 'global-resources'],
   ['/', '?view=glossary', 'dashboard', 'global-glossary'],
   ['/administration', '?tab=institution', 'administration', 'institution'],
