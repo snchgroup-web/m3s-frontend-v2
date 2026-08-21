@@ -384,6 +384,7 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
   const navigate = useNavigate();
   const [activeView, setActiveView] = useState(() => resolveDashboardView(location.search));
   const selectedFunction = resolveFunctionMapSelection(location.search);
+  const selectedKpi = new URLSearchParams(location.search).get('kpi') || '';
   const [intelligenceState, setIntelligenceState] = useState({ status: 'idle', data: null });
   const [artifactError, setArtifactError] = useState('');
   const intelligenceRequested = useRef(false);
@@ -566,7 +567,7 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
         </div>
       )}
 
-      <DashboardGovernanceViews activeView={activeView} language={language} onNavigate={onNavigate} />
+      <DashboardGovernanceViews activeView={activeView} language={language} selectedKpi={selectedKpi} onNavigate={onNavigate} />
 
       {activeView === 'map' && (
         <div className="mt-5">

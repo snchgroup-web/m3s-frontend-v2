@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
@@ -12,6 +12,7 @@ import {
   Gift,
   HandCoins,
   HeartHandshake,
+  HelpCircle,
   Landmark,
   ListChecks,
   Scale,
@@ -24,6 +25,7 @@ import {
 import api from './api';
 import DashboardPilotageNavigation from './DashboardPilotageNavigation';
 import { getDashboardIndicatorDestination } from './dashboardNavigation';
+import { getManagementKpiDefinition } from './dashboardKpiDictionary';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -95,14 +97,18 @@ const kpiStatusClasses = {
   disconnected: 'border-slate-600 bg-slate-900/45 text-slate-400'
 };
 
-const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, source, status, statusLabel, icon: Icon, accent, onOpen, openLabel }) => (
-  <button
+const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, source, status, statusLabel, icon: Icon, accent, onOpen, openLabel, definition, helpLabel, onHelp }) => (
+  <article
     id={`dashboard-kpi-${id}`}
-    type="button"
-    onClick={onOpen}
-    aria-label={`${openLabel}: ${label}`}
-    className="global-kpi-card group flex min-h-[132px] w-full flex-col scroll-mt-24 rounded-md border border-slate-700 bg-slate-800 p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-blue-950/25 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    className="global-kpi-card group relative min-h-[132px] scroll-mt-24 rounded-md border border-slate-700 bg-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-blue-950/25 focus-within:ring-2 focus-within:ring-blue-500"
   >
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label={`${openLabel}: ${label}`}
+      title={definition || undefined}
+      className="flex min-h-[130px] w-full flex-col rounded-md p-4 pr-14 text-left focus:outline-none"
+    >
     <span className="flex items-start justify-between gap-3">
       <span className="min-w-0">
         <span className="block text-sm font-medium text-slate-300">{label}</span>
@@ -118,7 +124,7 @@ const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, sour
           </>
         )}
       </span>
-      <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${kpiAccentClasses[accent]}`}>
+      <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${onHelp ? 'mr-10' : ''} ${kpiAccentClasses[accent]}`}>
         <Icon size={20} aria-hidden="true" />
       </span>
     </span>
@@ -126,7 +132,19 @@ const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, sour
       <span className="min-w-0 truncate text-xs text-slate-500" title={source}>{source}</span>
       <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-semibold ${kpiStatusClasses[status]}`}>{statusLabel}</span>
     </span>
-  </button>
+    </button>
+    {onHelp && (
+      <button
+        type="button"
+        onClick={onHelp}
+        aria-label={`${helpLabel}: ${label}`}
+        title={`${helpLabel}: ${label}`}
+        className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-600 bg-slate-900/80 text-slate-300 transition hover:border-blue-400 hover:text-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <HelpCircle size={18} aria-hidden="true" />
+      </button>
+    )}
+  </article>
 );
 
 const GlobalKpiGroup = ({ id, title, description, cards, gridClass }) => (
@@ -182,6 +200,7 @@ const mockDataBaseRaw = {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { language } = useLanguage();
   const [, setUser] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
@@ -272,7 +291,8 @@ const Dashboard = () => {
       financeRealEstate: 'Finance · Registre immobilier',
       financeSocial: 'Finance · Registre social',
       assetsInventory: 'Stock & Actifs · Inventaire',
-      majorFilesPortfolio: 'Management · Portefeuille des grands dossiers'
+      majorFilesPortfolio: 'Management · Portefeuille des grands dossiers',
+      explainIndicator: 'Comprendre cet indicateur'
     },
     EN: {
       dashboard: 'Dashboard',
@@ -356,7 +376,8 @@ const Dashboard = () => {
       financeRealEstate: 'Finance · Real estate register',
       financeSocial: 'Finance · Social register',
       assetsInventory: 'Stock & Assets · Inventory',
-      majorFilesPortfolio: 'Management · Major-file portfolio'
+      majorFilesPortfolio: 'Management · Major-file portfolio',
+      explainIndicator: 'Understand this indicator'
     },
     DE: {
       dashboard: 'Dashboard',
@@ -440,7 +461,8 @@ const Dashboard = () => {
       financeRealEstate: 'Finanzen · Immobilienregister',
       financeSocial: 'Finanzen · Sozialregister',
       assetsInventory: 'Bestand & Aktiven · Inventar',
-      majorFilesPortfolio: 'Management · Portfolio wichtiger Akten'
+      majorFilesPortfolio: 'Management · Portfolio wichtiger Akten',
+      explainIndicator: 'Diese Kennzahl verstehen'
     }
   };
 
@@ -690,12 +712,25 @@ const Dashboard = () => {
     fetchDashboardData();
   }, [mockDataBase]);
 
+  useEffect(() => {
+    if (loading || !location.hash.startsWith('#dashboard-kpi-')) return undefined;
+    const frame = window.requestAnimationFrame(() => {
+      const target = document.getElementById(location.hash.slice(1));
+      if (target?.classList.contains('global-kpi-card')) target.scrollIntoView({ block: 'start' });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [dashboardData, loading, location.hash]);
+
   const handleModuleClick = (path) => {
     navigate(path);
   };
 
   const handleIndicatorOpen = indicatorId => {
     navigate(getDashboardIndicatorDestination(indicatorId));
+  };
+
+  const handleIndicatorHelp = indicatorId => {
+    navigate(`/?view=glossary&kpi=${encodeURIComponent(indicatorId)}#dashboard-kpi-definition-${indicatorId}`);
   };
 
   if (loading) {
@@ -737,19 +772,25 @@ const Dashboard = () => {
         {
           id: 'active-major-files', label: t.activeMajorFiles, value: formatCount(dashboardData?.moduleStats.management.activeDossiers),
           source: t.majorFilesPortfolio, ...sourceState('portfolio'), icon: FolderKanban, accent: 'blue',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('active-major-files')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('active-major-files'),
+          definition: getManagementKpiDefinition('active-major-files', language)?.definition,
+          helpLabel: t.explainIndicator, onHelp: () => handleIndicatorHelp('active-major-files')
         },
         {
           id: 'users', label: t.m3sUsers, value: formatCount(dashboardData?.moduleStats.rh.members),
           secondary: dashboardData?.sourceStatus.users === 'available' ? t.activeAccounts : null,
           source: t.authenticationAccounts, ...sourceState('users'), icon: UsersRound, accent: 'violet',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('users')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('users'),
+          definition: getManagementKpiDefinition('users', language)?.definition,
+          helpLabel: t.explainIndicator, onHelp: () => handleIndicatorHelp('users')
         },
         {
           id: 'documents', label: t.documents, value: formatCount(dashboardData?.moduleStats.ged.documents),
           secondary: dashboardData?.sourceStatus.documents === 'available' ? t.files : null,
           source: t.gedDocuments, ...sourceState('documents'), icon: Files, accent: 'pink',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('documents')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('documents'),
+          definition: getManagementKpiDefinition('documents', language)?.definition,
+          helpLabel: t.explainIndicator, onHelp: () => handleIndicatorHelp('documents')
         },
         {
           id: 'tasks', label: t.trackedTasks, value: formatCount(dashboardData?.moduleStats.tasks.total),
@@ -759,7 +800,9 @@ const Dashboard = () => {
             ? `${t.openTasks} ${formatCount(dashboardData.moduleStats.tasks.open)} · ${t.completedTasks} ${formatCount(dashboardData.moduleStats.tasks.completed)}`
             : null,
           source: t.administrationTasks, ...sourceState('tasks'), icon: ListChecks, accent: 'cyan',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('tasks')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('tasks'),
+          definition: getManagementKpiDefinition('tasks', language)?.definition,
+          helpLabel: t.explainIndicator, onHelp: () => handleIndicatorHelp('tasks')
         }
       ]
     },
