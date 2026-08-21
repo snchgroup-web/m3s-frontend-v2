@@ -115,8 +115,10 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   expect(mockNavigate).toHaveBeenCalledWith('/administration?tab=overview&returnTo=dashboard&dashboardKpi=active-major-files#administration-portfolio');
   fireEvent.click(screen.getByRole('button', { name: 'Open module: M3S users' }));
   expect(mockNavigate).toHaveBeenCalledWith('/administration?tab=users&returnTo=dashboard&dashboardKpi=users#administration-users-register');
-  fireEvent.click(screen.getByRole('button', { name: 'Understand this indicator: M3S users' }));
-  expect(mockNavigate).toHaveBeenCalledWith('/?view=glossary&kpi=users#dashboard-kpi-definition-users');
+    fireEvent.click(screen.getByRole('button', { name: 'Understand this indicator: M3S users' }));
+    expect(mockNavigate).toHaveBeenCalledWith('/?view=glossary&kpi=users#dashboard-kpi-definition-users');
+    fireEvent.click(screen.getByRole('button', { name: 'Understand this indicator: Real estate reimbursements' }));
+    expect(mockNavigate).toHaveBeenCalledWith('/?view=glossary&kpi=real-estate-reimbursements#dashboard-kpi-definition-real-estate-reimbursements');
 
   await waitFor(() => {
     expect(api.getFinanceDashboard).toHaveBeenCalledTimes(1);

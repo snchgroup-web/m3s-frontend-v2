@@ -1,4 +1,4 @@
-const dictionary = {
+const managementDictionary = {
   FR: [
     {
       id: 'active-major-files',
@@ -99,9 +99,209 @@ const dictionary = {
   ]
 };
 
-export const getManagementKpiDefinitions = (language = 'FR') => dictionary[language] || dictionary.FR;
+const financeDictionary = {
+  FR: [
+    {
+      id: 'revenue', label: 'Recettes',
+      definition: 'Somme des recettes hors flux classés « Aide Sociale Ménage », exprimée dans les montants CHF et CFA enregistrés.',
+      scope: 'Recettes d’exploitation et autres recettes non sociales. Les flux sociaux sont présentés séparément afin d’éviter un double comptage.',
+      source: 'API Finance · /finance/dashboard · total_income et total_income_cfa, selon la règle nonSocialIncomeWhere.',
+      freshness: 'Actualisé au chargement du Tableau de bord à partir de l’agrégat Finance disponible.',
+      action: 'Ouvre le registre des recettes dans Finances.'
+    },
+    {
+      id: 'expenses', label: 'Dépenses',
+      definition: 'Somme de toutes les dépenses enregistrées, séparément en CHF et en CFA.',
+      scope: 'Écritures présentes dans la source Dépenses ; l’indicateur ne certifie ni leur qualification comptable ni l’exhaustivité des justificatifs.',
+      source: 'API Finance · /finance/dashboard · total_expenses et total_expenses_cfa.',
+      freshness: 'Actualisé au chargement du Tableau de bord à partir de l’agrégat Finance disponible.',
+      action: 'Ouvre le registre des dépenses dans Finances.'
+    },
+    {
+      id: 'balance', label: 'Solde',
+      definition: 'Différence entre les recettes non sociales et les dépenses, calculée séparément en CHF et en CFA.',
+      scope: 'Solde de lecture du registre Finance ; il ne constitue ni un solde bancaire, ni une trésorerie certifiée, ni un résultat comptable.',
+      source: 'Tableau de bord · recettes moins dépenses issues de /finance/dashboard.',
+      freshness: 'Recalculé au chargement lorsque les deux agrégats Finance sont disponibles.',
+      action: 'Ouvre la vue d’ensemble de Finances.'
+    },
+    {
+      id: 'donations', label: 'Dons',
+      definition: 'Somme des recettes dont la nature contient la qualification « DON », dans les montants CHF et CFA enregistrés.',
+      scope: 'Sous-ensemble des recettes non sociales ; la qualification dépend du champ Nature de la source.',
+      source: 'API Finance · registre Recettes · filtre de catégorie contenant DON.',
+      freshness: 'Recalculé au chargement à partir des lignes de recettes accessibles.',
+      action: 'Ouvre les recettes filtrées sur les dons dans Finances.'
+    },
+    {
+      id: 'financing', label: 'Financements',
+      definition: 'Somme des recettes dont la nature est exactement « FINANCEMENT », dans les montants CHF et CFA enregistrés.',
+      scope: 'Sous-ensemble des recettes ; cet indicateur ne détermine ni la nature juridique du financement ni son éventuelle obligation de remboursement.',
+      source: 'API Finance · registre Recettes · filtre de catégorie FINANCEMENT.',
+      freshness: 'Recalculé au chargement à partir des lignes de recettes accessibles.',
+      action: 'Ouvre les recettes filtrées sur les financements dans Finances.'
+    },
+    {
+      id: 'reference-rate', label: 'Taux de référence',
+      definition: 'Dernier taux CHF/CFA disponible dans l’historique FX gouverné.',
+      scope: 'Taux indicatif courant. Il ne remplace jamais le taux fournisseur ou le taux effectivement appliqué à une opération historique.',
+      source: 'API Finance · historique FX · taux_du_jour.CHF_CFA.',
+      freshness: 'La date et la source du taux restent celles du registre FX ; aucune actualisation fictive n’est ajoutée.',
+      action: 'Ouvre l’historique FX dans Finances.'
+    },
+    {
+      id: 'real-estate-funding', label: 'Financement immobilier total',
+      definition: 'Somme des investissements immobiliers réalisés, avec leurs montants CHF et CFA historiques enregistrés.',
+      scope: 'Opérations non futures de type Avance ou Information. Les montants CFA proviennent des opérations et ne sont pas recalculés au taux courant.',
+      source: 'API Finance immobilière · fin_immo_synthese · investissements_realises_chf et investissements_realises_cfa.',
+      freshness: 'Actualisé au chargement à partir de la synthèse immobilière disponible.',
+      action: 'Ouvre la vue Financement immobilier dans Finances.'
+    },
+    {
+      id: 'real-estate-reimbursements', label: 'Remboursements immobiliers',
+      definition: 'Somme CHF des remboursements immobiliers réalisés ; l’équivalent CFA affiché est une conversion au taux de référence courant.',
+      scope: 'Le CFA est indicatif et ne constitue pas un total historique des montants CFA effectivement remboursés.',
+      source: 'API Finance immobilière · remboursements_total_chf, converti avec taux_du_jour.CHF_CFA.',
+      freshness: 'Le CHF suit la synthèse immobilière ; l’équivalent CFA varie avec le taux de référence disponible.',
+      action: 'Ouvre la vue Financement immobilier dans Finances.'
+    },
+    {
+      id: 'outstanding-balance', label: 'Solde restant ouvert',
+      definition: 'Différence CHF entre la part attribuée à Cheikh et les remboursements réalisés ; l’équivalent CFA utilise le taux de référence courant.',
+      scope: 'Indicateur de suivi interne. Il ne constitue ni une reconnaissance de dette, ni une créance juridiquement ou comptablement certifiée.',
+      source: 'API Finance immobilière · solde_ouvert_cheikh_chf, converti avec taux_du_jour.CHF_CFA.',
+      freshness: 'Le CHF suit la synthèse immobilière ; l’équivalent CFA varie avec le taux de référence disponible.',
+      action: 'Ouvre la vue Financement immobilier dans Finances.'
+    },
+    {
+      id: 'social-flows', label: 'Flux sociaux reclassés',
+      definition: 'Somme des recettes classées « Aide Sociale Ménage », avec total CHF et total CFA historique enregistrés.',
+      scope: 'Flux sociaux exclus des recettes d’exploitation et présentés séparément ; le classement ne constitue pas une qualification comptable ou fiscale.',
+      source: 'API Finance sociale · total_chf et total_cfa_historique.',
+      freshness: 'Actualisé au chargement à partir du registre social disponible.',
+      action: 'Ouvre la vue Social dans Finances.'
+    }
+  ],
+  EN: [
+    {
+      id: 'revenue', label: 'Revenue', definition: 'Sum of income excluding flows classified as “Household Social Aid”, using the recorded CHF and CFA amounts.',
+      scope: 'Operating and other non-social income. Social flows are shown separately to prevent double counting.', source: 'Finance API · /finance/dashboard · total_income and total_income_cfa under nonSocialIncomeWhere.',
+      freshness: 'Refreshed when the Dashboard loads from the available Finance aggregate.', action: 'Opens the income register in Finance.'
+    },
+    {
+      id: 'expenses', label: 'Expenses', definition: 'Sum of all recorded expenses, separately in CHF and CFA.',
+      scope: 'Entries present in the Expenses source; the indicator certifies neither accounting classification nor completeness of evidence.', source: 'Finance API · /finance/dashboard · total_expenses and total_expenses_cfa.',
+      freshness: 'Refreshed when the Dashboard loads from the available Finance aggregate.', action: 'Opens the expense register in Finance.'
+    },
+    {
+      id: 'balance', label: 'Balance', definition: 'Difference between non-social income and expenses, calculated separately in CHF and CFA.',
+      scope: 'A Finance-register reading balance; it is neither a bank balance, certified cash position nor accounting result.', source: 'Dashboard · income minus expenses from /finance/dashboard.',
+      freshness: 'Recalculated on load when both Finance aggregates are available.', action: 'Opens the Finance overview.'
+    },
+    {
+      id: 'donations', label: 'Donations', definition: 'Sum of income whose nature contains “DON”, using the recorded CHF and CFA amounts.',
+      scope: 'Subset of non-social income; classification depends on the source Nature field.', source: 'Finance API · Income register · category filter containing DON.',
+      freshness: 'Recalculated on load from accessible income rows.', action: 'Opens income filtered to donations in Finance.'
+    },
+    {
+      id: 'financing', label: 'Financing', definition: 'Sum of income whose nature is exactly “FINANCEMENT”, using the recorded CHF and CFA amounts.',
+      scope: 'Subset of income; this indicator determines neither the legal nature of funding nor any repayment obligation.', source: 'Finance API · Income register · FINANCEMENT category filter.',
+      freshness: 'Recalculated on load from accessible income rows.', action: 'Opens income filtered to financing in Finance.'
+    },
+    {
+      id: 'reference-rate', label: 'Reference rate', definition: 'Latest available CHF/CFA rate in the governed FX history.',
+      scope: 'Current indicative rate. It never replaces a provider rate or the rate actually applied to a historical transaction.', source: 'Finance API · FX history · taux_du_jour.CHF_CFA.',
+      freshness: 'The rate date and source remain those of the FX register; no fictitious update is added.', action: 'Opens FX history in Finance.'
+    },
+    {
+      id: 'real-estate-funding', label: 'Total real estate funding', definition: 'Sum of realised real estate investments, with their recorded historical CHF and CFA amounts.',
+      scope: 'Non-future Advance or Information operations. CFA amounts come from transactions and are not recomputed at the current rate.', source: 'Real estate Finance API · fin_immo_synthese · investissements_realises_chf and investissements_realises_cfa.',
+      freshness: 'Refreshed on load from the available real estate summary.', action: 'Opens Real estate finance in Finance.'
+    },
+    {
+      id: 'real-estate-reimbursements', label: 'Real estate reimbursements', definition: 'Sum in CHF of realised real estate reimbursements; the displayed CFA equivalent is converted at the current reference rate.',
+      scope: 'The CFA amount is indicative and is not a historical total of CFA amounts actually reimbursed.', source: 'Real estate Finance API · remboursements_total_chf, converted with taux_du_jour.CHF_CFA.',
+      freshness: 'CHF follows the real estate summary; the CFA equivalent changes with the available reference rate.', action: 'Opens Real estate finance in Finance.'
+    },
+    {
+      id: 'outstanding-balance', label: 'Outstanding balance', definition: 'CHF difference between Cheikh’s attributed share and realised reimbursements; the CFA equivalent uses the current reference rate.',
+      scope: 'Internal tracking indicator. It is neither an acknowledgment of debt nor a legally or accounting-certified receivable.', source: 'Real estate Finance API · solde_ouvert_cheikh_chf, converted with taux_du_jour.CHF_CFA.',
+      freshness: 'CHF follows the real estate summary; the CFA equivalent changes with the available reference rate.', action: 'Opens Real estate finance in Finance.'
+    },
+    {
+      id: 'social-flows', label: 'Reclassified social flows', definition: 'Sum of income classified as “Household Social Aid”, with recorded CHF total and historical CFA total.',
+      scope: 'Social flows excluded from operating income and shown separately; classification is not an accounting or tax qualification.', source: 'Social Finance API · total_chf and total_cfa_historique.',
+      freshness: 'Refreshed on load from the available social register.', action: 'Opens the Social view in Finance.'
+    }
+  ],
+  DE: [
+    {
+      id: 'revenue', label: 'Einnahmen', definition: 'Summe der Einnahmen ohne als „Sozialhilfe Haushalt“ eingestufte Flüsse, mit den erfassten CHF- und CFA-Beträgen.',
+      scope: 'Betriebliche und andere nicht soziale Einnahmen. Soziale Flüsse werden getrennt ausgewiesen, um Doppelzählungen zu vermeiden.', source: 'Finanz-API · /finance/dashboard · total_income und total_income_cfa nach nonSocialIncomeWhere.',
+      freshness: 'Beim Laden des Dashboards aus dem verfügbaren Finanzaggregat aktualisiert.', action: 'Öffnet das Einnahmenregister in Finanzen.'
+    },
+    {
+      id: 'expenses', label: 'Ausgaben', definition: 'Summe aller erfassten Ausgaben, getrennt in CHF und CFA.',
+      scope: 'Buchungen in der Ausgabenquelle; die Kennzahl bestätigt weder die Buchungsklassifikation noch die Vollständigkeit der Belege.', source: 'Finanz-API · /finance/dashboard · total_expenses und total_expenses_cfa.',
+      freshness: 'Beim Laden des Dashboards aus dem verfügbaren Finanzaggregat aktualisiert.', action: 'Öffnet das Ausgabenregister in Finanzen.'
+    },
+    {
+      id: 'balance', label: 'Saldo', definition: 'Differenz zwischen nicht sozialen Einnahmen und Ausgaben, getrennt in CHF und CFA berechnet.',
+      scope: 'Lesesaldo des Finanzregisters; weder Bankguthaben noch bestätigte Liquidität oder Buchhaltungsergebnis.', source: 'Dashboard · Einnahmen minus Ausgaben aus /finance/dashboard.',
+      freshness: 'Beim Laden neu berechnet, wenn beide Finanzaggregate verfügbar sind.', action: 'Öffnet die Finanzübersicht.'
+    },
+    {
+      id: 'donations', label: 'Spenden', definition: 'Summe der Einnahmen, deren Art „DON“ enthält, mit den erfassten CHF- und CFA-Beträgen.',
+      scope: 'Teilmenge der nicht sozialen Einnahmen; die Einstufung hängt vom Feld Art der Quelle ab.', source: 'Finanz-API · Einnahmenregister · Kategorienfilter mit DON.',
+      freshness: 'Beim Laden aus den zugänglichen Einnahmenzeilen neu berechnet.', action: 'Öffnet die nach Spenden gefilterten Einnahmen.'
+    },
+    {
+      id: 'financing', label: 'Finanzierungen', definition: 'Summe der Einnahmen mit der exakten Art „FINANCEMENT“, mit den erfassten CHF- und CFA-Beträgen.',
+      scope: 'Teilmenge der Einnahmen; die Kennzahl bestimmt weder die Rechtsnatur noch eine Rückzahlungspflicht.', source: 'Finanz-API · Einnahmenregister · Kategorienfilter FINANCEMENT.',
+      freshness: 'Beim Laden aus den zugänglichen Einnahmenzeilen neu berechnet.', action: 'Öffnet die nach Finanzierungen gefilterten Einnahmen.'
+    },
+    {
+      id: 'reference-rate', label: 'Referenzkurs', definition: 'Letzter verfügbarer CHF/CFA-Kurs im geregelten FX-Verlauf.',
+      scope: 'Aktueller Richtkurs. Er ersetzt niemals einen Anbieterkurs oder den tatsächlich auf eine historische Transaktion angewandten Kurs.', source: 'Finanz-API · FX-Verlauf · taux_du_jour.CHF_CFA.',
+      freshness: 'Datum und Quelle bleiben die des FX-Registers; keine fiktive Aktualisierung wird ergänzt.', action: 'Öffnet den FX-Verlauf in Finanzen.'
+    },
+    {
+      id: 'real-estate-funding', label: 'Immobilienfinanzierung gesamt', definition: 'Summe der realisierten Immobilieninvestitionen mit ihren erfassten historischen CHF- und CFA-Beträgen.',
+      scope: 'Nicht zukünftige Vorgänge der Art Avance oder Information. CFA-Beträge stammen aus den Vorgängen und werden nicht zum aktuellen Kurs neu berechnet.', source: 'Immobilienfinanz-API · fin_immo_synthese · investissements_realises_chf und investissements_realises_cfa.',
+      freshness: 'Beim Laden aus der verfügbaren Immobilienübersicht aktualisiert.', action: 'Öffnet die Immobilienfinanzierung in Finanzen.'
+    },
+    {
+      id: 'real-estate-reimbursements', label: 'Immobilienrückzahlungen', definition: 'CHF-Summe der realisierten Immobilienrückzahlungen; der angezeigte CFA-Gegenwert wird zum aktuellen Referenzkurs umgerechnet.',
+      scope: 'Der CFA-Betrag ist indikativ und kein historischer Gesamtbetrag der tatsächlich in CFA geleisteten Rückzahlungen.', source: 'Immobilienfinanz-API · remboursements_total_chf, umgerechnet mit taux_du_jour.CHF_CFA.',
+      freshness: 'CHF folgt der Immobilienübersicht; der CFA-Gegenwert ändert sich mit dem verfügbaren Referenzkurs.', action: 'Öffnet die Immobilienfinanzierung in Finanzen.'
+    },
+    {
+      id: 'outstanding-balance', label: 'Offener Restsaldo', definition: 'CHF-Differenz zwischen Cheikh zugeordnetem Anteil und realisierten Rückzahlungen; der CFA-Gegenwert nutzt den aktuellen Referenzkurs.',
+      scope: 'Interne Steuerungskennzahl. Sie ist weder Schuldanerkenntnis noch rechtlich oder buchhalterisch bestätigte Forderung.', source: 'Immobilienfinanz-API · solde_ouvert_cheikh_chf, umgerechnet mit taux_du_jour.CHF_CFA.',
+      freshness: 'CHF folgt der Immobilienübersicht; der CFA-Gegenwert ändert sich mit dem verfügbaren Referenzkurs.', action: 'Öffnet die Immobilienfinanzierung in Finanzen.'
+    },
+    {
+      id: 'social-flows', label: 'Neu klassifizierte soziale Flüsse', definition: 'Summe der als „Sozialhilfe Haushalt“ eingestuften Einnahmen mit erfasstem CHF-Gesamtwert und historischem CFA-Gesamtwert.',
+      scope: 'Von den betrieblichen Einnahmen ausgeschlossene und getrennt ausgewiesene soziale Flüsse; die Einstufung ist keine buchhalterische oder steuerliche Qualifikation.', source: 'Sozialfinanz-API · total_chf und total_cfa_historique.',
+      freshness: 'Beim Laden aus dem verfügbaren Sozialregister aktualisiert.', action: 'Öffnet die Ansicht Soziales in Finanzen.'
+    }
+  ]
+};
+
+export const getManagementKpiDefinitions = (language = 'FR') => managementDictionary[language] || managementDictionary.FR;
 
 export const getManagementKpiDefinition = (id, language = 'FR') => (
   getManagementKpiDefinitions(language).find((item) => item.id === id) || null
 );
+
+export const getFinanceKpiDefinitions = (language = 'FR') => financeDictionary[language] || financeDictionary.FR;
+
+export const getFinanceKpiDefinition = (id, language = 'FR') => (
+  getFinanceKpiDefinitions(language).find((item) => item.id === id) || null
+);
+
+export const getDashboardKpiDefinitions = (language = 'FR') => ({
+  management: getManagementKpiDefinitions(language),
+  finance: getFinanceKpiDefinitions(language)
+});
 

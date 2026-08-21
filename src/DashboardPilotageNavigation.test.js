@@ -252,9 +252,12 @@ test('opens the four governed global views without confusing architecture with t
 
   fireEvent.click(screen.getByRole('tab', { name: 'Glossaire' }));
   expect(screen.getByText('Source maîtresse')).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Dictionnaire KPI · Management & Gouvernance' })).toBeInTheDocument();
-  expect(screen.getByText('Nombre de comptes authentifiés retournés par le service de comptage M3S.')).toBeInTheDocument();
-  expect(screen.getAllByRole('button', { name: 'Revenir à l’indicateur' })).toHaveLength(4);
+    expect(screen.getByRole('heading', { name: 'Dictionnaire KPI du Tableau de bord' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Management & Gouvernance' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Fonctions support · Finances' })).toBeInTheDocument();
+    expect(screen.getByText('Nombre de comptes authentifiés retournés par le service de comptage M3S.')).toBeInTheDocument();
+    expect(screen.getByText('Somme CHF des remboursements immobiliers réalisés ; l’équivalent CFA affiché est une conversion au taux de référence courant.')).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Revenir à l’indicateur' })).toHaveLength(14);
   fireEvent.click(screen.getByRole('button', { name: 'Ouvrir le Glossaire central' }));
   expect(onNavigate).toHaveBeenCalledWith('/ged?tab=glossary&returnTo=dashboard-glossary');
 });
