@@ -188,6 +188,24 @@ test('returns from a local function map to the global map', () => {
   );
 });
 
+test.each([
+  ['administration', 'Administration', 10, '#06b6d4'],
+  ['finance', 'Finances', 9, '#10b981'],
+  ['rh', 'Ressources humaines', 5, '#8b5cf6'],
+  ['it', 'IT & Support', 9, '#14b8a6'],
+  ['crm', 'Commercial & CRM', 7, '#0ea5e9'],
+  ['production', 'Production', 5, '#f97316'],
+  ['assets', 'Stock & Actifs', 5, '#f43f5e']
+])('renders the governed local map for %s', (functionId, label, componentCount, accent) => {
+  const { container } = renderDashboardNavigation({ language: 'FR' }, `/?view=map&function=${functionId}`);
+  const localMap = container.querySelector('.function-map-local-canvas');
+
+  expect(localMap).toBeInTheDocument();
+  expect(localMap).toHaveStyle(`--function-accent: ${accent}`);
+  expect(localMap.querySelectorAll('.function-map-local-node')).toHaveLength(componentCount);
+  expect(localMap).toHaveTextContent(label);
+});
+
 test('opens a dashboard view directly from the governed URL', async () => {
   renderDashboardNavigation({}, '/?view=intelligence');
 
