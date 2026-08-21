@@ -25,6 +25,7 @@ import {
   resolveAdministrationTab,
   shouldShowAdministrationOverviewReturn
 } from './administrationTabs';
+import { normalizeAdministrationUser, normalizeAuthAccountsCount } from './administrationUsers';
 
 const Admin = () => {
   const { language } = useLanguage();
@@ -103,6 +104,18 @@ const Admin = () => {
       tachesTerminees: 'Tâches terminées',
       nouvelleTache: 'Nouvelle tâche',
       modifierTache: 'Modifier tâche'
+      , userRegisterTitle: 'Comptes M3S et répertoire administratif'
+      , userRegisterDescription: 'Le compteur recense les comptes authentifiés. Le tableau présente séparément le répertoire administratif disponible dans la source RH.'
+      , authenticatedAccounts: 'Comptes M3S authentifiés'
+      , administrativeDirectory: 'Répertoire administratif'
+      , readOnlySource: 'Source gouvernée · lecture seule'
+      , sourceConnected: 'Source connectée'
+      , sourceUnavailable: 'Source indisponible'
+      , loading: 'Chargement…'
+      , position: 'Fonction'
+      , department: 'Équipe'
+      , memberType: 'Type de membre'
+      , noUsers: 'Aucun utilisateur disponible dans la source.'
     },
     EN: {
       title: 'Administration',
@@ -171,6 +184,18 @@ const Admin = () => {
       tachesTerminees: 'Completed tasks',
       nouvelleTache: 'New task',
       modifierTache: 'Edit task'
+      , userRegisterTitle: 'M3S accounts and administrative directory'
+      , userRegisterDescription: 'The counter covers authenticated accounts. The table separately presents the administrative directory available from the HR source.'
+      , authenticatedAccounts: 'Authenticated M3S accounts'
+      , administrativeDirectory: 'Administrative directory'
+      , readOnlySource: 'Governed source · read only'
+      , sourceConnected: 'Source connected'
+      , sourceUnavailable: 'Source unavailable'
+      , loading: 'Loading…'
+      , position: 'Function'
+      , department: 'Team'
+      , memberType: 'Member type'
+      , noUsers: 'No users are available from the source.'
     },
     DE: {
       title: 'Verwaltung',
@@ -239,6 +264,18 @@ const Admin = () => {
       tachesTerminees: 'Abgeschlossene Aufgaben',
       nouvelleTache: 'Neue Aufgabe',
       modifierTache: 'Aufgabe bearbeiten'
+      , userRegisterTitle: 'M3S-Konten und Verwaltungsverzeichnis'
+      , userRegisterDescription: 'Der Zähler erfasst authentifizierte Konten. Die Tabelle zeigt getrennt das in der HR-Quelle verfügbare Verwaltungsverzeichnis.'
+      , authenticatedAccounts: 'Authentifizierte M3S-Konten'
+      , administrativeDirectory: 'Verwaltungsverzeichnis'
+      , readOnlySource: 'Governance-Quelle · schreibgeschützt'
+      , sourceConnected: 'Quelle verbunden'
+      , sourceUnavailable: 'Quelle nicht verfügbar'
+      , loading: 'Wird geladen…'
+      , position: 'Funktion'
+      , department: 'Team'
+      , memberType: 'Mitgliedstyp'
+      , noUsers: 'In der Quelle sind keine Benutzer verfügbar.'
     }
   };
 
@@ -388,22 +425,18 @@ const Admin = () => {
 
   const [activeTab, setActiveTab] = useState('overview');
   const [users, setUsers] = useState([]);
+  const [usersStatus, setUsersStatus] = useState('loading');
+  const [authAccountsCount, setAuthAccountsCount] = useState(null);
+  const [authAccountsStatus, setAuthAccountsStatus] = useState('loading');
+  const [usersSourceTimestamp, setUsersSourceTimestamp] = useState(null);
   const [roles, setRoles] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [taskSummary, setTaskSummary] = useState({ total: null, open: null, completed: null });
   const [taskSummaryStatus, setTaskSummaryStatus] = useState('loading');
-  const [showUserModal, setShowUserModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [editingTaskId, setEditingTaskId] = useState(null);
-  const [userFormData, setUserFormData] = useState({
-    nom: '',
-    email: '',
-    role: 'Viewer',
-    statut: 'Actif',
-    dateCreation: new Date().toISOString().split('T')[0]
-  });
   const [roleFormData, setRoleFormData] = useState({
     nom: '',
     permissions: [],
@@ -471,16 +504,8 @@ const Admin = () => {
     loadTasks();
   }, []);
 
-  // Données de démo
+  // Les rôles restent un prototype local distinct du registre utilisateurs.
   useEffect(() => {
-    setUsers([
-      { id: 1, nom: 'Cheikh Sall', email: 'cheikh@seneswiss.sn', role: 'Manager', statut: 'Actif', dateCreation: '2026-01-15' },
-      { id: 2, nom: 'Chantal Ba', email: 'chantal@seneswiss.sn', role: 'Admin Finance', statut: 'Actif', dateCreation: '2026-02-01' },
-      { id: 3, nom: 'Pape Ndiaye', email: 'pape@seneswiss.sn', role: 'Administrateur', statut: 'Actif', dateCreation: '2026-03-10' },
-      { id: 4, nom: 'Gnilane Diop', email: 'gnilane.d@seneswiss.sn', role: 'Chef Projet', statut: 'Actif', dateCreation: '2026-03-20' },
-      { id: 5, nom: 'Ibou Seck', email: 'ibou@seneswiss.sn', role: 'Chef Opérations', statut: 'Actif', dateCreation: '2026-02-15' },
-    ]);
-
     setRoles([
       { id: 1, nom: 'Manager', permissions: ['Read', 'Create', 'Update', 'Delete', 'Admin'], description: 'Accès complet à tous les modules' },
       { id: 2, nom: 'Administrateur', permissions: ['Read', 'Create', 'Update', 'Delete', 'Audit'], description: 'Gestion système et permissions' },
@@ -492,44 +517,51 @@ const Admin = () => {
 
   }, []);
 
+  useEffect(() => {
+    if (activeTab !== 'users') return;
+
+    let active = true;
+    setUsersStatus('loading');
+    setAuthAccountsStatus('loading');
+
+    Promise.allSettled([api.getUsers(100, 0), api.getAuthAccountsCount()]).then(([usersResult, accountsResult]) => {
+      if (!active) return;
+
+      if (usersResult.status === 'fulfilled' && Array.isArray(usersResult.value?.data)) {
+        setUsers(usersResult.value.data.map(normalizeAdministrationUser));
+        setUsersSourceTimestamp(usersResult.value.timestamp || null);
+        setUsersStatus('ready');
+      } else {
+        setUsers([]);
+        setUsersSourceTimestamp(null);
+        setUsersStatus('unavailable');
+      }
+
+      if (accountsResult.status === 'fulfilled') {
+        const count = normalizeAuthAccountsCount(accountsResult.value);
+        setAuthAccountsCount(count);
+        setAuthAccountsStatus(count === null ? 'unavailable' : 'ready');
+      } else {
+        setAuthAccountsCount(null);
+        setAuthAccountsStatus('unavailable');
+      }
+    });
+
+    return () => { active = false; };
+  }, [activeTab]);
+
   // Calculs KPIs
   const tasksTotal = taskSummaryStatus === 'ready' ? taskSummary.total : null;
   const openTasks = taskSummaryStatus === 'ready' ? taskSummary.open : null;
   const completedTasks = taskSummaryStatus === 'ready' ? taskSummary.completed : null;
 
   // Gestion formulaires
-  const handleUserChange = (field, value) => {
-    setUserFormData(prev => ({ ...prev, [field]: value }));
-  };
-
   const handleRoleChange = (field, value) => {
     setRoleFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleTaskChange = (field, value) => {
     setTaskFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleSaveUser = () => {
-    if (!userFormData.nom || !userFormData.email) {
-      alert(t.remplirChamps);
-      return;
-    }
-
-    const normalizedUser = {
-      ...userFormData,
-      statut: normalizeUserStatus(userFormData.statut)
-    };
-
-    if (editingId) {
-      setUsers(users.map(u => u.id === editingId ? { ...normalizedUser, id: editingId } : u));
-    } else {
-      setUsers([...users, { ...normalizedUser, id: Date.now() }]);
-    }
-
-    setShowUserModal(false);
-    setEditingId(null);
-    setUserFormData({ nom: '', email: '', role: 'Viewer', statut: 'Actif', dateCreation: new Date().toISOString().split('T')[0] });
   };
 
   const handleSaveRole = () => {
@@ -549,20 +581,10 @@ const Admin = () => {
     setRoleFormData({ nom: '', permissions: [], description: '' });
   };
 
-  const handleEditUser = (user) => {
-    setEditingId(user.id);
-    setUserFormData(user);
-    setShowUserModal(true);
-  };
-
   const handleEditRole = (role) => {
     setEditingId(role.id);
     setRoleFormData(role);
     setShowRoleModal(true);
-  };
-
-  const handleDeleteUser = (id) => {
-    setUsers(users.filter(u => u.id !== id));
   };
 
   const handleDeleteRole = (id) => {
@@ -787,62 +809,85 @@ const Admin = () => {
 
         {/* Utilisateurs */}
         {activeTab === 'users' && (
-          <div id="administration-users-register" className="scroll-mt-24" tabIndex="-1">
-            <div className="flex justify-end mb-4">
-              <StandardCreateButton onClick={() => { setEditingId(null); setUserFormData({ nom: '', email: '', role: 'Viewer', statut: 'Actif', dateCreation: new Date().toISOString().split('T')[0] }); setShowUserModal(true); }}>
-                {t.newUser}
-              </StandardCreateButton>
+          <section id="administration-users-register" className="scroll-mt-24 space-y-5" tabIndex="-1">
+            <div className="rounded-lg border border-slate-700 bg-slate-800 p-5">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold text-slate-100">{t.userRegisterTitle}</h2>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">{t.userRegisterDescription}</p>
+                </div>
+                <span className="w-fit rounded-full border border-cyan-700 bg-cyan-950/40 px-3 py-1 text-xs font-semibold text-cyan-200">
+                  {t.readOnlySource}
+                </span>
+              </div>
+
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-md border border-blue-800 bg-blue-950/30 p-4">
+                  <p className="text-sm font-medium text-blue-200">{t.authenticatedAccounts}</p>
+                  <p className="mt-2 text-2xl font-semibold text-slate-100">
+                    {authAccountsStatus === 'loading' ? t.loading : authAccountsStatus === 'ready' ? authAccountsCount : '—'}
+                  </p>
+                  <p className="mt-2 text-xs text-slate-400">
+                    {authAccountsStatus === 'ready' ? t.sourceConnected : authAccountsStatus === 'loading' ? t.loading : t.sourceUnavailable}
+                  </p>
+                </div>
+                <div className="rounded-md border border-slate-600 bg-slate-900/35 p-4">
+                  <p className="text-sm font-medium text-slate-200">{t.administrativeDirectory}</p>
+                  <p className="mt-2 text-2xl font-semibold text-slate-100">
+                    {usersStatus === 'loading' ? t.loading : usersStatus === 'ready' ? users.length : '—'}
+                  </p>
+                  <p className="mt-2 text-xs text-slate-400">
+                    {usersStatus === 'ready'
+                      ? `${t.sourceConnected}${usersSourceTimestamp ? ` · ${new Date(usersSourceTimestamp).toLocaleString()}` : ''}`
+                      : usersStatus === 'loading' ? t.loading : t.sourceUnavailable}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-              <table className="w-full text-sm">
+
+            <div className="overflow-x-auto rounded-lg border border-slate-700 bg-slate-800">
+              <table className="min-w-[760px] w-full text-sm">
                 <thead className="bg-slate-700">
                   <tr>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.nom}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.email}</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">{t.role}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.position}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.department}</th>
+                    <th className="px-4 py-2 text-left text-white font-bold">{t.memberType}</th>
                     <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">{t.dateCreation}</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
                   </tr>
                 </thead>
                 <tbody>
+                  {usersStatus === 'loading' && (
+                    <tr><td colSpan="6" className="px-4 py-8 text-center text-slate-300">{t.loading}</td></tr>
+                  )}
+                  {usersStatus === 'unavailable' && (
+                    <tr><td colSpan="6" className="px-4 py-8 text-center text-amber-200">{t.sourceUnavailable}</td></tr>
+                  )}
+                  {usersStatus === 'ready' && users.length === 0 && (
+                    <tr><td colSpan="6" className="px-4 py-8 text-center text-slate-300">{t.noUsers}</td></tr>
+                  )}
                   {users.map(u => (
                     <tr
                       key={u.id}
-                      className="administration-table-row cursor-pointer border-t border-slate-700 transition-colors hover:bg-blue-950/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-400"
-                      tabIndex={0}
-                      aria-label={`${t.modifier} : ${formatValue(u.nom)}`}
-                      onClick={() => handleEditUser(u)}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter' || event.key === ' ') {
-                          event.preventDefault();
-                          handleEditUser(u);
-                        }
-                      }}
+                      className="administration-table-row border-t border-slate-700 transition-colors hover:bg-blue-950/25"
                     >
-                      <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(u.nom)}</td>
+                      <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(u.name)}</td>
                       <td className="px-4 py-2 text-slate-400 text-xs">{formatValue(u.email)}</td>
-                      <td className="px-4 py-2 text-slate-300">{formatValue(translateRole(u.role))}</td>
+                      <td className="px-4 py-2 text-slate-300">{formatValue(u.position)}</td>
+                      <td className="px-4 py-2 text-slate-300">{formatValue(u.department)}</td>
+                      <td className="px-4 py-2 text-slate-300">{formatValue(u.memberType)}</td>
                       <td className="px-4 py-2">
-                        <span className={`px-2 py-1 rounded text-xs font-semibold ${getUserStatusClass(u.statut)}`}>
-                          {getUserStatusLabel(u.statut)}
+                        <span className={`px-2 py-1 rounded text-xs font-semibold ${getUserStatusClass(u.status)}`}>
+                          {getUserStatusLabel(u.status)}
                         </span>
-                      </td>
-                      <td className="px-4 py-2 text-slate-400 text-xs">{formatValue(u.dateCreation)}</td>
-                      <td className="px-4 py-2 flex gap-2">
-                        <button onClick={(event) => { event.stopPropagation(); handleEditUser(u); }} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.modifier} : ${formatValue(u.nom)}`} title={t.modifier}>
-                          <Edit2 size={16} className="text-blue-400" />
-                        </button>
-                        <button onClick={(event) => { event.stopPropagation(); handleDeleteUser(u.id); }} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.supprimer} : ${formatValue(u.nom)}`} title={t.supprimer}>
-                          <Trash2 size={16} className="text-red-400" />
-                        </button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          </div>
+          </section>
         )}
 
         {/* Rôles */}
@@ -949,58 +994,6 @@ const Admin = () => {
             <div className="mt-6 grid grid-cols-2 gap-3">
               <button type="button" onClick={() => setShowTaskModal(false)} className="administration-modal__cancel min-h-11 rounded-md bg-slate-700 px-4 py-2 font-medium text-white transition hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400">{t.annuler}</button>
               <button type="submit" className={`${editingTaskId ? 'm3s-primary-button' : 'm3s-success-button'} administration-modal__primary min-h-11 px-4`}>{editingTaskId ? t.modifier : t.creer}</button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* Modal Utilisateur */}
-      {showUserModal && (
-        <div className="administration-modal fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-4 sm:items-center">
-          <form
-            className="administration-modal__panel max-h-[calc(100vh-2rem)] w-full max-w-md overflow-y-auto rounded-lg border border-slate-700 bg-slate-800 p-5 shadow-2xl sm:p-8"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="user-modal-title"
-            onSubmit={(event) => { event.preventDefault(); handleSaveUser(); }}
-          >
-            <h2 id="user-modal-title" className="mb-6 text-2xl font-semibold text-slate-100">
-              {editingId ? t.editUser : t.newUser}
-            </h2>
-
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="user-name" className="mb-2 block text-sm font-medium text-slate-300">{t.nom} *</label>
-                <input id="user-name" type="text" required value={userFormData.nom} onChange={(e) => handleUserChange('nom', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40" placeholder="Nom complet" />
-              </div>
-
-              <div>
-                <label htmlFor="user-email" className="mb-2 block text-sm font-medium text-slate-300">{t.email} *</label>
-                <input id="user-email" type="email" required value={userFormData.email} onChange={(e) => handleUserChange('email', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40" placeholder="email@seneswiss.sn" />
-              </div>
-
-              <div>
-                <label htmlFor="user-role" className="mb-2 block text-sm font-medium text-slate-300">{t.role}</label>
-                <select id="user-role" value={userFormData.role} onChange={(e) => handleUserChange('role', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40">
-                  {roles.map(r => (
-                    <option key={r.id} value={r.nom}>{translateRole(r.nom)}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="user-status" className="mb-2 block text-sm font-medium text-slate-300">{t.statut}</label>
-                <select id="user-status" value={userFormData.statut} onChange={(e) => handleUserChange('statut', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40">
-                  <option value="Actif">{t.active}</option>
-                  <option value="Inactif">{t.inactive}</option>
-                  <option value="Suspendu">{t.suspended}</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              <button type="button" onClick={() => setShowUserModal(false)} className="administration-modal__cancel min-h-11 rounded-md bg-slate-700 px-4 py-2 font-medium text-white transition hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400">{t.annuler}</button>
-              <button type="submit" className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} administration-modal__primary min-h-11 px-4`}>{editingId ? t.modifier : t.creer}</button>
             </div>
           </form>
         </div>
