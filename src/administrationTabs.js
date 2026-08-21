@@ -1,7 +1,7 @@
 export const resolveAdministrationTab = (tab, { canReadAudit = false } = {}) => {
   if (['tasks', 'projects'].includes(tab)) return 'planning';
   if (tab === 'audit') return canReadAudit ? 'audit' : 'overview';
-  if (['overview', 'planning', 'institution', 'communication', 'compliance', 'processes', 'architecture', 'resources', 'assistant', 'glossary'].includes(tab)) return tab;
+  if (['overview', 'planning', 'institution', 'communication', 'compliance', 'processes', 'architecture', 'resources', 'assistant', 'users', 'glossary'].includes(tab)) return tab;
   return 'overview';
 };
 

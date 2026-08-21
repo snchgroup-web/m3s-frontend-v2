@@ -114,7 +114,7 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   fireEvent.click(screen.getByRole('button', { name: 'Open module: Active major files' }));
   expect(mockNavigate).toHaveBeenCalledWith('/administration?tab=overview&returnTo=dashboard&dashboardKpi=active-major-files#administration-portfolio');
   fireEvent.click(screen.getByRole('button', { name: 'Open module: M3S users' }));
-  expect(mockNavigate).toHaveBeenCalledWith('/administration?tab=architecture&returnTo=dashboard&dashboardKpi=users#admin-architecture-systems');
+  expect(mockNavigate).toHaveBeenCalledWith('/administration?tab=users&returnTo=dashboard&dashboardKpi=users#administration-users-register');
 
   await waitFor(() => {
     expect(api.getFinanceDashboard).toHaveBeenCalledTimes(1);

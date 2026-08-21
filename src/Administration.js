@@ -787,7 +787,7 @@ const Admin = () => {
 
         {/* Utilisateurs */}
         {activeTab === 'users' && (
-          <div>
+          <div id="administration-users-register" className="scroll-mt-24" tabIndex="-1">
             <div className="flex justify-end mb-4">
               <StandardCreateButton onClick={() => { setEditingId(null); setUserFormData({ nom: '', email: '', role: 'Viewer', statut: 'Actif', dateCreation: new Date().toISOString().split('T')[0] }); setShowUserModal(true); }}>
                 {t.newUser}
@@ -884,7 +884,7 @@ const Admin = () => {
           </div>
         )}
 
-        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} permissions={permissions} handledTabs={['overview', 'institution', 'planning', 'communication', 'compliance', 'processes', 'architecture', 'resources', 'assistant', 'audit', 'glossary']} />
+        <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} permissions={permissions} handledTabs={['overview', 'institution', 'planning', 'communication', 'compliance', 'processes', 'architecture', 'resources', 'assistant', 'audit', 'users', 'roles', 'glossary']} />
         </div>
       </div>
 

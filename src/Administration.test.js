@@ -14,6 +14,7 @@ test.each([
   ['architecture', 'architecture'],
   ['resources', 'resources'],
   ['assistant', 'assistant'],
+  ['users', 'users'],
   ['glossary', 'glossary'],
   ['tasks', 'planning'],
   ['projects', 'planning'],
