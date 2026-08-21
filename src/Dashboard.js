@@ -292,6 +292,7 @@ const Dashboard = () => {
       financeRealEstate: 'Finance · Registre immobilier',
       financeSocial: 'Finance · Registre social',
       assetsInventory: 'Stock & Actifs · Inventaire',
+      beneficiarySource: 'Finance · Flux sociaux · Unités distinctes',
       supplierSources: 'Finance + Stock & Actifs · Fournisseurs distincts',
       majorFilesPortfolio: 'Management · Portefeuille des grands dossiers',
       explainIndicator: 'Comprendre cet indicateur'
@@ -378,6 +379,7 @@ const Dashboard = () => {
       financeRealEstate: 'Finance · Real estate register',
       financeSocial: 'Finance · Social register',
       assetsInventory: 'Stock & Assets · Inventory',
+      beneficiarySource: 'Finance · Social flows · Distinct units',
       supplierSources: 'Finance + Stock & Assets · Distinct suppliers',
       majorFilesPortfolio: 'Management · Major-file portfolio',
       explainIndicator: 'Understand this indicator'
@@ -464,6 +466,7 @@ const Dashboard = () => {
       financeRealEstate: 'Finanzen · Immobilienregister',
       financeSocial: 'Finanzen · Sozialregister',
       assetsInventory: 'Bestand & Aktiven · Inventar',
+      beneficiarySource: 'Finanzen · Sozialflüsse · Eindeutige Einheiten',
       supplierSources: 'Finanzen + Bestand & Aktiven · Eindeutige Lieferanten',
       majorFilesPortfolio: 'Management · Portfolio wichtiger Akten',
       explainIndicator: 'Diese Kennzahl verstehen'
@@ -498,7 +501,7 @@ const Dashboard = () => {
       try {
         setLoading(true);
 
-        const [financeDashboard, documentsCount, inventoryCount, tasksCount, authAccountsCount, portfolioSummary, income, expenses, fx, socialResult, realEstateResult, suppliersResult] = await Promise.all([
+        const [financeDashboard, documentsCount, inventoryCount, tasksCount, authAccountsCount, portfolioSummary, income, expenses, fx, socialResult, realEstateResult, suppliersResult, beneficiariesResult] = await Promise.all([
           withApiFallback(() => api.getFinanceDashboard()),
           withApiFallback(() => api.getDocumentsCount()),
           withApiFallback(() => api.getInventoryCount()),
@@ -510,12 +513,14 @@ const Dashboard = () => {
           withApiFallback(() => api.getFxHistory(), {}),
           withApiResult(() => api.getSocialFinance(200, 0)),
           withApiResult(() => api.getRealEstateFinance(200, 0)),
-          withApiResult(() => api.getSuppliersCount())
+          withApiResult(() => api.getSuppliersCount()),
+          withApiResult(() => api.getBeneficiariesCount())
         ]);
 
         const social = socialResult.data;
         const realEstate = realEstateResult.data;
         const suppliers = suppliersResult.data;
+        const beneficiaries = beneficiariesResult.data;
         const incomeAvailable = Array.isArray(income?.data);
         const expensesAvailable = Array.isArray(expenses?.data);
         const incomeRows = incomeAvailable ? income.data : [];
@@ -577,6 +582,7 @@ const Dashboard = () => {
         const usersAvailable = hasApiNumber(authAccountsCount?.total);
         const portfolioAvailable = hasApiNumber(portfolioSummary?.data?.active_dossiers);
         const suppliersAvailable = hasApiNumber(suppliers?.total);
+        const beneficiariesAvailable = hasApiNumber(beneficiaries?.total);
         const inventoryTotal = inventoryAvailable ? Number(inventoryCount.total) : null;
         const documentsTotal = documentsAvailable ? Number(documentsCount.total) : null;
         const tasksTotal = tasksAvailable ? Number(tasksCount.total) : null;
@@ -587,6 +593,7 @@ const Dashboard = () => {
         const usersTotal = usersAvailable ? Number(authAccountsCount.total) : null;
         const activeDossiers = portfolioAvailable ? Number(portfolioSummary.data.active_dossiers) : null;
         const suppliersTotal = suppliersAvailable ? Number(suppliers.total) : null;
+        const beneficiariesTotal = beneficiariesAvailable ? Number(beneficiaries.total) : null;
         const financeAvailable = [totalIncome, totalIncomeCfa, totalExpenses, totalExpensesCfa].every(Number.isFinite);
         const apiUnavailable = [
           financeDashboard,
@@ -608,6 +615,7 @@ const Dashboard = () => {
           || (!social && socialResult.errorStatus !== 403)
           || (!realEstate && realEstateResult.errorStatus !== 403)
           || (!suppliersAvailable && suppliersResult.errorStatus !== 403)
+          || (!beneficiariesAvailable && beneficiariesResult.errorStatus !== 403)
           || fx?.success === false;
         setDataWarning(apiUnavailable);
 
@@ -641,7 +649,8 @@ const Dashboard = () => {
             fx: exchangeRate ? 'available' : 'unavailable',
             realEstate: realEstateAvailable ? 'available' : realEstateResult.errorStatus === 403 ? 'restricted' : 'unavailable',
             social: socialAvailable ? 'available' : socialResult.errorStatus === 403 ? 'restricted' : 'unavailable',
-            suppliers: suppliersAvailable ? 'available' : suppliersResult.errorStatus === 403 ? 'restricted' : 'unavailable'
+            suppliers: suppliersAvailable ? 'available' : suppliersResult.errorStatus === 403 ? 'restricted' : 'unavailable',
+            beneficiaries: beneficiariesAvailable ? 'available' : beneficiariesResult.errorStatus === 403 ? 'restricted' : 'unavailable'
           },
           moduleStats: {
             ...mockDataBase.moduleStats,
@@ -691,7 +700,8 @@ const Dashboard = () => {
             },
             rh: {
               ...mockDataBase.moduleStats.rh,
-              members: usersTotal
+              members: usersTotal,
+              beneficiaries: beneficiariesTotal
             },
             management: {
               ...mockDataBase.moduleStats.management,
@@ -913,7 +923,7 @@ const Dashboard = () => {
         },
         {
           id: 'beneficiaries', label: t.beneficiaries, value: formatCount(dashboardData?.moduleStats.rh.beneficiaries),
-          source: t.notConnected, ...disconnectedState, icon: HeartHandshake, accent: 'violet',
+          source: t.beneficiarySource, ...sourceState('beneficiaries'), icon: HeartHandshake, accent: 'violet',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('beneficiaries'), ...operationsKpiHelp('beneficiaries')
         },
         {

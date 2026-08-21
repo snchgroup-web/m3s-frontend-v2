@@ -316,10 +316,10 @@ const operationsDictionary = {
     },
     {
       id: 'beneficiaries', label: 'Bénéficiaires',
-      definition: 'Nombre de bénéficiaires enregistrés dans le registre Commercial & CRM lorsque son compteur global sera raccordé.',
-      scope: 'Le compteur n’est pas connecté au Tableau de bord. La valeur reste indisponible et ne doit pas être confondue avec les utilisateurs M3S ou l’effectif RH.',
-      source: 'Source cible · Commercial & CRM · registre Bénéficiaires ; raccordement à réaliser.',
-      freshness: 'Indisponible tant qu’un compteur source gouverné n’est pas exposé.',
+      definition: 'Nombre d’unités bénéficiaires distinctes identifiées dans les flux sociaux reclassés de Finance.',
+      scope: 'Les valeurs non vides de CLIENT_BENEFICIAIRE sont normalisées puis dédupliquées. Le compteur ne mesure ni les versements, ni les personnes physiques au sein d’un ménage, ni l’effectif RH.',
+      source: 'API Bénéficiaires · compteur global ; source : recettes Finance classées Aide sociale ; champ CLIENT_BENEFICIAIRE.',
+      freshness: 'Actualisé au chargement du Tableau de bord lorsque la source Finance sociale répond.',
       action: 'Ouvre le registre Bénéficiaires dans Commercial & CRM.'
     },
     {
@@ -348,9 +348,9 @@ const operationsDictionary = {
       freshness: 'Unavailable until a governed source counter is exposed.', action: 'Opens the Orders register in Production.'
     },
     {
-      id: 'beneficiaries', label: 'Beneficiaries', definition: 'Number of beneficiaries recorded in Commercial & CRM once its global counter is connected.',
-      scope: 'The counter is not connected to the Dashboard. The value remains unavailable and must not be confused with M3S users or HR headcount.', source: 'Target source · Commercial & CRM · Beneficiaries register; connection pending.',
-      freshness: 'Unavailable until a governed source counter is exposed.', action: 'Opens the Beneficiaries register in Commercial & CRM.'
+      id: 'beneficiaries', label: 'Beneficiaries', definition: 'Number of distinct beneficiary units identified in reclassified Finance social flows.',
+      scope: 'Non-empty CLIENT_BENEFICIAIRE values are normalized and deduplicated. The counter measures neither payments, nor people within a household, nor HR headcount.', source: 'Beneficiaries API · global counter; source: Finance income classified as social aid; CLIENT_BENEFICIAIRE field.',
+      freshness: 'Refreshed when the Dashboard loads and the Finance social source responds.', action: 'Opens the Beneficiaries register in Commercial & CRM.'
     },
     {
       id: 'suppliers', label: 'Suppliers', definition: 'Global number of distinct supplier names present in Finance expenses and the Stock & Assets register.',
@@ -375,9 +375,9 @@ const operationsDictionary = {
       freshness: 'Nicht verfügbar, bis ein geregelter Quellzähler bereitsteht.', action: 'Öffnet das Bestellregister in Produktion.'
     },
     {
-      id: 'beneficiaries', label: 'Begünstigte', definition: 'Anzahl der in Vertrieb & CRM erfassten Begünstigten, sobald der globale Zähler verbunden ist.',
-      scope: 'Der Zähler ist nicht mit dem Dashboard verbunden. Der Wert bleibt nicht verfügbar und ist weder M3S-Benutzerzahl noch Personalbestand.', source: 'Zielquelle · Vertrieb & CRM · Begünstigtenregister; Verbindung ausstehend.',
-      freshness: 'Nicht verfügbar, bis ein geregelter Quellzähler bereitsteht.', action: 'Öffnet das Begünstigtenregister in Vertrieb & CRM.'
+      id: 'beneficiaries', label: 'Begünstigte', definition: 'Anzahl eindeutiger begünstigter Einheiten in den umklassifizierten Sozialflüssen der Finanzen.',
+      scope: 'Nicht leere Werte aus CLIENT_BENEFICIAIRE werden normalisiert und dedupliziert. Die Kennzahl misst weder Zahlungen noch Personen innerhalb eines Haushalts oder Personalbestand.', source: 'API Begünstigte · globaler Zähler; Quelle: als Sozialhilfe klassifizierte Finanzeinnahmen; Feld CLIENT_BENEFICIAIRE.',
+      freshness: 'Beim Laden des Dashboards aktualisiert, wenn die soziale Finanzquelle antwortet.', action: 'Öffnet das Begünstigtenregister in Vertrieb & CRM.'
     },
     {
       id: 'suppliers', label: 'Lieferanten', definition: 'Globale Anzahl eindeutiger Lieferantennamen in den Finanzausgaben und im Register Bestand & Aktiven.',

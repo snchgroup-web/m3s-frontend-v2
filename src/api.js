@@ -359,6 +359,12 @@ export const api = {
     return res.json();
   },
 
+  getBeneficiariesCount: async () => {
+    const res = await apiFetch(`${API_BASE_URL}/beneficiaries/count`);
+    if (!res.ok) throw await createApiError(res, 'BENEFICIARY_COUNT_UNAVAILABLE');
+    return res.json();
+  },
+
   createInventoryItem: async (data) => {
     const res = await apiFetch(`${API_BASE_URL}/inventory`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)

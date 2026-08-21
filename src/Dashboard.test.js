@@ -32,6 +32,7 @@ jest.mock('./api', () => ({
     getDocumentsCount: jest.fn(),
     getInventoryCount: jest.fn(),
     getSuppliersCount: jest.fn(),
+    getBeneficiariesCount: jest.fn(),
     getTasksCount: jest.fn(),
     getAuthAccountsCount: jest.fn(),
     getManagementPortfolioSummary: jest.fn(),
@@ -49,6 +50,7 @@ beforeEach(() => {
   api.getDocumentsCount.mockResolvedValue({ total: 12 });
   api.getInventoryCount.mockResolvedValue({ total: 8 });
   api.getSuppliersCount.mockResolvedValue({ total: 79 });
+  api.getBeneficiariesCount.mockResolvedValue({ total: 4 });
   api.getTasksCount.mockResolvedValue({ total: 4, open: 2, completed: 2, blocked: 0, cancelled: 0 });
   api.getAuthAccountsCount.mockResolvedValue({ total: 3 });
   api.getManagementPortfolioSummary.mockResolvedValue({
@@ -95,6 +97,8 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   expect(screen.getByText('8')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Open module: Suppliers' })).toHaveTextContent('79');
   expect(screen.getByText('Finance + Stock & Assets · Distinct suppliers')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Open module: Beneficiaries' })).toHaveTextContent('4');
+  expect(screen.getByText('Finance · Social flows · Distinct units')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Open module: Tracked tasks' })).toHaveTextContent('4');
   expect(screen.getByRole('button', { name: 'Open module: Tracked tasks' })).toHaveTextContent('Open 2 · Completed 2');
   expect(screen.getAllByText('Source not connected').length).toBeGreaterThan(0);
@@ -131,6 +135,7 @@ test('shows connected KPI values and labels missing sources explicitly', async (
     expect(api.getDocumentsCount).toHaveBeenCalledTimes(1);
     expect(api.getInventoryCount).toHaveBeenCalledTimes(1);
     expect(api.getSuppliersCount).toHaveBeenCalledTimes(1);
+    expect(api.getBeneficiariesCount).toHaveBeenCalledTimes(1);
     expect(api.getTasksCount).toHaveBeenCalledTimes(1);
     expect(api.getAuthAccountsCount).toHaveBeenCalledTimes(1);
     expect(api.getManagementPortfolioSummary).toHaveBeenCalledTimes(1);
@@ -185,12 +190,13 @@ test('keeps real zero count totals available without a partial-data warning', as
   api.getInventoryCount.mockResolvedValue({ total: 0 });
   api.getTasksCount.mockResolvedValue({ total: 0 });
   api.getSuppliersCount.mockResolvedValue({ total: 0 });
+  api.getBeneficiariesCount.mockResolvedValue({ total: 0 });
 
   render(<Dashboard />);
 
   expect(await screen.findByText('M3S users')).toBeInTheDocument();
   expect(screen.queryByText(/Some live data is temporarily unavailable/)).not.toBeInTheDocument();
-  expect(screen.getAllByText('0').length).toBeGreaterThanOrEqual(4);
+  expect(screen.getAllByText('0').length).toBeGreaterThanOrEqual(5);
 });
 
 test('keeps an unavailable supplier source distinct from a real zero', async () => {
@@ -202,6 +208,18 @@ test('keeps an unavailable supplier source distinct from a real zero', async () 
   expect(supplierCard).toHaveTextContent('—');
   expect(supplierCard).toHaveTextContent('Unavailable');
   expect(supplierCard).not.toHaveTextContent('0');
+  expect(await screen.findByText(/Some live data is temporarily unavailable/)).toBeInTheDocument();
+});
+
+test('keeps an unavailable beneficiary source distinct from a real zero', async () => {
+  api.getBeneficiariesCount.mockResolvedValue(null);
+
+  render(<Dashboard />);
+
+  const beneficiaryCard = await screen.findByRole('button', { name: 'Open module: Beneficiaries' });
+  expect(beneficiaryCard).toHaveTextContent('—');
+  expect(beneficiaryCard).toHaveTextContent('Unavailable');
+  expect(beneficiaryCard).not.toHaveTextContent('0');
   expect(await screen.findByText(/Some live data is temporarily unavailable/)).toBeInTheDocument();
 });
 
