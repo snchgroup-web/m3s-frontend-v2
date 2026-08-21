@@ -35,7 +35,7 @@ test('shows the four management responsibilities in French', () => {
   renderDashboardNavigation();
 
   expect(screen.getByRole('heading', { name: 'Décider avec une vue d’ensemble fiable' })).toBeInTheDocument();
-  expect(screen.getByRole('tab', { name: 'Pilotage' })).toHaveAttribute('aria-selected', 'true');
+  expect(screen.getByRole('tab', { name: "Vue d'ensemble" })).toHaveAttribute('aria-selected', 'true');
   expect(screen.getByText('Piloter')).toBeInTheDocument();
   expect(screen.getByText('Organiser')).toBeInTheDocument();
   expect(screen.getByText('Animer')).toBeInTheDocument();
@@ -79,7 +79,7 @@ test('retries metadata loading after leaving the Intelligence tab mid-request', 
 
   fireEvent.click(screen.getByRole('tab', { name: 'Daily Intelligence' }));
   expect(api.getLatestIntelligence).toHaveBeenCalledTimes(1);
-  fireEvent.click(screen.getByRole('tab', { name: 'Steering' }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Overview' }));
 
   await act(async () => {
     resolveFirstRequest({ success: true, data: null });
@@ -101,7 +101,7 @@ test('allows retrying metadata after a transient request failure', async () => {
 
   fireEvent.click(screen.getByRole('tab', { name: 'Daily Intelligence' }));
   expect(await screen.findByText('The Intelligence source is temporarily unavailable.')).toBeInTheDocument();
-  fireEvent.click(screen.getByRole('tab', { name: 'Steering' }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Overview' }));
   fireEvent.click(screen.getByRole('tab', { name: 'Daily Intelligence' }));
 
   expect(api.getLatestIntelligence).toHaveBeenCalledTimes(2);
@@ -208,7 +208,7 @@ test('keeps the selected dashboard view in the URL', () => {
 test('opens the dedicated steering view from another dashboard view', () => {
   renderDashboardNavigation({}, '/?view=intelligence');
 
-  fireEvent.click(screen.getByRole('tab', { name: 'Pilotage' }));
+  fireEvent.click(screen.getByRole('tab', { name: "Vue d'ensemble" }));
   expect(mockNavigate).toHaveBeenCalledWith(
     { pathname: '/', search: '?view=overview' },
     { replace: true }
