@@ -353,6 +353,12 @@ export const api = {
     }
   },
 
+  getSuppliersCount: async () => {
+    const res = await apiFetch(`${API_BASE_URL}/suppliers/count`);
+    if (!res.ok) throw await createApiError(res, 'SUPPLIER_COUNT_UNAVAILABLE');
+    return res.json();
+  },
+
   createInventoryItem: async (data) => {
     const res = await apiFetch(`${API_BASE_URL}/inventory`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)

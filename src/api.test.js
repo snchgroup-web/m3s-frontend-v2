@@ -84,6 +84,42 @@ test('preserves a Finance access denial without expiring the session', async () 
   expect(localStorage.getItem('session_expired')).toBeNull();
 });
 
+test('requests the governed suppliers count with authentication', async () => {
+  const payload = {
+    success: true,
+    total: 79,
+    source: 'finance_expenses_and_stock_assets'
+  };
+  localStorage.setItem('token', 'test-token');
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    status: 200,
+    json: jest.fn().mockResolvedValue(payload)
+  });
+
+  await expect(api.getSuppliersCount()).resolves.toEqual(payload);
+  expect(global.fetch).toHaveBeenCalledWith(
+    expect.stringMatching(/\/suppliers\/count$/),
+    expect.objectContaining({ headers: { Authorization: 'Bearer test-token' } })
+  );
+});
+
+test('preserves a suppliers count access denial without expiring the session', async () => {
+  localStorage.setItem('token', 'test-token');
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: false,
+    status: 403,
+    json: jest.fn().mockResolvedValue({ code: 'FINANCE_FORBIDDEN', error: 'Finance permission required' })
+  });
+
+  await expect(api.getSuppliersCount()).rejects.toMatchObject({
+    status: 403,
+    code: 'FINANCE_FORBIDDEN'
+  });
+  expect(localStorage.getItem('token')).toBe('test-token');
+  expect(localStorage.getItem('session_expired')).toBeNull();
+});
+
 test('requests the latest Intelligence metadata with authentication', async () => {
   const payload = { success: true, data: { editionDate: '2026-08-07', sourceVersion: 'V4' } };
   localStorage.setItem('token', 'test-token');

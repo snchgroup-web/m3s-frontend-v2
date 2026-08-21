@@ -175,7 +175,8 @@ const mockDataBaseRaw = {
     financing: 'unavailable',
     fx: 'unavailable',
     realEstate: 'unavailable',
-    social: 'unavailable'
+    social: 'unavailable',
+    suppliers: 'unavailable'
   },
   moduleStats: {
     finance: {
@@ -291,6 +292,7 @@ const Dashboard = () => {
       financeRealEstate: 'Finance · Registre immobilier',
       financeSocial: 'Finance · Registre social',
       assetsInventory: 'Stock & Actifs · Inventaire',
+      supplierSources: 'Finance + Stock & Actifs · Fournisseurs distincts',
       majorFilesPortfolio: 'Management · Portefeuille des grands dossiers',
       explainIndicator: 'Comprendre cet indicateur'
     },
@@ -376,6 +378,7 @@ const Dashboard = () => {
       financeRealEstate: 'Finance · Real estate register',
       financeSocial: 'Finance · Social register',
       assetsInventory: 'Stock & Assets · Inventory',
+      supplierSources: 'Finance + Stock & Assets · Distinct suppliers',
       majorFilesPortfolio: 'Management · Major-file portfolio',
       explainIndicator: 'Understand this indicator'
     },
@@ -461,6 +464,7 @@ const Dashboard = () => {
       financeRealEstate: 'Finanzen · Immobilienregister',
       financeSocial: 'Finanzen · Sozialregister',
       assetsInventory: 'Bestand & Aktiven · Inventar',
+      supplierSources: 'Finanzen + Bestand & Aktiven · Eindeutige Lieferanten',
       majorFilesPortfolio: 'Management · Portfolio wichtiger Akten',
       explainIndicator: 'Diese Kennzahl verstehen'
     }
@@ -494,7 +498,7 @@ const Dashboard = () => {
       try {
         setLoading(true);
 
-        const [financeDashboard, documentsCount, inventoryCount, tasksCount, authAccountsCount, portfolioSummary, income, expenses, fx, socialResult, realEstateResult] = await Promise.all([
+        const [financeDashboard, documentsCount, inventoryCount, tasksCount, authAccountsCount, portfolioSummary, income, expenses, fx, socialResult, realEstateResult, suppliersResult] = await Promise.all([
           withApiFallback(() => api.getFinanceDashboard()),
           withApiFallback(() => api.getDocumentsCount()),
           withApiFallback(() => api.getInventoryCount()),
@@ -505,11 +509,13 @@ const Dashboard = () => {
           withApiFallback(() => api.getExpenses(200, 0)),
           withApiFallback(() => api.getFxHistory(), {}),
           withApiResult(() => api.getSocialFinance(200, 0)),
-          withApiResult(() => api.getRealEstateFinance(200, 0))
+          withApiResult(() => api.getRealEstateFinance(200, 0)),
+          withApiResult(() => api.getSuppliersCount())
         ]);
 
         const social = socialResult.data;
         const realEstate = realEstateResult.data;
+        const suppliers = suppliersResult.data;
         const incomeAvailable = Array.isArray(income?.data);
         const expensesAvailable = Array.isArray(expenses?.data);
         const incomeRows = incomeAvailable ? income.data : [];
@@ -570,6 +576,7 @@ const Dashboard = () => {
         const taskStatusesAvailable = hasApiNumber(tasksCount?.open) && hasApiNumber(tasksCount?.completed);
         const usersAvailable = hasApiNumber(authAccountsCount?.total);
         const portfolioAvailable = hasApiNumber(portfolioSummary?.data?.active_dossiers);
+        const suppliersAvailable = hasApiNumber(suppliers?.total);
         const inventoryTotal = inventoryAvailable ? Number(inventoryCount.total) : null;
         const documentsTotal = documentsAvailable ? Number(documentsCount.total) : null;
         const tasksTotal = tasksAvailable ? Number(tasksCount.total) : null;
@@ -579,6 +586,7 @@ const Dashboard = () => {
         const tasksCancelled = hasApiNumber(tasksCount?.cancelled) ? Number(tasksCount.cancelled) : null;
         const usersTotal = usersAvailable ? Number(authAccountsCount.total) : null;
         const activeDossiers = portfolioAvailable ? Number(portfolioSummary.data.active_dossiers) : null;
+        const suppliersTotal = suppliersAvailable ? Number(suppliers.total) : null;
         const financeAvailable = [totalIncome, totalIncomeCfa, totalExpenses, totalExpensesCfa].every(Number.isFinite);
         const apiUnavailable = [
           financeDashboard,
@@ -599,6 +607,7 @@ const Dashboard = () => {
           || !expensesAvailable
           || (!social && socialResult.errorStatus !== 403)
           || (!realEstate && realEstateResult.errorStatus !== 403)
+          || (!suppliersAvailable && suppliersResult.errorStatus !== 403)
           || fx?.success === false;
         setDataWarning(apiUnavailable);
 
@@ -631,7 +640,8 @@ const Dashboard = () => {
             financing: incomeAvailable ? 'available' : 'unavailable',
             fx: exchangeRate ? 'available' : 'unavailable',
             realEstate: realEstateAvailable ? 'available' : realEstateResult.errorStatus === 403 ? 'restricted' : 'unavailable',
-            social: socialAvailable ? 'available' : socialResult.errorStatus === 403 ? 'restricted' : 'unavailable'
+            social: socialAvailable ? 'available' : socialResult.errorStatus === 403 ? 'restricted' : 'unavailable',
+            suppliers: suppliersAvailable ? 'available' : suppliersResult.errorStatus === 403 ? 'restricted' : 'unavailable'
           },
           moduleStats: {
             ...mockDataBase.moduleStats,
@@ -662,6 +672,10 @@ const Dashboard = () => {
             production: {
               ...mockDataBase.moduleStats.production,
               stocks: inventoryTotal
+            },
+            crm: {
+              ...mockDataBase.moduleStats.crm,
+              suppliers: suppliersTotal
             },
             ged: {
               ...mockDataBase.moduleStats.ged,
@@ -904,7 +918,7 @@ const Dashboard = () => {
         },
         {
           id: 'suppliers', label: t.suppliers, value: formatCount(dashboardData?.moduleStats.crm.suppliers),
-          source: t.notConnected, ...disconnectedState, icon: Truck, accent: 'sky',
+          source: t.supplierSources, ...sourceState('suppliers'), icon: Truck, accent: 'sky',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('suppliers'), ...operationsKpiHelp('suppliers')
         }
       ]

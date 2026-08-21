@@ -324,10 +324,10 @@ const operationsDictionary = {
     },
     {
       id: 'suppliers', label: 'Fournisseurs',
-      definition: 'Nombre de fournisseurs enregistrés dans le registre Production lorsque son compteur global sera raccordé.',
-      scope: 'Le compteur n’est pas connecté au Tableau de bord. La valeur reste indisponible et ne mesure ni les fournisseurs actifs ni ceux évalués.',
-      source: 'Source cible · Production · registre Fournisseurs ; raccordement à réaliser.',
-      freshness: 'Indisponible tant qu’un compteur source gouverné n’est pas exposé.',
+      definition: 'Nombre global de noms de fournisseurs distincts présents dans les dépenses Finance et le registre Stocks & Actifs.',
+      scope: 'Les noms non vides sont normalisés par suppression des espaces périphériques et comparaison sans distinction de casse. Le compteur ne mesure ni les fournisseurs actifs, ni leur évaluation, ni le nombre de transactions.',
+      source: 'API Fournisseurs · compteur global ; sources : dépenses Finance et stocks_actifs_propres ; champ total.',
+      freshness: 'Actualisé au chargement du Tableau de bord lorsque les deux sources maîtresses répondent.',
       action: 'Ouvre le registre Fournisseurs dans Production.'
     }
   ],
@@ -353,9 +353,9 @@ const operationsDictionary = {
       freshness: 'Unavailable until a governed source counter is exposed.', action: 'Opens the Beneficiaries register in Commercial & CRM.'
     },
     {
-      id: 'suppliers', label: 'Suppliers', definition: 'Number of suppliers recorded in Production once its global counter is connected.',
-      scope: 'The counter is not connected to the Dashboard. The value remains unavailable and measures neither active nor assessed suppliers.', source: 'Target source · Production · Suppliers register; connection pending.',
-      freshness: 'Unavailable until a governed source counter is exposed.', action: 'Opens the Suppliers register in Production.'
+      id: 'suppliers', label: 'Suppliers', definition: 'Global number of distinct supplier names present in Finance expenses and the Stock & Assets register.',
+      scope: 'Non-empty names are trimmed and compared without case sensitivity. The counter measures neither active or assessed suppliers nor transaction volume.', source: 'Suppliers API · global counter; sources: Finance expenses and stocks_actifs_propres; total field.',
+      freshness: 'Refreshed when the Dashboard loads and both master sources respond.', action: 'Opens the Suppliers register in Production.'
     }
   ],
   DE: [
@@ -380,9 +380,9 @@ const operationsDictionary = {
       freshness: 'Nicht verfügbar, bis ein geregelter Quellzähler bereitsteht.', action: 'Öffnet das Begünstigtenregister in Vertrieb & CRM.'
     },
     {
-      id: 'suppliers', label: 'Lieferanten', definition: 'Anzahl der in Produktion erfassten Lieferanten, sobald der globale Zähler verbunden ist.',
-      scope: 'Der Zähler ist nicht mit dem Dashboard verbunden. Der Wert bleibt nicht verfügbar und misst weder aktive noch bewertete Lieferanten.', source: 'Zielquelle · Produktion · Lieferantenregister; Verbindung ausstehend.',
-      freshness: 'Nicht verfügbar, bis ein geregelter Quellzähler bereitsteht.', action: 'Öffnet das Lieferantenregister in Produktion.'
+      id: 'suppliers', label: 'Lieferanten', definition: 'Globale Anzahl eindeutiger Lieferantennamen in den Finanzausgaben und im Register Bestand & Aktiven.',
+      scope: 'Nicht leere Namen werden außen bereinigt und ohne Beachtung der Groß- und Kleinschreibung verglichen. Die Kennzahl misst weder aktive oder bewertete Lieferanten noch Transaktionen.', source: 'Lieferanten-API · globaler Zähler; Quellen: Finanzausgaben und stocks_actifs_propres; Feld total.',
+      freshness: 'Beim Laden des Dashboards aktualisiert, wenn beide maßgeblichen Quellen antworten.', action: 'Öffnet das Lieferantenregister in Produktion.'
     }
   ]
 };
