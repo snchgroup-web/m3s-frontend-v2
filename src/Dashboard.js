@@ -25,7 +25,7 @@ import {
 import api from './api';
 import DashboardPilotageNavigation from './DashboardPilotageNavigation';
 import { getDashboardIndicatorDestination } from './dashboardNavigation';
-import { getManagementKpiDefinition } from './dashboardKpiDictionary';
+import { getFinanceKpiDefinition, getManagementKpiDefinition } from './dashboardKpiDictionary';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -390,7 +390,7 @@ const Dashboard = () => {
       ged: 'Dokumentenverwaltung',
       revenue: 'Einnahmen',
       expenses: 'Ausgaben',
-      balance: 'Bilanz',
+      balance: 'Saldo',
       employees: 'Mitarbeiter',
       volunteers: 'Freiwillige',
       members: 'Mitglieder',
@@ -400,7 +400,7 @@ const Dashboard = () => {
       documents: 'Dokumente',
       stocks: 'Lagermenge',
       donations: 'Spenden',
-      financing: 'Finanzierung',
+      financing: 'Finanzierungen',
       referenceRate: 'Referenzkurs',
       realEstateFunding: 'Immobilienfinanzierung gesamt',
       realEstateReimbursements: 'Immobilienrückzahlungen',
@@ -762,6 +762,11 @@ const Dashboard = () => {
     outstandingBalance: formatDualCurrency(dashboardData?.moduleStats.finance.outstandingBalance, dashboardData?.moduleStats.finance.outstandingBalanceCfa),
     social: formatDualCurrency(dashboardData?.moduleStats.finance.social, dashboardData?.moduleStats.finance.socialCfa)
   };
+  const financeKpiHelp = indicatorId => ({
+    definition: getFinanceKpiDefinition(indicatorId, language)?.definition,
+    helpLabel: t.explainIndicator,
+    onHelp: () => handleIndicatorHelp(indicatorId)
+  });
   const kpiGroups = [
     {
       id: 'management',
@@ -815,53 +820,53 @@ const Dashboard = () => {
         {
           id: 'revenue', label: t.revenue, value: `${financeValues.revenue.chf} CHF`, secondary: `${financeValues.revenue.cfa} CFA`, dualCurrency: true,
           source: t.financeIncome, ...sourceState('income'), icon: HandCoins, accent: 'emerald',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('revenue')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('revenue'), ...financeKpiHelp('revenue')
         },
         {
           id: 'expenses', label: t.expenses, value: `${financeValues.expenses.chf} CHF`, secondary: `${financeValues.expenses.cfa} CFA`, dualCurrency: true,
           source: t.financeExpenses, ...sourceState('expenses'), icon: ArrowDownToLine, accent: 'red',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('expenses')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('expenses'), ...financeKpiHelp('expenses')
         },
         {
           id: 'balance', label: t.balance, value: `${financeValues.balance.chf} CHF`, secondary: `${financeValues.balance.cfa} CFA`, dualCurrency: true,
           source: t.financeBalance, ...sourceState('finance'), icon: Scale, accent: 'blue',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('balance')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('balance'), ...financeKpiHelp('balance')
         },
         {
           id: 'donations', label: t.donations, value: `${financeValues.donations.chf} CHF`, secondary: `${financeValues.donations.cfa} CFA`, dualCurrency: true,
           source: t.financeDonations, ...sourceState('donations'), icon: Gift, accent: 'amber',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('donations')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('donations'), ...financeKpiHelp('donations')
         },
         {
           id: 'financing', label: t.financing, value: `${financeValues.financing.chf} CHF`, secondary: `${financeValues.financing.cfa} CFA`, dualCurrency: true,
           source: t.financeFunding, ...sourceState('financing'), icon: Landmark, accent: 'cyan',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('financing')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('financing'), ...financeKpiHelp('financing')
         },
         {
           id: 'reference-rate', label: t.referenceRate,
           value: Number.isFinite(dashboardData?.moduleStats.finance.referenceRate) ? `${formatCount(dashboardData.moduleStats.finance.referenceRate)} CFA / CHF` : '— CFA / CHF',
           source: t.financeReferenceRate, ...sourceState('fx'), icon: ArrowRightLeft, accent: 'violet',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('reference-rate')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('reference-rate'), ...financeKpiHelp('reference-rate')
         },
         {
           id: 'real-estate-funding', label: t.realEstateFunding, value: `${financeValues.realEstateFunding.chf} CHF`, secondary: `${financeValues.realEstateFunding.cfa} CFA`, dualCurrency: true,
           source: t.financeRealEstate, ...sourceState('realEstate'), icon: Building2, accent: 'sky',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('real-estate-funding')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('real-estate-funding'), ...financeKpiHelp('real-estate-funding')
         },
         {
           id: 'real-estate-reimbursements', label: t.realEstateReimbursements, value: `${financeValues.reimbursements.chf} CHF`, secondary: `${financeValues.reimbursements.cfa} CFA`, dualCurrency: true,
           source: t.financeRealEstate, ...sourceState('realEstate'), icon: HandCoins, accent: 'teal',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('real-estate-reimbursements')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('real-estate-reimbursements'), ...financeKpiHelp('real-estate-reimbursements')
         },
         {
           id: 'outstanding-balance', label: t.outstandingBalance, value: `${financeValues.outstandingBalance.chf} CHF`, secondary: `${financeValues.outstandingBalance.cfa} CFA`, dualCurrency: true,
           source: t.financeRealEstate, ...sourceState('realEstate'), icon: Landmark, accent: 'amber',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('outstanding-balance')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('outstanding-balance'), ...financeKpiHelp('outstanding-balance')
         },
         {
           id: 'social-flows', label: t.socialFlows, value: `${financeValues.social.chf} CHF`, secondary: `${financeValues.social.cfa} CFA`, dualCurrency: true,
           source: t.financeSocial, ...sourceState('social'), icon: HeartHandshake, accent: 'pink',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('social-flows')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('social-flows'), ...financeKpiHelp('social-flows')
         }
       ]
     },
