@@ -10,6 +10,8 @@ import MembersDirectory from './MembersDirectory';
 import RHGlossary from './RHGlossary';
 import RHOverview from './RHOverview';
 import { StandardCreateButton } from './StandardUI';
+import FunctionResourcesOverview from './FunctionResourcesOverview';
+import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
 
 const RH = () => {
   const { language } = useLanguage();
@@ -341,7 +343,7 @@ const RH = () => {
     const tab = new URLSearchParams(location.search).get('tab');
     if (tab === 'membres') {
       setActiveTab('directory');
-    } else if (['overview', 'directory', 'employes', 'benevoles', 'teams', 'hours', 'competences', 'myaccount', 'glossary'].includes(tab)) {
+    } else if (['overview', 'architecture', 'processes', 'directory', 'employes', 'benevoles', 'teams', 'hours', 'competences', 'myaccount', 'resources', 'glossary'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
@@ -545,7 +547,7 @@ const RH = () => {
 
   return (
     <>
-      <div className="m3s-design-scope min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-8">
+      <div className="m3s-design-scope m3s-business-module min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-8">
         <div className="mx-auto w-full max-w-[1800px]">
 
         {/* Tabs */}
@@ -574,6 +576,14 @@ const RH = () => {
           />
         )}
 
+        {activeTab === 'architecture' && (
+          <FunctionArchitectureOverview moduleId="rh" language={language} />
+        )}
+
+        {activeTab === 'processes' && (
+          <FunctionProcessOverview moduleId="rh" language={language} />
+        )}
+
         {/* Employés */}
         {activeTab === 'employes' && (
           <PersonnelTable data={employes} type="employe" onEdit={handleEdit} onDelete={requestDelete} onAdd={openNewModal} />
@@ -589,11 +599,15 @@ const RH = () => {
           <MembersDirectory onLoaded={handleDirectoryLoaded} />
         )}
 
+        {activeTab === 'resources' && (
+          <FunctionResourcesOverview moduleId="rh" language={language} onSelectTab={handleTabSelect} />
+        )}
+
         {activeTab === 'glossary' && (
           <RHGlossary language={language} />
         )}
 
-        <ChildTabPlaceholder moduleId="rh" language={language} activeTab={activeTab} handledTabs={['overview', 'directory', 'employes', 'benevoles', 'glossary']} />
+        <ChildTabPlaceholder moduleId="rh" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'directory', 'employes', 'benevoles', 'resources', 'glossary']} />
         </div>
       </div>
 

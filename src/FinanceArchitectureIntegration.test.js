@@ -56,7 +56,7 @@ test('opens the observed Finance architecture from its governed child tab', asyn
   );
 
   expect(await screen.findByRole('heading', { name: 'Voir les objets, les sources et leurs réutilisations' })).toBeInTheDocument();
-  expect(screen.getAllByRole('button', { name: 'Architecture & relations' }).length).toBeGreaterThan(0);
+  expect(screen.getAllByRole('tab', { name: 'Architecture & relations' }).length).toBeGreaterThan(0);
   expect(screen.queryByRole('heading', { name: 'Tracer les ressources, les engagements et les preuves financières' })).not.toBeInTheDocument();
 });
 
@@ -68,7 +68,7 @@ test('keeps the selected Finance child in the URL', async () => {
   );
 
   await screen.findByRole('heading', { name: 'Voir les objets, les sources et leurs réutilisations' });
-  fireEvent.click(screen.getByRole('button', { name: 'Processus & contrôles' }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Processus & procédures' }));
 
   expect(mockNavigate).toHaveBeenCalledWith({ pathname: '/finance', search: '?tab=processes' });
 });

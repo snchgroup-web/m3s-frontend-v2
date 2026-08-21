@@ -218,9 +218,9 @@
         {
           "id": "finance-processes",
           "label": {
-            "FR": "Processus & Contrôles",
-            "EN": "Processes & Controls",
-            "DE": "Prozesse & Kontrollen"
+            "FR": "Processus & Procédures",
+            "EN": "Processes & Procedures",
+            "DE": "Prozesse & Verfahren"
           },
           "icon": "ListChecks",
           "path": "/finance?tab=processes"
@@ -318,6 +318,26 @@
       "path": "/rh",
       "children": [
         {
+          "id": "rh-architecture",
+          "label": {
+            "FR": "Architecture & Relations",
+            "EN": "Architecture & Relations",
+            "DE": "Architektur & Beziehungen"
+          },
+          "icon": "Network",
+          "path": "/rh?tab=architecture"
+        },
+        {
+          "id": "rh-processes",
+          "label": {
+            "FR": "Processus & Procédures",
+            "EN": "Processes & Procedures",
+            "DE": "Prozesse & Verfahren"
+          },
+          "icon": "ListChecks",
+          "path": "/rh?tab=processes"
+        },
+        {
           "id": "directory",
           "label": {
             "FR": "Annuaire interne",
@@ -368,6 +388,16 @@
           "path": "/rh?tab=myaccount"
         },
         {
+          "id": "rh-resources",
+          "label": {
+            "FR": "Ressources",
+            "EN": "Resources",
+            "DE": "Ressourcen"
+          },
+          "icon": "Library",
+          "path": "/rh?tab=resources"
+        },
+        {
           "id": "rh-glossary",
           "label": {
             "FR": "Glossaire",
@@ -389,6 +419,26 @@
       "icon": "Briefcase",
       "path": "/crm",
       "children": [
+        {
+          "id": "crm-architecture",
+          "label": {
+            "FR": "Architecture & Relations",
+            "EN": "Architecture & Relations",
+            "DE": "Architektur & Beziehungen"
+          },
+          "icon": "Network",
+          "path": "/crm?tab=architecture"
+        },
+        {
+          "id": "crm-processes",
+          "label": {
+            "FR": "Processus & Procédures",
+            "EN": "Processes & Procedures",
+            "DE": "Prozesse & Verfahren"
+          },
+          "icon": "ListChecks",
+          "path": "/crm?tab=processes"
+        },
         {
           "id": "prospects-leads",
           "label": {
@@ -472,6 +522,26 @@
       "path": "/production",
       "children": [
         {
+          "id": "production-architecture",
+          "label": {
+            "FR": "Architecture & Relations",
+            "EN": "Architecture & Relations",
+            "DE": "Architektur & Beziehungen"
+          },
+          "icon": "Network",
+          "path": "/production?tab=architecture"
+        },
+        {
+          "id": "production-processes",
+          "label": {
+            "FR": "Processus & Procédures",
+            "EN": "Processes & Procedures",
+            "DE": "Prozesse & Verfahren"
+          },
+          "icon": "ListChecks",
+          "path": "/production?tab=processes"
+        },
+        {
           "id": "orders",
           "label": {
             "FR": "Commandes",
@@ -544,6 +614,26 @@
       "path": "/actifs",
       "children": [
         {
+          "id": "stock-architecture",
+          "label": {
+            "FR": "Architecture & Relations",
+            "EN": "Architecture & Relations",
+            "DE": "Architektur & Beziehungen"
+          },
+          "icon": "Network",
+          "path": "/actifs?tab=architecture"
+        },
+        {
+          "id": "stock-processes",
+          "label": {
+            "FR": "Processus & Procédures",
+            "EN": "Processes & Procedures",
+            "DE": "Prozesse & Verfahren"
+          },
+          "icon": "ListChecks",
+          "path": "/actifs?tab=processes"
+        },
+        {
           "id": "inventory",
           "label": {
             "FR": "Inventaire",
@@ -605,6 +695,26 @@
       "icon": "Zap",
       "path": "/ged",
       "children": [
+        {
+          "id": "it-support-architecture",
+          "label": {
+            "FR": "Architecture & Relations",
+            "EN": "Architecture & Relations",
+            "DE": "Architektur & Beziehungen"
+          },
+          "icon": "Network",
+          "path": "/ged?tab=architecture"
+        },
+        {
+          "id": "it-support-processes",
+          "label": {
+            "FR": "Processus & Procédures",
+            "EN": "Processes & Procedures",
+            "DE": "Prozesse & Verfahren"
+          },
+          "icon": "ListChecks",
+          "path": "/ged?tab=processes"
+        },
         {
           "id": "ged",
           "label": {

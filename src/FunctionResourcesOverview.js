@@ -44,6 +44,14 @@ const copy = {
 };
 
 const modules = {
+  rh: {
+    names: { FR: 'Ressources Humaines', EN: 'Human Resources', DE: 'Personalwesen' },
+    families: {
+      FR: ['Référentiels RH et rôles', 'CV, contrats et modèles', 'Droits, confidentialité et données personnelles', 'Compétences, activités et preuves'],
+      EN: ['HR references and roles', 'CVs, contracts and templates', 'Rights, confidentiality and personal data', 'Skills, activities and evidence'],
+      DE: ['HR-Referenzen und Rollen', 'Lebensläufe, Verträge und Vorlagen', 'Rechte, Vertraulichkeit und personenbezogene Daten', 'Kompetenzen, Aktivitäten und Nachweise']
+    }
+  },
   finances: {
     names: { FR: 'Finances', EN: 'Finance', DE: 'Finanzen' },
     families: {

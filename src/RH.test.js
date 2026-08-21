@@ -49,7 +49,7 @@ beforeEach(() => {
 test('keeps the URL and header context aligned when selecting the RH overview', async () => {
   render(<RH />);
 
-  fireEvent.click(screen.getByRole('button', { name: 'Overview', exact: true }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Overview', exact: true }));
   expect(mockNavigate).toHaveBeenCalledWith('/rh?tab=overview');
   await waitFor(() => {
     expect(screen.getByText('Members (0)')).toBeInTheDocument();

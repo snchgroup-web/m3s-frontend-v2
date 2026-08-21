@@ -80,6 +80,7 @@ test('uses the shared overview label for the Dashboard landing view', () => {
 test('places governed resources immediately before each local glossary', () => {
   const pairs = [
     ['finances', 'finance-resources', 'finance-glossary'],
+    ['rh', 'rh-resources', 'rh-glossary'],
     ['commercial', 'crm-resources', 'crm-glossary'],
     ['production', 'production-resources', 'production-glossary'],
     ['stock', 'stock-resources', 'glossary'],
@@ -95,6 +96,22 @@ test('places governed resources immediately before each local glossary', () => {
   expect(productionIds.indexOf('production-stocks')).toBeLessThan(productionIds.indexOf('production-resources'));
 
   const itIds = menuData.menu.find(item => item.id === 'it-support').children.map(item => item.id);
-  expect(itIds[0]).toBe('ged');
+  expect(itIds[0]).toBe('it-support-architecture');
   expect(itIds.at(-1)).toBe('it-support-glossary');
+});
+
+test('starts every support and operations function with Architecture then Processes', () => {
+  const expected = [
+    ['finances', 'finance-architecture', 'finance-processes'],
+    ['rh', 'rh-architecture', 'rh-processes'],
+    ['it-support', 'it-support-architecture', 'it-support-processes'],
+    ['commercial', 'crm-architecture', 'crm-processes'],
+    ['production', 'production-architecture', 'production-processes'],
+    ['stock', 'stock-architecture', 'stock-processes']
+  ];
+
+  expected.forEach(([moduleId, architectureId, processesId]) => {
+    const ids = menuData.menu.find(item => item.id === moduleId).children.map(item => item.id);
+    expect(ids.slice(0, 2)).toEqual([architectureId, processesId]);
+  });
 });

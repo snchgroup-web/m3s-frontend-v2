@@ -508,6 +508,109 @@ html.dark .function-map-management {
   box-shadow: 0 0 18px rgba(59, 130, 246, 0.12);
 }
 
+/* Socle visuel partagé par les fonctions métier issues du pilote Administration. */
+html:not(.dark) .m3s-business-module .text-slate-100,
+html:not(.dark) .m3s-business-module .text-slate-200 {
+  color: var(--m3s-text-primary) !important;
+}
+
+html:not(.dark) .m3s-business-module .text-slate-300,
+html:not(.dark) .m3s-business-module .text-slate-400 {
+  color: var(--m3s-text-secondary) !important;
+}
+
+html:not(.dark) .m3s-business-module .text-slate-500 {
+  color: #64748b !important;
+}
+
+html:not(.dark) .m3s-business-module .text-blue-100,
+html:not(.dark) .m3s-business-module .text-blue-200,
+html:not(.dark) .m3s-business-module .text-blue-300,
+html:not(.dark) .m3s-business-module .text-blue-400 {
+  color: #1d4ed8 !important;
+}
+
+html:not(.dark) .m3s-business-module .text-cyan-100,
+html:not(.dark) .m3s-business-module .text-cyan-200,
+html:not(.dark) .m3s-business-module .text-cyan-300,
+html:not(.dark) .m3s-business-module .text-cyan-400 {
+  color: #0e7490 !important;
+}
+
+html:not(.dark) .m3s-business-module .text-emerald-100,
+html:not(.dark) .m3s-business-module .text-emerald-200,
+html:not(.dark) .m3s-business-module .text-emerald-300,
+html:not(.dark) .m3s-business-module .text-emerald-400,
+html:not(.dark) .m3s-business-module .text-green-100,
+html:not(.dark) .m3s-business-module .text-green-200,
+html:not(.dark) .m3s-business-module .text-green-300,
+html:not(.dark) .m3s-business-module .text-green-400 {
+  color: #047857 !important;
+}
+
+html:not(.dark) .m3s-business-module .text-amber-100,
+html:not(.dark) .m3s-business-module .text-amber-200,
+html:not(.dark) .m3s-business-module .text-amber-300,
+html:not(.dark) .m3s-business-module .text-amber-400,
+html:not(.dark) .m3s-business-module .text-orange-100,
+html:not(.dark) .m3s-business-module .text-orange-200,
+html:not(.dark) .m3s-business-module .text-orange-300,
+html:not(.dark) .m3s-business-module .text-orange-400 {
+  color: #92400e !important;
+}
+
+html:not(.dark) .m3s-business-module .text-purple-100,
+html:not(.dark) .m3s-business-module .text-purple-200,
+html:not(.dark) .m3s-business-module .text-purple-300,
+html:not(.dark) .m3s-business-module .text-purple-400,
+html:not(.dark) .m3s-business-module .text-violet-100,
+html:not(.dark) .m3s-business-module .text-violet-200,
+html:not(.dark) .m3s-business-module .text-violet-300,
+html:not(.dark) .m3s-business-module .text-violet-400 {
+  color: #6d28d9 !important;
+}
+
+html:not(.dark) .m3s-business-module .text-red-100,
+html:not(.dark) .m3s-business-module .text-red-200,
+html:not(.dark) .m3s-business-module .text-red-300,
+html:not(.dark) .m3s-business-module .text-red-400,
+html:not(.dark) .m3s-business-module .text-rose-100,
+html:not(.dark) .m3s-business-module .text-rose-200,
+html:not(.dark) .m3s-business-module .text-rose-300,
+html:not(.dark) .m3s-business-module .text-rose-400 {
+  color: #be123c !important;
+}
+
+html:not(.dark) .m3s-business-module [class*="bg-blue-500/"],
+html:not(.dark) .m3s-business-module [class*="bg-blue-950/"] {
+  background-color: #eff6ff !important;
+}
+
+html:not(.dark) .m3s-business-module [class*="bg-cyan-500/"],
+html:not(.dark) .m3s-business-module [class*="bg-cyan-950/"] {
+  background-color: #ecfeff !important;
+}
+
+html:not(.dark) .m3s-business-module [class*="bg-emerald-500/"],
+html:not(.dark) .m3s-business-module [class*="bg-green-500/"] {
+  background-color: #ecfdf5 !important;
+}
+
+html:not(.dark) .m3s-business-module [class*="bg-amber-500/"],
+html:not(.dark) .m3s-business-module [class*="bg-amber-950/"] {
+  background-color: #fffbeb !important;
+}
+
+html:not(.dark) .m3s-business-module [class*="bg-purple-500/"],
+html:not(.dark) .m3s-business-module [class*="bg-violet-500/"] {
+  background-color: #f5f3ff !important;
+}
+
+html:not(.dark) .m3s-business-module [class*="bg-red-500/"],
+html:not(.dark) .m3s-business-module [class*="bg-rose-500/"] {
+  background-color: #fff1f2 !important;
+}
+
 @media (min-width: 1280px) {
   .function-map-family-grid {
     position: relative;

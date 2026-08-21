@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
 
 test.each([
+  ['rh', 'FR', 'Ressources Ressources Humaines'],
   ['finances', 'FR', 'Ressources Finances'],
   ['it-support', 'EN', 'IT & Support resources'],
   ['commercial', 'DE', 'Ressourcen Vertrieb & CRM'],

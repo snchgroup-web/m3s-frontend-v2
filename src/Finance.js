@@ -173,7 +173,7 @@ const Finance = () => {
       chartScope: 'extrait chargé',
       overview: 'Vue d\'ensemble',
       architecture: 'Architecture & relations',
-      processes: 'Processus & contrôles',
+      processes: 'Processus & procédures',
       recettes: 'Recettes',
       depenses: 'Dépenses',
       fx: 'Historique FX',
@@ -313,7 +313,7 @@ const Finance = () => {
       chartScope: 'loaded extract',
       overview: 'Overview',
       architecture: 'Architecture & relations',
-      processes: 'Processes & controls',
+      processes: 'Processes & procedures',
       recettes: 'Revenue',
       depenses: 'Expenses',
       fx: 'FX History',
@@ -453,7 +453,7 @@ const Finance = () => {
       chartScope: 'geladener Auszug',
       overview: 'Übersicht',
       architecture: 'Architektur & Beziehungen',
-      processes: 'Prozesse & Kontrollen',
+      processes: 'Prozesse & Verfahren',
       recettes: 'Einnahmen',
       depenses: 'Ausgaben',
       fx: 'Wechselkurshistorie',
@@ -1738,7 +1738,7 @@ const Finance = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+      <div className="m3s-business-module min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-8">
         <div className="mx-auto w-full max-w-[1800px]">
 
         {activeTab === 'overview' && <FinanceFunctionFrame language={language} />}

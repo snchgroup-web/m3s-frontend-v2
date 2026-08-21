@@ -54,6 +54,6 @@ test('opens Finance processes and controls from its governed child tab', async (
   );
 
   expect(await screen.findByRole('heading', { name: 'Comprendre les parcours et les contrôles réellement actifs' })).toBeInTheDocument();
-  expect(screen.getAllByRole('button', { name: 'Processus & contrôles' }).length).toBeGreaterThan(0);
+  expect(screen.getAllByRole('tab', { name: 'Processus & procédures' }).length).toBeGreaterThan(0);
   expect(screen.queryByRole('heading', { name: 'Voir les objets, les sources et leurs réutilisations' })).not.toBeInTheDocument();
 });

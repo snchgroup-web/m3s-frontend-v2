@@ -29,6 +29,7 @@ import { GlossaryEntryPanel } from './GlossaryHelp';
 import ITSupportGlossary from './ITSupportGlossary';
 import { StandardCreateButton } from './StandardUI';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
+import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
 
 const GED = () => {
   const { language } = useLanguage();
@@ -815,7 +816,7 @@ const GED = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'resources', 'glossary', 'ai-digital', 'database', 'user-guide', 'tech-docs', 'help-support', 'manual'].includes(tab)) {
+    if (['overview', 'architecture', 'processes', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'resources', 'glossary', 'ai-digital', 'database', 'user-guide', 'tech-docs', 'help-support', 'manual'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
@@ -1135,7 +1136,7 @@ const GED = () => {
  
   return (
     <>
-      <div className="it-support-overview min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+      <div className="it-support-overview m3s-business-module min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-8">
         <div className="mx-auto w-full max-w-[1800px]">
  
         {/* KPIs */}
@@ -1321,6 +1322,14 @@ const GED = () => {
               </table>
             )} />
           </div>
+        )}
+
+        {activeTab === 'architecture' && (
+          <FunctionArchitectureOverview moduleId="it-support" language={language} />
+        )}
+
+        {activeTab === 'processes' && (
+          <FunctionProcessOverview moduleId="it-support" language={language} />
         )}
 
         {activeTab === 'archives' && (
@@ -2034,7 +2043,7 @@ const GED = () => {
           </section>
         )}
 
-        <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'resources', 'glossary', 'ai-digital', 'user-guide', 'tech-docs', 'help-support']} />
+        <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'resources', 'glossary', 'ai-digital', 'user-guide', 'tech-docs', 'help-support']} />
         </div>
       </div>
 
