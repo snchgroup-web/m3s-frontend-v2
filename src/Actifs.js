@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis
 } from 'recharts';
@@ -15,6 +15,7 @@ import { getDasFromLegacyBu, translateDas, translateLegacyBu } from './strategic
 import StockAssetsFrame from './StockAssetsFrame';
 import StockAssetsGlossary from './StockAssetsGlossary';
 import { StandardCreateButton } from './StandardUI';
+import FunctionResourcesOverview from './FunctionResourcesOverview';
 
 const CATEGORY_VALUES = [
   'Véhicule',
@@ -141,6 +142,7 @@ const cleanDate = (value) => {
 const Actifs = () => {
   const { language } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [inventaire, setInventaire] = useState([]);
   const [realEstateTransactions, setRealEstateTransactions] = useState([]);
@@ -241,8 +243,15 @@ const Actifs = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    setActiveTab(['overview', 'inventory', 'immobilisations', 'risques', 'glossary'].includes(tab) ? tab : 'overview');
+    setActiveTab(['overview', 'inventory', 'immobilisations', 'risques', 'resources', 'glossary'].includes(tab) ? tab : 'overview');
   }, [location.search]);
+
+  const selectTab = (tab) => {
+    setActiveTab(tab);
+    const params = new URLSearchParams(location.search);
+    params.set('tab', tab);
+    navigate(`/actifs?${params.toString()}`);
+  };
 
   useEffect(() => {
     if (!showModal) return;
@@ -515,7 +524,7 @@ const Actifs = () => {
             moduleId="stock"
             language={language}
             activeTab={activeTab}
-            onSelect={setActiveTab}
+            onSelect={selectTab}
             tabs={[
               { tab: 'overview', label: t.overview },
               { tab: 'inventory', label: `${t.inventory} (${inventaire.length})` },
@@ -673,11 +682,15 @@ const Actifs = () => {
             </div>
           )}
 
+          {!loading && activeTab === 'resources' && (
+            <FunctionResourcesOverview moduleId="stock" language={language} onSelectTab={selectTab} />
+          )}
+
           {!loading && activeTab === 'glossary' && (
             <StockAssetsGlossary language={language} />
           )}
 
-          <ChildTabPlaceholder moduleId="stock" language={language} activeTab={activeTab} handledTabs={['inventory', 'overview', 'immobilisations', 'risques', 'glossary']} />
+          <ChildTabPlaceholder moduleId="stock" language={language} activeTab={activeTab} handledTabs={['inventory', 'overview', 'immobilisations', 'risques', 'resources', 'glossary']} />
         </div>
       </div>
 

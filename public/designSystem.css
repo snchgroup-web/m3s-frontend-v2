@@ -116,6 +116,31 @@ html.dark.deep-theme {
   box-shadow: var(--m3s-shadow-panel);
 }
 
+html:not(.dark) .function-resources-overview .text-slate-100 {
+  color: var(--m3s-text-primary) !important;
+}
+
+html:not(.dark) .function-resources-overview .text-slate-300,
+html:not(.dark) .function-resources-overview .text-slate-400 {
+  color: var(--m3s-text-secondary) !important;
+}
+
+html:not(.dark) .function-resources-overview .text-cyan-300 {
+  color: #0e7490 !important;
+}
+
+html:not(.dark) .function-resources-overview .text-blue-300 {
+  color: #1d4ed8 !important;
+}
+
+html:not(.dark) .function-resources-overview [class*="bg-amber-950/"] {
+  background-color: #fffbeb !important;
+}
+
+html:not(.dark) .function-resources-overview .text-amber-100 {
+  color: #78350f !important;
+}
+
 .m3s-raised {
   border: 1px solid var(--m3s-border);
   border-radius: 0.5rem;

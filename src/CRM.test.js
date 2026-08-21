@@ -7,7 +7,8 @@ let mockSearch = '';
 let mockLanguage = 'EN';
 
 jest.mock('react-router-dom', () => ({
-  useLocation: () => ({ search: mockSearch })
+  useLocation: () => ({ search: mockSearch }),
+  useNavigate: () => jest.fn()
 }), { virtual: true });
 
 jest.mock('./LanguageContext', () => ({
@@ -63,15 +64,15 @@ test('keeps the CRM pilot read-only and preserves validated sources', async () =
   expect(screen.getByText('Organization or person')).toBeInTheDocument();
   expect(screen.queryByRole('button', { name: 'Add' })).not.toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole('button', { name: 'Clients (0)' }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Clients (0)' }));
   expect(screen.getByRole('heading', { name: 'Clients' })).toBeInTheDocument();
   expect(screen.getByText('Identity and segment')).toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole('button', { name: 'Sales (0)' }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Sales (0)' }));
   expect(screen.getByRole('heading', { name: 'Sales' })).toBeInTheDocument();
   expect(screen.getByText('Prospect or client')).toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole('button', { name: 'Donations (0)' }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Donations (0)' }));
   expect(screen.getByRole('heading', { name: 'Donations' })).toBeInTheDocument();
 
   await waitFor(() => {
@@ -81,7 +82,7 @@ test('keeps the CRM pilot read-only and preserves validated sources', async () =
 
   mockLanguage = 'DE';
   view.rerender(<CRM />);
-  fireEvent.click(screen.getByRole('button', { name: 'Verkäufe (0)' }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Verkäufe (0)' }));
 
   expect(screen.getByRole('heading', { name: 'Verkäufe' })).toBeInTheDocument();
   expect(screen.getByText('Nächstes Teilpaket')).toBeInTheDocument();

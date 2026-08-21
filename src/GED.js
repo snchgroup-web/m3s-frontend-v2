@@ -28,6 +28,7 @@ import { getDigitalOffersTaxonomyData } from './taxonomyDataProvider';
 import { GlossaryEntryPanel } from './GlossaryHelp';
 import ITSupportGlossary from './ITSupportGlossary';
 import { StandardCreateButton } from './StandardUI';
+import FunctionResourcesOverview from './FunctionResourcesOverview';
 
 const GED = () => {
   const { language } = useLanguage();
@@ -814,7 +815,7 @@ const GED = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'glossary', 'ai-digital', 'database', 'user-guide', 'tech-docs', 'help-support', 'manual'].includes(tab)) {
+    if (['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'resources', 'glossary', 'ai-digital', 'database', 'user-guide', 'tech-docs', 'help-support', 'manual'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
@@ -1763,6 +1764,10 @@ const GED = () => {
           </div>
         )}
 
+        {activeTab === 'resources' && (
+          <FunctionResourcesOverview moduleId="it-support" language={language} onSelectTab={selectTab} />
+        )}
+
         {activeTab === 'glossary' && (
           <ITSupportGlossary language={language} />
         )}
@@ -2029,7 +2034,7 @@ const GED = () => {
           </section>
         )}
 
-        <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'glossary', 'ai-digital', 'user-guide', 'tech-docs', 'help-support']} />
+        <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'resources', 'glossary', 'ai-digital', 'user-guide', 'tech-docs', 'help-support']} />
         </div>
       </div>
 
