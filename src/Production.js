@@ -770,6 +770,20 @@ const Production = () => {
       <div className="m3s-business-module min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-8">
         <div className="mx-auto w-full max-w-[1800px]">
 
+        <ModulePageTabs
+          moduleId="production"
+          language={language}
+          activeTab={activeTab}
+          onSelect={selectTab}
+          tabs={[
+            { tab: 'overview', label: t.overview },
+            { tab: 'commandes', label: t.commandes },
+            { tab: 'fournisseurs', label: t.fournisseurs },
+            { tab: 'stocks', label: t.stocks },
+            { tab: 'glossary', label: t.glossary }
+          ]}
+        />
+
         <section className="mb-6 rounded-lg border border-blue-500/40 bg-blue-950/45 p-5 text-blue-50">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex items-start gap-3">
@@ -834,21 +848,6 @@ const Production = () => {
             </div>
           </div>
         </div>
- 
-        {/* Tabs */}
-        <ModulePageTabs
-          moduleId="production"
-          language={language}
-          activeTab={activeTab}
-          onSelect={selectTab}
-          tabs={[
-            { tab: 'overview', label: t.overview },
-            { tab: 'commandes', label: t.commandes },
-            { tab: 'fournisseurs', label: t.fournisseurs },
-            { tab: 'stocks', label: t.stocks },
-            { tab: 'glossary', label: t.glossary }
-          ]}
-        />
  
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (

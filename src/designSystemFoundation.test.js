@@ -12,6 +12,15 @@ const dateInputSource = fs.readFileSync(path.join(__dirname, 'LocalizedDateInput
 const journalTaskSource = fs.readFileSync(path.join(__dirname, 'JournalTaskRegister.js'), 'utf8');
 const businessModuleSources = ['Finance.js', 'RH.js', 'CRM.js', 'Production.js', 'Actifs.js', 'GED.js']
   .map(file => fs.readFileSync(path.join(__dirname, file), 'utf8'));
+const primaryTabPlacementCases = [
+  ['Administration.js', '<AdministrationDashboardOverview'],
+  ['Finance.js', '<FinanceOverviewIndicators'],
+  ['RH.js', '<RHOverview'],
+  ['CRM.js', '<div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-5">'],
+  ['Production.js', '<section className="mb-6 rounded-lg'],
+  ['Actifs.js', '{error &&'],
+  ['GED.js', '<div className="it-support-kpis']
+];
 
 describe('global M3S design foundations', () => {
   test('scopes shared typography and theme tokens to every module page', () => {
@@ -71,5 +80,17 @@ describe('global M3S design foundations', () => {
     businessModuleSources.forEach(source => expect(source).toContain('m3s-business-module'));
     expect(designSystemCss).toContain('html:not(.dark) .m3s-business-module .text-slate-100');
     expect(designSystemCss).toContain('html:not(.dark) .m3s-business-module .text-blue-100');
+  });
+
+  test('places the primary horizontal navigation before local indicators and content', () => {
+    primaryTabPlacementCases.forEach(([file, firstContentMarker]) => {
+      const source = fs.readFileSync(path.join(__dirname, file), 'utf8');
+      const tabsIndex = source.indexOf('<ModulePageTabs');
+      const contentIndex = source.indexOf(firstContentMarker);
+
+      expect(tabsIndex).toBeGreaterThan(-1);
+      expect(contentIndex).toBeGreaterThan(-1);
+      expect(tabsIndex).toBeLessThan(contentIndex);
+    });
   });
 });

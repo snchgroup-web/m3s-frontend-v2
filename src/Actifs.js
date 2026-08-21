@@ -503,6 +503,20 @@ const Actifs = () => {
     <>
       <div className="m3s-business-module min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 lg:p-6">
         <div className="w-full">
+          <ModulePageTabs
+            moduleId="stock"
+            language={language}
+            activeTab={activeTab}
+            onSelect={selectTab}
+            tabs={[
+              { tab: 'overview', label: t.overview },
+              { tab: 'inventory', label: `${t.inventory} (${inventaire.length})` },
+              { tab: 'immobilisations', label: `${t.immobilisations} (${terrainSummary.quantite} ${t.terrainUnit})` },
+              { tab: 'risques', label: `${t.risks} (${articlesRisques.length})` },
+              { tab: 'glossary', label: t.glossary }
+            ]}
+          />
+
           {error && <div className="mb-4 rounded border border-red-500/30 bg-red-500/10 px-4 py-3 text-red-200">{error}</div>}
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4 mb-6">
@@ -520,20 +534,6 @@ const Actifs = () => {
               </div>
             ))}
           </div>
-
-          <ModulePageTabs
-            moduleId="stock"
-            language={language}
-            activeTab={activeTab}
-            onSelect={selectTab}
-            tabs={[
-              { tab: 'overview', label: t.overview },
-              { tab: 'inventory', label: `${t.inventory} (${inventaire.length})` },
-              { tab: 'immobilisations', label: `${t.immobilisations} (${terrainSummary.quantite} ${t.terrainUnit})` },
-              { tab: 'risques', label: `${t.risks} (${articlesRisques.length})` },
-              { tab: 'glossary', label: t.glossary }
-            ]}
-          />
 
           {loading && <div className="py-16 text-center text-slate-400">Chargement...</div>}
 
