@@ -21,8 +21,13 @@ describe('responsive dashboard shell', () => {
   test('keeps dashboard content compact and readable on small screens', () => {
     expect(dashboardSource).toContain('space-y-4 p-3 sm:p-4 lg:space-y-6 lg:p-6');
     expect(dashboardSource).toContain("gridClass: 'grid-cols-2 sm:grid-cols-3 xl:grid-cols-6'");
+    expect(dashboardSource).toContain("gridClass: 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4'");
     expect(dashboardSource).toContain('global-kpi-card group relative min-h-[132px]');
     expect(dashboardSource).toContain('flex min-h-[130px] w-full flex-col rounded-md');
+    expect(dashboardSource).toContain('global-kpi-currency mt-2 flex flex-wrap items-baseline');
+    expect(dashboardSource).toContain('global-kpi-cfa whitespace-nowrap text-orange-400');
+    expect(dashboardSource).toContain("icon: TrendingDown, accent: 'red'");
+    expect(dashboardSource).toContain("icon: Gift, accent: 'violet'");
     expect(pilotageSource).toContain('moduleId="dashboard"');
     expect(readSource('moduleTabs.js')).toContain('flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto');
     expect(pilotageSource).toContain('intelligence-card rounded-md border');
@@ -53,6 +58,8 @@ describe('responsive dashboard shell', () => {
     expect(dashboardSource).toContain('Operations & Development');
     expect(indexHtml).toContain('html:not(.dark) .global-kpi-group .text-slate-100{color:#172033!important}');
     expect(indexHtml).toContain('html:not(.dark) .global-kpi-card{background-color:#fff!important');
+    expect(indexHtml).toContain('html:not(.dark) .global-kpi-card .global-kpi-cfa{color:#c2410c!important}');
+    expect(indexHtml).toContain('html:not(.dark) .global-kpi-card .global-kpi-status--available');
   });
 
   test('keeps only source-backed dashboard analysis', () => {
