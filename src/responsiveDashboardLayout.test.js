@@ -22,7 +22,7 @@ describe('responsive dashboard shell', () => {
     expect(dashboardSource).toContain('space-y-4 p-3 sm:p-4 lg:space-y-6 lg:p-6');
     expect(dashboardSource).toContain("gridClass: 'grid-cols-2 sm:grid-cols-3 xl:grid-cols-5'");
     expect(dashboardSource).toContain('global-kpi-card group flex min-h-[132px] w-full flex-col');
-    expect(pilotageSource).toContain('grid w-full grid-cols-3 gap-1.5');
+    expect(pilotageSource).toContain('flex w-full gap-1.5 overflow-x-auto');
     expect(pilotageSource).toContain('intelligence-card rounded-md border');
   });
 

@@ -172,7 +172,7 @@ test('opens a local function mind map directly from its governed URL', () => {
 
   expect(screen.getByText('Carte locale')).toBeInTheDocument();
   expect(screen.getAllByText('Administration').length).toBeGreaterThan(0);
-  expect(screen.getByText('Architecture & Relations')).toBeInTheDocument();
+  expect(screen.getAllByText('Architecture & Relations')).toHaveLength(2);
   expect(screen.getByText('Processus & Procédures')).toBeInTheDocument();
   expect(screen.getByText('Assistant administratif')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Revenir à la carte globale' })).toBeInTheDocument();
@@ -215,11 +215,38 @@ test('opens the dedicated steering view from another dashboard view', () => {
   );
 });
 
+test('opens the four governed global views without confusing architecture with the function map', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate });
+
+  fireEvent.click(screen.getByRole('tab', { name: 'Architecture & Relations' }));
+  expect(screen.getByRole('heading', { name: 'Architecture & Relations' })).toBeInTheDocument();
+  expect(screen.getByText('Chaîne de relation')).toBeInTheDocument();
+  expect(screen.queryByText('Carte mentale globale des fonctions')).not.toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('tab', { name: 'Processus & Contrôles' }));
+  expect(screen.getByRole('heading', { name: 'Processus & Contrôles' })).toBeInTheDocument();
+  expect(screen.getByText('Contrôles minimaux')).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('tab', { name: 'Ressources' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Ouvrir Administration' }));
+  expect(onNavigate).toHaveBeenCalledWith('/administration?tab=resources&returnTo=dashboard-resources');
+
+  fireEvent.click(screen.getByRole('tab', { name: 'Glossaire' }));
+  expect(screen.getByText('Source maîtresse')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Ouvrir le Glossaire central' }));
+  expect(onNavigate).toHaveBeenCalledWith('/ged?tab=glossary&returnTo=dashboard-glossary');
+});
+
 test.each([
   ['', 'overview'],
   ['?view=overview', 'overview'],
   ['?view=intelligence', 'intelligence'],
   ['?view=map', 'map'],
+  ['?view=architecture', 'architecture'],
+  ['?view=processes', 'processes'],
+  ['?view=resources', 'resources'],
+  ['?view=glossary', 'glossary'],
   ['?view=unknown', 'overview']
 ])('resolves %p to the safe dashboard view %p', (search, expected) => {
   expect(resolveDashboardView(search)).toBe(expected);
