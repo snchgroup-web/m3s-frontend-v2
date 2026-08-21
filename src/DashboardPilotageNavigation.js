@@ -179,13 +179,13 @@ const translations = {
 };
 
 const functionDefinitions = [
-  { id: 'administration', group: 'support', path: '/administration', icon: Building2, color: 'text-cyan-300', background: 'bg-cyan-950/40' },
-  { id: 'finance', group: 'support', path: '/finance', icon: WalletCards, color: 'text-emerald-300', background: 'bg-emerald-950/40' },
-  { id: 'rh', group: 'support', path: '/rh', icon: UsersRound, color: 'text-violet-300', background: 'bg-violet-950/40' },
-  { id: 'it', group: 'support', path: '/ged', icon: FolderCog, color: 'text-teal-300', background: 'bg-teal-950/40' },
-  { id: 'crm', group: 'operations', path: '/crm', icon: Handshake, color: 'text-sky-300', background: 'bg-sky-950/40' },
-  { id: 'production', group: 'operations', path: '/production', icon: Factory, color: 'text-orange-300', background: 'bg-orange-950/40' },
-  { id: 'assets', group: 'operations', path: '/actifs', icon: Warehouse, color: 'text-rose-300', background: 'bg-rose-950/40' }
+  { id: 'administration', group: 'support', path: '/administration', icon: Building2, color: 'text-cyan-300', background: 'bg-cyan-950/40', accent: '#06b6d4' },
+  { id: 'finance', group: 'support', path: '/finance', icon: WalletCards, color: 'text-emerald-300', background: 'bg-emerald-950/40', accent: '#10b981' },
+  { id: 'rh', group: 'support', path: '/rh', icon: UsersRound, color: 'text-violet-300', background: 'bg-violet-950/40', accent: '#8b5cf6' },
+  { id: 'it', group: 'support', path: '/ged', icon: FolderCog, color: 'text-teal-300', background: 'bg-teal-950/40', accent: '#14b8a6' },
+  { id: 'crm', group: 'operations', path: '/crm', icon: Handshake, color: 'text-sky-300', background: 'bg-sky-950/40', accent: '#0ea5e9' },
+  { id: 'production', group: 'operations', path: '/production', icon: Factory, color: 'text-orange-300', background: 'bg-orange-950/40', accent: '#f97316' },
+  { id: 'assets', group: 'operations', path: '/actifs', icon: Warehouse, color: 'text-rose-300', background: 'bg-rose-950/40', accent: '#f43f5e' }
 ];
 
 const dashboardViews = ['overview', 'intelligence', 'map', 'architecture', 'processes', 'incidents', 'resources', 'glossary'];
@@ -584,17 +584,30 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
           {!selectedFunction && (
             <div className="function-map-canvas mt-5" aria-label={t.mapTitle}>
               <div className="function-map-hub mx-auto flex max-w-sm items-center justify-center rounded-md px-4 py-3 text-center">
-                <Network className="mr-2 text-blue-300" size={21} aria-hidden="true" />
-                <span className="text-base font-semibold text-slate-100">{t.globalHub}</span>
+                <span className="function-map-hub-icon inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md">
+                  <Network className="text-blue-300" size={21} aria-hidden="true" />
+                </span>
+                <span className="ml-3 text-left">
+                  <span className="block text-xs font-semibold uppercase text-blue-300">{t.globalMap}</span>
+                  <span className="block text-base font-semibold text-slate-100">{t.globalHub}</span>
+                </span>
               </div>
               <div className="function-map-connector mx-auto h-6 w-px" aria-hidden="true" />
               <section className="function-map-management mx-auto max-w-4xl rounded-md p-3 sm:p-4" aria-labelledby="management-family-title">
                 <div className="flex items-start gap-3">
                   <span className="function-map-icon inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-blue-300"><LayoutDashboard size={21} aria-hidden="true" /></span>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <h4 id="management-family-title" className="text-sm font-semibold uppercase text-blue-300">{t.managementFamily[0]}</h4>
                     <p className="mt-1 text-sm leading-5 text-slate-400">{t.managementFamily[1]}</p>
                   </div>
+                </div>
+                <div className="function-map-management-actions mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  {t.management.map(([label], index) => (
+                    <div key={label} className="function-map-management-action flex min-h-9 items-center gap-2 rounded-md px-2.5 py-2">
+                      <span className="function-map-management-index inline-flex h-6 w-6 shrink-0 items-center justify-center rounded text-xs font-semibold">{index + 1}</span>
+                      <span className="truncate text-xs font-semibold text-slate-200">{label}</span>
+                    </div>
+                  ))}
                 </div>
               </section>
               <div className="function-map-connector mx-auto h-6 w-px" aria-hidden="true" />
@@ -610,14 +623,14 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
                         <p className="mt-1 text-sm leading-5 text-slate-400">{groupBody}</p>
                       </div>
                     </div>
-                    <div className={`grid grid-cols-1 gap-2 ${groupId === 'support' ? 'sm:grid-cols-2' : ''}`}>
-                      {functionDefinitions.filter(({ group }) => group === groupId).map(({ id, icon: Icon, color, background }) => (
-                        <button key={id} type="button" onClick={() => selectFunction(id)} aria-label={`${t.showLocalMap} : ${t.functions[id]}`} className="function-map-node group flex min-h-14 items-center justify-between rounded-md p-3 text-left transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500/70">
+                    <div className={`function-map-node-grid grid grid-cols-1 gap-2 ${groupId === 'support' ? 'sm:grid-cols-2' : ''}`}>
+                      {functionDefinitions.filter(({ group }) => group === groupId).map(({ id, icon: Icon, color, background, accent }) => (
+                        <button key={id} type="button" onClick={() => selectFunction(id)} aria-label={`${t.showLocalMap} : ${t.functions[id]}`} style={{ '--function-accent': accent }} className="function-map-node group flex min-h-14 items-center justify-between rounded-md p-3 text-left transition focus:outline-none focus:ring-2 focus:ring-blue-500/70">
                           <span className="flex min-w-0 items-center gap-3">
-                            <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${background} ${color}`}><Icon size={20} aria-hidden="true" /></span>
+                            <span className={`function-map-node-icon inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${background} ${color}`}><Icon size={20} aria-hidden="true" /></span>
                             <span className="text-sm font-semibold text-slate-100">{t.functions[id]}</span>
                           </span>
-                          <Network className="ml-2 shrink-0 text-slate-500 group-hover:text-blue-300" size={17} aria-hidden="true" />
+                          <ArrowRight className="function-map-node-arrow ml-2 shrink-0 text-slate-500" size={17} aria-hidden="true" />
                         </button>
                       ))}
                     </div>
