@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   ArrowRight,
   BookOpenText,
@@ -13,6 +13,7 @@ import {
   Workflow
 } from 'lucide-react';
 import DashboardIncidentRiskOverview from './DashboardIncidentRiskOverview';
+import { getManagementKpiDefinitions } from './dashboardKpiDictionary';
 
 const copy = {
   FR: {
@@ -61,6 +62,10 @@ const copy = {
       title: 'Glossaire',
       body: 'Ces définitions locales facilitent la lecture du Tableau de bord global. Le Glossaire central 2SG reste la source maîtresse.',
       open: 'Ouvrir le Glossaire central',
+      kpiTitle: 'Dictionnaire KPI · Management & Gouvernance',
+      kpiBody: 'Chaque fiche sépare la définition, le périmètre, la source, la fraîcheur et l’action. Elle explique la mesure sans modifier sa valeur.',
+      fields: { definition: 'Définition', scope: 'Périmètre', source: 'Source', freshness: 'Fraîcheur', action: 'Action associée' },
+      viewIndicator: 'Revenir à l’indicateur',
       terms: [
         ['Tableau de bord global', 'Vue transversale de pilotage qui consolide des informations sans remplacer les applications métier.'],
         ['Indicateur (KPI)', 'Mesure définie, sourcée et datée qui aide à suivre un objectif, un résultat ou un risque.'],
@@ -88,6 +93,10 @@ const copy = {
     },
     glossary: {
       eyebrow: 'STEERING VOCABULARY', title: 'Glossary', body: 'These local definitions support reading of the Global Dashboard. The 2SG Central Glossary remains the master source.', open: 'Open Central Glossary',
+      kpiTitle: 'KPI dictionary · Management & Governance',
+      kpiBody: 'Each record separates definition, scope, source, freshness and action. It explains the measure without changing its value.',
+      fields: { definition: 'Definition', scope: 'Scope', source: 'Source', freshness: 'Freshness', action: 'Associated action' },
+      viewIndicator: 'Return to indicator',
       terms: [['Global Dashboard', 'Cross-functional steering view that consolidates information without replacing business applications.'], ['Indicator (KPI)', 'A defined, sourced and dated measure used to track an objective, result or risk.'], ['Master source', 'Governed source of record for a given item, rule or version.'], ['Freshness', 'Date or age of the latest available and checked data.'], ['Unavailable', 'Explicit state used when a real source does not respond or provides no reliable value.'], ['Function map', 'Mind map showing 2SG/M3S families, functions and local components.']]
     }
   },
@@ -108,6 +117,10 @@ const copy = {
     },
     glossary: {
       eyebrow: 'STEUERUNGSVOKABULAR', title: 'Glossar', body: 'Diese lokalen Definitionen erleichtern das Lesen des globalen Dashboards. Das zentrale 2SG-Glossar bleibt die Hauptquelle.', open: 'Zentrales Glossar öffnen',
+      kpiTitle: 'KPI-Wörterbuch · Management & Governance',
+      kpiBody: 'Jeder Eintrag trennt Definition, Umfang, Quelle, Aktualität und Aktion. Er erklärt die Messgröße, ohne ihren Wert zu verändern.',
+      fields: { definition: 'Definition', scope: 'Umfang', source: 'Quelle', freshness: 'Aktualität', action: 'Zugeordnete Aktion' },
+      viewIndicator: 'Zur Kennzahl zurückkehren',
       terms: [['Globales Dashboard', 'Funktionsübergreifende Steuerungsansicht, die Informationen bündelt, ohne Fachanwendungen zu ersetzen.'], ['Kennzahl (KPI)', 'Definierte, belegte und datierte Messgröße zur Verfolgung eines Ziels, Ergebnisses oder Risikos.'], ['Hauptquelle', 'Geregelte maßgebliche Quelle für eine Information, Regel oder Version.'], ['Aktualität', 'Datum oder Alter der letzten verfügbaren und geprüften Daten.'], ['Nicht verfügbar', 'Expliziter Zustand, wenn eine reale Quelle nicht antwortet oder keinen verlässlichen Wert liefert.'], ['Funktionskarte', 'Mindmap der Bereiche, Funktionen und lokalen Komponenten von 2SG/M3S.']]
     }
   }
@@ -158,21 +171,60 @@ const ResourcesView = ({ data, onNavigate }) => {
   );
 };
 
-const GlossaryView = ({ data, onNavigate }) => (
-  <div className="mt-5">
-    <ViewHeader data={data} />
-    <dl className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">{data.terms.map(([term, definition]) => <div key={term} className="rounded-md border border-slate-700 bg-slate-900/35 p-3"><dt className="flex items-center gap-2 text-sm font-semibold text-slate-100"><BookOpenText className="shrink-0 text-blue-300" size={18} aria-hidden="true" />{term}</dt><dd className="mt-2 text-sm leading-5 text-slate-400">{definition}</dd></div>)}</dl>
-    <button type="button" onClick={() => onNavigate('/ged?tab=glossary&returnTo=dashboard-glossary')} className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-600">{data.open}<ArrowRight size={16} aria-hidden="true" /></button>
-  </div>
-);
+const GlossaryView = ({ data, language, selectedKpi, onNavigate }) => {
+  const kpis = getManagementKpiDefinitions(language);
 
-const DashboardGovernanceViews = ({ activeView, language = 'FR', onNavigate }) => {
+  useEffect(() => {
+    if (!selectedKpi || !kpis.some(({ id }) => id === selectedKpi)) return undefined;
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(`dashboard-kpi-definition-${selectedKpi}`)?.scrollIntoView({ block: 'start' });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [kpis, selectedKpi]);
+
+  return (
+    <div className="mt-5">
+      <ViewHeader data={data} />
+      <dl className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">{data.terms.map(([term, definition]) => <div key={term} className="rounded-md border border-slate-700 bg-slate-900/35 p-3"><dt className="flex items-center gap-2 text-sm font-semibold text-slate-100"><BookOpenText className="shrink-0 text-blue-300" size={18} aria-hidden="true" />{term}</dt><dd className="mt-2 text-sm leading-5 text-slate-400">{definition}</dd></div>)}</dl>
+      <section className="mt-5 border-t border-slate-700 pt-5" aria-labelledby="management-kpi-dictionary-title">
+        <h4 id="management-kpi-dictionary-title" className="text-base font-semibold text-slate-100">{data.kpiTitle}</h4>
+        <p className="mt-1 max-w-4xl text-sm leading-6 text-slate-400">{data.kpiBody}</p>
+        <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">
+          {kpis.map((kpi) => {
+            const selected = selectedKpi === kpi.id;
+            return (
+              <article
+                key={kpi.id}
+                id={`dashboard-kpi-definition-${kpi.id}`}
+                className={`scroll-mt-28 rounded-md border p-4 ${selected ? 'border-blue-400 bg-blue-950/25 ring-1 ring-blue-500/40' : 'border-slate-700 bg-slate-900/35'}`}
+              >
+                <h5 className="flex items-center gap-2 text-base font-semibold text-slate-100"><BookOpenText className="shrink-0 text-blue-300" size={19} aria-hidden="true" />{kpi.label}</h5>
+                <dl className="mt-3 space-y-3 text-sm">
+                  {['definition', 'scope', 'source', 'freshness', 'action'].map((field) => (
+                    <div key={field}>
+                      <dt className="font-semibold text-slate-200">{data.fields[field]}</dt>
+                      <dd className="mt-0.5 leading-5 text-slate-400">{kpi[field]}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <button type="button" onClick={() => onNavigate(`/?view=overview&dashboardKpi=${encodeURIComponent(kpi.id)}#dashboard-kpi-${kpi.id}`)} className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-600 bg-slate-800 px-4 py-2 text-sm font-semibold text-slate-100 hover:border-blue-400 hover:bg-slate-700">{data.viewIndicator}<ArrowRight size={16} aria-hidden="true" /></button>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+      <button type="button" onClick={() => onNavigate('/ged?tab=glossary&returnTo=dashboard-glossary')} className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-600">{data.open}<ArrowRight size={16} aria-hidden="true" /></button>
+    </div>
+  );
+};
+
+const DashboardGovernanceViews = ({ activeView, language = 'FR', selectedKpi = '', onNavigate }) => {
   const t = copy[language] || copy.FR;
   if (activeView === 'architecture') return <ArchitectureView data={t.architecture} />;
   if (activeView === 'processes') return <ProcessesView data={t.processes} />;
   if (activeView === 'incidents') return <DashboardIncidentRiskOverview language={language} onNavigate={onNavigate} />;
   if (activeView === 'resources') return <ResourcesView data={t.resources} onNavigate={onNavigate} />;
-  if (activeView === 'glossary') return <GlossaryView data={t.glossary} onNavigate={onNavigate} />;
+  if (activeView === 'glossary') return <GlossaryView data={t.glossary} language={language} selectedKpi={selectedKpi} onNavigate={onNavigate} />;
   return null;
 };
 

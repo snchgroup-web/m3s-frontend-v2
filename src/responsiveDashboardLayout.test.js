@@ -21,7 +21,8 @@ describe('responsive dashboard shell', () => {
   test('keeps dashboard content compact and readable on small screens', () => {
     expect(dashboardSource).toContain('space-y-4 p-3 sm:p-4 lg:space-y-6 lg:p-6');
     expect(dashboardSource).toContain("gridClass: 'grid-cols-2 sm:grid-cols-3 xl:grid-cols-5'");
-    expect(dashboardSource).toContain('global-kpi-card group flex min-h-[132px] w-full flex-col');
+    expect(dashboardSource).toContain('global-kpi-card group relative min-h-[132px]');
+    expect(dashboardSource).toContain('flex min-h-[130px] w-full flex-col rounded-md');
     expect(pilotageSource).toContain('moduleId="dashboard"');
     expect(readSource('moduleTabs.js')).toContain('flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto');
     expect(pilotageSource).toContain('intelligence-card rounded-md border');
