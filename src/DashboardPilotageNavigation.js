@@ -4,7 +4,6 @@ import {
   ArrowLeft,
   ArrowRight,
   BookOpenText,
-  BrainCircuit,
   BriefcaseBusiness,
   Building2,
   Factory,
@@ -21,13 +20,13 @@ import {
 } from 'lucide-react';
 import api from './api';
 import DashboardGovernanceViews from './DashboardGovernanceViews';
+import { ModulePageTabs } from './moduleTabs';
 
 const translations = {
   FR: {
     eyebrow: 'PILOTAGE GLOBAL 2SG / M3S',
     title: 'Décider avec une vue d’ensemble fiable',
     subtitle: 'Le tableau de bord global relie la situation opérationnelle, l’intelligence stratégique et les fonctions métier sans remplacer leurs tableaux de bord locaux.',
-    tabs: { overview: 'Pilotage', intelligence: 'Daily Intelligence', map: 'Carte des fonctions', architecture: 'Architecture & Relations', processes: 'Processus & Contrôles', resources: 'Ressources', glossary: 'Glossaire' },
     management: [
       ['Piloter', 'Fixer les objectifs et contrôler les résultats.'],
       ['Organiser', 'Répartir et coordonner le travail.'],
@@ -79,7 +78,6 @@ const translations = {
     eyebrow: '2SG / M3S GLOBAL STEERING',
     title: 'Decide from a reliable overall view',
     subtitle: 'The global dashboard connects operational status, strategic intelligence and business functions without replacing their local dashboards.',
-    tabs: { overview: 'Steering', intelligence: 'Daily Intelligence', map: 'Function map', architecture: 'Architecture & Relationships', processes: 'Processes & Controls', resources: 'Resources', glossary: 'Glossary' },
     management: [
       ['Steer', 'Set objectives and monitor results.'],
       ['Organise', 'Allocate and coordinate work.'],
@@ -131,7 +129,6 @@ const translations = {
     eyebrow: 'GLOBALE 2SG-/M3S-STEUERUNG',
     title: 'Mit einer verlässlichen Gesamtübersicht entscheiden',
     subtitle: 'Das globale Dashboard verbindet operative Lage, strategische Intelligenz und Unternehmensfunktionen, ohne deren lokale Dashboards zu ersetzen.',
-    tabs: { overview: 'Steuerung', intelligence: 'Daily Intelligence', map: 'Funktionskarte', architecture: 'Architektur & Beziehungen', processes: 'Prozesse & Kontrollen', resources: 'Ressourcen', glossary: 'Glossar' },
     management: [
       ['Steuern', 'Ziele festlegen und Ergebnisse kontrollieren.'],
       ['Organisieren', 'Arbeit verteilen und koordinieren.'],
@@ -190,8 +187,6 @@ const functionDefinitions = [
   { id: 'production', group: 'operations', path: '/production', icon: Factory, color: 'text-orange-300', background: 'bg-orange-950/40' },
   { id: 'assets', group: 'operations', path: '/actifs', icon: Warehouse, color: 'text-rose-300', background: 'bg-rose-950/40' }
 ];
-
-const tabIcons = { overview: LayoutDashboard, intelligence: BrainCircuit, map: Network, architecture: FolderCog, processes: BriefcaseBusiness, resources: Warehouse, glossary: BookOpenText };
 
 const dashboardViews = ['overview', 'intelligence', 'map', 'architecture', 'processes', 'resources', 'glossary'];
 
@@ -392,16 +387,11 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
   const [intelligenceState, setIntelligenceState] = useState({ status: 'idle', data: null });
   const [artifactError, setArtifactError] = useState('');
   const intelligenceRequested = useRef(false);
-  const activeTabRef = useRef(null);
   const t = translations[language] || translations.FR;
 
   useEffect(() => {
     setActiveView(resolveDashboardView(location.search));
   }, [location.search]);
-
-  useEffect(() => {
-    activeTabRef.current?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
-  }, [activeView]);
 
   const selectView = (view) => {
     const nextView = resolveDashboardView(`?view=${view}`);
@@ -490,32 +480,20 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
         : t.intelligenceUnavailable;
 
   return (
-    <section className="global-pilotage rounded-lg border border-slate-700 bg-slate-800 p-3 shadow-lg sm:p-5" aria-labelledby="global-pilotage-title">
-      <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+    <section aria-labelledby="global-pilotage-title">
+      <ModulePageTabs
+        moduleId="dashboard"
+        language={language}
+        activeTab={activeView}
+        onSelect={selectView}
+        ariaLabel={t.title}
+      />
+      <div className="global-pilotage rounded-lg border border-slate-700 bg-slate-800 p-3 shadow-lg sm:p-5">
+      <div>
         <div className="max-w-3xl">
           <p className="text-xs font-semibold uppercase text-blue-300">{t.eyebrow}</p>
           <h2 id="global-pilotage-title" className="mt-1 text-xl font-semibold text-slate-100 sm:text-2xl">{t.title}</h2>
           <p className="mt-2 text-sm leading-6 text-slate-300">{t.subtitle}</p>
-        </div>
-        <div className="flex w-full gap-1.5 overflow-x-auto pb-1 sm:gap-2 xl:max-w-3xl" role="tablist" aria-label={t.title}>
-          {Object.entries(t.tabs).map(([id, label]) => {
-            const Icon = tabIcons[id];
-            const active = activeView === id;
-            return (
-              <button
-                key={id}
-                ref={active ? activeTabRef : undefined}
-                type="button"
-                role="tab"
-                aria-selected={active}
-                onClick={() => selectView(id)}
-                className={`inline-flex min-h-11 shrink-0 items-center justify-center gap-1.5 rounded-md border px-3 py-2 text-xs font-semibold leading-4 transition sm:gap-2 sm:text-sm ${active ? 'border-blue-500 bg-blue-700 text-white' : 'border-slate-600 bg-slate-700 text-slate-200 hover:border-blue-400 hover:bg-slate-600'}`}
-              >
-                <Icon size={17} aria-hidden="true" />
-                <span>{label}</span>
-              </button>
-            );
-          })}
         </div>
       </div>
 
@@ -667,6 +645,7 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
           )}
         </div>
       )}
+      </div>
     </section>
   );
 };
