@@ -4,7 +4,6 @@ import { useLanguage } from './LanguageContext';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
   AlertTriangle,
-  ArrowRightLeft,
   Building2,
   Files,
   FolderKanban,
@@ -90,6 +89,20 @@ const kpiAccentClasses = {
   violet: 'bg-violet-500/10 text-violet-300'
 };
 
+const kpiFlowTextClasses = {
+  amber: 'text-amber-300',
+  blue: 'text-blue-300',
+  cyan: 'text-cyan-300',
+  emerald: 'text-emerald-300',
+  lime: 'text-lime-300',
+  pink: 'text-pink-300',
+  red: 'text-red-300',
+  rose: 'text-rose-300',
+  sky: 'text-sky-300',
+  teal: 'text-teal-300',
+  violet: 'text-violet-300'
+};
+
 const kpiStatusClasses = {
   available: 'border-emerald-700/60 bg-emerald-950/35 text-emerald-300',
   unavailable: 'border-amber-700/60 bg-amber-950/30 text-amber-300',
@@ -97,7 +110,7 @@ const kpiStatusClasses = {
   disconnected: 'border-slate-600 bg-slate-900/45 text-slate-400'
 };
 
-const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, source, status, statusLabel, icon: Icon, accent, onOpen, openLabel, definition, helpLabel, onHelp }) => (
+const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, source, status, statusLabel, icon: Icon, accent, flowAccent, onOpen, openLabel, definition, helpLabel, onHelp }) => (
   <article
     id={`dashboard-kpi-${id}`}
     className="global-kpi-card group relative min-h-[132px] scroll-mt-24 rounded-md border border-slate-700 bg-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-blue-950/25 focus-within:ring-2 focus-within:ring-blue-500"
@@ -110,14 +123,14 @@ const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, sour
       className="flex min-h-[130px] w-full flex-col rounded-md p-4 text-left focus:outline-none"
     >
     <span className="flex items-start justify-between gap-3">
-      <span className="global-kpi-label min-w-0 text-sm font-medium text-slate-300">{label}</span>
+      <span className={`global-kpi-label min-w-0 text-sm font-medium ${flowAccent ? kpiFlowTextClasses[flowAccent] : 'text-slate-300'}`}>{label}</span>
       <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${onHelp ? 'mr-10' : ''} ${kpiAccentClasses[accent]}`}>
         <Icon size={20} aria-hidden="true" />
       </span>
     </span>
     {dualCurrency ? (
       <span className="global-kpi-currency mt-2 flex flex-wrap items-baseline gap-x-1.5 gap-y-1 text-[15px] font-semibold 2xl:flex-nowrap">
-        <span className="global-kpi-primary whitespace-nowrap text-blue-300">{value}</span>
+        <span className={`global-kpi-primary global-kpi-flow whitespace-nowrap ${flowAccent ? kpiFlowTextClasses[flowAccent] : 'text-blue-300'}`}>{value}</span>
         <span className="global-kpi-cfa whitespace-nowrap text-orange-400">≈ {secondary}</span>
       </span>
     ) : (
@@ -795,6 +808,10 @@ const Dashboard = () => {
     outstandingBalance: formatDualCurrency(dashboardData?.moduleStats.finance.outstandingBalance, dashboardData?.moduleStats.finance.outstandingBalanceCfa),
     social: formatDualCurrency(dashboardData?.moduleStats.finance.social, dashboardData?.moduleStats.finance.socialCfa)
   };
+  const balanceValue = dashboardData?.moduleStats.finance.balance;
+  const balanceFlowAccent = Number.isFinite(balanceValue)
+    ? balanceValue > 0 ? 'lime' : balanceValue < 0 ? 'red' : 'blue'
+    : 'blue';
   const financeKpiHelp = indicatorId => ({
     definition: getFinanceKpiDefinition(indicatorId, language)?.definition,
     helpLabel: t.explainIndicator,
@@ -857,53 +874,47 @@ const Dashboard = () => {
       cards: [
         {
           id: 'revenue', label: t.revenue, value: `${financeValues.revenue.chf} CHF`, secondary: `${financeValues.revenue.cfa} CFA`, dualCurrency: true,
-          source: t.financeIncome, ...sourceState('income'), icon: HandCoins, accent: 'emerald',
+          source: t.financeIncome, ...sourceState('income'), icon: HandCoins, accent: 'emerald', flowAccent: 'emerald',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('revenue'), ...financeKpiHelp('revenue')
         },
         {
           id: 'expenses', label: t.expenses, value: `${financeValues.expenses.chf} CHF`, secondary: `${financeValues.expenses.cfa} CFA`, dualCurrency: true,
-          source: t.financeExpenses, ...sourceState('expenses'), icon: TrendingDown, accent: 'red',
+          source: t.financeExpenses, ...sourceState('expenses'), icon: TrendingDown, accent: 'red', flowAccent: 'red',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('expenses'), ...financeKpiHelp('expenses')
         },
         {
           id: 'balance', label: t.balance, value: `${financeValues.balance.chf} CHF`, secondary: `${financeValues.balance.cfa} CFA`, dualCurrency: true,
-          source: t.financeBalance, ...sourceState('finance'), icon: Scale, accent: 'blue',
+          source: t.financeBalance, ...sourceState('finance'), icon: Scale, accent: balanceFlowAccent, flowAccent: balanceFlowAccent,
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('balance'), ...financeKpiHelp('balance')
         },
         {
           id: 'donations', label: t.donations, value: `${financeValues.donations.chf} CHF`, secondary: `${financeValues.donations.cfa} CFA`, dualCurrency: true,
-          source: t.financeDonations, ...sourceState('donations'), icon: Gift, accent: 'violet',
+          source: t.financeDonations, ...sourceState('donations'), icon: Gift, accent: 'violet', flowAccent: 'violet',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('donations'), ...financeKpiHelp('donations')
         },
         {
           id: 'financing', label: t.financing, value: `${financeValues.financing.chf} CHF`, secondary: `${financeValues.financing.cfa} CFA`, dualCurrency: true,
-          source: t.financeFunding, ...sourceState('financing'), icon: Landmark, accent: 'cyan',
+          source: t.financeFunding, ...sourceState('financing'), icon: Landmark, accent: 'teal', flowAccent: 'teal',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('financing'), ...financeKpiHelp('financing')
         },
         {
-          id: 'reference-rate', label: t.referenceRate,
-          value: Number.isFinite(dashboardData?.moduleStats.finance.referenceRate) ? `${formatCount(dashboardData.moduleStats.finance.referenceRate)} CFA / CHF` : '— CFA / CHF',
-          source: t.financeReferenceRate, ...sourceState('fx'), icon: ArrowRightLeft, accent: 'violet',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('reference-rate'), ...financeKpiHelp('reference-rate')
-        },
-        {
           id: 'real-estate-funding', label: t.realEstateFunding, value: `${financeValues.realEstateFunding.chf} CHF`, secondary: `${financeValues.realEstateFunding.cfa} CFA`, dualCurrency: true,
-          source: t.financeRealEstate, ...sourceState('realEstate'), icon: Building2, accent: 'sky',
+          source: t.financeRealEstate, ...sourceState('realEstate'), icon: Building2, accent: 'sky', flowAccent: 'sky',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('real-estate-funding'), ...financeKpiHelp('real-estate-funding')
         },
         {
           id: 'real-estate-reimbursements', label: t.realEstateReimbursements, value: `${financeValues.reimbursements.chf} CHF`, secondary: `${financeValues.reimbursements.cfa} CFA`, dualCurrency: true,
-          source: t.financeRealEstate, ...sourceState('realEstate'), icon: HandCoins, accent: 'teal',
+          source: t.financeRealEstate, ...sourceState('realEstate'), icon: HandCoins, accent: 'lime', flowAccent: 'lime',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('real-estate-reimbursements'), ...financeKpiHelp('real-estate-reimbursements')
         },
         {
           id: 'outstanding-balance', label: t.outstandingBalance, value: `${financeValues.outstandingBalance.chf} CHF`, secondary: `${financeValues.outstandingBalance.cfa} CFA`, dualCurrency: true,
-          source: t.financeRealEstate, ...sourceState('realEstate'), icon: Landmark, accent: 'amber',
+          source: t.financeRealEstate, ...sourceState('realEstate'), icon: Landmark, accent: 'amber', flowAccent: 'amber',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('outstanding-balance'), ...financeKpiHelp('outstanding-balance')
         },
         {
           id: 'social-flows', label: t.socialFlows, value: `${financeValues.social.chf} CHF`, secondary: `${financeValues.social.cfa} CFA`, dualCurrency: true,
-          source: t.financeSocial, ...sourceState('social'), icon: HeartHandshake, accent: 'pink',
+          source: t.financeSocial, ...sourceState('social'), icon: HeartHandshake, accent: 'pink', flowAccent: 'pink',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('social-flows'), ...financeKpiHelp('social-flows')
         }
       ]

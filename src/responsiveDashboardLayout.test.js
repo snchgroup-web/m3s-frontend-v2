@@ -26,8 +26,14 @@ describe('responsive dashboard shell', () => {
     expect(dashboardSource).toContain('flex min-h-[130px] w-full flex-col rounded-md');
     expect(dashboardSource).toContain('global-kpi-currency mt-2 flex flex-wrap items-baseline');
     expect(dashboardSource).toContain('global-kpi-cfa whitespace-nowrap text-orange-400');
-    expect(dashboardSource).toContain("icon: TrendingDown, accent: 'red'");
-    expect(dashboardSource).toContain("icon: Gift, accent: 'violet'");
+    expect(dashboardSource).toContain('const kpiFlowTextClasses = {');
+    expect(dashboardSource).toContain("icon: TrendingDown, accent: 'red', flowAccent: 'red'");
+    expect(dashboardSource).toContain("icon: Gift, accent: 'violet', flowAccent: 'violet'");
+    expect(dashboardSource).toContain('accent: balanceFlowAccent, flowAccent: balanceFlowAccent');
+    expect(dashboardSource).not.toContain("id: 'reference-rate', label: t.referenceRate");
+    expect(dashboardSource.indexOf("id: 'financing'")).toBeLessThan(dashboardSource.indexOf("id: 'real-estate-funding'"));
+    expect(dashboardSource.indexOf("id: 'real-estate-funding'")).toBeLessThan(dashboardSource.indexOf("id: 'real-estate-reimbursements'"));
+    expect(dashboardSource.indexOf("id: 'real-estate-reimbursements'")).toBeLessThan(dashboardSource.indexOf("id: 'outstanding-balance'"));
     expect(pilotageSource).toContain('moduleId="dashboard"');
     expect(readSource('moduleTabs.js')).toContain('flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto');
     expect(pilotageSource).toContain('intelligence-card rounded-md border');
