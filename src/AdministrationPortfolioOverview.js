@@ -138,6 +138,16 @@ const ITEMS = [
   { id: 'daily', checkedOn: '2026-08-10', icon: FolderKanban, confidentiality: 'internal', tone: 'border-slate-600 bg-slate-900/35 text-slate-300' }
 ];
 
+export const getAdministrationPortfolioRecords = (language = 'FR') => {
+  const t = COPY[language] || COPY.FR;
+  return ITEMS.map(({ id, checkedOn, confidentiality }) => ({
+    id,
+    checkedOn,
+    confidentiality,
+    ...t.items[id]
+  }));
+};
+
 const formatDate = (value, language) => new Intl.DateTimeFormat(
   language === 'DE' ? 'de-CH' : language === 'EN' ? 'en-GB' : 'fr-CH',
   { day: '2-digit', month: '2-digit', year: 'numeric' }

@@ -51,19 +51,22 @@ const Layout = ({ children }) => {
       logout: 'Déconnexion',
       expandAll: 'Déplier tout',
       collapseAll: 'Replier tout',
-      backToDashboard: 'Retour à l’indicateur du Tableau de bord'
+      backToDashboard: 'Retour à l’indicateur du Tableau de bord',
+      backToDashboardSection: 'Retour à la section du Tableau de bord'
     },
     EN: {
       logout: 'Logout',
       expandAll: 'Expand All',
       collapseAll: 'Collapse All',
-      backToDashboard: 'Back to the Dashboard indicator'
+      backToDashboard: 'Back to the Dashboard indicator',
+      backToDashboardSection: 'Back to the Dashboard section'
     },
     DE: {
       logout: 'Abmelden',
       expandAll: 'Alles erweitern',
       collapseAll: 'Alles einklappen',
-      backToDashboard: 'Zur Dashboard-Kennzahl zurück'
+      backToDashboard: 'Zur Dashboard-Kennzahl zurück',
+      backToDashboardSection: 'Zum Dashboard-Bereich zurück'
     }
   };
 
@@ -293,14 +296,14 @@ const Layout = ({ children }) => {
         <Header onOpenMenu={() => setSidebarOpen(true)} />
         <main className="m3s-design-scope flex-1 overflow-auto">
           {dashboardReturn.enabled && (
-            <nav className="sticky top-0 z-30 border-b border-blue-800/70 bg-slate-950/95 px-3 py-2 shadow-sm backdrop-blur sm:px-5" aria-label={t.backToDashboard}>
+            <nav className="sticky top-0 z-30 border-b border-blue-800/70 bg-slate-950/95 px-3 py-2 shadow-sm backdrop-blur sm:px-5" aria-label={dashboardReturn.indicatorId ? t.backToDashboard : t.backToDashboardSection}>
               <button
                 type="button"
-                onClick={() => navigate(buildDashboardReturnPath(dashboardReturn.indicatorId))}
+                onClick={() => navigate(buildDashboardReturnPath(dashboardReturn.indicatorId, dashboardReturn.view))}
                 className="inline-flex min-h-10 items-center gap-2 rounded-md border border-blue-600 bg-blue-950/70 px-3 text-sm font-semibold text-blue-100 transition hover:border-blue-400 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
                 <ArrowLeft size={17} aria-hidden="true" />
-                {t.backToDashboard}
+                {dashboardReturn.indicatorId ? t.backToDashboard : t.backToDashboardSection}
               </button>
             </nav>
           )}

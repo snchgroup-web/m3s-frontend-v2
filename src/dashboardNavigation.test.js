@@ -21,12 +21,27 @@ test('builds the exact return path to the originating indicator', () => {
 test('recognises only an explicit dashboard return context', () => {
   expect(getDashboardReturnContext('?returnTo=dashboard&dashboardKpi=users')).toEqual({
     enabled: true,
-    indicatorId: 'users'
+    indicatorId: 'users',
+    view: 'overview'
   });
   expect(getDashboardReturnContext('?returnTo=overview')).toEqual({
     enabled: false,
-    indicatorId: null
+    indicatorId: null,
+    view: 'overview'
   });
+});
+
+test('returns to the exact dashboard section when no KPI initiated the navigation', () => {
+  expect(getDashboardReturnContext('?returnTo=dashboard&dashboardView=incidents')).toEqual({
+    enabled: true,
+    indicatorId: null,
+    view: 'incidents'
+  });
+  expect(buildDashboardReturnPath(null, 'incidents')).toBe('/?view=incidents#global-pilotage-title');
+});
+
+test('falls back to the governed dashboard overview for an unknown return view', () => {
+  expect(buildDashboardReturnPath(null, 'unknown')).toBe('/?view=overview#global-situation');
 });
 
 test('governs every current KPI destination and preserves its exact return identity', () => {

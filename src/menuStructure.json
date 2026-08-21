@@ -61,6 +61,16 @@
           "path": "/?view=processes"
         },
         {
+          "id": "global-incidents",
+          "label": {
+            "FR": "Incidents & Risques",
+            "EN": "Incidents & Risks",
+            "DE": "Vorfälle & Risiken"
+          },
+          "icon": "AlertTriangle",
+          "path": "/?view=incidents"
+        },
+        {
           "id": "global-resources",
           "label": {
             "FR": "Ressources",

@@ -1,6 +1,18 @@
 export const DASHBOARD_RETURN_KEY = 'returnTo';
 export const DASHBOARD_RETURN_VALUE = 'dashboard';
 export const DASHBOARD_KPI_KEY = 'dashboardKpi';
+export const DASHBOARD_VIEW_KEY = 'dashboardView';
+
+const DASHBOARD_VIEWS = new Set([
+  'overview',
+  'intelligence',
+  'map',
+  'architecture',
+  'processes',
+  'incidents',
+  'resources',
+  'glossary'
+]);
 
 export const DASHBOARD_INDICATOR_DESTINATIONS = Object.freeze({
   'active-major-files': '/administration?tab=overview#administration-portfolio',
@@ -37,10 +49,15 @@ export const getDashboardIndicatorDestination = indicatorId => {
   return buildDashboardDestination(path, indicatorId);
 };
 
-export const buildDashboardReturnPath = indicatorId => {
-  const params = new URLSearchParams({ view: 'overview' });
+export const buildDashboardReturnPath = (indicatorId, requestedView = 'overview') => {
+  const view = DASHBOARD_VIEWS.has(requestedView) ? requestedView : 'overview';
+  const params = new URLSearchParams({ view });
   if (indicatorId) params.set(DASHBOARD_KPI_KEY, indicatorId);
-  const hash = indicatorId ? `#dashboard-kpi-${indicatorId}` : '#global-situation';
+  const hash = indicatorId
+    ? `#dashboard-kpi-${indicatorId}`
+    : view === 'overview'
+      ? '#global-situation'
+      : '#global-pilotage-title';
   return `/?${params.toString()}${hash}`;
 };
 
@@ -48,6 +65,9 @@ export const getDashboardReturnContext = search => {
   const params = new URLSearchParams(search);
   return {
     enabled: params.get(DASHBOARD_RETURN_KEY) === DASHBOARD_RETURN_VALUE,
-    indicatorId: params.get(DASHBOARD_KPI_KEY)
+    indicatorId: params.get(DASHBOARD_KPI_KEY),
+    view: DASHBOARD_VIEWS.has(params.get(DASHBOARD_VIEW_KEY))
+      ? params.get(DASHBOARD_VIEW_KEY)
+      : 'overview'
   };
 };
