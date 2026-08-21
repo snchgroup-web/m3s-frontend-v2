@@ -39,6 +39,46 @@
           },
           "icon": "Network",
           "path": "/?view=map"
+        },
+        {
+          "id": "global-architecture",
+          "label": {
+            "FR": "Architecture & Relations",
+            "EN": "Architecture & Relationships",
+            "DE": "Architektur & Beziehungen"
+          },
+          "icon": "Network",
+          "path": "/?view=architecture"
+        },
+        {
+          "id": "global-processes",
+          "label": {
+            "FR": "Processus & Contrôles",
+            "EN": "Processes & Controls",
+            "DE": "Prozesse & Kontrollen"
+          },
+          "icon": "Activity",
+          "path": "/?view=processes"
+        },
+        {
+          "id": "global-resources",
+          "label": {
+            "FR": "Ressources",
+            "EN": "Resources",
+            "DE": "Ressourcen"
+          },
+          "icon": "Library",
+          "path": "/?view=resources"
+        },
+        {
+          "id": "global-glossary",
+          "label": {
+            "FR": "Glossaire",
+            "EN": "Glossary",
+            "DE": "Glossar"
+          },
+          "icon": "BookOpen",
+          "path": "/?view=glossary"
         }
       ]
     },

@@ -17,7 +17,7 @@ test('groups every global module once in the governed sidebar order', () => {
   expect(groups.flatMap(group => group.items)).toHaveLength(menuData.menu.length);
 });
 
-test('keeps the Dashboard parent as its overview and preserves its three child views', () => {
+test('keeps the Dashboard parent as its overview and preserves its seven child views', () => {
   const dashboard = menuData.menu.find(item => item.id === 'dashboard');
   const administration = menuData.menu.find(item => item.id === 'administration');
   const planning = administration.children.find(item => item.id === 'planning');
@@ -25,7 +25,11 @@ test('keeps the Dashboard parent as its overview and preserves its three child v
   expect(dashboard.children.map(item => item.path)).toEqual([
     '/?view=overview',
     '/?view=intelligence',
-    '/?view=map'
+    '/?view=map',
+    '/?view=architecture',
+    '/?view=processes',
+    '/?view=resources',
+    '/?view=glossary'
   ]);
   expect(dashboard.children.map(item => item.id)).toContain('global-steering');
   expect(dashboard.children.find(item => item.id === 'global-intelligence').label.FR).toBe('Daily Intelligence');
@@ -37,6 +41,10 @@ test.each([
   ['/', '', 'dashboard', null],
   ['/', '?view=overview', 'dashboard', 'global-steering'],
   ['/', '?view=intelligence', 'dashboard', 'global-intelligence'],
+  ['/', '?view=architecture', 'dashboard', 'global-architecture'],
+  ['/', '?view=processes', 'dashboard', 'global-processes'],
+  ['/', '?view=resources', 'dashboard', 'global-resources'],
+  ['/', '?view=glossary', 'dashboard', 'global-glossary'],
   ['/administration', '?tab=institution', 'administration', 'institution'],
   ['/administration', '?tab=compliance&section=registers', 'administration', 'compliance'],
   ['/finance', '?tab=depenses', 'finances', 'depenses']
