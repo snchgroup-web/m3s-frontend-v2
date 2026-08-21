@@ -152,6 +152,38 @@ test('preserves a beneficiaries count access denial without expiring the session
   expect(localStorage.getItem('session_expired')).toBeNull();
 });
 
+test('requests the governed donors count with authentication', async () => {
+  const payload = { success: true, total: 6, counting_unit: 'distinct_identified_donor' };
+  localStorage.setItem('token', 'test-token');
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    status: 200,
+    json: jest.fn().mockResolvedValue(payload)
+  });
+
+  await expect(api.getDonorsCount()).resolves.toEqual(payload);
+  expect(global.fetch).toHaveBeenCalledWith(
+    expect.stringMatching(/\/donors\/count$/),
+    expect.objectContaining({ headers: { Authorization: 'Bearer test-token' } })
+  );
+});
+
+test('preserves a donors count access denial without expiring the session', async () => {
+  localStorage.setItem('token', 'test-token');
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: false,
+    status: 403,
+    json: jest.fn().mockResolvedValue({ code: 'DONOR_COUNT_FORBIDDEN', error: 'Access denied' })
+  });
+
+  await expect(api.getDonorsCount()).rejects.toMatchObject({
+    status: 403,
+    code: 'DONOR_COUNT_FORBIDDEN'
+  });
+  expect(localStorage.getItem('token')).toBe('test-token');
+  expect(localStorage.getItem('session_expired')).toBeNull();
+});
+
 test('requests the latest Intelligence metadata with authentication', async () => {
   const payload = { success: true, data: { editionDate: '2026-08-07', sourceVersion: 'V4' } };
   localStorage.setItem('token', 'test-token');

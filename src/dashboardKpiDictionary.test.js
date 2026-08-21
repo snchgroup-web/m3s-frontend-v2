@@ -68,7 +68,7 @@ test('distinguishes historical CFA values from current-rate equivalents', () => 
   expect(getFinanceKpiDefinition('unknown', 'FR')).toBeNull();
 });
 
-test.each(['FR', 'EN', 'DE'])('provides the five governed Operations KPIs in %s', (language) => {
+test.each(['FR', 'EN', 'DE'])('provides the six governed Operations KPIs in %s', (language) => {
   const definitions = getOperationsKpiDefinitions(language);
 
   expect(definitions.map(({ id }) => id)).toEqual([
@@ -76,6 +76,7 @@ test.each(['FR', 'EN', 'DE'])('provides the five governed Operations KPIs in %s'
     'clients',
     'orders',
     'beneficiaries',
+    'donors',
     'suppliers'
   ]);
   definitions.forEach((definition) => {
@@ -100,7 +101,7 @@ test('groups the Dashboard dictionary without duplicating KPI records', () => {
   const groups = getDashboardKpiDefinitions('FR');
   expect(groups.management).toHaveLength(4);
   expect(groups.finance).toHaveLength(10);
-  expect(groups.operations).toHaveLength(5);
-  expect(new Set(Object.values(groups).flat().map(({ id }) => id))).toHaveProperty('size', 19);
+  expect(groups.operations).toHaveLength(6);
+  expect(new Set(Object.values(groups).flat().map(({ id }) => id))).toHaveProperty('size', 20);
 });
 

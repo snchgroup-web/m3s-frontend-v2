@@ -33,6 +33,7 @@ export const DASHBOARD_INDICATOR_DESTINATIONS = Object.freeze({
   clients: '/crm?tab=clients#crm-clients-register',
   orders: '/production?tab=commandes#production-orders-register',
   beneficiaries: '/crm?tab=beneficiaires#crm-beneficiaries-register',
+  donors: '/crm?tab=dons#crm-donations-register',
   suppliers: '/production?tab=fournisseurs#production-suppliers-register'
 });
 

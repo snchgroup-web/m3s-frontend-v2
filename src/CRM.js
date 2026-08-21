@@ -870,7 +870,7 @@ const CRM = () => {
         )}
 
         {activeTab === 'dons' && (
-          <DataTable
+          <div id="crm-donations-register" className="scroll-mt-24" tabIndex="-1"><DataTable
             title={t.dons}
             type="dons"
             rows={dons}
@@ -899,7 +899,7 @@ const CRM = () => {
                 {tableCell(tv(item.source))}
               </>
             )}
-          />
+          /></div>
         )}
 
         {activeTab === 'beneficiaires' && (

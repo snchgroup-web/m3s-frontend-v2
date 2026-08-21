@@ -323,6 +323,14 @@ const operationsDictionary = {
       action: 'Ouvre le registre Bénéficiaires dans Commercial & CRM.'
     },
     {
+      id: 'donors', label: 'Donateurs',
+      definition: 'Nombre de noms de donateurs distincts identifiés dans les dons en nature candidats de Stocks & Actifs.',
+      scope: 'Les valeurs non vides du champ fournisseur sont normalisées et dédupliquées uniquement parmi les lignes candidates du registre Dons. Le compteur ne mesure ni le nombre de dons, ni leur montant, ni un registre maître validé des donateurs.',
+      source: 'API Donateurs · compteur des dons candidats ; source : stocks_actifs_propres ; champ fournisseur.',
+      freshness: 'Actualisé au chargement du Tableau de bord lorsque la source Stocks & Actifs répond.',
+      action: 'Ouvre le registre Dons dans Commercial & CRM.'
+    },
+    {
       id: 'suppliers', label: 'Fournisseurs',
       definition: 'Nombre global de noms de fournisseurs distincts présents dans les dépenses Finance et le registre Stocks & Actifs.',
       scope: 'Les noms non vides sont normalisés par suppression des espaces périphériques et comparaison sans distinction de casse. Le compteur ne mesure ni les fournisseurs actifs, ni leur évaluation, ni le nombre de transactions.',
@@ -353,6 +361,11 @@ const operationsDictionary = {
       freshness: 'Refreshed when the Dashboard loads and the Finance social source responds.', action: 'Opens the Beneficiaries register in Commercial & CRM.'
     },
     {
+      id: 'donors', label: 'Donors', definition: 'Number of distinct donor names identified among Stock & Assets in-kind donation candidates.',
+      scope: 'Non-empty supplier-field values are normalized and deduplicated only among candidate rows in the Donations register. The counter measures neither donation transactions, amounts nor an approved master donor register.', source: 'Donors API · donation-candidate count; source: stocks_actifs_propres; supplier field.',
+      freshness: 'Refreshed when the Dashboard loads and the Stock & Assets source responds.', action: 'Opens the Donations register in Commercial & CRM.'
+    },
+    {
       id: 'suppliers', label: 'Suppliers', definition: 'Global number of distinct supplier names present in Finance expenses and the Stock & Assets register.',
       scope: 'Non-empty names are trimmed and compared without case sensitivity. The counter measures neither active or assessed suppliers nor transaction volume.', source: 'Suppliers API · global counter; sources: Finance expenses and stocks_actifs_propres; total field.',
       freshness: 'Refreshed when the Dashboard loads and both master sources respond.', action: 'Opens the Suppliers register in Production.'
@@ -378,6 +391,11 @@ const operationsDictionary = {
       id: 'beneficiaries', label: 'Begünstigte', definition: 'Anzahl eindeutiger begünstigter Einheiten in den umklassifizierten Sozialflüssen der Finanzen.',
       scope: 'Nicht leere Werte aus CLIENT_BENEFICIAIRE werden normalisiert und dedupliziert. Die Kennzahl misst weder Zahlungen noch Personen innerhalb eines Haushalts oder Personalbestand.', source: 'API Begünstigte · globaler Zähler; Quelle: als Sozialhilfe klassifizierte Finanzeinnahmen; Feld CLIENT_BENEFICIAIRE.',
       freshness: 'Beim Laden des Dashboards aktualisiert, wenn die soziale Finanzquelle antwortet.', action: 'Öffnet das Begünstigtenregister in Vertrieb & CRM.'
+    },
+    {
+      id: 'donors', label: 'Spender', definition: 'Anzahl eindeutiger Spendernamen unter den Sachspendenkandidaten von Bestand & Aktiven.',
+      scope: 'Nicht leere Werte des Lieferantenfelds werden nur unter den Kandidatenzeilen des Spendenregisters normalisiert und dedupliziert. Die Kennzahl misst weder Spendenvorgänge, Beträge noch ein freigegebenes Spender-Stammregister.', source: 'Spender-API · Zähler der Spendenkandidaten; Quelle: stocks_actifs_propres; Feld fournisseur.',
+      freshness: 'Beim Laden des Dashboards aktualisiert, wenn die Quelle Bestand & Aktiven antwortet.', action: 'Öffnet das Spendenregister in Vertrieb & CRM.'
     },
     {
       id: 'suppliers', label: 'Lieferanten', definition: 'Globale Anzahl eindeutiger Lieferantennamen in den Finanzausgaben und im Register Bestand & Aktiven.',
