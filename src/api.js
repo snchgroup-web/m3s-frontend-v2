@@ -365,6 +365,12 @@ export const api = {
     return res.json();
   },
 
+  getDonorsCount: async () => {
+    const res = await apiFetch(`${API_BASE_URL}/donors/count`);
+    if (!res.ok) throw await createApiError(res, 'DONOR_COUNT_UNAVAILABLE');
+    return res.json();
+  },
+
   createInventoryItem: async (data) => {
     const res = await apiFetch(`${API_BASE_URL}/inventory`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)

@@ -176,7 +176,8 @@ const mockDataBaseRaw = {
     fx: 'unavailable',
     realEstate: 'unavailable',
     social: 'unavailable',
-    suppliers: 'unavailable'
+    suppliers: 'unavailable',
+    donors: 'unavailable'
   },
   moduleStats: {
     finance: {
@@ -189,7 +190,7 @@ const mockDataBaseRaw = {
       social: null, socialCfa: null, incomeCount: 0, expenseCount: 0
     },
     rh: { employees: null, volunteers: null, members: null, beneficiaries: null },
-    crm: { prospects: null, clients: null, donations: null, suppliers: null },
+    crm: { prospects: null, clients: null, donations: null, donors: null, suppliers: null },
     production: { orders: null, completed: null, pending: null, stocks: null },
     actifs: { total: null, depreciation: null },
     ged: { documents: null, recent: null },
@@ -249,7 +250,7 @@ const Dashboard = () => {
       globalIndicators: 'Indicateurs globaux',
       transactions: 'transactions',
       netMonthly: 'Net mensuel',
-      donors: 'donateurs',
+      donors: 'Donateurs',
       projects: 'projets',
       employees_staff: 'employés',
       quantity: 'Quantité en Stock',
@@ -293,6 +294,7 @@ const Dashboard = () => {
       financeSocial: 'Finance · Registre social',
       assetsInventory: 'Stock & Actifs · Inventaire',
       beneficiarySource: 'Finance · Flux sociaux · Unités distinctes',
+      donorSource: 'Stock & Actifs · Dons candidats · Donateurs distincts',
       supplierSources: 'Finance + Stock & Actifs · Fournisseurs distincts',
       majorFilesPortfolio: 'Management · Portefeuille des grands dossiers',
       explainIndicator: 'Comprendre cet indicateur'
@@ -336,7 +338,7 @@ const Dashboard = () => {
       globalIndicators: 'Global indicators',
       transactions: 'transactions',
       netMonthly: 'Net monthly',
-      donors: 'donors',
+      donors: 'Donors',
       projects: 'projects',
       employees_staff: 'employees',
       quantity: 'Stock Quantity',
@@ -380,6 +382,7 @@ const Dashboard = () => {
       financeSocial: 'Finance · Social register',
       assetsInventory: 'Stock & Assets · Inventory',
       beneficiarySource: 'Finance · Social flows · Distinct units',
+      donorSource: 'Stock & Assets · Donation candidates · Distinct donors',
       supplierSources: 'Finance + Stock & Assets · Distinct suppliers',
       majorFilesPortfolio: 'Management · Major-file portfolio',
       explainIndicator: 'Understand this indicator'
@@ -467,6 +470,7 @@ const Dashboard = () => {
       financeSocial: 'Finanzen · Sozialregister',
       assetsInventory: 'Bestand & Aktiven · Inventar',
       beneficiarySource: 'Finanzen · Sozialflüsse · Eindeutige Einheiten',
+      donorSource: 'Bestand & Aktiven · Spendenkandidaten · Eindeutige Spender',
       supplierSources: 'Finanzen + Bestand & Aktiven · Eindeutige Lieferanten',
       majorFilesPortfolio: 'Management · Portfolio wichtiger Akten',
       explainIndicator: 'Diese Kennzahl verstehen'
@@ -501,7 +505,7 @@ const Dashboard = () => {
       try {
         setLoading(true);
 
-        const [financeDashboard, documentsCount, inventoryCount, tasksCount, authAccountsCount, portfolioSummary, income, expenses, fx, socialResult, realEstateResult, suppliersResult, beneficiariesResult] = await Promise.all([
+        const [financeDashboard, documentsCount, inventoryCount, tasksCount, authAccountsCount, portfolioSummary, income, expenses, fx, socialResult, realEstateResult, suppliersResult, beneficiariesResult, donorsResult] = await Promise.all([
           withApiFallback(() => api.getFinanceDashboard()),
           withApiFallback(() => api.getDocumentsCount()),
           withApiFallback(() => api.getInventoryCount()),
@@ -514,13 +518,15 @@ const Dashboard = () => {
           withApiResult(() => api.getSocialFinance(200, 0)),
           withApiResult(() => api.getRealEstateFinance(200, 0)),
           withApiResult(() => api.getSuppliersCount()),
-          withApiResult(() => api.getBeneficiariesCount())
+          withApiResult(() => api.getBeneficiariesCount()),
+          withApiResult(() => api.getDonorsCount())
         ]);
 
         const social = socialResult.data;
         const realEstate = realEstateResult.data;
         const suppliers = suppliersResult.data;
         const beneficiaries = beneficiariesResult.data;
+        const donors = donorsResult.data;
         const incomeAvailable = Array.isArray(income?.data);
         const expensesAvailable = Array.isArray(expenses?.data);
         const incomeRows = incomeAvailable ? income.data : [];
@@ -583,6 +589,7 @@ const Dashboard = () => {
         const portfolioAvailable = hasApiNumber(portfolioSummary?.data?.active_dossiers);
         const suppliersAvailable = hasApiNumber(suppliers?.total);
         const beneficiariesAvailable = hasApiNumber(beneficiaries?.total);
+        const donorsAvailable = hasApiNumber(donors?.total);
         const inventoryTotal = inventoryAvailable ? Number(inventoryCount.total) : null;
         const documentsTotal = documentsAvailable ? Number(documentsCount.total) : null;
         const tasksTotal = tasksAvailable ? Number(tasksCount.total) : null;
@@ -594,6 +601,7 @@ const Dashboard = () => {
         const activeDossiers = portfolioAvailable ? Number(portfolioSummary.data.active_dossiers) : null;
         const suppliersTotal = suppliersAvailable ? Number(suppliers.total) : null;
         const beneficiariesTotal = beneficiariesAvailable ? Number(beneficiaries.total) : null;
+        const donorsTotal = donorsAvailable ? Number(donors.total) : null;
         const financeAvailable = [totalIncome, totalIncomeCfa, totalExpenses, totalExpensesCfa].every(Number.isFinite);
         const apiUnavailable = [
           financeDashboard,
@@ -616,6 +624,7 @@ const Dashboard = () => {
           || (!realEstate && realEstateResult.errorStatus !== 403)
           || (!suppliersAvailable && suppliersResult.errorStatus !== 403)
           || (!beneficiariesAvailable && beneficiariesResult.errorStatus !== 403)
+          || (!donorsAvailable && donorsResult.errorStatus !== 403)
           || fx?.success === false;
         setDataWarning(apiUnavailable);
 
@@ -650,7 +659,8 @@ const Dashboard = () => {
             realEstate: realEstateAvailable ? 'available' : realEstateResult.errorStatus === 403 ? 'restricted' : 'unavailable',
             social: socialAvailable ? 'available' : socialResult.errorStatus === 403 ? 'restricted' : 'unavailable',
             suppliers: suppliersAvailable ? 'available' : suppliersResult.errorStatus === 403 ? 'restricted' : 'unavailable',
-            beneficiaries: beneficiariesAvailable ? 'available' : beneficiariesResult.errorStatus === 403 ? 'restricted' : 'unavailable'
+            beneficiaries: beneficiariesAvailable ? 'available' : beneficiariesResult.errorStatus === 403 ? 'restricted' : 'unavailable',
+            donors: donorsAvailable ? 'available' : donorsResult.errorStatus === 403 ? 'restricted' : 'unavailable'
           },
           moduleStats: {
             ...mockDataBase.moduleStats,
@@ -684,6 +694,7 @@ const Dashboard = () => {
             },
             crm: {
               ...mockDataBase.moduleStats.crm,
+              donors: donorsTotal,
               suppliers: suppliersTotal
             },
             ged: {
@@ -903,7 +914,7 @@ const Dashboard = () => {
       id: 'operations',
       title: t.operationsGroup,
       description: t.operationsGroupBody,
-      gridClass: 'grid-cols-2 sm:grid-cols-3 xl:grid-cols-5',
+      gridClass: 'grid-cols-2 sm:grid-cols-3 xl:grid-cols-6',
       cards: [
         {
           id: 'stocks', label: t.stocks, value: formatCount(dashboardData?.moduleStats.production.stocks),
@@ -925,6 +936,11 @@ const Dashboard = () => {
           id: 'beneficiaries', label: t.beneficiaries, value: formatCount(dashboardData?.moduleStats.rh.beneficiaries),
           source: t.beneficiarySource, ...sourceState('beneficiaries'), icon: HeartHandshake, accent: 'violet',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('beneficiaries'), ...operationsKpiHelp('beneficiaries')
+        },
+        {
+          id: 'donors', label: t.donors, value: formatCount(dashboardData?.moduleStats.crm.donors),
+          source: t.donorSource, ...sourceState('donors'), icon: Gift, accent: 'pink',
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('donors'), ...operationsKpiHelp('donors')
         },
         {
           id: 'suppliers', label: t.suppliers, value: formatCount(dashboardData?.moduleStats.crm.suppliers),
