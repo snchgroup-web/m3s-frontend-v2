@@ -23,6 +23,7 @@ import CRMGlossary from './CRMGlossary';
 import api from './api';
 import { isLegacyBuCode, translateDas } from './strategicMapping';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
+import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
 
 const dictionaries = {
   FR: {
@@ -334,7 +335,7 @@ const valueLabels = {
 };
 
 const chartColors = ['#38bdf8', '#34d399', '#f59e0b', '#a78bfa', '#fb7185', '#22d3ee'];
-const tabs = ['overview', 'prospects', 'clients', 'ventes', 'dons', 'beneficiaires', 'resources', 'glossary'];
+const tabs = ['overview', 'architecture', 'processes', 'prospects', 'clients', 'ventes', 'dons', 'beneficiaires', 'resources', 'glossary'];
 
 const designationTerms = {
   EN: [
@@ -782,7 +783,7 @@ const CRM = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 p-8">
+    <div className="m3s-business-module min-h-screen bg-slate-900 p-4 sm:p-8">
       <div className="mx-auto w-full max-w-[1800px]">
         <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-5">
           <StandardKpiCard label={t.validatedSources} value={sourcesLoading ? '…' : `${availableSourceCount}/2`} secondary={t.sourcesAvailable} icon={Target} color="text-blue-400" />
@@ -856,6 +857,10 @@ const CRM = () => {
             </div>
           </div>
         )}
+
+        {activeTab === 'architecture' && <FunctionArchitectureOverview moduleId="commercial" language={language} />}
+
+        {activeTab === 'processes' && <FunctionProcessOverview moduleId="commercial" language={language} />}
 
         {activeTab === 'prospects' && (
           <NextRegister title={t.prospects} purpose={t.prospectsPurpose} fields={t.prospectsFields} icon={Target} />

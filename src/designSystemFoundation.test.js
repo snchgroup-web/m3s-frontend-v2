@@ -10,6 +10,8 @@ const administrationSource = fs.readFileSync(path.join(__dirname, 'Administratio
 const standardUiSource = fs.readFileSync(path.join(__dirname, 'StandardUI.js'), 'utf8');
 const dateInputSource = fs.readFileSync(path.join(__dirname, 'LocalizedDateInput.js'), 'utf8');
 const journalTaskSource = fs.readFileSync(path.join(__dirname, 'JournalTaskRegister.js'), 'utf8');
+const businessModuleSources = ['Finance.js', 'RH.js', 'CRM.js', 'Production.js', 'Actifs.js', 'GED.js']
+  .map(file => fs.readFileSync(path.join(__dirname, file), 'utf8'));
 
 describe('global M3S design foundations', () => {
   test('scopes shared typography and theme tokens to every module page', () => {
@@ -63,5 +65,11 @@ describe('global M3S design foundations', () => {
 
   test('loads the shared foundation without changing the CDN Tailwind pipeline', () => {
     expect(indexHtml).toContain('<link rel="stylesheet" href="%PUBLIC_URL%/designSystem.css" />');
+  });
+
+  test('applies the shared business-module contrast layer to every function', () => {
+    businessModuleSources.forEach(source => expect(source).toContain('m3s-business-module'));
+    expect(designSystemCss).toContain('html:not(.dark) .m3s-business-module .text-slate-100');
+    expect(designSystemCss).toContain('html:not(.dark) .m3s-business-module .text-blue-100');
   });
 });

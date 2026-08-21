@@ -11,6 +11,7 @@ import { StandardActionsCell, StandardCreateButton, StandardRecordSheetModal } f
 import { isLegacyBuCode, translateDas } from './strategicMapping';
 import ProductionGlossary from './ProductionGlossary';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
+import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
 
 const Production = () => {
   const { language } = useLanguage();
@@ -607,7 +608,7 @@ const Production = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'commandes', 'fournisseurs', 'stocks', 'manufacturing', 'resources', 'glossary'].includes(tab)) {
+    if (['overview', 'architecture', 'processes', 'commandes', 'fournisseurs', 'stocks', 'manufacturing', 'resources', 'glossary'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
@@ -766,7 +767,7 @@ const Production = () => {
  
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+      <div className="m3s-business-module min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-8">
         <div className="mx-auto w-full max-w-[1800px]">
 
         <section className="mb-6 rounded-lg border border-blue-500/40 bg-blue-950/45 p-5 text-blue-50">
@@ -928,6 +929,10 @@ const Production = () => {
           </div>
         )}
 
+        {activeTab === 'architecture' && <FunctionArchitectureOverview moduleId="production" language={language} />}
+
+        {activeTab === 'processes' && <FunctionProcessOverview moduleId="production" language={language} />}
+
         {activeTab === 'manufacturing' && (
           <section className="rounded-lg border border-slate-700 bg-slate-800 p-5 text-slate-100">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
@@ -1081,7 +1086,7 @@ const Production = () => {
 
         {activeTab === 'glossary' && <ProductionGlossary language={language} />}
 
-        <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'commandes', 'manufacturing', 'fournisseurs', 'stocks', 'resources', 'glossary']} />
+        <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'commandes', 'manufacturing', 'fournisseurs', 'stocks', 'resources', 'glossary']} />
         </div>
       </div>
 

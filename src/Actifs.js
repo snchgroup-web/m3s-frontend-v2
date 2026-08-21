@@ -16,6 +16,7 @@ import StockAssetsFrame from './StockAssetsFrame';
 import StockAssetsGlossary from './StockAssetsGlossary';
 import { StandardCreateButton } from './StandardUI';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
+import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
 
 const CATEGORY_VALUES = [
   'Véhicule',
@@ -243,7 +244,7 @@ const Actifs = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    setActiveTab(['overview', 'inventory', 'immobilisations', 'risques', 'resources', 'glossary'].includes(tab) ? tab : 'overview');
+    setActiveTab(['overview', 'architecture', 'processes', 'inventory', 'immobilisations', 'risques', 'resources', 'glossary'].includes(tab) ? tab : 'overview');
   }, [location.search]);
 
   const selectTab = (tab) => {
@@ -500,7 +501,7 @@ const Actifs = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 lg:p-6">
+      <div className="m3s-business-module min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 lg:p-6">
         <div className="w-full">
           {error && <div className="mb-4 rounded border border-red-500/30 bg-red-500/10 px-4 py-3 text-red-200">{error}</div>}
 
@@ -686,11 +687,19 @@ const Actifs = () => {
             <FunctionResourcesOverview moduleId="stock" language={language} onSelectTab={selectTab} />
           )}
 
+          {!loading && activeTab === 'architecture' && (
+            <FunctionArchitectureOverview moduleId="stock" language={language} />
+          )}
+
+          {!loading && activeTab === 'processes' && (
+            <FunctionProcessOverview moduleId="stock" language={language} />
+          )}
+
           {!loading && activeTab === 'glossary' && (
             <StockAssetsGlossary language={language} />
           )}
 
-          <ChildTabPlaceholder moduleId="stock" language={language} activeTab={activeTab} handledTabs={['inventory', 'overview', 'immobilisations', 'risques', 'resources', 'glossary']} />
+          <ChildTabPlaceholder moduleId="stock" language={language} activeTab={activeTab} handledTabs={['inventory', 'overview', 'architecture', 'processes', 'immobilisations', 'risques', 'resources', 'glossary']} />
         </div>
       </div>
 
