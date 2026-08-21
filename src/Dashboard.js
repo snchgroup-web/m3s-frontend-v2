@@ -4,7 +4,6 @@ import { useLanguage } from './LanguageContext';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
   AlertTriangle,
-  ArrowDownToLine,
   ArrowRightLeft,
   Building2,
   Files,
@@ -18,6 +17,7 @@ import {
   Scale,
   ShoppingCart,
   Truck,
+  TrendingDown,
   UserRoundSearch,
   UsersRound,
   Warehouse
@@ -107,30 +107,28 @@ const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, sour
       onClick={onOpen}
       aria-label={`${openLabel}: ${label}`}
       title={definition || undefined}
-      className="flex min-h-[130px] w-full flex-col rounded-md p-4 pr-14 text-left focus:outline-none"
+      className="flex min-h-[130px] w-full flex-col rounded-md p-4 text-left focus:outline-none"
     >
     <span className="flex items-start justify-between gap-3">
-      <span className="min-w-0">
-        <span className="block text-sm font-medium text-slate-300">{label}</span>
-        {dualCurrency ? (
-          <span className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-lg font-semibold">
-            <span className="text-blue-300">{value}</span>
-            <span className="text-amber-300">≈ {secondary}</span>
-          </span>
-        ) : (
-          <>
-            <span className="mt-2 block break-words text-lg font-semibold text-slate-100">{value}</span>
-            {secondary && <span className="mt-0.5 block break-words text-sm font-medium text-slate-400">{secondary}</span>}
-          </>
-        )}
-      </span>
+      <span className="global-kpi-label min-w-0 text-sm font-medium text-slate-300">{label}</span>
       <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${onHelp ? 'mr-10' : ''} ${kpiAccentClasses[accent]}`}>
         <Icon size={20} aria-hidden="true" />
       </span>
     </span>
+    {dualCurrency ? (
+      <span className="global-kpi-currency mt-2 flex flex-wrap items-baseline gap-x-1.5 gap-y-1 text-[15px] font-semibold 2xl:flex-nowrap">
+        <span className="global-kpi-primary whitespace-nowrap text-blue-300">{value}</span>
+        <span className="global-kpi-cfa whitespace-nowrap text-orange-400">≈ {secondary}</span>
+      </span>
+    ) : (
+      <>
+        <span className="global-kpi-primary mt-2 block break-words text-lg font-semibold text-slate-100">{value}</span>
+        {secondary && <span className="global-kpi-secondary mt-0.5 block break-words text-sm font-medium text-slate-400">{secondary}</span>}
+      </>
+    )}
     <span className="mt-auto flex items-end justify-between gap-2 border-t border-slate-700 pt-2">
-      <span className="min-w-0 truncate text-xs text-slate-500" title={source}>{source}</span>
-      <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-semibold ${kpiStatusClasses[status]}`}>{statusLabel}</span>
+      <span className="global-kpi-source min-w-0 truncate text-xs text-slate-500" title={source}>{source}</span>
+      <span className={`global-kpi-status global-kpi-status--${status} shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-semibold ${kpiStatusClasses[status]}`}>{statusLabel}</span>
     </span>
     </button>
     {onHelp && (
@@ -139,7 +137,7 @@ const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, sour
         onClick={onHelp}
         aria-label={`${helpLabel}: ${label}`}
         title={`${helpLabel}: ${label}`}
-        className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-600 bg-slate-900/80 text-slate-300 transition hover:border-blue-400 hover:text-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="global-kpi-help absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-600 bg-slate-900/80 text-slate-300 transition hover:border-blue-400 hover:text-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <HelpCircle size={18} aria-hidden="true" />
       </button>
@@ -855,7 +853,7 @@ const Dashboard = () => {
       id: 'support',
       title: t.supportGroup,
       description: t.supportGroupBody,
-      gridClass: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',
+      gridClass: 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4',
       cards: [
         {
           id: 'revenue', label: t.revenue, value: `${financeValues.revenue.chf} CHF`, secondary: `${financeValues.revenue.cfa} CFA`, dualCurrency: true,
@@ -864,7 +862,7 @@ const Dashboard = () => {
         },
         {
           id: 'expenses', label: t.expenses, value: `${financeValues.expenses.chf} CHF`, secondary: `${financeValues.expenses.cfa} CFA`, dualCurrency: true,
-          source: t.financeExpenses, ...sourceState('expenses'), icon: ArrowDownToLine, accent: 'red',
+          source: t.financeExpenses, ...sourceState('expenses'), icon: TrendingDown, accent: 'red',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('expenses'), ...financeKpiHelp('expenses')
         },
         {
@@ -874,7 +872,7 @@ const Dashboard = () => {
         },
         {
           id: 'donations', label: t.donations, value: `${financeValues.donations.chf} CHF`, secondary: `${financeValues.donations.cfa} CFA`, dualCurrency: true,
-          source: t.financeDonations, ...sourceState('donations'), icon: Gift, accent: 'amber',
+          source: t.financeDonations, ...sourceState('donations'), icon: Gift, accent: 'violet',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('donations'), ...financeKpiHelp('donations')
         },
         {
