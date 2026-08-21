@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import {
+  ArrowLeft,
   Menu, X, ChevronDown, ChevronRight, Maximize2, Minimize2, Circle,
   Home, Settings, Users, DollarSign, Briefcase, Package, Building2, Zap,
   Activity, Clock, User, Target, TrendingUp, Heart, Smile, ShoppingCart,
@@ -15,6 +16,7 @@ import { ModuleIcon, modulePresentation } from './modulePresentation';
 import { getSidebarMenuGroups, resolveActiveMenuLocation } from './sidebarMenu';
 import { useAuth } from './AuthContext';
 import { hasPermission } from './accessControl';
+import { buildDashboardReturnPath, getDashboardReturnContext } from './dashboardNavigation';
 
 // Mapping des icônes
 const iconMap = {
@@ -41,23 +43,27 @@ const Layout = ({ children }) => {
   const activeMenu = resolveActiveMenuLocation(menuData, location.pathname, location.search);
   const activeParentId = activeMenu.parent?.id;
   const activeParentHasChildren = Boolean(activeMenu.parent?.children?.length);
+  const dashboardReturn = getDashboardReturnContext(location.search);
 
   // Traductions UI
   const translations = {
     FR: {
       logout: 'Déconnexion',
       expandAll: 'Déplier tout',
-      collapseAll: 'Replier tout'
+      collapseAll: 'Replier tout',
+      backToDashboard: 'Retour à l’indicateur du Tableau de bord'
     },
     EN: {
       logout: 'Logout',
       expandAll: 'Expand All',
-      collapseAll: 'Collapse All'
+      collapseAll: 'Collapse All',
+      backToDashboard: 'Back to the Dashboard indicator'
     },
     DE: {
       logout: 'Abmelden',
       expandAll: 'Alles erweitern',
-      collapseAll: 'Alles einklappen'
+      collapseAll: 'Alles einklappen',
+      backToDashboard: 'Zur Dashboard-Kennzahl zurück'
     }
   };
 
@@ -67,6 +73,28 @@ const Layout = ({ children }) => {
     if (!activeParentHasChildren) return;
     setExpandedMenus(previous => ({ ...previous, [activeParentId]: true }));
   }, [activeParentHasChildren, activeParentId]);
+
+  useEffect(() => {
+    if (!location.hash) return undefined;
+
+    const targetId = decodeURIComponent(location.hash.slice(1));
+    let attempts = 0;
+    let timeoutId;
+
+    const revealTarget = () => {
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ block: 'start', inline: 'nearest' });
+        if (typeof target.focus === 'function') target.focus({ preventScroll: true });
+        return;
+      }
+      attempts += 1;
+      if (attempts < 150) timeoutId = window.setTimeout(revealTarget, 80);
+    };
+
+    timeoutId = window.setTimeout(revealTarget, 0);
+    return () => window.clearTimeout(timeoutId);
+  }, [location.hash, location.pathname, location.search]);
 
   // Expand/Collapse All
   const toggleExpandAll = () => {
@@ -264,6 +292,18 @@ const Layout = ({ children }) => {
       <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
         <Header onOpenMenu={() => setSidebarOpen(true)} />
         <main className="m3s-design-scope flex-1 overflow-auto">
+          {dashboardReturn.enabled && (
+            <nav className="sticky top-0 z-30 border-b border-blue-800/70 bg-slate-950/95 px-3 py-2 shadow-sm backdrop-blur sm:px-5" aria-label={t.backToDashboard}>
+              <button
+                type="button"
+                onClick={() => navigate(buildDashboardReturnPath(dashboardReturn.indicatorId))}
+                className="inline-flex min-h-10 items-center gap-2 rounded-md border border-blue-600 bg-blue-950/70 px-3 text-sm font-semibold text-blue-100 transition hover:border-blue-400 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                <ArrowLeft size={17} aria-hidden="true" />
+                {t.backToDashboard}
+              </button>
+            </nav>
+          )}
           {children}
         </main>
       </div>

@@ -1832,7 +1832,7 @@ const Finance = () => {
         )}
 
         {activeTab === 'overview' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div id="finance-overview" className="scroll-mt-24 grid grid-cols-1 lg:grid-cols-2 gap-6" tabIndex="-1">
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
               <h3 className="text-white font-bold mb-4">{t.tendance} (CHF) · {t.chartScope}</h3>
               <ResponsiveContainer width="100%" height={300}>
@@ -1890,7 +1890,7 @@ const Finance = () => {
         {activeTab === 'processes' && <FinanceProcessControls language={language} />}
 
         {activeTab === 'recettes' && (
-          <div>
+          <div id="finance-revenue-register" className="scroll-mt-24" tabIndex="-1">
             <div className="flex justify-end mb-4">
               <StandardCreateButton onClick={() => openNewModal('recette')}>{t.nouvelleRecette}</StandardCreateButton>
             </div>
@@ -1952,7 +1952,7 @@ const Finance = () => {
         )}
 
         {activeTab === 'depenses' && (
-          <div>
+          <div id="finance-expense-register" className="scroll-mt-24" tabIndex="-1">
             <div className="flex justify-end mb-4">
               <StandardCreateButton onClick={() => openNewModal('depense')}>{t.nouvelleDepense}</StandardCreateButton>
             </div>
@@ -2014,7 +2014,7 @@ const Finance = () => {
         )}
 
         {activeTab === 'fx' && (
-          <div className="space-y-5">
+          <div id="finance-fx" className="scroll-mt-24 space-y-5" tabIndex="-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
               {[
                 { label: t.tauxActuel, value: tauxChfCfa, icon: ArrowRightLeft, color: 'text-blue-400' },
@@ -2150,7 +2150,7 @@ const Finance = () => {
         )}
 
         {activeTab === 'social' && (
-          <div className="space-y-6">
+          <div id="finance-social" className="scroll-mt-24 space-y-6" tabIndex="-1">
             <section className="flex flex-col gap-4 border-b border-slate-700 pb-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
                 <div className="mb-2 flex items-center gap-3">
@@ -2302,7 +2302,7 @@ const Finance = () => {
         )}
 
         {activeTab === 'immobilier' && (
-          <div className="space-y-6">
+          <div id="finance-real-estate" className="scroll-mt-24 space-y-6" tabIndex="-1">
             {immoAccessState !== 'available' ? (
               <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-8 text-center" role="status">
                 {immoAccessState === 'loading' ? (

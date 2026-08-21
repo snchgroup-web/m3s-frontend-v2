@@ -875,7 +875,7 @@ const Production = () => {
  
         {/* Tables */}
         {activeTab === 'commandes' && (
-          <div>
+          <div id="production-orders-register" className="scroll-mt-24" tabIndex="-1">
             <div className="mb-4 rounded-lg border border-slate-600 bg-slate-800/70 px-4 py-3 text-sm text-slate-200">
               {t.noWriteAction}
             </div>
@@ -953,7 +953,7 @@ const Production = () => {
         )}
 
         {activeTab === 'fournisseurs' && (
-          <div>
+          <div id="production-suppliers-register" className="scroll-mt-24" tabIndex="-1">
             <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <p className="text-sm text-slate-300">{t.registreFournisseurs}</p>
               <StandardCreateButton onClick={() => { setEditingId(null); setModalType('fournisseur'); setFormData(getDefaultFormData('fournisseur')); setShowModal(true); }}>

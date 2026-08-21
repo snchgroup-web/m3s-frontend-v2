@@ -564,7 +564,7 @@ const Actifs = () => {
           )}
 
           {!loading && activeTab === 'inventory' && (
-            <div>
+            <div id="assets-inventory-register" className="scroll-mt-24" tabIndex="-1">
               <div className="mb-4 flex justify-end">
                 <StandardCreateButton icon={PackagePlus} onClick={openCreate}>{t.add}</StandardCreateButton>
               </div>

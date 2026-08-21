@@ -1238,7 +1238,7 @@ const GED = () => {
  
         {/* Documents */}
         {activeTab === 'documents' && (
-          <div>
+          <div id="ged-documents-register" className="scroll-mt-24" tabIndex="-1">
             <div className="flex justify-end mb-4">
               <StandardCreateButton onClick={() => { setEditingId(null); setModalType('document'); setFormData({ nom: '', type: 'PDF', dossier: '', dateCreation: new Date().toISOString().split('T')[0], taille: '', statut: 'Actif' }); setShowModal(true); }}>
                 {t.nouvelDocument}
