@@ -76,12 +76,10 @@ describe('light-mode accent border selectors', () => {
   test('keeps Administration forms readable and accessible in both themes', () => {
     expect(indexHtml).toContain('html:not(.dark) .administration-modal .text-slate-100{color:#172033!important}');
     expect(indexHtml).toContain('html:not(.dark) .administration-modal__primary{color:#fff!important}');
-    expect((administrationSource.match(/administration-modal__panel/g) || [])).toHaveLength(3);
-    expect((administrationSource.match(/role="dialog"/g) || [])).toHaveLength(3);
-    expect((administrationSource.match(/aria-modal="true"/g) || [])).toHaveLength(3);
+    expect((administrationSource.match(/administration-modal__panel/g) || [])).toHaveLength(2);
+    expect((administrationSource.match(/role="dialog"/g) || [])).toHaveLength(2);
+    expect((administrationSource.match(/aria-modal="true"/g) || [])).toHaveLength(2);
     expect(administrationSource).toContain('id="task-title" type="text" required');
-    expect(administrationSource).toContain('id="user-name" type="text" required');
-    expect(administrationSource).toContain('id="user-email" type="email" required');
     expect(administrationSource).toContain('id="role-name" type="text" required');
   });
 
@@ -115,10 +113,9 @@ describe('light-mode accent border selectors', () => {
     expect((administrationSource.match(/administration-table-row/g) || [])).toHaveLength(2);
     expect(administrationSource).toContain('transition-colors hover:bg-blue-950/35');
     expect(administrationSource).toContain('onClick={() => handleEditTask(task)}');
-    expect(administrationSource).toContain('onClick={() => handleEditUser(u)}');
     expect(administrationSource).toContain("event.key === 'Enter' || event.key === ' '");
     expect(administrationSource).toContain('event.stopPropagation(); handleDeleteTask');
-    expect(administrationSource).toContain('event.stopPropagation(); handleDeleteUser');
+    expect(administrationSource).toContain('Source gouvernée · lecture seule');
   });
 
   test('keeps global sidebar labels and active locations readable in light mode', () => {
