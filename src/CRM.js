@@ -852,7 +852,7 @@ const CRM = () => {
           <NextRegister title={t.prospects} purpose={t.prospectsPurpose} fields={t.prospectsFields} icon={Target} />
         )}
         {activeTab === 'clients' && (
-          <NextRegister title={t.clients} purpose={t.clientsPurpose} fields={t.clientsFields} icon={Users} />
+          <div id="crm-clients-register" className="scroll-mt-24" tabIndex="-1"><NextRegister title={t.clients} purpose={t.clientsPurpose} fields={t.clientsFields} icon={Users} /></div>
         )}
         {activeTab === 'ventes' && (
           <NextRegister title={t.ventes} purpose={t.salesPurpose} fields={t.salesFields} icon={TrendingUp} />
@@ -892,7 +892,7 @@ const CRM = () => {
         )}
 
         {activeTab === 'beneficiaires' && (
-          <DataTable
+          <div id="crm-beneficiaries-register" className="scroll-mt-24" tabIndex="-1"><DataTable
             title={t.beneficiaires}
             type="beneficiaires"
             rows={beneficiaires}
@@ -922,7 +922,7 @@ const CRM = () => {
                 {tableCell(tv(item.source))}
               </>
             )}
-          />
+          /></div>
         )}
 
         {activeTab === 'glossary' && <CRMGlossary language={language} />}

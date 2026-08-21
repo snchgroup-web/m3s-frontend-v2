@@ -690,7 +690,7 @@ const Admin = () => {
         )}
 
         {activeTab === 'planning' && (
-          <div>
+          <div id="administration-task-register" className="scroll-mt-24" tabIndex="-1">
             <PlanningOverview
               language={language}
               tasksTotal={tasksTotal}

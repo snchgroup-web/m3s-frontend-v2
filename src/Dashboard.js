@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import api from './api';
 import DashboardPilotageNavigation from './DashboardPilotageNavigation';
+import { getDashboardIndicatorDestination } from './dashboardNavigation';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -94,12 +95,13 @@ const kpiStatusClasses = {
   disconnected: 'border-slate-600 bg-slate-900/45 text-slate-400'
 };
 
-const GlobalKpiCard = ({ label, value, secondary, dualCurrency = false, source, status, statusLabel, icon: Icon, accent, onOpen, openLabel }) => (
+const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, source, status, statusLabel, icon: Icon, accent, onOpen, openLabel }) => (
   <button
+    id={`dashboard-kpi-${id}`}
     type="button"
     onClick={onOpen}
     aria-label={`${openLabel}: ${label}`}
-    className="global-kpi-card group flex min-h-[132px] w-full flex-col rounded-md border border-slate-700 bg-slate-800 p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-blue-950/25 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    className="global-kpi-card group flex min-h-[132px] w-full flex-col scroll-mt-24 rounded-md border border-slate-700 bg-slate-800 p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-blue-950/25 focus:outline-none focus:ring-2 focus:ring-blue-500"
   >
     <span className="flex items-start justify-between gap-3">
       <span className="min-w-0">
@@ -692,6 +694,10 @@ const Dashboard = () => {
     navigate(path);
   };
 
+  const handleIndicatorOpen = indicatorId => {
+    navigate(getDashboardIndicatorDestination(indicatorId));
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full bg-gradient-to-br from-slate-900 to-slate-800">
@@ -731,19 +737,19 @@ const Dashboard = () => {
         {
           id: 'active-major-files', label: t.activeMajorFiles, value: formatCount(dashboardData?.moduleStats.management.activeDossiers),
           source: t.majorFilesPortfolio, ...sourceState('portfolio'), icon: FolderKanban, accent: 'blue',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/administration?tab=overview#administration-portfolio')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('active-major-files')
         },
         {
           id: 'users', label: t.m3sUsers, value: formatCount(dashboardData?.moduleStats.rh.members),
           secondary: dashboardData?.sourceStatus.users === 'available' ? t.activeAccounts : null,
           source: t.authenticationAccounts, ...sourceState('users'), icon: UsersRound, accent: 'violet',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/administration?tab=institution')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('users')
         },
         {
           id: 'documents', label: t.documents, value: formatCount(dashboardData?.moduleStats.ged.documents),
           secondary: dashboardData?.sourceStatus.documents === 'available' ? t.files : null,
           source: t.gedDocuments, ...sourceState('documents'), icon: Files, accent: 'pink',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/ged?tab=documents')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('documents')
         },
         {
           id: 'tasks', label: t.trackedTasks, value: formatCount(dashboardData?.moduleStats.tasks.total),
@@ -753,7 +759,7 @@ const Dashboard = () => {
             ? `${t.openTasks} ${formatCount(dashboardData.moduleStats.tasks.open)} · ${t.completedTasks} ${formatCount(dashboardData.moduleStats.tasks.completed)}`
             : null,
           source: t.administrationTasks, ...sourceState('tasks'), icon: ListChecks, accent: 'cyan',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/administration?tab=planning')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('tasks')
         }
       ]
     },
@@ -766,53 +772,53 @@ const Dashboard = () => {
         {
           id: 'revenue', label: t.revenue, value: `${financeValues.revenue.chf} CHF`, secondary: `${financeValues.revenue.cfa} CFA`, dualCurrency: true,
           source: t.financeIncome, ...sourceState('income'), icon: HandCoins, accent: 'emerald',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=recettes')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('revenue')
         },
         {
           id: 'expenses', label: t.expenses, value: `${financeValues.expenses.chf} CHF`, secondary: `${financeValues.expenses.cfa} CFA`, dualCurrency: true,
           source: t.financeExpenses, ...sourceState('expenses'), icon: ArrowDownToLine, accent: 'red',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=depenses')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('expenses')
         },
         {
           id: 'balance', label: t.balance, value: `${financeValues.balance.chf} CHF`, secondary: `${financeValues.balance.cfa} CFA`, dualCurrency: true,
           source: t.financeBalance, ...sourceState('finance'), icon: Scale, accent: 'blue',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('balance')
         },
         {
           id: 'donations', label: t.donations, value: `${financeValues.donations.chf} CHF`, secondary: `${financeValues.donations.cfa} CFA`, dualCurrency: true,
           source: t.financeDonations, ...sourceState('donations'), icon: Gift, accent: 'amber',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=recettes')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('donations')
         },
         {
           id: 'financing', label: t.financing, value: `${financeValues.financing.chf} CHF`, secondary: `${financeValues.financing.cfa} CFA`, dualCurrency: true,
           source: t.financeFunding, ...sourceState('financing'), icon: Landmark, accent: 'cyan',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=recettes')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('financing')
         },
         {
           id: 'reference-rate', label: t.referenceRate,
           value: Number.isFinite(dashboardData?.moduleStats.finance.referenceRate) ? `${formatCount(dashboardData.moduleStats.finance.referenceRate)} CFA / CHF` : '— CFA / CHF',
           source: t.financeReferenceRate, ...sourceState('fx'), icon: ArrowRightLeft, accent: 'violet',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=fx')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('reference-rate')
         },
         {
           id: 'real-estate-funding', label: t.realEstateFunding, value: `${financeValues.realEstateFunding.chf} CHF`, secondary: `${financeValues.realEstateFunding.cfa} CFA`, dualCurrency: true,
           source: t.financeRealEstate, ...sourceState('realEstate'), icon: Building2, accent: 'sky',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=immobilier')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('real-estate-funding')
         },
         {
           id: 'real-estate-reimbursements', label: t.realEstateReimbursements, value: `${financeValues.reimbursements.chf} CHF`, secondary: `${financeValues.reimbursements.cfa} CFA`, dualCurrency: true,
           source: t.financeRealEstate, ...sourceState('realEstate'), icon: HandCoins, accent: 'teal',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=immobilier')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('real-estate-reimbursements')
         },
         {
           id: 'outstanding-balance', label: t.outstandingBalance, value: `${financeValues.outstandingBalance.chf} CHF`, secondary: `${financeValues.outstandingBalance.cfa} CFA`, dualCurrency: true,
           source: t.financeRealEstate, ...sourceState('realEstate'), icon: Landmark, accent: 'amber',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=immobilier')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('outstanding-balance')
         },
         {
           id: 'social-flows', label: t.socialFlows, value: `${financeValues.social.chf} CHF`, secondary: `${financeValues.social.cfa} CFA`, dualCurrency: true,
           source: t.financeSocial, ...sourceState('social'), icon: HeartHandshake, accent: 'pink',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/finance?tab=social')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('social-flows')
         }
       ]
     },
@@ -826,27 +832,27 @@ const Dashboard = () => {
           id: 'stocks', label: t.stocks, value: formatCount(dashboardData?.moduleStats.production.stocks),
           secondary: dashboardData?.sourceStatus.inventory === 'available' ? t.quantity : null,
           source: t.assetsInventory, ...sourceState('inventory'), icon: Warehouse, accent: 'rose',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/actifs?tab=inventory')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('stocks')
         },
         {
           id: 'clients', label: t.clients, value: formatCount(dashboardData?.moduleStats.crm.clients),
           source: t.notConnected, ...disconnectedState, icon: UserRoundSearch, accent: 'teal',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/crm?tab=clients')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('clients')
         },
         {
           id: 'orders', label: t.orders, value: formatCount(dashboardData?.moduleStats.production.orders),
           source: t.notConnected, ...disconnectedState, icon: ShoppingCart, accent: 'lime',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/production?tab=commandes')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('orders')
         },
         {
           id: 'beneficiaries', label: t.beneficiaries, value: formatCount(dashboardData?.moduleStats.rh.beneficiaries),
           source: t.notConnected, ...disconnectedState, icon: HeartHandshake, accent: 'violet',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/crm?tab=beneficiaires')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('beneficiaries')
         },
         {
           id: 'suppliers', label: t.suppliers, value: formatCount(dashboardData?.moduleStats.crm.suppliers),
           source: t.notConnected, ...disconnectedState, icon: Truck, accent: 'sky',
-          openLabel: t.openModule, onOpen: () => handleModuleClick('/production?tab=fournisseurs')
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('suppliers')
         }
       ]
     }

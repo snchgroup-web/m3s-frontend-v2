@@ -108,11 +108,13 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   expect(screen.queryByRole('heading', { name: 'Human Resources' })).not.toBeInTheDocument();
 
   fireEvent.click(screen.getByRole('button', { name: 'Open module: Revenue' }));
-  expect(mockNavigate).toHaveBeenCalledWith('/finance?tab=recettes');
+  expect(mockNavigate).toHaveBeenCalledWith('/finance?tab=recettes&returnTo=dashboard&dashboardKpi=revenue#finance-revenue-register');
   fireEvent.click(screen.getByRole('button', { name: 'Open module: Tracked tasks' }));
-  expect(mockNavigate).toHaveBeenCalledWith('/administration?tab=planning');
+  expect(mockNavigate).toHaveBeenCalledWith('/administration?tab=planning&returnTo=dashboard&dashboardKpi=tasks#administration-task-register');
   fireEvent.click(screen.getByRole('button', { name: 'Open module: Active major files' }));
-  expect(mockNavigate).toHaveBeenCalledWith('/administration?tab=overview#administration-portfolio');
+  expect(mockNavigate).toHaveBeenCalledWith('/administration?tab=overview&returnTo=dashboard&dashboardKpi=active-major-files#administration-portfolio');
+  fireEvent.click(screen.getByRole('button', { name: 'Open module: M3S users' }));
+  expect(mockNavigate).toHaveBeenCalledWith('/administration?tab=architecture&returnTo=dashboard&dashboardKpi=users#admin-architecture-systems');
 
   await waitFor(() => {
     expect(api.getFinanceDashboard).toHaveBeenCalledTimes(1);
