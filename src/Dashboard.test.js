@@ -119,6 +119,8 @@ test('shows connected KPI values and labels missing sources explicitly', async (
     expect(mockNavigate).toHaveBeenCalledWith('/?view=glossary&kpi=users#dashboard-kpi-definition-users');
     fireEvent.click(screen.getByRole('button', { name: 'Understand this indicator: Real estate reimbursements' }));
     expect(mockNavigate).toHaveBeenCalledWith('/?view=glossary&kpi=real-estate-reimbursements#dashboard-kpi-definition-real-estate-reimbursements');
+    fireEvent.click(screen.getByRole('button', { name: 'Understand this indicator: Clients' }));
+    expect(mockNavigate).toHaveBeenCalledWith('/?view=glossary&kpi=clients#dashboard-kpi-definition-clients');
 
   await waitFor(() => {
     expect(api.getFinanceDashboard).toHaveBeenCalledTimes(1);
