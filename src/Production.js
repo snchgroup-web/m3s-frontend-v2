@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck, Wrench } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
@@ -10,10 +10,12 @@ import { api } from './api';
 import { StandardActionsCell, StandardCreateButton, StandardRecordSheetModal } from './StandardUI';
 import { isLegacyBuCode, translateDas } from './strategicMapping';
 import ProductionGlossary from './ProductionGlossary';
+import FunctionResourcesOverview from './FunctionResourcesOverview';
 
 const Production = () => {
   const { language } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Translations
   const translations = {
@@ -605,12 +607,19 @@ const Production = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'commandes', 'fournisseurs', 'stocks', 'manufacturing', 'glossary'].includes(tab)) {
+    if (['overview', 'commandes', 'fournisseurs', 'stocks', 'manufacturing', 'resources', 'glossary'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
     }
   }, [location.search]);
+
+  const selectTab = (tab) => {
+    setActiveTab(tab);
+    const params = new URLSearchParams(location.search);
+    params.set('tab', tab);
+    navigate(`/production?${params.toString()}`);
+  };
 
   useEffect(() => {
     setCommandes([
@@ -830,7 +839,7 @@ const Production = () => {
           moduleId="production"
           language={language}
           activeTab={activeTab}
-          onSelect={setActiveTab}
+          onSelect={selectTab}
           tabs={[
             { tab: 'overview', label: t.overview },
             { tab: 'commandes', label: t.commandes },
@@ -1068,9 +1077,11 @@ const Production = () => {
           </div>
         )}
 
+        {activeTab === 'resources' && <FunctionResourcesOverview moduleId="production" language={language} onSelectTab={selectTab} />}
+
         {activeTab === 'glossary' && <ProductionGlossary language={language} />}
 
-        <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'commandes', 'manufacturing', 'fournisseurs', 'stocks', 'glossary']} />
+        <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'commandes', 'manufacturing', 'fournisseurs', 'stocks', 'resources', 'glossary']} />
         </div>
       </div>
 

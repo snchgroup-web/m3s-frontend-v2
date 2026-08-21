@@ -6,7 +6,8 @@ import api from './api';
 let mockLocationSearch = '?tab=risques';
 
 jest.mock('react-router-dom', () => ({
-  useLocation: () => ({ search: mockLocationSearch })
+  useLocation: () => ({ search: mockLocationSearch }),
+  useNavigate: () => jest.fn()
 }), { virtual: true });
 
 jest.mock('./LanguageContext', () => ({
@@ -63,7 +64,7 @@ test('keeps the Risks register read-only while Inventory remains editable', asyn
   expect(screen.queryByTitle('Edit item')).not.toBeInTheDocument();
   expect(screen.queryByText('New item')).not.toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole('button', { name: 'Inventory (1)' }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Inventory (1)' }));
 
   expect(screen.getByText('New item')).toBeInTheDocument();
   expect(screen.getByTitle('Edit item')).toBeInTheDocument();
@@ -78,7 +79,7 @@ test('connects the Stock & Assets business frame to the overview', async () => {
   render(<Actifs />);
 
   await screen.findByText('Read-only monitoring register');
-  fireEvent.click(screen.getByRole('button', { name: 'Overview' }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Overview' }));
 
   expect(screen.getByRole('heading', { name: 'Know what 2SG owns, where it is and which control applies' })).toBeInTheDocument();
   expect(screen.getByText(/does not replace accounting, legal title/)).toBeInTheDocument();

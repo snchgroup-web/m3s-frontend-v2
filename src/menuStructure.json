@@ -286,6 +286,16 @@
           "path": "/finance?tab=fx"
         },
         {
+          "id": "finance-resources",
+          "label": {
+            "FR": "Ressources",
+            "EN": "Resources",
+            "DE": "Ressourcen"
+          },
+          "icon": "Library",
+          "path": "/finance?tab=resources"
+        },
+        {
           "id": "finance-glossary",
           "label": {
             "FR": "Glossaire",
@@ -430,6 +440,16 @@
           "path": "/crm?tab=beneficiaires"
         },
         {
+          "id": "crm-resources",
+          "label": {
+            "FR": "Ressources",
+            "EN": "Resources",
+            "DE": "Ressourcen"
+          },
+          "icon": "Library",
+          "path": "/crm?tab=resources"
+        },
+        {
           "id": "crm-glossary",
           "label": {
             "FR": "Glossaire",
@@ -480,6 +500,26 @@
           },
           "icon": "Truck",
           "path": "/production?tab=fournisseurs"
+        },
+        {
+          "id": "production-stocks",
+          "label": {
+            "FR": "Stocks",
+            "EN": "Stock",
+            "DE": "Bestände"
+          },
+          "icon": "Boxes",
+          "path": "/production?tab=stocks"
+        },
+        {
+          "id": "production-resources",
+          "label": {
+            "FR": "Ressources",
+            "EN": "Resources",
+            "DE": "Ressourcen"
+          },
+          "icon": "Library",
+          "path": "/production?tab=resources"
         },
         {
           "id": "production-glossary",
@@ -534,6 +574,16 @@
           "path": "/actifs?tab=risques"
         },
         {
+          "id": "stock-resources",
+          "label": {
+            "FR": "Ressources",
+            "EN": "Resources",
+            "DE": "Ressourcen"
+          },
+          "icon": "Library",
+          "path": "/actifs?tab=resources"
+        },
+        {
           "id": "glossary",
           "label": {
             "FR": "Glossaire",
@@ -556,26 +606,6 @@
       "path": "/ged",
       "children": [
         {
-          "id": "knowledge",
-          "label": {
-            "FR": "Veille & Knowledge Management",
-            "EN": "Monitoring & Knowledge Management",
-            "DE": "Überwachung & Wissensmanagement"
-          },
-          "icon": "Eye",
-          "path": "/ged?tab=knowledge"
-        },
-        {
-          "id": "it-support-glossary",
-          "label": {
-            "FR": "Glossaire",
-            "EN": "Glossary",
-            "DE": "Glossar"
-          },
-          "icon": "BookOpen",
-          "path": "/ged?tab=glossary"
-        },
-        {
           "id": "ged",
           "label": {
             "FR": "GED",
@@ -584,6 +614,46 @@
           },
           "icon": "FileText",
           "path": "/ged?tab=documents"
+        },
+        {
+          "id": "it-support-dossiers",
+          "label": {
+            "FR": "Dossiers",
+            "EN": "Folders",
+            "DE": "Dossiers"
+          },
+          "icon": "Folder",
+          "path": "/ged?tab=dossiers"
+        },
+        {
+          "id": "it-support-archives",
+          "label": {
+            "FR": "Archives",
+            "EN": "Archives",
+            "DE": "Archive"
+          },
+          "icon": "Archive",
+          "path": "/ged?tab=archives"
+        },
+        {
+          "id": "it-support-document-tools",
+          "label": {
+            "FR": "Outils documentaires",
+            "EN": "Document tools",
+            "DE": "Dokumentenwerkzeuge"
+          },
+          "icon": "Wrench",
+          "path": "/ged?tab=outils-documents"
+        },
+        {
+          "id": "knowledge",
+          "label": {
+            "FR": "Veille & Knowledge Management",
+            "EN": "Monitoring & Knowledge Management",
+            "DE": "Überwachung & Wissensmanagement"
+          },
+          "icon": "Eye",
+          "path": "/ged?tab=knowledge"
         },
         {
           "id": "ai-digital",
@@ -644,6 +714,26 @@
           },
           "icon": "Book",
           "path": "/ged?tab=manual"
+        },
+        {
+          "id": "it-support-resources",
+          "label": {
+            "FR": "Ressources",
+            "EN": "Resources",
+            "DE": "Ressourcen"
+          },
+          "icon": "Library",
+          "path": "/ged?tab=resources"
+        },
+        {
+          "id": "it-support-glossary",
+          "label": {
+            "FR": "Glossaire",
+            "EN": "Glossary",
+            "DE": "Glossar"
+          },
+          "icon": "BookOpen",
+          "path": "/ged?tab=glossary"
         }
       ]
     }

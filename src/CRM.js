@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Bar,
   BarChart,
@@ -22,6 +22,7 @@ import { StandardActionsCell, StandardKpiCard, StandardRecordSheetModal } from '
 import CRMGlossary from './CRMGlossary';
 import api from './api';
 import { isLegacyBuCode, translateDas } from './strategicMapping';
+import FunctionResourcesOverview from './FunctionResourcesOverview';
 
 const dictionaries = {
   FR: {
@@ -333,7 +334,7 @@ const valueLabels = {
 };
 
 const chartColors = ['#38bdf8', '#34d399', '#f59e0b', '#a78bfa', '#fb7185', '#22d3ee'];
-const tabs = ['overview', 'prospects', 'clients', 'ventes', 'dons', 'beneficiaires', 'glossary'];
+const tabs = ['overview', 'prospects', 'clients', 'ventes', 'dons', 'beneficiaires', 'resources', 'glossary'];
 
 const designationTerms = {
   EN: [
@@ -463,6 +464,7 @@ const normalizeInventoryDonation = (item, index) => ({
 const CRM = () => {
   const { language } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
   const queryTab = new URLSearchParams(location.search).get('tab');
   const [activeTab, setActiveTab] = useState(tabs.includes(queryTab) ? queryTab : 'overview');
   const [beneficiaires, setBeneficiaires] = useState([]);
@@ -487,6 +489,13 @@ const CRM = () => {
   useEffect(() => {
     setActiveTab(tabs.includes(queryTab) ? queryTab : 'overview');
   }, [queryTab]);
+
+  const selectTab = (tab) => {
+    setActiveTab(tab);
+    const params = new URLSearchParams(location.search);
+    params.set('tab', tab);
+    navigate(`/crm?${params.toString()}`);
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -791,7 +800,7 @@ const CRM = () => {
             moduleId="commercial"
             language={language}
             activeTab={activeTab}
-            onSelect={setActiveTab}
+            onSelect={selectTab}
             tabs={[
               { tab: 'overview', label: t.overview },
               { tab: 'prospects', label: `${t.prospects} (0)` },
@@ -924,6 +933,8 @@ const CRM = () => {
             )}
           /></div>
         )}
+
+        {activeTab === 'resources' && <FunctionResourcesOverview moduleId="commercial" language={language} onSelectTab={selectTab} />}
 
         {activeTab === 'glossary' && <CRMGlossary language={language} />}
 

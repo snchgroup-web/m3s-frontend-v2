@@ -76,3 +76,25 @@ test('uses the shared overview label for the Dashboard landing view', () => {
     DE: 'Übersicht',
   });
 });
+
+test('places governed resources immediately before each local glossary', () => {
+  const pairs = [
+    ['finances', 'finance-resources', 'finance-glossary'],
+    ['commercial', 'crm-resources', 'crm-glossary'],
+    ['production', 'production-resources', 'production-glossary'],
+    ['stock', 'stock-resources', 'glossary'],
+    ['it-support', 'it-support-resources', 'it-support-glossary'],
+  ];
+
+  pairs.forEach(([moduleId, resourcesId, glossaryId]) => {
+    const ids = menuData.menu.find(item => item.id === moduleId).children.map(item => item.id);
+    expect(ids.indexOf(resourcesId)).toBe(ids.indexOf(glossaryId) - 1);
+  });
+
+  const productionIds = menuData.menu.find(item => item.id === 'production').children.map(item => item.id);
+  expect(productionIds.indexOf('production-stocks')).toBeLessThan(productionIds.indexOf('production-resources'));
+
+  const itIds = menuData.menu.find(item => item.id === 'it-support').children.map(item => item.id);
+  expect(itIds[0]).toBe('ged');
+  expect(itIds.at(-1)).toBe('it-support-glossary');
+});
