@@ -1741,6 +1741,21 @@ const Finance = () => {
       <div className="m3s-business-module min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-8">
         <div className="mx-auto w-full max-w-[1800px]">
 
+        <ModulePageTabs
+          moduleId="finances"
+          language={language}
+          activeTab={activeTab}
+          onSelect={selectFinanceTab}
+          tabs={[
+            { tab: 'overview', label: t.overview },
+            { tab: 'architecture', label: t.architecture },
+            { tab: 'processes', label: t.processes },
+            { tab: 'recettes', label: t.recettes },
+            { tab: 'depenses', label: t.depenses },
+            { tab: 'fx', label: t.fx }
+          ]}
+        />
+
         {activeTab === 'overview' && <FinanceFunctionFrame language={language} />}
 
         <FinanceOverviewIndicators
@@ -1809,21 +1824,6 @@ const Finance = () => {
             )}
           </div>
         </div>
-
-        <ModulePageTabs
-          moduleId="finances"
-          language={language}
-          activeTab={activeTab}
-          onSelect={selectFinanceTab}
-          tabs={[
-            { tab: 'overview', label: t.overview },
-            { tab: 'architecture', label: t.architecture },
-            { tab: 'processes', label: t.processes },
-            { tab: 'recettes', label: t.recettes },
-            { tab: 'depenses', label: t.depenses },
-            { tab: 'fx', label: t.fx }
-          ]}
-        />
 
         {feedback && (
           <div className="m3s-feedback m3s-feedback--success mb-6 flex items-start gap-3 px-4 py-3" role="status">

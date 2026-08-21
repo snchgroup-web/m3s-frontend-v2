@@ -1138,7 +1138,21 @@ const GED = () => {
     <>
       <div className="it-support-overview m3s-business-module min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-8">
         <div className="mx-auto w-full max-w-[1800px]">
- 
+
+        <ModulePageTabs
+          moduleId="it-support"
+          language={language}
+          activeTab={activeTab}
+          onSelect={selectTab}
+          tabs={[
+            { tab: 'overview', label: t.overview },
+            { tab: 'documents', label: t.documents },
+            { tab: 'dossiers', label: t.dossiers },
+            { tab: 'archives', label: t.archives || 'Archives' },
+            { tab: 'outils-documents', label: t.documentTools }
+          ]}
+        />
+
         {/* KPIs */}
         <div className="it-support-kpis grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="it-support-kpi it-support-kpi--blue bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
@@ -1182,21 +1196,6 @@ const GED = () => {
           </div>
         </div>
  
-        {/* Tabs */}
-        <ModulePageTabs
-          moduleId="it-support"
-          language={language}
-          activeTab={activeTab}
-          onSelect={selectTab}
-          tabs={[
-            { tab: 'overview', label: t.overview },
-            { tab: 'documents', label: t.documents },
-            { tab: 'dossiers', label: t.dossiers },
-            { tab: 'archives', label: t.archives || 'Archives' },
-            { tab: 'outils-documents', label: t.documentTools }
-          ]}
-        />
-
         {returnVisualHref && (
           <aside className="mb-6 flex flex-col gap-3 rounded-lg border border-blue-700 bg-blue-950/45 p-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm leading-6 text-blue-100">{t.returnContext}</p>

@@ -785,18 +785,7 @@ const CRM = () => {
   return (
     <div className="m3s-business-module min-h-screen bg-slate-900 p-4 sm:p-8">
       <div className="mx-auto w-full max-w-[1800px]">
-        <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-5">
-          <StandardKpiCard label={t.validatedSources} value={sourcesLoading ? '…' : `${availableSourceCount}/2`} secondary={t.sourcesAvailable} icon={Target} color="text-blue-400" />
-          <StandardKpiCard label={t.socialFlows} value={formatSourceCount(sourceStatus.social, beneficiaires.length)} secondary={`${t.financeSocialSource} · ${t.loadedExtract}`} icon={HeartHandshake} color="text-cyan-400" />
-          <StandardKpiCard label={t.totalSocial} value={formatSourceMoney(sourceStatus.social, socialTotals.chf, formatChf)} secondary={sourceStatus.social === 'available' ? `${formatCfa(socialTotals.cfa)} · ${t.loadedExtract}` : sourceStatusLabel(sourceStatus.social)} icon={TrendingUp} color="text-emerald-400" />
-          <StandardKpiCard label={t.inKindDonations} value={formatSourceCount(sourceStatus.inventory, dons.length)} secondary={sourceStatus.inventory === 'available' ? `${formatChf(donsTotals.chf)} / ${formatCfa(donsTotals.cfa)} · ${t.loadedExtract}` : sourceStatusLabel(sourceStatus.inventory)} icon={Gift} color="text-purple-400" />
-          <StandardKpiCard label={t.toBuild} value="3" secondary={`${t.prospects} / ${t.clients} / ${t.ventes}`} icon={Users} color="text-amber-400" />
-        </div>
-
-        <SourceStatusPanel />
-        <Notice>{t.sourceNotice}</Notice>
-
-        <div className="mb-6 min-w-0">
+        <div className="min-w-0">
           <ModulePageTabs
             moduleId="commercial"
             language={language}
@@ -813,6 +802,17 @@ const CRM = () => {
             ]}
           />
         </div>
+
+        <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-5">
+          <StandardKpiCard label={t.validatedSources} value={sourcesLoading ? '…' : `${availableSourceCount}/2`} secondary={t.sourcesAvailable} icon={Target} color="text-blue-400" />
+          <StandardKpiCard label={t.socialFlows} value={formatSourceCount(sourceStatus.social, beneficiaires.length)} secondary={`${t.financeSocialSource} · ${t.loadedExtract}`} icon={HeartHandshake} color="text-cyan-400" />
+          <StandardKpiCard label={t.totalSocial} value={formatSourceMoney(sourceStatus.social, socialTotals.chf, formatChf)} secondary={sourceStatus.social === 'available' ? `${formatCfa(socialTotals.cfa)} · ${t.loadedExtract}` : sourceStatusLabel(sourceStatus.social)} icon={TrendingUp} color="text-emerald-400" />
+          <StandardKpiCard label={t.inKindDonations} value={formatSourceCount(sourceStatus.inventory, dons.length)} secondary={sourceStatus.inventory === 'available' ? `${formatChf(donsTotals.chf)} / ${formatCfa(donsTotals.cfa)} · ${t.loadedExtract}` : sourceStatusLabel(sourceStatus.inventory)} icon={Gift} color="text-purple-400" />
+          <StandardKpiCard label={t.toBuild} value="3" secondary={`${t.prospects} / ${t.clients} / ${t.ventes}`} icon={Users} color="text-amber-400" />
+        </div>
+
+        <SourceStatusPanel />
+        <Notice>{t.sourceNotice}</Notice>
 
         {activeTab === 'overview' && (
           <div className="space-y-6">
