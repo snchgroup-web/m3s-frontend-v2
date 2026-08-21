@@ -60,8 +60,19 @@ test('keeps the parent active without inventing a child on an overview URL', () 
   expect(active.child).toBeNull();
 });
 
-test('keeps the Dashboard parent active without activating the Pilotage child', () => {
+test('keeps the Dashboard parent active without activating the overview child', () => {
   const active = resolveActiveMenuLocation(menuData, '/', '');
   expect(active.parent?.id).toBe('dashboard');
   expect(active.child).toBeNull();
+});
+
+test('uses the shared overview label for the Dashboard landing view', () => {
+  const dashboard = menuData.menu.find(item => item.id === 'dashboard');
+  const overview = dashboard.children.find(item => item.id === 'global-steering');
+
+  expect(overview.label).toEqual({
+    FR: "Vue d'ensemble",
+    EN: 'Overview',
+    DE: 'Übersicht',
+  });
 });

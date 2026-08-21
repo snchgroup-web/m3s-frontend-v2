@@ -13,9 +13,9 @@
         {
           "id": "global-steering",
           "label": {
-            "FR": "Pilotage",
-            "EN": "Steering",
-            "DE": "Steuerung"
+            "FR": "Vue d'ensemble",
+            "EN": "Overview",
+            "DE": "Übersicht"
           },
           "icon": "LayoutDashboard",
           "path": "/?view=overview"
