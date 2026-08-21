@@ -4,7 +4,7 @@ export const DASHBOARD_KPI_KEY = 'dashboardKpi';
 
 export const DASHBOARD_INDICATOR_DESTINATIONS = Object.freeze({
   'active-major-files': '/administration?tab=overview#administration-portfolio',
-  users: '/administration?tab=architecture#admin-architecture-systems',
+  users: '/administration?tab=users#administration-users-register',
   documents: '/ged?tab=documents#ged-documents-register',
   tasks: '/administration?tab=planning#administration-task-register',
   revenue: '/finance?tab=recettes#finance-revenue-register',
