@@ -136,6 +136,25 @@ test('keeps an available social extract when inventory is unavailable', async ()
   expect(screen.queryByText('0 CHF')).not.toBeInTheDocument();
 });
 
+test('uses the governed beneficiary field without inferring a name from the description', async () => {
+  mockSearch = '?tab=beneficiaires';
+  mockLanguage = 'FR';
+  api.getSocialFinance.mockResolvedValue({
+    data: [
+      { id: 'SOC-1', beneficiaire: 'Unité Alpha', description: 'Aide famille Rufisque' },
+      { id: 'SOC-2', beneficiaire: '', description: 'Aide famille Rufisque' }
+    ]
+  });
+  api.getInventory.mockResolvedValue({ data: [] });
+
+  render(<CRM />);
+
+  expect(await screen.findByText('Unité Alpha')).toBeInTheDocument();
+  expect(screen.getByText('Bénéficiaire à préciser')).toBeInTheDocument();
+  expect(screen.queryByText('Famille SN')).not.toBeInTheDocument();
+  expect(screen.queryByText('Communauté Rufisque')).not.toBeInTheDocument();
+});
+
 test('opens the governed local CRM glossary from the module tab', async () => {
   renderCRM('glossary', 'FR');
 

@@ -415,11 +415,8 @@ const isDonationCandidate = (item) => {
 };
 
 const deriveBeneficiaryName = (row) => {
-  if (row.beneficiaire) return row.beneficiaire;
-  const description = String(row.description || '');
-  if (/famille|menage|ménage/i.test(description)) return 'Famille SN';
-  if (/rufisque/i.test(description)) return 'Communauté Rufisque';
-  return 'Bénéficiaire à préciser';
+  const sourceName = String(row.beneficiaire || '').trim();
+  return sourceName || 'Bénéficiaire à préciser';
 };
 
 const normalizeSocialRow = (row, index) => ({
