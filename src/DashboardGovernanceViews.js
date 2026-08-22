@@ -43,7 +43,24 @@ const copy = {
         'Une personne ou un collectif assume une responsabilité dans une fonction et une Team.',
         'Une opération peut exécuter ou financer une tâche sans se confondre avec elle.',
         'Une preuve documente une opération, un contrôle ou une décision avec sa provenance.'
-      ]
+      ],
+      pilotTitle: 'Premier domaine pilote · Achat & approvisionnement',
+      pilotBody: 'Ce domaine teste les identifiants et relations nécessaires sans modifier les registres actuels.',
+      pilotObserved: 'Observé aujourd’hui',
+      pilotTarget: 'Cible candidate',
+      pilotObservedItems: [
+        'Dépense : fournisseur, montants, Team, Agent et phase projet sous forme de valeurs.',
+        'Stock : fournisseur, quantités et montants d’achat dans un registre séparé.',
+        'Vue Fournisseurs : rapprochement dérivé par nom normalisé, sans clé fournisseur commune.',
+        'Justificatif GED : aucune référence homogène dans les écritures génériques.'
+      ],
+      pilotTargetItems: [
+        'purchase_case_id relie le dossier, le projet, la phase et la tâche autorisée.',
+        'supplier_id identifie le fournisseur sans remplacer son nom d’affichage.',
+        'expense_id et inventory_movement_id restent deux objets distincts reliés à l’achat.',
+        'ged_document_id rattache offre, facture, paiement, livraison et réception à leurs preuves.'
+      ],
+      pilotBoundary: 'Prochaine décision : valider les objets, identifiants, cardinalités et propriétaires de source avant toute évolution de schéma.'
     },
     processes: {
       eyebrow: 'MÉTHODE COMMUNE',
@@ -100,7 +117,12 @@ const copy = {
       dataModelTitle: 'Candidate relational model', dataModelStatus: 'Target to validate',
       dataModelBody: 'This diagram prepares the expected cross-functional relationships. It does not mean that the tables, identifiers or connections are already available.',
       dataModelGroups: [['Work frame', 'File → Project → Phase → Task'], ['Responsibilities', 'Function → Team → Person or collective'], ['Business flows', 'Action → Operation → Income, expense or stock movement'], ['Traceability', 'Source → Document → Control → Decision']],
-      dataModelRelations: ['A task belongs to a phase, itself linked to a project and a file.', 'A person or collective assumes a responsibility within a function and a Team.', 'An operation may execute or finance a task without being the same object.', 'Evidence documents an operation, control or decision together with its provenance.']
+      dataModelRelations: ['A task belongs to a phase, itself linked to a project and a file.', 'A person or collective assumes a responsibility within a function and a Team.', 'An operation may execute or finance a task without being the same object.', 'Evidence documents an operation, control or decision together with its provenance.'],
+      pilotTitle: 'First pilot domain · Purchasing & procurement', pilotBody: 'This domain tests the required identifiers and relationships without changing current registers.',
+      pilotObserved: 'Observed today', pilotTarget: 'Candidate target',
+      pilotObservedItems: ['Expense: supplier, amounts, Team, Agent and project phase as values.', 'Stock: supplier, quantities and purchase amounts in a separate register.', 'Supplier view: matching derived from normalised names, without a shared supplier key.', 'DMS evidence: no consistent reference in generic financial entries.'],
+      pilotTargetItems: ['purchase_case_id links the file, project, phase and authorised task.', 'supplier_id identifies the supplier without replacing its display name.', 'expense_id and inventory_movement_id remain two distinct objects linked to the purchase.', 'ged_document_id links offer, invoice, payment, delivery and acceptance to their evidence.'],
+      pilotBoundary: 'Next decision: validate objects, identifiers, cardinalities and source owners before any schema change.'
     },
     processes: {
       eyebrow: 'COMMON METHOD', title: 'Processes & Controls', body: 'Global steering harmonises cross-functional controls. Detailed procedures remain governed within each function.',
@@ -129,7 +151,12 @@ const copy = {
       dataModelTitle: 'Kandidatenmodell der Beziehungen', dataModelStatus: 'Zielbild zu validieren',
       dataModelBody: 'Dieses Schema bereitet die erwarteten funktionsübergreifenden Beziehungen vor. Es bedeutet nicht, dass Tabellen, Kennungen oder Verbindungen bereits verfügbar sind.',
       dataModelGroups: [['Arbeitsrahmen', 'Dossier → Projekt → Phase → Aufgabe'], ['Verantwortung', 'Funktion → Team → Person oder Kollektiv'], ['Fachliche Flüsse', 'Aktion → Vorgang → Einnahme, Ausgabe oder Lagerbewegung'], ['Nachvollziehbarkeit', 'Quelle → Dokument → Kontrolle → Entscheidung']],
-      dataModelRelations: ['Eine Aufgabe gehört zu einer Phase, die einem Projekt und einem Dossier zugeordnet ist.', 'Eine Person oder ein Kollektiv übernimmt Verantwortung innerhalb einer Funktion und eines Teams.', 'Ein Vorgang kann eine Aufgabe ausführen oder finanzieren, ohne mit ihr identisch zu sein.', 'Ein Nachweis dokumentiert einen Vorgang, eine Kontrolle oder eine Entscheidung samt Herkunft.']
+      dataModelRelations: ['Eine Aufgabe gehört zu einer Phase, die einem Projekt und einem Dossier zugeordnet ist.', 'Eine Person oder ein Kollektiv übernimmt Verantwortung innerhalb einer Funktion und eines Teams.', 'Ein Vorgang kann eine Aufgabe ausführen oder finanzieren, ohne mit ihr identisch zu sein.', 'Ein Nachweis dokumentiert einen Vorgang, eine Kontrolle oder eine Entscheidung samt Herkunft.'],
+      pilotTitle: 'Erster Pilotbereich · Einkauf & Beschaffung', pilotBody: 'Dieser Bereich prüft die erforderlichen Kennungen und Beziehungen, ohne aktuelle Register zu ändern.',
+      pilotObserved: 'Heute beobachtet', pilotTarget: 'Kandidatenziel',
+      pilotObservedItems: ['Ausgabe: Lieferant, Beträge, Team, Agent und Projektphase als Werte.', 'Bestand: Lieferant, Mengen und Einkaufsbeträge in einem getrennten Register.', 'Lieferantenansicht: Ableitung über normalisierte Namen ohne gemeinsamen Lieferantenschlüssel.', 'GED-Nachweis: keine einheitliche Referenz in allgemeinen Finanzbuchungen.'],
+      pilotTargetItems: ['purchase_case_id verbindet Dossier, Projekt, Phase und autorisierte Aufgabe.', 'supplier_id identifiziert den Lieferanten, ohne seinen Anzeigenamen zu ersetzen.', 'expense_id und inventory_movement_id bleiben zwei getrennte, mit dem Einkauf verbundene Objekte.', 'ged_document_id verbindet Angebot, Rechnung, Zahlung, Lieferung und Abnahme mit ihren Nachweisen.'],
+      pilotBoundary: 'Nächste Entscheidung: Objekte, Kennungen, Kardinalitäten und Quellenverantwortliche vor jeder Schemaänderung validieren.'
     },
     processes: {
       eyebrow: 'GEMEINSAME METHODE', title: 'Prozesse & Kontrollen', body: 'Die globale Steuerung harmonisiert funktionsübergreifende Kontrollen. Detaillierte Verfahren bleiben in jeder Funktion geregelt.',
@@ -202,6 +229,21 @@ const ArchitectureView = ({ data }) => {
             </li>
           ))}
         </ol>
+      </section>
+      <section className="mt-4 rounded-md border border-slate-700 bg-slate-900/30 p-3" aria-labelledby="global-purchase-pilot">
+        <h4 id="global-purchase-pilot" className="text-sm font-semibold text-slate-100">{data.pilotTitle}</h4>
+        <p className="mt-1 max-w-4xl text-sm leading-5 text-slate-400">{data.pilotBody}</p>
+        <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
+          {[[data.pilotObserved, data.pilotObservedItems, 'border-blue-800/70'], [data.pilotTarget, data.pilotTargetItems, 'border-emerald-800/70']].map(([title, items, borderClass]) => (
+            <article key={title} className={`rounded-md border ${borderClass} bg-slate-900/40 p-3`}>
+              <h5 className="text-sm font-semibold text-slate-100">{title}</h5>
+              <ul className="mt-3 space-y-2">
+                {items.map((item) => <li key={item} className="flex items-start gap-2 text-sm leading-5 text-slate-300"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400" />{item}</li>)}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <p className="mt-3 rounded-md border border-amber-700/70 bg-amber-950/15 px-3 py-2 text-sm leading-5 text-amber-100">{data.pilotBoundary}</p>
       </section>
     </div>
   );
