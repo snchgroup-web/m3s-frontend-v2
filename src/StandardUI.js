@@ -90,7 +90,11 @@ export const StandardRecordSheetModal = ({
   description,
   details = [],
   closeLabel = 'Close',
-  onClose
+  onClose,
+  primaryActionLabel,
+  onPrimaryAction,
+  destructiveActionLabel,
+  onDestructiveAction
 }) => {
   if (!open) return null;
 
@@ -121,7 +125,27 @@ export const StandardRecordSheetModal = ({
             </div>
           ))}
         </div>
-        <div className="mt-6 flex justify-end">
+        <div className="mt-6 flex flex-wrap justify-end gap-3">
+          {onDestructiveAction && destructiveActionLabel && (
+            <button
+              type="button"
+              onClick={onDestructiveAction}
+              className="inline-flex items-center gap-2 rounded-lg border border-red-500/60 bg-red-950/35 px-4 py-2 text-sm font-semibold text-red-100 transition hover:bg-red-900/55"
+            >
+              <Trash2 size={16} aria-hidden="true" />
+              {destructiveActionLabel}
+            </button>
+          )}
+          {onPrimaryAction && primaryActionLabel && (
+            <button
+              type="button"
+              onClick={onPrimaryAction}
+              className="inline-flex items-center gap-2 rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-500"
+            >
+              <Edit2 size={16} aria-hidden="true" />
+              {primaryActionLabel}
+            </button>
+          )}
           <button
             type="button"
             onClick={onClose}
