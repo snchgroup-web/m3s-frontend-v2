@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { LanguageProvider } from './LanguageContext';
 import Production from './Production';
 import { api } from './api';
@@ -84,6 +84,31 @@ test('keeps the connected suppliers register available separately', async () => 
   expect(await screen.findByText('Supplier register consolidated from Expenses and Stock & Assets.')).toBeInTheDocument();
   expect(api.getExpenses).toHaveBeenCalledWith(500, 0);
   expect(api.getInventory).toHaveBeenCalledWith(500, 0);
+});
+
+test('uses the governed team list when preparing a supplier', async () => {
+  renderProduction('fournisseurs', 'FR');
+
+  fireEvent.click(await screen.findByRole('button', { name: 'Préparer fournisseur' }));
+
+  const teamSelect = screen.getByRole('combobox', { name: 'Team' });
+  expect(teamSelect).toHaveValue('Team_ZH');
+  expect(screen.getByRole('option', { name: 'TZH - Team Zurich' })).toBeInTheDocument();
+  expect(screen.getByRole('option', { name: 'TSN - Team Sénégal' })).toBeInTheDocument();
+
+  fireEvent.change(teamSelect, { target: { value: 'Team_SN' } });
+
+  expect(teamSelect).toHaveValue('Team_SN');
+  expect(screen.getByRole('combobox', { name: 'Agent' })).toHaveValue('Pape');
+
+  fireEvent.change(screen.getByPlaceholderText('Nom du fournisseur'), { target: { value: 'Fournisseur test' } });
+  fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'test@example.com' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Créer' }));
+
+  expect(await screen.findByText('Fournisseur test')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Modifier' }));
+
+  expect(screen.getByRole('combobox', { name: 'Team' })).toHaveValue('Team_SN');
 });
 
 test('renders the local Production glossary from the governed tab', async () => {
