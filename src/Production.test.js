@@ -157,6 +157,39 @@ test('preserves an unknown historical agent instead of inventing an individual a
   expect(screen.getByRole('option', { name: 'Agent historique (valeur historique)' })).toBeInTheDocument();
 });
 
+test('flags an incompatible Team-Agent source without displaying or reusing the impossible assignment', async () => {
+  renderProduction('fournisseurs', 'FR', {
+    expenses: [{
+      fournisseur: 'Fazza Design Inc., Adama Archit.',
+      team: 'TSN',
+      agent: 'Team ZH',
+      category: 'Chantier, Formalités',
+      departement: 'Finances',
+      pays: 'SN',
+      date_operation: { value: '2026-08-21' },
+      montant_chf: 88099
+    }]
+  });
+
+  fireEvent.click(await screen.findByText('Fazza Design Inc., Adama Archit.'));
+
+  expect(screen.getByText('Source incohérente : affectation à qualifier')).toBeInTheDocument();
+  expect(screen.getAllByText('À qualifier').length).toBeGreaterThan(0);
+  expect(screen.queryByText('Team ZH (collectif)')).not.toBeInTheDocument();
+  expect(screen.getAllByText('Chantier, Formalités').length).toBeGreaterThan(0);
+  expect(screen.getAllByText('Finances').length).toBeGreaterThan(0);
+  expect(screen.getAllByText('Sénégal').length).toBeGreaterThan(0);
+  expect(screen.getAllByText('21.08.2026').length).toBeGreaterThan(0);
+  expect(screen.queryByText(/\[object Object\]/)).not.toBeInTheDocument();
+
+  fireEvent.click(screen.getByText('Modifier').closest('button'));
+
+  expect(screen.getByRole('combobox', { name: 'Team' })).toHaveValue('Team_SN');
+  expect(screen.getByRole('combobox', { name: 'Agent' })).toHaveValue('');
+  expect(screen.queryByRole('option', { name: /Team ZH/ })).not.toBeInTheDocument();
+  expect(screen.getByRole('option', { name: 'Team SN (collectif)' })).toBeInTheDocument();
+});
+
 test('offers supplier deletion from the row and the detail sheet with confirmation', async () => {
   const confirm = jest.spyOn(window, 'confirm').mockReturnValue(true);
   renderProduction('fournisseurs', 'FR', {

@@ -78,6 +78,10 @@ const Production = () => {
       confirmerSuppressionFournisseur: 'Supprimer ce fournisseur du registre local ?',
       agentNonAttribue: 'Non attribué',
       agentHistorique: 'valeur historique',
+      affectationAQualifier: 'À qualifier',
+      coherenceAffectation: 'Cohérence Team / Agent',
+      affectationCoherente: 'Cohérente',
+      affectationIncoherente: 'Source incohérente : affectation à qualifier',
       ok: 'OK',
       bas: 'BAS',
       creer: 'Créer',
@@ -155,6 +159,10 @@ const Production = () => {
       confirmerSuppressionFournisseur: 'Delete this supplier from the local register?',
       agentNonAttribue: 'Unassigned',
       agentHistorique: 'historical value',
+      affectationAQualifier: 'To be qualified',
+      coherenceAffectation: 'Team / Agent consistency',
+      affectationCoherente: 'Consistent',
+      affectationIncoherente: 'Inconsistent source: assignment to be qualified',
       ok: 'OK',
       bas: 'LOW',
       creer: 'Create',
@@ -232,6 +240,10 @@ const Production = () => {
       confirmerSuppressionFournisseur: 'Diesen Lieferanten aus dem lokalen Register löschen?',
       agentNonAttribue: 'Nicht zugewiesen',
       agentHistorique: 'historischer Wert',
+      affectationAQualifier: 'Zu klären',
+      coherenceAffectation: 'Konsistenz Team / Agent',
+      affectationCoherente: 'Konsistent',
+      affectationIncoherente: 'Inkonsistente Quelle: Zuordnung ist zu klären',
       ok: 'OK',
       bas: 'NIEDRIG',
       creer: 'Erstellen',
@@ -396,7 +408,14 @@ const Production = () => {
   };
 
   // Helper function to translate data values
-  const normalizeLookupKey = (value) => String(value || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+  const readScalar = (value) => {
+    if (value === null || value === undefined) return '';
+    if (value instanceof Date) return value.toISOString();
+    if (typeof value !== 'object') return String(value).trim();
+    const nested = value.value ?? value.date ?? value.timestamp ?? value.stringValue ?? value.string_value;
+    return nested === undefined ? '' : readScalar(nested);
+  };
+  const normalizeLookupKey = (value) => readScalar(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
   const statusKeys = {
     'LIVREE': 'Livrée',
     'DELIVERED': 'Livrée',
@@ -407,7 +426,9 @@ const Production = () => {
     'VORBEREITUNG': 'Préparation'
   };
   const countryKeys = {
+    'SN': 'Sénégal',
     'SENEGAL': 'Sénégal',
+    'CH': 'Suisse',
     'FRANCE': 'France',
     'SUISSE': 'Suisse',
     'SWITZERLAND': 'Suisse',
@@ -477,15 +498,17 @@ const Production = () => {
     'PAPA AMANDIOGOU NDIAYE': 'Pape',
     'IBRAHIMA NDIAYE': 'Ibou',
     'TEAM ZH': 'Team_ZH',
+    'TEAM ZH (COLLECTIF)': 'Team_ZH',
     TZH: 'Team_ZH',
     'TEAM SN': 'Team_SN',
+    'TEAM SN (COLLECTIF)': 'Team_SN',
     TSN: 'Team_SN'
   };
   const normalizeTeam = (team) => {
     const key = normalizeLookupKey(team).replace(/[\s-]/g, '_');
     if (['TZH', 'TEAM_ZH', 'TEAMZH', 'ZH'].includes(key)) return 'Team_ZH';
     if (['TSN', 'TEAM_SN', 'TEAMSN', 'SN'].includes(key)) return 'Team_SN';
-    return team || '-';
+    return readScalar(team) || '-';
   };
   const translateTeam = (team) => {
     const normalized = normalizeTeam(team);
@@ -510,11 +533,33 @@ const Production = () => {
     }
     return candidates[0] || '';
   };
+  const normalizeAgent = (agent) => {
+    const value = readScalar(agent);
+    return agentAliases[normalizeLookupKey(value)] || value;
+  };
+  const getAgentTeam = (agent) => {
+    const canonical = normalizeAgent(agent);
+    if (agentsByTeam.Team_ZH.some(option => option.value === canonical)) return 'Team_ZH';
+    if (agentsByTeam.Team_SN.some(option => option.value === canonical)) return 'Team_SN';
+    return '';
+  };
+  const splitSourceValues = (value) => readScalar(value)
+    .split(',')
+    .map(item => item.trim())
+    .filter(Boolean);
   const translateAgent = (agent) => {
     const normalized = agentAliases[normalizeLookupKey(agent)] || agent;
     return [...agentsByTeam.Team_ZH, ...agentsByTeam.Team_SN]
       .find(option => option.value === normalized)?.label || agent;
   };
+  const supplierAgentLabel = (supplier) => {
+    const agents = supplier?.agent && supplier.agent !== '-'
+      ? translateJoinedValues(supplier.agent, translateAgent)
+      : '';
+    if (!supplier?.assignmentIssueCount) return agents || '-';
+    return agents ? `${agents} · ${t.affectationAQualifier}` : t.affectationAQualifier;
+  };
+  const supplierCategoryOptions = ['Matériel', 'Logiciels', 'Services', 'Bien immobilier', 'Frais Administratifs', 'Chantier'];
   const getDefaultFormData = (type = 'commande') => ({
     numero: '',
     client: '',
@@ -556,13 +601,15 @@ const Production = () => {
 
   const formatDate = (value) => {
     if (!value) return '-';
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return String(value).slice(0, 10);
+    const scalar = readScalar(value);
+    if (!scalar) return '-';
+    const date = new Date(scalar);
+    if (Number.isNaN(date.getTime())) return scalar.slice(0, 10);
     return date.toLocaleDateString(language === 'EN' ? 'en-GB' : language === 'DE' ? 'de-CH' : 'fr-CH');
   };
 
   const normalizeSupplier = (value) => {
-    const name = String(value || '').trim();
+    const name = readScalar(value);
     if (!name || ['-', 'N/A', 'NA', 'A CONFIRMER', 'INCONNU'].includes(normalizeLookupKey(name))) return '';
     return name;
   };
@@ -585,6 +632,7 @@ const Production = () => {
           departements: new Set(),
           teams: new Set(),
           agents: new Set(),
+          assignmentIssues: [],
           pays: new Set(),
           refs: new Set(),
           lignesDepenses: 0,
@@ -599,8 +647,32 @@ const Production = () => {
 
     const touchDate = (supplier, value) => {
       if (!value) return;
-      const next = String(value).slice(0, 10);
+      const next = readScalar(value).slice(0, 10);
+      if (!next) return;
       if (!supplier.lastDate || next > supplier.lastDate) supplier.lastDate = next;
+    };
+
+    const addValues = (set, value, normalizer = readScalar) => {
+      splitSourceValues(value).forEach(item => {
+        const normalized = normalizer(item);
+        if (normalized && normalized !== '-') set.add(normalized);
+      });
+    };
+
+    const addAssignment = (supplier, row) => {
+      const rawTeams = splitSourceValues(row.team || row.equipe);
+      const teams = rawTeams.map(normalizeTeam).filter(team => teamOptions.some(option => option.value === team));
+      teams.forEach(team => supplier.teams.add(team));
+
+      splitSourceValues(row.agent || row.responsable || row.owner).forEach(rawAgent => {
+        const agent = normalizeAgent(rawAgent);
+        const governedTeam = getAgentTeam(agent);
+        if (governedTeam && teams.length && !teams.includes(governedTeam)) {
+          supplier.assignmentIssues.push({ team: teams.join(', '), agent });
+          return;
+        }
+        if (agent) supplier.agents.add(agent);
+      });
     };
 
     expenseRows.forEach((row) => {
@@ -610,12 +682,11 @@ const Production = () => {
       supplier.lignesDepenses += 1;
       supplier.montantChf += toNumber(row.montant_chf ?? row.amount_chf ?? row.chf);
       supplier.montantCfa += toNumber(row.montant_cfa ?? row.amount_cfa ?? row.cfa);
-      supplier.categories.add(row.category || row.categorie || row.nature);
-      supplier.departements.add(row.departement || row.department);
-      supplier.teams.add(normalizeTeam(row.team || row.equipe));
-      supplier.agents.add(row.agent || row.responsable || row.owner);
-      supplier.pays.add(row.pays || row.country);
-      supplier.refs.add(row.ref || row.reference || row.id);
+      addValues(supplier.categories, row.category || row.categorie || row.nature);
+      addValues(supplier.departements, row.departement || row.department);
+      addAssignment(supplier, row);
+      addValues(supplier.pays, row.pays || row.country, normalizeCountry);
+      addValues(supplier.refs, row.ref || row.reference || row.id);
       touchDate(supplier, row.date_created || row.date || row.date_operation);
     });
 
@@ -626,12 +697,11 @@ const Production = () => {
       supplier.lignesStocks += 1;
       supplier.montantChf += toNumber(row.valeur_chf ?? row.achat_chf ?? row.montant_chf);
       supplier.montantCfa += toNumber(row.valeur_cfa ?? row.achat_cfa ?? row.montant_cfa);
-      supplier.categories.add(row.categorie || row.category || row.sous_categorie);
-      supplier.departements.add(row.departement || row.bu || row.department);
-      supplier.teams.add(normalizeTeam(row.team || row.equipe));
-      supplier.agents.add(row.agent || row.responsable || row.owner);
-      supplier.pays.add(row.pays || row.localisation || row.country);
-      supplier.refs.add(row.source_id || row.ref || row.reference || row.id);
+      addValues(supplier.categories, row.categorie || row.category || row.sous_categorie);
+      addValues(supplier.departements, row.departement || row.bu || row.department);
+      addAssignment(supplier, row);
+      addValues(supplier.pays, row.pays || row.localisation || row.country, normalizeCountry);
+      addValues(supplier.refs, row.source_id || row.ref || row.reference || row.id);
       touchDate(supplier, row.date_achat || row.date_created || row.date || row.date_operation);
     });
 
@@ -644,6 +714,7 @@ const Production = () => {
         team: joinSet(supplier.teams),
         agent: joinSet(supplier.agents),
         pays: joinSet(supplier.pays),
+        assignmentIssueCount: supplier.assignmentIssues.length,
         references: supplier.refs.size
       }))
       .sort((a, b) => b.montantChf - a.montantChf || a.nom.localeCompare(b.nom));
@@ -797,7 +868,9 @@ const Production = () => {
         agent: formData.agent
       };
       if (editingId) {
-        setFournisseurs(fournisseurs.map(f => f.id === editingId ? { ...fournisseurData, id: editingId } : f));
+        setFournisseurs(fournisseurs.map(f => f.id === editingId
+          ? { ...f, ...fournisseurData, id: editingId, assignmentIssueCount: 0, assignmentIssues: [] }
+          : f));
       } else {
         setFournisseurs([...fournisseurs, { ...fournisseurData, id: Date.now() }]);
       }
@@ -825,7 +898,11 @@ const Production = () => {
     setEditingId(item.id);
     const editableTeam = type === 'fournisseur' ? resolveEditableTeam(item.team) : '';
     const editableItem = type === 'fournisseur'
-      ? { ...item, team: editableTeam, agent: resolveEditableAgent(editableTeam, item.agent) }
+      ? {
+          ...item,
+          team: editableTeam,
+          agent: item.assignmentIssueCount ? '' : resolveEditableAgent(editableTeam, item.agent)
+        }
       : item;
     setFormData({ ...getDefaultFormData(type), ...editableItem });
     setShowModal(true);
@@ -1095,8 +1172,8 @@ const Production = () => {
                       <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.categorie, translateCategory)}</td>
                       <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.departement, translateDepartment)}</td>
                       <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.team, translateTeam)}</td>
-                      <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.agent, translateAgent)}</td>
-                      <td className="px-4 py-2 text-slate-400">{f.pays}</td>
+                      <td className={`px-4 py-2 ${f.assignmentIssueCount ? 'font-semibold text-amber-300' : 'text-slate-400'}`}>{supplierAgentLabel(f)}</td>
+                      <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.pays, translateCountry)}</td>
                       <td className="px-4 py-2 text-slate-400">{formatDate(f.lastDate)}</td>
                       <StandardActionsCell
                         item={f}
@@ -1191,8 +1268,9 @@ const Production = () => {
           [t.categorie, translateJoinedValues(selectedFournisseur.categorie, translateCategory)],
           [t.departement, translateJoinedValues(selectedFournisseur.departement, translateDepartment)],
           [t.team, translateJoinedValues(selectedFournisseur.team, translateTeam)],
-          [t.agent, translateJoinedValues(selectedFournisseur.agent, translateAgent)],
-          [t.pays, selectedFournisseur.pays],
+          [t.agent, supplierAgentLabel(selectedFournisseur)],
+          [t.coherenceAffectation, selectedFournisseur.assignmentIssueCount ? t.affectationIncoherente : t.affectationCoherente],
+          [t.pays, translateJoinedValues(selectedFournisseur.pays, translateCountry)],
           [t.derniereOperation, formatDate(selectedFournisseur.lastDate)],
           [t.nbReferences, selectedFournisseur.references]
         ] : []}
@@ -1234,12 +1312,12 @@ const Production = () => {
                   <input type="email" placeholder={t.email} value={formData.email} onChange={(e) => handleFormChange('email', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
                   <input type="tel" placeholder={t.telephone} value={formData.telephone} onChange={(e) => handleFormChange('telephone', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
                   <select value={formData.categorie} onChange={(e) => handleFormChange('categorie', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
-                    <option value="Matériel">{translateCategory('Matériel')}</option>
-                    <option value="Logiciels">{translateCategory('Logiciels')}</option>
-                    <option value="Services">{translateCategory('Services')}</option>
-                    <option value="Bien immobilier">{translateCategory('Bien immobilier')}</option>
-                    <option value="Frais Administratifs">{translateCategory('Frais Administratifs')}</option>
-                    <option value="Chantier">{translateCategory('Chantier')}</option>
+                    {formData.categorie && !supplierCategoryOptions.includes(formData.categorie) && (
+                      <option value={formData.categorie}>{translateJoinedValues(formData.categorie, translateCategory)} ({t.agentHistorique})</option>
+                    )}
+                    {supplierCategoryOptions.map(category => (
+                      <option key={category} value={category}>{translateCategory(category)}</option>
+                    ))}
                   </select>
                   <label className="block text-sm font-medium text-slate-200">
                     <span className="mb-1 block">{t.team}</span>
