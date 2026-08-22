@@ -136,7 +136,7 @@ const copy = {
       ],
       workDomainTitle: 'Deuxième domaine borné · Dossier, projet et exécution',
       workDomainBody: 'Ce cadrage confronte le socle relationnel V1 aux données réellement visibles. Il n’ajoute aucune table et ne transforme pas une simple tâche en projet.',
-      workDomainStatus: 'Cadrage V1 · implémentation à arbitrer',
+      workDomainStatus: 'Règle tâche validée · aucune implémentation',
       workObservedTitle: 'État relationnel observé',
       workObservedItems: [
         'Le registre des tâches expose tâche, statut, priorité, responsable, module et progression sous forme de valeurs.',
@@ -157,19 +157,20 @@ const copy = {
         ['project_id', 'Projet délimité', 'Administration · Planification & Projets avec la fonction responsable', '1 dossier → 0..n projets ; chaque projet → 0..1 dossier.'],
         ['phase_id', 'Phase gouvernée', 'Administration · Planification & Projets', '1 projet → 0..n phases ; chaque phase → exactement 1 projet.'],
         ['activity_id', 'Activité cohérente facultative', 'Fonction responsable · Planification & Projets', '1 phase → 0..n activités ; chaque activité → exactement 1 phase. Niveau facultatif.'],
-        ['task_id', 'Tâche exécutable', 'Fonction responsable · registre des tâches', 'V1 : 1 activité → 0..n tâches. Le rattachement direct à une phase si l’activité est omise reste à arbitrer.'],
+        ['task_id', 'Tâche exécutable', 'Fonction responsable · registre des tâches', '1 phase → 0..n tâches ; chaque tâche → exactement 1 phase et 0..1 activité. Toute activité renseignée appartient à la même phase.'],
         ['action_id', 'Action élémentaire facultative', 'Fonction responsable · journal d’exécution', '1 tâche → 0..n actions ; chaque action → exactement 1 tâche. Niveau facultatif.'],
         ['milestone_id', 'Jalon de contrôle', 'Planification & Projets · fonction responsable', '1 projet → 0..n jalons ; chaque jalon → 1 projet et 0..1 phase.']
       ],
       workRulesTitle: 'Garde-fous du cadrage',
       workRules: [
         'Aucun niveau vide n’est créé pour satisfaire artificiellement une hiérarchie.',
+        'Une tâche reste reliée à sa phase ; son activité est facultative et ne peut appartenir à une autre phase.',
         'Le statut ou la progression d’un parent n’est jamais déduit automatiquement de ses enfants.',
         'L’auteur d’une saisie ne devient pas automatiquement responsable, contrôleur ou validateur.',
         'Les preuves restent dans la GED et se relient à l’objet concerné sans copie concurrente.'
       ],
-      workDecisionTitle: 'Arbitrage humain prioritaire',
-      workDecisionBody: 'Lorsque le niveau Activité n’est pas utile, décider si `task_id` pointe directement vers `phase_id` ou utilise une relation parent typée. Ne créer aucune activité vide par défaut.'
+      workDecisionTitle: 'Décision métier validée · 23.08.2026',
+      workDecisionBody: 'Chaque tâche porte un `phase_id` obligatoire et un `activity_id` facultatif. Aucune activité vide n’est créée par défaut ; l’intégrité Phase–Activité–Tâche devra être garantie avant toute persistance.'
     },
     processes: {
       eyebrow: 'MÉTHODE COMMUNE',
@@ -307,7 +308,7 @@ const copy = {
       ],
       workDomainTitle: 'Second bounded domain · File, project and execution',
       workDomainBody: 'This framing compares the V1 relational foundation with actually visible data. It adds no table and does not turn a simple task into a project.',
-      workDomainStatus: 'V1 framing · implementation to arbitrate',
+      workDomainStatus: 'Task rule validated · no implementation',
       workObservedTitle: 'Observed relationship state',
       workObservedItems: [
         'The task register exposes task, status, priority, owner, module and progress as values.',
@@ -328,19 +329,20 @@ const copy = {
         ['project_id', 'Bounded project', 'Administration · Planning & Projects with the responsible function', '1 file → 0..n projects; each project → 0..1 file.'],
         ['phase_id', 'Governed phase', 'Administration · Planning & Projects', '1 project → 0..n phases; each phase → exactly 1 project.'],
         ['activity_id', 'Optional coherent activity', 'Responsible function · Planning & Projects', '1 phase → 0..n activities; each activity → exactly 1 phase. Optional level.'],
-        ['task_id', 'Executable task', 'Responsible function · task register', 'V1: 1 activity → 0..n tasks. A direct phase link when activity is omitted remains to arbitrate.'],
+        ['task_id', 'Executable task', 'Responsible function · task register', '1 phase → 0..n tasks; each task → exactly 1 phase and 0..1 activity. Any selected activity belongs to the same phase.'],
         ['action_id', 'Optional elementary action', 'Responsible function · execution log', '1 task → 0..n actions; each action → exactly 1 task. Optional level.'],
         ['milestone_id', 'Control milestone', 'Planning & Projects · responsible function', '1 project → 0..n milestones; each milestone → 1 project and 0..1 phase.']
       ],
       workRulesTitle: 'Framing guardrails',
       workRules: [
         'No empty level is created merely to satisfy a hierarchy.',
+        'A task remains linked to its phase; its activity is optional and cannot belong to another phase.',
         'A parent status or progress is never inferred automatically from its children.',
         'The author of an entry does not automatically become its owner, controller or validator.',
         'Evidence remains in the DMS and links to the relevant object without a competing copy.'
       ],
-      workDecisionTitle: 'Priority human decision',
-      workDecisionBody: 'When the Activity level is not useful, decide whether `task_id` links directly to `phase_id` or uses a typed parent relationship. Do not create empty activities by default.'
+      workDecisionTitle: 'Business decision validated · 23 Aug 2026',
+      workDecisionBody: 'Each task has a required `phase_id` and an optional `activity_id`. No empty activity is created by default; Phase–Activity–Task integrity must be guaranteed before any persistence.'
     },
     processes: {
       eyebrow: 'COMMON METHOD', title: 'Processes & Controls', body: 'Global steering harmonises cross-functional controls. Detailed procedures remain governed within each function.',
@@ -450,7 +452,7 @@ const copy = {
       ],
       workDomainTitle: 'Zweiter begrenzter Bereich · Akte, Projekt und Ausführung',
       workDomainBody: 'Diese Rahmung vergleicht das relationale V1-Fundament mit den tatsächlich sichtbaren Daten. Sie fügt keine Tabelle hinzu und macht aus einer einfachen Aufgabe kein Projekt.',
-      workDomainStatus: 'V1-Rahmung · Implementierung zu entscheiden',
+      workDomainStatus: 'Aufgabenregel validiert · keine Implementierung',
       workObservedTitle: 'Beobachteter Beziehungsstand',
       workObservedItems: [
         'Das Aufgabenregister führt Aufgabe, Status, Priorität, Verantwortung, Modul und Fortschritt als Werte.',
@@ -471,19 +473,20 @@ const copy = {
         ['project_id', 'Abgegrenztes Projekt', 'Verwaltung · Planung & Projekte mit der verantwortlichen Funktion', '1 Akte → 0..n Projekte; jedes Projekt → 0..1 Akte.'],
         ['phase_id', 'Geregelte Phase', 'Verwaltung · Planung & Projekte', '1 Projekt → 0..n Phasen; jede Phase → genau 1 Projekt.'],
         ['activity_id', 'Optionale zusammenhängende Aktivität', 'Verantwortliche Funktion · Planung & Projekte', '1 Phase → 0..n Aktivitäten; jede Aktivität → genau 1 Phase. Optionale Ebene.'],
-        ['task_id', 'Ausführbare Aufgabe', 'Verantwortliche Funktion · Aufgabenregister', 'V1: 1 Aktivität → 0..n Aufgaben. Die direkte Phasenverknüpfung ohne Aktivität bleibt zu entscheiden.'],
+        ['task_id', 'Ausführbare Aufgabe', 'Verantwortliche Funktion · Aufgabenregister', '1 Phase → 0..n Aufgaben; jede Aufgabe → genau 1 Phase und 0..1 Aktivität. Eine gewählte Aktivität gehört zur selben Phase.'],
         ['action_id', 'Optionale Einzelaktion', 'Verantwortliche Funktion · Ausführungsjournal', '1 Aufgabe → 0..n Aktionen; jede Aktion → genau 1 Aufgabe. Optionale Ebene.'],
         ['milestone_id', 'Kontrollmeilenstein', 'Planung & Projekte · verantwortliche Funktion', '1 Projekt → 0..n Meilensteine; jeder Meilenstein → 1 Projekt und 0..1 Phase.']
       ],
       workRulesTitle: 'Leitplanken der Rahmung',
       workRules: [
         'Keine leere Ebene wird nur zur Erfüllung einer Hierarchie angelegt.',
+        'Eine Aufgabe bleibt mit ihrer Phase verknüpft; ihre Aktivität ist optional und darf keiner anderen Phase angehören.',
         'Status oder Fortschritt eines Elternobjekts werden nie automatisch aus den Kindern abgeleitet.',
         'Der Autor eines Eintrags wird nicht automatisch verantwortlich, kontrollierend oder validierend.',
         'Nachweise bleiben in der GED und werden ohne konkurrierende Kopie mit dem betroffenen Objekt verknüpft.'
       ],
-      workDecisionTitle: 'Vorrangige menschliche Entscheidung',
-      workDecisionBody: 'Wenn die Ebene Aktivität nicht nützlich ist, entscheiden, ob `task_id` direkt auf `phase_id` verweist oder eine typisierte Elternbeziehung nutzt. Standardmäßig keine leeren Aktivitäten anlegen.'
+      workDecisionTitle: 'Fachentscheidung validiert · 23.08.2026',
+      workDecisionBody: 'Jede Aufgabe besitzt eine verpflichtende `phase_id` und eine optionale `activity_id`. Standardmäßig wird keine leere Aktivität angelegt; die Integrität Phase–Aktivität–Aufgabe muss vor jeder Persistenz gewährleistet sein.'
     },
     processes: {
       eyebrow: 'GEMEINSAME METHODE', title: 'Prozesse & Kontrollen', body: 'Die globale Steuerung harmonisiert funktionsübergreifende Kontrollen. Detaillierte Verfahren bleiben in jeder Funktion geregelt.',
