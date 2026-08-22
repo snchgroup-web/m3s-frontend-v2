@@ -70,8 +70,8 @@ const Production = () => {
       preparationFournisseur: 'Préparer fournisseur',
       aucuneDonnee: 'Aucune donnée fournisseur disponible.',
       voir: 'Voir',
-      teamZh: 'Team ZH',
-      teamSn: 'Team SN',
+      teamZh: 'TZH - Team Zurich',
+      teamSn: 'TSN - Team Sénégal',
       ok: 'OK',
       bas: 'BAS',
       creer: 'Créer',
@@ -141,8 +141,8 @@ const Production = () => {
       preparationFournisseur: 'Prepare supplier',
       aucuneDonnee: 'No supplier data available.',
       voir: 'View',
-      teamZh: 'Team ZH',
-      teamSn: 'Team SN',
+      teamZh: 'TZH - Zurich Team',
+      teamSn: 'TSN - Senegal Team',
       ok: 'OK',
       bas: 'LOW',
       creer: 'Create',
@@ -212,8 +212,8 @@ const Production = () => {
       preparationFournisseur: 'Lieferant vorbereiten',
       aucuneDonnee: 'Keine Lieferantendaten verfügbar.',
       voir: 'Ansehen',
-      teamZh: 'Team ZH',
-      teamSn: 'Team SN',
+      teamZh: 'TZH - Team Zürich',
+      teamSn: 'TSN - Team Senegal',
       ok: 'OK',
       bas: 'NIEDRIG',
       creer: 'Erstellen',
@@ -460,6 +460,12 @@ const Production = () => {
   const translateTeam = (team) => {
     const normalized = normalizeTeam(team);
     return teamOptions.find(option => option.value === normalized)?.label || normalized;
+  };
+  const resolveEditableTeam = (team) => {
+    const candidates = String(team || '')
+      .split(',')
+      .map(value => normalizeTeam(value.trim()));
+    return candidates.find(candidate => teamOptions.some(option => option.value === candidate)) || 'Team_ZH';
   };
   const getDefaultFormData = (type = 'commande') => ({
     numero: '',
@@ -762,7 +768,10 @@ const Production = () => {
   const handleEdit = (type, item) => {
     setModalType(type);
     setEditingId(item.id);
-    setFormData({ ...getDefaultFormData(type), ...item });
+    const editableItem = type === 'fournisseur'
+      ? { ...item, team: resolveEditableTeam(item.team) }
+      : item;
+    setFormData({ ...getDefaultFormData(type), ...editableItem });
     setShowModal(true);
   };
  
@@ -1153,16 +1162,22 @@ const Production = () => {
                     <option value="Frais Administratifs">{translateCategory('Frais Administratifs')}</option>
                     <option value="Chantier">{translateCategory('Chantier')}</option>
                   </select>
-                  <select value={normalizeTeam(formData.team)} onChange={(e) => handleFormChange('team', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
-                    {teamOptions.map(option => (
-                      <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                  </select>
-                  <select value={formData.agent} onChange={(e) => handleFormChange('agent', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
-                    {(agentsByTeam[normalizeTeam(formData.team)] || []).map(option => (
-                      <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                  </select>
+                  <label className="block text-sm font-medium text-slate-200">
+                    <span className="mb-1 block">{t.team}</span>
+                    <select value={resolveEditableTeam(formData.team)} onChange={(e) => handleFormChange('team', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                      {teamOptions.map(option => (
+                        <option key={option.value} value={option.value}>{option.label}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="block text-sm font-medium text-slate-200">
+                    <span className="mb-1 block">{t.agent}</span>
+                    <select value={formData.agent} onChange={(e) => handleFormChange('agent', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                      {(agentsByTeam[resolveEditableTeam(formData.team)] || []).map(option => (
+                        <option key={option.value} value={option.value}>{option.label}</option>
+                      ))}
+                    </select>
+                  </label>
                   <select value={formData.pays} onChange={(e) => handleFormChange('pays', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
                     <option value="Sénégal">{translateCountry('Sénégal')}</option>
                     <option value="France">{translateCountry('France')}</option>
