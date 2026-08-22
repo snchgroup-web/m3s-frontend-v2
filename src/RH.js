@@ -12,6 +12,7 @@ import RHOverview from './RHOverview';
 import { StandardCreateButton } from './StandardUI';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
 import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
+import FunctionAssistant from './FunctionAssistant';
 
 const RH = () => {
   const { language } = useLanguage();
@@ -343,7 +344,7 @@ const RH = () => {
     const tab = new URLSearchParams(location.search).get('tab');
     if (tab === 'membres') {
       setActiveTab('directory');
-    } else if (['overview', 'architecture', 'processes', 'directory', 'employes', 'benevoles', 'teams', 'hours', 'competences', 'myaccount', 'resources', 'glossary'].includes(tab)) {
+    } else if (['overview', 'architecture', 'processes', 'directory', 'employes', 'benevoles', 'teams', 'hours', 'competences', 'myaccount', 'assistant', 'resources', 'glossary'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
@@ -586,7 +587,9 @@ const RH = () => {
 
         {/* Employés */}
         {activeTab === 'employes' && (
-          <PersonnelTable data={employes} type="employe" onEdit={handleEdit} onDelete={requestDelete} onAdd={openNewModal} />
+          <section id="rh-employees-register" className="scroll-mt-24" tabIndex="-1">
+            <PersonnelTable data={employes} type="employe" onEdit={handleEdit} onDelete={requestDelete} onAdd={openNewModal} />
+          </section>
         )}
 
         {/* Bénévoles */}
@@ -603,11 +606,13 @@ const RH = () => {
           <FunctionResourcesOverview moduleId="rh" language={language} onSelectTab={handleTabSelect} />
         )}
 
+        {activeTab === 'assistant' && <FunctionAssistant moduleId="rh" language={language} />}
+
         {activeTab === 'glossary' && (
           <RHGlossary language={language} />
         )}
 
-        <ChildTabPlaceholder moduleId="rh" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'directory', 'employes', 'benevoles', 'resources', 'glossary']} />
+        <ChildTabPlaceholder moduleId="rh" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'directory', 'employes', 'benevoles', 'assistant', 'resources', 'glossary']} />
         </div>
       </div>
 

@@ -30,6 +30,7 @@ import ITSupportGlossary from './ITSupportGlossary';
 import { StandardCreateButton } from './StandardUI';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
 import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
+import FunctionAssistant from './FunctionAssistant';
 
 const GED = () => {
   const { language } = useLanguage();
@@ -816,7 +817,7 @@ const GED = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'architecture', 'processes', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'resources', 'glossary', 'ai-digital', 'database', 'user-guide', 'tech-docs', 'help-support', 'manual'].includes(tab)) {
+    if (['overview', 'architecture', 'processes', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'assistant', 'resources', 'glossary', 'ai-digital', 'database', 'user-guide', 'tech-docs', 'help-support', 'manual'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
@@ -1208,7 +1209,7 @@ const GED = () => {
 
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div id="it-support-overview" className="grid scroll-mt-24 grid-cols-1 gap-6 lg:grid-cols-2" tabIndex="-1">
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
               <h3 className="text-white font-bold mb-4">{t.documentsParType}</h3>
               <ResponsiveContainer width="100%" height={300}>
@@ -1776,6 +1777,8 @@ const GED = () => {
           <FunctionResourcesOverview moduleId="it-support" language={language} onSelectTab={selectTab} />
         )}
 
+        {activeTab === 'assistant' && <FunctionAssistant moduleId="it-support" language={language} />}
+
         {activeTab === 'glossary' && (
           <ITSupportGlossary language={language} />
         )}
@@ -1966,7 +1969,7 @@ const GED = () => {
         )}
 
         {activeTab === 'help-support' && (
-          <section className="space-y-6" aria-labelledby="support-title">
+          <section id="it-help-support" className="scroll-mt-24 space-y-6" aria-labelledby="support-title" tabIndex="-1">
             <div className="rounded-lg border border-blue-700 bg-blue-950/50 p-6">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
@@ -2042,7 +2045,7 @@ const GED = () => {
           </section>
         )}
 
-        <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'resources', 'glossary', 'ai-digital', 'user-guide', 'tech-docs', 'help-support']} />
+        <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'assistant', 'resources', 'glossary', 'ai-digital', 'user-guide', 'tech-docs', 'help-support']} />
         </div>
       </div>
 

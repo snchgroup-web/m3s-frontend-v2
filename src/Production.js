@@ -12,6 +12,7 @@ import { isLegacyBuCode, translateDas } from './strategicMapping';
 import ProductionGlossary from './ProductionGlossary';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
 import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
+import FunctionAssistant from './FunctionAssistant';
 
 const Production = () => {
   const { language } = useLanguage();
@@ -608,7 +609,7 @@ const Production = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'architecture', 'processes', 'commandes', 'fournisseurs', 'stocks', 'manufacturing', 'resources', 'glossary'].includes(tab)) {
+    if (['overview', 'architecture', 'processes', 'commandes', 'fournisseurs', 'stocks', 'manufacturing', 'assistant', 'resources', 'glossary'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
@@ -1083,9 +1084,11 @@ const Production = () => {
 
         {activeTab === 'resources' && <FunctionResourcesOverview moduleId="production" language={language} onSelectTab={selectTab} />}
 
+        {activeTab === 'assistant' && <FunctionAssistant moduleId="production" language={language} />}
+
         {activeTab === 'glossary' && <ProductionGlossary language={language} />}
 
-        <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'commandes', 'manufacturing', 'fournisseurs', 'stocks', 'resources', 'glossary']} />
+        <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'commandes', 'manufacturing', 'fournisseurs', 'stocks', 'assistant', 'resources', 'glossary']} />
         </div>
       </div>
 

@@ -16,6 +16,7 @@ import FinanceArchitecture from './FinanceArchitecture';
 import FinanceProcessControls from './FinanceProcessControls';
 import ActionConfirmationDialog from './ActionConfirmationDialog';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
+import FunctionAssistant from './FunctionAssistant';
 
 const TEAM_OPTIONS = ['Team_ZH', 'Team_SN'];
 const AGENT_OPTIONS = ['Cheikh', 'Chantal', 'Pape', 'Gnilane Diouf', 'Gnilane Ndiaye', 'Ibou'];
@@ -578,7 +579,7 @@ const Finance = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'architecture', 'processes', 'recettes', 'depenses', 'fx', 'budget', 'social', 'immobilier', 'resources', 'glossary'].includes(tab)) {
+    if (['overview', 'architecture', 'processes', 'recettes', 'depenses', 'fx', 'budget', 'social', 'immobilier', 'assistant', 'resources', 'glossary'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
@@ -2496,9 +2497,11 @@ const Finance = () => {
 
         {activeTab === 'resources' && <FunctionResourcesOverview moduleId="finances" language={language} onSelectTab={selectFinanceTab} />}
 
+        {activeTab === 'assistant' && <FunctionAssistant moduleId="finances" language={language} />}
+
         {activeTab === 'glossary' && <FinanceGlossary language={language} />}
 
-        <ChildTabPlaceholder moduleId="finances" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'recettes', 'depenses', 'fx', 'social', 'immobilier', 'resources', 'glossary']} />
+        <ChildTabPlaceholder moduleId="finances" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'recettes', 'depenses', 'fx', 'social', 'immobilier', 'assistant', 'resources', 'glossary']} />
 
         {showImmoModal && (
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
