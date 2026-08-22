@@ -223,6 +223,19 @@ test('scrolls to the Production content when a child tab changes', async () => {
   window.HTMLElement.prototype.scrollIntoView = originalScrollIntoView;
 });
 
+test('marks a detail tab so its content is visually prioritised on mobile', async () => {
+  const { container } = renderProduction('architecture', 'FR');
+
+  expect(await screen.findByRole('heading', { name: 'Architecture & relations Production' })).toBeInTheDocument();
+  const stack = container.querySelector('.production-content-stack');
+  expect(stack).toHaveClass('production-content-stack--detail');
+  expect(stack.querySelector('.production-active-view')).toContainElement(
+    screen.getByRole('heading', { name: 'Architecture & relations Production' })
+  );
+  expect(stack.querySelector('.production-pilot-summary')).toBeInTheDocument();
+  expect(stack.querySelector('.production-kpi-summary')).toBeInTheDocument();
+});
+
 test('renders the local Production glossary from the governed tab', async () => {
   renderProduction('glossary', 'FR');
 

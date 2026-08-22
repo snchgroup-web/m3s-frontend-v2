@@ -158,6 +158,8 @@ test('selects a local function map without leaving the global dashboard', () => 
   expect(operationsHeading.closest('.function-map-family')).toHaveClass('function-map-family--operations');
   expect(managementHeading.compareDocumentPosition(supportHeading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   expect(managementHeading.compareDocumentPosition(operationsHeading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  expect(screen.getByText('4 Funktionen')).toBeInTheDocument();
+  expect(screen.getByText('3 Funktionen')).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Lokale Karte anzeigen : Verwaltung' }));
   expect(onNavigate).not.toHaveBeenCalled();
   expect(mockNavigate).toHaveBeenLastCalledWith(
@@ -186,6 +188,15 @@ test('returns from a local function map to the global map', () => {
     { pathname: '/', search: '?view=map' },
     { replace: true }
   );
+});
+
+test('opens the selected business function from its local map', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ language: 'FR', onNavigate }, '/?view=map&function=production');
+
+  expect(screen.getByText('2SG / M3S · Opérations & Développement')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Ouvrir la fonction' }));
+  expect(onNavigate).toHaveBeenCalledWith('/production');
 });
 
 test.each([
