@@ -251,6 +251,10 @@ test('opens the four governed global views without confusing architecture with t
   fireEvent.click(screen.getByRole('tab', { name: 'Architecture & Relations' }));
   expect(screen.getByRole('heading', { name: 'Architecture & Relations' })).toBeInTheDocument();
   expect(screen.getByText('Chaîne de relation')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Modèle relationnel candidat' })).toBeInTheDocument();
+  expect(screen.getByText('Cible à valider')).toBeInTheDocument();
+  expect(screen.getByText('Dossier → Projet → Phase → Tâche')).toBeInTheDocument();
+  expect(screen.getByText('Une opération peut exécuter ou financer une tâche sans se confondre avec elle.')).toBeInTheDocument();
   expect(screen.queryByText('Carte mentale globale des fonctions')).not.toBeInTheDocument();
 
   fireEvent.click(screen.getByRole('tab', { name: 'Processus & Contrôles' }));

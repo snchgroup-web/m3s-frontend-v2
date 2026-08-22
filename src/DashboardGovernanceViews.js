@@ -28,7 +28,22 @@ const copy = {
         ['GED & preuves', 'Conserve les sources maîtresses, versions, décisions et pièces justificatives.', 'Traçabilité']
       ],
       relationTitle: 'Chaîne de relation',
-      relation: ['Décision de pilotage', 'Fonction responsable', 'Action ou transaction', 'Preuve et revue']
+      relation: ['Décision de pilotage', 'Fonction responsable', 'Action ou transaction', 'Preuve et revue'],
+      dataModelTitle: 'Modèle relationnel candidat',
+      dataModelStatus: 'Cible à valider',
+      dataModelBody: 'Ce schéma prépare les relations transversales attendues. Il ne signifie pas que les tables, identifiants ou raccordements sont déjà disponibles.',
+      dataModelGroups: [
+        ['Cadre de travail', 'Dossier → Projet → Phase → Tâche'],
+        ['Responsabilités', 'Fonction → Team → Personne ou collectif'],
+        ['Flux métier', 'Action → Opération → Recette, dépense ou mouvement de stock'],
+        ['Traçabilité', 'Source → Document → Contrôle → Décision']
+      ],
+      dataModelRelations: [
+        'Une tâche appartient à une phase, elle-même rattachée à un projet et à un dossier.',
+        'Une personne ou un collectif assume une responsabilité dans une fonction et une Team.',
+        'Une opération peut exécuter ou financer une tâche sans se confondre avec elle.',
+        'Une preuve documente une opération, un contrôle ou une décision avec sa provenance.'
+      ]
     },
     processes: {
       eyebrow: 'MÉTHODE COMMUNE',
@@ -81,7 +96,11 @@ const copy = {
     architecture: {
       eyebrow: 'CROSS-FUNCTIONAL STRUCTURE', title: 'Architecture & Relationships', body: 'This view describes the global steering layers and their exchanges. It complements the function mind map without replacing it.',
       cards: [['Global steering', 'Sets priorities, consolidates indicators and makes decisions visible.', 'Dashboard'], ['Business functions', 'Execute and control work within their scopes and local dashboards.', 'M3S functions'], ['Services & data', 'Provide authorised data through APIs, with availability and freshness.', 'Connected sources'], ['GED & evidence', 'Retains master sources, versions, decisions and supporting evidence.', 'Traceability']],
-      relationTitle: 'Relationship chain', relation: ['Steering decision', 'Responsible function', 'Action or transaction', 'Evidence and review']
+      relationTitle: 'Relationship chain', relation: ['Steering decision', 'Responsible function', 'Action or transaction', 'Evidence and review'],
+      dataModelTitle: 'Candidate relational model', dataModelStatus: 'Target to validate',
+      dataModelBody: 'This diagram prepares the expected cross-functional relationships. It does not mean that the tables, identifiers or connections are already available.',
+      dataModelGroups: [['Work frame', 'File → Project → Phase → Task'], ['Responsibilities', 'Function → Team → Person or collective'], ['Business flows', 'Action → Operation → Income, expense or stock movement'], ['Traceability', 'Source → Document → Control → Decision']],
+      dataModelRelations: ['A task belongs to a phase, itself linked to a project and a file.', 'A person or collective assumes a responsibility within a function and a Team.', 'An operation may execute or finance a task without being the same object.', 'Evidence documents an operation, control or decision together with its provenance.']
     },
     processes: {
       eyebrow: 'COMMON METHOD', title: 'Processes & Controls', body: 'Global steering harmonises cross-functional controls. Detailed procedures remain governed within each function.',
@@ -106,7 +125,11 @@ const copy = {
     architecture: {
       eyebrow: 'FUNKTIONSÜBERGREIFENDE STRUKTUR', title: 'Architektur & Beziehungen', body: 'Diese Ansicht beschreibt die Ebenen der globalen Steuerung und ihre Austauschbeziehungen. Sie ergänzt die Funktions-Mindmap, ohne sie zu ersetzen.',
       cards: [['Globale Steuerung', 'Richtet Prioritäten aus, konsolidiert Kennzahlen und macht Entscheidungen sichtbar.', 'Dashboard'], ['Fachfunktionen', 'Führen und kontrollieren die Arbeit in ihren Bereichen und lokalen Dashboards.', 'M3S-Funktionen'], ['Dienste & Daten', 'Liefern autorisierte Daten über APIs mit Verfügbarkeit und Aktualität.', 'Verbundene Quellen'], ['GED & Nachweise', 'Bewahrt Hauptquellen, Versionen, Entscheidungen und Belege auf.', 'Nachvollziehbarkeit']],
-      relationTitle: 'Beziehungskette', relation: ['Steuerungsentscheidung', 'Verantwortliche Funktion', 'Aktion oder Transaktion', 'Nachweis und Prüfung']
+      relationTitle: 'Beziehungskette', relation: ['Steuerungsentscheidung', 'Verantwortliche Funktion', 'Aktion oder Transaktion', 'Nachweis und Prüfung'],
+      dataModelTitle: 'Kandidatenmodell der Beziehungen', dataModelStatus: 'Zielbild zu validieren',
+      dataModelBody: 'Dieses Schema bereitet die erwarteten funktionsübergreifenden Beziehungen vor. Es bedeutet nicht, dass Tabellen, Kennungen oder Verbindungen bereits verfügbar sind.',
+      dataModelGroups: [['Arbeitsrahmen', 'Dossier → Projekt → Phase → Aufgabe'], ['Verantwortung', 'Funktion → Team → Person oder Kollektiv'], ['Fachliche Flüsse', 'Aktion → Vorgang → Einnahme, Ausgabe oder Lagerbewegung'], ['Nachvollziehbarkeit', 'Quelle → Dokument → Kontrolle → Entscheidung']],
+      dataModelRelations: ['Eine Aufgabe gehört zu einer Phase, die einem Projekt und einem Dossier zugeordnet ist.', 'Eine Person oder ein Kollektiv übernimmt Verantwortung innerhalb einer Funktion und eines Teams.', 'Ein Vorgang kann eine Aufgabe ausführen oder finanzieren, ohne mit ihr identisch zu sein.', 'Ein Nachweis dokumentiert einen Vorgang, eine Kontrolle oder eine Entscheidung samt Herkunft.']
     },
     processes: {
       eyebrow: 'GEMEINSAME METHODE', title: 'Prozesse & Kontrollen', body: 'Die globale Steuerung harmonisiert funktionsübergreifende Kontrollen. Detaillierte Verfahren bleiben in jeder Funktion geregelt.',
@@ -151,6 +174,34 @@ const ArchitectureView = ({ data }) => {
       <section className="mt-4 rounded-md border border-slate-700 bg-slate-900/25 p-3" aria-labelledby="global-relation-chain">
         <h4 id="global-relation-chain" className="text-sm font-semibold text-slate-100">{data.relationTitle}</h4>
         <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-4">{data.relation.map((item, index) => <div key={item} className="flex min-h-11 items-center gap-2 rounded-md border border-slate-700 px-3 py-2 text-sm text-slate-200"><span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-blue-950 text-xs font-semibold text-blue-300">{index + 1}</span>{item}</div>)}</div>
+      </section>
+      <section className="mt-4 rounded-md border border-cyan-800/70 bg-cyan-950/10 p-3" aria-labelledby="global-candidate-data-model">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h4 id="global-candidate-data-model" className="text-sm font-semibold text-slate-100">{data.dataModelTitle}</h4>
+            <p className="mt-1 max-w-4xl text-sm leading-5 text-slate-400">{data.dataModelBody}</p>
+          </div>
+          <span className="rounded-md border border-amber-600/70 bg-amber-950/20 px-2.5 py-1 text-xs font-semibold text-amber-200">{data.dataModelStatus}</span>
+        </div>
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {data.dataModelGroups.map(([title, path], index) => {
+            const Icon = icons[index];
+            return (
+              <article key={title} className="min-w-0 rounded-md border border-slate-700 bg-slate-900/35 p-3">
+                <div className="flex items-center gap-2"><Icon className="shrink-0 text-cyan-300" size={18} aria-hidden="true" /><h5 className="text-sm font-semibold text-slate-100">{title}</h5></div>
+                <p className="mt-2 break-words text-sm leading-6 text-slate-300">{path}</p>
+              </article>
+            );
+          })}
+        </div>
+        <ol className="mt-4 grid grid-cols-1 gap-2 lg:grid-cols-2">
+          {data.dataModelRelations.map((relation, index) => (
+            <li key={relation} className="flex min-h-11 items-start gap-2 rounded-md border border-slate-700 px-3 py-2 text-sm leading-5 text-slate-300">
+              <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-cyan-950 text-xs font-semibold text-cyan-300">{index + 1}</span>
+              {relation}
+            </li>
+          ))}
+        </ol>
       </section>
     </div>
   );
