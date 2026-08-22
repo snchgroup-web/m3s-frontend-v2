@@ -51,7 +51,7 @@ const COPY = {
     ],
     nextTitle: 'Prochaines actions',
     next: [
-      'Faire valider la période, la fonction responsable et l’emplacement GED avant toute promotion de cette revue.',
+      'Faire contrôler le fond par les fonctions concernées avant toute promotion de cette revue.',
       'Stabiliser la source maîtresse du Daily Intelligence Dashboard.',
       'Compléter le contrôle RBAC avec un utilisateur ordinaire lors d’un onboarding légitime.',
       'Poursuivre la qualification des pièces LEGAL sans rédaction ou conclusion prématurée.'
@@ -67,15 +67,15 @@ const COPY = {
     governanceTitle: 'Circuit documentaire proposé',
     governanceIntro: 'Ce circuit sépare la consolidation administrative, la validation du fond, la décision de gouvernance et la conservation des preuves.',
     governanceSteps: [
-      ['Administration', 'Consolide les journaux, nomme la version et prépare la revue.', 'Responsable proposé'],
+      ['Administration', 'Consolide les journaux, nomme la version, prépare la revue et suit son échéance.', 'Responsable du processus'],
       ['Fonctions concernées', 'Vérifient les faits et résultats qui relèvent de leur périmètre.', 'Validation du fond'],
       ['Gouvernance', 'Approuve ou refuse la promotion en rapport institutionnel.', 'Décision humaine'],
       ['GED', 'Conserve le corpus source, la version, les validations et le rapport approuvé.', 'Après approbation']
     ],
-    gedTitle: 'Emplacement GED candidat',
+    gedTitle: 'Référence GED retenue',
     gedPath: 'GED/Administration/Rapports_activite/2026/Hebdomadaires/2SG-ADM-RH-2026-W33-PILOTE',
-    gedStatus: 'À confirmer par Cheikh',
-    promotionRule: 'Tant que le propriétaire, le circuit et l’emplacement GED ne sont pas confirmés, cette revue reste une synthèse de travail provisoire.',
+    gedStatus: 'Classement à créer après approbation',
+    promotionRule: 'Administration est responsable du processus. La référence GED est retenue, mais aucun archivage institutionnel n’est déclaré avant contrôle du fond et décision humaine de promotion.',
     caution: 'Cette revue est une synthèse de travail à contrôler par Cheikh et la fonction responsable. Elle n’est ni signée, ni adoptée, ni archivée comme rapport institutionnel.'
   },
   EN: {
@@ -115,7 +115,7 @@ const COPY = {
     ],
     nextTitle: 'Next actions',
     next: [
-      'Validate the period, owning function and DMS location before promoting this review.',
+      'Have the relevant functions review the content before promoting this review.',
       'Stabilise the Daily Intelligence Dashboard master source.',
       'Complete the RBAC check with an ordinary user during a legitimate onboarding.',
       'Continue qualifying LEGAL records without premature drafting or conclusions.'
@@ -131,15 +131,15 @@ const COPY = {
     governanceTitle: 'Proposed document workflow',
     governanceIntro: 'This workflow separates administrative consolidation, content validation, governance decision and evidence retention.',
     governanceSteps: [
-      ['Administration', 'Consolidates journals, names the version and prepares the review.', 'Proposed owner'],
+      ['Administration', 'Consolidates journals, names the version, prepares the review and tracks its due date.', 'Process owner'],
       ['Relevant functions', 'Check the facts and results within their scope.', 'Content validation'],
       ['Governance', 'Approves or refuses promotion to an institutional report.', 'Human decision'],
       ['DMS', 'Retains the source corpus, version, validations and approved report.', 'After approval']
     ],
-    gedTitle: 'Candidate DMS location',
+    gedTitle: 'Retained DMS reference',
     gedPath: 'GED/Administration/Rapports_activite/2026/Hebdomadaires/2SG-ADM-RH-2026-W33-PILOTE',
-    gedStatus: 'To be confirmed by Cheikh',
-    promotionRule: 'Until the owner, workflow and DMS location are confirmed, this review remains a provisional working synthesis.',
+    gedStatus: 'Filing to be created after approval',
+    promotionRule: 'Administration owns the process. The DMS reference is retained, but no institutional filing is claimed before content review and a human promotion decision.',
     caution: 'This review is a working synthesis to be checked by Cheikh and the owning function. It is neither signed, adopted nor archived as an institutional report.'
   },
   DE: {
@@ -179,7 +179,7 @@ const COPY = {
     ],
     nextTitle: 'Nächste Maßnahmen',
     next: [
-      'Zeitraum, verantwortliche Funktion und DMS-Ablage vor einer Hochstufung dieses Rückblicks validieren.',
+      'Den Inhalt vor einer Hochstufung durch die betroffenen Funktionen prüfen lassen.',
       'Die Hauptquelle des Daily Intelligence Dashboards stabilisieren.',
       'Die RBAC-Prüfung bei einem legitimen Onboarding mit einem gewöhnlichen Benutzer vervollständigen.',
       'LEGAL-Unterlagen weiter qualifizieren, ohne vorzeitige Texte oder Schlussfolgerungen.'
@@ -195,15 +195,15 @@ const COPY = {
     governanceTitle: 'Vorgeschlagener Dokumentenprozess',
     governanceIntro: 'Dieser Prozess trennt administrative Konsolidierung, fachliche Prüfung, Governance-Entscheidung und Nachweisaufbewahrung.',
     governanceSteps: [
-      ['Verwaltung', 'Konsolidiert die Journale, benennt die Version und bereitet den Rückblick vor.', 'Vorgeschlagene Verantwortung'],
+      ['Verwaltung', 'Konsolidiert die Journale, benennt die Version, bereitet den Rückblick vor und verfolgt die Frist.', 'Prozessverantwortung'],
       ['Betroffene Funktionen', 'Prüfen die Fakten und Ergebnisse in ihrem Zuständigkeitsbereich.', 'Fachliche Prüfung'],
       ['Governance', 'Genehmigt oder verweigert die Hochstufung zum institutionellen Bericht.', 'Menschliche Entscheidung'],
       ['DMS', 'Bewahrt Quellkorpus, Version, Prüfungen und genehmigten Bericht auf.', 'Nach Genehmigung']
     ],
-    gedTitle: 'Vorgeschlagener DMS-Ablageort',
+    gedTitle: 'Festgelegte DMS-Referenz',
     gedPath: 'GED/Administration/Rapports_activite/2026/Hebdomadaires/2SG-ADM-RH-2026-W33-PILOTE',
-    gedStatus: 'Von Cheikh zu bestätigen',
-    promotionRule: 'Bis Verantwortung, Prozess und DMS-Ablage bestätigt sind, bleibt dieser Rückblick eine vorläufige Arbeitsübersicht.',
+    gedStatus: 'Ablage nach Genehmigung anzulegen',
+    promotionRule: 'Die Verwaltung trägt die Prozessverantwortung. Die DMS-Referenz ist festgelegt, doch vor fachlicher Prüfung und menschlicher Hochstufungsentscheidung wird keine institutionelle Ablage behauptet.',
     caution: 'Dieser Rückblick ist eine Arbeitsübersicht, die von Cheikh und der verantwortlichen Funktion zu prüfen ist. Er ist weder unterzeichnet noch angenommen oder als institutioneller Bericht archiviert.'
   }
 };
