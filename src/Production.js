@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck, Wrench, X } from 'lucide-react';
@@ -13,6 +13,14 @@ import ProductionGlossary from './ProductionGlossary';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
 import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
 import FunctionAssistant from './FunctionAssistant';
+import {
+  buildTeamAgentDirectory,
+  findAgentTeam,
+  getDirectoryAgentLabel,
+  normalizeTeamCode,
+  resolveDirectoryAgent,
+  TEAM_CODES
+} from './teamDirectory';
 
 const Production = () => {
   const { language } = useLanguage();
@@ -79,6 +87,9 @@ const Production = () => {
       donneesSourceLectureSeule: 'Données sources en lecture seule',
       confirmerSuppressionFournisseur: 'Supprimer ce fournisseur du registre local ?',
       agentNonAttribue: 'Non attribué',
+      agentSourceLoading: 'Chargement de l’annuaire sécurisé RH-001…',
+      agentSourceAvailable: 'Personnes proposées depuis l’annuaire sécurisé RH-001.',
+      agentSourceUnavailable: 'Annuaire RH-001 indisponible : seuls les collectifs des équipes sont proposés.',
       nonRenseigne: 'Non renseigné',
       agentHistorique: 'valeur historique',
       affectationAQualifier: 'À qualifier',
@@ -163,6 +174,9 @@ const Production = () => {
       donneesSourceLectureSeule: 'Read-only source data',
       confirmerSuppressionFournisseur: 'Delete this supplier from the local register?',
       agentNonAttribue: 'Unassigned',
+      agentSourceLoading: 'Loading the secure RH-001 directory…',
+      agentSourceAvailable: 'People are suggested from the secure RH-001 directory.',
+      agentSourceUnavailable: 'RH-001 directory unavailable: only team collectives are offered.',
       nonRenseigne: 'Not specified',
       agentHistorique: 'historical value',
       affectationAQualifier: 'To be qualified',
@@ -247,6 +261,9 @@ const Production = () => {
       donneesSourceLectureSeule: 'Quelldaten nur zum Lesen',
       confirmerSuppressionFournisseur: 'Diesen Lieferanten aus dem lokalen Register löschen?',
       agentNonAttribue: 'Nicht zugewiesen',
+      agentSourceLoading: 'Geschütztes Verzeichnis RH-001 wird geladen…',
+      agentSourceAvailable: 'Personen werden aus dem geschützten Verzeichnis RH-001 vorgeschlagen.',
+      agentSourceUnavailable: 'Verzeichnis RH-001 nicht verfügbar: nur Team-Kollektive werden angeboten.',
       nonRenseigne: 'Nicht angegeben',
       agentHistorique: 'historischer Wert',
       affectationAQualifier: 'Zu klären',
@@ -487,38 +504,7 @@ const Production = () => {
     { value: 'Team_ZH', label: t.teamZh },
     { value: 'Team_SN', label: t.teamSn }
   ];
-  const agentsByTeam = {
-    Team_ZH: [
-      { value: 'Cheikh', label: 'Cheikh Ndiaye' },
-      { value: 'Chantal', label: 'Chantal Löffler' },
-      { value: 'Team_ZH', label: t.teamZhCollective }
-    ],
-    Team_SN: [
-      { value: 'Pape', label: 'Papa Amandiogou Ndiaye (Pape)' },
-      { value: 'Gnilane Diouf', label: 'Gnilane Diouf' },
-      { value: 'Gnilane Ndiaye', label: 'Gnilane Ndiaye' },
-      { value: 'Ibou', label: 'Ibrahima Ndiaye (Ibou)' },
-      { value: 'Team_SN', label: t.teamSnCollective }
-    ]
-  };
-  const agentAliases = {
-    'CHEIKH NDIAYE': 'Cheikh',
-    'CHANTAL LOFFLER': 'Chantal',
-    'PAPA AMANDIOGOU NDIAYE': 'Pape',
-    'IBRAHIMA NDIAYE': 'Ibou',
-    'TEAM ZH': 'Team_ZH',
-    'TEAM ZH (COLLECTIF)': 'Team_ZH',
-    TZH: 'Team_ZH',
-    'TEAM SN': 'Team_SN',
-    'TEAM SN (COLLECTIF)': 'Team_SN',
-    TSN: 'Team_SN'
-  };
-  const normalizeTeam = (team) => {
-    const key = normalizeLookupKey(team).replace(/[\s-]/g, '_');
-    if (['TZH', 'TEAM_ZH', 'TEAMZH', 'ZH'].includes(key)) return 'Team_ZH';
-    if (['TSN', 'TEAM_SN', 'TEAMSN', 'SN'].includes(key)) return 'Team_SN';
-    return readScalar(team) || '-';
-  };
+  const normalizeTeam = (team) => normalizeTeamCode(readScalar(team)) || '-';
   const translateTeam = (team) => {
     const normalized = normalizeTeam(team);
     return teamOptions.find(option => option.value === normalized)?.label || normalized;
@@ -530,36 +516,16 @@ const Production = () => {
     return candidates.find(candidate => teamOptions.some(option => option.value === candidate)) || 'Team_ZH';
   };
   const resolveEditableAgent = (team, agent) => {
-    const options = agentsByTeam[team] || [];
-    const candidates = String(agent || '')
-      .split(',')
-      .map(value => value.trim())
-      .filter(Boolean);
-    for (const candidate of candidates) {
-      const canonical = agentAliases[normalizeLookupKey(candidate)] || candidate;
-      const match = options.find(option => normalizeLookupKey(option.value) === normalizeLookupKey(canonical));
-      if (match) return match.value;
-    }
-    return candidates[0] || '';
+    return resolveDirectoryAgent(team, agent, agentsByTeam);
   };
-  const normalizeAgent = (agent) => {
-    const value = readScalar(agent);
-    return agentAliases[normalizeLookupKey(value)] || value;
-  };
-  const getAgentTeam = (agent) => {
-    const canonical = normalizeAgent(agent);
-    if (agentsByTeam.Team_ZH.some(option => option.value === canonical)) return 'Team_ZH';
-    if (agentsByTeam.Team_SN.some(option => option.value === canonical)) return 'Team_SN';
-    return '';
-  };
+  const normalizeAgent = (agent) => readScalar(agent);
+  const getAgentTeam = (agent, directory = agentsByTeam) => findAgentTeam(agent, directory);
   const splitSourceValues = (value) => readScalar(value)
     .split(',')
     .map(item => item.trim())
     .filter(Boolean);
   const translateAgent = (agent) => {
-    const normalized = agentAliases[normalizeLookupKey(agent)] || agent;
-    return [...agentsByTeam.Team_ZH, ...agentsByTeam.Team_SN]
-      .find(option => option.value === normalized)?.label || agent;
+    return getDirectoryAgentLabel(agent, agentsByTeam);
   };
   const supplierAgentLabel = (supplier) => {
     const agents = supplier?.agent && supplier.agent !== '-'
@@ -584,13 +550,13 @@ const Production = () => {
     departement: '',
     pays: 'Sénégal',
     team: 'Team_ZH',
-    agent: 'Cheikh',
+    agent: '',
     seuil: '',
     unite: 'Unité',
     statut: 'En cours',
     date: new Date().toISOString().split('T')[0],
     ...(type === 'stock' ? { produit: 'Licences IT', quantite: '', seuil: '', unite: 'Unité' } : {}),
-    ...(type === 'fournisseur' ? { categorie: 'Services', departement: '', pays: 'Sénégal', team: 'Team_ZH', agent: 'Cheikh' } : {})
+    ...(type === 'fournisseur' ? { categorie: 'Services', departement: '', pays: 'Sénégal', team: 'Team_ZH', agent: '' } : {})
   });
 
   const safeRows = (payload) => {
@@ -629,7 +595,7 @@ const Production = () => {
 
   const joinSet = (set) => Array.from(set).filter(Boolean).join(', ') || '-';
 
-  const buildSuppliersFromSources = (expenseRows, inventoryRows) => {
+  const buildSuppliersFromSources = (expenseRows, inventoryRows, directory = agentsByTeam) => {
     const suppliersByKey = new Map();
 
     const ensureSupplier = (name) => {
@@ -679,7 +645,7 @@ const Production = () => {
 
       splitSourceValues(row.agent || row.responsable || row.owner).forEach(rawAgent => {
         const agent = normalizeAgent(rawAgent);
-        const governedTeam = getAgentTeam(agent);
+        const governedTeam = getAgentTeam(agent, directory);
         if (governedTeam && teams.length && !teams.includes(governedTeam)) {
           supplier.assignmentIssues.push({ team: teams.join(', '), agent });
           return;
@@ -738,12 +704,18 @@ const Production = () => {
   const [fournisseurs, setFournisseurs] = useState([]);
   const [fournisseursLoading, setFournisseursLoading] = useState(false);
   const [fournisseursError, setFournisseursError] = useState('');
+  const [directoryMembers, setDirectoryMembers] = useState([]);
+  const [agentDirectoryStatus, setAgentDirectoryStatus] = useState('loading');
   const [stocks, setStocks] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('commande');
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState(getDefaultFormData('commande'));
   const previousTabRef = useRef(activeTab);
+  const agentsByTeam = useMemo(() => buildTeamAgentDirectory(directoryMembers, {
+    [TEAM_CODES.ZURICH]: t.teamZhCollective,
+    [TEAM_CODES.SENEGAL]: t.teamSnCollective
+  }), [directoryMembers, t.teamSnCollective, t.teamZhCollective]);
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
@@ -790,16 +762,32 @@ const Production = () => {
       setFournisseursLoading(true);
       setFournisseursError('');
       try {
-        const [expensesPayload, inventoryPayload] = await Promise.all([
+        const [expensesResult, inventoryResult, directoryResult] = await Promise.allSettled([
           api.getExpenses(500, 0),
-          api.getInventory(500, 0)
+          api.getInventory(500, 0),
+          api.getMembersDirectory(100, 0)
         ]);
         if (cancelled) return;
-        setFournisseurs(buildSuppliersFromSources(safeRows(expensesPayload), safeRows(inventoryPayload)));
+        if (expensesResult.status === 'rejected') throw expensesResult.reason;
+        if (inventoryResult.status === 'rejected') throw inventoryResult.reason;
+
+        const members = directoryResult.status === 'fulfilled' ? safeRows(directoryResult.value) : [];
+        const nextDirectory = buildTeamAgentDirectory(members, {
+          [TEAM_CODES.ZURICH]: t.teamZhCollective,
+          [TEAM_CODES.SENEGAL]: t.teamSnCollective
+        });
+        setDirectoryMembers(members);
+        setAgentDirectoryStatus(directoryResult.status === 'fulfilled' ? 'available' : 'unavailable');
+        setFournisseurs(buildSuppliersFromSources(
+          safeRows(expensesResult.value),
+          safeRows(inventoryResult.value),
+          nextDirectory
+        ));
       } catch (error) {
         if (cancelled) return;
         setFournisseurs([]);
         setFournisseursError(error.message || 'Erreur fournisseurs');
+        setAgentDirectoryStatus('unavailable');
       } finally {
         if (!cancelled) setFournisseursLoading(false);
       }
@@ -1391,6 +1379,13 @@ const Production = () => {
                       ))}
                       </select>
                     </label>
+                    <p className={`text-xs leading-5 md:col-span-2 ${agentDirectoryStatus === 'available' ? 'text-emerald-300' : 'text-amber-300'}`} role="status">
+                      {agentDirectoryStatus === 'loading'
+                        ? t.agentSourceLoading
+                        : agentDirectoryStatus === 'available'
+                          ? t.agentSourceAvailable
+                          : t.agentSourceUnavailable}
+                    </p>
                     <label>
                       <span className="m3s-field-label">{t.pays}</span>
                       <select aria-label={t.pays} value={formData.pays} onChange={(e) => handleFormChange('pays', e.target.value)} className="m3s-field mt-1 w-full">

@@ -25,15 +25,27 @@ jest.mock('recharts', () => ({
 jest.mock('./api', () => ({
   api: {
     getExpenses: jest.fn(),
-    getInventory: jest.fn()
+    getInventory: jest.fn(),
+    getMembersDirectory: jest.fn()
   }
 }));
 
-const renderProduction = (tab, language = 'EN', { expenses = [], inventory = [] } = {}) => {
+const directory = [
+  { person_id: 'PER-1', display_name: 'Cheikh Ndiaye', preferred_name: 'Cheikh', team: 'TZH', active: true },
+  { person_id: 'PER-2', display_name: 'Chantal Löffler', preferred_name: 'Chantal', team: 'TZH', active: true },
+  { person_id: 'PER-3', display_name: 'Gnilane Diouf', preferred_name: 'Gnilane', team: 'TSN', active: true },
+  { person_id: 'PER-4', display_name: 'Gnilane Ndiaye', preferred_name: 'Gnilane', team: 'TSN', active: true },
+  { person_id: 'PER-5', display_name: 'Papa Amandiogou Ndiaye', preferred_name: 'Pape', team: 'TSN', active: true },
+  { person_id: 'PER-6', display_name: 'Ibrahima Ndiaye', preferred_name: 'Ibou', team: 'TSN', active: true }
+];
+
+const renderProduction = (tab, language = 'EN', { expenses = [], inventory = [], members = directory, directoryError = null } = {}) => {
   mockSearch = `?tab=${tab}`;
   localStorage.setItem('language', language);
   api.getExpenses.mockResolvedValue({ data: expenses });
   api.getInventory.mockResolvedValue({ data: inventory });
+  if (directoryError) api.getMembersDirectory.mockRejectedValue(directoryError);
+  else api.getMembersDirectory.mockResolvedValue({ data: members, total: members.length });
 
   return render(
     <LanguageProvider>
@@ -90,6 +102,8 @@ test('uses the governed team list when preparing a supplier', async () => {
   renderProduction('fournisseurs', 'FR');
 
   fireEvent.click(await screen.findByRole('button', { name: 'Préparer fournisseur' }));
+
+  expect(await screen.findByText('Personnes proposées depuis l’annuaire sécurisé RH-001.')).toBeInTheDocument();
 
   const teamSelect = screen.getByRole('combobox', { name: 'Team' });
   expect(teamSelect).toHaveValue('Team_ZH');
@@ -221,6 +235,16 @@ test('scrolls to the Production content when a child tab changes', async () => {
 
   await waitFor(() => expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' }));
   window.HTMLElement.prototype.scrollIntoView = originalScrollIntoView;
+});
+
+test('offers collectives only when the secure RH-001 directory is unavailable', async () => {
+  renderProduction('fournisseurs', 'FR', { directoryError: new Error('RH-001 unavailable') });
+
+  fireEvent.click(await screen.findByRole('button', { name: 'Préparer fournisseur' }));
+
+  expect(await screen.findByText('Annuaire RH-001 indisponible : seuls les collectifs des équipes sont proposés.')).toBeInTheDocument();
+  expect(screen.getByRole('option', { name: 'Team ZH (collectif)' })).toBeInTheDocument();
+  expect(screen.queryByRole('option', { name: 'Cheikh Ndiaye' })).not.toBeInTheDocument();
 });
 
 test('marks a detail tab so its content is visually prioritised on mobile', async () => {
