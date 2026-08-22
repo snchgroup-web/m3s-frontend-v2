@@ -16,12 +16,12 @@ test('frames the French reporting cycle and identifies the provisional pilot rev
   expect(screen.getByText('3 journaux disponibles · 3 journées sans journal')).toBeInTheDocument();
   expect(screen.getByText(/n’est pas assimilée à une absence de travail/i)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Circuit documentaire proposé' })).toBeInTheDocument();
-  expect(screen.getByText('Responsable proposé')).toBeInTheDocument();
+  expect(screen.getByText('Responsable du processus')).toBeInTheDocument();
   expect(screen.getByText('Validation du fond')).toBeInTheDocument();
   expect(screen.getByText('Décision humaine')).toBeInTheDocument();
-  expect(screen.getByText('À confirmer par Cheikh')).toBeInTheDocument();
+  expect(screen.getByText('Classement à créer après approbation')).toBeInTheDocument();
   expect(screen.getByText(/GED\/Administration\/Rapports_activite/)).toBeInTheDocument();
-  expect(screen.getByText(/reste une synthèse de travail provisoire/i)).toBeInTheDocument();
+  expect(screen.getByText(/aucun archivage institutionnel n’est déclaré/i)).toBeInTheDocument();
   expect(screen.queryByText('M3S_JOURNAL_DE_BORD_2026-08-10.md')).not.toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: /Afficher les journaux sources/i }));
   expect(screen.getByText('M3S_JOURNAL_DE_BORD_2026-08-10.md')).toBeInTheDocument();
@@ -35,6 +35,14 @@ test('renders the German responsibilities and documentary caution', () => {
   expect(screen.getByText(/Keine Kennzahl, keinen Fortschrittsgrad/i)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Wochenrückblick vom 10. bis 15. August 2026' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Vorgeschlagener Dokumentenprozess' })).toBeInTheDocument();
-  expect(screen.getByText('Von Cheikh zu bestätigen')).toBeInTheDocument();
-  expect(screen.getByText(/bleibt eine Arbeitsübersicht/i)).toBeInTheDocument();
+  expect(screen.getByText('Ablage nach Genehmigung anzulegen')).toBeInTheDocument();
+  expect(screen.getByText(/keine institutionelle Ablage behauptet/i)).toBeInTheDocument();
+});
+
+test('keeps the pilot review provisional after assigning the process owner and DMS reference', () => {
+  render(<AdministrationReportingCycle language="FR" />);
+
+  expect(screen.getByText('Synthèse de travail provisoire', { selector: 'dd' })).toBeInTheDocument();
+  expect(screen.getByText(/Administration est responsable du processus/i)).toBeInTheDocument();
+  expect(screen.getByText(/Elle n’est ni signée, ni adoptée, ni archivée/i)).toBeInTheDocument();
 });
