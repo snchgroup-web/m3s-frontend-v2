@@ -1,6 +1,10 @@
 export const LEGAL_DOCUMENTARY_BASELINE = Object.freeze({
-  availability: 'protected',
-  totalStages: 6
+  availability: 'qualified-summary',
+  totalStages: 6,
+  currentStage: 'applicability',
+  currentStageIndex: 1,
+  externalDeliverableStatus: 'review',
+  evidenceDate: '2026-08-16'
 });
 
 export const LEGAL_DOCUMENTARY_STAGES = Object.freeze([
