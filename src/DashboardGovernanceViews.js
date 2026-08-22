@@ -87,6 +87,21 @@ const copy = {
         ['Commander par lot', 'Production', 'Responsable autorisé', 'Commande ou contrat, fournisseur, montant, devise et délai', 'Autorisation active et un fournisseur par commande ou lot.'],
         ['Réceptionner', 'Responsable terrain · Production', 'Stock & Actifs · fonction métier', 'Bon ou PV, quantités, état, photos ou tests et réserves', 'Réserves visibles ; aucun paiement final déduit automatiquement.'],
         ['Clôturer', 'Production', 'Finance · Gouvernance selon le cas', 'Réception, état des paiements, réserves et index GED', 'Obligations revues, décision et date de clôture tracées.']
+      ],
+      pilotSubmodelTitle: 'Sous-modèle candidat · commande, réception et réserves',
+      pilotSubmodelStatus: 'Cible à valider · aucune implémentation',
+      pilotSubmodelBody: 'Ces trois objets détaillent le passage de la commande au constat terrain. Ils restent reliés au dossier d’achat sans remplacer les registres Finance, Stock & Actifs ou GED.',
+      pilotSubmodelObjects: [
+        ['order_or_lot_id', 'Commande ou lot autorisé', 'Production · registre Commandes candidat', '1 dossier d’achat → 0..n commandes ou lots ; chaque commande ou lot → exactement 1 dossier et 1 fournisseur retenu.'],
+        ['receipt_id', 'Constat de réception', 'Production · responsable terrain ; Stock & Actifs pour le mouvement lié', '1 commande ou lot → 0..n réceptions ; chaque réception → exactement 1 commande ou lot. Une réception peut être partielle.'],
+        ['reservation_id', 'Réserve de réception', 'Production · suivi métier des réserves', '1 réception → 0..n réserves ; chaque réserve → exactement 1 réception et conserve un état explicite jusqu’à sa levée ou son rejet documenté.']
+      ],
+      pilotGuardrailsTitle: 'Règles de liaison candidates',
+      pilotGuardrails: [
+        'Une commande ou un lot retient un seul fournisseur ; un dossier d’achat peut en contenir plusieurs.',
+        'Une réception partielle ne clôture ni le reliquat à livrer ni les obligations restantes.',
+        'Une réserve ouverte empêche une clôture non qualifiée, mais ne détermine ni ne modifie automatiquement le paiement.',
+        'Le bon, le PV, les photos, les tests et les preuves de réserve restent dans la GED, reliés à l’objet qu’ils prouvent.'
       ]
     },
     processes: {
@@ -176,6 +191,21 @@ const copy = {
         ['Order by lot', 'Production', 'Authorised responsible party', 'Order or contract, supplier, amount, currency and deadline', 'Active authorisation and one supplier per order or lot.'],
         ['Receive', 'Field responsible party · Production', 'Stock & Assets · business function', 'Delivery note or report, quantities, condition, photos or tests and reservations', 'Reservations visible; no final payment inferred automatically.'],
         ['Close', 'Production', 'Finance · Governance as applicable', 'Receipt, payment status, reservations and DMS index', 'Obligations reviewed, closure decision and date recorded.']
+      ],
+      pilotSubmodelTitle: 'Candidate submodel · order, receipt and reservations',
+      pilotSubmodelStatus: 'Target to validate · no implementation',
+      pilotSubmodelBody: 'These three objects detail the transition from order to field confirmation. They remain linked to the purchasing case without replacing the Finance, Stock & Assets or DMS registers.',
+      pilotSubmodelObjects: [
+        ['order_or_lot_id', 'Authorised order or lot', 'Production · candidate Order register', '1 purchasing case → 0..n orders or lots; each order or lot → exactly 1 case and 1 selected supplier.'],
+        ['receipt_id', 'Receipt record', 'Production · field responsible party; Stock & Assets for the linked movement', '1 order or lot → 0..n receipts; each receipt → exactly 1 order or lot. A receipt may be partial.'],
+        ['reservation_id', 'Receipt reservation', 'Production · business follow-up of reservations', '1 receipt → 0..n reservations; each reservation → exactly 1 receipt and retains an explicit status until documented clearance or rejection.']
+      ],
+      pilotGuardrailsTitle: 'Candidate linking rules',
+      pilotGuardrails: [
+        'An order or lot selects one supplier; a purchasing case may contain several orders or lots.',
+        'A partial receipt closes neither the outstanding delivery nor the remaining obligations.',
+        'An open reservation prevents unqualified closure, but does not automatically determine or modify payment.',
+        'The delivery note, report, photos, tests and reservation evidence remain in the DMS, linked to the object they evidence.'
       ]
     },
     processes: {
@@ -237,6 +267,21 @@ const copy = {
         ['Je Los bestellen', 'Produktion', 'Autorisierte Verantwortung', 'Bestellung oder Vertrag, Lieferant, Betrag, Währung und Frist', 'Aktive Genehmigung und ein Lieferant je Bestellung oder Los.'],
         ['Annehmen', 'Verantwortung vor Ort · Produktion', 'Bestand & Aktiva · Fachfunktion', 'Lieferschein oder Protokoll, Mengen, Zustand, Fotos oder Tests und Vorbehalte', 'Vorbehalte sichtbar; keine automatische Ableitung der Schlusszahlung.'],
         ['Abschließen', 'Produktion', 'Finanzen · Governance je nach Fall', 'Annahme, Zahlungsstatus, Vorbehalte und GED-Index', 'Pflichten geprüft, Abschlussentscheidung und Datum dokumentiert.']
+      ],
+      pilotSubmodelTitle: 'Kandidaten-Teilmodell · Bestellung, Annahme und Vorbehalte',
+      pilotSubmodelStatus: 'Zielbild zu validieren · keine Implementierung',
+      pilotSubmodelBody: 'Diese drei Objekte beschreiben den Übergang von der Bestellung zum Befund vor Ort. Sie bleiben mit dem Einkaufsdossier verbunden, ohne die Register Finanzen, Bestand & Aktiva oder GED zu ersetzen.',
+      pilotSubmodelObjects: [
+        ['order_or_lot_id', 'Autorisierte Bestellung oder Los', 'Produktion · vorgeschlagenes Bestellregister', '1 Einkaufsdossier → 0..n Bestellungen oder Lose; jede Bestellung oder jedes Los → genau 1 Dossier und 1 ausgewählter Lieferant.'],
+        ['receipt_id', 'Annahmefeststellung', 'Produktion · Verantwortung vor Ort; Bestand & Aktiva für die verbundene Bewegung', '1 Bestellung oder Los → 0..n Annahmen; jede Annahme → genau 1 Bestellung oder Los. Eine Annahme kann teilweise erfolgen.'],
+        ['reservation_id', 'Annahmevorbehalt', 'Produktion · fachliche Nachverfolgung der Vorbehalte', '1 Annahme → 0..n Vorbehalte; jeder Vorbehalt → genau 1 Annahme und behält einen ausdrücklichen Status bis zur dokumentierten Aufhebung oder Ablehnung.']
+      ],
+      pilotGuardrailsTitle: 'Vorgeschlagene Verknüpfungsregeln',
+      pilotGuardrails: [
+        'Eine Bestellung oder ein Los wählt einen Lieferanten aus; ein Einkaufsdossier kann mehrere Bestellungen oder Lose enthalten.',
+        'Eine Teilannahme schließt weder die Restlieferung noch die verbleibenden Pflichten ab.',
+        'Ein offener Vorbehalt verhindert einen unqualifizierten Abschluss, bestimmt oder ändert die Zahlung aber nicht automatisch.',
+        'Lieferschein, Protokoll, Fotos, Tests und Vorbehaltsnachweise bleiben in der GED und sind mit dem belegten Objekt verknüpft.'
       ]
     },
     processes: {
@@ -378,6 +423,38 @@ const ArchitectureView = ({ data }) => {
                   </dl>
                 </article>
               ))}
+            </div>
+          </div>
+          <div className="mt-4 border-t border-slate-700 pt-4">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h6 className="text-sm font-semibold text-slate-100">{data.pilotSubmodelTitle}</h6>
+                <p className="mt-1 max-w-4xl text-sm leading-5 text-slate-400">{data.pilotSubmodelBody}</p>
+              </div>
+              <span className="rounded-md border border-amber-600/70 bg-amber-950/20 px-2.5 py-1 text-xs font-semibold text-amber-200">{data.pilotSubmodelStatus}</span>
+            </div>
+            <div className="mt-3 grid gap-3 lg:grid-cols-3">
+              {data.pilotSubmodelObjects.map(([identifier, role, owner, cardinality]) => (
+                <article key={identifier} className="rounded-md border border-slate-700 bg-slate-950/20 p-3">
+                  <code className="break-all text-sm font-semibold text-cyan-300">{identifier}</code>
+                  <p className="mt-2 text-sm font-semibold text-slate-100">{role}</p>
+                  <dl className="mt-3 space-y-3 text-sm">
+                    <div><dt className="text-xs font-semibold uppercase text-slate-500">{data.pilotOwner}</dt><dd className="mt-1 leading-5 text-slate-300">{owner}</dd></div>
+                    <div><dt className="text-xs font-semibold uppercase text-slate-500">{data.pilotCardinality}</dt><dd className="mt-1 leading-5 text-slate-300">{cardinality}</dd></div>
+                  </dl>
+                </article>
+              ))}
+            </div>
+            <div className="mt-3 rounded-md border border-emerald-800/70 bg-emerald-950/10 p-3">
+              <h6 className="text-sm font-semibold text-slate-100">{data.pilotGuardrailsTitle}</h6>
+              <ul className="mt-2 grid gap-2 md:grid-cols-2">
+                {data.pilotGuardrails.map((rule) => (
+                  <li key={rule} className="flex items-start gap-2 text-sm leading-5 text-slate-300">
+                    <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-300" size={16} aria-hidden="true" />
+                    {rule}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>

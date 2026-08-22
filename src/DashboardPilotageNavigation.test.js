@@ -261,8 +261,8 @@ test('opens the four governed global views without confusing architecture with t
   expect(screen.getByText(/expense_id et inventory_movement_id restent deux objets distincts/)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Contrat relationnel candidat à arbitrer' })).toBeInTheDocument();
   expect(screen.getByText('Proposition · aucune implémentation')).toBeInTheDocument();
-  expect(screen.getAllByText('Propriétaire candidat')).toHaveLength(6);
-  expect(screen.getAllByText('Cardinalité candidate')).toHaveLength(6);
+  expect(screen.getAllByText('Propriétaire candidat')).toHaveLength(9);
+  expect(screen.getAllByText('Cardinalité candidate')).toHaveLength(9);
   expect(screen.getByText('1 fournisseur → 0..n dossiers d’achat ; chaque commande ou lot → exactement 1 fournisseur retenu.')).toBeInTheDocument();
   expect(screen.getByText('responsible_party_id')).toBeInTheDocument();
   expect(screen.getByText(/RH-001 gouverne les identités et affectations internes/)).toBeInTheDocument();
@@ -273,6 +273,13 @@ test('opens the four governed global views without confusing architecture with t
   expect(screen.getByRole('heading', { name: 'Commander par lot' })).toBeInTheDocument();
   expect(screen.getByText('Autorisation active et un fournisseur par commande ou lot.')).toBeInTheDocument();
   expect(screen.getByText('Réserves visibles ; aucun paiement final déduit automatiquement.')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Sous-modèle candidat · commande, réception et réserves' })).toBeInTheDocument();
+  expect(screen.getByText('order_or_lot_id')).toBeInTheDocument();
+  expect(screen.getByText('receipt_id')).toBeInTheDocument();
+  expect(screen.getByText('reservation_id')).toBeInTheDocument();
+  expect(screen.getByText(/chaque commande ou lot → exactement 1 dossier et 1 fournisseur retenu/)).toBeInTheDocument();
+  expect(screen.getByText('Une réception partielle ne clôture ni le reliquat à livrer ni les obligations restantes.')).toBeInTheDocument();
+  expect(screen.getByText(/Une réserve ouverte empêche une clôture non qualifiée, mais ne détermine ni ne modifie automatiquement le paiement/)).toBeInTheDocument();
   expect(screen.queryByText('Carte mentale globale des fonctions')).not.toBeInTheDocument();
 
   fireEvent.click(screen.getByRole('tab', { name: 'Processus & Contrôles' }));
