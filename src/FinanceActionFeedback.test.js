@@ -83,6 +83,10 @@ test('requires confirmation before creating a revenue entry and then reports suc
   fireEvent.click(await screen.findByRole('button', { name: 'Nouvelle Recette' }));
   fireEvent.change(screen.getByPlaceholderText('Description'), { target: { value: 'Cotisation pilote' } });
   fireEvent.change(screen.getByPlaceholderText('Montant'), { target: { value: '100' } });
+  expect(screen.getAllByText('710 CFA / CHF')).not.toHaveLength(0);
+  const appliedRate = screen.getByLabelText('Taux appliqué *');
+  expect(appliedRate).toHaveValue(710);
+  fireEvent.change(appliedRate, { target: { value: '705' } });
   fireEvent.click(screen.getByRole('button', { name: 'Créer' }));
 
   expect(screen.getByRole('dialog', { name: 'Confirmer l’ajout' })).toHaveTextContent('Cotisation pilote');
@@ -90,7 +94,13 @@ test('requires confirmation before creating a revenue entry and then reports suc
 
   fireEvent.click(screen.getByRole('button', { name: 'Oui, ajouter' }));
 
-  await waitFor(() => expect(api.createIncome).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(api.createIncome).toHaveBeenCalledWith(expect.objectContaining({
+    taux_fx: 705,
+    taux_fx_applique: 705,
+    taux_fx_reference: 710,
+    montant_chf: 100,
+    montant_cfa: 70500,
+  })));
   expect(await screen.findByText('« Cotisation pilote » a été enregistrée avec succès.')).toBeInTheDocument();
 });
 

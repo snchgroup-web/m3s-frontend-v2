@@ -73,6 +73,7 @@ const createEmptyFinanceForm = () => ({
   devise: 'CHF',
   date: new Date().toISOString().split('T')[0],
   categorie: '',
+  tauxFxApplique: '',
   agent: '',
   team: '',
   departement: '',
@@ -205,7 +206,7 @@ const Finance = () => {
       montant: 'Montant',
       montantCHF: 'Montant CHF',
       montantCFA: 'Montant CFA',
-      tauxFXCol: 'Taux FX',
+      tauxFXCol: 'Taux appliqué',
       devise: 'Devise',
       categorie: 'Catégorie',
       choisirCategorie: 'Sélectionner une catégorie',
@@ -241,6 +242,9 @@ const Finance = () => {
       direction: 'Direction',
       dateReference: 'Date de référence (vide = taux du jour)',
       tauxApplique: 'Taux appliqué',
+      tauxReference: 'Taux de référence',
+      tauxReferenceIndisponible: 'Non disponible pour cette date',
+      separationTauxInfo: 'Le taux appliqué provient de la transaction ou du fournisseur. Le taux de référence reste un repère distinct.',
       calculer: 'Calculer',
       conversionsRapides: 'Conversions rapides',
       conversionResultat: 'Résultat de la conversion',
@@ -345,7 +349,7 @@ const Finance = () => {
       montant: 'Amount',
       montantCHF: 'Amount CHF',
       montantCFA: 'Amount CFA',
-      tauxFXCol: 'FX Rate',
+      tauxFXCol: 'Applied rate',
       devise: 'Currency',
       categorie: 'Category',
       choisirCategorie: 'Select a category',
@@ -381,6 +385,9 @@ const Finance = () => {
       direction: 'Direction',
       dateReference: 'Reference date (blank = today’s rate)',
       tauxApplique: 'Applied rate',
+      tauxReference: 'Reference rate',
+      tauxReferenceIndisponible: 'Unavailable for this date',
+      separationTauxInfo: 'The applied rate comes from the transaction or provider. The reference rate remains a separate benchmark.',
       calculer: 'Calculate',
       conversionsRapides: 'Quick conversions',
       conversionResultat: 'Conversion result',
@@ -485,7 +492,7 @@ const Finance = () => {
       montant: 'Betrag',
       montantCHF: 'Betrag CHF',
       montantCFA: 'Betrag CFA',
-      tauxFXCol: 'Wechselkurs',
+      tauxFXCol: 'Angewandter Kurs',
       devise: 'Währung',
       categorie: 'Kategorie',
       choisirCategorie: 'Kategorie auswählen',
@@ -521,6 +528,9 @@ const Finance = () => {
       direction: 'Richtung',
       dateReference: 'Referenzdatum (leer = heutiger Kurs)',
       tauxApplique: 'Angewandter Kurs',
+      tauxReference: 'Referenzkurs',
+      tauxReferenceIndisponible: 'Für dieses Datum nicht verfügbar',
+      separationTauxInfo: 'Der angewandte Kurs stammt aus der Transaktion oder vom Anbieter. Der Referenzkurs bleibt ein separater Vergleichswert.',
       calculer: 'Berechnen',
       conversionsRapides: 'Schnellumrechnungen',
       conversionResultat: 'Umrechnungsergebnis',
@@ -610,7 +620,8 @@ const Finance = () => {
 
   const normalizeFinanceRow = useCallback((item, type, fallbackCategory, index = 0) => {
     const deviseOrigine = String(item.devise_origine || item.devise || item.currency || 'CHF').toUpperCase();
-    const rawTauxFx = item.taux_fx ?? item.taux ?? item.fx_rate;
+    const rawTauxFx = item.taux_fx_applique ?? item.taux_fx ?? item.taux ?? item.fx_rate;
+    const rawTauxFxReference = item.taux_fx_reference ?? item.taux_ref_auto;
     const rawAmount = item.montant_origine ?? item.amount_original ?? item.montant ?? item.amount ?? item.montant_chf ?? item.amount_chf ?? item.montant_cfa ?? item.amount_cfa ?? 0;
     const montantOrigine = toNumber(rawAmount);
     const explicitMontantChf = item.montant_chf ?? item.amount_chf ?? item.montantChf;
@@ -640,6 +651,7 @@ const Finance = () => {
       montantChf,
       montantCfa,
       tauxFx,
+      tauxFxReference: toNumber(rawTauxFxReference) || null,
       hasExplicitTauxFx,
       dateTauxFx: cleanDate(item.date_taux_fx || item.date_taux || item.date_updated || item.created_at),
       sourceTauxFx: item.source_taux_fx || item.source_taux || item.source || 'Standard',
@@ -1522,22 +1534,36 @@ const Finance = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleFinanceDateChange = (date) => {
+    const nextReference = getHistoricalCfaPerChf(date)?.cfaPerChf || '';
+    setFormData((previous) => {
+      const previousReference = getHistoricalCfaPerChf(previous.date)?.cfaPerChf || '';
+      const appliedWasDefault = !previous.tauxFxApplique
+        || Number(previous.tauxFxApplique) === Number(previousReference);
+      return {
+        ...previous,
+        date,
+        tauxFxApplique: appliedWasDefault ? nextReference : previous.tauxFxApplique,
+      };
+    });
+  };
+
   const handleSave = () => {
     if (!formData.description || !formData.montant) {
       alert(t.remplirChamps);
       return;
     }
-    const historicalRate = getHistoricalCfaPerChf(formData.date);
-    if (!historicalRate?.cfaPerChf) {
-      alert(`${t.aucunTauxDate} : ${formatDateForDisplay(formData.date)}.`);
+    const tauxFxReference = getHistoricalCfaPerChf(formData.date)?.cfaPerChf || 0;
+    const tauxFxApplique = toNumber(formData.tauxFxApplique || tauxFxReference);
+    if (tauxFxApplique <= 0) {
+      alert(t.remplirChamps);
       return;
     }
 
     const montantOrigine = toNumber(formData.montant);
     const deviseOrigine = String(formData.devise || 'CHF').toUpperCase();
-    const tauxFx = historicalRate.cfaPerChf;
-    const montantChf = deviseOrigine === 'CHF' ? montantOrigine : montantOrigine / tauxFx;
-    const montantCfa = deviseOrigine === 'CFA' ? montantOrigine : montantOrigine * tauxFx;
+    const montantChf = deviseOrigine === 'CHF' ? montantOrigine : montantOrigine / tauxFxApplique;
+    const montantCfa = deviseOrigine === 'CFA' ? montantOrigine : montantOrigine * tauxFxApplique;
     const payload = {
       description: formData.description,
       date: formData.date,
@@ -1545,7 +1571,9 @@ const Finance = () => {
       devise_origine: deviseOrigine,
       montant_chf: montantChf,
       montant_cfa: montantCfa,
-      taux_fx: tauxFx,
+      taux_fx: tauxFxApplique,
+      taux_fx_applique: tauxFxApplique,
+      taux_fx_reference: tauxFxReference || null,
       categorie: formData.categorie,
       type: formData.type || (modalType === 'recette' ? 'Virement' : 'Paiement'),
       agent: formData.agent || '',
@@ -1596,7 +1624,8 @@ const Finance = () => {
     setFormData({
       ...item,
       montant: item.montantOrigine ?? item.montant,
-      devise: item.deviseOrigine ?? item.devise
+      devise: item.deviseOrigine ?? item.devise,
+      tauxFxApplique: item.tauxFx || '',
     });
     setShowModal(true);
   };
@@ -1615,19 +1644,23 @@ const Finance = () => {
   };
 
   const openNewModal = (type) => {
+    const next = createEmptyFinanceForm();
+    next.tauxFxApplique = getHistoricalCfaPerChf(next.date)?.cfaPerChf || '';
     setModalType(type);
     setSocialModal(false);
     setEditingId(null);
-    setFormData(createEmptyFinanceForm());
+    setFormData(next);
     setShowModal(true);
   };
 
   const openNewSocialModal = () => {
+    const next = createEmptyFinanceForm();
+    next.tauxFxApplique = getHistoricalCfaPerChf(next.date)?.cfaPerChf || '';
     setModalType('recette');
     setSocialModal(true);
     setEditingId(null);
     setFormData({
-      ...createEmptyFinanceForm(),
+      ...next,
       categorie: 'Aide Sociale Ménage',
       agent: 'Cheikh',
       team: 'Team_ZH',
@@ -2648,9 +2681,32 @@ const Finance = () => {
                 </select>
                 <LocalizedDateInput
                   value={formData.date}
-                  onChange={(date) => handleFormChange('date', date)}
+                  onChange={handleFinanceDateChange}
                   className="w-full"
                 />
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <label className="text-sm text-slate-300">
+                    <span className="mb-1 block">{t.tauxReference}</span>
+                    <output className="block min-h-11 w-full rounded-lg border border-slate-600 bg-slate-900/50 px-4 py-2 text-slate-200">
+                      {getHistoricalCfaPerChf(formData.date)?.cfaPerChf
+                        ? `${formatAmount(getHistoricalCfaPerChf(formData.date).cfaPerChf)} CFA / CHF`
+                        : t.tauxReferenceIndisponible}
+                    </output>
+                  </label>
+                  <label className="text-sm text-slate-300">
+                    <span className="mb-1 block">{t.tauxApplique} *</span>
+                    <input
+                      type="number"
+                      min="0"
+                      step="any"
+                      required
+                      value={formData.tauxFxApplique || getHistoricalCfaPerChf(formData.date)?.cfaPerChf || ''}
+                      onChange={(event) => handleFormChange('tauxFxApplique', event.target.value)}
+                      className="min-h-11 w-full rounded-lg border border-slate-600 bg-slate-700 px-4 py-2 text-white"
+                    />
+                  </label>
+                </div>
+                <p className="text-sm text-slate-300">{t.separationTauxInfo}</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <label className="text-sm text-slate-300">
                     <span className="block mb-1">{t.agent}</span>
