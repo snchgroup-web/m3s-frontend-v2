@@ -58,7 +58,9 @@ const translations = {
     globalMap: 'Carte globale',
     localMap: 'Carte locale',
     localMapBody: 'Cette carte locale synthétise les composantes actuellement structurées de la fonction, sans quitter le pilotage global.',
+    functionCount: (count) => `${count} fonction${count > 1 ? 's' : ''}`,
     showLocalMap: 'Afficher la carte locale',
+    openFunction: 'Ouvrir la fonction',
     backToGlobalMap: 'Revenir à la carte globale',
     functions: {
       administration: 'Administration', finance: 'Finances', rh: 'Ressources humaines',
@@ -109,7 +111,9 @@ const translations = {
     globalMap: 'Global map',
     localMap: 'Local map',
     localMapBody: 'This local map summarises the function components currently structured without leaving global steering.',
+    functionCount: (count) => `${count} function${count > 1 ? 's' : ''}`,
     showLocalMap: 'Show local map',
+    openFunction: 'Open function',
     backToGlobalMap: 'Return to global map',
     functions: {
       administration: 'Administration', finance: 'Finance', rh: 'Human resources',
@@ -160,7 +164,9 @@ const translations = {
     globalMap: 'Globale Karte',
     localMap: 'Lokale Karte',
     localMapBody: 'Diese lokale Karte fasst die derzeit strukturierten Bestandteile der Funktion zusammen, ohne die globale Steuerung zu verlassen.',
+    functionCount: (count) => `${count} Funktion${count > 1 ? 'en' : ''}`,
     showLocalMap: 'Lokale Karte anzeigen',
+    openFunction: 'Funktion öffnen',
     backToGlobalMap: 'Zur globalen Karte zurückkehren',
     functions: {
       administration: 'Verwaltung', finance: 'Finanzen', rh: 'Personalwesen',
@@ -413,6 +419,12 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
     navigate({ pathname: location.pathname, search: `?${params.toString()}` }, { replace: true });
   };
 
+  const openSelectedFunction = () => {
+    if (!selectedFunctionDefinition?.path) return;
+    if (onNavigate) onNavigate(selectedFunctionDefinition.path);
+    else navigate(selectedFunctionDefinition.path);
+  };
+
   useEffect(() => {
     if (activeView !== 'intelligence' || intelligenceRequested.current) return undefined;
     intelligenceRequested.current = true;
@@ -578,9 +590,14 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
               <p className="mt-1 max-w-4xl text-sm leading-6 text-slate-400">{selectedFunction ? t.localMapBody : t.mapBody}</p>
             </div>
             {selectedFunction && (
-              <button type="button" onClick={() => selectFunction()} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-sm font-semibold text-slate-100 hover:border-blue-400 hover:bg-slate-600">
-                <ArrowLeft size={17} aria-hidden="true" />{t.backToGlobalMap}
-              </button>
+              <div className="function-map-view-actions grid shrink-0 grid-cols-1 gap-2 sm:grid-cols-2">
+                <button type="button" onClick={() => selectFunction()} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-sm font-semibold text-slate-100 hover:border-blue-400 hover:bg-slate-600">
+                  <ArrowLeft size={17} aria-hidden="true" />{t.backToGlobalMap}
+                </button>
+                <button type="button" onClick={openSelectedFunction} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-blue-700 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-600">
+                  {t.openFunction}<ArrowRight size={17} aria-hidden="true" />
+                </button>
+              </div>
             )}
           </div>
 
@@ -617,17 +634,19 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
               <div className="function-map-family-grid grid grid-cols-1 gap-5 xl:grid-cols-2">
                 {Object.entries(t.functionGroups).map(([groupId, [groupTitle, groupBody]]) => {
                   const GroupIcon = groupId === 'support' ? FolderCog : Factory;
+                  const groupFunctions = functionDefinitions.filter(({ group }) => group === groupId);
                   return (
                   <section key={groupId} className={`function-map-family function-map-family--${groupId} rounded-md p-3 sm:p-4`} aria-labelledby={`function-family-${groupId}`}>
                     <div className="function-map-family-header flex items-start gap-3 pb-3">
                       <span className="function-map-icon inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-blue-300"><GroupIcon size={19} aria-hidden="true" /></span>
-                      <div>
+                      <div className="min-w-0 flex-1">
                         <h4 id={`function-family-${groupId}`} className="text-sm font-semibold uppercase text-blue-300">{groupTitle}</h4>
                         <p className="mt-1 text-sm leading-5 text-slate-400">{groupBody}</p>
                       </div>
+                      <span className="function-map-family-count shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold">{t.functionCount(groupFunctions.length)}</span>
                     </div>
                     <div className={`function-map-node-grid grid grid-cols-1 gap-2 ${groupId === 'support' ? 'sm:grid-cols-2' : ''}`}>
-                      {functionDefinitions.filter(({ group }) => group === groupId).map(({ id, icon: Icon, color, background, accent }) => (
+                      {groupFunctions.map(({ id, icon: Icon, color, background, accent }) => (
                         <button key={id} type="button" onClick={() => selectFunction(id)} aria-label={`${t.showLocalMap} : ${t.functions[id]}`} style={{ '--function-accent': accent }} className="function-map-node group flex min-h-14 items-center justify-between rounded-md p-3 text-left transition focus:outline-none focus:ring-2 focus:ring-blue-500/70">
                           <span className="flex min-w-0 items-center gap-3">
                             <span className={`function-map-node-icon inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${background} ${color}`}><Icon size={20} aria-hidden="true" /></span>
@@ -650,7 +669,7 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
                   <SelectedFunctionIcon size={21} aria-hidden="true" />
                 </span>
                 <span className="ml-3 min-w-0 text-left">
-                  <span className="block text-xs font-semibold uppercase text-blue-300">{t.globalHub}</span>
+                  <span className="block truncate text-xs font-semibold uppercase text-blue-300">{t.globalHub} · {t.functionGroups[selectedFunctionDefinition.group][0]}</span>
                   <span id="local-function-map-title" className="block truncate text-base font-semibold text-slate-100">{t.functions[selectedFunction]}</span>
                 </span>
               </div>

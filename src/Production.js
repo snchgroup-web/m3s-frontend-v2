@@ -959,7 +959,8 @@ const Production = () => {
           />
         </div>
 
-        <section className="mb-6 rounded-lg border border-blue-500/40 bg-blue-950/45 p-5 text-blue-50">
+        <div className={`production-content-stack${activeTab === 'overview' ? '' : ' production-content-stack--detail'}`}>
+        <section className="production-pilot-summary mb-6 rounded-lg border border-blue-500/40 bg-blue-950/45 p-5 text-blue-50">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex items-start gap-3">
               <AlertCircle size={20} className="mt-0.5 shrink-0 text-blue-300" aria-hidden="true" />
@@ -982,7 +983,7 @@ const Production = () => {
         </section>
  
         {/* KPIs */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="production-kpi-summary grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
             <div className="flex items-center justify-between">
               <div>
@@ -1024,6 +1025,7 @@ const Production = () => {
           </div>
         </div>
  
+        <div className="production-active-view">
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1263,6 +1265,8 @@ const Production = () => {
         {activeTab === 'glossary' && <ProductionGlossary language={language} />}
 
         <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'commandes', 'manufacturing', 'fournisseurs', 'stocks', 'assistant', 'resources', 'glossary']} />
+        </div>
+        </div>
         </div>
       </div>
 

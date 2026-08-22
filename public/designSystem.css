@@ -505,6 +505,12 @@ html.dark .m3s-glossary-status--validated {
   border-bottom: 1px solid var(--m3s-border);
 }
 
+.function-map-family-count {
+  border: 1px solid color-mix(in srgb, var(--m3s-row-accent) 30%, var(--m3s-border));
+  background: color-mix(in srgb, var(--m3s-row-accent) 7%, var(--m3s-surface-raised));
+  color: var(--m3s-text-secondary);
+}
+
 .function-map-node {
   border-left: 3px solid var(--function-accent, var(--m3s-row-accent));
   box-shadow: none;
@@ -793,6 +799,18 @@ html:not(.dark) .m3s-business-module [class*="bg-rose-500/"] {
     gap: 1rem;
   }
 
+  .function-map-family-header {
+    flex-wrap: wrap;
+  }
+
+  .function-map-family-count {
+    margin-left: 3rem;
+  }
+
+  .function-map-view-actions {
+    width: 100%;
+  }
+
   .function-map-family::before {
     content: "";
     position: absolute;
@@ -809,5 +827,23 @@ html:not(.dark) .m3s-business-module [class*="bg-rose-500/"] {
 
   .function-map-local-canvas {
     background-size: 20px 20px;
+  }
+
+  .production-content-stack--detail {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .production-content-stack--detail .production-active-view {
+    order: 0;
+  }
+
+  .production-content-stack--detail .production-pilot-summary {
+    order: 1;
+    margin-top: 1.5rem;
+  }
+
+  .production-content-stack--detail .production-kpi-summary {
+    order: 2;
   }
 }
