@@ -67,12 +67,14 @@ const copy = {
       pilotOwner: 'Propriétaire candidat',
       pilotCardinality: 'Cardinalité candidate',
       pilotContracts: [
-        ['purchase_case_id', 'Dossier transverse de l’achat', 'Registre Achat & approvisionnement · pilotage métier Production', '1 dossier → 0..n dépenses, 0..n mouvements et 0..n documents ; 0..n fournisseurs candidats puis 0..1 retenu.'],
-        ['supplier_id', 'Identité gouvernée du fournisseur', 'Production · registre Fournisseurs', '1 fournisseur → 0..n dossiers d’achat ; un seul rôle fournisseur retenu par dossier.'],
+        ['purchase_case_id', 'Dossier transverse de l’achat', 'Registre Achat & approvisionnement · pilotage métier Production', '1 dossier → 0..n dépenses, 0..n mouvements et 0..n documents ; 0..n fournisseurs candidats puis 0..n retenus par commandes ou lots.'],
+        ['supplier_id', 'Identité gouvernée du fournisseur', 'Production · registre Fournisseurs', '1 fournisseur → 0..n dossiers d’achat ; chaque commande ou lot → exactement 1 fournisseur retenu.'],
+        ['responsible_party_id', 'Responsabilité interne de l’achat', 'Ressources Humaines · annuaire actif RH-001', '1 dossier → 1 responsable actif, personne ou collectif ; 1 responsable → 0..n dossiers. Les fournisseurs externes restent dans le registre Fournisseurs.'],
         ['expense_id', 'Écriture financière liée à l’achat', 'Finances · registre Dépenses', '1 dossier → 0..n dépenses ; chaque dépense d’achat → 1 dossier. Les historiques non qualifiés peuvent rester sans lien.'],
         ['inventory_movement_id', 'Entrée ou mouvement de stock issu de l’achat', 'Stock & Actifs · registre Inventaire', '1 dossier → 0..n mouvements ; chaque mouvement d’acquisition → 1 dossier. Un service peut n’en produire aucun.'],
         ['ged_document_id', 'Pièce ou preuve documentaire', 'IT & Support · GED', '1 dossier → 0..n documents ; un document peut prouver plusieurs objets par des liens gouvernés.']
       ],
+      pilotPeopleBoundary: 'RH-001 gouverne les identités et affectations internes. Il ne transforme pas un fournisseur ou entrepreneur externe en membre du personnel.',
       pilotLifecycleTitle: 'Cycle candidat du dossier d’achat',
       pilotLifecycleBody: 'Ce statut appartient au dossier d’achat. Il ne remplace pas les statuts propres aux dépenses, paiements, mouvements de stock ou documents.',
       pilotLifecycle: ['Brouillon', 'À autoriser', 'Autorisé', 'Commandé', 'Réception partielle', 'Réception sous réserve', 'Réceptionné', 'Clôturé', 'Annulé']
@@ -144,12 +146,14 @@ const copy = {
       pilotOwner: 'Candidate owner',
       pilotCardinality: 'Candidate cardinality',
       pilotContracts: [
-        ['purchase_case_id', 'Cross-functional purchasing case', 'Purchasing & procurement register · Production business stewardship', '1 case → 0..n expenses, 0..n movements and 0..n documents; 0..n candidate suppliers then 0..1 selected.'],
-        ['supplier_id', 'Governed supplier identity', 'Production · Supplier register', '1 supplier → 0..n purchase cases; one selected-supplier role per case.'],
+        ['purchase_case_id', 'Cross-functional purchasing case', 'Purchasing & procurement register · Production business stewardship', '1 case → 0..n expenses, 0..n movements and 0..n documents; 0..n candidate suppliers then 0..n selected through orders or lots.'],
+        ['supplier_id', 'Governed supplier identity', 'Production · Supplier register', '1 supplier → 0..n purchase cases; each order or lot → exactly 1 selected supplier.'],
+        ['responsible_party_id', 'Internal purchasing responsibility', 'Human Resources · RH-001 active directory', '1 case → 1 active responsible party, person or collective; 1 party → 0..n cases. External suppliers remain in the Supplier register.'],
         ['expense_id', 'Financial entry linked to the purchase', 'Finance · Expense register', '1 case → 0..n expenses; each purchase expense → 1 case. Unqualified legacy entries may remain unlinked.'],
         ['inventory_movement_id', 'Stock entry or movement resulting from the purchase', 'Stock & Assets · Inventory register', '1 case → 0..n movements; each acquisition movement → 1 case. A service may create none.'],
         ['ged_document_id', 'Document or supporting evidence', 'IT & Support · DMS', '1 case → 0..n documents; one document may evidence several objects through governed links.']
       ],
+      pilotPeopleBoundary: 'RH-001 governs internal identities and assignments. It does not turn an external supplier or contractor into staff.',
       pilotLifecycleTitle: 'Candidate purchasing-case lifecycle',
       pilotLifecycleBody: 'This status belongs to the purchasing case. It does not replace the statuses of expenses, payments, stock movements or documents.',
       pilotLifecycle: ['Draft', 'Pending authorisation', 'Authorised', 'Ordered', 'Partial receipt', 'Receipt with reservations', 'Received', 'Closed', 'Cancelled']
@@ -193,12 +197,14 @@ const copy = {
       pilotOwner: 'Vorgeschlagene Verantwortung',
       pilotCardinality: 'Vorgeschlagene Kardinalität',
       pilotContracts: [
-        ['purchase_case_id', 'Funktionsübergreifendes Einkaufsdossier', 'Register Einkauf & Beschaffung · fachliche Steuerung Produktion', '1 Dossier → 0..n Ausgaben, 0..n Bewegungen und 0..n Dokumente; 0..n Lieferantenkandidaten, danach 0..1 ausgewählt.'],
-        ['supplier_id', 'Geregelte Lieferantenidentität', 'Produktion · Lieferantenregister', '1 Lieferant → 0..n Einkaufsdossiers; eine ausgewählte Lieferantenrolle je Dossier.'],
+        ['purchase_case_id', 'Funktionsübergreifendes Einkaufsdossier', 'Register Einkauf & Beschaffung · fachliche Steuerung Produktion', '1 Dossier → 0..n Ausgaben, 0..n Bewegungen und 0..n Dokumente; 0..n Lieferantenkandidaten, danach 0..n ausgewählte Lieferanten über Bestellungen oder Lose.'],
+        ['supplier_id', 'Geregelte Lieferantenidentität', 'Produktion · Lieferantenregister', '1 Lieferant → 0..n Einkaufsdossiers; jede Bestellung oder jedes Los → genau 1 ausgewählter Lieferant.'],
+        ['responsible_party_id', 'Interne Einkaufsverantwortung', 'Personalwesen · aktives Verzeichnis RH-001', '1 Dossier → 1 aktive verantwortliche Einheit, Person oder Kollektiv; 1 Einheit → 0..n Dossiers. Externe Lieferanten bleiben im Lieferantenregister.'],
         ['expense_id', 'Mit dem Einkauf verbundene Finanzausgabe', 'Finanzen · Ausgabenregister', '1 Dossier → 0..n Ausgaben; jede Einkaufsausgabe → 1 Dossier. Nicht qualifizierte Altbestände können unverknüpft bleiben.'],
         ['inventory_movement_id', 'Bestandszugang oder -bewegung aus dem Einkauf', 'Bestand & Aktiva · Inventarregister', '1 Dossier → 0..n Bewegungen; jede Beschaffungsbewegung → 1 Dossier. Eine Dienstleistung kann keine erzeugen.'],
         ['ged_document_id', 'Dokument oder Nachweis', 'IT & Support · GED', '1 Dossier → 0..n Dokumente; ein Dokument kann mehrere Objekte über geregelte Verknüpfungen belegen.']
       ],
+      pilotPeopleBoundary: 'RH-001 regelt interne Identitäten und Zuweisungen. Externe Lieferanten oder Auftragnehmer werden dadurch nicht zu Personal.',
       pilotLifecycleTitle: 'Kandidatenzyklus des Einkaufsdossiers',
       pilotLifecycleBody: 'Dieser Status gehört zum Einkaufsdossier. Er ersetzt nicht die eigenen Status von Ausgaben, Zahlungen, Bestandsbewegungen oder Dokumenten.',
       pilotLifecycle: ['Entwurf', 'Zur Freigabe', 'Freigegeben', 'Bestellt', 'Teilweise erhalten', 'Annahme mit Vorbehalt', 'Angenommen', 'Abgeschlossen', 'Storniert']
@@ -309,6 +315,7 @@ const ArchitectureView = ({ data }) => {
               </article>
             ))}
           </div>
+          <p className="m3s-raised mt-3 px-3 py-2 text-sm leading-5 text-slate-300">{data.pilotPeopleBoundary}</p>
           <div className="m3s-raised mt-4 p-3">
             <h6 className="text-sm font-semibold text-slate-100">{data.pilotLifecycleTitle}</h6>
             <p className="mt-1 max-w-4xl text-sm leading-5 text-slate-400">{data.pilotLifecycleBody}</p>

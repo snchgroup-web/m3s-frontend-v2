@@ -261,9 +261,11 @@ test('opens the four governed global views without confusing architecture with t
   expect(screen.getByText(/expense_id et inventory_movement_id restent deux objets distincts/)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Contrat relationnel candidat à arbitrer' })).toBeInTheDocument();
   expect(screen.getByText('Proposition · aucune implémentation')).toBeInTheDocument();
-  expect(screen.getAllByText('Propriétaire candidat')).toHaveLength(5);
-  expect(screen.getAllByText('Cardinalité candidate')).toHaveLength(5);
-  expect(screen.getByText('1 fournisseur → 0..n dossiers d’achat ; un seul rôle fournisseur retenu par dossier.')).toBeInTheDocument();
+  expect(screen.getAllByText('Propriétaire candidat')).toHaveLength(6);
+  expect(screen.getAllByText('Cardinalité candidate')).toHaveLength(6);
+  expect(screen.getByText('1 fournisseur → 0..n dossiers d’achat ; chaque commande ou lot → exactement 1 fournisseur retenu.')).toBeInTheDocument();
+  expect(screen.getByText('responsible_party_id')).toBeInTheDocument();
+  expect(screen.getByText(/RH-001 gouverne les identités et affectations internes/)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Cycle candidat du dossier d’achat' })).toBeInTheDocument();
   expect(screen.getByText('Réception sous réserve')).toBeInTheDocument();
   expect(screen.getByText(/Il ne remplace pas les statuts propres aux dépenses/)).toBeInTheDocument();
