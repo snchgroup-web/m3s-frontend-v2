@@ -296,6 +296,12 @@
           "path": "/finance?tab=fx"
         },
         {
+          "id": "finance-assistant",
+          "label": { "FR": "Assistant Finances", "EN": "Finance Assistant", "DE": "Assistent Finanzen" },
+          "icon": "Bot",
+          "path": "/finance?tab=assistant"
+        },
+        {
           "id": "finance-resources",
           "label": {
             "FR": "Ressources",
@@ -396,6 +402,12 @@
           },
           "icon": "User",
           "path": "/rh?tab=myaccount"
+        },
+        {
+          "id": "rh-assistant",
+          "label": { "FR": "Assistant RH", "EN": "HR Assistant", "DE": "Assistent Personalwesen" },
+          "icon": "Bot",
+          "path": "/rh?tab=assistant"
         },
         {
           "id": "rh-resources",
@@ -500,6 +512,12 @@
           "path": "/crm?tab=beneficiaires"
         },
         {
+          "id": "crm-assistant",
+          "label": { "FR": "Assistant Commercial", "EN": "Commercial Assistant", "DE": "Assistent Vertrieb" },
+          "icon": "Bot",
+          "path": "/crm?tab=assistant"
+        },
+        {
           "id": "crm-resources",
           "label": {
             "FR": "Ressources",
@@ -592,6 +610,12 @@
           "path": "/production?tab=stocks"
         },
         {
+          "id": "production-assistant",
+          "label": { "FR": "Assistant Production", "EN": "Production Assistant", "DE": "Assistent Produktion" },
+          "icon": "Bot",
+          "path": "/production?tab=assistant"
+        },
+        {
           "id": "production-resources",
           "label": {
             "FR": "Ressources",
@@ -672,6 +696,12 @@
           },
           "icon": "AlertTriangle",
           "path": "/actifs?tab=risques"
+        },
+        {
+          "id": "stock-assistant",
+          "label": { "FR": "Assistant Stock & Actifs", "EN": "Stock & Assets Assistant", "DE": "Assistent Bestand & Aktiven" },
+          "icon": "Bot",
+          "path": "/actifs?tab=assistant"
         },
         {
           "id": "stock-resources",
@@ -834,6 +864,12 @@
           },
           "icon": "Book",
           "path": "/ged?tab=manual"
+        },
+        {
+          "id": "it-support-assistant",
+          "label": { "FR": "Assistant IT & Support", "EN": "IT & Support Assistant", "DE": "Assistent IT & Support" },
+          "icon": "Bot",
+          "path": "/ged?tab=assistant"
         },
         {
           "id": "it-support-resources",

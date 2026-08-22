@@ -34,6 +34,7 @@ jest.mock('./api', () => ({
     getSuppliersCount: jest.fn(),
     getBeneficiariesCount: jest.fn(),
     getDonorsCount: jest.fn(),
+    getMembersDirectory: jest.fn(),
     getTasksCount: jest.fn(),
     getAuthAccountsCount: jest.fn(),
     getManagementPortfolioSummary: jest.fn(),
@@ -53,6 +54,17 @@ beforeEach(() => {
   api.getSuppliersCount.mockResolvedValue({ total: 79 });
   api.getBeneficiariesCount.mockResolvedValue({ total: 4 });
   api.getDonorsCount.mockResolvedValue({ total: 6 });
+  api.getMembersDirectory.mockResolvedValue({
+    total: 6,
+    data: [
+      { member_type: 'Fondateur', team: 'TZH', active: true },
+      { member_type: 'Fondateur', team: 'TZH', active: true },
+      { member_type: 'Associe', team: 'TSN', active: true },
+      { member_type: 'Associe', team: 'TSN', active: true },
+      { member_type: 'Associe', team: 'TSN', active: true },
+      { member_type: 'Associe', team: 'TSN', active: true }
+    ]
+  });
   api.getTasksCount.mockResolvedValue({ total: 4, open: 2, completed: 2, blocked: 0, cancelled: 0 });
   api.getAuthAccountsCount.mockResolvedValue({ total: 3 });
   api.getManagementPortfolioSummary.mockResolvedValue({
@@ -88,11 +100,13 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   expect(screen.getByRole('button', { name: 'Open module: Active major files' })).toHaveTextContent('7');
   expect(screen.getByText('Management · Major-file portfolio')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Management & Governance' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Support functions' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Operations & Development' })).toBeInTheDocument();
-  expect(screen.getByText('M3S · Authenticated accounts')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Support functions · Finance' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Support functions · Human Resources' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Support functions · IT & Support' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Operations & Development · Commercial & CRM' })).toBeInTheDocument();
+  expect(screen.getAllByText('M3S · Authenticated accounts')).toHaveLength(2);
   expect(screen.getByText('Administration · Task register')).toBeInTheDocument();
-  expect(screen.getByText('Document Management · Documents')).toBeInTheDocument();
+  expect(screen.getAllByText('Document Management · Documents')).toHaveLength(2);
   expect(screen.getAllByText('Available').length).toBeGreaterThan(0);
   expect(screen.getAllByText('To connect').length).toBeGreaterThan(0);
   expect(screen.getAllByText('12').length).toBeGreaterThan(0);
@@ -105,6 +119,11 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   expect(screen.getByText('Stock & Assets · Donation candidates · Distinct donors')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Open module: Tracked tasks' })).toHaveTextContent('4');
   expect(screen.getByRole('button', { name: 'Open module: Tracked tasks' })).toHaveTextContent('Open 2 · Completed 2');
+  expect(screen.getByRole('button', { name: 'Open module: Members' })).toHaveTextContent('6');
+  expect(screen.getByRole('button', { name: 'Open module: Founding members' })).toHaveTextContent('2');
+  expect(screen.getByRole('button', { name: 'Open module: Associate members' })).toHaveTextContent('4');
+  expect(screen.getByRole('button', { name: 'Open module: Teams' })).toHaveTextContent('2');
+  expect(screen.getByRole('button', { name: 'Open module: Employees' })).toHaveTextContent('—');
   expect(screen.getAllByText('Source not connected').length).toBeGreaterThan(0);
   expect(screen.queryByText('3 projects')).not.toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Cross-functional analysis' })).toBeInTheDocument();
@@ -145,6 +164,7 @@ test('shows connected KPI values and labels missing sources explicitly', async (
     expect(api.getTasksCount).toHaveBeenCalledTimes(1);
     expect(api.getAuthAccountsCount).toHaveBeenCalledTimes(1);
     expect(api.getManagementPortfolioSummary).toHaveBeenCalledTimes(1);
+    expect(api.getMembersDirectory).toHaveBeenCalledWith(100, 0);
   });
 });
 

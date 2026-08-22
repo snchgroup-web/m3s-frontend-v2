@@ -45,7 +45,7 @@ test('falls back to the governed dashboard overview for an unknown return view',
 });
 
 test('governs every current KPI destination and preserves its exact return identity', () => {
-  expect(Object.keys(DASHBOARD_INDICATOR_DESTINATIONS)).toHaveLength(20);
+  expect(Object.keys(DASHBOARD_INDICATOR_DESTINATIONS)).toHaveLength(29);
 
   Object.entries(DASHBOARD_INDICATOR_DESTINATIONS).forEach(([indicatorId, path]) => {
     const destination = getDashboardIndicatorDestination(indicatorId);

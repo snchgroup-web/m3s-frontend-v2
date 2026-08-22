@@ -405,6 +405,46 @@ const operationsDictionary = {
   ]
 };
 
+const supportDictionary = {
+  FR: [
+    ['members', 'Membres', 'Nombre total de membres figurant dans l’annuaire RH gouverné.', 'Inclut les membres actifs du corpus disponible ; ne mesure ni les comptes M3S ni les employés.', 'API RH · annuaire des membres · total.', 'Actualisé au chargement lorsque l’annuaire répond.', 'Ouvre l’annuaire RH.'],
+    ['founders', 'Membres fondateurs', 'Nombre de membres actifs qualifiés Fondateur dans l’annuaire gouverné.', 'Calcul disponible uniquement lorsque l’annuaire complet est chargé.', 'API RH · annuaire des membres · member_type Fondateur.', 'Recalculé au chargement du corpus complet.', 'Ouvre l’annuaire RH.'],
+    ['associates', 'Membres associés', 'Nombre de membres actifs qualifiés Associé dans l’annuaire gouverné.', 'Calcul disponible uniquement lorsque l’annuaire complet est chargé.', 'API RH · annuaire des membres · member_type Associe.', 'Recalculé au chargement du corpus complet.', 'Ouvre l’annuaire RH.'],
+    ['teams', 'Teams', 'Nombre de teams distinctes renseignées pour les membres actifs.', 'Les libellés vides sont exclus et les sous-groupes ne sont pas comptés comme teams.', 'API RH · annuaire des membres · champ team.', 'Recalculé au chargement du corpus complet.', 'Ouvre la vue Teams RH.'],
+    ['employees', 'Employés', 'Effectif des employés enregistré dans un futur registre RH gouverné.', 'La source n’est pas encore raccordée ; la valeur indisponible ne signifie pas zéro employé.', 'Source cible · RH · registre des employés.', 'Indisponible jusqu’au raccordement du registre.', 'Ouvre le registre Employés RH.'],
+    ['it-accounts', 'Comptes M3S', 'Nombre de comptes authentifiés exposé par le backend M3S.', 'Mesure des comptes techniques actifs, distincte du nombre de membres ou d’employés.', 'API Authentification · compteur des comptes.', 'Actualisé au chargement du Tableau de bord.', 'Ouvre le registre des utilisateurs.'],
+    ['it-documents', 'Documents GED', 'Nombre de documents exposé par le compteur GED.', 'Mesure des fichiers enregistrés ; ni le nombre de dossiers ni le volume de stockage.', 'API GED · compteur des documents.', 'Actualisé au chargement du Tableau de bord.', 'Ouvre le registre des documents.'],
+    ['it-incidents', 'Incidents IT ouverts', 'Nombre futur d’incidents IT encore ouverts.', 'Le registre n’est pas raccordé ; aucune valeur n’est inventée.', 'Source cible · IT & Support · registre des incidents.', 'Indisponible jusqu’au raccordement du registre.', 'Ouvre Aide & Support.'],
+    ['it-storage', 'Stockage GED', 'Volume futur de stockage documentaire réellement utilisé.', 'La mesure n’est pas raccordée et ne doit pas être déduite du nombre de documents.', 'Source cible · IT & Support · mesure de stockage GED.', 'Indisponible jusqu’au raccordement de la source.', 'Ouvre la vue d’ensemble IT & Support.']
+  ],
+  EN: [
+    ['members', 'Members', 'Total members listed in the governed HR directory.', 'Includes active members in the available corpus; it measures neither M3S accounts nor employees.', 'HR API · member directory · total.', 'Refreshed on load when the directory responds.', 'Opens the HR directory.'],
+    ['founders', 'Founding members', 'Active members classified as Founder in the governed directory.', 'Calculated only when the complete directory is loaded.', 'HR API · member directory · Founder member_type.', 'Recalculated on load from the complete corpus.', 'Opens the HR directory.'],
+    ['associates', 'Associate members', 'Active members classified as Associate in the governed directory.', 'Calculated only when the complete directory is loaded.', 'HR API · member directory · Associe member_type.', 'Recalculated on load from the complete corpus.', 'Opens the HR directory.'],
+    ['teams', 'Teams', 'Distinct teams stated for active members.', 'Empty labels are excluded and subgroups are not counted as teams.', 'HR API · member directory · team field.', 'Recalculated on load from the complete corpus.', 'Opens HR Teams.'],
+    ['employees', 'Employees', 'Future employee headcount from a governed HR register.', 'The source is not connected; unavailable does not mean zero employees.', 'Target source · HR · employee register.', 'Unavailable until the register is connected.', 'Opens the HR employee register.'],
+    ['it-accounts', 'M3S accounts', 'Authenticated account count exposed by the M3S backend.', 'Measures active technical accounts, separately from members and employees.', 'Authentication API · account count.', 'Refreshed when the Dashboard loads.', 'Opens the user register.'],
+    ['it-documents', 'DMS documents', 'Document count exposed by the DMS counter.', 'Measures registered files, not folders or storage volume.', 'DMS API · document count.', 'Refreshed when the Dashboard loads.', 'Opens the document register.'],
+    ['it-incidents', 'Open IT incidents', 'Future count of IT incidents that remain open.', 'The register is not connected and no value is invented.', 'Target source · IT & Support · incident register.', 'Unavailable until the register is connected.', 'Opens Help & Support.'],
+    ['it-storage', 'DMS storage', 'Future volume of document storage actually used.', 'The source is not connected and storage must not be inferred from document count.', 'Target source · IT & Support · DMS storage measure.', 'Unavailable until the source is connected.', 'Opens IT & Support overview.']
+  ],
+  DE: [
+    ['members', 'Mitglieder', 'Gesamtzahl der Mitglieder im geregelten Personalverzeichnis.', 'Umfasst aktive Mitglieder des verfügbaren Korpus; weder M3S-Konten noch Beschäftigte.', 'Personal-API · Mitgliederverzeichnis · total.', 'Beim Laden aktualisiert, wenn das Verzeichnis antwortet.', 'Öffnet das Personalverzeichnis.'],
+    ['founders', 'Gründungsmitglieder', 'Aktive Mitglieder mit der Einstufung Gründer im geregelten Verzeichnis.', 'Nur verfügbar, wenn das vollständige Verzeichnis geladen ist.', 'Personal-API · Mitgliederverzeichnis · member_type Fondateur.', 'Beim Laden des vollständigen Korpus neu berechnet.', 'Öffnet das Personalverzeichnis.'],
+    ['associates', 'Assoziierte Mitglieder', 'Aktive Mitglieder mit der Einstufung Assoziiert im geregelten Verzeichnis.', 'Nur verfügbar, wenn das vollständige Verzeichnis geladen ist.', 'Personal-API · Mitgliederverzeichnis · member_type Associe.', 'Beim Laden des vollständigen Korpus neu berechnet.', 'Öffnet das Personalverzeichnis.'],
+    ['teams', 'Teams', 'Anzahl unterschiedlicher Teams aktiver Mitglieder.', 'Leere Angaben und Untergruppen werden nicht als Teams gezählt.', 'Personal-API · Mitgliederverzeichnis · Feld team.', 'Beim Laden des vollständigen Korpus neu berechnet.', 'Öffnet die Teamansicht.'],
+    ['employees', 'Mitarbeiter', 'Künftiger Personalbestand aus einem geregelten Mitarbeiterregister.', 'Die Quelle ist nicht verbunden; nicht verfügbar bedeutet nicht null Mitarbeiter.', 'Zielquelle · Personalwesen · Mitarbeiterregister.', 'Nicht verfügbar bis zur Anbindung.', 'Öffnet das Mitarbeiterregister.'],
+    ['it-accounts', 'M3S-Konten', 'Anzahl authentifizierter Konten aus dem M3S-Backend.', 'Technische Konten, getrennt von Mitgliedern und Beschäftigten.', 'Authentifizierungs-API · Kontenzähler.', 'Beim Laden des Dashboards aktualisiert.', 'Öffnet das Benutzerregister.'],
+    ['it-documents', 'GED-Dokumente', 'Anzahl der Dokumente aus dem GED-Zähler.', 'Misst Dateien, nicht Ordner oder Speichervolumen.', 'GED-API · Dokumentenzähler.', 'Beim Laden des Dashboards aktualisiert.', 'Öffnet das Dokumentenregister.'],
+    ['it-incidents', 'Offene IT-Vorfälle', 'Künftige Anzahl noch offener IT-Vorfälle.', 'Das Register ist nicht verbunden; kein Wert wird erfunden.', 'Zielquelle · IT & Support · Vorfallregister.', 'Nicht verfügbar bis zur Anbindung.', 'Öffnet Hilfe & Support.'],
+    ['it-storage', 'GED-Speicher', 'Künftiges tatsächlich genutztes Dokumentenspeichervolumen.', 'Nicht verbunden und nicht aus der Dokumentenzahl abzuleiten.', 'Zielquelle · IT & Support · GED-Speichermessung.', 'Nicht verfügbar bis zur Anbindung.', 'Öffnet die IT-&-Support-Übersicht.']
+  ]
+};
+
+Object.keys(supportDictionary).forEach((language) => {
+  supportDictionary[language] = supportDictionary[language].map(([id, label, definition, scope, source, freshness, action]) => ({ id, label, definition, scope, source, freshness, action }));
+});
+
 export const getManagementKpiDefinitions = (language = 'FR') => managementDictionary[language] || managementDictionary.FR;
 
 export const getManagementKpiDefinition = (id, language = 'FR') => (
@@ -423,9 +463,16 @@ export const getOperationsKpiDefinition = (id, language = 'FR') => (
   getOperationsKpiDefinitions(language).find((item) => item.id === id) || null
 );
 
+export const getSupportKpiDefinitions = (language = 'FR') => supportDictionary[language] || supportDictionary.FR;
+
+export const getSupportKpiDefinition = (id, language = 'FR') => (
+  getSupportKpiDefinitions(language).find((item) => item.id === id) || null
+);
+
 export const getDashboardKpiDefinitions = (language = 'FR') => ({
   management: getManagementKpiDefinitions(language),
   finance: getFinanceKpiDefinitions(language),
+  support: getSupportKpiDefinitions(language),
   operations: getOperationsKpiDefinitions(language)
 });
 

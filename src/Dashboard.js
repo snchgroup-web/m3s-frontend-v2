@@ -4,6 +4,7 @@ import { useLanguage } from './LanguageContext';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
   AlertTriangle,
+  BadgeCheck,
   Building2,
   Files,
   FolderKanban,
@@ -13,10 +14,13 @@ import {
   HelpCircle,
   Landmark,
   ListChecks,
+  Network,
   Scale,
+  ServerCog,
   ShoppingCart,
   Truck,
   TrendingDown,
+  UserRoundCheck,
   UserRoundSearch,
   UsersRound,
   Warehouse
@@ -24,7 +28,7 @@ import {
 import api from './api';
 import DashboardPilotageNavigation from './DashboardPilotageNavigation';
 import { getDashboardIndicatorDestination } from './dashboardNavigation';
-import { getFinanceKpiDefinition, getManagementKpiDefinition, getOperationsKpiDefinition } from './dashboardKpiDictionary';
+import { getFinanceKpiDefinition, getManagementKpiDefinition, getOperationsKpiDefinition, getSupportKpiDefinition } from './dashboardKpiDictionary';
 
 // Month translations (stable constants, defined at module level)
 const monthTranslations = {
@@ -188,7 +192,8 @@ const mockDataBaseRaw = {
     realEstate: 'unavailable',
     social: 'unavailable',
     suppliers: 'unavailable',
-    donors: 'unavailable'
+    donors: 'unavailable',
+    members: 'unavailable'
   },
   moduleStats: {
     finance: {
@@ -200,13 +205,13 @@ const mockDataBaseRaw = {
       outstandingBalance: null, outstandingBalanceCfa: null,
       social: null, socialCfa: null, incomeCount: 0, expenseCount: 0
     },
-    rh: { employees: null, volunteers: null, members: null, beneficiaries: null },
+    rh: { employees: null, volunteers: null, members: null, founders: null, associates: null, teams: null, beneficiaries: null },
     crm: { prospects: null, clients: null, donations: null, donors: null, suppliers: null },
     production: { orders: null, completed: null, pending: null, stocks: null },
     actifs: { total: null, depreciation: null },
     ged: { documents: null, recent: null },
     tasks: { total: null, open: null, completed: null, blocked: null, cancelled: null },
-    management: { activeDossiers: null },
+    management: { activeDossiers: null, users: null },
     caseStudies: null
   }
 };
@@ -235,6 +240,9 @@ const Dashboard = () => {
       expenses: 'Dépenses',
       balance: 'Solde',
       employees: 'Employés',
+      founders: 'Membres fondateurs',
+      associates: 'Membres associés',
+      teams: 'Teams',
       volunteers: 'Bénévoles',
       members: 'Membres',
       prospects: 'Prospects',
@@ -287,12 +295,29 @@ const Dashboard = () => {
       managementGroup: 'Management & Gouvernance',
       managementGroupBody: 'Accès, utilisateurs et preuves documentaires transversales.',
       supportGroup: 'Fonctions support',
-      supportGroupBody: 'Indicateurs financiers issus des flux réellement disponibles.',
+      supportGroupBody: 'Indicateurs locaux essentiels de Finances, Ressources Humaines et IT & Support.',
+      supportFinanceGroup: 'Fonctions support · Finances',
+      supportFinanceGroupBody: 'Flux financiers réellement disponibles, sans valeur de démonstration.',
+      supportRhGroup: 'Fonctions support · Ressources Humaines',
+      supportRhGroupBody: 'Composition institutionnelle issue de l’annuaire gouverné ; les employés restent distincts des membres.',
+      supportItGroup: 'Fonctions support · IT & Support',
+      supportItGroupBody: 'Comptes et documents raccordés ; incidents et stockage restent à connecter.',
+      operationsCommercialGroup: 'Opérations & Développement · Commercial & CRM',
+      operationsProductionGroup: 'Opérations & Développement · Production',
+      operationsAssetsGroup: 'Opérations & Développement · Stock & Actifs',
       operationsGroup: 'Opérations & Développement',
       operationsGroupBody: 'Activité métier et relations opérationnelles, avec sources absentes signalées.',
       available: 'Disponible',
       sourceToConnect: 'À connecter',
       authenticationAccounts: 'M3S · Comptes authentifiés',
+      membersDirectory: 'RH · Annuaire gouverné des membres',
+      employeesRegister: 'RH · Registre des employés à raccorder',
+      itAccounts: 'Comptes M3S',
+      itDocuments: 'Documents GED',
+      itIncidents: 'Incidents IT ouverts',
+      itStorage: 'Stockage GED',
+      itIncidentSource: 'IT & Support · Registre des incidents à raccorder',
+      itStorageSource: 'IT & Support · Mesure du stockage à raccorder',
       administrationTasks: 'Administration · Registre des tâches',
       gedDocuments: 'GED · Documents',
       financeIncome: 'Finance · Recettes',
@@ -323,6 +348,9 @@ const Dashboard = () => {
       expenses: 'Expenses',
       balance: 'Balance',
       employees: 'Employees',
+      founders: 'Founding members',
+      associates: 'Associate members',
+      teams: 'Teams',
       volunteers: 'Volunteers',
       members: 'Members',
       prospects: 'Prospects',
@@ -375,12 +403,29 @@ const Dashboard = () => {
       managementGroup: 'Management & Governance',
       managementGroupBody: 'Cross-functional access, users and documentary evidence.',
       supportGroup: 'Support functions',
-      supportGroupBody: 'Financial indicators drawn from genuinely available flows.',
+      supportGroupBody: 'Essential local indicators from Finance, Human Resources and IT & Support.',
+      supportFinanceGroup: 'Support functions · Finance',
+      supportFinanceGroupBody: 'Genuinely available financial flows, without demonstration values.',
+      supportRhGroup: 'Support functions · Human Resources',
+      supportRhGroupBody: 'Institutional composition from the governed directory; employees remain distinct from members.',
+      supportItGroup: 'Support functions · IT & Support',
+      supportItGroupBody: 'Accounts and documents are connected; incidents and storage remain to connect.',
+      operationsCommercialGroup: 'Operations & Development · Commercial & CRM',
+      operationsProductionGroup: 'Operations & Development · Production',
+      operationsAssetsGroup: 'Operations & Development · Stock & Assets',
       operationsGroup: 'Operations & Development',
       operationsGroupBody: 'Business activity and operational relationships, with missing sources clearly marked.',
       available: 'Available',
       sourceToConnect: 'To connect',
       authenticationAccounts: 'M3S · Authenticated accounts',
+      membersDirectory: 'HR · Governed member directory',
+      employeesRegister: 'HR · Employee register to connect',
+      itAccounts: 'M3S accounts',
+      itDocuments: 'DMS documents',
+      itIncidents: 'Open IT incidents',
+      itStorage: 'DMS storage',
+      itIncidentSource: 'IT & Support · Incident register to connect',
+      itStorageSource: 'IT & Support · Storage measure to connect',
       administrationTasks: 'Administration · Task register',
       gedDocuments: 'Document Management · Documents',
       financeIncome: 'Finance · Income',
@@ -411,6 +456,9 @@ const Dashboard = () => {
       expenses: 'Ausgaben',
       balance: 'Saldo',
       employees: 'Mitarbeiter',
+      founders: 'Gründungsmitglieder',
+      associates: 'Assoziierte Mitglieder',
+      teams: 'Teams',
       volunteers: 'Freiwillige',
       members: 'Mitglieder',
       prospects: 'Aussichten',
@@ -463,12 +511,29 @@ const Dashboard = () => {
       managementGroup: 'Management & Governance',
       managementGroupBody: 'Funktionsübergreifende Zugänge, Benutzer und Dokumentennachweise.',
       supportGroup: 'Unterstützungsfunktionen',
-      supportGroupBody: 'Finanzkennzahlen aus tatsächlich verfügbaren Datenflüssen.',
+      supportGroupBody: 'Wesentliche lokale Kennzahlen aus Finanzen, Personalwesen und IT & Support.',
+      supportFinanceGroup: 'Unterstützungsfunktionen · Finanzen',
+      supportFinanceGroupBody: 'Tatsächlich verfügbare Finanzflüsse ohne Demowerte.',
+      supportRhGroup: 'Unterstützungsfunktionen · Personalwesen',
+      supportRhGroupBody: 'Institutionelle Zusammensetzung aus dem geregelten Verzeichnis; Beschäftigte bleiben von Mitgliedern getrennt.',
+      supportItGroup: 'Unterstützungsfunktionen · IT & Support',
+      supportItGroupBody: 'Konten und Dokumente sind verbunden; Vorfälle und Speicher bleiben anzubinden.',
+      operationsCommercialGroup: 'Betrieb & Entwicklung · Vertrieb & CRM',
+      operationsProductionGroup: 'Betrieb & Entwicklung · Produktion',
+      operationsAssetsGroup: 'Betrieb & Entwicklung · Bestand & Aktiven',
       operationsGroup: 'Betrieb & Entwicklung',
       operationsGroupBody: 'Fachliche Aktivität und operative Beziehungen; fehlende Quellen sind klar gekennzeichnet.',
       available: 'Verfügbar',
       sourceToConnect: 'Zu verbinden',
       authenticationAccounts: 'M3S · Authentifizierte Konten',
+      membersDirectory: 'Personalwesen · Geregeltes Mitgliederverzeichnis',
+      employeesRegister: 'Personalwesen · Mitarbeiterregister anzubinden',
+      itAccounts: 'M3S-Konten',
+      itDocuments: 'GED-Dokumente',
+      itIncidents: 'Offene IT-Vorfälle',
+      itStorage: 'GED-Speicher',
+      itIncidentSource: 'IT & Support · Vorfallregister anzubinden',
+      itStorageSource: 'IT & Support · Speichermessung anzubinden',
       administrationTasks: 'Verwaltung · Aufgabenregister',
       gedDocuments: 'Dokumentenverwaltung · Dokumente',
       financeIncome: 'Finanzen · Einnahmen',
@@ -516,7 +581,7 @@ const Dashboard = () => {
       try {
         setLoading(true);
 
-        const [financeDashboard, documentsCount, inventoryCount, tasksCount, authAccountsCount, portfolioSummary, income, expenses, fx, socialResult, realEstateResult, suppliersResult, beneficiariesResult, donorsResult] = await Promise.all([
+        const [financeDashboard, documentsCount, inventoryCount, tasksCount, authAccountsCount, portfolioSummary, income, expenses, fx, socialResult, realEstateResult, suppliersResult, beneficiariesResult, donorsResult, membersResult] = await Promise.all([
           withApiFallback(() => api.getFinanceDashboard()),
           withApiFallback(() => api.getDocumentsCount()),
           withApiFallback(() => api.getInventoryCount()),
@@ -530,7 +595,8 @@ const Dashboard = () => {
           withApiResult(() => api.getRealEstateFinance(200, 0)),
           withApiResult(() => api.getSuppliersCount()),
           withApiResult(() => api.getBeneficiariesCount()),
-          withApiResult(() => api.getDonorsCount())
+          withApiResult(() => api.getDonorsCount()),
+          withApiResult(() => api.getMembersDirectory(100, 0))
         ]);
 
         const social = socialResult.data;
@@ -538,6 +604,7 @@ const Dashboard = () => {
         const suppliers = suppliersResult.data;
         const beneficiaries = beneficiariesResult.data;
         const donors = donorsResult.data;
+        const membersDirectory = membersResult.data;
         const incomeAvailable = Array.isArray(income?.data);
         const expensesAvailable = Array.isArray(expenses?.data);
         const incomeRows = incomeAvailable ? income.data : [];
@@ -601,6 +668,10 @@ const Dashboard = () => {
         const suppliersAvailable = hasApiNumber(suppliers?.total);
         const beneficiariesAvailable = hasApiNumber(beneficiaries?.total);
         const donorsAvailable = hasApiNumber(donors?.total);
+        const membersAvailable = hasApiNumber(membersDirectory?.total) && Array.isArray(membersDirectory?.data);
+        const memberRows = membersAvailable ? membersDirectory.data.filter((row) => row?.active !== false) : [];
+        const membersComplete = membersAvailable && membersDirectory.data.length === Number(membersDirectory.total);
+        const normalizedMemberType = (value) => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
         const inventoryTotal = inventoryAvailable ? Number(inventoryCount.total) : null;
         const documentsTotal = documentsAvailable ? Number(documentsCount.total) : null;
         const tasksTotal = tasksAvailable ? Number(tasksCount.total) : null;
@@ -613,6 +684,10 @@ const Dashboard = () => {
         const suppliersTotal = suppliersAvailable ? Number(suppliers.total) : null;
         const beneficiariesTotal = beneficiariesAvailable ? Number(beneficiaries.total) : null;
         const donorsTotal = donorsAvailable ? Number(donors.total) : null;
+        const membersTotal = membersAvailable ? Number(membersDirectory.total) : null;
+        const foundersTotal = membersComplete ? memberRows.filter((row) => normalizedMemberType(row.member_type) === 'fondateur').length : null;
+        const associatesTotal = membersComplete ? memberRows.filter((row) => normalizedMemberType(row.member_type) === 'associe').length : null;
+        const teamsTotal = membersComplete ? new Set(memberRows.map((row) => String(row.team || '').trim()).filter(Boolean)).size : null;
         const financeAvailable = [totalIncome, totalIncomeCfa, totalExpenses, totalExpensesCfa].every(Number.isFinite);
         const apiUnavailable = [
           financeDashboard,
@@ -636,6 +711,7 @@ const Dashboard = () => {
           || (!suppliersAvailable && suppliersResult.errorStatus !== 403)
           || (!beneficiariesAvailable && beneficiariesResult.errorStatus !== 403)
           || (!donorsAvailable && donorsResult.errorStatus !== 403)
+          || (!membersAvailable && membersResult.errorStatus !== 403)
           || fx?.success === false;
         setDataWarning(apiUnavailable);
 
@@ -671,7 +747,8 @@ const Dashboard = () => {
             social: socialAvailable ? 'available' : socialResult.errorStatus === 403 ? 'restricted' : 'unavailable',
             suppliers: suppliersAvailable ? 'available' : suppliersResult.errorStatus === 403 ? 'restricted' : 'unavailable',
             beneficiaries: beneficiariesAvailable ? 'available' : beneficiariesResult.errorStatus === 403 ? 'restricted' : 'unavailable',
-            donors: donorsAvailable ? 'available' : donorsResult.errorStatus === 403 ? 'restricted' : 'unavailable'
+            donors: donorsAvailable ? 'available' : donorsResult.errorStatus === 403 ? 'restricted' : 'unavailable',
+            members: membersAvailable ? 'available' : membersResult.errorStatus === 403 ? 'restricted' : 'unavailable'
           },
           moduleStats: {
             ...mockDataBase.moduleStats,
@@ -722,12 +799,16 @@ const Dashboard = () => {
             },
             rh: {
               ...mockDataBase.moduleStats.rh,
-              members: usersTotal,
+              members: membersTotal,
+              founders: foundersTotal,
+              associates: associatesTotal,
+              teams: teamsTotal,
               beneficiaries: beneficiariesTotal
             },
             management: {
               ...mockDataBase.moduleStats.management,
-              activeDossiers
+              activeDossiers,
+              users: usersTotal
             }
           }
         });
@@ -822,6 +903,11 @@ const Dashboard = () => {
     helpLabel: t.explainIndicator,
     onHelp: () => handleIndicatorHelp(indicatorId)
   });
+  const supportKpiHelp = indicatorId => ({
+    definition: getSupportKpiDefinition(indicatorId, language)?.definition,
+    helpLabel: t.explainIndicator,
+    onHelp: () => handleIndicatorHelp(indicatorId)
+  });
   const kpiGroups = [
     {
       id: 'management',
@@ -837,7 +923,7 @@ const Dashboard = () => {
           helpLabel: t.explainIndicator, onHelp: () => handleIndicatorHelp('active-major-files')
         },
         {
-          id: 'users', label: t.m3sUsers, value: formatCount(dashboardData?.moduleStats.rh.members),
+          id: 'users', label: t.m3sUsers, value: formatCount(dashboardData?.moduleStats.management.users),
           secondary: dashboardData?.sourceStatus.users === 'available' ? t.activeAccounts : null,
           source: t.authenticationAccounts, ...sourceState('users'), icon: UsersRound, accent: 'violet',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('users'),
@@ -867,9 +953,9 @@ const Dashboard = () => {
       ]
     },
     {
-      id: 'support',
-      title: t.supportGroup,
-      description: t.supportGroupBody,
+      id: 'support-finance',
+      title: t.supportFinanceGroup,
+      description: t.supportFinanceGroupBody,
       gridClass: 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4',
       cards: [
         {
@@ -920,26 +1006,76 @@ const Dashboard = () => {
       ]
     },
     {
-      id: 'operations',
-      title: t.operationsGroup,
-      description: t.operationsGroupBody,
-      gridClass: 'grid-cols-2 sm:grid-cols-3 xl:grid-cols-6',
+      id: 'support-rh',
+      title: t.supportRhGroup,
+      description: t.supportRhGroupBody,
+      gridClass: 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-5',
       cards: [
         {
-          id: 'stocks', label: t.stocks, value: formatCount(dashboardData?.moduleStats.production.stocks),
-          secondary: dashboardData?.sourceStatus.inventory === 'available' ? t.quantity : null,
-          source: t.assetsInventory, ...sourceState('inventory'), icon: Warehouse, accent: 'rose',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('stocks'), ...operationsKpiHelp('stocks')
+          id: 'members', label: t.members, value: formatCount(dashboardData?.moduleStats.rh.members),
+          source: t.membersDirectory, ...sourceState('members'), icon: UsersRound, accent: 'violet',
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('members'), ...supportKpiHelp('members')
         },
+        {
+          id: 'founders', label: t.founders, value: formatCount(dashboardData?.moduleStats.rh.founders),
+          source: t.membersDirectory, ...sourceState('members'), icon: BadgeCheck, accent: 'blue',
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('founders'), ...supportKpiHelp('founders')
+        },
+        {
+          id: 'associates', label: t.associates, value: formatCount(dashboardData?.moduleStats.rh.associates),
+          source: t.membersDirectory, ...sourceState('members'), icon: UserRoundCheck, accent: 'cyan',
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('associates'), ...supportKpiHelp('associates')
+        },
+        {
+          id: 'teams', label: t.teams, value: formatCount(dashboardData?.moduleStats.rh.teams),
+          source: t.membersDirectory, ...sourceState('members'), icon: Network, accent: 'teal',
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('teams'), ...supportKpiHelp('teams')
+        },
+        {
+          id: 'employees', label: t.employees, value: formatCount(dashboardData?.moduleStats.rh.employees),
+          source: t.employeesRegister, ...disconnectedState, icon: UsersRound, accent: 'amber',
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('employees'), ...supportKpiHelp('employees')
+        }
+      ]
+    },
+    {
+      id: 'support-it',
+      title: t.supportItGroup,
+      description: t.supportItGroupBody,
+      gridClass: 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4',
+      cards: [
+        {
+          id: 'it-accounts', label: t.itAccounts, value: formatCount(dashboardData?.moduleStats.management.users),
+          source: t.authenticationAccounts, ...sourceState('users'), icon: UsersRound, accent: 'violet',
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('it-accounts'), ...supportKpiHelp('it-accounts')
+        },
+        {
+          id: 'it-documents', label: t.itDocuments, value: formatCount(dashboardData?.moduleStats.ged.documents),
+          source: t.gedDocuments, ...sourceState('documents'), icon: Files, accent: 'pink',
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('it-documents'), ...supportKpiHelp('it-documents')
+        },
+        {
+          id: 'it-incidents', label: t.itIncidents, value: '—',
+          source: t.itIncidentSource, ...disconnectedState, icon: ServerCog, accent: 'red',
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('it-incidents'), ...supportKpiHelp('it-incidents')
+        },
+        {
+          id: 'it-storage', label: t.itStorage, value: '—',
+          source: t.itStorageSource, ...disconnectedState, icon: ServerCog, accent: 'sky',
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('it-storage'), ...supportKpiHelp('it-storage')
+        }
+      ]
+    },
+    {
+      id: 'operations-commercial',
+      title: t.operationsCommercialGroup,
+      description: t.operationsGroupBody,
+      gridClass: 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4',
+      cards: [
         {
           id: 'clients', label: t.clients, value: formatCount(dashboardData?.moduleStats.crm.clients),
           source: t.notConnected, ...disconnectedState, icon: UserRoundSearch, accent: 'teal',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('clients'), ...operationsKpiHelp('clients')
-        },
-        {
-          id: 'orders', label: t.orders, value: formatCount(dashboardData?.moduleStats.production.orders),
-          source: t.notConnected, ...disconnectedState, icon: ShoppingCart, accent: 'lime',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('orders'), ...operationsKpiHelp('orders')
         },
         {
           id: 'beneficiaries', label: t.beneficiaries, value: formatCount(dashboardData?.moduleStats.rh.beneficiaries),
@@ -950,11 +1086,38 @@ const Dashboard = () => {
           id: 'donors', label: t.donors, value: formatCount(dashboardData?.moduleStats.crm.donors),
           source: t.donorSource, ...sourceState('donors'), icon: Gift, accent: 'pink',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('donors'), ...operationsKpiHelp('donors')
+        }
+      ]
+    },
+    {
+      id: 'operations-production',
+      title: t.operationsProductionGroup,
+      description: t.operationsGroupBody,
+      gridClass: 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3',
+      cards: [
+        {
+          id: 'orders', label: t.orders, value: formatCount(dashboardData?.moduleStats.production.orders),
+          source: t.notConnected, ...disconnectedState, icon: ShoppingCart, accent: 'lime',
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('orders'), ...operationsKpiHelp('orders')
         },
         {
           id: 'suppliers', label: t.suppliers, value: formatCount(dashboardData?.moduleStats.crm.suppliers),
           source: t.supplierSources, ...sourceState('suppliers'), icon: Truck, accent: 'sky',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('suppliers'), ...operationsKpiHelp('suppliers')
+        }
+      ]
+    },
+    {
+      id: 'operations-assets',
+      title: t.operationsAssetsGroup,
+      description: t.operationsGroupBody,
+      gridClass: 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3',
+      cards: [
+        {
+          id: 'stocks', label: t.stocks, value: formatCount(dashboardData?.moduleStats.production.stocks),
+          secondary: dashboardData?.sourceStatus.inventory === 'available' ? t.quantity : null,
+          source: t.assetsInventory, ...sourceState('inventory'), icon: Warehouse, accent: 'rose',
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('stocks'), ...operationsKpiHelp('stocks')
         }
       ]
     }

@@ -17,6 +17,7 @@ import StockAssetsGlossary from './StockAssetsGlossary';
 import { StandardCreateButton } from './StandardUI';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
 import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
+import FunctionAssistant from './FunctionAssistant';
 
 const CATEGORY_VALUES = [
   'Véhicule',
@@ -244,7 +245,7 @@ const Actifs = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
-    setActiveTab(['overview', 'architecture', 'processes', 'inventory', 'immobilisations', 'risques', 'resources', 'glossary'].includes(tab) ? tab : 'overview');
+    setActiveTab(['overview', 'architecture', 'processes', 'inventory', 'immobilisations', 'risques', 'assistant', 'resources', 'glossary'].includes(tab) ? tab : 'overview');
   }, [location.search]);
 
   const selectTab = (tab) => {
@@ -687,6 +688,8 @@ const Actifs = () => {
             <FunctionResourcesOverview moduleId="stock" language={language} onSelectTab={selectTab} />
           )}
 
+          {!loading && activeTab === 'assistant' && <FunctionAssistant moduleId="stock" language={language} />}
+
           {!loading && activeTab === 'architecture' && (
             <FunctionArchitectureOverview moduleId="stock" language={language} />
           )}
@@ -699,7 +702,7 @@ const Actifs = () => {
             <StockAssetsGlossary language={language} />
           )}
 
-          <ChildTabPlaceholder moduleId="stock" language={language} activeTab={activeTab} handledTabs={['inventory', 'overview', 'architecture', 'processes', 'immobilisations', 'risques', 'resources', 'glossary']} />
+          <ChildTabPlaceholder moduleId="stock" language={language} activeTab={activeTab} handledTabs={['inventory', 'overview', 'architecture', 'processes', 'immobilisations', 'risques', 'assistant', 'resources', 'glossary']} />
         </div>
       </div>
 

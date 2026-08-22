@@ -24,6 +24,7 @@ import api from './api';
 import { isLegacyBuCode, translateDas } from './strategicMapping';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
 import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
+import FunctionAssistant from './FunctionAssistant';
 
 const dictionaries = {
   FR: {
@@ -335,7 +336,7 @@ const valueLabels = {
 };
 
 const chartColors = ['#38bdf8', '#34d399', '#f59e0b', '#a78bfa', '#fb7185', '#22d3ee'];
-const tabs = ['overview', 'architecture', 'processes', 'prospects', 'clients', 'ventes', 'dons', 'beneficiaires', 'resources', 'glossary'];
+const tabs = ['overview', 'architecture', 'processes', 'prospects', 'clients', 'ventes', 'dons', 'beneficiaires', 'assistant', 'resources', 'glossary'];
 
 const designationTerms = {
   EN: [
@@ -937,6 +938,8 @@ const CRM = () => {
         )}
 
         {activeTab === 'resources' && <FunctionResourcesOverview moduleId="commercial" language={language} onSelectTab={selectTab} />}
+
+        {activeTab === 'assistant' && <FunctionAssistant moduleId="commercial" language={language} />}
 
         {activeTab === 'glossary' && <CRMGlossary language={language} />}
 
