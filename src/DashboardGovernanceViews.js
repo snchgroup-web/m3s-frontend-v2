@@ -60,7 +60,22 @@ const copy = {
         'expense_id et inventory_movement_id restent deux objets distincts reliés à l’achat.',
         'ged_document_id rattache offre, facture, paiement, livraison et réception à leurs preuves.'
       ],
-      pilotBoundary: 'Prochaine décision : valider les objets, identifiants, cardinalités et propriétaires de source avant toute évolution de schéma.'
+      pilotBoundary: 'Prochaine décision : valider les objets, identifiants, cardinalités et propriétaires de source avant toute évolution de schéma.',
+      pilotContractTitle: 'Contrat relationnel candidat à arbitrer',
+      pilotContractStatus: 'Proposition · aucune implémentation',
+      pilotContractBody: 'Chaque ligne propose une responsabilité de source et une cardinalité. Elle ne crée ni clé, ni table, ni migration.',
+      pilotOwner: 'Propriétaire candidat',
+      pilotCardinality: 'Cardinalité candidate',
+      pilotContracts: [
+        ['purchase_case_id', 'Dossier transverse de l’achat', 'Registre Achat & approvisionnement · pilotage métier Production', '1 dossier → 0..n dépenses, 0..n mouvements et 0..n documents ; 0..n fournisseurs candidats puis 0..1 retenu.'],
+        ['supplier_id', 'Identité gouvernée du fournisseur', 'Production · registre Fournisseurs', '1 fournisseur → 0..n dossiers d’achat ; un seul rôle fournisseur retenu par dossier.'],
+        ['expense_id', 'Écriture financière liée à l’achat', 'Finances · registre Dépenses', '1 dossier → 0..n dépenses ; chaque dépense d’achat → 1 dossier. Les historiques non qualifiés peuvent rester sans lien.'],
+        ['inventory_movement_id', 'Entrée ou mouvement de stock issu de l’achat', 'Stock & Actifs · registre Inventaire', '1 dossier → 0..n mouvements ; chaque mouvement d’acquisition → 1 dossier. Un service peut n’en produire aucun.'],
+        ['ged_document_id', 'Pièce ou preuve documentaire', 'IT & Support · GED', '1 dossier → 0..n documents ; un document peut prouver plusieurs objets par des liens gouvernés.']
+      ],
+      pilotLifecycleTitle: 'Cycle candidat du dossier d’achat',
+      pilotLifecycleBody: 'Ce statut appartient au dossier d’achat. Il ne remplace pas les statuts propres aux dépenses, paiements, mouvements de stock ou documents.',
+      pilotLifecycle: ['Brouillon', 'À autoriser', 'Autorisé', 'Commandé', 'Réception partielle', 'Réception sous réserve', 'Réceptionné', 'Clôturé', 'Annulé']
     },
     processes: {
       eyebrow: 'MÉTHODE COMMUNE',
@@ -122,7 +137,22 @@ const copy = {
       pilotObserved: 'Observed today', pilotTarget: 'Candidate target',
       pilotObservedItems: ['Expense: supplier, amounts, Team, Agent and project phase as values.', 'Stock: supplier, quantities and purchase amounts in a separate register.', 'Supplier view: matching derived from normalised names, without a shared supplier key.', 'DMS evidence: no consistent reference in generic financial entries.'],
       pilotTargetItems: ['purchase_case_id links the file, project, phase and authorised task.', 'supplier_id identifies the supplier without replacing its display name.', 'expense_id and inventory_movement_id remain two distinct objects linked to the purchase.', 'ged_document_id links offer, invoice, payment, delivery and acceptance to their evidence.'],
-      pilotBoundary: 'Next decision: validate objects, identifiers, cardinalities and source owners before any schema change.'
+      pilotBoundary: 'Next decision: validate objects, identifiers, cardinalities and source owners before any schema change.',
+      pilotContractTitle: 'Candidate relationship contract to arbitrate',
+      pilotContractStatus: 'Proposal · no implementation',
+      pilotContractBody: 'Each row proposes a source owner and a cardinality. It creates no key, table or migration.',
+      pilotOwner: 'Candidate owner',
+      pilotCardinality: 'Candidate cardinality',
+      pilotContracts: [
+        ['purchase_case_id', 'Cross-functional purchasing case', 'Purchasing & procurement register · Production business stewardship', '1 case → 0..n expenses, 0..n movements and 0..n documents; 0..n candidate suppliers then 0..1 selected.'],
+        ['supplier_id', 'Governed supplier identity', 'Production · Supplier register', '1 supplier → 0..n purchase cases; one selected-supplier role per case.'],
+        ['expense_id', 'Financial entry linked to the purchase', 'Finance · Expense register', '1 case → 0..n expenses; each purchase expense → 1 case. Unqualified legacy entries may remain unlinked.'],
+        ['inventory_movement_id', 'Stock entry or movement resulting from the purchase', 'Stock & Assets · Inventory register', '1 case → 0..n movements; each acquisition movement → 1 case. A service may create none.'],
+        ['ged_document_id', 'Document or supporting evidence', 'IT & Support · DMS', '1 case → 0..n documents; one document may evidence several objects through governed links.']
+      ],
+      pilotLifecycleTitle: 'Candidate purchasing-case lifecycle',
+      pilotLifecycleBody: 'This status belongs to the purchasing case. It does not replace the statuses of expenses, payments, stock movements or documents.',
+      pilotLifecycle: ['Draft', 'Pending authorisation', 'Authorised', 'Ordered', 'Partial receipt', 'Receipt with reservations', 'Received', 'Closed', 'Cancelled']
     },
     processes: {
       eyebrow: 'COMMON METHOD', title: 'Processes & Controls', body: 'Global steering harmonises cross-functional controls. Detailed procedures remain governed within each function.',
@@ -156,7 +186,22 @@ const copy = {
       pilotObserved: 'Heute beobachtet', pilotTarget: 'Kandidatenziel',
       pilotObservedItems: ['Ausgabe: Lieferant, Beträge, Team, Agent und Projektphase als Werte.', 'Bestand: Lieferant, Mengen und Einkaufsbeträge in einem getrennten Register.', 'Lieferantenansicht: Ableitung über normalisierte Namen ohne gemeinsamen Lieferantenschlüssel.', 'GED-Nachweis: keine einheitliche Referenz in allgemeinen Finanzbuchungen.'],
       pilotTargetItems: ['purchase_case_id verbindet Dossier, Projekt, Phase und autorisierte Aufgabe.', 'supplier_id identifiziert den Lieferanten, ohne seinen Anzeigenamen zu ersetzen.', 'expense_id und inventory_movement_id bleiben zwei getrennte, mit dem Einkauf verbundene Objekte.', 'ged_document_id verbindet Angebot, Rechnung, Zahlung, Lieferung und Abnahme mit ihren Nachweisen.'],
-      pilotBoundary: 'Nächste Entscheidung: Objekte, Kennungen, Kardinalitäten und Quellenverantwortliche vor jeder Schemaänderung validieren.'
+      pilotBoundary: 'Nächste Entscheidung: Objekte, Kennungen, Kardinalitäten und Quellenverantwortliche vor jeder Schemaänderung validieren.',
+      pilotContractTitle: 'Zu entscheidender Kandidatenvertrag der Beziehungen',
+      pilotContractStatus: 'Vorschlag · keine Implementierung',
+      pilotContractBody: 'Jede Zeile schlägt eine Quellenverantwortung und eine Kardinalität vor. Sie erzeugt weder Schlüssel noch Tabelle oder Migration.',
+      pilotOwner: 'Vorgeschlagene Verantwortung',
+      pilotCardinality: 'Vorgeschlagene Kardinalität',
+      pilotContracts: [
+        ['purchase_case_id', 'Funktionsübergreifendes Einkaufsdossier', 'Register Einkauf & Beschaffung · fachliche Steuerung Produktion', '1 Dossier → 0..n Ausgaben, 0..n Bewegungen und 0..n Dokumente; 0..n Lieferantenkandidaten, danach 0..1 ausgewählt.'],
+        ['supplier_id', 'Geregelte Lieferantenidentität', 'Produktion · Lieferantenregister', '1 Lieferant → 0..n Einkaufsdossiers; eine ausgewählte Lieferantenrolle je Dossier.'],
+        ['expense_id', 'Mit dem Einkauf verbundene Finanzausgabe', 'Finanzen · Ausgabenregister', '1 Dossier → 0..n Ausgaben; jede Einkaufsausgabe → 1 Dossier. Nicht qualifizierte Altbestände können unverknüpft bleiben.'],
+        ['inventory_movement_id', 'Bestandszugang oder -bewegung aus dem Einkauf', 'Bestand & Aktiva · Inventarregister', '1 Dossier → 0..n Bewegungen; jede Beschaffungsbewegung → 1 Dossier. Eine Dienstleistung kann keine erzeugen.'],
+        ['ged_document_id', 'Dokument oder Nachweis', 'IT & Support · GED', '1 Dossier → 0..n Dokumente; ein Dokument kann mehrere Objekte über geregelte Verknüpfungen belegen.']
+      ],
+      pilotLifecycleTitle: 'Kandidatenzyklus des Einkaufsdossiers',
+      pilotLifecycleBody: 'Dieser Status gehört zum Einkaufsdossier. Er ersetzt nicht die eigenen Status von Ausgaben, Zahlungen, Bestandsbewegungen oder Dokumenten.',
+      pilotLifecycle: ['Entwurf', 'Zur Freigabe', 'Freigegeben', 'Bestellt', 'Teilweise erhalten', 'Annahme mit Vorbehalt', 'Angenommen', 'Abgeschlossen', 'Storniert']
     },
     processes: {
       eyebrow: 'GEMEINSAME METHODE', title: 'Prozesse & Kontrollen', body: 'Die globale Steuerung harmonisiert funktionsübergreifende Kontrollen. Detaillierte Verfahren bleiben in jeder Funktion geregelt.',
@@ -244,6 +289,39 @@ const ArchitectureView = ({ data }) => {
           ))}
         </div>
         <p className="mt-3 rounded-md border border-amber-700/70 bg-amber-950/15 px-3 py-2 text-sm leading-5 text-amber-100">{data.pilotBoundary}</p>
+        <section className="mt-4 rounded-md border border-cyan-800/70 bg-cyan-950/10 p-3" aria-labelledby="purchase-candidate-contract">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h5 id="purchase-candidate-contract" className="text-sm font-semibold text-slate-100">{data.pilotContractTitle}</h5>
+              <p className="mt-1 max-w-4xl text-sm leading-5 text-slate-400">{data.pilotContractBody}</p>
+            </div>
+            <span className="rounded-md border border-amber-600/70 bg-amber-950/20 px-2.5 py-1 text-xs font-semibold text-amber-200">{data.pilotContractStatus}</span>
+          </div>
+          <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">
+            {data.pilotContracts.map(([identifier, role, owner, cardinality]) => (
+              <article key={identifier} className="m3s-raised min-w-0 p-3">
+                <code className="break-all text-sm font-semibold text-cyan-300">{identifier}</code>
+                <p className="mt-2 text-sm font-semibold text-slate-100">{role}</p>
+                <dl className="mt-3 space-y-3 text-sm">
+                  <div><dt className="text-xs font-semibold uppercase text-slate-500">{data.pilotOwner}</dt><dd className="mt-1 leading-5 text-slate-300">{owner}</dd></div>
+                  <div><dt className="text-xs font-semibold uppercase text-slate-500">{data.pilotCardinality}</dt><dd className="mt-1 leading-5 text-slate-300">{cardinality}</dd></div>
+                </dl>
+              </article>
+            ))}
+          </div>
+          <div className="m3s-raised mt-4 p-3">
+            <h6 className="text-sm font-semibold text-slate-100">{data.pilotLifecycleTitle}</h6>
+            <p className="mt-1 max-w-4xl text-sm leading-5 text-slate-400">{data.pilotLifecycleBody}</p>
+            <ol className="mt-3 flex flex-wrap gap-2">
+              {data.pilotLifecycle.map((status, index) => (
+                <li key={status} className="inline-flex min-h-9 items-center gap-2 rounded-md border border-slate-700 px-2.5 py-1.5 text-sm text-slate-300">
+                  <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded bg-cyan-950 text-xs font-semibold text-cyan-300">{index + 1}</span>
+                  {status}
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
       </section>
     </div>
   );
