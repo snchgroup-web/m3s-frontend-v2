@@ -280,6 +280,15 @@ test('opens the four governed global views without confusing architecture with t
   expect(screen.getByText(/chaque commande ou lot → exactement 1 dossier et 1 fournisseur retenu/)).toBeInTheDocument();
   expect(screen.getByText('Une réception partielle ne clôture ni le reliquat à livrer ni les obligations restantes.')).toBeInTheDocument();
   expect(screen.getByText(/Une réserve ouverte empêche une clôture non qualifiée, mais ne détermine ni ne modifie automatiquement le paiement/)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Cycle candidat d’une réserve' })).toBeInTheDocument();
+  expect(screen.getByText('Action corrective en cours')).toBeInTheDocument();
+  expect(screen.getByText('À vérifier')).toBeInTheDocument();
+  expect(screen.getByText('Levée')).toBeInTheDocument();
+  expect(screen.getByText('Maintenue')).toBeInTheDocument();
+  expect(screen.getByText('Annulée')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Trace minimale candidate' })).toBeInTheDocument();
+  expect(screen.getByText('Preuves avant et après, référencées dans la GED')).toBeInTheDocument();
+  expect(screen.getByText('Décision, auteur, date et motif du dernier état')).toBeInTheDocument();
   expect(screen.queryByText('Carte mentale globale des fonctions')).not.toBeInTheDocument();
 
   fireEvent.click(screen.getByRole('tab', { name: 'Processus & Contrôles' }));

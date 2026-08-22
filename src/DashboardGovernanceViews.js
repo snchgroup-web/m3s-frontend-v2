@@ -102,6 +102,25 @@ const copy = {
         'Une réception partielle ne clôture ni le reliquat à livrer ni les obligations restantes.',
         'Une réserve ouverte empêche une clôture non qualifiée, mais ne détermine ni ne modifie automatiquement le paiement.',
         'Le bon, le PV, les photos, les tests et les preuves de réserve restent dans la GED, reliés à l’objet qu’ils prouvent.'
+      ],
+      pilotReservationLifecycleTitle: 'Cycle candidat d’une réserve',
+      pilotReservationLifecycleBody: 'Production tient l’état métier. La levée ou le maintien exige un contrôle tracé par la personne autorisée selon le dossier et la délégation applicable.',
+      pilotReservationLifecycle: [
+        ['Ouverte', 'Constat enregistré et action attendue.'],
+        ['Action corrective en cours', 'Responsable et échéance connus.'],
+        ['À vérifier', 'Correction déclarée, contrôle restant à effectuer.'],
+        ['Levée', 'Contrôle concluant et décision tracée.'],
+        ['Maintenue', 'Écart encore présent après contrôle.'],
+        ['Annulée', 'Doublon ou création erronée, motif conservé.']
+      ],
+      pilotReservationEvidenceTitle: 'Trace minimale candidate',
+      pilotReservationEvidence: [
+        'Constat, date et objet concerné',
+        'Responsable de l’action et échéance',
+        'Action corrective attendue ou réalisée',
+        'Preuves avant et après, référencées dans la GED',
+        'Résultat du contrôle et reliquat éventuel',
+        'Décision, auteur, date et motif du dernier état'
       ]
     },
     processes: {
@@ -206,6 +225,25 @@ const copy = {
         'A partial receipt closes neither the outstanding delivery nor the remaining obligations.',
         'An open reservation prevents unqualified closure, but does not automatically determine or modify payment.',
         'The delivery note, report, photos, tests and reservation evidence remain in the DMS, linked to the object they evidence.'
+      ],
+      pilotReservationLifecycleTitle: 'Candidate reservation lifecycle',
+      pilotReservationLifecycleBody: 'Production maintains the business status. Clearance or maintenance requires a recorded control by the authorised person according to the case and applicable delegation.',
+      pilotReservationLifecycle: [
+        ['Open', 'Finding recorded and action expected.'],
+        ['Corrective action in progress', 'Responsible party and deadline known.'],
+        ['Pending verification', 'Correction declared, control still to be performed.'],
+        ['Cleared', 'Successful control and recorded decision.'],
+        ['Maintained', 'Deviation still present after control.'],
+        ['Cancelled', 'Duplicate or erroneous creation, with reason retained.']
+      ],
+      pilotReservationEvidenceTitle: 'Candidate minimum trace',
+      pilotReservationEvidence: [
+        'Finding, date and affected object',
+        'Action owner and deadline',
+        'Expected or completed corrective action',
+        'Before-and-after evidence referenced in the DMS',
+        'Control result and any remaining deviation',
+        'Decision, author, date and reason for the latest status'
       ]
     },
     processes: {
@@ -282,6 +320,25 @@ const copy = {
         'Eine Teilannahme schließt weder die Restlieferung noch die verbleibenden Pflichten ab.',
         'Ein offener Vorbehalt verhindert einen unqualifizierten Abschluss, bestimmt oder ändert die Zahlung aber nicht automatisch.',
         'Lieferschein, Protokoll, Fotos, Tests und Vorbehaltsnachweise bleiben in der GED und sind mit dem belegten Objekt verknüpft.'
+      ],
+      pilotReservationLifecycleTitle: 'Vorgeschlagener Lebenszyklus eines Vorbehalts',
+      pilotReservationLifecycleBody: 'Produktion führt den fachlichen Status. Aufhebung oder Aufrechterhaltung erfordern eine dokumentierte Kontrolle durch die je nach Dossier und geltender Delegation autorisierte Person.',
+      pilotReservationLifecycle: [
+        ['Offen', 'Feststellung erfasst und Maßnahme erwartet.'],
+        ['Korrekturmaßnahme läuft', 'Verantwortung und Frist sind bekannt.'],
+        ['Zu prüfen', 'Korrektur gemeldet, Kontrolle noch ausstehend.'],
+        ['Aufgehoben', 'Erfolgreiche Kontrolle und dokumentierte Entscheidung.'],
+        ['Aufrechterhalten', 'Abweichung nach Kontrolle weiterhin vorhanden.'],
+        ['Storniert', 'Duplikat oder irrtümliche Anlage, Begründung bleibt erhalten.']
+      ],
+      pilotReservationEvidenceTitle: 'Vorgeschlagene Mindestspur',
+      pilotReservationEvidence: [
+        'Feststellung, Datum und betroffenes Objekt',
+        'Maßnahmenverantwortung und Frist',
+        'Erwartete oder ausgeführte Korrekturmaßnahme',
+        'Vorher- und Nachher-Nachweise mit GED-Referenz',
+        'Kontrollergebnis und verbleibende Abweichung',
+        'Entscheidung, Autor, Datum und Grund des letzten Status'
       ]
     },
     processes: {
@@ -452,6 +509,30 @@ const ArchitectureView = ({ data }) => {
                   <li key={rule} className="flex items-start gap-2 text-sm leading-5 text-slate-300">
                     <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-300" size={16} aria-hidden="true" />
                     {rule}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="mt-4 border-t border-slate-700 pt-4">
+              <h6 className="text-sm font-semibold text-slate-100">{data.pilotReservationLifecycleTitle}</h6>
+              <p className="mt-1 max-w-4xl text-sm leading-5 text-slate-400">{data.pilotReservationLifecycleBody}</p>
+              <ol className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                {data.pilotReservationLifecycle.map(([status, meaning], index) => (
+                  <li key={status} className="rounded-md border border-slate-700 bg-slate-950/20 p-3">
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded bg-cyan-950 text-xs font-semibold text-cyan-300">{index + 1}</span>
+                      <span className="text-sm font-semibold text-slate-100">{status}</span>
+                    </div>
+                    <p className="mt-2 text-sm leading-5 text-slate-400">{meaning}</p>
+                  </li>
+                ))}
+              </ol>
+              <h6 className="mt-4 text-sm font-semibold text-slate-100">{data.pilotReservationEvidenceTitle}</h6>
+              <ul className="mt-2 grid gap-2 md:grid-cols-2">
+                {data.pilotReservationEvidence.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm leading-5 text-slate-300">
+                    <CheckCircle2 className="mt-0.5 shrink-0 text-cyan-300" size={16} aria-hidden="true" />
+                    {item}
                   </li>
                 ))}
               </ul>
