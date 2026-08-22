@@ -17,9 +17,15 @@ import FinanceProcessControls from './FinanceProcessControls';
 import ActionConfirmationDialog from './ActionConfirmationDialog';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
 import FunctionAssistant from './FunctionAssistant';
+import {
+  buildTeamAgentDirectory,
+  findAgentTeam,
+  getDirectoryAgentLabel,
+  normalizeTeamCode,
+  TEAM_CODES
+} from './teamDirectory';
 
-const TEAM_OPTIONS = ['Team_ZH', 'Team_SN'];
-const AGENT_OPTIONS = ['Cheikh', 'Chantal', 'Pape', 'Gnilane Diouf', 'Gnilane Ndiaye', 'Ibou'];
+const TEAM_OPTIONS = [TEAM_CODES.ZURICH, TEAM_CODES.SENEGAL];
 const DEPARTMENT_OPTIONS = [
   'Administration',
   'Finances',
@@ -150,6 +156,8 @@ const Finance = () => {
     source: 'Manual'
   });
   const [formData, setFormData] = useState(createEmptyFinanceForm);
+  const [directoryMembers, setDirectoryMembers] = useState([]);
+  const [agentDirectoryStatus, setAgentDirectoryStatus] = useState('loading');
 
   // Translations
   const translations = {
@@ -213,6 +221,12 @@ const Finance = () => {
       ref: 'Ref.',
       agent: 'Agent',
       team: 'Team',
+      teamZhCollective: 'Team ZH (collectif)',
+      teamSnCollective: 'Team SN (collectif)',
+      agentSourceLoading: 'Chargement de l’annuaire sécurisé RH-001…',
+      agentSourceAvailable: 'Personnes proposées depuis l’annuaire sécurisé RH-001.',
+      agentSourceUnavailable: 'Annuaire RH-001 indisponible : seuls les collectifs des équipes sont proposés.',
+      agentHistorical: 'valeur historique',
       departement: 'Departement',
       phaseProjet: 'Phase Projet',
       pays: 'Pays',
@@ -360,6 +374,12 @@ const Finance = () => {
       ref: 'Ref.',
       agent: 'Agent',
       team: 'Team',
+      teamZhCollective: 'Team ZH (collective)',
+      teamSnCollective: 'Team SN (collective)',
+      agentSourceLoading: 'Loading the secure RH-001 directory…',
+      agentSourceAvailable: 'People are suggested from the secure RH-001 directory.',
+      agentSourceUnavailable: 'RH-001 directory unavailable: only team collectives are offered.',
+      agentHistorical: 'historical value',
       departement: 'Department',
       phaseProjet: 'Project Phase',
       pays: 'Country',
@@ -507,6 +527,12 @@ const Finance = () => {
       ref: 'Ref.',
       agent: 'Agent',
       team: 'Team',
+      teamZhCollective: 'Team ZH (gemeinsam)',
+      teamSnCollective: 'Team SN (gemeinsam)',
+      agentSourceLoading: 'Geschütztes Verzeichnis RH-001 wird geladen…',
+      agentSourceAvailable: 'Personen werden aus dem geschützten Verzeichnis RH-001 vorgeschlagen.',
+      agentSourceUnavailable: 'Verzeichnis RH-001 nicht verfügbar: nur Team-Kollektive werden angeboten.',
+      agentHistorical: 'historischer Wert',
       departement: 'Abteilung',
       phaseProjet: 'Projektphase',
       pays: 'Land',
@@ -598,6 +624,30 @@ const Finance = () => {
 
   const t = translations[language];
   const withLabel = (template, label) => template.replace('{label}', label || t.operationLabel);
+  const agentsByTeam = useMemo(() => buildTeamAgentDirectory(directoryMembers, {
+    [TEAM_CODES.ZURICH]: t.teamZhCollective,
+    [TEAM_CODES.SENEGAL]: t.teamSnCollective
+  }), [directoryMembers, t.teamSnCollective, t.teamZhCollective]);
+
+  const agentOptionsFor = useCallback((team, historicalValue) => {
+    const options = [...(agentsByTeam[normalizeTeamCode(team)] || [])];
+    if (historicalValue && !options.some((option) => option.value === historicalValue)) {
+      options.unshift({
+        value: historicalValue,
+        label: `${getDirectoryAgentLabel(historicalValue, agentsByTeam)} (${t.agentHistorical})`
+      });
+    }
+    return options;
+  }, [agentsByTeam, t.agentHistorical]);
+
+  const financeAgentOptions = useMemo(
+    () => agentOptionsFor(formData.team, formData.agent),
+    [agentOptionsFor, formData.agent, formData.team]
+  );
+  const immoAgentOptions = useMemo(
+    () => agentOptionsFor(immoFormData.team, immoFormData.agent),
+    [agentOptionsFor, immoFormData.agent, immoFormData.team]
+  );
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
@@ -607,6 +657,28 @@ const Finance = () => {
       setActiveTab('overview');
     }
   }, [location.search]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const loadDirectory = async () => {
+      if (typeof api.getMembersDirectory !== 'function') {
+        setAgentDirectoryStatus('unavailable');
+        return;
+      }
+      try {
+        const response = await api.getMembersDirectory(100, 0);
+        if (cancelled) return;
+        setDirectoryMembers(Array.isArray(response?.data) ? response.data : []);
+        setAgentDirectoryStatus('available');
+      } catch (error) {
+        if (cancelled) return;
+        setDirectoryMembers([]);
+        setAgentDirectoryStatus('unavailable');
+      }
+    };
+    loadDirectory();
+    return () => { cancelled = true; };
+  }, []);
 
   const selectFinanceTab = (tab) => {
     setActiveTab(tab);
@@ -1138,13 +1210,6 @@ const Finance = () => {
     return [...new Set([...defaults, ...existing, formData.categorie].filter(Boolean))];
   }, [modalType, socialModal, recettes, depenses, formData.categorie]);
 
-  const agentOptions = useMemo(() => {
-    const existing = [...recettes, ...depenses]
-      .map((row) => row.agent)
-      .filter((value) => value && normalizeCategoryKey(value) !== 'NON RENSEIGNE');
-    return [...new Set([...AGENT_OPTIONS, ...existing, formData.agent].filter(Boolean))];
-  }, [recettes, depenses, formData.agent]);
-
   const immoCategoryOptions = useMemo(() => [
     ...new Set([
       'Achat Terrain', 'Frais Administratifs', 'Clôture/Portail', 'Gros Œuvres',
@@ -1423,6 +1488,11 @@ const Finance = () => {
   const handleImmoFormChange = (field, value) => {
     setImmoFormData((previous) => {
       const next = { ...previous, [field]: value };
+      if (field === 'team') {
+        next.team = normalizeTeamCode(value);
+        const currentAgentTeam = findAgentTeam(previous.agent, agentsByTeam);
+        if (!currentAgentTeam || currentAgentTeam !== next.team) next.agent = '';
+      }
       if (field === 'date') {
         const historicalRate = getHistoricalCfaPerChf(value)?.cfaPerChf;
         if (historicalRate) next.tauxFx = historicalRate;
@@ -1457,7 +1527,7 @@ const Finance = () => {
       documentRef: item.document_ref || '',
       statut: item.statut || 'En cours',
       agent: item.agent || '',
-      team: item.team || '',
+      team: normalizeTeamCode(item.team || ''),
       departement: item.departement || '',
       phaseProjet: item.phase_projet || ''
     });
@@ -1535,7 +1605,15 @@ const Finance = () => {
   };
 
   const handleFormChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((previous) => {
+      const next = { ...previous, [field]: value };
+      if (field === 'team') {
+        next.team = normalizeTeamCode(value);
+        const currentAgentTeam = findAgentTeam(previous.agent, agentsByTeam);
+        if (!currentAgentTeam || currentAgentTeam !== next.team) next.agent = '';
+      }
+      return next;
+    });
   };
 
   const handleFinanceDateChange = (date) => {
@@ -1630,6 +1708,7 @@ const Finance = () => {
       montant: item.montantOrigine ?? item.montant,
       devise: item.deviseOrigine ?? item.devise,
       tauxFxApplique: item.tauxFx || '',
+      team: normalizeTeamCode(item.team || ''),
     });
     setShowModal(true);
   };
@@ -1666,7 +1745,7 @@ const Finance = () => {
     setFormData({
       ...next,
       categorie: 'Aide Sociale Ménage',
-      agent: 'Cheikh',
+      agent: '',
       team: 'Team_ZH',
       departement: 'Finances',
       pays: 'CH'
@@ -2617,19 +2696,29 @@ const Finance = () => {
                   </select>
                 </label>
                 <label className="text-sm text-slate-300">
-                  <span className="block mb-1">{t.agent}</span>
-                  <select value={immoFormData.agent} onChange={(event) => handleImmoFormChange('agent', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
-                    <option value="">-</option>
-                    {agentOptions.map((value) => <option key={value} value={value}>{value}</option>)}
-                  </select>
-                </label>
-                <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.team}</span>
-                  <select value={immoFormData.team} onChange={(event) => handleImmoFormChange('team', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
+                  <select aria-label={t.team} value={immoFormData.team} onChange={(event) => handleImmoFormChange('team', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
                     <option value="">-</option>
                     {TEAM_OPTIONS.map((value) => <option key={value} value={value}>{translateStandardValue(value)}</option>)}
                   </select>
                 </label>
+                <label className="text-sm text-slate-300">
+                  <span className="block mb-1">{t.agent}</span>
+                  <select aria-label={t.agent} value={immoFormData.agent} onChange={(event) => handleImmoFormChange('agent', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
+                    <option value="">-</option>
+                    {immoAgentOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+                  </select>
+                </label>
+                <p
+                  className={`text-xs leading-5 md:col-span-2 ${agentDirectoryStatus === 'available' ? 'text-emerald-300' : 'text-amber-300'}`}
+                  role="status"
+                >
+                  {agentDirectoryStatus === 'loading'
+                    ? t.agentSourceLoading
+                    : agentDirectoryStatus === 'available'
+                      ? t.agentSourceAvailable
+                      : t.agentSourceUnavailable}
+                </p>
                 <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.departement}</span>
                   <select value={immoFormData.departement} onChange={(event) => handleImmoFormChange('departement', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
@@ -2724,19 +2813,29 @@ const Finance = () => {
                 <p className="text-sm text-slate-300">{t.separationTauxInfo}</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <label className="text-sm text-slate-300">
-                    <span className="block mb-1">{t.agent}</span>
-                    <select value={formData.agent || ''} onChange={(e) => handleFormChange('agent', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
-                      <option value="">-</option>
-                      {agentOptions.map((value) => <option key={value} value={value}>{value}</option>)}
-                    </select>
-                  </label>
-                  <label className="text-sm text-slate-300">
                     <span className="block mb-1">{t.team}</span>
-                    <select value={formData.team || ''} onChange={(e) => handleFormChange('team', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                    <select aria-label={t.team} value={formData.team || ''} onChange={(e) => handleFormChange('team', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
                       <option value="">-</option>
                       {TEAM_OPTIONS.map((value) => <option key={value} value={value}>{translateStandardValue(value)}</option>)}
                     </select>
                   </label>
+                  <label className="text-sm text-slate-300">
+                    <span className="block mb-1">{t.agent}</span>
+                    <select aria-label={t.agent} value={formData.agent || ''} onChange={(e) => handleFormChange('agent', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                      <option value="">-</option>
+                      {financeAgentOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+                    </select>
+                  </label>
+                  <p
+                    className={`text-xs leading-5 md:col-span-2 ${agentDirectoryStatus === 'available' ? 'text-emerald-300' : 'text-amber-300'}`}
+                    role="status"
+                  >
+                    {agentDirectoryStatus === 'loading'
+                      ? t.agentSourceLoading
+                      : agentDirectoryStatus === 'available'
+                        ? t.agentSourceAvailable
+                        : t.agentSourceUnavailable}
+                  </p>
                   <label className="text-sm text-slate-300">
                     <span className="block mb-1">{t.departement}</span>
                     <select value={formData.departement || ''} onChange={(e) => handleFormChange('departement', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
