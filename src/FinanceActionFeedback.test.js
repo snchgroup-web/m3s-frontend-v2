@@ -104,6 +104,44 @@ test('requires confirmation before creating a revenue entry and then reports suc
   expect(await screen.findByText('« Cotisation pilote » a été enregistrée avec succès.')).toBeInTheDocument();
 });
 
+test('keeps incomplete historical FX values visible without reference-rate substitution', async () => {
+  api.getIncome.mockResolvedValue({
+    data: [
+      {
+        source_id: 'REC-00003',
+        description: 'Recette CFA historique',
+        devise_origine: 'CFA',
+        montant_origine: 100000,
+        montant_chf: 0,
+        montant_cfa: 100000,
+        taux_fx_applique: 0,
+      },
+      {
+        source_id: 'REC-00004',
+        description: 'Recette CHF incomplète',
+        devise_origine: 'CHF',
+        montant_origine: 100,
+        montant_chf: 100,
+        montant_cfa: null,
+        taux_fx_applique: null,
+      },
+    ],
+  });
+
+  renderFinance();
+
+  expect(await screen.findByText(/2 écriture\(s\) affichée\(s\) ont un taux appliqué absent ou nul/)).toBeInTheDocument();
+  expect(screen.getByText(/1 écriture\(s\) affichée\(s\) ont un montant CHF ou CFA indisponible/)).toBeInTheDocument();
+  expect(screen.getAllByText('À qualifier')).toHaveLength(2);
+
+  const cfaRow = screen.getByText('REC-00003').closest('tr');
+  const incompleteChfRow = screen.getByText('REC-00004').closest('tr');
+  expect(cfaRow).toHaveTextContent('0');
+  expect(cfaRow).not.toHaveTextContent('710');
+  expect(incompleteChfRow).toHaveTextContent('—');
+  expect(incompleteChfRow).not.toHaveTextContent('71 000');
+});
+
 test('keeps a local FX rate until deletion is confirmed', async () => {
   mockSearch = '?tab=fx';
   const { container } = renderFinance();

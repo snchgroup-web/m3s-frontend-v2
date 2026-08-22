@@ -245,6 +245,10 @@ const Finance = () => {
       tauxReference: 'Taux de référence',
       tauxReferenceIndisponible: 'Non disponible pour cette date',
       separationTauxInfo: 'Le taux appliqué provient de la transaction ou du fournisseur. Le taux de référence reste un repère distinct.',
+      fxQualityTitle: 'Qualité FX à contrôler',
+      fxQualityRateWarning: '{count} écriture(s) affichée(s) ont un taux appliqué absent ou nul. Elles restent visibles sans conversion automatique et doivent être qualifiées à partir de la preuve de transaction.',
+      fxQualityAmountWarning: '{count} écriture(s) affichée(s) ont un montant CHF ou CFA indisponible. La valeur manquante n’est pas remplacée par zéro.',
+      fxRateMissing: 'À qualifier',
       calculer: 'Calculer',
       conversionsRapides: 'Conversions rapides',
       conversionResultat: 'Résultat de la conversion',
@@ -388,6 +392,10 @@ const Finance = () => {
       tauxReference: 'Reference rate',
       tauxReferenceIndisponible: 'Unavailable for this date',
       separationTauxInfo: 'The applied rate comes from the transaction or provider. The reference rate remains a separate benchmark.',
+      fxQualityTitle: 'FX quality check required',
+      fxQualityRateWarning: '{count} displayed transaction(s) have a missing or zero applied rate. They remain visible without automatic conversion and must be qualified from the transaction evidence.',
+      fxQualityAmountWarning: '{count} displayed transaction(s) have an unavailable CHF or CFA amount. The missing value is not replaced with zero.',
+      fxRateMissing: 'To qualify',
       calculer: 'Calculate',
       conversionsRapides: 'Quick conversions',
       conversionResultat: 'Conversion result',
@@ -531,6 +539,10 @@ const Finance = () => {
       tauxReference: 'Referenzkurs',
       tauxReferenceIndisponible: 'Für dieses Datum nicht verfügbar',
       separationTauxInfo: 'Der angewandte Kurs stammt aus der Transaktion oder vom Anbieter. Der Referenzkurs bleibt ein separater Vergleichswert.',
+      fxQualityTitle: 'FX-Datenqualität prüfen',
+      fxQualityRateWarning: '{count} angezeigte Buchung(en) haben keinen oder einen null gesetzten angewandten Kurs. Sie bleiben ohne automatische Umrechnung sichtbar und müssen anhand des Transaktionsnachweises qualifiziert werden.',
+      fxQualityAmountWarning: 'Bei {count} angezeigten Buchung(en) ist der CHF- oder CFA-Betrag nicht verfügbar. Der fehlende Wert wird nicht durch null ersetzt.',
+      fxRateMissing: 'Zu qualifizieren',
       calculer: 'Berechnen',
       conversionsRapides: 'Schnellumrechnungen',
       conversionResultat: 'Umrechnungsergebnis',
@@ -622,10 +634,16 @@ const Finance = () => {
     const deviseOrigine = String(item.devise_origine || item.devise || item.currency || 'CHF').toUpperCase();
     const rawTauxFx = item.taux_fx_applique ?? item.taux_fx ?? item.taux ?? item.fx_rate;
     const rawTauxFxReference = item.taux_fx_reference ?? item.taux_ref_auto;
-    const rawAmount = item.montant_origine ?? item.amount_original ?? item.montant ?? item.amount ?? item.montant_chf ?? item.amount_chf ?? item.montant_cfa ?? item.amount_cfa ?? 0;
+    const originalAmountValue = item.montant_origine ?? item.amount_original ?? item.montant ?? item.amount;
+    const hasValue = (value) => value !== null && value !== undefined && value !== '';
+    const rawAmount = hasValue(originalAmountValue)
+      ? originalAmountValue
+      : item.montant_chf ?? item.amount_chf ?? item.montant_cfa ?? item.amount_cfa ?? 0;
     const montantOrigine = toNumber(rawAmount);
     const explicitMontantChf = item.montant_chf ?? item.amount_chf ?? item.montantChf;
     const explicitMontantCfa = item.montant_cfa ?? item.amount_cfa ?? item.montantCfa;
+    const montantChfAvailable = hasValue(explicitMontantChf) || (deviseOrigine === 'CHF' && hasValue(originalAmountValue));
+    const montantCfaAvailable = hasValue(explicitMontantCfa) || (deviseOrigine === 'CFA' && hasValue(originalAmountValue));
     const montantChf = toNumber(
       explicitMontantChf,
       deviseOrigine === 'CHF' ? montantOrigine : 0
@@ -634,10 +652,9 @@ const Finance = () => {
       explicitMontantCfa,
       deviseOrigine === 'CFA' ? montantOrigine : 0
     );
-    const tauxDepuisMontants = montantChf > 0 && montantCfa > 0 ? montantCfa / montantChf : null;
     const tauxBrut = toNumber(rawTauxFx);
     const tauxNormalise = deviseOrigine === 'CFA' && tauxBrut > 0 && tauxBrut < 1 ? 1 / tauxBrut : tauxBrut;
-    const tauxFx = tauxDepuisMontants || tauxNormalise || null;
+    const tauxFx = tauxNormalise > 0 ? tauxNormalise : null;
     const hasExplicitTauxFx = Boolean(tauxFx);
 
     return {
@@ -650,6 +667,8 @@ const Finance = () => {
       deviseOrigine,
       montantChf,
       montantCfa,
+      montantChfAvailable,
+      montantCfaAvailable,
       tauxFx,
       tauxFxReference: toNumber(rawTauxFxReference) || null,
       hasExplicitTauxFx,
@@ -705,36 +724,6 @@ const Finance = () => {
 
     return candidates[0] || null;
   }, [fxHistory]);
-
-  const applyHistoricalFx = useCallback((row) => {
-    const storedMontantChf = toNumber(row.montantChf);
-    const storedMontantCfa = toNumber(row.montantCfa);
-    if (storedMontantChf > 0 && storedMontantCfa > 0) {
-      return {
-        ...row,
-        tauxFx: storedMontantCfa / storedMontantChf,
-        montant: storedMontantChf,
-        montantChf: storedMontantChf,
-        montantCfa: storedMontantCfa
-      };
-    }
-    const historicalRate = row.hasExplicitTauxFx ? null : getHistoricalCfaPerChf(row.date);
-    const tauxFx = row.hasExplicitTauxFx ? row.tauxFx : historicalRate?.cfaPerChf;
-    const montantOrigine = toNumber(row.montantOrigine ?? row.montant);
-    const deviseOrigine = String(row.deviseOrigine || row.devise || 'CHF').toUpperCase();
-    const montantChf = tauxFx && deviseOrigine === 'CFA' ? montantOrigine / tauxFx : toNumber(row.montantChf ?? row.montant);
-    const montantCfa = tauxFx && deviseOrigine === 'CHF' ? montantOrigine * tauxFx : toNumber(row.montantCfa);
-
-    return {
-      ...row,
-      tauxFx,
-      montant: montantChf,
-      montantChf,
-      montantCfa,
-      dateTauxFx: row.hasExplicitTauxFx ? row.dateTauxFx : historicalRate?.date || row.dateTauxFx,
-      sourceTauxFx: row.hasExplicitTauxFx ? row.sourceTauxFx : historicalRate?.source || row.sourceTauxFx
-    };
-  }, [getHistoricalCfaPerChf]);
 
   // Phase 2: Load real data from BigQuery via API
   const loadFinanceData = useCallback(async () => {
@@ -1239,8 +1228,25 @@ const Finance = () => {
     loadRealEstateFinance();
   }, [loadRealEstateFinance]);
 
-  const recettesAffichees = useMemo(() => recettes.map(applyHistoricalFx), [recettes, applyHistoricalFx]);
-  const depensesAffichees = useMemo(() => depenses.map(applyHistoricalFx), [depenses, applyHistoricalFx]);
+  const recettesAffichees = recettes;
+  const depensesAffichees = depenses;
+  const renderFxQualityNotice = (rows) => {
+    const missingRateCount = rows.filter((row) => !row.hasExplicitTauxFx).length;
+    const missingAmountCount = rows.filter((row) => !row.montantChfAvailable || !row.montantCfaAvailable).length;
+    if (!missingRateCount && !missingAmountCount) return null;
+
+    return (
+      <div className="mb-4 rounded-lg border border-amber-500/35 bg-amber-500/10 px-4 py-3 text-sm" role="status">
+        <p className="font-semibold text-amber-200">{t.fxQualityTitle}</p>
+        {missingRateCount > 0 && (
+          <p className="mt-1 text-slate-300">{t.fxQualityRateWarning.replace('{count}', missingRateCount)}</p>
+        )}
+        {missingAmountCount > 0 && (
+          <p className="mt-1 text-slate-300">{t.fxQualityAmountWarning.replace('{count}', missingAmountCount)}</p>
+        )}
+      </div>
+    );
+  };
 
   const recettesExploitation = useMemo(() => recettesAffichees.filter((row) => {
     const category = normalizeCategoryKey(row.categorie);
@@ -1268,9 +1274,7 @@ const Finance = () => {
     ? Math.round(chfAmount * tauxChfCfa).toLocaleString()
     : '—';
 
-  const socialRowsAffichees = useMemo(() => {
-    return socialRows.map(applyHistoricalFx);
-  }, [socialRows, applyHistoricalFx]);
+  const socialRowsAffichees = socialRows;
   const socialRowsTotalChf = socialRowsAffichees.reduce((sum, row) => sum + toNumber(row.montantChf), 0);
   const socialRowsTotalCfaHistorique = socialRowsAffichees.reduce((sum, row) => sum + toNumber(row.montantCfa), 0);
   const socialTotalChf = socialAccessState === 'available'
@@ -1929,6 +1933,7 @@ const Finance = () => {
             <div className="flex justify-end mb-4">
               <StandardCreateButton onClick={() => openNewModal('recette')}>{t.nouvelleRecette}</StandardCreateButton>
             </div>
+            {renderFxQualityNotice(recettesAffichees)}
             <TableControls
               rows={recettesAffichees}
               renderTable={(visibleRows) => (
@@ -1961,9 +1966,11 @@ const Finance = () => {
                         <td className="px-4 py-3 text-slate-400">{formatCell(r.ref)}</td>
                         <td className="px-6 py-3 text-slate-400 whitespace-nowrap">{formatDateForDisplay(r.date)}</td>
                         <td className="px-6 py-3 text-slate-300">{translateDescription(r.description)}</td>
-                        <td className="px-4 py-3 text-green-400 font-bold">{formatAmount(r.montantChf)}</td>
-                        <td className="px-4 py-3 text-green-300 font-bold">{formatAmount(r.montantCfa)}</td>
-                        <td className="px-4 py-3 text-purple-300">{formatAmount(r.tauxFx)}</td>
+                        <td className="px-4 py-3 text-green-400 font-bold">{r.montantChfAvailable ? formatAmount(r.montantChf) : '—'}</td>
+                        <td className="px-4 py-3 text-green-300 font-bold">{r.montantCfaAvailable ? formatAmount(r.montantCfa) : '—'}</td>
+                        <td className="px-4 py-3 text-purple-300">
+                          {r.hasExplicitTauxFx ? formatAmount(r.tauxFx) : <span className="font-semibold text-amber-300">{t.fxRateMissing}</span>}
+                        </td>
                         <td className="px-6 py-3 text-slate-400">{translateCategory(r.categorie)}</td>
                         <td className="px-4 py-3 text-slate-400">{formatCell(r.agent)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(r.team)}</td>
@@ -1991,6 +1998,7 @@ const Finance = () => {
             <div className="flex justify-end mb-4">
               <StandardCreateButton onClick={() => openNewModal('depense')}>{t.nouvelleDepense}</StandardCreateButton>
             </div>
+            {renderFxQualityNotice(depensesAffichees)}
             <TableControls
               rows={depensesAffichees}
               renderTable={(visibleRows) => (
@@ -2023,9 +2031,11 @@ const Finance = () => {
                         <td className="px-4 py-3 text-slate-400">{formatCell(d.ref)}</td>
                         <td className="px-6 py-3 text-slate-400 whitespace-nowrap">{formatDateForDisplay(d.date)}</td>
                         <td className="px-6 py-3 text-slate-300">{translateDescription(d.description)}</td>
-                        <td className="px-4 py-3 text-red-400 font-bold">{formatAmount(d.montantChf)}</td>
-                        <td className="px-4 py-3 text-red-300 font-bold">{formatAmount(d.montantCfa)}</td>
-                        <td className="px-4 py-3 text-purple-300">{formatAmount(d.tauxFx)}</td>
+                        <td className="px-4 py-3 text-red-400 font-bold">{d.montantChfAvailable ? formatAmount(d.montantChf) : '—'}</td>
+                        <td className="px-4 py-3 text-red-300 font-bold">{d.montantCfaAvailable ? formatAmount(d.montantCfa) : '—'}</td>
+                        <td className="px-4 py-3 text-purple-300">
+                          {d.hasExplicitTauxFx ? formatAmount(d.tauxFx) : <span className="font-semibold text-amber-300">{t.fxRateMissing}</span>}
+                        </td>
                         <td className="px-6 py-3 text-slate-400">{translateCategory(d.categorie)}</td>
                         <td className="px-4 py-3 text-slate-400">{formatCell(d.agent)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.team)}</td>
@@ -2279,6 +2289,7 @@ const Finance = () => {
               </section>
             </div>
 
+            {renderFxQualityNotice(socialRowsAffichees)}
             <section>
               <TableControls
                 rows={socialRowsAffichees}
@@ -2309,9 +2320,13 @@ const Finance = () => {
                           <td className="px-4 py-3 text-slate-400">{formatCell(row.ref)}</td>
                           <td className="whitespace-nowrap px-4 py-3 text-slate-300">{formatDateForDisplay(row.date)}</td>
                           <td className="max-w-[380px] px-5 py-3 font-medium text-white">{translateDescription(row.description)}</td>
-                          <td className="whitespace-nowrap px-4 py-3 font-semibold text-emerald-300">{formatAmount(row.montantChf)} CHF</td>
-                          <td className="whitespace-nowrap px-4 py-3 font-semibold text-cyan-300">{formatAmount(row.montantCfa)} CFA</td>
-                          <td className="px-4 py-3 text-purple-300">{row.tauxFx ? Number(row.tauxFx).toLocaleString(undefined, { maximumFractionDigits: 3 }) : '-'}</td>
+                          <td className="whitespace-nowrap px-4 py-3 font-semibold text-emerald-300">{row.montantChfAvailable ? `${formatAmount(row.montantChf)} CHF` : '—'}</td>
+                          <td className="whitespace-nowrap px-4 py-3 font-semibold text-cyan-300">{row.montantCfaAvailable ? `${formatAmount(row.montantCfa)} CFA` : '—'}</td>
+                          <td className="px-4 py-3 text-purple-300">
+                            {row.hasExplicitTauxFx
+                              ? Number(row.tauxFx).toLocaleString(undefined, { maximumFractionDigits: 3 })
+                              : <span className="font-semibold text-amber-300">{t.fxRateMissing}</span>}
+                          </td>
                           <td className="px-4 py-3"><span className="inline-flex whitespace-nowrap rounded bg-emerald-500/15 px-2 py-1 text-xs font-medium text-emerald-300">{translateStandardValue(row.natureSociale)}</span></td>
                           <td className="px-4 py-3 text-slate-300">{formatCell(row.beneficiaire)}</td>
                           <td className="px-4 py-3 text-slate-300">{formatCell(row.agent)}</td>
