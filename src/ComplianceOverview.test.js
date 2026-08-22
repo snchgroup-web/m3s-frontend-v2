@@ -10,12 +10,17 @@ test('renders the cautious compliance model in French', () => {
   expect(screen.getByText('Aucune conformité déclarée')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Avancement documentaire LEGAL' })).toBeInTheDocument();
   expect(screen.getByLabelText('Étape documentaire en cours')).toHaveTextContent('Applicabilité à qualifier');
-  expect(screen.getByText('Applicabilité')).toBeInTheDocument();
+  const applicabilityStage = screen.getAllByText('Applicabilité').find(element => element.closest('li'));
+  expect(applicabilityStage).toBeInTheDocument();
   expect(screen.getByText('Adoption / publication')).toBeInTheDocument();
-  expect(screen.getByText('Applicabilité').closest('li')).toHaveAttribute('aria-current', 'step');
+  expect(applicabilityStage.closest('li')).toHaveAttribute('aria-current', 'step');
   expect(screen.getByText('Constitué')).toBeInTheDocument();
   expect(screen.getByText(/Livrable préparatoire externe reçu · en contrôle/i)).toBeInTheDocument();
   expect(screen.getByText(/ne mesure ni ne certifie la conformité juridique/i)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Qualification d’applicabilité' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Activités & offres réellement ouvertes' })).toBeInTheDocument();
+  expect(screen.getAllByText('À confirmer sur source')).toHaveLength(4);
+  expect(screen.getByText(/les CGU, CGV, politiques, mentions et obligations restent/i)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Registres des obligations et dossiers juridiques' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Conformité de l’association à vérifier' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Villa LR1 — dossier A. Kane' })).toBeInTheDocument();
@@ -31,6 +36,8 @@ test('renders the German compliance boundaries', () => {
   expect(screen.getByText('Keine Konformität behauptet')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Dokumentationsfortschritt LEGAL' })).toBeInTheDocument();
   expect(screen.getByLabelText('Aktuelle Dokumentationsetappe')).toHaveTextContent('Anwendbarkeit zu qualifizieren');
+  expect(screen.getByRole('heading', { name: 'Qualifizierung der Anwendbarkeit' })).toBeInTheDocument();
+  expect(screen.getAllByText('Anhand einer Quelle zu bestätigen')).toHaveLength(4);
   expect(screen.getByRole('button', { name: 'Nach oben' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Villa LR1 — Fall A. Kane' })).toBeInTheDocument();
   expect(screen.getByText(/Weder Haftung noch Verfahrensausgang/i)).toBeInTheDocument();

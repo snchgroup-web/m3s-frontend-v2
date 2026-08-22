@@ -8,9 +8,12 @@ import {
   FolderLock,
   Gavel,
   Landmark,
+  MapPinned,
+  RadioTower,
   Scale,
   ShieldCheck,
-  UserCheck
+  UserCheck,
+  Workflow
 } from 'lucide-react';
 import InternalSectionNav from './InternalSectionNav';
 import { LEGAL_DOCUMENTARY_BASELINE, LEGAL_DOCUMENTARY_STAGES } from './legalDocumentaryProgress';
@@ -25,6 +28,7 @@ const COPY = {
     noClaim: 'Aucune conformité déclarée',
     navLabel: 'Navigation dans Conformité',
     navProgress: 'Avancement',
+    navApplicability: 'Applicabilité',
     navFramework: 'Périmètre',
     navRegister: 'Registres',
     navControls: 'Contrôles & preuves',
@@ -48,6 +52,38 @@ const COPY = {
     reviewEvidence: 'Livrable préparatoire externe reçu · en contrôle · 16-08-2026',
     progressCaution: 'Cet indicateur mesure la préparation documentaire. Il ne mesure ni ne certifie la conformité juridique de 2SG.',
     sourceLabel: 'Source protégée',
+    applicabilityTitle: 'Qualification d’applicabilité',
+    applicabilityBody: 'La qualification relie les activités réellement exercées aux territoires, canaux et flux concernés. Chaque conclusion devra être justifiée par une source et validée par la fonction compétente.',
+    applicabilityStatus: 'À confirmer sur source',
+    applicabilitySource: 'Source à contrôler',
+    applicabilityDeliverable: 'Résultat attendu',
+    applicabilityDimensions: [
+      {
+        title: 'Activités & offres réellement ouvertes',
+        body: 'Identifier les activités effectivement exercées, leurs publics et leur état réel, sans déduire une offre active d’un projet ou d’une intention.',
+        source: 'Business Model, Business Plan, catalogue gouverné et décisions',
+        deliverable: 'Liste datée des activités actives, pilotes, suspendues ou projetées'
+      },
+      {
+        title: 'Territoires & entités responsables',
+        body: 'Rattacher chaque activité à son territoire d’exercice et à l’entité ou la personne qui l’opère réellement.',
+        source: 'Pièces institutionnelles signées, mandats et preuves d’activité',
+        deliverable: 'Couple activité–territoire–responsable confirmé'
+      },
+      {
+        title: 'Canaux & points de contact',
+        body: 'Recenser les sites, formulaires, e-mails, messageries, documents et parcours réellement utilisés avec les publics.',
+        source: 'Inventaire des canaux, interfaces publiées et modèles en usage',
+        deliverable: 'Carte des canaux actifs, publics concernés et propriétaire du canal'
+      },
+      {
+        title: 'Flux de données, contrats & paiements',
+        body: 'Décrire les données collectées, les engagements, les paiements et les preuves associés à chaque parcours réel.',
+        source: 'Registres métier, contrats, formulaires, écritures et preuves GED',
+        deliverable: 'Matrice flux–finalité–preuve–fonction compétente'
+      }
+    ],
+    applicabilityRule: 'Tant que ces quatre axes ne sont pas confirmés sur pièces, les CGU, CGV, politiques, mentions et obligations restent des documents ou exigences candidates à qualifier.',
     frameworkTitle: 'Périmètre de conformité à organiser',
     frameworkBody: 'La conformité est transversale. Administration tient les registres et les échéances ; la gouvernance et les fonctions compétentes valident le fond dans leur domaine.',
     institutional: 'Conformité associative',
@@ -110,6 +146,7 @@ const COPY = {
     noClaim: 'No compliance claim',
     navLabel: 'Compliance navigation',
     navProgress: 'Progress',
+    navApplicability: 'Applicability',
     navFramework: 'Scope',
     navRegister: 'Registers',
     navControls: 'Controls & evidence',
@@ -133,6 +170,38 @@ const COPY = {
     reviewEvidence: 'External preparatory deliverable received · under review · 2026-08-16',
     progressCaution: 'This indicator measures documentary readiness. It neither measures nor certifies 2SG legal compliance.',
     sourceLabel: 'Protected source',
+    applicabilityTitle: 'Applicability qualification',
+    applicabilityBody: 'Qualification links actual activities to the territories, channels and flows concerned. Every conclusion must be supported by a source and validated by the competent function.',
+    applicabilityStatus: 'To confirm from source',
+    applicabilitySource: 'Source to review',
+    applicabilityDeliverable: 'Expected result',
+    applicabilityDimensions: [
+      {
+        title: 'Activities & offers actually open',
+        body: 'Identify activities actually performed, their audiences and real status, without treating a project or intention as an active offer.',
+        source: 'Business Model, Business Plan, governed catalogue and decisions',
+        deliverable: 'Dated list of active, pilot, suspended or planned activities'
+      },
+      {
+        title: 'Territories & responsible entities',
+        body: 'Link each activity to its operating territory and to the entity or person that actually operates it.',
+        source: 'Signed institutional records, mandates and evidence of activity',
+        deliverable: 'Confirmed activity–territory–owner combination'
+      },
+      {
+        title: 'Channels & touchpoints',
+        body: 'Inventory the sites, forms, emails, messaging, documents and journeys actually used with audiences.',
+        source: 'Channel inventory, published interfaces and templates in use',
+        deliverable: 'Map of active channels, audiences concerned and channel owner'
+      },
+      {
+        title: 'Data, contract & payment flows',
+        body: 'Describe data collected, commitments, payments and evidence associated with each real journey.',
+        source: 'Business registers, contracts, forms, entries and GED evidence',
+        deliverable: 'Flow–purpose–evidence–competent function matrix'
+      }
+    ],
+    applicabilityRule: 'Until these four dimensions are confirmed from evidence, terms of use, terms of sale, policies, notices and obligations remain candidate documents or requirements to qualify.',
     frameworkTitle: 'Compliance scope to organise',
     frameworkBody: 'Compliance is cross-functional. Administration maintains registers and deadlines; governance and competent functions validate substance in their domain.',
     institutional: 'Association compliance',
@@ -195,6 +264,7 @@ const COPY = {
     noClaim: 'Keine Konformität behauptet',
     navLabel: 'Navigation innerhalb der Compliance',
     navProgress: 'Fortschritt',
+    navApplicability: 'Anwendbarkeit',
     navFramework: 'Umfang',
     navRegister: 'Register',
     navControls: 'Kontrollen & Nachweise',
@@ -218,6 +288,38 @@ const COPY = {
     reviewEvidence: 'Externes vorbereitendes Ergebnis eingegangen · in Prüfung · 16.08.2026',
     progressCaution: 'Diese Kennzahl misst die dokumentarische Vorbereitung. Sie misst oder bestätigt keine rechtliche Konformität von 2SG.',
     sourceLabel: 'Geschützte Quelle',
+    applicabilityTitle: 'Qualifizierung der Anwendbarkeit',
+    applicabilityBody: 'Die Qualifizierung verknüpft tatsächlich ausgeübte Tätigkeiten mit den betroffenen Gebieten, Kanälen und Abläufen. Jede Schlussfolgerung muss durch eine Quelle belegt und von der zuständigen Funktion validiert werden.',
+    applicabilityStatus: 'Anhand einer Quelle zu bestätigen',
+    applicabilitySource: 'Zu prüfende Quelle',
+    applicabilityDeliverable: 'Erwartetes Ergebnis',
+    applicabilityDimensions: [
+      {
+        title: 'Tatsächlich offene Tätigkeiten & Angebote',
+        body: 'Tatsächlich ausgeübte Tätigkeiten, Zielgruppen und realen Status erfassen, ohne ein Projekt oder eine Absicht als aktives Angebot darzustellen.',
+        source: 'Business Model, Business Plan, gesteuerter Katalog und Entscheidungen',
+        deliverable: 'Datierte Liste aktiver, pilotierter, ausgesetzter oder geplanter Tätigkeiten'
+      },
+      {
+        title: 'Gebiete & verantwortliche Einheiten',
+        body: 'Jede Tätigkeit ihrem Ausübungsgebiet und der Einheit oder Person zuordnen, die sie tatsächlich betreibt.',
+        source: 'Unterzeichnete institutionelle Unterlagen, Mandate und Tätigkeitsnachweise',
+        deliverable: 'Bestätigte Kombination Tätigkeit–Gebiet–Verantwortung'
+      },
+      {
+        title: 'Kanäle & Kontaktpunkte',
+        body: 'Tatsächlich genutzte Websites, Formulare, E-Mails, Nachrichtenkanäle, Dokumente und Abläufe mit Zielgruppen erfassen.',
+        source: 'Kanalinventar, veröffentlichte Oberflächen und verwendete Vorlagen',
+        deliverable: 'Karte aktiver Kanäle, betroffener Zielgruppen und Kanalverantwortung'
+      },
+      {
+        title: 'Daten-, Vertrags- & Zahlungsflüsse',
+        body: 'Erhobene Daten, Verpflichtungen, Zahlungen und Nachweise für jeden realen Ablauf beschreiben.',
+        source: 'Fachregister, Verträge, Formulare, Buchungen und GED-Nachweise',
+        deliverable: 'Matrix Ablauf–Zweck–Nachweis–zuständige Funktion'
+      }
+    ],
+    applicabilityRule: 'Bis diese vier Dimensionen anhand von Nachweisen bestätigt sind, bleiben Nutzungsbedingungen, Verkaufsbedingungen, Richtlinien, Hinweise und Pflichten zu qualifizierende Dokumente oder Anforderungen.',
     frameworkTitle: 'Zu organisierender Compliance-Umfang',
     frameworkBody: 'Compliance ist bereichsübergreifend. Die Verwaltung führt Register und Fristen; Governance und zuständige Funktionen validieren die Inhalte ihres Bereichs.',
     institutional: 'Vereinskonformität',
@@ -285,6 +387,7 @@ const ComplianceOverview = ({ language = 'FR' }) => {
   const t = COPY[language] || COPY.FR;
   const navItems = [
     { id: 'compliance-progress', label: t.navProgress },
+    { id: 'compliance-applicability', label: t.navApplicability },
     { id: 'compliance-framework', label: t.navFramework },
     { id: 'compliance-register', label: t.navRegister },
     { id: 'compliance-controls', label: t.navControls },
@@ -309,6 +412,7 @@ const ComplianceOverview = ({ language = 'FR' }) => {
     [t.specialistRole, t.specialistRoleBody, UserCheck],
     [t.gedRole, t.gedRoleBody, FolderLock]
   ];
+  const applicabilityIcons = [Workflow, MapPinned, RadioTower, Scale];
 
   return (
     <section id="compliance-top" className="administration-overview mb-6 space-y-6 scroll-mt-24" aria-labelledby="compliance-title">
@@ -389,6 +493,41 @@ const ComplianceOverview = ({ language = 'FR' }) => {
             <p className="mt-2 text-xs leading-5 text-slate-400">{t.sourceLabel} · {t.progressStageName}</p>
           </aside>
         </div>
+      </section>
+
+      <section id="compliance-applicability" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="compliance-applicability-title">
+        <h3 id="compliance-applicability-title" className="text-xl font-semibold text-slate-100">{t.applicabilityTitle}</h3>
+        <p className="mt-2 max-w-5xl text-sm leading-6 text-slate-400">{t.applicabilityBody}</p>
+        <div className="mt-5 grid gap-4 xl:grid-cols-2">
+          {t.applicabilityDimensions.map((dimension, index) => {
+            const Icon = applicabilityIcons[index];
+            return (
+              <article key={dimension.title} className="rounded-lg border border-slate-700 bg-slate-900/45 p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-blue-950 text-blue-300">
+                      <Icon size={20} aria-hidden="true" />
+                    </span>
+                    <h4 className="font-semibold text-slate-100">{dimension.title}</h4>
+                  </div>
+                  <span className="rounded-full border border-amber-700 bg-amber-950/40 px-3 py-1 text-xs font-semibold text-amber-100">{t.applicabilityStatus}</span>
+                </div>
+                <p className="mt-3 text-sm leading-6 text-slate-300">{dimension.body}</p>
+                <dl className="mt-4 grid gap-3 border-t border-slate-700 pt-4 sm:grid-cols-2">
+                  <div>
+                    <dt className="text-xs font-bold uppercase text-slate-500">{t.applicabilitySource}</dt>
+                    <dd className="mt-1 text-sm leading-5 text-slate-300">{dimension.source}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs font-bold uppercase text-slate-500">{t.applicabilityDeliverable}</dt>
+                    <dd className="mt-1 text-sm leading-5 text-slate-300">{dimension.deliverable}</dd>
+                  </div>
+                </dl>
+              </article>
+            );
+          })}
+        </div>
+        <p className="mt-5 rounded-md border border-amber-800 bg-amber-950/20 px-4 py-3 text-sm leading-6 text-amber-100">{t.applicabilityRule}</p>
       </section>
 
       <section id="compliance-framework" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="compliance-framework-title">
