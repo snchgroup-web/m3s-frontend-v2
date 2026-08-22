@@ -269,6 +269,10 @@ test('opens the four governed global views without confusing architecture with t
   expect(screen.getByRole('heading', { name: 'Cycle candidat du dossier d’achat' })).toBeInTheDocument();
   expect(screen.getByText('Réception sous réserve')).toBeInTheDocument();
   expect(screen.getByText(/Il ne remplace pas les statuts propres aux dépenses/)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Contrôles minimaux candidats' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Commander par lot' })).toBeInTheDocument();
+  expect(screen.getByText('Autorisation active et un fournisseur par commande ou lot.')).toBeInTheDocument();
+  expect(screen.getByText('Réserves visibles ; aucun paiement final déduit automatiquement.')).toBeInTheDocument();
   expect(screen.queryByText('Carte mentale globale des fonctions')).not.toBeInTheDocument();
 
   fireEvent.click(screen.getByRole('tab', { name: 'Processus & Contrôles' }));

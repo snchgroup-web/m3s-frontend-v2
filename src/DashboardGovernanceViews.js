@@ -77,7 +77,17 @@ const copy = {
       pilotPeopleBoundary: 'RH-001 gouverne les identités et affectations internes. Il ne transforme pas un fournisseur ou entrepreneur externe en membre du personnel.',
       pilotLifecycleTitle: 'Cycle candidat du dossier d’achat',
       pilotLifecycleBody: 'Ce statut appartient au dossier d’achat. Il ne remplace pas les statuts propres aux dépenses, paiements, mouvements de stock ou documents.',
-      pilotLifecycle: ['Brouillon', 'À autoriser', 'Autorisé', 'Commandé', 'Réception partielle', 'Réception sous réserve', 'Réceptionné', 'Clôturé', 'Annulé']
+      pilotLifecycle: ['Brouillon', 'À autoriser', 'Autorisé', 'Commandé', 'Réception partielle', 'Réception sous réserve', 'Réceptionné', 'Clôturé', 'Annulé'],
+      pilotControlsTitle: 'Contrôles minimaux candidats',
+      pilotControlsBody: 'Ces portes de passage structurent le dossier sans valider une dépense, un paiement ou une réception à la place de leur fonction responsable.',
+      pilotControlLabels: ['Prépare', 'Contrôle ou autorise', 'Preuve minimale', 'Condition de passage'],
+      pilotControls: [
+        ['Créer', 'Responsable interne RH-001 · Production', 'Production', 'Besoin, périmètre, projet ou tâche, Team et responsable', 'Dossier identifié, sans engagement externe.'],
+        ['Autoriser', 'Production', 'Gouvernance · Finance pour l’engagement', 'Offres ou options, choix motivé, budget, risques et délégation', 'Décision datée, auteur et plafond explicites.'],
+        ['Commander par lot', 'Production', 'Responsable autorisé', 'Commande ou contrat, fournisseur, montant, devise et délai', 'Autorisation active et un fournisseur par commande ou lot.'],
+        ['Réceptionner', 'Responsable terrain · Production', 'Stock & Actifs · fonction métier', 'Bon ou PV, quantités, état, photos ou tests et réserves', 'Réserves visibles ; aucun paiement final déduit automatiquement.'],
+        ['Clôturer', 'Production', 'Finance · Gouvernance selon le cas', 'Réception, état des paiements, réserves et index GED', 'Obligations revues, décision et date de clôture tracées.']
+      ]
     },
     processes: {
       eyebrow: 'MÉTHODE COMMUNE',
@@ -156,7 +166,17 @@ const copy = {
       pilotPeopleBoundary: 'RH-001 governs internal identities and assignments. It does not turn an external supplier or contractor into staff.',
       pilotLifecycleTitle: 'Candidate purchasing-case lifecycle',
       pilotLifecycleBody: 'This status belongs to the purchasing case. It does not replace the statuses of expenses, payments, stock movements or documents.',
-      pilotLifecycle: ['Draft', 'Pending authorisation', 'Authorised', 'Ordered', 'Partial receipt', 'Receipt with reservations', 'Received', 'Closed', 'Cancelled']
+      pilotLifecycle: ['Draft', 'Pending authorisation', 'Authorised', 'Ordered', 'Partial receipt', 'Receipt with reservations', 'Received', 'Closed', 'Cancelled'],
+      pilotControlsTitle: 'Candidate minimum controls',
+      pilotControlsBody: 'These gates structure the case without validating an expense, payment or receipt on behalf of its responsible function.',
+      pilotControlLabels: ['Prepares', 'Controls or authorises', 'Minimum evidence', 'Transition condition'],
+      pilotControls: [
+        ['Create', 'RH-001 internal responsible party · Production', 'Production', 'Need, scope, project or task, Team and responsible party', 'Case identified, with no external commitment.'],
+        ['Authorise', 'Production', 'Governance · Finance for the commitment', 'Offers or options, reasoned choice, budget, risks and delegation', 'Dated decision, author and explicit ceiling.'],
+        ['Order by lot', 'Production', 'Authorised responsible party', 'Order or contract, supplier, amount, currency and deadline', 'Active authorisation and one supplier per order or lot.'],
+        ['Receive', 'Field responsible party · Production', 'Stock & Assets · business function', 'Delivery note or report, quantities, condition, photos or tests and reservations', 'Reservations visible; no final payment inferred automatically.'],
+        ['Close', 'Production', 'Finance · Governance as applicable', 'Receipt, payment status, reservations and DMS index', 'Obligations reviewed, closure decision and date recorded.']
+      ]
     },
     processes: {
       eyebrow: 'COMMON METHOD', title: 'Processes & Controls', body: 'Global steering harmonises cross-functional controls. Detailed procedures remain governed within each function.',
@@ -207,7 +227,17 @@ const copy = {
       pilotPeopleBoundary: 'RH-001 regelt interne Identitäten und Zuweisungen. Externe Lieferanten oder Auftragnehmer werden dadurch nicht zu Personal.',
       pilotLifecycleTitle: 'Kandidatenzyklus des Einkaufsdossiers',
       pilotLifecycleBody: 'Dieser Status gehört zum Einkaufsdossier. Er ersetzt nicht die eigenen Status von Ausgaben, Zahlungen, Bestandsbewegungen oder Dokumenten.',
-      pilotLifecycle: ['Entwurf', 'Zur Freigabe', 'Freigegeben', 'Bestellt', 'Teilweise erhalten', 'Annahme mit Vorbehalt', 'Angenommen', 'Abgeschlossen', 'Storniert']
+      pilotLifecycle: ['Entwurf', 'Zur Freigabe', 'Freigegeben', 'Bestellt', 'Teilweise erhalten', 'Annahme mit Vorbehalt', 'Angenommen', 'Abgeschlossen', 'Storniert'],
+      pilotControlsTitle: 'Vorgeschlagene Mindestkontrollen',
+      pilotControlsBody: 'Diese Übergangstore strukturieren das Dossier, ohne Ausgaben, Zahlungen oder Annahmen anstelle der zuständigen Funktion zu bestätigen.',
+      pilotControlLabels: ['Bereitet vor', 'Kontrolliert oder genehmigt', 'Mindestnachweis', 'Übergangsbedingung'],
+      pilotControls: [
+        ['Anlegen', 'Interne RH-001-Verantwortung · Produktion', 'Produktion', 'Bedarf, Umfang, Projekt oder Aufgabe, Team und Verantwortung', 'Dossier identifiziert, ohne externe Verpflichtung.'],
+        ['Genehmigen', 'Produktion', 'Governance · Finanzen für die Verpflichtung', 'Angebote oder Optionen, begründete Wahl, Budget, Risiken und Delegation', 'Datierte Entscheidung, Autor und ausdrückliche Obergrenze.'],
+        ['Je Los bestellen', 'Produktion', 'Autorisierte Verantwortung', 'Bestellung oder Vertrag, Lieferant, Betrag, Währung und Frist', 'Aktive Genehmigung und ein Lieferant je Bestellung oder Los.'],
+        ['Annehmen', 'Verantwortung vor Ort · Produktion', 'Bestand & Aktiva · Fachfunktion', 'Lieferschein oder Protokoll, Mengen, Zustand, Fotos oder Tests und Vorbehalte', 'Vorbehalte sichtbar; keine automatische Ableitung der Schlusszahlung.'],
+        ['Abschließen', 'Produktion', 'Finanzen · Governance je nach Fall', 'Annahme, Zahlungsstatus, Vorbehalte und GED-Index', 'Pflichten geprüft, Abschlussentscheidung und Datum dokumentiert.']
+      ]
     },
     processes: {
       eyebrow: 'GEMEINSAME METHODE', title: 'Prozesse & Kontrollen', body: 'Die globale Steuerung harmonisiert funktionsübergreifende Kontrollen. Detaillierte Verfahren bleiben in jeder Funktion geregelt.',
@@ -316,7 +346,7 @@ const ArchitectureView = ({ data }) => {
             ))}
           </div>
           <p className="m3s-raised mt-3 px-3 py-2 text-sm leading-5 text-slate-300">{data.pilotPeopleBoundary}</p>
-          <div className="m3s-raised mt-4 p-3">
+          <div className="mt-4 border-t border-slate-700 pt-4">
             <h6 className="text-sm font-semibold text-slate-100">{data.pilotLifecycleTitle}</h6>
             <p className="mt-1 max-w-4xl text-sm leading-5 text-slate-400">{data.pilotLifecycleBody}</p>
             <ol className="mt-3 flex flex-wrap gap-2">
@@ -327,6 +357,28 @@ const ArchitectureView = ({ data }) => {
                 </li>
               ))}
             </ol>
+          </div>
+          <div className="mt-4 border-t border-slate-700 pt-4">
+            <h6 className="text-sm font-semibold text-slate-100">{data.pilotControlsTitle}</h6>
+            <p className="mt-1 max-w-4xl text-sm leading-5 text-slate-400">{data.pilotControlsBody}</p>
+            <div className="mt-3 grid gap-3 xl:grid-cols-2">
+              {data.pilotControls.map(([step, preparer, controller, evidence, gate], index) => (
+                <article key={step} className="rounded-md border border-slate-700 bg-slate-950/20 p-3">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-cyan-950 text-xs font-semibold text-cyan-300">{index + 1}</span>
+                    <h6 className="text-sm font-semibold text-slate-100">{step}</h6>
+                  </div>
+                  <dl className="mt-3 grid gap-3 sm:grid-cols-2">
+                    {[preparer, controller, evidence, gate].map((value, fieldIndex) => (
+                      <div key={data.pilotControlLabels[fieldIndex]}>
+                        <dt className="text-xs font-semibold uppercase text-slate-500">{data.pilotControlLabels[fieldIndex]}</dt>
+                        <dd className="mt-1 text-sm leading-5 text-slate-300">{value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
       </section>
