@@ -133,7 +133,43 @@ const copy = {
         'Contrat de liaison GED défini sans exposer les pièces sensibles dans le bundle client',
         'Historique qualifié au cas par cas, sans conversion automatique des anciens libellés',
         'Tests de permissions, concurrence, reprise sur erreur et retour arrière réussis'
-      ]
+      ],
+      workDomainTitle: 'Deuxième domaine borné · Dossier, projet et exécution',
+      workDomainBody: 'Ce cadrage confronte le socle relationnel V1 aux données réellement visibles. Il n’ajoute aucune table et ne transforme pas une simple tâche en projet.',
+      workDomainStatus: 'Cadrage V1 · implémentation à arbitrer',
+      workObservedTitle: 'État relationnel observé',
+      workObservedItems: [
+        'Le registre des tâches expose tâche, statut, priorité, responsable, module et progression sous forme de valeurs.',
+        'Finance conserve `phase_projet` comme libellé ; aucun `project_id`, `phase_id` ou `task_id` n’est observé dans son payload courant.',
+        'Le portefeuille suit les grands dossiers, sans chaîne relationnelle complète exposée vers projets, phases, activités et tâches.'
+      ],
+      workStandardTitle: 'Socle V1 déjà documenté',
+      workStandardItems: [
+        'Un dossier peut exister sans projet, notamment pour une obligation, un incident ou un contentieux.',
+        'Projet, phase, activité, tâche et action ne sont créés que lorsque chaque niveau apporte une utilité réelle.',
+        'Un jalon matérialise une décision, une livraison, une réception ou un contrôle sans durée propre.',
+        'Auteur, responsable, contrôleur et validateur restent distingués par des affectations gouvernées.'
+      ],
+      workObjectOwner: 'Propriétaire de source candidat',
+      workObjectRelation: 'Relation candidate',
+      workObjects: [
+        ['dossier_id', 'Dossier de suivi', 'Administration · portefeuille et fonction métier responsable', '1 portefeuille → 0..n dossiers ; chaque dossier → 0..1 portefeuille.'],
+        ['project_id', 'Projet délimité', 'Administration · Planification & Projets avec la fonction responsable', '1 dossier → 0..n projets ; chaque projet → 0..1 dossier.'],
+        ['phase_id', 'Phase gouvernée', 'Administration · Planification & Projets', '1 projet → 0..n phases ; chaque phase → exactement 1 projet.'],
+        ['activity_id', 'Activité cohérente facultative', 'Fonction responsable · Planification & Projets', '1 phase → 0..n activités ; chaque activité → exactement 1 phase. Niveau facultatif.'],
+        ['task_id', 'Tâche exécutable', 'Fonction responsable · registre des tâches', 'V1 : 1 activité → 0..n tâches. Le rattachement direct à une phase si l’activité est omise reste à arbitrer.'],
+        ['action_id', 'Action élémentaire facultative', 'Fonction responsable · journal d’exécution', '1 tâche → 0..n actions ; chaque action → exactement 1 tâche. Niveau facultatif.'],
+        ['milestone_id', 'Jalon de contrôle', 'Planification & Projets · fonction responsable', '1 projet → 0..n jalons ; chaque jalon → 1 projet et 0..1 phase.']
+      ],
+      workRulesTitle: 'Garde-fous du cadrage',
+      workRules: [
+        'Aucun niveau vide n’est créé pour satisfaire artificiellement une hiérarchie.',
+        'Le statut ou la progression d’un parent n’est jamais déduit automatiquement de ses enfants.',
+        'L’auteur d’une saisie ne devient pas automatiquement responsable, contrôleur ou validateur.',
+        'Les preuves restent dans la GED et se relient à l’objet concerné sans copie concurrente.'
+      ],
+      workDecisionTitle: 'Arbitrage humain prioritaire',
+      workDecisionBody: 'Lorsque le niveau Activité n’est pas utile, décider si `task_id` pointe directement vers `phase_id` ou utilise une relation parent typée. Ne créer aucune activité vide par défaut.'
     },
     processes: {
       eyebrow: 'MÉTHODE COMMUNE',
@@ -268,7 +304,43 @@ const copy = {
         'DMS linking contract defined without exposing sensitive documents in the client bundle',
         'Legacy history qualified case by case, with no automatic conversion of old labels',
         'Permission, concurrency, error recovery and rollback tests passed'
-      ]
+      ],
+      workDomainTitle: 'Second bounded domain · File, project and execution',
+      workDomainBody: 'This framing compares the V1 relational foundation with actually visible data. It adds no table and does not turn a simple task into a project.',
+      workDomainStatus: 'V1 framing · implementation to arbitrate',
+      workObservedTitle: 'Observed relationship state',
+      workObservedItems: [
+        'The task register exposes task, status, priority, owner, module and progress as values.',
+        'Finance retains `phase_projet` as a label; no `project_id`, `phase_id` or `task_id` is observed in its current payload.',
+        'The portfolio tracks major files, without exposing a complete relationship chain to projects, phases, activities and tasks.'
+      ],
+      workStandardTitle: 'Already documented V1 foundation',
+      workStandardItems: [
+        'A file may exist without a project, notably for an obligation, incident or dispute.',
+        'Project, phase, activity, task and action are created only when each level provides real value.',
+        'A milestone represents a decision, delivery, acceptance or control without its own duration.',
+        'Author, owner, controller and validator remain separated through governed assignments.'
+      ],
+      workObjectOwner: 'Candidate source owner',
+      workObjectRelation: 'Candidate relationship',
+      workObjects: [
+        ['dossier_id', 'Tracking file', 'Administration · portfolio and responsible business function', '1 portfolio → 0..n files; each file → 0..1 portfolio.'],
+        ['project_id', 'Bounded project', 'Administration · Planning & Projects with the responsible function', '1 file → 0..n projects; each project → 0..1 file.'],
+        ['phase_id', 'Governed phase', 'Administration · Planning & Projects', '1 project → 0..n phases; each phase → exactly 1 project.'],
+        ['activity_id', 'Optional coherent activity', 'Responsible function · Planning & Projects', '1 phase → 0..n activities; each activity → exactly 1 phase. Optional level.'],
+        ['task_id', 'Executable task', 'Responsible function · task register', 'V1: 1 activity → 0..n tasks. A direct phase link when activity is omitted remains to arbitrate.'],
+        ['action_id', 'Optional elementary action', 'Responsible function · execution log', '1 task → 0..n actions; each action → exactly 1 task. Optional level.'],
+        ['milestone_id', 'Control milestone', 'Planning & Projects · responsible function', '1 project → 0..n milestones; each milestone → 1 project and 0..1 phase.']
+      ],
+      workRulesTitle: 'Framing guardrails',
+      workRules: [
+        'No empty level is created merely to satisfy a hierarchy.',
+        'A parent status or progress is never inferred automatically from its children.',
+        'The author of an entry does not automatically become its owner, controller or validator.',
+        'Evidence remains in the DMS and links to the relevant object without a competing copy.'
+      ],
+      workDecisionTitle: 'Priority human decision',
+      workDecisionBody: 'When the Activity level is not useful, decide whether `task_id` links directly to `phase_id` or uses a typed parent relationship. Do not create empty activities by default.'
     },
     processes: {
       eyebrow: 'COMMON METHOD', title: 'Processes & Controls', body: 'Global steering harmonises cross-functional controls. Detailed procedures remain governed within each function.',
@@ -375,7 +447,43 @@ const copy = {
         'GED-Verknüpfungsvertrag definiert, ohne sensible Dokumente im Client-Bundle offenzulegen',
         'Altbestände einzeln qualifiziert, ohne automatische Umwandlung alter Bezeichnungen',
         'Tests für Rechte, Parallelität, Fehlerwiederaufnahme und Rücksetzung erfolgreich'
-      ]
+      ],
+      workDomainTitle: 'Zweiter begrenzter Bereich · Akte, Projekt und Ausführung',
+      workDomainBody: 'Diese Rahmung vergleicht das relationale V1-Fundament mit den tatsächlich sichtbaren Daten. Sie fügt keine Tabelle hinzu und macht aus einer einfachen Aufgabe kein Projekt.',
+      workDomainStatus: 'V1-Rahmung · Implementierung zu entscheiden',
+      workObservedTitle: 'Beobachteter Beziehungsstand',
+      workObservedItems: [
+        'Das Aufgabenregister führt Aufgabe, Status, Priorität, Verantwortung, Modul und Fortschritt als Werte.',
+        'Finanzen behält `phase_projet` als Bezeichnung; im aktuellen Payload sind kein `project_id`, `phase_id` oder `task_id` beobachtet.',
+        'Das Portfolio verfolgt wichtige Akten, ohne eine vollständige Beziehungskette zu Projekten, Phasen, Aktivitäten und Aufgaben offenzulegen.'
+      ],
+      workStandardTitle: 'Bereits dokumentiertes V1-Fundament',
+      workStandardItems: [
+        'Eine Akte kann ohne Projekt bestehen, insbesondere für eine Pflicht, einen Vorfall oder einen Rechtsstreit.',
+        'Projekt, Phase, Aktivität, Aufgabe und Aktion werden nur angelegt, wenn jede Ebene einen echten Nutzen hat.',
+        'Ein Meilenstein steht für Entscheidung, Lieferung, Annahme oder Kontrolle ohne eigene Dauer.',
+        'Autor, Verantwortung, Kontrolle und Validierung bleiben durch geregelte Zuweisungen getrennt.'
+      ],
+      workObjectOwner: 'Vorgeschlagene Quellenverantwortung',
+      workObjectRelation: 'Vorgeschlagene Beziehung',
+      workObjects: [
+        ['dossier_id', 'Verfolgungsakte', 'Verwaltung · Portfolio und verantwortliche Fachfunktion', '1 Portfolio → 0..n Akten; jede Akte → 0..1 Portfolio.'],
+        ['project_id', 'Abgegrenztes Projekt', 'Verwaltung · Planung & Projekte mit der verantwortlichen Funktion', '1 Akte → 0..n Projekte; jedes Projekt → 0..1 Akte.'],
+        ['phase_id', 'Geregelte Phase', 'Verwaltung · Planung & Projekte', '1 Projekt → 0..n Phasen; jede Phase → genau 1 Projekt.'],
+        ['activity_id', 'Optionale zusammenhängende Aktivität', 'Verantwortliche Funktion · Planung & Projekte', '1 Phase → 0..n Aktivitäten; jede Aktivität → genau 1 Phase. Optionale Ebene.'],
+        ['task_id', 'Ausführbare Aufgabe', 'Verantwortliche Funktion · Aufgabenregister', 'V1: 1 Aktivität → 0..n Aufgaben. Die direkte Phasenverknüpfung ohne Aktivität bleibt zu entscheiden.'],
+        ['action_id', 'Optionale Einzelaktion', 'Verantwortliche Funktion · Ausführungsjournal', '1 Aufgabe → 0..n Aktionen; jede Aktion → genau 1 Aufgabe. Optionale Ebene.'],
+        ['milestone_id', 'Kontrollmeilenstein', 'Planung & Projekte · verantwortliche Funktion', '1 Projekt → 0..n Meilensteine; jeder Meilenstein → 1 Projekt und 0..1 Phase.']
+      ],
+      workRulesTitle: 'Leitplanken der Rahmung',
+      workRules: [
+        'Keine leere Ebene wird nur zur Erfüllung einer Hierarchie angelegt.',
+        'Status oder Fortschritt eines Elternobjekts werden nie automatisch aus den Kindern abgeleitet.',
+        'Der Autor eines Eintrags wird nicht automatisch verantwortlich, kontrollierend oder validierend.',
+        'Nachweise bleiben in der GED und werden ohne konkurrierende Kopie mit dem betroffenen Objekt verknüpft.'
+      ],
+      workDecisionTitle: 'Vorrangige menschliche Entscheidung',
+      workDecisionBody: 'Wenn die Ebene Aktivität nicht nützlich ist, entscheiden, ob `task_id` direkt auf `phase_id` verweist oder eine typisierte Elternbeziehung nutzt. Standardmäßig keine leeren Aktivitäten anlegen.'
     },
     processes: {
       eyebrow: 'GEMEINSAME METHODE', title: 'Prozesse & Kontrollen', body: 'Die globale Steuerung harmonisiert funktionsübergreifende Kontrollen. Detaillierte Verfahren bleiben in jeder Funktion geregelt.',
@@ -590,6 +698,61 @@ const ArchitectureView = ({ data }) => {
             </div>
           </div>
         </section>
+      </section>
+      <section className="mt-6 border-t border-slate-700 pt-5" aria-labelledby="work-breakdown-candidate">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h4 id="work-breakdown-candidate" className="text-base font-semibold text-slate-100">{data.workDomainTitle}</h4>
+            <p className="mt-1 max-w-4xl text-sm leading-6 text-slate-400">{data.workDomainBody}</p>
+          </div>
+          <span className="rounded-md border border-amber-600/70 bg-amber-950/20 px-2.5 py-1 text-xs font-semibold text-amber-200">{data.workDomainStatus}</span>
+        </div>
+        <div className="mt-4 grid gap-3 lg:grid-cols-2">
+          {[[data.workObservedTitle, data.workObservedItems], [data.workStandardTitle, data.workStandardItems]].map(([title, items], groupIndex) => (
+            <article key={title} className="rounded-md border border-slate-700 bg-slate-900/30 p-3">
+              <h5 className="text-sm font-semibold text-slate-100">{title}</h5>
+              <ul className="mt-3 space-y-2">
+                {items.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm leading-5 text-slate-300">
+                    {groupIndex === 0
+                      ? <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-400" />
+                      : <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-300" size={16} aria-hidden="true" />}
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {data.workObjects.map(([identifier, role, owner, relation]) => (
+            <article key={identifier} className="min-w-0 rounded-md border border-slate-700 bg-slate-950/20 p-3">
+              <code className="break-all text-sm font-semibold text-cyan-300">{identifier}</code>
+              <p className="mt-2 text-sm font-semibold text-slate-100">{role}</p>
+              <dl className="mt-3 space-y-3 text-sm">
+                <div><dt className="text-xs font-semibold uppercase text-slate-500">{data.workObjectOwner}</dt><dd className="mt-1 leading-5 text-slate-300">{owner}</dd></div>
+                <div><dt className="text-xs font-semibold uppercase text-slate-500">{data.workObjectRelation}</dt><dd className="mt-1 leading-5 text-slate-300">{relation}</dd></div>
+              </dl>
+            </article>
+          ))}
+        </div>
+        <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+          <article className="rounded-md border border-emerald-800/70 bg-emerald-950/10 p-3">
+            <h5 className="flex items-center gap-2 text-sm font-semibold text-slate-100"><ShieldCheck className="shrink-0 text-emerald-300" size={18} aria-hidden="true" />{data.workRulesTitle}</h5>
+            <ul className="mt-3 space-y-2">
+              {data.workRules.map((rule) => (
+                <li key={rule} className="flex items-start gap-2 text-sm leading-5 text-slate-300">
+                  <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-300" size={16} aria-hidden="true" />
+                  {rule}
+                </li>
+              ))}
+            </ul>
+          </article>
+          <article className="rounded-md border border-amber-700/70 bg-amber-950/15 p-3">
+            <h5 className="text-sm font-semibold text-amber-100">{data.workDecisionTitle}</h5>
+            <p className="mt-2 text-sm leading-6 text-amber-100/90">{data.workDecisionBody}</p>
+          </article>
+        </div>
       </section>
     </div>
   );

@@ -296,6 +296,18 @@ test('opens the four governed global views without confusing architecture with t
   expect(screen.getByRole('heading', { name: 'Préconditions techniques avant formulaire et backend' })).toBeInTheDocument();
   expect(screen.getByText(/Droits RBAC définis pour créer, corriger, contrôler, lever, maintenir et annuler/)).toBeInTheDocument();
   expect(screen.getByText(/sans conversion automatique des anciens libellés/)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Deuxième domaine borné · Dossier, projet et exécution' })).toBeInTheDocument();
+  expect(screen.getByText('Cadrage V1 · implémentation à arbitrer')).toBeInTheDocument();
+  expect(screen.getByText('dossier_id')).toBeInTheDocument();
+  expect(screen.getByText('project_id')).toBeInTheDocument();
+  expect(screen.getByText('phase_id')).toBeInTheDocument();
+  expect(screen.getByText('activity_id')).toBeInTheDocument();
+  expect(screen.getByText('task_id')).toBeInTheDocument();
+  expect(screen.getByText('action_id')).toBeInTheDocument();
+  expect(screen.getByText('milestone_id')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Garde-fous du cadrage' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Arbitrage humain prioritaire' })).toBeInTheDocument();
+  expect(screen.getByText(/Ne créer aucune activité vide par défaut/)).toBeInTheDocument();
   expect(screen.queryByText('Carte mentale globale des fonctions')).not.toBeInTheDocument();
 
   fireEvent.click(screen.getByRole('tab', { name: 'Processus & Contrôles' }));
