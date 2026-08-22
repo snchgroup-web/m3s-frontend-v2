@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck, Wrench } from 'lucide-react';
+import { Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck, Wrench, X } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
 import { api } from './api';
-import { StandardActionsCell, StandardCreateButton, StandardRecordSheetModal } from './StandardUI';
+import { StandardActionsCell, StandardCreateButton } from './StandardUI';
 import { isLegacyBuCode, translateDas } from './strategicMapping';
 import ProductionGlossary from './ProductionGlossary';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
@@ -75,8 +75,11 @@ const Production = () => {
       teamZhCollective: 'Team ZH (collectif)',
       teamSnCollective: 'Team SN (collectif)',
       modifierFournisseur: 'Modifier le fournisseur',
+      champsModifiables: 'Champs modifiables',
+      donneesSourceLectureSeule: 'Données sources en lecture seule',
       confirmerSuppressionFournisseur: 'Supprimer ce fournisseur du registre local ?',
       agentNonAttribue: 'Non attribué',
+      nonRenseigne: 'Non renseigné',
       agentHistorique: 'valeur historique',
       affectationAQualifier: 'À qualifier',
       coherenceAffectation: 'Cohérence Team / Agent',
@@ -156,8 +159,11 @@ const Production = () => {
       teamZhCollective: 'Team ZH (collective)',
       teamSnCollective: 'Team SN (collective)',
       modifierFournisseur: 'Edit Supplier',
+      champsModifiables: 'Editable fields',
+      donneesSourceLectureSeule: 'Read-only source data',
       confirmerSuppressionFournisseur: 'Delete this supplier from the local register?',
       agentNonAttribue: 'Unassigned',
+      nonRenseigne: 'Not specified',
       agentHistorique: 'historical value',
       affectationAQualifier: 'To be qualified',
       coherenceAffectation: 'Team / Agent consistency',
@@ -237,8 +243,11 @@ const Production = () => {
       teamZhCollective: 'Team ZH (gemeinsam)',
       teamSnCollective: 'Team SN (gemeinsam)',
       modifierFournisseur: 'Lieferant bearbeiten',
+      champsModifiables: 'Bearbeitbare Felder',
+      donneesSourceLectureSeule: 'Quelldaten nur zum Lesen',
       confirmerSuppressionFournisseur: 'Diesen Lieferanten aus dem lokalen Register löschen?',
       agentNonAttribue: 'Nicht zugewiesen',
+      nonRenseigne: 'Nicht angegeben',
       agentHistorique: 'historischer Wert',
       affectationAQualifier: 'Zu klären',
       coherenceAffectation: 'Konsistenz Team / Agent',
@@ -560,6 +569,9 @@ const Production = () => {
     return agents ? `${agents} · ${t.affectationAQualifier}` : t.affectationAQualifier;
   };
   const supplierCategoryOptions = ['Matériel', 'Logiciels', 'Services', 'Bien immobilier', 'Frais Administratifs', 'Chantier'];
+  const supplierDepartmentOptions = Object.entries(dataTranslations.departments.FR)
+    .filter(([, label], index, entries) => entries.findIndex(([, candidate]) => candidate === label) === index)
+    .map(([value]) => value);
   const getDefaultFormData = (type = 'commande') => ({
     numero: '',
     client: '',
@@ -569,6 +581,7 @@ const Production = () => {
     email: '',
     telephone: '',
     categorie: 'Services',
+    departement: '',
     pays: 'Sénégal',
     team: 'Team_ZH',
     agent: 'Cheikh',
@@ -577,7 +590,7 @@ const Production = () => {
     statut: 'En cours',
     date: new Date().toISOString().split('T')[0],
     ...(type === 'stock' ? { produit: 'Licences IT', quantite: '', seuil: '', unite: 'Unité' } : {}),
-    ...(type === 'fournisseur' ? { categorie: 'Services', pays: 'Sénégal', team: 'Team_ZH', agent: 'Cheikh' } : {})
+    ...(type === 'fournisseur' ? { categorie: 'Services', departement: '', pays: 'Sénégal', team: 'Team_ZH', agent: 'Cheikh' } : {})
   });
 
   const safeRows = (payload) => {
@@ -725,7 +738,6 @@ const Production = () => {
   const [fournisseurs, setFournisseurs] = useState([]);
   const [fournisseursLoading, setFournisseursLoading] = useState(false);
   const [fournisseursError, setFournisseursError] = useState('');
-  const [selectedFournisseur, setSelectedFournisseur] = useState(null);
   const [stocks, setStocks] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('commande');
@@ -837,7 +849,7 @@ const Production = () => {
       alert(t.remplirChamps);
       return;
     }
-    if (modalType === 'fournisseur' && (!formData.nom || !formData.email)) {
+    if (modalType === 'fournisseur' && (!formData.nom || (!editingId && !formData.email))) {
       alert(t.remplirChamps);
       return;
     }
@@ -863,6 +875,7 @@ const Production = () => {
         email: formData.email,
         telephone: formData.telephone,
         categorie: formData.categorie,
+        departement: formData.departement,
         pays: normalizeCountry(formData.pays),
         team: normalizeTeam(formData.team),
         agent: formData.agent
@@ -911,7 +924,18 @@ const Production = () => {
   const handleDeleteSupplier = (item) => {
     if (!item || !window.confirm(t.confirmerSuppressionFournisseur)) return;
     setFournisseurs(current => current.filter(fournisseur => fournisseur.id !== item.id));
-    setSelectedFournisseur(null);
+    setShowModal(false);
+    setEditingId(null);
+  };
+
+  const editingSupplier = modalType === 'fournisseur' && editingId
+    ? fournisseurs.find(fournisseur => fournisseur.id === editingId)
+    : null;
+
+  const closeFormModal = () => {
+    setShowModal(false);
+    setEditingId(null);
+    setFormData(getDefaultFormData(modalType));
   };
  
   return (
@@ -1161,7 +1185,7 @@ const Production = () => {
                     </tr>
                   )}
                   {visibleRows.map(f => (
-                    <tr key={f.id} onClick={() => setSelectedFournisseur(f)} className="cursor-pointer border-t border-slate-700 hover:bg-slate-700/50">
+                    <tr key={f.id} onClick={() => handleEdit('fournisseur', f)} className="cursor-pointer border-t border-slate-700 hover:bg-slate-700/50">
                       <td className="px-4 py-2 text-slate-400">{f.id}</td>
                       <td className="px-4 py-2 text-slate-300 font-medium">{f.nom}</td>
                       <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.sourcesLabel, translateSource)}</td>
@@ -1177,7 +1201,6 @@ const Production = () => {
                       <td className="px-4 py-2 text-slate-400">{formatDate(f.lastDate)}</td>
                       <StandardActionsCell
                         item={f}
-                        onView={setSelectedFournisseur}
                         onEdit={(item) => handleEdit('fournisseur', item)}
                         onDelete={handleDeleteSupplier}
                         labels={{ view: t.voir, edit: t.modifier, delete: t.supprimer }}
@@ -1243,53 +1266,52 @@ const Production = () => {
         </div>
       </div>
 
-      <StandardRecordSheetModal
-        open={Boolean(selectedFournisseur)}
-        title={selectedFournisseur?.nom}
-        eyebrow={t.ficheFournisseur}
-        description={t.registreFournisseurs}
-        closeLabel={t.annuler}
-        onClose={() => setSelectedFournisseur(null)}
-        primaryActionLabel={t.modifier}
-        onPrimaryAction={() => {
-          const fournisseur = selectedFournisseur;
-          setSelectedFournisseur(null);
-          handleEdit('fournisseur', fournisseur);
-        }}
-        destructiveActionLabel={t.supprimer}
-        onDestructiveAction={() => handleDeleteSupplier(selectedFournisseur)}
-        details={selectedFournisseur ? [
-          [t.reference, selectedFournisseur.id],
-          [t.sources, translateJoinedValues(selectedFournisseur.sourcesLabel, translateSource)],
-          [t.montantChf, formatMoney(selectedFournisseur.montantChf, 'CHF')],
-          [t.montantCfa, formatMoney(selectedFournisseur.montantCfa, 'CFA')],
-          [t.lignesDepenses, selectedFournisseur.lignesDepenses],
-          [t.lignesStocks, selectedFournisseur.lignesStocks],
-          [t.categorie, translateJoinedValues(selectedFournisseur.categorie, translateCategory)],
-          [t.departement, translateJoinedValues(selectedFournisseur.departement, translateDepartment)],
-          [t.team, translateJoinedValues(selectedFournisseur.team, translateTeam)],
-          [t.agent, supplierAgentLabel(selectedFournisseur)],
-          [t.coherenceAffectation, selectedFournisseur.assignmentIssueCount ? t.affectationIncoherente : t.affectationCoherente],
-          [t.pays, translateJoinedValues(selectedFournisseur.pays, translateCountry)],
-          [t.derniereOperation, formatDate(selectedFournisseur.lastDate)],
-          [t.nbReferences, selectedFournisseur.references]
-        ] : []}
-      />
-
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
-            <h2 className="text-2xl font-bold text-white mb-6">
-              {editingId && modalType === 'fournisseur'
-                ? t.modifierFournisseur
-                : modalType === 'commande'
-                  ? t.nouvelleCommande
-                  : modalType === 'fournisseur'
-                    ? t.nouveauFournisseur
-                    : t.ajouterStock}
-            </h2>
- 
+          <div role="dialog" aria-modal="true" aria-labelledby="production-record-modal-title" className={`max-h-[90vh] w-full overflow-y-auto rounded-lg border border-slate-700 bg-slate-800 p-5 shadow-2xl sm:p-8 ${modalType === 'fournisseur' ? 'max-w-4xl' : 'max-w-md'}`}>
+            <div className="mb-6 flex items-start justify-between gap-4">
+              <div>
+                {modalType === 'fournisseur' && <p className="text-sm font-semibold uppercase text-blue-300">{t.ficheFournisseur}</p>}
+                <h2 id="production-record-modal-title" className="mt-1 text-2xl font-semibold text-white">
+                  {editingId && modalType === 'fournisseur'
+                    ? formData.nom || t.modifierFournisseur
+                    : modalType === 'commande'
+                      ? t.nouvelleCommande
+                      : modalType === 'fournisseur'
+                        ? t.nouveauFournisseur
+                        : t.ajouterStock}
+                </h2>
+                {modalType === 'fournisseur' && <p className="mt-2 text-sm text-amber-200">{t.registreFournisseurs}</p>}
+              </div>
+              <button type="button" onClick={closeFormModal} className="m3s-icon-button shrink-0 text-slate-300 hover:bg-slate-700 hover:text-white" aria-label={t.annuler} title={t.annuler}>
+                <X size={20} />
+              </button>
+            </div>
+
+            {editingSupplier && (
+              <section className="mb-6">
+                <h3 className="mb-3 text-sm font-semibold uppercase text-slate-300">{t.donneesSourceLectureSeule}</h3>
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+                  {[
+                    [t.reference, editingSupplier.id],
+                    [t.sources, translateJoinedValues(editingSupplier.sourcesLabel, translateSource)],
+                    [t.montantChf, formatMoney(editingSupplier.montantChf, 'CHF')],
+                    [t.montantCfa, formatMoney(editingSupplier.montantCfa, 'CFA')],
+                    [t.lignesDepenses, editingSupplier.lignesDepenses],
+                    [t.lignesStocks, editingSupplier.lignesStocks],
+                    [t.derniereOperation, formatDate(editingSupplier.lastDate)],
+                    [t.nbReferences, editingSupplier.references]
+                  ].map(([label, value]) => (
+                    <div key={label} className="m3s-raised px-4 py-3">
+                      <p className="text-xs uppercase text-slate-500">{label}</p>
+                      <p className="mt-1 break-words text-sm font-semibold text-slate-100">{value ?? '-'}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
             <div className="space-y-4">
               {modalType === 'commande' && (
                 <>
@@ -1307,29 +1329,55 @@ const Production = () => {
               )}
 
               {modalType === 'fournisseur' && (
-                <>
-                  <input type="text" placeholder={t.nomFournisseur} value={formData.nom} onChange={(e) => handleFormChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
-                  <input type="email" placeholder={t.email} value={formData.email} onChange={(e) => handleFormChange('email', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
-                  <input type="tel" placeholder={t.telephone} value={formData.telephone} onChange={(e) => handleFormChange('telephone', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" />
-                  <select value={formData.categorie} onChange={(e) => handleFormChange('categorie', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
-                    {formData.categorie && !supplierCategoryOptions.includes(formData.categorie) && (
-                      <option value={formData.categorie}>{translateJoinedValues(formData.categorie, translateCategory)} ({t.agentHistorique})</option>
-                    )}
-                    {supplierCategoryOptions.map(category => (
-                      <option key={category} value={category}>{translateCategory(category)}</option>
-                    ))}
-                  </select>
-                  <label className="block text-sm font-medium text-slate-200">
-                    <span className="mb-1 block">{t.team}</span>
-                    <select value={resolveEditableTeam(formData.team)} onChange={(e) => handleFormChange('team', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                <section>
+                  <h3 className="mb-3 text-sm font-semibold uppercase text-slate-300">{t.champsModifiables}</h3>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <label>
+                      <span className="m3s-field-label">{t.nomFournisseur} *</span>
+                      <input type="text" value={formData.nom} onChange={(e) => handleFormChange('nom', e.target.value)} className="m3s-field mt-1 w-full" />
+                    </label>
+                    <label>
+                      <span className="m3s-field-label">{t.email}{editingId ? '' : ' *'}</span>
+                      <input type="email" value={formData.email} onChange={(e) => handleFormChange('email', e.target.value)} className="m3s-field mt-1 w-full" />
+                    </label>
+                    <label>
+                      <span className="m3s-field-label">{t.telephone}</span>
+                      <input type="tel" value={formData.telephone} onChange={(e) => handleFormChange('telephone', e.target.value)} className="m3s-field mt-1 w-full" />
+                    </label>
+                    <label>
+                      <span className="m3s-field-label">{t.categorie}</span>
+                      <select aria-label={t.categorie} value={formData.categorie} onChange={(e) => handleFormChange('categorie', e.target.value)} className="m3s-field mt-1 w-full">
+                        {formData.categorie && !supplierCategoryOptions.includes(formData.categorie) && (
+                          <option value={formData.categorie}>{translateJoinedValues(formData.categorie, translateCategory)} ({t.agentHistorique})</option>
+                        )}
+                        {supplierCategoryOptions.map(category => (
+                          <option key={category} value={category}>{translateCategory(category)}</option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      <span className="m3s-field-label">{t.departement}</span>
+                      <select aria-label={t.departement} value={formData.departement || ''} onChange={(e) => handleFormChange('departement', e.target.value)} className="m3s-field mt-1 w-full">
+                        <option value="">{t.nonRenseigne}</option>
+                        {formData.departement && !supplierDepartmentOptions.includes(formData.departement) && (
+                          <option value={formData.departement}>{translateJoinedValues(formData.departement, translateDepartment)} ({t.agentHistorique})</option>
+                        )}
+                        {supplierDepartmentOptions.map(departement => (
+                          <option key={departement} value={departement}>{translateDepartment(departement)}</option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      <span className="m3s-field-label">{t.team}</span>
+                      <select aria-label={t.team} value={resolveEditableTeam(formData.team)} onChange={(e) => handleFormChange('team', e.target.value)} className="m3s-field mt-1 w-full">
                       {teamOptions.map(option => (
                         <option key={option.value} value={option.value}>{option.label}</option>
                       ))}
-                    </select>
-                  </label>
-                  <label className="block text-sm font-medium text-slate-200">
-                    <span className="mb-1 block">{t.agent}</span>
-                    <select value={formData.agent} onChange={(e) => handleFormChange('agent', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                      </select>
+                    </label>
+                    <label>
+                      <span className="m3s-field-label">{t.agent}</span>
+                      <select aria-label={t.agent} value={formData.agent} onChange={(e) => handleFormChange('agent', e.target.value)} className="m3s-field mt-1 w-full">
                       <option value="">{t.agentNonAttribue}</option>
                       {formData.agent && !(agentsByTeam[resolveEditableTeam(formData.team)] || []).some(option => option.value === formData.agent) && (
                         <option value={formData.agent}>{formData.agent} ({t.agentHistorique})</option>
@@ -1337,14 +1385,25 @@ const Production = () => {
                       {(agentsByTeam[resolveEditableTeam(formData.team)] || []).map(option => (
                         <option key={option.value} value={option.value}>{option.label}</option>
                       ))}
-                    </select>
-                  </label>
-                  <select value={formData.pays} onChange={(e) => handleFormChange('pays', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
-                    <option value="Sénégal">{translateCountry('Sénégal')}</option>
-                    <option value="France">{translateCountry('France')}</option>
-                    <option value="Suisse">{translateCountry('Suisse')}</option>
-                  </select>
-                </>
+                      </select>
+                    </label>
+                    <label>
+                      <span className="m3s-field-label">{t.pays}</span>
+                      <select aria-label={t.pays} value={formData.pays} onChange={(e) => handleFormChange('pays', e.target.value)} className="m3s-field mt-1 w-full">
+                        {formData.pays && !['Sénégal', 'France', 'Suisse'].includes(formData.pays) && (
+                          <option value={formData.pays}>{translateJoinedValues(formData.pays, translateCountry)} ({t.agentHistorique})</option>
+                        )}
+                        <option value="Sénégal">{translateCountry('Sénégal')}</option>
+                        <option value="France">{translateCountry('France')}</option>
+                        <option value="Suisse">{translateCountry('Suisse')}</option>
+                      </select>
+                    </label>
+                    <div className={`rounded-md border px-4 py-3 md:col-span-2 ${editingSupplier?.assignmentIssueCount && !formData.agent ? 'border-amber-500/60 bg-amber-950/25 text-amber-200' : 'border-emerald-500/40 bg-emerald-950/20 text-emerald-200'}`}>
+                      <span className="text-xs font-semibold uppercase">{t.coherenceAffectation}</span>
+                      <p className="mt-1 text-sm font-semibold">{editingSupplier?.assignmentIssueCount && !formData.agent ? t.affectationIncoherente : t.affectationCoherente}</p>
+                    </div>
+                  </div>
+                </section>
               )}
 
               {modalType === 'stock' && (
@@ -1357,9 +1416,16 @@ const Production = () => {
               )}
             </div>
  
-            <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">{t.annuler}</button>
-              <button onClick={handleSave} className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 flex-1 px-4`}>{editingId ? t.modifier : t.creer}</button>
+            <div className="mt-6 flex flex-col-reverse gap-3 border-t border-slate-700 pt-4 sm:flex-row sm:justify-end">
+              {editingSupplier && (
+                <button type="button" onClick={() => handleDeleteSupplier(editingSupplier)} className="m3s-danger-button min-h-11 px-4 sm:mr-auto">
+                  <Trash2 size={17} /> {t.supprimer}
+                </button>
+              )}
+              <button type="button" onClick={closeFormModal} className="m3s-secondary-button min-h-11 px-4">{t.annuler}</button>
+              <button type="button" onClick={handleSave} className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 px-4`}>
+                {editingId ? <Edit2 size={17} /> : null} {editingId ? t.modifier : t.creer}
+              </button>
             </div>
           </div>
         </div>

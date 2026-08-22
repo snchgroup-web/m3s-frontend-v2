@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { LanguageProvider } from './LanguageContext';
 import Production from './Production';
 import { api } from './api';
@@ -102,8 +102,8 @@ test('uses the governed team list when preparing a supplier', async () => {
   expect(screen.getByRole('combobox', { name: 'Agent' })).toHaveValue('');
   expect(screen.getByRole('option', { name: 'Papa Amandiogou Ndiaye (Pape)' })).toBeInTheDocument();
 
-  fireEvent.change(screen.getByPlaceholderText('Nom du fournisseur'), { target: { value: 'Fournisseur test' } });
-  fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'test@example.com' } });
+  fireEvent.change(screen.getByRole('textbox', { name: /Nom du fournisseur/ }), { target: { value: 'Fournisseur test' } });
+  fireEvent.change(screen.getByRole('textbox', { name: /Email/ }), { target: { value: 'test@example.com' } });
   fireEvent.click(screen.getByRole('button', { name: 'Créer' }));
 
   expect(await screen.findByText('Fournisseur test')).toBeInTheDocument();
@@ -112,7 +112,7 @@ test('uses the governed team list when preparing a supplier', async () => {
   expect(screen.getByRole('combobox', { name: 'Team' })).toHaveValue('Team_SN');
 });
 
-test('opens supplier editing from the detail sheet and offers individual or collective agents by team', async () => {
+test('opens one editable supplier sheet and offers individual or collective agents by team', async () => {
   renderProduction('fournisseurs', 'FR', {
     expenses: [
       { fournisseur: 'Apleona Real Estate AG', team: 'Team ZH', agent: 'Chantal', montant_chf: 100 },
@@ -122,27 +122,34 @@ test('opens supplier editing from the detail sheet and offers individual or coll
 
   fireEvent.click(await screen.findByText('Apleona Real Estate AG'));
 
-  expect(screen.getAllByText('Chantal Löffler, Team ZH (collectif)')).toHaveLength(2);
-  fireEvent.click(screen.getByText('Modifier').closest('button'));
-
-  expect(screen.getByRole('heading', { name: 'Modifier le fournisseur' })).toBeInTheDocument();
-  expect(screen.getByText('Modifier', { selector: 'button' })).toBeInTheDocument();
-  const teamSelect = screen.getByRole('combobox', { name: 'Team' });
-  const agentSelect = screen.getByRole('combobox', { name: 'Agent' });
+  const dialog = screen.getByRole('dialog');
+  expect(screen.queryByTitle('Voir')).not.toBeInTheDocument();
+  expect(within(dialog).getByRole('heading', { name: 'Apleona Real Estate AG' })).toBeInTheDocument();
+  expect(within(dialog).getByText('Données sources en lecture seule')).toBeInTheDocument();
+  expect(within(dialog).getByText('Champs modifiables')).toBeInTheDocument();
+  const teamSelect = within(dialog).getByRole('combobox', { name: 'Team' });
+  const agentSelect = within(dialog).getByRole('combobox', { name: 'Agent' });
   expect(teamSelect).toHaveValue('Team_ZH');
   expect(agentSelect).toHaveValue('Chantal');
-  expect(screen.getByRole('option', { name: 'Cheikh Ndiaye' })).toBeInTheDocument();
-  expect(screen.getByRole('option', { name: 'Chantal Löffler' })).toBeInTheDocument();
-  expect(screen.getByRole('option', { name: 'Team ZH (collectif)' })).toBeInTheDocument();
+  expect(within(dialog).getByRole('option', { name: 'Cheikh Ndiaye' })).toBeInTheDocument();
+  expect(within(dialog).getByRole('option', { name: 'Chantal Löffler' })).toBeInTheDocument();
+  expect(within(dialog).getByRole('option', { name: 'Team ZH (collectif)' })).toBeInTheDocument();
 
   fireEvent.change(teamSelect, { target: { value: 'Team_SN' } });
 
   expect(agentSelect).toHaveValue('');
-  expect(screen.getByRole('option', { name: 'Non attribué' })).toBeInTheDocument();
-  expect(screen.queryByRole('option', { name: 'Chantal Löffler' })).not.toBeInTheDocument();
-  expect(screen.getByRole('option', { name: 'Papa Amandiogou Ndiaye (Pape)' })).toBeInTheDocument();
-  expect(screen.getByRole('option', { name: 'Ibrahima Ndiaye (Ibou)' })).toBeInTheDocument();
-  expect(screen.getByRole('option', { name: 'Team SN (collectif)' })).toBeInTheDocument();
+  expect(within(dialog).getByRole('option', { name: 'Non attribué' })).toBeInTheDocument();
+  expect(within(dialog).queryByRole('option', { name: 'Chantal Löffler' })).not.toBeInTheDocument();
+  expect(within(dialog).getByRole('option', { name: 'Papa Amandiogou Ndiaye (Pape)' })).toBeInTheDocument();
+  expect(within(dialog).getByRole('option', { name: 'Ibrahima Ndiaye (Ibou)' })).toBeInTheDocument();
+  expect(within(dialog).getByRole('option', { name: 'Team SN (collectif)' })).toBeInTheDocument();
+
+  fireEvent.change(agentSelect, { target: { value: 'Team_SN' } });
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Modifier' }));
+
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  expect(screen.getAllByText('TSN - Team Sénégal').length).toBeGreaterThan(0);
+  expect(screen.getAllByText('Team SN (collectif)').length).toBeGreaterThan(0);
 });
 
 test('preserves an unknown historical agent instead of inventing an individual assignment', async () => {
@@ -151,7 +158,6 @@ test('preserves an unknown historical agent instead of inventing an individual a
   });
 
   fireEvent.click(await screen.findByText('Fournisseur historique'));
-  fireEvent.click(screen.getByText('Modifier').closest('button'));
 
   expect(screen.getByRole('combobox', { name: 'Agent' })).toHaveValue('Agent historique');
   expect(screen.getByRole('option', { name: 'Agent historique (valeur historique)' })).toBeInTheDocument();
@@ -182,15 +188,15 @@ test('flags an incompatible Team-Agent source without displaying or reusing the 
   expect(screen.getAllByText('21.08.2026').length).toBeGreaterThan(0);
   expect(screen.queryByText(/\[object Object\]/)).not.toBeInTheDocument();
 
-  fireEvent.click(screen.getByText('Modifier').closest('button'));
-
   expect(screen.getByRole('combobox', { name: 'Team' })).toHaveValue('Team_SN');
   expect(screen.getByRole('combobox', { name: 'Agent' })).toHaveValue('');
+  expect(screen.getByRole('combobox', { name: 'Département' })).toHaveValue('Finances');
+  expect(screen.getByRole('combobox', { name: 'Pays' })).toHaveValue('Sénégal');
   expect(screen.queryByRole('option', { name: /Team ZH/ })).not.toBeInTheDocument();
   expect(screen.getByRole('option', { name: 'Team SN (collectif)' })).toBeInTheDocument();
 });
 
-test('offers supplier deletion from the row and the detail sheet with confirmation', async () => {
+test('offers supplier deletion from the row and the unified form with confirmation', async () => {
   const confirm = jest.spyOn(window, 'confirm').mockReturnValue(true);
   renderProduction('fournisseurs', 'FR', {
     expenses: [{ fournisseur: 'Fournisseur à supprimer', team: 'TZH', agent: 'Team ZH', montant_chf: 50 }]
