@@ -88,23 +88,25 @@ const copy = {
         ['Réceptionner', 'Responsable terrain · Production', 'Stock & Actifs · fonction métier', 'Bon ou PV, quantités, état, photos ou tests et réserves', 'Réserves visibles ; aucun paiement final déduit automatiquement.'],
         ['Clôturer', 'Production', 'Finance · Gouvernance selon le cas', 'Réception, état des paiements, réserves et index GED', 'Obligations revues, décision et date de clôture tracées.']
       ],
-      pilotSubmodelTitle: 'Sous-modèle candidat · commande, réception et réserves',
-      pilotSubmodelStatus: 'Cible à valider · aucune implémentation',
+      pilotSubmodelTitle: 'Sous-modèle métier validé · commande, réception et réserves',
+      pilotSubmodelStatus: 'Validé métier · 23.08.2026 · aucune implémentation',
       pilotSubmodelBody: 'Ces trois objets détaillent le passage de la commande au constat terrain. Ils restent reliés au dossier d’achat sans remplacer les registres Finance, Stock & Actifs ou GED.',
+      pilotSubmodelOwner: 'Propriétaire métier validé',
+      pilotSubmodelCardinality: 'Cardinalité métier validée',
       pilotSubmodelObjects: [
-        ['order_or_lot_id', 'Commande ou lot autorisé', 'Production · registre Commandes candidat', '1 dossier d’achat → 0..n commandes ou lots ; chaque commande ou lot → exactement 1 dossier et 1 fournisseur retenu.'],
+        ['order_or_lot_id', 'Commande ou lot autorisé', 'Production · registre Commandes cible', '1 dossier d’achat → 0..n commandes ou lots ; chaque commande ou lot → exactement 1 dossier et 1 fournisseur retenu.'],
         ['receipt_id', 'Constat de réception', 'Production · responsable terrain ; Stock & Actifs pour le mouvement lié', '1 commande ou lot → 0..n réceptions ; chaque réception → exactement 1 commande ou lot. Une réception peut être partielle.'],
         ['reservation_id', 'Réserve de réception', 'Production · suivi métier des réserves', '1 réception → 0..n réserves ; chaque réserve → exactement 1 réception et conserve un état explicite jusqu’à sa levée ou son rejet documenté.']
       ],
-      pilotGuardrailsTitle: 'Règles de liaison candidates',
+      pilotGuardrailsTitle: 'Règles de liaison validées',
       pilotGuardrails: [
         'Une commande ou un lot retient un seul fournisseur ; un dossier d’achat peut en contenir plusieurs.',
         'Une réception partielle ne clôture ni le reliquat à livrer ni les obligations restantes.',
         'Une réserve ouverte empêche une clôture non qualifiée, mais ne détermine ni ne modifie automatiquement le paiement.',
         'Le bon, le PV, les photos, les tests et les preuves de réserve restent dans la GED, reliés à l’objet qu’ils prouvent.'
       ],
-      pilotReservationLifecycleTitle: 'Cycle candidat d’une réserve',
-      pilotReservationLifecycleBody: 'Production tient l’état métier. La levée ou le maintien exige un contrôle tracé par la personne autorisée selon le dossier et la délégation applicable.',
+      pilotReservationLifecycleTitle: 'Cycle métier validé d’une réserve',
+      pilotReservationLifecycleBody: 'Validation Cheikh du 23.08.2026. Production tient l’état métier. La levée ou le maintien exige un contrôle tracé par la personne autorisée selon le dossier et la délégation applicable.',
       pilotReservationLifecycle: [
         ['Ouverte', 'Constat enregistré et action attendue.'],
         ['Action corrective en cours', 'Responsable et échéance connus.'],
@@ -113,7 +115,7 @@ const copy = {
         ['Maintenue', 'Écart encore présent après contrôle.'],
         ['Annulée', 'Doublon ou création erronée, motif conservé.']
       ],
-      pilotReservationEvidenceTitle: 'Trace minimale candidate',
+      pilotReservationEvidenceTitle: 'Trace minimale validée',
       pilotReservationEvidence: [
         'Constat, date et objet concerné',
         'Responsable de l’action et échéance',
@@ -121,6 +123,16 @@ const copy = {
         'Preuves avant et après, référencées dans la GED',
         'Résultat du contrôle et reliquat éventuel',
         'Décision, auteur, date et motif du dernier état'
+      ],
+      pilotImplementationTitle: 'Préconditions techniques avant formulaire et backend',
+      pilotImplementationBody: 'Les décisions métier sont validées. Ces portes techniques restent obligatoires avant toute persistance ou migration.',
+      pilotImplementationItems: [
+        'Schéma versionné, identifiants stables et contraintes d’intégrité approuvés',
+        'Droits RBAC définis pour créer, corriger, contrôler, lever, maintenir et annuler',
+        'Écritures transactionnelles et journal d’audit prévus pour chaque changement d’état',
+        'Contrat de liaison GED défini sans exposer les pièces sensibles dans le bundle client',
+        'Historique qualifié au cas par cas, sans conversion automatique des anciens libellés',
+        'Tests de permissions, concurrence, reprise sur erreur et retour arrière réussis'
       ]
     },
     processes: {
@@ -211,23 +223,25 @@ const copy = {
         ['Receive', 'Field responsible party · Production', 'Stock & Assets · business function', 'Delivery note or report, quantities, condition, photos or tests and reservations', 'Reservations visible; no final payment inferred automatically.'],
         ['Close', 'Production', 'Finance · Governance as applicable', 'Receipt, payment status, reservations and DMS index', 'Obligations reviewed, closure decision and date recorded.']
       ],
-      pilotSubmodelTitle: 'Candidate submodel · order, receipt and reservations',
-      pilotSubmodelStatus: 'Target to validate · no implementation',
+      pilotSubmodelTitle: 'Validated business submodel · order, receipt and reservations',
+      pilotSubmodelStatus: 'Business validated · 23 Aug 2026 · no implementation',
       pilotSubmodelBody: 'These three objects detail the transition from order to field confirmation. They remain linked to the purchasing case without replacing the Finance, Stock & Assets or DMS registers.',
+      pilotSubmodelOwner: 'Validated business owner',
+      pilotSubmodelCardinality: 'Validated business cardinality',
       pilotSubmodelObjects: [
-        ['order_or_lot_id', 'Authorised order or lot', 'Production · candidate Order register', '1 purchasing case → 0..n orders or lots; each order or lot → exactly 1 case and 1 selected supplier.'],
+        ['order_or_lot_id', 'Authorised order or lot', 'Production · target Order register', '1 purchasing case → 0..n orders or lots; each order or lot → exactly 1 case and 1 selected supplier.'],
         ['receipt_id', 'Receipt record', 'Production · field responsible party; Stock & Assets for the linked movement', '1 order or lot → 0..n receipts; each receipt → exactly 1 order or lot. A receipt may be partial.'],
         ['reservation_id', 'Receipt reservation', 'Production · business follow-up of reservations', '1 receipt → 0..n reservations; each reservation → exactly 1 receipt and retains an explicit status until documented clearance or rejection.']
       ],
-      pilotGuardrailsTitle: 'Candidate linking rules',
+      pilotGuardrailsTitle: 'Validated linking rules',
       pilotGuardrails: [
         'An order or lot selects one supplier; a purchasing case may contain several orders or lots.',
         'A partial receipt closes neither the outstanding delivery nor the remaining obligations.',
         'An open reservation prevents unqualified closure, but does not automatically determine or modify payment.',
         'The delivery note, report, photos, tests and reservation evidence remain in the DMS, linked to the object they evidence.'
       ],
-      pilotReservationLifecycleTitle: 'Candidate reservation lifecycle',
-      pilotReservationLifecycleBody: 'Production maintains the business status. Clearance or maintenance requires a recorded control by the authorised person according to the case and applicable delegation.',
+      pilotReservationLifecycleTitle: 'Validated reservation business lifecycle',
+      pilotReservationLifecycleBody: 'Validated by Cheikh on 23 Aug 2026. Production maintains the business status. Clearance or maintenance requires a recorded control by the authorised person according to the case and applicable delegation.',
       pilotReservationLifecycle: [
         ['Open', 'Finding recorded and action expected.'],
         ['Corrective action in progress', 'Responsible party and deadline known.'],
@@ -236,7 +250,7 @@ const copy = {
         ['Maintained', 'Deviation still present after control.'],
         ['Cancelled', 'Duplicate or erroneous creation, with reason retained.']
       ],
-      pilotReservationEvidenceTitle: 'Candidate minimum trace',
+      pilotReservationEvidenceTitle: 'Validated minimum trace',
       pilotReservationEvidence: [
         'Finding, date and affected object',
         'Action owner and deadline',
@@ -244,6 +258,16 @@ const copy = {
         'Before-and-after evidence referenced in the DMS',
         'Control result and any remaining deviation',
         'Decision, author, date and reason for the latest status'
+      ],
+      pilotImplementationTitle: 'Technical prerequisites before form and backend',
+      pilotImplementationBody: 'The business decisions are validated. These technical gates remain mandatory before any persistence or migration.',
+      pilotImplementationItems: [
+        'Approved versioned schema, stable identifiers and integrity constraints',
+        'RBAC permissions defined for creating, correcting, controlling, clearing, maintaining and cancelling',
+        'Transactional writes and audit trail planned for every status change',
+        'DMS linking contract defined without exposing sensitive documents in the client bundle',
+        'Legacy history qualified case by case, with no automatic conversion of old labels',
+        'Permission, concurrency, error recovery and rollback tests passed'
       ]
     },
     processes: {
@@ -306,23 +330,25 @@ const copy = {
         ['Annehmen', 'Verantwortung vor Ort · Produktion', 'Bestand & Aktiva · Fachfunktion', 'Lieferschein oder Protokoll, Mengen, Zustand, Fotos oder Tests und Vorbehalte', 'Vorbehalte sichtbar; keine automatische Ableitung der Schlusszahlung.'],
         ['Abschließen', 'Produktion', 'Finanzen · Governance je nach Fall', 'Annahme, Zahlungsstatus, Vorbehalte und GED-Index', 'Pflichten geprüft, Abschlussentscheidung und Datum dokumentiert.']
       ],
-      pilotSubmodelTitle: 'Kandidaten-Teilmodell · Bestellung, Annahme und Vorbehalte',
-      pilotSubmodelStatus: 'Zielbild zu validieren · keine Implementierung',
+      pilotSubmodelTitle: 'Validiertes Fachmodell · Bestellung, Annahme und Vorbehalte',
+      pilotSubmodelStatus: 'Fachlich validiert · 23.08.2026 · keine Implementierung',
       pilotSubmodelBody: 'Diese drei Objekte beschreiben den Übergang von der Bestellung zum Befund vor Ort. Sie bleiben mit dem Einkaufsdossier verbunden, ohne die Register Finanzen, Bestand & Aktiva oder GED zu ersetzen.',
+      pilotSubmodelOwner: 'Validierte fachliche Verantwortung',
+      pilotSubmodelCardinality: 'Validierte fachliche Kardinalität',
       pilotSubmodelObjects: [
-        ['order_or_lot_id', 'Autorisierte Bestellung oder Los', 'Produktion · vorgeschlagenes Bestellregister', '1 Einkaufsdossier → 0..n Bestellungen oder Lose; jede Bestellung oder jedes Los → genau 1 Dossier und 1 ausgewählter Lieferant.'],
+        ['order_or_lot_id', 'Autorisierte Bestellung oder Los', 'Produktion · Zielregister Bestellungen', '1 Einkaufsdossier → 0..n Bestellungen oder Lose; jede Bestellung oder jedes Los → genau 1 Dossier und 1 ausgewählter Lieferant.'],
         ['receipt_id', 'Annahmefeststellung', 'Produktion · Verantwortung vor Ort; Bestand & Aktiva für die verbundene Bewegung', '1 Bestellung oder Los → 0..n Annahmen; jede Annahme → genau 1 Bestellung oder Los. Eine Annahme kann teilweise erfolgen.'],
         ['reservation_id', 'Annahmevorbehalt', 'Produktion · fachliche Nachverfolgung der Vorbehalte', '1 Annahme → 0..n Vorbehalte; jeder Vorbehalt → genau 1 Annahme und behält einen ausdrücklichen Status bis zur dokumentierten Aufhebung oder Ablehnung.']
       ],
-      pilotGuardrailsTitle: 'Vorgeschlagene Verknüpfungsregeln',
+      pilotGuardrailsTitle: 'Validierte Verknüpfungsregeln',
       pilotGuardrails: [
         'Eine Bestellung oder ein Los wählt einen Lieferanten aus; ein Einkaufsdossier kann mehrere Bestellungen oder Lose enthalten.',
         'Eine Teilannahme schließt weder die Restlieferung noch die verbleibenden Pflichten ab.',
         'Ein offener Vorbehalt verhindert einen unqualifizierten Abschluss, bestimmt oder ändert die Zahlung aber nicht automatisch.',
         'Lieferschein, Protokoll, Fotos, Tests und Vorbehaltsnachweise bleiben in der GED und sind mit dem belegten Objekt verknüpft.'
       ],
-      pilotReservationLifecycleTitle: 'Vorgeschlagener Lebenszyklus eines Vorbehalts',
-      pilotReservationLifecycleBody: 'Produktion führt den fachlichen Status. Aufhebung oder Aufrechterhaltung erfordern eine dokumentierte Kontrolle durch die je nach Dossier und geltender Delegation autorisierte Person.',
+      pilotReservationLifecycleTitle: 'Validierter fachlicher Lebenszyklus eines Vorbehalts',
+      pilotReservationLifecycleBody: 'Von Cheikh am 23.08.2026 validiert. Produktion führt den fachlichen Status. Aufhebung oder Aufrechterhaltung erfordern eine dokumentierte Kontrolle durch die je nach Dossier und geltender Delegation autorisierte Person.',
       pilotReservationLifecycle: [
         ['Offen', 'Feststellung erfasst und Maßnahme erwartet.'],
         ['Korrekturmaßnahme läuft', 'Verantwortung und Frist sind bekannt.'],
@@ -331,7 +357,7 @@ const copy = {
         ['Aufrechterhalten', 'Abweichung nach Kontrolle weiterhin vorhanden.'],
         ['Storniert', 'Duplikat oder irrtümliche Anlage, Begründung bleibt erhalten.']
       ],
-      pilotReservationEvidenceTitle: 'Vorgeschlagene Mindestspur',
+      pilotReservationEvidenceTitle: 'Validierte Mindestspur',
       pilotReservationEvidence: [
         'Feststellung, Datum und betroffenes Objekt',
         'Maßnahmenverantwortung und Frist',
@@ -339,6 +365,16 @@ const copy = {
         'Vorher- und Nachher-Nachweise mit GED-Referenz',
         'Kontrollergebnis und verbleibende Abweichung',
         'Entscheidung, Autor, Datum und Grund des letzten Status'
+      ],
+      pilotImplementationTitle: 'Technische Voraussetzungen vor Formular und Backend',
+      pilotImplementationBody: 'Die fachlichen Entscheidungen sind validiert. Diese technischen Tore bleiben vor jeder Persistenz oder Migration verbindlich.',
+      pilotImplementationItems: [
+        'Genehmigtes versioniertes Schema, stabile Kennungen und Integritätsregeln',
+        'RBAC-Rechte für Anlegen, Korrigieren, Kontrollieren, Aufheben, Aufrechterhalten und Stornieren definiert',
+        'Transaktionale Schreibvorgänge und Auditspur für jede Statusänderung vorgesehen',
+        'GED-Verknüpfungsvertrag definiert, ohne sensible Dokumente im Client-Bundle offenzulegen',
+        'Altbestände einzeln qualifiziert, ohne automatische Umwandlung alter Bezeichnungen',
+        'Tests für Rechte, Parallelität, Fehlerwiederaufnahme und Rücksetzung erfolgreich'
       ]
     },
     processes: {
@@ -496,8 +532,8 @@ const ArchitectureView = ({ data }) => {
                   <code className="break-all text-sm font-semibold text-cyan-300">{identifier}</code>
                   <p className="mt-2 text-sm font-semibold text-slate-100">{role}</p>
                   <dl className="mt-3 space-y-3 text-sm">
-                    <div><dt className="text-xs font-semibold uppercase text-slate-500">{data.pilotOwner}</dt><dd className="mt-1 leading-5 text-slate-300">{owner}</dd></div>
-                    <div><dt className="text-xs font-semibold uppercase text-slate-500">{data.pilotCardinality}</dt><dd className="mt-1 leading-5 text-slate-300">{cardinality}</dd></div>
+                    <div><dt className="text-xs font-semibold uppercase text-slate-500">{data.pilotSubmodelOwner}</dt><dd className="mt-1 leading-5 text-slate-300">{owner}</dd></div>
+                    <div><dt className="text-xs font-semibold uppercase text-slate-500">{data.pilotSubmodelCardinality}</dt><dd className="mt-1 leading-5 text-slate-300">{cardinality}</dd></div>
                   </dl>
                 </article>
               ))}
@@ -536,6 +572,21 @@ const ArchitectureView = ({ data }) => {
                   </li>
                 ))}
               </ul>
+              <div className="mt-4 rounded-md border border-blue-800/70 bg-blue-950/10 p-3">
+                <h6 className="flex items-center gap-2 text-sm font-semibold text-slate-100">
+                  <ShieldCheck className="shrink-0 text-blue-300" size={18} aria-hidden="true" />
+                  {data.pilotImplementationTitle}
+                </h6>
+                <p className="mt-1 max-w-4xl text-sm leading-5 text-slate-400">{data.pilotImplementationBody}</p>
+                <ul className="mt-3 grid gap-2 md:grid-cols-2">
+                  {data.pilotImplementationItems.map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-sm leading-5 text-slate-300">
+                      <CheckCircle2 className="mt-0.5 shrink-0 text-blue-300" size={16} aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </section>
