@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { LanguageProvider } from './LanguageContext';
 import Production from './Production';
 import { api } from './api';
@@ -29,11 +29,11 @@ jest.mock('./api', () => ({
   }
 }));
 
-const renderProduction = (tab, language = 'EN') => {
+const renderProduction = (tab, language = 'EN', { expenses = [], inventory = [] } = {}) => {
   mockSearch = `?tab=${tab}`;
   localStorage.setItem('language', language);
-  api.getExpenses.mockResolvedValue({ data: [] });
-  api.getInventory.mockResolvedValue({ data: [] });
+  api.getExpenses.mockResolvedValue({ data: expenses });
+  api.getInventory.mockResolvedValue({ data: inventory });
 
   return render(
     <LanguageProvider>
@@ -99,7 +99,8 @@ test('uses the governed team list when preparing a supplier', async () => {
   fireEvent.change(teamSelect, { target: { value: 'Team_SN' } });
 
   expect(teamSelect).toHaveValue('Team_SN');
-  expect(screen.getByRole('combobox', { name: 'Agent' })).toHaveValue('Pape');
+  expect(screen.getByRole('combobox', { name: 'Agent' })).toHaveValue('');
+  expect(screen.getByRole('option', { name: 'Papa Amandiogou Ndiaye (Pape)' })).toBeInTheDocument();
 
   fireEvent.change(screen.getByPlaceholderText('Nom du fournisseur'), { target: { value: 'Fournisseur test' } });
   fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'test@example.com' } });
@@ -109,6 +110,78 @@ test('uses the governed team list when preparing a supplier', async () => {
   fireEvent.click(screen.getByRole('button', { name: 'Modifier' }));
 
   expect(screen.getByRole('combobox', { name: 'Team' })).toHaveValue('Team_SN');
+});
+
+test('opens supplier editing from the detail sheet and offers individual or collective agents by team', async () => {
+  renderProduction('fournisseurs', 'FR', {
+    expenses: [
+      { fournisseur: 'Apleona Real Estate AG', team: 'Team ZH', agent: 'Chantal', montant_chf: 100 },
+      { fournisseur: 'Apleona Real Estate AG', team: 'TZH', agent: 'Team ZH', montant_chf: 50 }
+    ]
+  });
+
+  fireEvent.click(await screen.findByText('Apleona Real Estate AG'));
+
+  expect(screen.getAllByText('Chantal Löffler, Team ZH (collectif)')).toHaveLength(2);
+  fireEvent.click(screen.getByText('Modifier').closest('button'));
+
+  expect(screen.getByRole('heading', { name: 'Modifier le fournisseur' })).toBeInTheDocument();
+  expect(screen.getByText('Modifier', { selector: 'button' })).toBeInTheDocument();
+  const teamSelect = screen.getByRole('combobox', { name: 'Team' });
+  const agentSelect = screen.getByRole('combobox', { name: 'Agent' });
+  expect(teamSelect).toHaveValue('Team_ZH');
+  expect(agentSelect).toHaveValue('Chantal');
+  expect(screen.getByRole('option', { name: 'Cheikh Ndiaye' })).toBeInTheDocument();
+  expect(screen.getByRole('option', { name: 'Chantal Löffler' })).toBeInTheDocument();
+  expect(screen.getByRole('option', { name: 'Team ZH (collectif)' })).toBeInTheDocument();
+
+  fireEvent.change(teamSelect, { target: { value: 'Team_SN' } });
+
+  expect(agentSelect).toHaveValue('');
+  expect(screen.getByRole('option', { name: 'Non attribué' })).toBeInTheDocument();
+  expect(screen.queryByRole('option', { name: 'Chantal Löffler' })).not.toBeInTheDocument();
+  expect(screen.getByRole('option', { name: 'Papa Amandiogou Ndiaye (Pape)' })).toBeInTheDocument();
+  expect(screen.getByRole('option', { name: 'Ibrahima Ndiaye (Ibou)' })).toBeInTheDocument();
+  expect(screen.getByRole('option', { name: 'Team SN (collectif)' })).toBeInTheDocument();
+});
+
+test('preserves an unknown historical agent instead of inventing an individual assignment', async () => {
+  renderProduction('fournisseurs', 'FR', {
+    expenses: [{ fournisseur: 'Fournisseur historique', team: 'TZH', agent: 'Agent historique', montant_chf: 25 }]
+  });
+
+  fireEvent.click(await screen.findByText('Fournisseur historique'));
+  fireEvent.click(screen.getByText('Modifier').closest('button'));
+
+  expect(screen.getByRole('combobox', { name: 'Agent' })).toHaveValue('Agent historique');
+  expect(screen.getByRole('option', { name: 'Agent historique (valeur historique)' })).toBeInTheDocument();
+});
+
+test('offers supplier deletion from the row and the detail sheet with confirmation', async () => {
+  const confirm = jest.spyOn(window, 'confirm').mockReturnValue(true);
+  renderProduction('fournisseurs', 'FR', {
+    expenses: [{ fournisseur: 'Fournisseur à supprimer', team: 'TZH', agent: 'Team ZH', montant_chf: 50 }]
+  });
+
+  fireEvent.click(await screen.findByText('Fournisseur à supprimer'));
+  expect(screen.getAllByTitle('Supprimer')).toHaveLength(1);
+  fireEvent.click(screen.getByText('Supprimer', { selector: 'button' }));
+
+  expect(confirm).toHaveBeenCalledWith('Supprimer ce fournisseur du registre local ?');
+  expect(screen.queryByText('Fournisseur à supprimer')).not.toBeInTheDocument();
+  confirm.mockRestore();
+});
+
+test('scrolls to the Production content when a child tab changes', async () => {
+  const scrollIntoView = jest.fn();
+  const originalScrollIntoView = window.HTMLElement.prototype.scrollIntoView;
+  window.HTMLElement.prototype.scrollIntoView = scrollIntoView;
+  renderProduction('overview', 'FR');
+
+  fireEvent.click(screen.getByRole('tab', { name: 'Fournisseurs' }));
+
+  await waitFor(() => expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' }));
+  window.HTMLElement.prototype.scrollIntoView = originalScrollIntoView;
 });
 
 test('renders the local Production glossary from the governed tab', async () => {

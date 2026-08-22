@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck, Wrench } from 'lucide-react';
@@ -72,6 +72,12 @@ const Production = () => {
       voir: 'Voir',
       teamZh: 'TZH - Team Zurich',
       teamSn: 'TSN - Team Sénégal',
+      teamZhCollective: 'Team ZH (collectif)',
+      teamSnCollective: 'Team SN (collectif)',
+      modifierFournisseur: 'Modifier le fournisseur',
+      confirmerSuppressionFournisseur: 'Supprimer ce fournisseur du registre local ?',
+      agentNonAttribue: 'Non attribué',
+      agentHistorique: 'valeur historique',
       ok: 'OK',
       bas: 'BAS',
       creer: 'Créer',
@@ -143,6 +149,12 @@ const Production = () => {
       voir: 'View',
       teamZh: 'TZH - Zurich Team',
       teamSn: 'TSN - Senegal Team',
+      teamZhCollective: 'Team ZH (collective)',
+      teamSnCollective: 'Team SN (collective)',
+      modifierFournisseur: 'Edit Supplier',
+      confirmerSuppressionFournisseur: 'Delete this supplier from the local register?',
+      agentNonAttribue: 'Unassigned',
+      agentHistorique: 'historical value',
       ok: 'OK',
       bas: 'LOW',
       creer: 'Create',
@@ -214,6 +226,12 @@ const Production = () => {
       voir: 'Ansehen',
       teamZh: 'TZH - Team Zürich',
       teamSn: 'TSN - Team Senegal',
+      teamZhCollective: 'Team ZH (gemeinsam)',
+      teamSnCollective: 'Team SN (gemeinsam)',
+      modifierFournisseur: 'Lieferant bearbeiten',
+      confirmerSuppressionFournisseur: 'Diesen Lieferanten aus dem lokalen Register löschen?',
+      agentNonAttribue: 'Nicht zugewiesen',
+      agentHistorique: 'historischer Wert',
       ok: 'OK',
       bas: 'NIEDRIG',
       creer: 'Erstellen',
@@ -441,15 +459,27 @@ const Production = () => {
   ];
   const agentsByTeam = {
     Team_ZH: [
-      { value: 'Cheikh', label: 'Cheikh - Manager' },
-      { value: 'Chantal', label: 'Chantal - Administratrice Financière' }
+      { value: 'Cheikh', label: 'Cheikh Ndiaye' },
+      { value: 'Chantal', label: 'Chantal Löffler' },
+      { value: 'Team_ZH', label: t.teamZhCollective }
     ],
     Team_SN: [
-      { value: 'Pape', label: 'Pape - Administrateur' },
-      { value: 'Gnilane Diouf', label: 'Gnilane Diouf - Cheffe Projets' },
-      { value: 'Gnilane Ndiaye', label: 'Gnilane Ndiaye - Cheffe Organisation & Développement' },
-      { value: 'Ibou', label: 'Ibou - Chef Opérations, Stocks & Actifs' }
+      { value: 'Pape', label: 'Papa Amandiogou Ndiaye (Pape)' },
+      { value: 'Gnilane Diouf', label: 'Gnilane Diouf' },
+      { value: 'Gnilane Ndiaye', label: 'Gnilane Ndiaye' },
+      { value: 'Ibou', label: 'Ibrahima Ndiaye (Ibou)' },
+      { value: 'Team_SN', label: t.teamSnCollective }
     ]
+  };
+  const agentAliases = {
+    'CHEIKH NDIAYE': 'Cheikh',
+    'CHANTAL LOFFLER': 'Chantal',
+    'PAPA AMANDIOGOU NDIAYE': 'Pape',
+    'IBRAHIMA NDIAYE': 'Ibou',
+    'TEAM ZH': 'Team_ZH',
+    TZH: 'Team_ZH',
+    'TEAM SN': 'Team_SN',
+    TSN: 'Team_SN'
   };
   const normalizeTeam = (team) => {
     const key = normalizeLookupKey(team).replace(/[\s-]/g, '_');
@@ -466,6 +496,24 @@ const Production = () => {
       .split(',')
       .map(value => normalizeTeam(value.trim()));
     return candidates.find(candidate => teamOptions.some(option => option.value === candidate)) || 'Team_ZH';
+  };
+  const resolveEditableAgent = (team, agent) => {
+    const options = agentsByTeam[team] || [];
+    const candidates = String(agent || '')
+      .split(',')
+      .map(value => value.trim())
+      .filter(Boolean);
+    for (const candidate of candidates) {
+      const canonical = agentAliases[normalizeLookupKey(candidate)] || candidate;
+      const match = options.find(option => normalizeLookupKey(option.value) === normalizeLookupKey(canonical));
+      if (match) return match.value;
+    }
+    return candidates[0] || '';
+  };
+  const translateAgent = (agent) => {
+    const normalized = agentAliases[normalizeLookupKey(agent)] || agent;
+    return [...agentsByTeam.Team_ZH, ...agentsByTeam.Team_SN]
+      .find(option => option.value === normalized)?.label || agent;
   };
   const getDefaultFormData = (type = 'commande') => ({
     numero: '',
@@ -612,6 +660,7 @@ const Production = () => {
   const [modalType, setModalType] = useState('commande');
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState(getDefaultFormData('commande'));
+  const previousTabRef = useRef(activeTab);
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
@@ -621,6 +670,12 @@ const Production = () => {
       setActiveTab('overview');
     }
   }, [location.search]);
+
+  useEffect(() => {
+    if (previousTabRef.current === activeTab) return;
+    previousTabRef.current = activeTab;
+    document.getElementById('production-module-tabs')?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+  }, [activeTab]);
 
   const selectTab = (tab) => {
     setActiveTab(tab);
@@ -699,7 +754,7 @@ const Production = () => {
       setFormData(prev => ({
         ...prev,
         team: normalizedTeam,
-        agent: agentsByTeam[normalizedTeam]?.[0]?.value || ''
+        agent: ''
       }));
       return;
     }
@@ -768,11 +823,18 @@ const Production = () => {
   const handleEdit = (type, item) => {
     setModalType(type);
     setEditingId(item.id);
+    const editableTeam = type === 'fournisseur' ? resolveEditableTeam(item.team) : '';
     const editableItem = type === 'fournisseur'
-      ? { ...item, team: resolveEditableTeam(item.team) }
+      ? { ...item, team: editableTeam, agent: resolveEditableAgent(editableTeam, item.agent) }
       : item;
     setFormData({ ...getDefaultFormData(type), ...editableItem });
     setShowModal(true);
+  };
+
+  const handleDeleteSupplier = (item) => {
+    if (!item || !window.confirm(t.confirmerSuppressionFournisseur)) return;
+    setFournisseurs(current => current.filter(fournisseur => fournisseur.id !== item.id));
+    setSelectedFournisseur(null);
   };
  
   return (
@@ -780,19 +842,21 @@ const Production = () => {
       <div className="m3s-business-module min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-8">
         <div className="mx-auto w-full max-w-[1800px]">
 
-        <ModulePageTabs
-          moduleId="production"
-          language={language}
-          activeTab={activeTab}
-          onSelect={selectTab}
-          tabs={[
-            { tab: 'overview', label: t.overview },
-            { tab: 'commandes', label: t.commandes },
-            { tab: 'fournisseurs', label: t.fournisseurs },
-            { tab: 'stocks', label: t.stocks },
-            { tab: 'glossary', label: t.glossary }
-          ]}
-        />
+        <div id="production-module-tabs" className="scroll-mt-24">
+          <ModulePageTabs
+            moduleId="production"
+            language={language}
+            activeTab={activeTab}
+            onSelect={selectTab}
+            tabs={[
+              { tab: 'overview', label: t.overview },
+              { tab: 'commandes', label: t.commandes },
+              { tab: 'fournisseurs', label: t.fournisseurs },
+              { tab: 'stocks', label: t.stocks },
+              { tab: 'glossary', label: t.glossary }
+            ]}
+          />
+        </div>
 
         <section className="mb-6 rounded-lg border border-blue-500/40 bg-blue-950/45 p-5 text-blue-50">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
@@ -1031,14 +1095,15 @@ const Production = () => {
                       <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.categorie, translateCategory)}</td>
                       <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.departement, translateDepartment)}</td>
                       <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.team, translateTeam)}</td>
-                      <td className="px-4 py-2 text-slate-400">{f.agent}</td>
+                      <td className="px-4 py-2 text-slate-400">{translateJoinedValues(f.agent, translateAgent)}</td>
                       <td className="px-4 py-2 text-slate-400">{f.pays}</td>
                       <td className="px-4 py-2 text-slate-400">{formatDate(f.lastDate)}</td>
                       <StandardActionsCell
                         item={f}
                         onView={setSelectedFournisseur}
                         onEdit={(item) => handleEdit('fournisseur', item)}
-                        labels={{ view: t.voir, edit: t.modifier }}
+                        onDelete={handleDeleteSupplier}
+                        labels={{ view: t.voir, edit: t.modifier, delete: t.supprimer }}
                       />
                     </tr>
                   ))}
@@ -1108,6 +1173,14 @@ const Production = () => {
         description={t.registreFournisseurs}
         closeLabel={t.annuler}
         onClose={() => setSelectedFournisseur(null)}
+        primaryActionLabel={t.modifier}
+        onPrimaryAction={() => {
+          const fournisseur = selectedFournisseur;
+          setSelectedFournisseur(null);
+          handleEdit('fournisseur', fournisseur);
+        }}
+        destructiveActionLabel={t.supprimer}
+        onDestructiveAction={() => handleDeleteSupplier(selectedFournisseur)}
         details={selectedFournisseur ? [
           [t.reference, selectedFournisseur.id],
           [t.sources, translateJoinedValues(selectedFournisseur.sourcesLabel, translateSource)],
@@ -1118,7 +1191,7 @@ const Production = () => {
           [t.categorie, translateJoinedValues(selectedFournisseur.categorie, translateCategory)],
           [t.departement, translateJoinedValues(selectedFournisseur.departement, translateDepartment)],
           [t.team, translateJoinedValues(selectedFournisseur.team, translateTeam)],
-          [t.agent, selectedFournisseur.agent],
+          [t.agent, translateJoinedValues(selectedFournisseur.agent, translateAgent)],
           [t.pays, selectedFournisseur.pays],
           [t.derniereOperation, formatDate(selectedFournisseur.lastDate)],
           [t.nbReferences, selectedFournisseur.references]
@@ -1130,7 +1203,13 @@ const Production = () => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-slate-800 rounded-lg p-8 max-w-md w-full border border-slate-700">
             <h2 className="text-2xl font-bold text-white mb-6">
-              {modalType === 'commande' ? t.nouvelleCommande : modalType === 'fournisseur' ? t.nouveauFournisseur : t.ajouterStock}
+              {editingId && modalType === 'fournisseur'
+                ? t.modifierFournisseur
+                : modalType === 'commande'
+                  ? t.nouvelleCommande
+                  : modalType === 'fournisseur'
+                    ? t.nouveauFournisseur
+                    : t.ajouterStock}
             </h2>
  
             <div className="space-y-4">
@@ -1173,6 +1252,10 @@ const Production = () => {
                   <label className="block text-sm font-medium text-slate-200">
                     <span className="mb-1 block">{t.agent}</span>
                     <select value={formData.agent} onChange={(e) => handleFormChange('agent', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                      <option value="">{t.agentNonAttribue}</option>
+                      {formData.agent && !(agentsByTeam[resolveEditableTeam(formData.team)] || []).some(option => option.value === formData.agent) && (
+                        <option value={formData.agent}>{formData.agent} ({t.agentHistorique})</option>
+                      )}
                       {(agentsByTeam[resolveEditableTeam(formData.team)] || []).map(option => (
                         <option key={option.value} value={option.value}>{option.label}</option>
                       ))}
@@ -1198,7 +1281,7 @@ const Production = () => {
  
             <div className="flex gap-3 mt-6">
               <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition">{t.annuler}</button>
-              <button onClick={handleSave} className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 flex-1 px-4`}>{t.creer}</button>
+              <button onClick={handleSave} className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 flex-1 px-4`}>{editingId ? t.modifier : t.creer}</button>
             </div>
           </div>
         </div>
