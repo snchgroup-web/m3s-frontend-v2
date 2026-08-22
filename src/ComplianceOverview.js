@@ -13,7 +13,7 @@ import {
   UserCheck
 } from 'lucide-react';
 import InternalSectionNav from './InternalSectionNav';
-import { LEGAL_DOCUMENTARY_STAGES } from './legalDocumentaryProgress';
+import { LEGAL_DOCUMENTARY_BASELINE, LEGAL_DOCUMENTARY_STAGES } from './legalDocumentaryProgress';
 
 const COPY = {
   FR: {
@@ -32,16 +32,20 @@ const COPY = {
     navBoundaries: 'Frontières',
     backToTop: 'Revenir en haut',
     progressTitle: 'Avancement documentaire LEGAL',
-    progressBody: 'Le modèle documentaire reste visible, mais l’état opérationnel du dossier est protégé et doit être chargé depuis une source autorisée.',
-    progressStage: 'État protégé',
-    progressStageName: 'Accès contrôlé',
-    progressLabel: 'Maturité documentaire',
+    progressBody: 'L’inventaire documentaire est constitué. L’applicabilité des pièces et obligations est en cours de qualification ; le détail sensible reste dans le registre autorisé.',
+    progressStage: 'Étape en cours',
+    progressStageName: 'Applicabilité à qualifier',
+    progressLabel: 'Étape documentaire en cours',
     progressStages: ['Inventaire', 'Applicabilité', 'Rédaction', 'Relecture', 'Validation', 'Adoption / publication'],
-    inventoryMetric: 'Éléments suivis',
+    inventoryMetric: 'Inventaire gouverné',
+    inventoryValue: 'Constitué',
     candidateMetric: 'Pièces candidates',
+    candidateValue: 'À qualifier',
     officialSourcesMetric: 'Sources officielles',
-    nextActionTitle: 'Action protégée',
-    nextAction: 'Consulter le registre autorisé pour connaître l’état et la prochaine action.',
+    officialSourcesValue: 'À rapprocher',
+    nextActionTitle: 'Prochaine action documentaire',
+    nextAction: 'Contrôler le livrable préparatoire reçu, puis confirmer les activités, territoires et canaux avant toute rédaction ou validation.',
+    reviewEvidence: 'Livrable préparatoire externe reçu · en contrôle · 16-08-2026',
     progressCaution: 'Cet indicateur mesure la préparation documentaire. Il ne mesure ni ne certifie la conformité juridique de 2SG.',
     sourceLabel: 'Source protégée',
     frameworkTitle: 'Périmètre de conformité à organiser',
@@ -113,16 +117,20 @@ const COPY = {
     navBoundaries: 'Boundaries',
     backToTop: 'Back to top',
     progressTitle: 'LEGAL documentary progress',
-    progressBody: 'The documentary model remains visible, but the operational file status is protected and must be loaded from an authorised source.',
-    progressStage: 'Protected status',
-    progressStageName: 'Controlled access',
-    progressLabel: 'Documentary maturity',
+    progressBody: 'The document inventory is established. The applicability of documents and obligations is being qualified; sensitive details remain in the authorised register.',
+    progressStage: 'Current stage',
+    progressStageName: 'Applicability to qualify',
+    progressLabel: 'Current documentary stage',
     progressStages: ['Inventory', 'Applicability', 'Drafting', 'Review', 'Validation', 'Adoption / publication'],
-    inventoryMetric: 'Tracked items',
+    inventoryMetric: 'Governed inventory',
+    inventoryValue: 'Established',
     candidateMetric: 'Candidate documents',
+    candidateValue: 'To qualify',
     officialSourcesMetric: 'Official sources',
-    nextActionTitle: 'Protected action',
-    nextAction: 'Consult the authorised register for the current status and next action.',
+    officialSourcesValue: 'To reconcile',
+    nextActionTitle: 'Next documentary action',
+    nextAction: 'Review the received preparatory deliverable, then confirm activities, territories and channels before any drafting or validation.',
+    reviewEvidence: 'External preparatory deliverable received · under review · 2026-08-16',
     progressCaution: 'This indicator measures documentary readiness. It neither measures nor certifies 2SG legal compliance.',
     sourceLabel: 'Protected source',
     frameworkTitle: 'Compliance scope to organise',
@@ -194,16 +202,20 @@ const COPY = {
     navBoundaries: 'Abgrenzung',
     backToTop: 'Nach oben',
     progressTitle: 'Dokumentationsfortschritt LEGAL',
-    progressBody: 'Das Dokumentationsmodell bleibt sichtbar; der operative Aktenstand ist jedoch geschützt und muss aus einer autorisierten Quelle geladen werden.',
-    progressStage: 'Geschützter Stand',
-    progressStageName: 'Kontrollierter Zugriff',
-    progressLabel: 'Dokumentarischer Reifegrad',
+    progressBody: 'Das Dokumentenverzeichnis ist erstellt. Die Anwendbarkeit der Unterlagen und Pflichten wird derzeit qualifiziert; sensible Details verbleiben im autorisierten Register.',
+    progressStage: 'Aktuelle Etappe',
+    progressStageName: 'Anwendbarkeit zu qualifizieren',
+    progressLabel: 'Aktuelle Dokumentationsetappe',
     progressStages: ['Inventar', 'Anwendbarkeit', 'Entwurf', 'Prüfung', 'Validierung', 'Verabschiedung / Veröffentlichung'],
-    inventoryMetric: 'Erfasste Elemente',
+    inventoryMetric: 'Gesteuertes Inventar',
+    inventoryValue: 'Erstellt',
     candidateMetric: 'Kandidatendokumente',
+    candidateValue: 'Zu qualifizieren',
     officialSourcesMetric: 'Amtliche Quellen',
-    nextActionTitle: 'Geschützte Maßnahme',
-    nextAction: 'Den aktuellen Stand und nächsten Schritt im autorisierten Register einsehen.',
+    officialSourcesValue: 'Abzugleichen',
+    nextActionTitle: 'Nächster Dokumentationsschritt',
+    nextAction: 'Das eingegangene vorbereitende Ergebnis prüfen und anschließend Tätigkeiten, Gebiete und Kanäle vor jeder Ausarbeitung oder Validierung bestätigen.',
+    reviewEvidence: 'Externes vorbereitendes Ergebnis eingegangen · in Prüfung · 16.08.2026',
     progressCaution: 'Diese Kennzahl misst die dokumentarische Vorbereitung. Sie misst oder bestätigt keine rechtliche Konformität von 2SG.',
     sourceLabel: 'Geschützte Quelle',
     frameworkTitle: 'Zu organisierender Compliance-Umfang',
@@ -330,13 +342,13 @@ const ComplianceOverview = ({ language = 'FR' }) => {
         <div className="mt-5 rounded-md border border-slate-700 bg-slate-950/35 p-4" aria-label={t.progressLabel}>
           <div className="flex items-center justify-between gap-3 text-sm font-semibold text-slate-200">
             <span>{t.progressLabel}</span>
-            <span>—</span>
+            <span>{t.progressStageName}</span>
           </div>
         </div>
 
         <ol className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-6">
           {LEGAL_DOCUMENTARY_STAGES.map((stage, index) => {
-            const isCurrent = false;
+            const isCurrent = index === LEGAL_DOCUMENTARY_BASELINE.currentStageIndex;
             return (
               <li
                 key={stage}
@@ -352,9 +364,9 @@ const ComplianceOverview = ({ language = 'FR' }) => {
 
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
           {[
-            [t.inventoryMetric, '—', FileSearch],
-            [t.candidateMetric, '—', FileCheck2],
-            [t.officialSourcesMetric, '—', Landmark]
+            [t.inventoryMetric, t.inventoryValue, FileSearch],
+            [t.candidateMetric, t.candidateValue, FileCheck2],
+            [t.officialSourcesMetric, t.officialSourcesValue, Landmark]
           ].map(([label, value, Icon]) => (
             <article key={label} className="rounded-md border border-slate-700 bg-slate-950/35 p-4">
               <div className="flex items-center justify-between gap-3">
@@ -370,6 +382,7 @@ const ComplianceOverview = ({ language = 'FR' }) => {
           <aside className="min-w-0 rounded-md border border-blue-800 bg-blue-950/25 p-4">
             <p className="text-xs font-bold uppercase text-blue-300">{t.nextActionTitle}</p>
             <p className="mt-2 text-sm leading-6 text-slate-200">{t.nextAction}</p>
+            <p className="mt-3 border-t border-blue-900/70 pt-3 text-xs leading-5 text-blue-200">{t.reviewEvidence}</p>
           </aside>
           <aside className="min-w-0 rounded-md border border-amber-800 bg-amber-950/20 p-4">
             <p className="text-sm font-semibold leading-6 text-amber-100">{t.progressCaution}</p>
