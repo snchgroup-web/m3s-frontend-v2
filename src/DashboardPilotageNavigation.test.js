@@ -42,6 +42,26 @@ test('shows the four management responsibilities in French', () => {
   expect(screen.getByText('Diriger')).toBeInTheDocument();
 });
 
+test('shows the governed institutional programme without inventing progress', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  expect(screen.getByRole('tab', { name: 'Programme institutionnel 2SG' })).toHaveAttribute('aria-selected', 'true');
+  expect(screen.getByRole('heading', { name: 'De l’idée à une institution durable' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: '2SG · Institution porteuse' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'M3S · Système interne transversal de management' })).toBeInTheDocument();
+  expect(screen.getByText('29 composantes', { exact: false })).toBeInTheDocument();
+  expect(screen.getByText(/Aucun pourcentage n’est affiché/)).toBeInTheDocument();
+  expect(document.body.textContent).not.toMatch(/\d+\s*%/);
+});
+
+test('opens the institutional programme in all three interface languages', () => {
+  const { rerender } = renderDashboardNavigation({ language: 'EN' }, '/?view=program');
+  expect(screen.getByRole('heading', { name: 'From an idea to a sustainable institution' })).toBeInTheDocument();
+
+  rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
+  expect(screen.getByRole('heading', { name: 'Von der Idee zu einer nachhaltigen Institution' })).toBeInTheDocument();
+});
+
 test('keeps Intelligence honest when no edition is published', async () => {
   const onNavigate = jest.fn();
   renderDashboardNavigation({ language: 'EN', onNavigate });
@@ -336,6 +356,7 @@ test('opens the four governed global views without confusing architecture with t
 test.each([
   ['', 'overview'],
   ['?view=overview', 'overview'],
+  ['?view=program', 'program'],
   ['?view=intelligence', 'intelligence'],
   ['?view=map', 'map'],
   ['?view=architecture', 'architecture'],

@@ -21,6 +21,16 @@
           "path": "/?view=overview"
         },
         {
+          "id": "global-institutional-program",
+          "label": {
+            "FR": "Programme institutionnel 2SG",
+            "EN": "2SG Institutional programme",
+            "DE": "Institutionelles 2SG-Programm"
+          },
+          "icon": "Target",
+          "path": "/?view=program"
+        },
+        {
           "id": "global-intelligence",
           "label": {
             "FR": "Daily Intelligence",
