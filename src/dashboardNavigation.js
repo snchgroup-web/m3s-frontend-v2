@@ -5,6 +5,7 @@ export const DASHBOARD_VIEW_KEY = 'dashboardView';
 
 const DASHBOARD_VIEWS = new Set([
   'overview',
+  'program',
   'intelligence',
   'map',
   'architecture',

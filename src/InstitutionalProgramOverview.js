@@ -1,5 +1,6 @@
 import React from 'react';
 import { Activity, Briefcase, Building2, Network, ShieldCheck, Target, TrendingUp } from 'lucide-react';
+import InstitutionalLegalPilot from './InstitutionalLegalPilot';
 
 const translations = {
   FR: {
@@ -117,7 +118,7 @@ const cyclePresentation = {
   development: { icon: TrendingUp, accent: 'text-emerald-300', surface: 'bg-emerald-950/25', border: 'border-emerald-800/70' }
 };
 
-const InstitutionalProgramOverview = ({ language = 'FR', onSelectView }) => {
+const InstitutionalProgramOverview = ({ language = 'FR', onSelectView, onNavigate }) => {
   const t = translations[language] || translations.FR;
 
   return (
@@ -206,6 +207,8 @@ const InstitutionalProgramOverview = ({ language = 'FR', onSelectView }) => {
           </div>
         </article>
       </section>
+
+      <InstitutionalLegalPilot language={language} onNavigate={onNavigate} />
 
       <footer className="m3s-panel p-4">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
