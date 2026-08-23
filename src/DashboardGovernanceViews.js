@@ -193,10 +193,10 @@ const copy = {
       body: 'Les ressources restent conservées dans leurs espaces maîtres. Cette vue fournit des accès transversaux sans créer de copie concurrente.',
       open: 'Ouvrir',
       cards: [
-        ['Ressources Administration', 'Documents directeurs, ressources légales, favoris et supports de la fonction pilote.', '/administration?tab=resources&returnTo=dashboard-resources', 'Administration'],
-        ['GED & Knowledge Management', 'Documents, dossiers, archives, veille et connaissance institutionnelle.', '/ged?tab=knowledge&returnTo=dashboard-resources', 'GED'],
+        ['Ressources Administration', 'Documents directeurs, ressources légales, favoris et supports de la fonction pilote.', '/administration?tab=resources&returnTo=dashboard&dashboardView=resources', 'Administration'],
+        ['GED & Knowledge Management', 'Documents, dossiers, archives, veille et connaissance institutionnelle.', '/ged?tab=knowledge&returnTo=dashboard&dashboardView=resources', 'GED'],
         ['Daily Intelligence', 'Mémoire stratégique, agenda, journal de bord et dernière édition publiée.', '/?view=intelligence', 'Pilotage'],
-        ['Planification & projets', 'Tâches, projets, échéances et journal d’exécution de la fonction Administration.', '/administration?tab=planning&returnTo=dashboard-resources', 'Exécution']
+        ['Planification & projets', 'Tâches, projets, échéances et journal d’exécution de la fonction Administration.', '/administration?tab=planning&returnTo=dashboard&dashboardView=resources', 'Exécution']
       ]
     },
     glossary: {
@@ -351,7 +351,7 @@ const copy = {
     },
     resources: {
       eyebrow: 'GOVERNED ACCESS POINTS', title: 'Resources', body: 'Resources remain in their master spaces. This view provides cross-functional access without creating a competing copy.', open: 'Open',
-      cards: [['Administration resources', 'Governing documents, legal resources, bookmarks and pilot-function support.', '/administration?tab=resources&returnTo=dashboard-resources', 'Administration'], ['GED & Knowledge Management', 'Documents, folders, archives, monitoring and institutional knowledge.', '/ged?tab=knowledge&returnTo=dashboard-resources', 'GED'], ['Daily Intelligence', 'Strategic memory, agenda, logbook and latest published edition.', '/?view=intelligence', 'Steering'], ['Planning & projects', 'Tasks, projects, deadlines and Administration execution log.', '/administration?tab=planning&returnTo=dashboard-resources', 'Execution']]
+      cards: [['Administration resources', 'Governing documents, legal resources, bookmarks and pilot-function support.', '/administration?tab=resources&returnTo=dashboard&dashboardView=resources', 'Administration'], ['GED & Knowledge Management', 'Documents, folders, archives, monitoring and institutional knowledge.', '/ged?tab=knowledge&returnTo=dashboard&dashboardView=resources', 'GED'], ['Daily Intelligence', 'Strategic memory, agenda, logbook and latest published edition.', '/?view=intelligence', 'Steering'], ['Planning & projects', 'Tasks, projects, deadlines and Administration execution log.', '/administration?tab=planning&returnTo=dashboard&dashboardView=resources', 'Execution']]
     },
     glossary: {
       eyebrow: 'STEERING VOCABULARY', title: 'Glossary', body: 'These local definitions support reading of the Global Dashboard. The 2SG Central Glossary remains the master source.', open: 'Open Central Glossary',
@@ -495,7 +495,7 @@ const copy = {
     },
     resources: {
       eyebrow: 'GEREGELTE ZUGÄNGE', title: 'Ressourcen', body: 'Ressourcen verbleiben in ihren maßgeblichen Bereichen. Diese Ansicht bietet funktionsübergreifende Zugänge ohne konkurrierende Kopien.', open: 'Öffnen',
-      cards: [['Ressourcen Verwaltung', 'Leitdokumente, Rechtsquellen, Favoriten und Hilfsmittel der Pilotfunktion.', '/administration?tab=resources&returnTo=dashboard-resources', 'Verwaltung'], ['GED & Knowledge Management', 'Dokumente, Ordner, Archive, Monitoring und institutionelles Wissen.', '/ged?tab=knowledge&returnTo=dashboard-resources', 'GED'], ['Daily Intelligence', 'Strategisches Gedächtnis, Agenda, Arbeitsjournal und letzte Ausgabe.', '/?view=intelligence', 'Steuerung'], ['Planung & Projekte', 'Aufgaben, Projekte, Termine und Ausführungsjournal der Verwaltung.', '/administration?tab=planning&returnTo=dashboard-resources', 'Ausführung']]
+      cards: [['Ressourcen Verwaltung', 'Leitdokumente, Rechtsquellen, Favoriten und Hilfsmittel der Pilotfunktion.', '/administration?tab=resources&returnTo=dashboard&dashboardView=resources', 'Verwaltung'], ['GED & Knowledge Management', 'Dokumente, Ordner, Archive, Monitoring und institutionelles Wissen.', '/ged?tab=knowledge&returnTo=dashboard&dashboardView=resources', 'GED'], ['Daily Intelligence', 'Strategisches Gedächtnis, Agenda, Arbeitsjournal und letzte Ausgabe.', '/?view=intelligence', 'Steuerung'], ['Planung & Projekte', 'Aufgaben, Projekte, Termine und Ausführungsjournal der Verwaltung.', '/administration?tab=planning&returnTo=dashboard&dashboardView=resources', 'Ausführung']]
     },
     glossary: {
       eyebrow: 'STEUERUNGSVOKABULAR', title: 'Glossar', body: 'Diese lokalen Definitionen erleichtern das Lesen des globalen Dashboards. Das zentrale 2SG-Glossar bleibt die Hauptquelle.', open: 'Zentrales Glossar öffnen',
