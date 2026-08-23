@@ -2,6 +2,8 @@
   command = "npm run build"
   publish = "build"
 
+# Keep the production build configuration versioned with the M3S frontend.
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
