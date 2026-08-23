@@ -337,7 +337,9 @@ test('opens the four governed global views without confusing architecture with t
 
   fireEvent.click(screen.getByRole('tab', { name: 'Ressources' }));
   fireEvent.click(screen.getByRole('button', { name: 'Ouvrir Administration' }));
-  expect(onNavigate).toHaveBeenCalledWith('/administration?tab=resources&returnTo=dashboard-resources');
+  expect(onNavigate).toHaveBeenCalledWith('/administration?tab=resources&returnTo=dashboard&dashboardView=resources');
+  fireEvent.click(screen.getByRole('button', { name: 'Ouvrir Exécution' }));
+  expect(onNavigate).toHaveBeenCalledWith('/administration?tab=planning&returnTo=dashboard&dashboardView=resources');
 
   fireEvent.click(screen.getByRole('tab', { name: 'Glossaire' }));
   expect(screen.getByText('Source maîtresse')).toBeInTheDocument();
