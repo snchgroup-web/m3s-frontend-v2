@@ -17,7 +17,7 @@ const primaryTabPlacementCases = [
   ['Finance.js', '<FinanceOverviewIndicators'],
   ['RH.js', '<RHOverview'],
   ['CRM.js', '<div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-5">'],
-  ['Production.js', '<section className="mb-6 rounded-lg'],
+  ['Production.js', '<section className="production-pilot-summary'],
   ['Actifs.js', '{error &&'],
   ['GED.js', '<div className="it-support-kpis']
 ];

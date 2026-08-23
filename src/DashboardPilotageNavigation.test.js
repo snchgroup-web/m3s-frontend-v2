@@ -62,6 +62,25 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByRole('heading', { name: 'Von der Idee zu einer nachhaltigen Institution' })).toBeInTheDocument();
 });
 
+test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  expect(screen.getByRole('heading', { name: 'MEP-01 · LEGAL' })).toBeInTheDocument();
+  expect(screen.getByText(/Progression non calculable/)).toBeInTheDocument();
+  expect(screen.getByText('Applicabilité à qualifier')).toBeInTheDocument();
+  expect(document.body.textContent).not.toMatch(/MEP-01[^%]*\d+\s*%/);
+});
+
+test('opens the authorised LEGAL progress with an exact programme return context', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate }, '/?view=program');
+
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir l’avancement LEGAL/ }));
+  expect(onNavigate).toHaveBeenCalledWith(
+    '/administration?tab=compliance&returnTo=dashboard&dashboardView=program#compliance-progress'
+  );
+});
+
 test('keeps Intelligence honest when no edition is published', async () => {
   const onNavigate = jest.fn();
   renderDashboardNavigation({ language: 'EN', onNavigate });

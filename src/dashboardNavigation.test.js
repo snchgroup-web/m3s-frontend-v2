@@ -40,6 +40,15 @@ test('returns to the exact dashboard section when no KPI initiated the navigatio
   expect(buildDashboardReturnPath(null, 'incidents')).toBe('/?view=incidents#global-pilotage-title');
 });
 
+test('preserves the institutional programme as a governed return view', () => {
+  expect(getDashboardReturnContext('?returnTo=dashboard&dashboardView=program')).toEqual({
+    enabled: true,
+    indicatorId: null,
+    view: 'program'
+  });
+  expect(buildDashboardReturnPath(null, 'program')).toBe('/?view=program#global-pilotage-title');
+});
+
 test('falls back to the governed dashboard overview for an unknown return view', () => {
   expect(buildDashboardReturnPath(null, 'unknown')).toBe('/?view=overview#global-situation');
 });
