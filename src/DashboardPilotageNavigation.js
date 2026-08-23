@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import api from './api';
 import DashboardGovernanceViews from './DashboardGovernanceViews';
+import InstitutionalProgramOverview from './InstitutionalProgramOverview';
 import { ModulePageTabs } from './moduleTabs';
 
 const translations = {
@@ -194,7 +195,7 @@ const functionDefinitions = [
   { id: 'assets', group: 'operations', path: '/actifs', icon: Warehouse, color: 'text-rose-300', background: 'bg-rose-950/40', accent: '#f43f5e' }
 ];
 
-const dashboardViews = ['overview', 'intelligence', 'map', 'architecture', 'processes', 'incidents', 'resources', 'glossary'];
+const dashboardViews = ['overview', 'program', 'intelligence', 'map', 'architecture', 'processes', 'incidents', 'resources', 'glossary'];
 
 export const resolveDashboardView = (search = '') => {
   const view = new URLSearchParams(search).get('view');
@@ -577,6 +578,10 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
             ))}
           </div>
         </div>
+      )}
+
+      {activeView === 'program' && (
+        <InstitutionalProgramOverview language={language} onSelectView={selectView} />
       )}
 
       <DashboardGovernanceViews activeView={activeView} language={language} selectedKpi={selectedKpi} onNavigate={onNavigate} />

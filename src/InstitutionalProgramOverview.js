@@ -1,0 +1,234 @@
+import React from 'react';
+import { Activity, Briefcase, Building2, Network, ShieldCheck, Target, TrendingUp } from 'lucide-react';
+
+const translations = {
+  FR: {
+    eyebrow: 'PROGRAMME INSTITUTIONNEL GLOBAL 2SG',
+    title: 'De l’idée à une institution durable',
+    body: 'Cette lecture présente la structure institutionnelle validée. Elle prépare le futur registre de progression sans remplacer les documents directeurs, les preuves ou les décisions humaines.',
+    readOnly: 'Lecture seule',
+    sourceStatus: 'Structure générale validée · composantes et mesure à affiner',
+    institution: '2SG · Institution porteuse',
+    institutionBody: '2SG porte la mission, la gouvernance, les actifs, les activités, les projets et les offres.',
+    cycles: {
+      implantation: {
+        title: 'Cycle institutionnel · Implantation',
+        body: 'Concevoir l’idée institutionnelle puis la rendre opérationnelle.',
+        steps: [
+          ['Conception', 'Préparer les porteurs, bâtir et formaliser une idée cohérente et réalisable.', '6 composantes cadrées'],
+          ['Mise en place', 'Installer la structure hybride et rendre ses premiers moyens opérationnels.', '7 composantes cadrées']
+        ]
+      },
+      development: {
+        title: 'Cycle institutionnel · Développement',
+        body: 'Stabiliser ce qui a été implanté puis développer son usage et son impact.',
+        steps: [
+          ['Consolidation', 'Contrôler, corriger, documenter, sécuriser et stabiliser.', '8 composantes cadrées'],
+          ['Dynamisation', 'Animer, faire adopter, étendre et optimiser de manière maîtrisée.', '8 composantes cadrées']
+        ]
+      }
+    },
+    system: 'M3S · Système interne transversal de management',
+    systemBody: 'M3S aide 2SG à piloter, organiser, documenter, contrôler et capitaliser. Il soutient l’institution sans constituer une institution parallèle ni un niveau stratégique équivalent.',
+    measurement: 'Mesure gouvernée',
+    measurementBody: 'Aucun pourcentage n’est affiché tant que le périmètre cible, les tâches, les preuves et les éventuels poids ne sont pas validés.',
+    source: 'Sources de cadrage',
+    sourceModel: 'Modèle du Programme institutionnel global V0.2 · 23.08.2026',
+    sourceMatrix: 'Matrice de cadrage V0.1 · 29 composantes',
+    openResources: 'Voir les ressources',
+    openArchitecture: 'Voir l’architecture'
+  },
+  EN: {
+    eyebrow: '2SG GLOBAL INSTITUTIONAL PROGRAMME',
+    title: 'From an idea to a sustainable institution',
+    body: 'This view presents the validated institutional structure. It prepares the future progress register without replacing governing documents, evidence or human decisions.',
+    readOnly: 'Read only',
+    sourceStatus: 'Overall structure validated · components and measurement to refine',
+    institution: '2SG · Sponsoring institution',
+    institutionBody: '2SG carries the mission, governance, assets, activities, projects and offers.',
+    cycles: {
+      implantation: {
+        title: 'Institutional cycle · Establishment',
+        body: 'Design the institutional idea and then make it operational.',
+        steps: [
+          ['Design', 'Prepare the founders, build and formalise a coherent and feasible idea.', '6 framed components'],
+          ['Implementation', 'Install the hybrid structure and make its initial resources operational.', '7 framed components']
+        ]
+      },
+      development: {
+        title: 'Institutional cycle · Development',
+        body: 'Stabilise what has been established, then develop its use and impact.',
+        steps: [
+          ['Consolidation', 'Control, correct, document, secure and stabilise.', '8 framed components'],
+          ['Dynamisation', 'Mobilise, foster adoption, expand and optimise in a controlled way.', '8 framed components']
+        ]
+      }
+    },
+    system: 'M3S · Cross-functional internal management system',
+    systemBody: 'M3S helps 2SG steer, organise, document, control and retain knowledge. It supports the institution without becoming a parallel institution or an equivalent strategic level.',
+    measurement: 'Governed measurement',
+    measurementBody: 'No percentage is displayed until the target scope, tasks, evidence and any weights have been validated.',
+    source: 'Framing sources',
+    sourceModel: 'Global Institutional Programme model V0.2 · 23 Aug 2026',
+    sourceMatrix: 'Framing matrix V0.1 · 29 components',
+    openResources: 'View resources',
+    openArchitecture: 'View architecture'
+  },
+  DE: {
+    eyebrow: 'GLOBALES INSTITUTIONELLES 2SG-PROGRAMM',
+    title: 'Von der Idee zu einer nachhaltigen Institution',
+    body: 'Diese Ansicht zeigt die validierte institutionelle Struktur. Sie bereitet das künftige Fortschrittsregister vor, ohne Leitdokumente, Nachweise oder menschliche Entscheidungen zu ersetzen.',
+    readOnly: 'Nur Lesen',
+    sourceStatus: 'Gesamtstruktur validiert · Komponenten und Messung zu präzisieren',
+    institution: '2SG · Trägerinstitution',
+    institutionBody: '2SG trägt Mission, Governance, Vermögenswerte, Aktivitäten, Projekte und Angebote.',
+    cycles: {
+      implantation: {
+        title: 'Institutioneller Zyklus · Aufbau',
+        body: 'Die institutionelle Idee konzipieren und anschließend funktionsfähig machen.',
+        steps: [
+          ['Konzeption', 'Die Träger vorbereiten und eine kohärente, realisierbare Idee ausarbeiten.', '6 strukturierte Komponenten'],
+          ['Umsetzung', 'Die hybride Struktur einrichten und ihre ersten Mittel funktionsfähig machen.', '7 strukturierte Komponenten']
+        ]
+      },
+      development: {
+        title: 'Institutioneller Zyklus · Entwicklung',
+        body: 'Das Aufgebaute stabilisieren und anschließend Nutzung und Wirkung entwickeln.',
+        steps: [
+          ['Konsolidierung', 'Kontrollieren, korrigieren, dokumentieren, absichern und stabilisieren.', '8 strukturierte Komponenten'],
+          ['Dynamisierung', 'Aktivieren, Nutzung fördern, erweitern und kontrolliert optimieren.', '8 strukturierte Komponenten']
+        ]
+      }
+    },
+    system: 'M3S · Internes funktionsübergreifendes Managementsystem',
+    systemBody: 'M3S hilft 2SG beim Steuern, Organisieren, Dokumentieren, Kontrollieren und Sichern von Wissen. Es unterstützt die Institution, ohne eine parallele Institution oder eine gleichwertige strategische Ebene zu bilden.',
+    measurement: 'Governance-konforme Messung',
+    measurementBody: 'Es wird kein Prozentsatz angezeigt, solange Zielumfang, Aufgaben, Nachweise und mögliche Gewichtungen nicht validiert sind.',
+    source: 'Strukturierungsquellen',
+    sourceModel: 'Modell des globalen institutionellen Programms V0.2 · 23.08.2026',
+    sourceMatrix: 'Strukturierungsmatrix V0.1 · 29 Komponenten',
+    openResources: 'Ressourcen anzeigen',
+    openArchitecture: 'Architektur anzeigen'
+  }
+};
+
+const cyclePresentation = {
+  implantation: { icon: Building2, accent: 'text-cyan-300', surface: 'bg-cyan-950/25', border: 'border-cyan-800/70' },
+  development: { icon: TrendingUp, accent: 'text-emerald-300', surface: 'bg-emerald-950/25', border: 'border-emerald-800/70' }
+};
+
+const InstitutionalProgramOverview = ({ language = 'FR', onSelectView }) => {
+  const t = translations[language] || translations.FR;
+
+  return (
+    <div className="institutional-program-view m3s-business-module m3s-design-scope mt-5 space-y-4">
+      <header className="m3s-panel p-4 sm:p-5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="max-w-4xl">
+            <p className="text-xs font-semibold uppercase text-blue-300">{t.eyebrow}</p>
+            <h3 className="mt-1 text-xl font-semibold text-slate-100 sm:text-2xl">{t.title}</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-300">{t.body}</p>
+          </div>
+          <span className="inline-flex min-h-9 shrink-0 items-center gap-2 self-start rounded-md border border-blue-700/70 bg-blue-950/30 px-3 py-2 text-xs font-semibold text-blue-200">
+            <ShieldCheck size={16} aria-hidden="true" />{t.readOnly}
+          </span>
+        </div>
+        <p className="mt-4 rounded-md border border-amber-800/60 bg-amber-950/20 px-3 py-2 text-sm text-amber-200">{t.sourceStatus}</p>
+      </header>
+
+      <section className="institutional-program-root m3s-panel p-4 sm:p-5" aria-labelledby="institutional-program-root-title">
+        <div className="mx-auto flex max-w-xl items-center gap-3 rounded-md border border-blue-700/70 bg-blue-950/25 p-4">
+          <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-blue-950/50 text-blue-300">
+            <Target size={23} aria-hidden="true" />
+          </span>
+          <div>
+            <h4 id="institutional-program-root-title" className="text-base font-semibold text-slate-100">{t.institution}</h4>
+            <p className="mt-1 text-sm leading-5 text-slate-300">{t.institutionBody}</p>
+          </div>
+        </div>
+
+        <div className="mx-auto h-6 w-px bg-blue-700/70" aria-hidden="true" />
+
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          {Object.entries(t.cycles).map(([cycleId, cycle]) => {
+            const presentation = cyclePresentation[cycleId];
+            const CycleIcon = presentation.icon;
+            return (
+              <article key={cycleId} className={`rounded-md border p-4 ${presentation.border} ${presentation.surface}`}>
+                <div className="flex items-start gap-3">
+                  <span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-slate-900/40 ${presentation.accent}`}>
+                    <CycleIcon size={21} aria-hidden="true" />
+                  </span>
+                  <div>
+                    <h4 className="text-base font-semibold text-slate-100">{cycle.title}</h4>
+                    <p className="mt-1 text-sm leading-5 text-slate-300">{cycle.body}</p>
+                  </div>
+                </div>
+                <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {cycle.steps.map(([title, body, count], index) => (
+                    <div key={title} className="m3s-raised min-h-[142px] p-3">
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-blue-950/40 text-xs font-semibold text-blue-300">{index + 1}</span>
+                        <h5 className="text-sm font-semibold text-slate-100">{title}</h5>
+                      </div>
+                      <p className="mt-2 text-sm leading-5 text-slate-300">{body}</p>
+                      <p className="mt-3 text-xs font-semibold text-blue-300">{count}</p>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+        <article className="m3s-panel p-4">
+          <div className="flex items-start gap-3">
+            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-violet-950/35 text-violet-300">
+              <Network size={21} aria-hidden="true" />
+            </span>
+            <div>
+              <h4 className="text-base font-semibold text-slate-100">{t.system}</h4>
+              <p className="mt-1 text-sm leading-6 text-slate-300">{t.systemBody}</p>
+            </div>
+          </div>
+        </article>
+        <article className="m3s-panel p-4">
+          <div className="flex items-start gap-3">
+            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-amber-950/35 text-amber-300">
+              <Activity size={21} aria-hidden="true" />
+            </span>
+            <div>
+              <h4 className="text-base font-semibold text-slate-100">{t.measurement}</h4>
+              <p className="mt-1 text-sm leading-6 text-slate-300">{t.measurementBody}</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <footer className="m3s-panel p-4">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <Briefcase className="text-blue-300" size={18} aria-hidden="true" />
+              <h4 className="text-sm font-semibold text-slate-100">{t.source}</h4>
+            </div>
+            <p className="mt-2 text-sm text-slate-300">{t.sourceModel}</p>
+            <p className="mt-1 text-sm text-slate-400">{t.sourceMatrix}</p>
+          </div>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <button type="button" onClick={() => onSelectView('resources')} className="inline-flex min-h-11 items-center justify-center rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-blue-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              {t.openResources}
+            </button>
+            <button type="button" onClick={() => onSelectView('architecture')} className="inline-flex min-h-11 items-center justify-center rounded-md bg-blue-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              {t.openArchitecture}
+            </button>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default InstitutionalProgramOverview;
