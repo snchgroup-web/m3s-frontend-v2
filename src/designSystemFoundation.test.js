@@ -80,6 +80,7 @@ describe('global M3S design foundations', () => {
     businessModuleSources.forEach(source => expect(source).toContain('m3s-business-module'));
     expect(designSystemCss).toContain('html:not(.dark) .m3s-business-module .text-slate-100');
     expect(designSystemCss).toContain('html:not(.dark) .m3s-business-module .text-blue-100');
+    expect(designSystemCss).toContain('html:not(.dark) .m3s-business-module .text-fuchsia-100');
   });
 
   test('places the primary horizontal navigation before local indicators and content', () => {

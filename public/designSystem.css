@@ -705,6 +705,17 @@ html:not(.dark) .m3s-business-module .text-violet-400 {
   color: #6d28d9 !important;
 }
 
+html:not(.dark) .m3s-business-module .text-fuchsia-100,
+html:not(.dark) .m3s-business-module .text-fuchsia-200,
+html:not(.dark) .m3s-business-module .text-fuchsia-300,
+html:not(.dark) .m3s-business-module .text-fuchsia-400,
+html:not(.dark) .m3s-business-module .text-pink-100,
+html:not(.dark) .m3s-business-module .text-pink-200,
+html:not(.dark) .m3s-business-module .text-pink-300,
+html:not(.dark) .m3s-business-module .text-pink-400 {
+  color: #86198f !important;
+}
+
 html:not(.dark) .m3s-business-module .text-red-100,
 html:not(.dark) .m3s-business-module .text-red-200,
 html:not(.dark) .m3s-business-module .text-red-300,
@@ -739,6 +750,13 @@ html:not(.dark) .m3s-business-module [class*="bg-amber-950/"] {
 html:not(.dark) .m3s-business-module [class*="bg-purple-500/"],
 html:not(.dark) .m3s-business-module [class*="bg-violet-500/"] {
   background-color: #f5f3ff !important;
+}
+
+html:not(.dark) .m3s-business-module [class*="bg-fuchsia-500/"],
+html:not(.dark) .m3s-business-module [class*="bg-fuchsia-950/"],
+html:not(.dark) .m3s-business-module [class*="bg-pink-500/"],
+html:not(.dark) .m3s-business-module [class*="bg-pink-950/"] {
+  background-color: #fdf4ff !important;
 }
 
 html:not(.dark) .m3s-business-module [class*="bg-red-500/"],
