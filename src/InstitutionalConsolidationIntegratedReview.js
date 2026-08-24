@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  ArrowRight,
   Calculator,
   CheckSquare,
   FileSearch,
@@ -10,17 +9,7 @@ import {
   UsersRound
 } from 'lucide-react';
 import InstitutionalMeasurementReadiness from './InstitutionalMeasurementReadiness';
-
-const DOMAINS = [
-  ['CNS-01', 'institutional-governance-compliance-consolidation-pilot'],
-  ['CNS-02', 'institutional-processes-procedures-consolidation-pilot'],
-  ['CNS-03', 'institutional-data-reference-systems-consolidation-pilot'],
-  ['CNS-04', 'institutional-finance-controls-consolidation-pilot'],
-  ['CNS-05', 'institutional-human-resources-capabilities-consolidation-pilot'],
-  ['CNS-06', 'institutional-m3s-security-continuity-consolidation-pilot'],
-  ['CNS-07', 'institutional-quality-lessons-consolidation-pilot'],
-  ['CNS-08', 'institutional-reporting-consolidation-pilot']
-];
+import InstitutionalConsolidationDecisionMatrix from './InstitutionalConsolidationDecisionMatrix';
 
 const COPY = {
   FR: {
@@ -36,19 +25,6 @@ const COPY = {
       ['Responsabilités', 'Nommer producteur du fond, contrôleur, validateur, décideur et responsable de conservation.'],
       ['Règle de calcul', 'Valider unités, dénominateurs, poids éventuels, traitement des indisponibilités et fréquence de revue.']
     ],
-    domainsTitle: 'Périmètre de la revue',
-    domainStatus: 'Cadrage publié · revue à conduire',
-    domains: [
-      'Gouvernance & conformité',
-      'Processus & procédures',
-      'Données & référentiels',
-      'Finances & contrôles',
-      'Ressources humaines & capacités',
-      'M3S, sécurité & continuité',
-      'Qualité & retours d’expérience',
-      'Reporting institutionnel'
-    ],
-    open: 'Revoir',
     outputsTitle: 'Résultats attendus de la revue',
     outputs: [
       'Périmètre cible et dépendances confirmés pour chacun des huit CNS.',
@@ -74,19 +50,6 @@ const COPY = {
       ['Responsibilities', 'Name the content producer, controller, reviewer, decision-maker and retention owner.'],
       ['Calculation rule', 'Validate units, denominators, possible weights, unavailable-state treatment and review frequency.']
     ],
-    domainsTitle: 'Review scope',
-    domainStatus: 'Framework published · review to conduct',
-    domains: [
-      'Governance & compliance',
-      'Processes & procedures',
-      'Data & reference systems',
-      'Finance & controls',
-      'Human resources & capabilities',
-      'M3S, security & continuity',
-      'Quality & lessons learned',
-      'Institutional reporting'
-    ],
-    open: 'Review',
     outputsTitle: 'Expected review outputs',
     outputs: [
       'Target scope and dependencies confirmed for each of the eight CNS domains.',
@@ -112,19 +75,6 @@ const COPY = {
       ['Verantwortungen', 'Fachverantwortung, Kontrolle, Validierung, Entscheid und Aufbewahrung zuweisen.'],
       ['Berechnungsregel', 'Einheiten, Nenner, mögliche Gewichte, Behandlung nicht verfügbarer Werte und Prüffrequenz validieren.']
     ],
-    domainsTitle: 'Prüfumfang',
-    domainStatus: 'Strukturierung veröffentlicht · Prüfung durchzuführen',
-    domains: [
-      'Governance & Compliance',
-      'Prozesse & Verfahren',
-      'Daten & Referenzsysteme',
-      'Finanzen & Kontrollen',
-      'Personal & Kapazitäten',
-      'M3S, Sicherheit & Kontinuität',
-      'Qualität & Erfahrungsrückfluss',
-      'Institutionelles Reporting'
-    ],
-    open: 'Prüfen',
     outputsTitle: 'Erwartete Prüfergebnisse',
     outputs: [
       'Zielumfang und Abhängigkeiten für alle acht CNS bestätigt.',
@@ -173,17 +123,7 @@ const InstitutionalConsolidationIntegratedReview = ({ language = 'FR' }) => {
         </div>
       </div>
 
-      <div className="mt-5 border-t border-slate-700 pt-4">
-        <div className="flex items-center gap-2"><CheckSquare className="text-sky-300" size={18} aria-hidden="true" /><h5 className="text-sm font-semibold text-slate-100">{t.domainsTitle}</h5></div>
-        <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
-          {DOMAINS.map(([code, targetId], index) => (
-            <button key={code} type="button" onClick={() => openSection(targetId)} className="group min-h-20 rounded-md border border-slate-600 bg-slate-950/15 p-3 text-left transition hover:border-sky-400 hover:bg-slate-800/70 focus:outline-none focus:ring-2 focus:ring-sky-500">
-              <span className="flex items-center justify-between gap-3"><span className="text-sm font-semibold text-slate-100">{code} · {t.domains[index]}</span><ArrowRight className="shrink-0 text-sky-300 transition group-hover:translate-x-0.5" size={16} aria-hidden="true" /></span>
-              <span className="mt-2 block text-xs leading-4 text-slate-400">{t.domainStatus} · {t.open}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+      <InstitutionalConsolidationDecisionMatrix language={language} onOpen={openSection} />
 
       <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">
         <article className="m3s-raised p-4"><div className="flex items-center gap-2"><ListChecks className="text-emerald-300" size={18} aria-hidden="true" /><h5 className="text-sm font-semibold text-slate-100">{t.outputsTitle}</h5></div><ul className="mt-3 space-y-2">{t.outputs.map(item => <li key={item} className="flex gap-2 text-sm leading-5 text-slate-300"><CheckSquare className="mt-0.5 shrink-0 text-emerald-300" size={15} aria-hidden="true" /><span>{item}</span></li>)}</ul></article>
