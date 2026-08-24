@@ -14,6 +14,7 @@ import {
   UsersRound
 } from 'lucide-react';
 import InstitutionalMeasurementReadiness from './InstitutionalMeasurementReadiness';
+import InstitutionalConsolidationDecisionRecord from './InstitutionalConsolidationDecisionRecord';
 
 const STAGES = ['scope', 'roles', 'files', 'contracts', 'capabilities', 'review'];
 
@@ -21,7 +22,7 @@ const COPY = {
   FR: {
     eyebrow: 'PILOTE DE PROGRESSION · CONSOLIDATION',
     title: 'CNS-05 · Ressources humaines et capacités',
-    status: 'Périmètre cible à définir',
+    status: 'Cadre validé · détail à inventorier',
     body: 'Structurer les rôles, compétences, contrats, dossiers individuels et besoins de capacité de 2SG. Cette composante ne présume ni qu’une personne est engagée, ni qu’un contrat est valide, ni qu’un droit d’accès est accordé.',
     noMeasure: 'Progression non calculable · périmètre RH, rôles, dossiers, contrats, compétences, accès, preuves et règle de revue à définir puis valider',
     currentStage: 'Point de travail actuel',
@@ -58,7 +59,7 @@ const COPY = {
   EN: {
     eyebrow: 'PROGRESS PILOT · CONSOLIDATION',
     title: 'CNS-05 · Human resources and capabilities',
-    status: 'Target scope to define',
+    status: 'Framework validated · detail to inventory',
     body: 'Structure 2SG roles, skills, contracts, individual files and capacity needs. This component assumes neither that a person is employed, nor that a contract is valid, nor that access has been granted.',
     noMeasure: 'Progress cannot be calculated · HR scope, roles, files, contracts, skills, access, evidence and review rule must be defined and validated',
     currentStage: 'Current work point',
@@ -95,7 +96,7 @@ const COPY = {
   DE: {
     eyebrow: 'FORTSCHRITTSPILOT · KONSOLIDIERUNG',
     title: 'CNS-05 · Personal und Kapazitäten',
-    status: 'Zielumfang zu definieren',
+    status: 'Arbeitsrahmen validiert · Details zu inventarisieren',
     body: 'Rollen, Kompetenzen, Verträge, Personaldossiers und Kapazitätsbedarfe von 2SG strukturieren. Diese Komponente setzt weder eine Anstellung noch einen gültigen Vertrag oder gewährten Zugriff voraus.',
     noMeasure: 'Fortschritt nicht berechenbar · Personalumfang, Rollen, Dossiers, Verträge, Kompetenzen, Zugriffe, Nachweise und Prüfregel sind zu definieren und zu validieren',
     currentStage: 'Aktueller Arbeitspunkt',
@@ -157,6 +158,8 @@ const InstitutionalHumanResourcesCapabilitiesConsolidationPilot = ({ language = 
       </div>
 
       <InstitutionalMeasurementReadiness language={language} headline={t.noMeasure} accent="violet" />
+
+      <InstitutionalConsolidationDecisionRecord cnsId="CNS-05" language={language} />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">

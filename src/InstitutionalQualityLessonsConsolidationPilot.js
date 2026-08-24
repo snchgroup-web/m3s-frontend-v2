@@ -13,6 +13,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import InstitutionalMeasurementReadiness from './InstitutionalMeasurementReadiness';
+import InstitutionalConsolidationDecisionRecord from './InstitutionalConsolidationDecisionRecord';
 
 const STAGES = ['scope', 'review', 'reservations', 'correction', 'decision', 'lessons'];
 
@@ -20,7 +21,7 @@ const COPY = {
   FR: {
     eyebrow: 'PILOTE DE PROGRESSION · CONSOLIDATION',
     title: 'CNS-07 · Qualité et retours d’expérience',
-    status: 'Périmètre cible à définir',
+    status: 'Cadre validé · détail à inventorier',
     body: 'Évaluer les pilotes, livrables et processus, traiter leurs réserves puis capitaliser les enseignements utiles. Cette vue ne présume ni réception, ni qualité acquise, ni clôture et ne remplace pas la validation de la fonction compétente.',
     noMeasure: 'Progression non calculable · périmètre, critères d’acceptation, réserves, preuves, responsabilités et règle de clôture à définir et valider',
     currentStage: 'Point de travail actuel',
@@ -57,7 +58,7 @@ const COPY = {
   EN: {
     eyebrow: 'PROGRESS PILOT · CONSOLIDATION',
     title: 'CNS-07 · Quality and lessons learned',
-    status: 'Target scope to define',
+    status: 'Framework validated · detail to inventory',
     body: 'Evaluate pilots, deliverables and processes, address their reservations and retain useful lessons. This view assumes neither acceptance, achieved quality nor closure and does not replace validation by the competent function.',
     noMeasure: 'Progress cannot be calculated · scope, acceptance criteria, reservations, evidence, responsibilities and closure rule must be defined and validated',
     currentStage: 'Current work point',
@@ -94,7 +95,7 @@ const COPY = {
   DE: {
     eyebrow: 'FORTSCHRITTSPILOT · KONSOLIDIERUNG',
     title: 'CNS-07 · Qualität und Erfahrungsrückfluss',
-    status: 'Zielumfang zu definieren',
+    status: 'Arbeitsrahmen validiert · Details zu inventarisieren',
     body: 'Piloten, Lieferobjekte und Prozesse bewerten, Vorbehalte bearbeiten und nützliche Erkenntnisse sichern. Diese Ansicht setzt weder Abnahme, erreichte Qualität noch Abschluss voraus und ersetzt nicht die Validierung durch die zuständige Funktion.',
     noMeasure: 'Fortschritt nicht berechenbar · Umfang, Abnahmekriterien, Vorbehalte, Nachweise, Verantwortungen und Abschlussregel sind zu definieren und zu validieren',
     currentStage: 'Aktueller Arbeitspunkt',
@@ -156,6 +157,8 @@ const InstitutionalQualityLessonsConsolidationPilot = ({ language = 'FR', onNavi
       </div>
 
       <InstitutionalMeasurementReadiness language={language} headline={t.noMeasure} accent="emerald" />
+
+      <InstitutionalConsolidationDecisionRecord cnsId="CNS-07" language={language} />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">

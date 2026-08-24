@@ -554,11 +554,11 @@ test('returns from Daily Intelligence to the CNS-08 programme section', () => {
   });
 });
 
-test('shows the integrated CNS review without inventing a ninth domain or global progress', () => {
+test('shows the integrated CNS validation without inventing a ninth domain or global progress', () => {
   renderDashboardNavigation({}, '/?view=program');
 
-  expect(screen.getByRole('heading', { name: 'Arbitrer CNS-01 à CNS-08 avant toute mesure globale' })).toBeInTheDocument();
-  expect(screen.getByText('Décision d’avancement non prise')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Validation des CNS-01 à CNS-08 consignée avant toute mesure globale' })).toBeInTheDocument();
+  expect(screen.getByText('8 cadres de travail validés')).toBeInTheDocument();
   expect(screen.getByText(/Une absence de preuve reste un écart/)).toBeInTheDocument();
   expect(screen.queryByText(/CNS-09/)).not.toBeInTheDocument();
   expect(document.body.textContent).not.toMatch(/CNS-01 à CNS-08[^%]*\d+\s*%/);
@@ -569,7 +569,7 @@ test('opens every CNS section from the integrated review grid', () => {
   Element.prototype.scrollIntoView = scrollIntoView;
   renderDashboardNavigation({}, '/?view=program');
 
-  const review = screen.getByRole('heading', { name: 'Arbitrer CNS-01 à CNS-08 avant toute mesure globale' }).closest('section');
+  const review = screen.getByRole('heading', { name: 'Validation des CNS-01 à CNS-08 consignée avant toute mesure globale' }).closest('section');
   const reviewView = within(review);
   const buttons = reviewView.getAllByRole('button', { name: /CNS-0[1-8]/ });
   expect(buttons).toHaveLength(8);
@@ -582,39 +582,56 @@ test('opens every CNS section from the integrated review grid', () => {
   expect(window.location.hash).toBe('#institutional-reporting-consolidation-pilot');
 });
 
-test('prepares the eight CNS decisions without recording an approval or a calculated result', () => {
+test('records the eight validated CNS frameworks without calculating a result', () => {
   renderDashboardNavigation({}, '/?view=program');
 
-  const matrix = screen.getByRole('heading', { name: 'Matrice préparatoire d’arbitrage' }).closest('section');
+  const matrix = screen.getByRole('heading', { name: 'Matrice des cadres validés' }).closest('section');
   const matrixView = within(matrix);
-  expect(matrixView.getAllByText('Cadrage publié')).toHaveLength(8);
-  expect(matrixView.getAllByText('À confirmer')).toHaveLength(16);
-  expect(matrixView.getAllByText('À affecter')).toHaveLength(8);
-  expect(matrixView.getAllByText('Non autorisée')).toHaveLength(8);
+  expect(matrixView.getAllByText('Cadre validé')).toHaveLength(8);
+  expect(matrixView.getAllByText('Retenu')).toHaveLength(8);
+  expect(matrixView.getAllByText('Retenues')).toHaveLength(8);
+  expect(matrixView.getAllByText('Répartition retenue')).toHaveLength(8);
+  expect(matrixView.getAllByText('Indisponible')).toHaveLength(8);
   expect(matrixView.getAllByRole('button', { name: /Ouvrir le cadrage CNS-0[1-8]/ })).toHaveLength(8);
-  expect(matrix).not.toHaveTextContent(/validé|approuvé|\d+\s*%/i);
+  expect(matrix).not.toHaveTextContent(/approuvé|\d+\s*%/i);
+});
+
+test('records distinct governed decisions for CNS-04 through CNS-08 with explicit limits', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  ['04', '05', '06', '07', '08'].forEach(code => {
+    expect(screen.getByRole('heading', { name: `CNS-${code}-DEC-001 · V1.0` })).toBeInTheDocument();
+  });
+  expect(screen.getAllByText('Cadre de travail validé', { selector: 'span' })).toHaveLength(8);
+  expect(screen.getByText(/PR frontend #165/)).toBeInTheDocument();
+  expect(screen.getByText(/Ne certifie aucune comptabilité/)).toBeInTheDocument();
+  expect(screen.getByText(/Ne crée aucune relation de travail/)).toBeInTheDocument();
+  expect(screen.getByText(/Ne certifie ni sécurité/)).toBeInTheDocument();
+  expect(screen.getByText(/Ne prononce aucune conformité/)).toBeInTheDocument();
+  expect(screen.getByText(/N’approuve aucun rapport/)).toBeInTheDocument();
+  expect(document.body.textContent).not.toMatch(/CNS-0[4-8][^%]*\d+\s*%/);
 });
 
 test('translates the CNS decision matrix in English and German', () => {
   const { rerender } = renderDashboardNavigation({ language: 'EN' }, '/?view=program');
-  expect(screen.getByRole('heading', { name: 'Decision-preparation matrix' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Validated-framework matrix' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-01 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-02 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(3);
-  expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(3);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(8);
+  expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
-  expect(screen.getAllByText('Not authorised')).toHaveLength(8);
+  expect(screen.getAllByText('Unavailable')).toHaveLength(8);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
-  expect(screen.getByRole('heading', { name: 'Vorbereitende Entscheidungsmatrix' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Matrix der validierten Arbeitsrahmen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-01 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-02 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(3);
-  expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span' })).toHaveLength(3);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(8);
+  expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
-  expect(screen.getAllByText('Nicht autorisiert')).toHaveLength(8);
+  expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(8);
 });
 
 test('keeps Intelligence honest when no edition is published', async () => {

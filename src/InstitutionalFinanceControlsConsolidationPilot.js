@@ -14,6 +14,7 @@ import {
   WalletCards
 } from 'lucide-react';
 import InstitutionalMeasurementReadiness from './InstitutionalMeasurementReadiness';
+import InstitutionalConsolidationDecisionRecord from './InstitutionalConsolidationDecisionRecord';
 
 const STAGES = ['scope', 'flows', 'evidence', 'rates', 'reconciliation', 'review'];
 
@@ -21,7 +22,7 @@ const COPY = {
   FR: {
     eyebrow: 'PILOTE DE PROGRESSION · CONSOLIDATION',
     title: 'CNS-04 · Finances et contrôles',
-    status: 'Périmètre cible à définir',
+    status: 'Cadre validé · détail à inventorier',
     body: 'Structurer les flux financiers, budgets, contrôles, preuves et taux appliqués de 2SG en CHF et CFA. Cette composante ne présume ni qu’un flux est rapproché, ni qu’un budget est validé, ni qu’une écriture constitue une comptabilité certifiée.',
     noMeasure: 'Progression non calculable · flux, budgets, contrôles, périodicité, pièces, taux CHF/CFA et règle de revue à définir puis valider',
     currentStage: 'Point de travail actuel',
@@ -57,7 +58,7 @@ const COPY = {
   EN: {
     eyebrow: 'PROGRESS PILOT · CONSOLIDATION',
     title: 'CNS-04 · Finance and controls',
-    status: 'Target scope to define',
+    status: 'Framework validated · detail to inventory',
     body: 'Structure 2SG financial flows, budgets, controls, evidence and applied rates in CHF and CFA. This component assumes neither that a flow is reconciled, nor that a budget is approved, nor that a record constitutes certified accounting.',
     noMeasure: 'Progress cannot be calculated · flows, budgets, controls, frequency, evidence, CHF/CFA rates and review rule must be defined and validated',
     currentStage: 'Current work point',
@@ -93,7 +94,7 @@ const COPY = {
   DE: {
     eyebrow: 'FORTSCHRITTSPILOT · KONSOLIDIERUNG',
     title: 'CNS-04 · Finanzen und Kontrollen',
-    status: 'Zielumfang zu definieren',
+    status: 'Arbeitsrahmen validiert · Details zu inventarisieren',
     body: 'Finanzflüsse, Budgets, Kontrollen, Nachweise und angewandte Kurse von 2SG in CHF und CFA strukturieren. Diese Komponente setzt weder abgestimmte Flüsse noch genehmigte Budgets oder eine zertifizierte Buchhaltung voraus.',
     noMeasure: 'Fortschritt nicht berechenbar · Flüsse, Budgets, Kontrollen, Frequenz, Belege, CHF/CFA-Kurse und Prüfregel sind zu definieren und zu validieren',
     currentStage: 'Aktueller Arbeitspunkt',
@@ -154,6 +155,8 @@ const InstitutionalFinanceControlsConsolidationPilot = ({ language = 'FR', onNav
       </div>
 
       <InstitutionalMeasurementReadiness language={language} headline={t.noMeasure} accent="emerald" />
+
+      <InstitutionalConsolidationDecisionRecord cnsId="CNS-04" language={language} />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">

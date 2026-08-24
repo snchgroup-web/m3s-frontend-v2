@@ -14,78 +14,78 @@ import InstitutionalConsolidationDecisionMatrix from './InstitutionalConsolidati
 const COPY = {
   FR: {
     eyebrow: 'REVUE HUMAINE INTÉGRÉE · CONSOLIDATION',
-    title: 'Arbitrer CNS-01 à CNS-08 avant toute mesure globale',
-    status: 'Décision d’avancement non prise',
-    body: 'Cette vue rassemble les huit cadrages publiés afin de préparer une décision humaine commune. Elle reste une couche de revue distincte des domaines CNS, ne transforme pas un cadrage en résultat acquis et ne calcule aucun taux de progression.',
-    noMeasure: 'Progression non calculable · périmètre, preuves, responsables, règles de calcul et réserves à confirmer en revue humaine',
-    gatesTitle: 'Quatre portes à franchir',
+    title: 'Validation des CNS-01 à CNS-08 consignée avant toute mesure globale',
+    status: '8 cadres de travail validés',
+    body: 'Cette vue rassemble les huit cadres validés par Cheikh. Elle reste une couche de gouvernance distincte des résultats métier : la validation autorise les inventaires détaillés, mais ne transforme aucun cadrage en résultat acquis et ne calcule aucun taux de progression.',
+    noMeasure: 'Progression indisponible · inventaires, preuves réelles, responsables nominatifs, règles de calcul et réserves restent à établir par domaine',
+    gatesTitle: 'Quatre principes validés',
     gates: [
-      ['Périmètre cible', 'Confirmer les résultats attendus, inclusions, exclusions et dépendances de chaque CNS.'],
-      ['Preuves recevables', 'Définir les pièces, sources, dates, versions, niveaux de confidentialité et critères d’acceptation.'],
-      ['Responsabilités', 'Nommer producteur du fond, contrôleur, validateur, décideur et responsable de conservation.'],
-      ['Règle de calcul', 'Valider unités, dénominateurs, poids éventuels, traitement des indisponibilités et fréquence de revue.']
+      ['Périmètre cible', 'Le cadre de chaque CNS fixe les inclusions, exclusions et dépendances à inventorier.'],
+      ['Preuves recevables', 'Chaque résultat devra rester relié à des pièces, sources, dates, versions et critères d’acceptation.'],
+      ['Responsabilités', 'La séparation entre production du fond, contrôle, validation, décision et conservation est retenue.'],
+      ['Règle de calcul', 'Aucun taux ne sera affiché avant une règle versionnée couvrant dénominateur, statuts, indisponibilités et revue.']
     ],
-    outputsTitle: 'Résultats attendus de la revue',
+    outputsTitle: 'Effets de la validation',
     outputs: [
-      'Périmètre cible et dépendances confirmés pour chacun des huit CNS.',
-      'Index des preuves recevables, manquantes, restreintes ou à contrôler.',
-      'Responsables et autorités de validation explicitement affectés.',
-      'Règle de calcul versionnée, ou décision motivée de maintenir la mesure indisponible.',
-      'Réserves, arbitrages et prochaine étape du Programme institutionnel global 2SG consignés.'
+      'Les huit cadres peuvent maintenant servir de base aux inventaires détaillés.',
+      'Chaque CNS dispose d’une trace versionnée, d’une autorité, d’une date et de limites explicites.',
+      'Les preuves manquantes, restreintes ou à contrôler demeurent visibles comme écarts.',
+      'La mesure globale reste indisponible jusqu’à une règle de calcul distincte et prouvée.',
+      'Toute évolution devra créer une nouvelle version sans effacer les décisions du 25-08-2026.'
     ],
     governanceTitle: 'Décision et responsabilités',
     governance: 'Les fonctions responsables valident leur fond métier. Administration prépare la grille et consolide les statuts. La GED conserve les preuves autorisées. Les membres fondateurs arbitrent la décision institutionnelle et toute délégation requise. Une absence de preuve reste un écart, jamais une validation implicite.',
-    source: 'Sources de revue : Programme institutionnel global 2SG V0.2, matrice de cadrage V0.1, CNS-01 à CNS-08 publiés, Journal de bord du 24.08.2026 et contexte Daily Intelligence V4. Statut : préparation de revue, sans validation globale ni progression chiffrée.'
+    source: 'Sources de revue : Programme institutionnel global 2SG V0.2, matrice de cadrage V0.1, CNS-01 à CNS-08 publiés, Journal de bord et contexte Daily Intelligence V4. Statut : huit cadres de travail validés par Cheikh et consignés le 25-08-2026 ; aucune progression globale déclarée.'
   },
   EN: {
     eyebrow: 'INTEGRATED HUMAN REVIEW · CONSOLIDATION',
-    title: 'Review CNS-01 through CNS-08 before any global measurement',
-    status: 'Advancement decision not made',
-    body: 'This view brings together the eight published frameworks to prepare a shared human decision. It remains a review layer separate from the CNS domains, does not turn framing into an achieved result and calculates no progress rate.',
-    noMeasure: 'Progress cannot be calculated · scope, evidence, owners, calculation rules and reservations must be confirmed through human review',
-    gatesTitle: 'Four gates to clear',
+    title: 'CNS-01 through CNS-08 validation recorded before any global measurement',
+    status: '8 working frameworks validated',
+    body: 'This view brings together the eight frameworks validated by Cheikh. It remains a governance layer separate from business outcomes: validation authorises detailed inventories but turns no framework into an achieved result and calculates no progress rate.',
+    noMeasure: 'Progress unavailable · inventories, real evidence, named owners, calculation rules and reservations remain to be established by domain',
+    gatesTitle: 'Four validated principles',
     gates: [
-      ['Target scope', 'Confirm expected results, inclusions, exclusions and dependencies for each CNS.'],
-      ['Acceptable evidence', 'Define records, sources, dates, versions, confidentiality levels and acceptance criteria.'],
-      ['Responsibilities', 'Name the content producer, controller, reviewer, decision-maker and retention owner.'],
-      ['Calculation rule', 'Validate units, denominators, possible weights, unavailable-state treatment and review frequency.']
+      ['Target scope', 'Each CNS framework sets the inclusions, exclusions and dependencies to inventory.'],
+      ['Acceptable evidence', 'Every outcome must remain connected to records, sources, dates, versions and acceptance criteria.'],
+      ['Responsibilities', 'Separation between content production, control, validation, decision and retention is retained.'],
+      ['Calculation rule', 'No rate will be displayed before a versioned rule covers denominator, statuses, unavailable states and review.']
     ],
-    outputsTitle: 'Expected review outputs',
+    outputsTitle: 'Effects of validation',
     outputs: [
-      'Target scope and dependencies confirmed for each of the eight CNS domains.',
-      'Index of acceptable, missing, restricted or pending evidence.',
-      'Owners and validation authorities explicitly assigned.',
-      'Versioned calculation rule, or a reasoned decision to keep measurement unavailable.',
-      'Reservations, decisions and the next step for the 2SG Global Institutional Programme recorded.'
+      'The eight frameworks can now serve as baselines for detailed inventories.',
+      'Each CNS has a versioned record, authority, date and explicit limitations.',
+      'Missing, restricted or pending evidence remains visible as gaps.',
+      'Global measurement remains unavailable until a separate, evidenced calculation rule exists.',
+      'Any change must create a new version without erasing the decisions dated 25-08-2026.'
     ],
     governanceTitle: 'Decision and responsibilities',
     governance: 'Responsible functions validate their business content. Administration prepares the grid and consolidates statuses. The DMS retains authorised evidence. Founding members decide the institutional outcome and any required delegation. Missing evidence remains a gap, never implicit validation.',
-    source: 'Review sources: 2SG Global Institutional Programme V0.2, Framing Matrix V0.1, published CNS-01 through CNS-08, Work Log dated 24 Aug 2026 and Daily Intelligence V4 context. Status: review preparation, without global validation or quantified progress.'
+    source: 'Review sources: 2SG Global Institutional Programme V0.2, Framing Matrix V0.1, published CNS-01 through CNS-08, Work Log and Daily Intelligence V4 context. Status: eight working frameworks validated by Cheikh and recorded on 25-08-2026; no global progress declared.'
   },
   DE: {
     eyebrow: 'INTEGRIERTE MENSCHLICHE PRÜFUNG · KONSOLIDIERUNG',
-    title: 'CNS-01 bis CNS-08 vor jeder Gesamtmessung prüfen',
-    status: 'Fortschrittsentscheid nicht getroffen',
-    body: 'Diese Ansicht führt die acht veröffentlichten Strukturierungen zusammen, um einen gemeinsamen menschlichen Entscheid vorzubereiten. Sie bleibt eine von den CNS-Domänen getrennte Prüfschicht, macht aus Strukturierung kein erreichtes Ergebnis und berechnet keinen Fortschrittswert.',
-    noMeasure: 'Fortschritt nicht berechenbar · Umfang, Nachweise, Verantwortungen, Berechnungsregeln und Vorbehalte sind in menschlicher Prüfung zu bestätigen',
-    gatesTitle: 'Vier zu erfüllende Prüftore',
+    title: 'Validierung CNS-01 bis CNS-08 vor jeder Gesamtmessung dokumentiert',
+    status: '8 Arbeitsrahmen validiert',
+    body: 'Diese Ansicht führt die acht von Cheikh validierten Arbeitsrahmen zusammen. Sie bleibt eine von Fachergebnissen getrennte Governance-Schicht: Die Validierung erlaubt Detailinventare, macht aber aus keinem Rahmen ein erreichtes Ergebnis und berechnet keinen Fortschrittswert.',
+    noMeasure: 'Fortschritt nicht verfügbar · Inventare, reale Nachweise, namentliche Verantwortungen, Berechnungsregeln und Vorbehalte sind je Domäne noch zu erstellen',
+    gatesTitle: 'Vier validierte Grundsätze',
     gates: [
-      ['Zielumfang', 'Erwartete Ergebnisse, Einschlüsse, Ausschlüsse und Abhängigkeiten jedes CNS bestätigen.'],
-      ['Zulässige Nachweise', 'Unterlagen, Quellen, Daten, Versionen, Vertraulichkeitsstufen und Annahmekriterien definieren.'],
-      ['Verantwortungen', 'Fachverantwortung, Kontrolle, Validierung, Entscheid und Aufbewahrung zuweisen.'],
-      ['Berechnungsregel', 'Einheiten, Nenner, mögliche Gewichte, Behandlung nicht verfügbarer Werte und Prüffrequenz validieren.']
+      ['Zielumfang', 'Der Rahmen jedes CNS legt die zu inventarisierenden Einschlüsse, Ausschlüsse und Abhängigkeiten fest.'],
+      ['Zulässige Nachweise', 'Jedes Ergebnis muss mit Unterlagen, Quellen, Daten, Versionen und Annahmekriterien verbunden bleiben.'],
+      ['Verantwortungen', 'Die Trennung von Fachinhalt, Kontrolle, Validierung, Entscheid und Aufbewahrung ist festgehalten.'],
+      ['Berechnungsregel', 'Kein Wert wird angezeigt, bevor eine versionierte Regel Nenner, Status, Nichtverfügbarkeit und Prüfung abdeckt.']
     ],
-    outputsTitle: 'Erwartete Prüfergebnisse',
+    outputsTitle: 'Wirkungen der Validierung',
     outputs: [
-      'Zielumfang und Abhängigkeiten für alle acht CNS bestätigt.',
-      'Index zulässiger, fehlender, eingeschränkter oder noch zu prüfender Nachweise.',
-      'Verantwortungen und Validierungsbefugnisse ausdrücklich zugewiesen.',
-      'Versionierte Berechnungsregel oder begründeter Entscheid, die Messung nicht verfügbar zu lassen.',
-      'Vorbehalte, Entscheide und nächster Schritt des globalen institutionellen 2SG-Programms protokolliert.'
+      'Die acht Arbeitsrahmen können nun als Grundlage für Detailinventare dienen.',
+      'Jedes CNS besitzt einen versionierten Nachweis mit Autorität, Datum und ausdrücklichen Grenzen.',
+      'Fehlende, eingeschränkte oder noch zu prüfende Nachweise bleiben als Lücken sichtbar.',
+      'Die Gesamtmessung bleibt ohne getrennte und belegte Berechnungsregel nicht verfügbar.',
+      'Jede Änderung muss eine neue Version erzeugen, ohne die Entscheide vom 25.08.2026 zu löschen.'
     ],
     governanceTitle: 'Entscheid und Verantwortungen',
     governance: 'Die zuständigen Funktionen validieren ihren Fachinhalt. Administration bereitet die Prüfliste vor und konsolidiert Status. Die GED bewahrt autorisierte Nachweise. Die Gründungsmitglieder entscheiden institutionell und über nötige Delegationen. Fehlender Nachweis bleibt eine Lücke und wird nie zur stillschweigenden Validierung.',
-    source: 'Prüfquellen: Globales institutionelles 2SG-Programm V0.2, Strukturierungsmatrix V0.1, veröffentlichte CNS-01 bis CNS-08, Arbeitsjournal vom 24.08.2026 und Daily-Intelligence-V4-Kontext. Status: Prüfungsvorbereitung ohne Gesamtvalidierung oder quantifizierten Fortschritt.'
+    source: 'Prüfquellen: Globales institutionelles 2SG-Programm V0.2, Strukturierungsmatrix V0.1, veröffentlichte CNS-01 bis CNS-08, Arbeitsjournal und Daily-Intelligence-V4-Kontext. Status: acht Arbeitsrahmen von Cheikh validiert und am 25.08.2026 dokumentiert; kein Gesamtfortschritt erklärt.'
   }
 };
 
@@ -108,7 +108,7 @@ const InstitutionalConsolidationIntegratedReview = ({ language = 'FR' }) => {
           <h4 id={`${sectionId}-title`} className="mt-1 text-lg font-semibold text-slate-100 sm:text-xl">{t.title}</h4>
           <p className="mt-2 text-sm leading-6 text-slate-300">{t.body}</p>
         </div>
-        <span className="inline-flex min-h-9 shrink-0 items-center gap-2 self-start rounded-md border border-amber-700/70 bg-amber-950/25 px-3 py-2 text-xs font-semibold text-amber-100"><Scale size={16} aria-hidden="true" />{t.status}</span>
+        <span className="inline-flex min-h-9 shrink-0 items-center gap-2 self-start rounded-md border border-emerald-700/70 bg-emerald-950/25 px-3 py-2 text-xs font-semibold text-emerald-100"><Scale size={16} aria-hidden="true" />{t.status}</span>
       </div>
 
       <InstitutionalMeasurementReadiness language={language} headline={t.noMeasure} accent="violet" />
