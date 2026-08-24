@@ -3,6 +3,7 @@ import { Activity, Briefcase, Building2, Network, ShieldCheck, Target, TrendingU
 import InstitutionalLegalPilot from './InstitutionalLegalPilot';
 import InstitutionalGovernancePilot from './InstitutionalGovernancePilot';
 import InstitutionalDigitalInfrastructurePilot from './InstitutionalDigitalInfrastructurePilot';
+import InstitutionalInitialFundingPilot from './InstitutionalInitialFundingPilot';
 
 const translations = {
   FR: {
@@ -213,6 +214,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', onSelectView, onNavigat
       <InstitutionalLegalPilot language={language} onNavigate={onNavigate} />
       <InstitutionalGovernancePilot language={language} onNavigate={onNavigate} />
       <InstitutionalDigitalInfrastructurePilot language={language} onNavigate={onNavigate} />
+      <InstitutionalInitialFundingPilot language={language} onNavigate={onNavigate} />
 
       <footer className="m3s-panel p-4">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">

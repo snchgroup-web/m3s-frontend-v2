@@ -59,15 +59,17 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByRole('heading', { name: 'From an idea to a sustainable institution' })).toBeInTheDocument();
   expect(screen.getByText('Mandates and delegations to confirm')).toBeInTheDocument();
   expect(screen.getByText('Access, environments and continuity to consolidate')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(3);
-  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(3);
+  expect(screen.getByText('Scope, contributions and allocations to reconcile')).toBeInTheDocument();
+  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(4);
+  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(4);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Von der Idee zu einer nachhaltigen Institution' })).toBeInTheDocument();
   expect(screen.getByText('Mandate und Delegationen zu bestätigen')).toBeInTheDocument();
   expect(screen.getByText('Zugriffe, Umgebungen und Kontinuität zu konsolidieren')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(3);
-  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(3);
+  expect(screen.getByText('Umfang, Beiträge und Zuordnungen abzustimmen')).toBeInTheDocument();
+  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(4);
+  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(4);
 });
 
 test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
@@ -76,10 +78,10 @@ test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
   expect(screen.getByRole('heading', { name: 'MEP-01 · LEGAL' })).toBeInTheDocument();
   expect(screen.getByText('Progression non calculable · périmètre cible, tâches et preuves à valider')).toBeInTheDocument();
   expect(screen.getByText('Applicabilité à qualifier')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(3);
-  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(3);
-  expect(screen.getAllByText(/Périmètre cible$/)).toHaveLength(3);
-  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(3);
+  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(4);
+  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(4);
+  expect(screen.getAllByText(/Périmètre cible$/)).toHaveLength(4);
+  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(4);
   expect(document.body.textContent).not.toMatch(/MEP-01[^%]*\d+\s*%/);
 });
 
@@ -128,6 +130,25 @@ test('opens IT & Support from MEP-04 with the exact programme return context', (
   fireEvent.click(screen.getByRole('button', { name: /Ouvrir IT & Support/ }));
   expect(onNavigate).toHaveBeenCalledWith(
     '/ged?tab=architecture&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-digital-infrastructure-pilot#it-support-architecture'
+  );
+});
+
+test('shows the governed MEP-05 initial funding pilot without exposing private finance or inventing progress', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  expect(screen.getByRole('heading', { name: 'MEP-05 · Ressources & financement initial' })).toBeInTheDocument();
+  expect(screen.getByText('Périmètre, apports et affectations à rapprocher')).toBeInTheDocument();
+  expect(screen.getByText(/Montants détaillés, références de transaction, comptes, bénéficiaires/)).toBeInTheDocument();
+  expect(document.body.textContent).not.toMatch(/MEP-05[^%]*\d+\s*%/);
+});
+
+test('opens Finance from MEP-05 with the exact programme return context', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate }, '/?view=program');
+
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir Finances/ }));
+  expect(onNavigate).toHaveBeenCalledWith(
+    '/finance?tab=architecture&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-initial-funding-pilot#finance-architecture-title'
   );
 });
 
