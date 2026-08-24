@@ -61,8 +61,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Access, environments and continuity to consolidate')).toBeInTheDocument();
   expect(screen.getByText('Scope, contributions and allocations to reconcile')).toBeInTheDocument();
   expect(screen.getByText('Institutional scope and minimum inventory to define')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(5);
-  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(5);
+  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(6);
+  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(6);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Von der Idee zu einer nachhaltigen Institution' })).toBeInTheDocument();
@@ -70,8 +70,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Zugriffe, Umgebungen und Kontinuität zu konsolidieren')).toBeInTheDocument();
   expect(screen.getByText('Umfang, Beiträge und Zuordnungen abzustimmen')).toBeInTheDocument();
   expect(screen.getByText('Institutionellen Umfang und Mindestinventar definieren')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(5);
-  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(5);
+  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(6);
+  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(6);
 });
 
 test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
@@ -80,10 +80,10 @@ test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
   expect(screen.getByRole('heading', { name: 'MEP-01 · LEGAL' })).toBeInTheDocument();
   expect(screen.getByText('Progression non calculable · périmètre cible, tâches et preuves à valider')).toBeInTheDocument();
   expect(screen.getByText('Applicabilité à qualifier')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(5);
-  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(5);
-  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(5);
-  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(5);
+  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(6);
+  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(6);
+  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(6);
+  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(6);
   expect(document.body.textContent).not.toMatch(/MEP-01[^%]*\d+\s*%/);
 });
 
@@ -175,9 +175,36 @@ test('opens each MEP-03 master register with the exact programme return context'
   expect(onNavigate).toHaveBeenLastCalledWith(
     '/ged?tab=overview&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-admin-material-installation-pilot#it-support-overview'
   );
-  fireEvent.click(screen.getByRole('button', { name: /Ouvrir les ressources/ }));
+  fireEvent.click(screen.getByRole('button', { name: /^Ouvrir les ressources$/ }));
   expect(onNavigate).toHaveBeenLastCalledWith(
     '/administration?tab=resources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-admin-material-installation-pilot#administration-resources-title'
+  );
+});
+
+test('shows MEP-06 identity and communication without promoting exploratory assets', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  expect(screen.getByRole('heading', { name: 'MEP-06 · Identité & communication' })).toBeInTheDocument();
+  expect(screen.getByText('Socle de marque, modèles et canaux officiels à valider')).toBeInTheDocument();
+  expect(screen.getByText(/Une planche logo, une palette exploratoire, un prototype/)).toBeInTheDocument();
+  expect(document.body.textContent).not.toMatch(/MEP-06[^%]*\d+\s*%/);
+});
+
+test('opens each MEP-06 governed source with the exact programme return context', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate }, '/?view=program');
+
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir les sources d’identité/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=institution&section=institution-sources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-identity-communication-pilot#institution-sources'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir la communication/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=communication&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-identity-communication-pilot#communication-institutional'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir les ressources d’identité/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=resources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-identity-communication-pilot#administration-resources-title'
   );
 });
 
