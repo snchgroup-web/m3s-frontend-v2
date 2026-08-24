@@ -2,6 +2,7 @@ export const DASHBOARD_RETURN_KEY = 'returnTo';
 export const DASHBOARD_RETURN_VALUE = 'dashboard';
 export const DASHBOARD_KPI_KEY = 'dashboardKpi';
 export const DASHBOARD_VIEW_KEY = 'dashboardView';
+export const DASHBOARD_SECTION_KEY = 'dashboardSection';
 
 const DASHBOARD_VIEWS = new Set([
   'overview',
@@ -14,6 +15,11 @@ const DASHBOARD_VIEWS = new Set([
   'resources',
   'glossary'
 ]);
+
+const safeSectionId = sectionId =>
+  typeof sectionId === 'string' && /^[a-z0-9-]+$/.test(sectionId)
+    ? sectionId
+    : null;
 
 export const DASHBOARD_INDICATOR_DESTINATIONS = Object.freeze({
   'active-major-files': '/administration?tab=overview#administration-portfolio',
@@ -60,25 +66,30 @@ export const getDashboardIndicatorDestination = indicatorId => {
   return buildDashboardDestination(path, indicatorId);
 };
 
-export const buildDashboardReturnPath = (indicatorId, requestedView = 'overview') => {
+export const buildDashboardReturnPath = (indicatorId, requestedView = 'overview', sectionId = null) => {
   const view = DASHBOARD_VIEWS.has(requestedView) ? requestedView : 'overview';
   const params = new URLSearchParams({ view });
   if (indicatorId) params.set(DASHBOARD_KPI_KEY, indicatorId);
-  const hash = indicatorId
-    ? `#dashboard-kpi-${indicatorId}`
-    : view === 'overview'
-      ? '#global-situation'
-      : '#global-pilotage-title';
+  const section = safeSectionId(sectionId);
+  const hash = section
+    ? `#${section}`
+    : indicatorId
+      ? `#dashboard-kpi-${indicatorId}`
+      : view === 'overview'
+        ? '#global-situation'
+        : '#global-pilotage-title';
   return `/?${params.toString()}${hash}`;
 };
 
 export const getDashboardReturnContext = search => {
   const params = new URLSearchParams(search);
+  const sectionId = safeSectionId(params.get(DASHBOARD_SECTION_KEY));
   return {
     enabled: params.get(DASHBOARD_RETURN_KEY) === DASHBOARD_RETURN_VALUE,
     indicatorId: params.get(DASHBOARD_KPI_KEY),
     view: DASHBOARD_VIEWS.has(params.get(DASHBOARD_VIEW_KEY))
       ? params.get(DASHBOARD_VIEW_KEY)
-      : 'overview'
+      : 'overview',
+    ...(sectionId ? { sectionId } : {})
   };
 };
