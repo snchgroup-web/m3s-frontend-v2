@@ -261,13 +261,14 @@ test('shows CNS-01 governance and compliance without declaring consolidation com
   expect(document.body.textContent).not.toMatch(/CNS-01[^%]*\d+\s*%/);
 });
 
-test('shows the CNS-01 candidate arbitration proposal without declaring approval or a percentage', () => {
+test('shows the human validation of the CNS-01 working framework without declaring institutional adoption or a percentage', () => {
   renderDashboardNavigation({}, '/?view=program');
 
-  expect(screen.getByRole('heading', { name: 'Base d’arbitrage CNS-01 prête à examiner' })).toBeInTheDocument();
-  expect(screen.getByText('Ce que Cheikh peut valider maintenant')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Base d’arbitrage CNS-01 validée comme cadre de travail' })).toBeInTheDocument();
+  expect(screen.getByText('Validation humaine consignée')).toBeInTheDocument();
+  expect(screen.getByText(/Cadre de travail CNS-01 validé par Cheikh le 24-08-2026/)).toBeInTheDocument();
   expect(screen.getByText(/Cette validation autorise la préparation de l’inventaire détaillé/)).toBeInTheDocument();
-  expect(screen.getByText(/Statut : proposition candidate, non validée/)).toBeInTheDocument();
+  expect(screen.getByText(/adoption institutionnelle non déclarée/)).toBeInTheDocument();
   expect(document.body.textContent).not.toMatch(/CNS-01[^%]*\d+\s*%/);
 });
 
@@ -553,12 +554,12 @@ test('prepares the eight CNS decisions without recording an approval or a calcul
 test('translates the CNS decision matrix in English and German', () => {
   const { rerender } = renderDashboardNavigation({ language: 'EN' }, '/?view=program');
   expect(screen.getByRole('heading', { name: 'Decision-preparation matrix' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'CNS-01 decision baseline ready for review' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'CNS-01 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getAllByText('Not authorised')).toHaveLength(8);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Vorbereitende Entscheidungsmatrix' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-01 zur Prüfung bereit' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-01 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getAllByText('Nicht autorisiert')).toHaveLength(8);
 });
 
