@@ -61,8 +61,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Access, environments and continuity to consolidate')).toBeInTheDocument();
   expect(screen.getByText('Scope, contributions and allocations to reconcile')).toBeInTheDocument();
   expect(screen.getByText('Institutional scope and minimum inventory to define')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(12);
-  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(12);
+  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(13);
+  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(13);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Von der Idee zu einer nachhaltigen Institution' })).toBeInTheDocument();
@@ -70,8 +70,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Zugriffe, Umgebungen und Kontinuität zu konsolidieren')).toBeInTheDocument();
   expect(screen.getByText('Umfang, Beiträge und Zuordnungen abzustimmen')).toBeInTheDocument();
   expect(screen.getByText('Institutionellen Umfang und Mindestinventar definieren')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(12);
-  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(12);
+  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(13);
+  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(13);
 });
 
 test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
@@ -80,10 +80,10 @@ test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
   expect(screen.getByRole('heading', { name: 'MEP-01 · LEGAL' })).toBeInTheDocument();
   expect(screen.getByText('Progression non calculable · périmètre cible, tâches et preuves à valider')).toBeInTheDocument();
   expect(screen.getByText('Applicabilité à qualifier')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(12);
-  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(12);
-  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(12);
-  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(12);
+  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(13);
+  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(13);
+  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(13);
+  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(13);
   expect(document.body.textContent).not.toMatch(/MEP-01[^%]*\d+\s*%/);
 });
 
@@ -371,6 +371,37 @@ test('opens each CNS-05 governed HR view with the exact programme return context
   fireEvent.click(screen.getByRole('button', { name: /Ouvrir les ressources RH/ }));
   expect(onNavigate).toHaveBeenLastCalledWith(
     '/rh?tab=resources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-human-resources-capabilities-consolidation-pilot#rh-resources-title'
+  );
+});
+
+test('shows CNS-06 M3S security and continuity without claiming stability, security or resilience', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  expect(screen.getByRole('heading', { name: 'CNS-06 · M3S, sécurité et continuité' })).toBeInTheDocument();
+  expect(screen.getByText('Définir les critères de stabilité, sécurité, continuité et gestion d’incident')).toBeInTheDocument();
+  expect(screen.getByText(/Un service accessible n’est pas automatiquement stable/)).toBeInTheDocument();
+  expect(document.body.textContent).not.toMatch(/CNS-06[^%]*\d+\s*%/);
+});
+
+test('opens each CNS-06 governed IT view with the exact programme return context', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate }, '/?view=program');
+
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir l’architecture IT/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/ged?tab=architecture&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-m3s-security-continuity-consolidation-pilot#it-support-architecture-title'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir les processus IT/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/ged?tab=processes&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-m3s-security-continuity-consolidation-pilot#it-support-process-title'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir l’aide & incidents/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/ged?tab=help-support&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-m3s-security-continuity-consolidation-pilot#it-help-support'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir les ressources IT/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/ged?tab=resources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-m3s-security-continuity-consolidation-pilot#it-support-resources-title'
   );
 });
 
