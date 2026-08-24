@@ -43,12 +43,15 @@ const InstitutionalMeasurementReadiness = ({ language = 'FR', headline, accent =
   const t = COPY[language] || COPY.FR;
   const cyan = accent === 'cyan';
   const violet = accent === 'violet';
-  const accentClasses = violet
-    ? 'border-violet-700/60 bg-violet-950/20 text-violet-200'
-    : cyan
-      ? 'border-cyan-700/60 bg-cyan-950/20 text-cyan-200'
-      : 'border-blue-700/60 bg-blue-950/20 text-blue-200';
-  const iconClasses = violet ? 'text-violet-300' : cyan ? 'text-cyan-300' : 'text-blue-300';
+  const emerald = accent === 'emerald';
+  const accentClasses = emerald
+    ? 'border-emerald-700/60 bg-emerald-950/20 text-emerald-200'
+    : violet
+      ? 'border-violet-700/60 bg-violet-950/20 text-violet-200'
+      : cyan
+        ? 'border-cyan-700/60 bg-cyan-950/20 text-cyan-200'
+        : 'border-blue-700/60 bg-blue-950/20 text-blue-200';
+  const iconClasses = emerald ? 'text-emerald-300' : violet ? 'text-violet-300' : cyan ? 'text-cyan-300' : 'text-blue-300';
 
   return (
     <section className="mt-4 rounded-md border border-amber-800/60 bg-amber-950/15 p-3 sm:p-4" aria-label={t.title}>
