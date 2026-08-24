@@ -7,6 +7,7 @@ import InstitutionalInitialFundingPilot from './InstitutionalInitialFundingPilot
 import InstitutionalAdministrativeMaterialInstallationPilot from './InstitutionalAdministrativeMaterialInstallationPilot';
 import InstitutionalIdentityCommunicationPilot from './InstitutionalIdentityCommunicationPilot';
 import InstitutionalOperationalLaunchPilot from './InstitutionalOperationalLaunchPilot';
+import InstitutionalGovernanceComplianceConsolidationPilot from './InstitutionalGovernanceComplianceConsolidationPilot';
 
 const translations = {
   FR: {
@@ -221,6 +222,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', onSelectView, onNavigat
       <InstitutionalAdministrativeMaterialInstallationPilot language={language} onNavigate={onNavigate} />
       <InstitutionalIdentityCommunicationPilot language={language} onNavigate={onNavigate} />
       <InstitutionalOperationalLaunchPilot language={language} onNavigate={onNavigate} />
+      <InstitutionalGovernanceComplianceConsolidationPilot language={language} onNavigate={onNavigate} />
 
       <footer className="m3s-panel p-4">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">

@@ -61,8 +61,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Access, environments and continuity to consolidate')).toBeInTheDocument();
   expect(screen.getByText('Scope, contributions and allocations to reconcile')).toBeInTheDocument();
   expect(screen.getByText('Institutional scope and minimum inventory to define')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(7);
-  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(7);
+  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(8);
+  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(8);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Von der Idee zu einer nachhaltigen Institution' })).toBeInTheDocument();
@@ -70,8 +70,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Zugriffe, Umgebungen und Kontinuität zu konsolidieren')).toBeInTheDocument();
   expect(screen.getByText('Umfang, Beiträge und Zuordnungen abzustimmen')).toBeInTheDocument();
   expect(screen.getByText('Institutionellen Umfang und Mindestinventar definieren')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(7);
-  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(7);
+  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(8);
+  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(8);
 });
 
 test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
@@ -80,10 +80,10 @@ test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
   expect(screen.getByRole('heading', { name: 'MEP-01 · LEGAL' })).toBeInTheDocument();
   expect(screen.getByText('Progression non calculable · périmètre cible, tâches et preuves à valider')).toBeInTheDocument();
   expect(screen.getByText('Applicabilité à qualifier')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(7);
-  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(7);
-  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(7);
-  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(7);
+  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(8);
+  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(8);
+  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(8);
+  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(8);
   expect(document.body.textContent).not.toMatch(/MEP-01[^%]*\d+\s*%/);
 });
 
@@ -232,6 +232,33 @@ test('opens each MEP-07 governed source with the exact programme return context'
   fireEvent.click(screen.getByRole('button', { name: /Ouvrir les ressources de pilotage/ }));
   expect(onNavigate).toHaveBeenLastCalledWith(
     '/administration?tab=resources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-operational-launch-pilot#administration-resources-title'
+  );
+});
+
+test('shows CNS-01 governance and compliance without declaring consolidation complete', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  expect(screen.getByRole('heading', { name: 'CNS-01 · Gouvernance et conformité' })).toBeInTheDocument();
+  expect(screen.getByText('Liste des exigences et décisions à établir')).toBeInTheDocument();
+  expect(screen.getByText(/MEP-01 constitue et qualifie le socle LEGAL/)).toBeInTheDocument();
+  expect(document.body.textContent).not.toMatch(/CNS-01[^%]*\d+\s*%/);
+});
+
+test('opens each CNS-01 governed source with the exact programme return context', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate }, '/?view=program');
+
+  fireEvent.click(screen.getByRole('button', { name: /Contrôler Gouvernance & équipe/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=institution&section=institution-governance&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-governance-compliance-consolidation-pilot#institution-governance'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir le registre Conformité/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=compliance&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-governance-compliance-consolidation-pilot#compliance-register'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir le journal d’audit/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=audit&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-governance-compliance-consolidation-pilot#administration-audit-title'
   );
 });
 
