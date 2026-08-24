@@ -7,6 +7,7 @@ import {
   ShieldCheck,
   UsersRound
 } from 'lucide-react';
+import GovernedDecisionRecord from './GovernedDecisionRecord';
 
 const COPY = {
   FR: {
@@ -38,6 +39,24 @@ const COPY = {
     decisionTitle: 'Validation humaine consignée',
     decision: 'Cadre de travail CNS-01 validé par Cheikh le 24-08-2026. Cette validation autorise la préparation de l’inventaire détaillé, mais ne vaut ni adoption institutionnelle, ni déclaration de conformité, ni acceptation d’un risque juridique.',
     authority: 'Adoption, signature, délégation ou acceptation de risque : décision des membres fondateurs et intervention de la fonction ou du conseil compétent lorsque nécessaire.',
+    recordLabels: {
+      eyebrow: 'Registre de décision gouverné',
+      author: 'Auteur de la décision',
+      date: 'Date de décision',
+      decision: 'Décision enregistrée',
+      evidence: 'Preuve de traçabilité',
+      limit: 'Portée et réserve'
+    },
+    record: {
+      id: 'CNS-01-DEC-001',
+      version: 'V1.0',
+      status: 'Cadre de travail validé',
+      author: 'Cheikh Ndiaye',
+      date: '24-08-2026',
+      decision: 'Les quatre propositions CNS-01 sont retenues comme base de travail pour préparer l’inventaire détaillé des exigences de gouvernance et de conformité.',
+      evidence: 'Validation humaine consignée dans le journal 2SG du 24-08-2026 ; PR frontend #173 ; commit de fusion cf3d3e67.',
+      limit: 'N’autorise ni adoption institutionnelle, ni signature, ni déclaration de conformité, ni acceptation d’un risque juridique. Toute évolution produit une nouvelle version sans écraser cette trace.'
+    },
     source: 'Sources : CNS-01 publié, MEP-01 LEGAL, MEP-02 Gouvernance, pilote Administration, registre Conformité et règles de gouvernance 2SG consignées. Statut : cadre de travail validé par Cheikh le 24-08-2026 ; adoption institutionnelle non déclarée.'
   },
   EN: {
@@ -69,6 +88,24 @@ const COPY = {
     decisionTitle: 'Human validation recorded',
     decision: 'CNS-01 working framework validated by Cheikh on 24-08-2026. This authorises preparation of the detailed inventory, but is neither institutional adoption, a compliance declaration nor acceptance of legal risk.',
     authority: 'Adoption, signature, delegation or risk acceptance: decision by the founding members and involvement of the competent function or adviser where required.',
+    recordLabels: {
+      eyebrow: 'Governed decision record',
+      author: 'Decision author',
+      date: 'Decision date',
+      decision: 'Recorded decision',
+      evidence: 'Traceability evidence',
+      limit: 'Scope and reservation'
+    },
+    record: {
+      id: 'CNS-01-DEC-001',
+      version: 'V1.0',
+      status: 'Working framework validated',
+      author: 'Cheikh Ndiaye',
+      date: '24-08-2026',
+      decision: 'The four CNS-01 proposals are retained as the working baseline for preparing the detailed inventory of governance and compliance requirements.',
+      evidence: 'Human validation recorded in the 2SG journal dated 24-08-2026; frontend PR #173; merge commit cf3d3e67.',
+      limit: 'This authorises neither institutional adoption, signature, a compliance declaration nor acceptance of legal risk. Any change creates a new version without overwriting this record.'
+    },
     source: 'Sources: published CNS-01, MEP-01 LEGAL, MEP-02 Governance, Administration pilot, Compliance register and recorded 2SG governance rules. Status: working framework validated by Cheikh on 24-08-2026; institutional adoption is not declared.'
   },
   DE: {
@@ -100,6 +137,24 @@ const COPY = {
     decisionTitle: 'Menschliche Validierung dokumentiert',
     decision: 'Arbeitsrahmen CNS-01 von Cheikh am 24.08.2026 validiert. Dies erlaubt die Vorbereitung des Detailinventars, ist aber weder institutionelle Verabschiedung noch Konformitätserklärung oder Annahme eines Rechtsrisikos.',
     authority: 'Verabschiedung, Unterschrift, Delegation oder Risikoannahme: Entscheid der Gründungsmitglieder und bei Bedarf Einbezug der zuständigen Funktion oder Beratung.',
+    recordLabels: {
+      eyebrow: 'Governance-konformer Entscheidnachweis',
+      author: 'Entscheidautor',
+      date: 'Entscheiddatum',
+      decision: 'Dokumentierter Entscheid',
+      evidence: 'Nachweis der Rückverfolgbarkeit',
+      limit: 'Umfang und Vorbehalt'
+    },
+    record: {
+      id: 'CNS-01-DEC-001',
+      version: 'V1.0',
+      status: 'Arbeitsrahmen validiert',
+      author: 'Cheikh Ndiaye',
+      date: '24.08.2026',
+      decision: 'Die vier Vorschläge CNS-01 werden als Arbeitsgrundlage für die Vorbereitung des Detailinventars der Governance- und Konformitätsanforderungen festgehalten.',
+      evidence: 'Menschliche Validierung im 2SG-Journal vom 24.08.2026 dokumentiert; Frontend-PR #173; Merge-Commit cf3d3e67.',
+      limit: 'Dies erlaubt weder institutionelle Verabschiedung noch Unterschrift, Konformitätserklärung oder Annahme eines Rechtsrisikos. Jede Änderung erzeugt eine neue Version, ohne diesen Nachweis zu überschreiben.'
+    },
     source: 'Quellen: veröffentlichtes CNS-01, MEP-01 LEGAL, MEP-02 Governance, Pilot Administration, Compliance-Register und dokumentierte 2SG-Governance-Regeln. Status: Arbeitsrahmen von Cheikh am 24.08.2026 validiert; keine institutionelle Verabschiedung erklärt.'
   }
 };
@@ -141,6 +196,8 @@ const InstitutionalGovernanceArbitrationProposal = ({ language = 'FR' }) => {
           <div className="flex items-center gap-2"><Scale className="text-amber-300" size={18} aria-hidden="true" /><p className="text-sm leading-6 text-slate-200">{t.authority}</p></div>
         </article>
       </div>
+
+      <GovernedDecisionRecord labels={t.recordLabels} record={t.record} />
 
       <p className="mt-4 border-t border-slate-700 pt-4 text-xs leading-5 text-slate-400">{t.source}</p>
     </section>
