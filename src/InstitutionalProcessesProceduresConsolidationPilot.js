@@ -12,6 +12,7 @@ import {
   Workflow
 } from 'lucide-react';
 import InstitutionalMeasurementReadiness from './InstitutionalMeasurementReadiness';
+import InstitutionalProcessesArbitrationProposal from './InstitutionalProcessesArbitrationProposal';
 
 const STAGES = ['scope', 'inputs', 'roles', 'controls', 'evidence', 'review'];
 
@@ -152,6 +153,8 @@ const InstitutionalProcessesProceduresConsolidationPilot = ({ language = 'FR', o
       </div>
 
       <InstitutionalMeasurementReadiness language={language} headline={t.noMeasure} accent="cyan" />
+
+      <InstitutionalProcessesArbitrationProposal language={language} />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">

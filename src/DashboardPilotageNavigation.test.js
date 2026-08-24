@@ -277,6 +277,16 @@ test('shows the human validation of the CNS-01 working framework without declari
   expect(document.body.textContent).not.toMatch(/CNS-01[^%]*\d+\s*%/);
 });
 
+test('shows the CNS-02 candidate decision baseline without recording validation or progress', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  expect(screen.getByRole('heading', { name: 'Base d’arbitrage candidate CNS-02' })).toBeInTheDocument();
+  expect(screen.getByText('Arbitrage humain requis')).toBeInTheDocument();
+  expect(screen.getByText(/Tant que cette décision n’est pas explicitement enregistrée, le statut reste candidat/)).toBeInTheDocument();
+  expect(screen.getByText(/Aucun pourcentage à ce stade\. La mesure reste indisponible tant que l’inventaire des processus critiques/)).toBeInTheDocument();
+  expect(screen.queryByRole('heading', { name: /CNS-02-DEC-/ })).not.toBeInTheDocument();
+});
+
 test('opens each CNS-01 governed source with the exact programme return context', () => {
   const onNavigate = jest.fn();
   renderDashboardNavigation({ onNavigate }, '/?view=program');
@@ -562,6 +572,8 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-01 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByText('Governed decision record')).toBeInTheDocument();
   expect(screen.getByText('Working framework validated', { selector: 'span' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Candidate CNS-02 decision baseline' })).toBeInTheDocument();
+  expect(screen.getByText('Human decision required')).toBeInTheDocument();
   expect(screen.getAllByText('Not authorised')).toHaveLength(8);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
@@ -569,6 +581,8 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-01 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByText('Governance-konformer Entscheidnachweis')).toBeInTheDocument();
   expect(screen.getByText('Arbeitsrahmen validiert', { selector: 'span' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Kandidatenbasis für den Entscheid CNS-02' })).toBeInTheDocument();
+  expect(screen.getByText('Menschlicher Entscheid erforderlich')).toBeInTheDocument();
   expect(screen.getAllByText('Nicht autorisiert')).toHaveLength(8);
 });
 
