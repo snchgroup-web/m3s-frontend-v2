@@ -299,7 +299,7 @@ const Layout = ({ children }) => {
             <nav className="sticky top-0 z-30 border-b border-blue-800/70 bg-slate-950/95 px-3 py-2 shadow-sm backdrop-blur sm:px-5" aria-label={dashboardReturn.indicatorId ? t.backToDashboard : t.backToDashboardSection}>
               <button
                 type="button"
-                onClick={() => navigate(buildDashboardReturnPath(dashboardReturn.indicatorId, dashboardReturn.view))}
+                onClick={() => navigate(buildDashboardReturnPath(dashboardReturn.indicatorId, dashboardReturn.view, dashboardReturn.sectionId))}
                 className="inline-flex min-h-10 items-center gap-2 rounded-md border border-blue-600 bg-blue-950/70 px-3 text-sm font-semibold text-blue-100 transition hover:border-blue-400 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
                 <ArrowLeft size={17} aria-hidden="true" />

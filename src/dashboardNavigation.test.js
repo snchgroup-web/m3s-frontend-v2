@@ -49,6 +49,19 @@ test('preserves the institutional programme as a governed return view', () => {
   expect(buildDashboardReturnPath(null, 'program')).toBe('/?view=program#global-pilotage-title');
 });
 
+test('returns to an authorised dashboard section without accepting an unsafe anchor', () => {
+  expect(getDashboardReturnContext('?returnTo=dashboard&dashboardView=program&dashboardSection=institutional-digital-infrastructure-pilot')).toEqual({
+    enabled: true,
+    indicatorId: null,
+    view: 'program',
+    sectionId: 'institutional-digital-infrastructure-pilot'
+  });
+  expect(buildDashboardReturnPath(null, 'program', 'institutional-digital-infrastructure-pilot')).toBe(
+    '/?view=program#institutional-digital-infrastructure-pilot'
+  );
+  expect(buildDashboardReturnPath(null, 'program', '../unsafe')).toBe('/?view=program#global-pilotage-title');
+});
+
 test('falls back to the governed dashboard overview for an unknown return view', () => {
   expect(buildDashboardReturnPath(null, 'unknown')).toBe('/?view=overview#global-situation');
 });

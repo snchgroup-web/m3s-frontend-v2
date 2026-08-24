@@ -42,9 +42,13 @@ const ICONS = [Target, ListChecks, FileCheck2, Calculator];
 const InstitutionalMeasurementReadiness = ({ language = 'FR', headline, accent = 'blue' }) => {
   const t = COPY[language] || COPY.FR;
   const cyan = accent === 'cyan';
-  const accentClasses = cyan
-    ? 'border-cyan-700/60 bg-cyan-950/20 text-cyan-200'
-    : 'border-blue-700/60 bg-blue-950/20 text-blue-200';
+  const violet = accent === 'violet';
+  const accentClasses = violet
+    ? 'border-violet-700/60 bg-violet-950/20 text-violet-200'
+    : cyan
+      ? 'border-cyan-700/60 bg-cyan-950/20 text-cyan-200'
+      : 'border-blue-700/60 bg-blue-950/20 text-blue-200';
+  const iconClasses = violet ? 'text-violet-300' : cyan ? 'text-cyan-300' : 'text-blue-300';
 
   return (
     <section className="mt-4 rounded-md border border-amber-800/60 bg-amber-950/15 p-3 sm:p-4" aria-label={t.title}>
@@ -63,7 +67,7 @@ const InstitutionalMeasurementReadiness = ({ language = 'FR', headline, accent =
           return (
             <li key={item.title} className="min-w-0 border-l-2 border-slate-600 bg-slate-950/15 px-3 py-2.5">
               <div className="flex items-start gap-2">
-                <Icon className={cyan ? 'mt-0.5 shrink-0 text-cyan-300' : 'mt-0.5 shrink-0 text-blue-300'} size={16} aria-hidden="true" />
+                <Icon className={`mt-0.5 shrink-0 ${iconClasses}`} size={16} aria-hidden="true" />
                 <div className="min-w-0">
                   <p className="text-xs font-semibold text-slate-100">{index + 1}. {item.title}</p>
                   <p className="mt-1 text-xs leading-4 text-slate-300">{item.detail}</p>
