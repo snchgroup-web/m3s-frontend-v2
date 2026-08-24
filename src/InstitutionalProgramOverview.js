@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Activity, Briefcase, Building2, Network, ShieldCheck, Target, TrendingUp } from 'lucide-react';
 import InstitutionalLegalPilot from './InstitutionalLegalPilot';
 import InstitutionalGovernancePilot from './InstitutionalGovernancePilot';
@@ -13,6 +13,7 @@ import InstitutionalDataReferenceSystemsConsolidationPilot from './Institutional
 import InstitutionalFinanceControlsConsolidationPilot from './InstitutionalFinanceControlsConsolidationPilot';
 import InstitutionalHumanResourcesCapabilitiesConsolidationPilot from './InstitutionalHumanResourcesCapabilitiesConsolidationPilot';
 import InstitutionalM3SSecurityContinuityConsolidationPilot from './InstitutionalM3SSecurityContinuityConsolidationPilot';
+import InstitutionalQualityLessonsConsolidationPilot from './InstitutionalQualityLessonsConsolidationPilot';
 
 const translations = {
   FR: {
@@ -133,6 +134,13 @@ const cyclePresentation = {
 const InstitutionalProgramOverview = ({ language = 'FR', onSelectView, onNavigate }) => {
   const t = translations[language] || translations.FR;
 
+  useEffect(() => {
+    const sectionId = decodeURIComponent(window.location.hash.replace(/^#/, ''));
+    if (!sectionId.startsWith('institutional-')) return;
+    const section = document.getElementById(sectionId);
+    if (typeof section?.scrollIntoView === 'function') section.scrollIntoView({ block: 'start' });
+  }, [language]);
+
   return (
     <div className="institutional-program-view m3s-business-module m3s-design-scope mt-5 space-y-4">
       <header className="m3s-panel p-4 sm:p-5">
@@ -233,6 +241,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', onSelectView, onNavigat
       <InstitutionalFinanceControlsConsolidationPilot language={language} onNavigate={onNavigate} />
       <InstitutionalHumanResourcesCapabilitiesConsolidationPilot language={language} onNavigate={onNavigate} />
       <InstitutionalM3SSecurityContinuityConsolidationPilot language={language} onNavigate={onNavigate} />
+      <InstitutionalQualityLessonsConsolidationPilot language={language} onNavigate={onNavigate} />
 
       <footer className="m3s-panel p-4">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
