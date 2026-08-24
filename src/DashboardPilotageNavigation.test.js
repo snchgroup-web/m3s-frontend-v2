@@ -61,8 +61,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Access, environments and continuity to consolidate')).toBeInTheDocument();
   expect(screen.getByText('Scope, contributions and allocations to reconcile')).toBeInTheDocument();
   expect(screen.getByText('Institutional scope and minimum inventory to define')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(9);
-  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(9);
+  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(10);
+  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(10);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Von der Idee zu einer nachhaltigen Institution' })).toBeInTheDocument();
@@ -70,8 +70,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Zugriffe, Umgebungen und Kontinuität zu konsolidieren')).toBeInTheDocument();
   expect(screen.getByText('Umfang, Beiträge und Zuordnungen abzustimmen')).toBeInTheDocument();
   expect(screen.getByText('Institutionellen Umfang und Mindestinventar definieren')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(9);
-  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(9);
+  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(10);
+  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(10);
 });
 
 test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
@@ -80,10 +80,10 @@ test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
   expect(screen.getByRole('heading', { name: 'MEP-01 · LEGAL' })).toBeInTheDocument();
   expect(screen.getByText('Progression non calculable · périmètre cible, tâches et preuves à valider')).toBeInTheDocument();
   expect(screen.getByText('Applicabilité à qualifier')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(9);
-  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(9);
-  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(9);
-  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(9);
+  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(10);
+  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(10);
+  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(10);
+  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(10);
   expect(document.body.textContent).not.toMatch(/MEP-01[^%]*\d+\s*%/);
 });
 
@@ -286,6 +286,33 @@ test('opens each CNS-02 governed source with the exact programme return context'
   fireEvent.click(screen.getByRole('button', { name: /Ouvrir les ressources processus/ }));
   expect(onNavigate).toHaveBeenLastCalledWith(
     '/administration?tab=resources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-processes-procedures-consolidation-pilot#administration-resources-title'
+  );
+});
+
+test('shows CNS-03 data and reference systems without claiming a master source or validated model', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  expect(screen.getByRole('heading', { name: 'CNS-03 · Données et référentiels' })).toBeInTheDocument();
+  expect(screen.getByText('Inventorier référentiels, propriétaires, relations et écarts de vocabulaire')).toBeInTheDocument();
+  expect(screen.getByText(/Une donnée disponible n’est pas nécessairement fiable/)).toBeInTheDocument();
+  expect(document.body.textContent).not.toMatch(/CNS-03[^%]*\d+\s*%/);
+});
+
+test('opens each CNS-03 governed source with the exact programme return context', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate }, '/?view=program');
+
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir le modèle de données/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/?view=architecture&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-data-reference-systems-consolidation-pilot#global-candidate-data-model'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir le glossaire global/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/?view=glossary&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-data-reference-systems-consolidation-pilot#dashboard-kpi-dictionary-title'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir les ressources données/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=resources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-data-reference-systems-consolidation-pilot#administration-resources-title'
   );
 });
 
