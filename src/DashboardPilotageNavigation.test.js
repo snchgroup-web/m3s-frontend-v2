@@ -61,8 +61,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Access, environments and continuity to consolidate')).toBeInTheDocument();
   expect(screen.getByText('Scope, contributions and allocations to reconcile')).toBeInTheDocument();
   expect(screen.getByText('Institutional scope and minimum inventory to define')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(11);
-  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(11);
+  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(12);
+  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(12);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Von der Idee zu einer nachhaltigen Institution' })).toBeInTheDocument();
@@ -70,8 +70,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Zugriffe, Umgebungen und Kontinuität zu konsolidieren')).toBeInTheDocument();
   expect(screen.getByText('Umfang, Beiträge und Zuordnungen abzustimmen')).toBeInTheDocument();
   expect(screen.getByText('Institutionellen Umfang und Mindestinventar definieren')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(11);
-  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(11);
+  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(12);
+  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(12);
 });
 
 test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
@@ -80,10 +80,10 @@ test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
   expect(screen.getByRole('heading', { name: 'MEP-01 · LEGAL' })).toBeInTheDocument();
   expect(screen.getByText('Progression non calculable · périmètre cible, tâches et preuves à valider')).toBeInTheDocument();
   expect(screen.getByText('Applicabilité à qualifier')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(11);
-  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(11);
-  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(11);
-  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(11);
+  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(12);
+  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(12);
+  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(12);
+  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(12);
   expect(document.body.textContent).not.toMatch(/MEP-01[^%]*\d+\s*%/);
 });
 
@@ -340,6 +340,37 @@ test('opens each CNS-04 governed Finance view with the exact programme return co
   fireEvent.click(screen.getByRole('button', { name: /Ouvrir les ressources Finance/ }));
   expect(onNavigate).toHaveBeenLastCalledWith(
     '/finance?tab=resources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-finance-controls-consolidation-pilot#finances-resources-title'
+  );
+});
+
+test('shows CNS-05 human resources and capabilities without claiming employment, contract validity or access', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  expect(screen.getByRole('heading', { name: 'CNS-05 · Ressources humaines et capacités' })).toBeInTheDocument();
+  expect(screen.getByText('Définir le dossier RH minimal, les accès, contrats et plans de capacité')).toBeInTheDocument();
+  expect(screen.getByText(/Une personne dans l’annuaire n’est pas automatiquement employée/)).toBeInTheDocument();
+  expect(document.body.textContent).not.toMatch(/CNS-05[^%]*\d+\s*%/);
+});
+
+test('opens each CNS-05 governed HR view with the exact programme return context', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate }, '/?view=program');
+
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir l’architecture RH/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/rh?tab=architecture&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-human-resources-capabilities-consolidation-pilot#rh-architecture-title'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir les processus RH/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/rh?tab=processes&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-human-resources-capabilities-consolidation-pilot#rh-process-title'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir l’annuaire interne/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/rh?tab=directory&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-human-resources-capabilities-consolidation-pilot#members-directory-title'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir les ressources RH/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/rh?tab=resources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-human-resources-capabilities-consolidation-pilot#rh-resources-title'
   );
 });
 
