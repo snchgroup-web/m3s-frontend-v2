@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import DashboardPilotageNavigation, { renderReferenceArtifact, renderSandboxedHtmlArtifact, resolveDashboardView, resolveFunctionMapSelection } from './DashboardPilotageNavigation';
 import api from './api';
 
@@ -62,8 +62,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Access, environments and continuity to consolidate')).toBeInTheDocument();
   expect(screen.getByText('Scope, contributions and allocations to reconcile')).toBeInTheDocument();
   expect(screen.getByText('Institutional scope and minimum inventory to define')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(14);
-  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(14);
+  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(15);
+  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(15);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Von der Idee zu einer nachhaltigen Institution' })).toBeInTheDocument();
@@ -71,8 +71,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Zugriffe, Umgebungen und Kontinuität zu konsolidieren')).toBeInTheDocument();
   expect(screen.getByText('Umfang, Beiträge und Zuordnungen abzustimmen')).toBeInTheDocument();
   expect(screen.getByText('Institutionellen Umfang und Mindestinventar definieren')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(14);
-  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(14);
+  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(15);
+  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(15);
 });
 
 test('keeps the current institutional programme section visible after a language change', () => {
@@ -97,10 +97,10 @@ test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
   expect(screen.getByRole('heading', { name: 'MEP-01 · LEGAL' })).toBeInTheDocument();
   expect(screen.getByText('Progression non calculable · périmètre cible, tâches et preuves à valider')).toBeInTheDocument();
   expect(screen.getByText('Applicabilité à qualifier')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(14);
-  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(14);
-  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(14);
-  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(14);
+  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(15);
+  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(15);
+  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(15);
+  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(15);
   expect(document.body.textContent).not.toMatch(/MEP-01[^%]*\d+\s*%/);
 });
 
@@ -434,23 +434,69 @@ test('shows CNS-07 quality and lessons learned without claiming acceptance, qual
 test('opens each CNS-07 governed review view with the exact programme return context', () => {
   const onNavigate = jest.fn();
   renderDashboardNavigation({ onNavigate }, '/?view=program');
+  const section = screen.getByRole('heading', { name: 'CNS-07 · Qualité et retours d’expérience' }).closest('section');
+  const qualityView = within(section);
 
-  fireEvent.click(screen.getByRole('button', { name: /Ouvrir le cycle de reporting/ }));
+  fireEvent.click(qualityView.getByRole('button', { name: /Ouvrir le cycle de reporting/ }));
   expect(onNavigate).toHaveBeenLastCalledWith(
     '/administration?tab=processes&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-quality-lessons-consolidation-pilot#process-reports'
   );
-  fireEvent.click(screen.getByRole('button', { name: /Ouvrir la revue hebdomadaire/ }));
+  fireEvent.click(qualityView.getByRole('button', { name: /Ouvrir la revue hebdomadaire/ }));
   expect(onNavigate).toHaveBeenLastCalledWith(
     '/administration?tab=processes&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-quality-lessons-consolidation-pilot#weekly-review-title'
   );
-  fireEvent.click(screen.getByRole('button', { name: /Ouvrir le journal de planification/ }));
+  fireEvent.click(qualityView.getByRole('button', { name: /Ouvrir le journal de planification/ }));
   expect(onNavigate).toHaveBeenLastCalledWith(
     '/administration?tab=planning&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-quality-lessons-consolidation-pilot#planning-journal-register'
   );
-  fireEvent.click(screen.getByRole('button', { name: /Ouvrir le Knowledge Management/ }));
+  fireEvent.click(qualityView.getByRole('button', { name: /Ouvrir le Knowledge Management/ }));
   expect(onNavigate).toHaveBeenLastCalledWith(
     '/ged?tab=knowledge&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-quality-lessons-consolidation-pilot'
   );
+});
+
+test('shows CNS-08 institutional reporting without inventing progress or approval', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  expect(screen.getByRole('heading', { name: 'CNS-08 · Reporting institutionnel' })).toBeInTheDocument();
+  expect(screen.getByText('Définir le calendrier, les sources, les contrôles et les décisions du reporting')).toBeInTheDocument();
+  expect(screen.getByText(/Un journal n’est pas un rapport validé/)).toBeInTheDocument();
+  expect(document.body.textContent).not.toMatch(/CNS-08[^%]*\d+\s*%/);
+});
+
+test('opens each CNS-08 reporting view with the exact programme return context', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate }, '/?view=program');
+  const section = screen.getByRole('heading', { name: 'CNS-08 · Reporting institutionnel' }).closest('section');
+  const reportingView = within(section);
+
+  fireEvent.click(reportingView.getByRole('button', { name: /Ouvrir le cycle de reporting institutionnel/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=processes&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-reporting-consolidation-pilot#process-reports'
+  );
+  fireEvent.click(reportingView.getByRole('button', { name: /Ouvrir le Daily Intelligence/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/?view=intelligence&returnView=program&returnSection=institutional-reporting-consolidation-pilot'
+  );
+  fireEvent.click(reportingView.getByRole('button', { name: /Ouvrir le journal de planification/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=planning&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-reporting-consolidation-pilot#planning-journal-register'
+  );
+  fireEvent.click(reportingView.getByRole('button', { name: /Ouvrir le Knowledge Management/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/ged?tab=knowledge&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-reporting-consolidation-pilot'
+  );
+});
+
+test('returns from Daily Intelligence to the CNS-08 programme section', () => {
+  renderDashboardNavigation({}, '/?view=intelligence&returnView=program&returnSection=institutional-reporting-consolidation-pilot');
+
+  fireEvent.click(screen.getByRole('button', { name: 'Revenir à CNS-08 · Reporting institutionnel' }));
+  expect(mockNavigate).toHaveBeenCalledWith({
+    pathname: '/',
+    search: '?view=program',
+    hash: '#institutional-reporting-consolidation-pilot'
+  });
 });
 
 test('keeps Intelligence honest when no edition is published', async () => {

@@ -47,6 +47,7 @@ const translations = {
     intelligenceAreas: ['Mémoire stratégique', 'État du système', 'Radar & veille', 'Opportunités', 'Agenda', 'Journal de bord', 'Recommandations'],
     knowledgeAction: 'Ouvrir Veille & KM',
     returnToIntelligence: 'Revenir au Daily Intelligence',
+    returnToReporting: 'Revenir à CNS-08 · Reporting institutionnel',
     referenceTitle: 'Référentiel du 2SG Daily Intelligence Dashboard',
     mapTitle: 'Carte mentale globale des fonctions',
     mapBody: 'La carte relie 2SG/M3S à ses familles et fonctions. Sélectionnez une fonction pour afficher sa carte locale dans cette même vue.',
@@ -100,6 +101,7 @@ const translations = {
     intelligenceAreas: ['Strategic memory', 'System status', 'Radar & monitoring', 'Opportunities', 'Agenda', 'Logbook', 'Recommendations'],
     knowledgeAction: 'Open Monitoring & KM',
     returnToIntelligence: 'Return to Daily Intelligence',
+    returnToReporting: 'Return to CNS-08 · Institutional reporting',
     referenceTitle: '2SG Daily Intelligence Dashboard reference',
     mapTitle: 'Global function mind map',
     mapBody: 'The map connects 2SG/M3S to its families and functions. Select a function to display its local map in this same view.',
@@ -153,6 +155,7 @@ const translations = {
     intelligenceAreas: ['Strategisches Gedächtnis', 'Systemstatus', 'Radar & Monitoring', 'Chancen', 'Agenda', 'Arbeitsjournal', 'Empfehlungen'],
     knowledgeAction: 'Monitoring & KM öffnen',
     returnToIntelligence: 'Zur Daily Intelligence zurückkehren',
+    returnToReporting: 'Zu CNS-08 · Institutionelles Reporting zurückkehren',
     referenceTitle: 'Referenz des 2SG Daily Intelligence Dashboard',
     mapTitle: 'Globale Mindmap der Funktionen',
     mapBody: 'Die Karte verbindet 2SG/M3S mit seinen Bereichen und Funktionen. Wählen Sie eine Funktion, um ihre lokale Karte in derselben Ansicht anzuzeigen.',
@@ -392,6 +395,9 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
   const [activeView, setActiveView] = useState(() => resolveDashboardView(location.search));
   const selectedFunction = resolveFunctionMapSelection(location.search);
   const selectedKpi = new URLSearchParams(location.search).get('kpi') || '';
+  const returnView = new URLSearchParams(location.search).get('returnView') || '';
+  const returnSection = new URLSearchParams(location.search).get('returnSection') || '';
+  const canReturnToProgrammeSection = returnView === 'program' && returnSection.startsWith('institutional-');
   const [intelligenceState, setIntelligenceState] = useState({ status: 'idle', data: null });
   const [artifactError, setArtifactError] = useState('');
   const intelligenceRequested = useRef(false);
@@ -424,6 +430,14 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
     if (!selectedFunctionDefinition?.path) return;
     if (onNavigate) onNavigate(selectedFunctionDefinition.path);
     else navigate(selectedFunctionDefinition.path);
+  };
+
+  const returnToProgrammeSection = () => {
+    navigate({
+      pathname: location.pathname,
+      search: '?view=program',
+      hash: `#${returnSection}`
+    });
   };
 
   useEffect(() => {
@@ -533,6 +547,15 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
 
       {activeView === 'intelligence' && (
         <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[1.1fr_1fr]">
+          {canReturnToProgrammeSection && (
+            <button
+              type="button"
+              onClick={returnToProgrammeSection}
+              className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-blue-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:col-span-2 lg:w-fit"
+            >
+              <ArrowLeft size={17} aria-hidden="true" />{t.returnToReporting}
+            </button>
+          )}
           <article className="intelligence-card rounded-md border p-3 sm:p-4">
             <div className="flex flex-wrap items-center gap-3">
               <BookOpenText className="text-blue-300" size={22} aria-hidden="true" />
