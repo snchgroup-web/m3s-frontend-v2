@@ -57,16 +57,18 @@ test('shows the governed institutional programme without inventing progress', ()
 test('opens the institutional programme in all three interface languages', () => {
   const { rerender } = renderDashboardNavigation({ language: 'EN' }, '/?view=program');
   expect(screen.getByRole('heading', { name: 'From an idea to a sustainable institution' })).toBeInTheDocument();
+  expect(screen.getByText('Mandates and delegations to confirm')).toBeInTheDocument();
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Von der Idee zu einer nachhaltigen Institution' })).toBeInTheDocument();
+  expect(screen.getByText('Mandate und Delegationen zu bestätigen')).toBeInTheDocument();
 });
 
 test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
   renderDashboardNavigation({}, '/?view=program');
 
   expect(screen.getByRole('heading', { name: 'MEP-01 · LEGAL' })).toBeInTheDocument();
-  expect(screen.getByText(/Progression non calculable/)).toBeInTheDocument();
+  expect(screen.getByText('Progression non calculable · périmètre cible, tâches et preuves à valider')).toBeInTheDocument();
   expect(screen.getByText('Applicabilité à qualifier')).toBeInTheDocument();
   expect(document.body.textContent).not.toMatch(/MEP-01[^%]*\d+\s*%/);
 });
@@ -78,6 +80,25 @@ test('opens the authorised LEGAL progress with an exact programme return context
   fireEvent.click(screen.getByRole('button', { name: /Ouvrir l’avancement LEGAL/ }));
   expect(onNavigate).toHaveBeenCalledWith(
     '/administration?tab=compliance&returnTo=dashboard&dashboardView=program#compliance-progress'
+  );
+});
+
+test('shows the governed MEP-02 Governance pilot without inventing progress or authority', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  expect(screen.getByRole('heading', { name: 'MEP-02 · Gouvernance' })).toBeInTheDocument();
+  expect(screen.getByText('Mandats et délégations à confirmer')).toBeInTheDocument();
+  expect(screen.getByText(/Statut de membre, fonction, mandat juridique et droit M3S/)).toBeInTheDocument();
+  expect(document.body.textContent).not.toMatch(/MEP-02[^%]*\d+\s*%/);
+});
+
+test('opens the governance source with an exact programme return context', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate }, '/?view=program');
+
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir Gouvernance & équipe/ }));
+  expect(onNavigate).toHaveBeenCalledWith(
+    '/administration?tab=institution&section=institution-governance&returnTo=dashboard&dashboardView=program#institution-governance'
   );
 });
 

@@ -142,7 +142,7 @@ const InstitutionalLegalPilot = ({ language = 'FR', onNavigate }) => {
             const current = index === LEGAL_DOCUMENTARY_BASELINE.currentStageIndex;
             const complete = index < LEGAL_DOCUMENTARY_BASELINE.currentStageIndex;
             return (
-              <li key={stage} className={`min-h-16 rounded-md border p-2 text-xs font-semibold ${current ? 'border-blue-500 bg-blue-950/40 text-blue-100' : complete ? 'border-emerald-800/70 bg-emerald-950/20 text-emerald-200' : 'border-slate-700 bg-slate-900/30 text-slate-400'}`}>
+              <li key={stage} className={`min-h-16 rounded-md border p-2 text-xs font-semibold ${current ? 'border-blue-500 bg-blue-950/40 text-blue-100' : complete ? 'border-emerald-800/70 bg-emerald-950/20 text-emerald-200' : 'border-slate-600 bg-slate-950/10 text-slate-200'}`}>
                 <span className="mb-1 block">{index + 1}</span>{t.stages[index]}
               </li>
             );
