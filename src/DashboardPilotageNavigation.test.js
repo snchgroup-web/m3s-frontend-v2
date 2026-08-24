@@ -527,6 +527,29 @@ test('opens every CNS section from the integrated review grid', () => {
   expect(window.location.hash).toBe('#institutional-reporting-consolidation-pilot');
 });
 
+test('prepares the eight CNS decisions without recording an approval or a calculated result', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  const matrix = screen.getByRole('heading', { name: 'Matrice préparatoire d’arbitrage' }).closest('section');
+  const matrixView = within(matrix);
+  expect(matrixView.getAllByText('Cadrage publié')).toHaveLength(8);
+  expect(matrixView.getAllByText('À confirmer')).toHaveLength(16);
+  expect(matrixView.getAllByText('À affecter')).toHaveLength(8);
+  expect(matrixView.getAllByText('Non autorisée')).toHaveLength(8);
+  expect(matrixView.getAllByRole('button', { name: /Ouvrir le cadrage CNS-0[1-8]/ })).toHaveLength(8);
+  expect(matrix).not.toHaveTextContent(/validé|approuvé|\d+\s*%/i);
+});
+
+test('translates the CNS decision matrix in English and German', () => {
+  const { rerender } = renderDashboardNavigation({ language: 'EN' }, '/?view=program');
+  expect(screen.getByRole('heading', { name: 'Decision-preparation matrix' })).toBeInTheDocument();
+  expect(screen.getAllByText('Not authorised')).toHaveLength(8);
+
+  rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
+  expect(screen.getByRole('heading', { name: 'Vorbereitende Entscheidungsmatrix' })).toBeInTheDocument();
+  expect(screen.getAllByText('Nicht autorisiert')).toHaveLength(8);
+});
+
 test('keeps Intelligence honest when no edition is published', async () => {
   const onNavigate = jest.fn();
   renderDashboardNavigation({ language: 'EN', onNavigate });
