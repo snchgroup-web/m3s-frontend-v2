@@ -269,6 +269,11 @@ test('shows the human validation of the CNS-01 working framework without declari
   expect(screen.getByText(/Cadre de travail CNS-01 validé par Cheikh le 24-08-2026/)).toBeInTheDocument();
   expect(screen.getByText(/Cette validation autorise la préparation de l’inventaire détaillé/)).toBeInTheDocument();
   expect(screen.getByText(/adoption institutionnelle non déclarée/)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'CNS-01-DEC-001 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByText('Cadre de travail validé', { selector: 'span' })).toBeInTheDocument();
+  expect(screen.getByText('Cheikh Ndiaye')).toBeInTheDocument();
+  expect(screen.getByText(/PR frontend #173/)).toBeInTheDocument();
+  expect(screen.getByText(/Toute évolution produit une nouvelle version/)).toBeInTheDocument();
   expect(document.body.textContent).not.toMatch(/CNS-01[^%]*\d+\s*%/);
 });
 
@@ -555,11 +560,15 @@ test('translates the CNS decision matrix in English and German', () => {
   const { rerender } = renderDashboardNavigation({ language: 'EN' }, '/?view=program');
   expect(screen.getByRole('heading', { name: 'Decision-preparation matrix' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-01 decision baseline validated as a working framework' })).toBeInTheDocument();
+  expect(screen.getByText('Governed decision record')).toBeInTheDocument();
+  expect(screen.getByText('Working framework validated', { selector: 'span' })).toBeInTheDocument();
   expect(screen.getAllByText('Not authorised')).toHaveLength(8);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Vorbereitende Entscheidungsmatrix' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-01 als Arbeitsrahmen validiert' })).toBeInTheDocument();
+  expect(screen.getByText('Governance-konformer Entscheidnachweis')).toBeInTheDocument();
+  expect(screen.getByText('Arbeitsrahmen validiert', { selector: 'span' })).toBeInTheDocument();
   expect(screen.getAllByText('Nicht autorisiert')).toHaveLength(8);
 });
 
