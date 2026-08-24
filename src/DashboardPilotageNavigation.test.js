@@ -61,8 +61,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Access, environments and continuity to consolidate')).toBeInTheDocument();
   expect(screen.getByText('Scope, contributions and allocations to reconcile')).toBeInTheDocument();
   expect(screen.getByText('Institutional scope and minimum inventory to define')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(10);
-  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(10);
+  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(11);
+  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(11);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Von der Idee zu einer nachhaltigen Institution' })).toBeInTheDocument();
@@ -70,8 +70,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Zugriffe, Umgebungen und Kontinuität zu konsolidieren')).toBeInTheDocument();
   expect(screen.getByText('Umfang, Beiträge und Zuordnungen abzustimmen')).toBeInTheDocument();
   expect(screen.getByText('Institutionellen Umfang und Mindestinventar definieren')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(10);
-  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(10);
+  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(11);
+  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(11);
 });
 
 test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
@@ -80,10 +80,10 @@ test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
   expect(screen.getByRole('heading', { name: 'MEP-01 · LEGAL' })).toBeInTheDocument();
   expect(screen.getByText('Progression non calculable · périmètre cible, tâches et preuves à valider')).toBeInTheDocument();
   expect(screen.getByText('Applicabilité à qualifier')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(10);
-  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(10);
-  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(10);
-  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(10);
+  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(11);
+  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(11);
+  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(11);
+  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(11);
   expect(document.body.textContent).not.toMatch(/MEP-01[^%]*\d+\s*%/);
 });
 
@@ -313,6 +313,33 @@ test('opens each CNS-03 governed source with the exact programme return context'
   fireEvent.click(screen.getByRole('button', { name: /Ouvrir les ressources données/ }));
   expect(onNavigate).toHaveBeenLastCalledWith(
     '/administration?tab=resources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-data-reference-systems-consolidation-pilot#administration-resources-title'
+  );
+});
+
+test('shows CNS-04 finance and controls without claiming reconciliation or accounting validation', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  expect(screen.getByRole('heading', { name: 'CNS-04 · Finances et contrôles' })).toBeInTheDocument();
+  expect(screen.getByText('Définir contrôles, périodicité, pièces attendues et traitement CHF/CFA')).toBeInTheDocument();
+  expect(screen.getByText(/Le taux courant ne remplace jamais le taux historique appliqué/)).toBeInTheDocument();
+  expect(document.body.textContent).not.toMatch(/CNS-04[^%]*\d+\s*%/);
+});
+
+test('opens each CNS-04 governed Finance view with the exact programme return context', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate }, '/?view=program');
+
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir les contrôles Finance/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/finance?tab=processes&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-finance-controls-consolidation-pilot#finance-process-controls-title'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir l’historique FX/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/finance?tab=fx&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-finance-controls-consolidation-pilot#finance-fx'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir les ressources Finance/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/finance?tab=resources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-finance-controls-consolidation-pilot#finances-resources-title'
   );
 });
 
