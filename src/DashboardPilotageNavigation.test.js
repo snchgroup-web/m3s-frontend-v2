@@ -61,8 +61,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Access, environments and continuity to consolidate')).toBeInTheDocument();
   expect(screen.getByText('Scope, contributions and allocations to reconcile')).toBeInTheDocument();
   expect(screen.getByText('Institutional scope and minimum inventory to define')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(6);
-  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(6);
+  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(7);
+  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(7);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Von der Idee zu einer nachhaltigen Institution' })).toBeInTheDocument();
@@ -70,8 +70,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Zugriffe, Umgebungen und Kontinuität zu konsolidieren')).toBeInTheDocument();
   expect(screen.getByText('Umfang, Beiträge und Zuordnungen abzustimmen')).toBeInTheDocument();
   expect(screen.getByText('Institutionellen Umfang und Mindestinventar definieren')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(6);
-  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(6);
+  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(7);
+  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(7);
 });
 
 test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
@@ -80,10 +80,10 @@ test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
   expect(screen.getByRole('heading', { name: 'MEP-01 · LEGAL' })).toBeInTheDocument();
   expect(screen.getByText('Progression non calculable · périmètre cible, tâches et preuves à valider')).toBeInTheDocument();
   expect(screen.getByText('Applicabilité à qualifier')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(6);
-  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(6);
-  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(6);
-  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(6);
+  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(7);
+  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(7);
+  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(7);
+  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(7);
   expect(document.body.textContent).not.toMatch(/MEP-01[^%]*\d+\s*%/);
 });
 
@@ -205,6 +205,33 @@ test('opens each MEP-06 governed source with the exact programme return context'
   fireEvent.click(screen.getByRole('button', { name: /Ouvrir les ressources d’identité/ }));
   expect(onNavigate).toHaveBeenLastCalledWith(
     '/administration?tab=resources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-identity-communication-pilot#administration-resources-title'
+  );
+});
+
+test('shows MEP-07 operational launch without declaring the institution launched', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  expect(screen.getByRole('heading', { name: 'MEP-07 · Lancement opérationnel' })).toBeInTheDocument();
+  expect(screen.getByText('Périmètre et conditions de lancement à définir')).toBeInTheDocument();
+  expect(screen.getByText(/Un dossier réel, un outil utilisé ou une opération reçue/)).toBeInTheDocument();
+  expect(document.body.textContent).not.toMatch(/MEP-07[^%]*\d+\s*%/);
+});
+
+test('opens each MEP-07 governed source with the exact programme return context', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate }, '/?view=program');
+
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir la planification/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=planning&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-operational-launch-pilot#planning-pilot-project'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir les processus Production/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/production?tab=processes&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-operational-launch-pilot#production-module-tabs'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir les ressources de pilotage/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=resources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-operational-launch-pilot#administration-resources-title'
   );
 });
 
