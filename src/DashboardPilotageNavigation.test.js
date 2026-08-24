@@ -58,10 +58,14 @@ test('opens the institutional programme in all three interface languages', () =>
   const { rerender } = renderDashboardNavigation({ language: 'EN' }, '/?view=program');
   expect(screen.getByRole('heading', { name: 'From an idea to a sustainable institution' })).toBeInTheDocument();
   expect(screen.getByText('Mandates and delegations to confirm')).toBeInTheDocument();
+  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(2);
+  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(2);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Von der Idee zu einer nachhaltigen Institution' })).toBeInTheDocument();
   expect(screen.getByText('Mandate und Delegationen zu bestätigen')).toBeInTheDocument();
+  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(2);
+  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(2);
 });
 
 test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
@@ -70,6 +74,10 @@ test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
   expect(screen.getByRole('heading', { name: 'MEP-01 · LEGAL' })).toBeInTheDocument();
   expect(screen.getByText('Progression non calculable · périmètre cible, tâches et preuves à valider')).toBeInTheDocument();
   expect(screen.getByText('Applicabilité à qualifier')).toBeInTheDocument();
+  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(2);
+  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(2);
+  expect(screen.getAllByText(/Périmètre cible$/)).toHaveLength(2);
+  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(2);
   expect(document.body.textContent).not.toMatch(/MEP-01[^%]*\d+\s*%/);
 });
 

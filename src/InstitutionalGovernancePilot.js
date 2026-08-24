@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight, CheckCircle2, ClipboardCheck, FileKey2, Gavel, KeyRound, Network, Users } from 'lucide-react';
+import InstitutionalMeasurementReadiness from './InstitutionalMeasurementReadiness';
 
 const GOVERNANCE_STAGES = [
   'principles',
@@ -138,9 +139,7 @@ const InstitutionalGovernancePilot = ({ language = 'FR', onNavigate }) => {
         </span>
       </div>
 
-      <div className="mt-4 rounded-md border border-amber-800/60 bg-amber-950/20 px-3 py-2 text-sm font-semibold text-amber-200">
-        {t.noMeasure}
-      </div>
+      <InstitutionalMeasurementReadiness language={language} headline={t.noMeasure} accent="cyan" />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
