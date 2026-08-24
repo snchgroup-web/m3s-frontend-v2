@@ -14,8 +14,8 @@ const DOMAINS = [
 
 const COPY = {
   FR: {
-    title: 'Matrice préparatoire d’arbitrage',
-    body: 'Une ligne de décision commune est préparée pour chaque domaine. Les mentions ci-dessous décrivent ce qui reste à décider ; elles ne constituent ni une validation ni une affectation.',
+    title: 'Matrice des cadres validés',
+    body: 'Une ligne de décision commune est désormais consignée pour chaque domaine. La validation porte sur les cadres de travail ; les inventaires détaillés, preuves réelles et règles de calcul restent à établir séparément.',
     domains: [
       'Gouvernance & conformité',
       'Processus & procédures',
@@ -26,15 +26,15 @@ const COPY = {
       'Qualité & retours d’expérience',
       'Reporting institutionnel'
     ],
-    published: 'Cadrage publié',
+    published: 'Cadre validé',
     fields: ['Périmètre cible', 'Preuves recevables', 'Responsabilités', 'Règle de calcul'],
-    values: ['À confirmer', 'À confirmer', 'À affecter', 'Non autorisée'],
-    reserve: 'Réserve active : aucune mesure globale avant clôture des quatre arbitrages.',
+    values: ['Retenu', 'Retenues', 'Répartition retenue', 'Indisponible'],
+    reserve: 'Réserve active : aucune mesure globale avant inventaires détaillés et règle de calcul distincte.',
     open: 'Ouvrir le cadrage'
   },
   EN: {
-    title: 'Decision-preparation matrix',
-    body: 'A common decision line is prepared for each domain. The entries below describe what remains to be decided; they are neither an approval nor an assignment.',
+    title: 'Validated-framework matrix',
+    body: 'A common decision line is now recorded for each domain. Validation applies to the working frameworks; detailed inventories, real evidence and calculation rules must still be established separately.',
     domains: [
       'Governance & compliance',
       'Processes & procedures',
@@ -45,15 +45,15 @@ const COPY = {
       'Quality & lessons learned',
       'Institutional reporting'
     ],
-    published: 'Framework published',
+    published: 'Framework validated',
     fields: ['Target scope', 'Acceptable evidence', 'Responsibilities', 'Calculation rule'],
-    values: ['To confirm', 'To confirm', 'To assign', 'Not authorised'],
-    reserve: 'Active reservation: no global measurement before all four decisions are closed.',
+    values: ['Retained', 'Retained', 'Allocation retained', 'Unavailable'],
+    reserve: 'Active reservation: no global measurement before detailed inventories and a separate calculation rule.',
     open: 'Open framework'
   },
   DE: {
-    title: 'Vorbereitende Entscheidungsmatrix',
-    body: 'Für jede Domäne wird eine gemeinsame Entscheidungszeile vorbereitet. Die folgenden Angaben beschreiben offene Entscheide; sie sind weder Validierung noch Zuweisung.',
+    title: 'Matrix der validierten Arbeitsrahmen',
+    body: 'Für jede Domäne ist nun eine gemeinsame Entscheidungszeile dokumentiert. Die Validierung betrifft die Arbeitsrahmen; Detailinventare, reale Nachweise und Berechnungsregeln sind weiterhin getrennt zu erstellen.',
     domains: [
       'Governance & Compliance',
       'Prozesse & Verfahren',
@@ -64,10 +64,10 @@ const COPY = {
       'Qualität & Erfahrungsrückfluss',
       'Institutionelles Reporting'
     ],
-    published: 'Strukturierung veröffentlicht',
+    published: 'Arbeitsrahmen validiert',
     fields: ['Zielumfang', 'Zulässige Nachweise', 'Verantwortungen', 'Berechnungsregel'],
-    values: ['Zu bestätigen', 'Zu bestätigen', 'Zuzuweisen', 'Nicht autorisiert'],
-    reserve: 'Aktiver Vorbehalt: keine Gesamtmessung vor Abschluss aller vier Entscheide.',
+    values: ['Festgehalten', 'Festgehalten', 'Zuordnung festgehalten', 'Nicht verfügbar'],
+    reserve: 'Aktiver Vorbehalt: keine Gesamtmessung vor Detailinventaren und einer getrennten Berechnungsregel.',
     open: 'Strukturierung öffnen'
   }
 };

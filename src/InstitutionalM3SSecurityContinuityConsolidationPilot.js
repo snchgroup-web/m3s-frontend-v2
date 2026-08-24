@@ -13,6 +13,7 @@ import {
   Siren
 } from 'lucide-react';
 import InstitutionalMeasurementReadiness from './InstitutionalMeasurementReadiness';
+import InstitutionalConsolidationDecisionRecord from './InstitutionalConsolidationDecisionRecord';
 
 const STAGES = ['scope', 'stability', 'protection', 'backup', 'incident', 'review'];
 
@@ -20,7 +21,7 @@ const COPY = {
   FR: {
     eyebrow: 'PILOTE DE PROGRESSION · CONSOLIDATION',
     title: 'CNS-06 · M3S, sécurité et continuité',
-    status: 'Périmètre cible à définir',
+    status: 'Cadre validé · détail à inventorier',
     body: 'Consolider la stabilité, la sécurité, la continuité et la gestion des incidents de M3S et des services numériques critiques de 2SG. Cette vue ne publie aucun secret et ne présume ni homologation, ni résilience, ni absence de risque.',
     noMeasure: 'Progression non calculable · services critiques, critères, contrôles, preuves, responsabilités et règle de revue à définir et valider',
     currentStage: 'Point de travail actuel',
@@ -57,7 +58,7 @@ const COPY = {
   EN: {
     eyebrow: 'PROGRESS PILOT · CONSOLIDATION',
     title: 'CNS-06 · M3S, security and continuity',
-    status: 'Target scope to define',
+    status: 'Framework validated · detail to inventory',
     body: 'Consolidate the stability, security, continuity and incident management of M3S and 2SG critical digital services. This view publishes no secret and assumes neither approval, resilience nor absence of risk.',
     noMeasure: 'Progress cannot be calculated · critical services, criteria, controls, evidence, responsibilities and review rule must be defined and validated',
     currentStage: 'Current work point',
@@ -94,7 +95,7 @@ const COPY = {
   DE: {
     eyebrow: 'FORTSCHRITTSPILOT · KONSOLIDIERUNG',
     title: 'CNS-06 · M3S, Sicherheit und Kontinuität',
-    status: 'Zielumfang zu definieren',
+    status: 'Arbeitsrahmen validiert · Details zu inventarisieren',
     body: 'Stabilität, Sicherheit, Kontinuität und Störungsmanagement von M3S und kritischen digitalen 2SG-Diensten konsolidieren. Diese Ansicht veröffentlicht keine Geheimnisse und setzt weder Freigabe, Widerstandsfähigkeit noch Risikofreiheit voraus.',
     noMeasure: 'Fortschritt nicht berechenbar · kritische Dienste, Kriterien, Kontrollen, Nachweise, Verantwortungen und Prüfregel sind zu definieren und zu validieren',
     currentStage: 'Aktueller Arbeitspunkt',
@@ -156,6 +157,8 @@ const InstitutionalM3SSecurityContinuityConsolidationPilot = ({ language = 'FR',
       </div>
 
       <InstitutionalMeasurementReadiness language={language} headline={t.noMeasure} accent="cyan" />
+
+      <InstitutionalConsolidationDecisionRecord cnsId="CNS-06" language={language} />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">

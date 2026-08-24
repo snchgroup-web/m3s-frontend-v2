@@ -13,6 +13,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import InstitutionalMeasurementReadiness from './InstitutionalMeasurementReadiness';
+import InstitutionalConsolidationDecisionRecord from './InstitutionalConsolidationDecisionRecord';
 
 const STAGES = ['calendar', 'sources', 'control', 'indicators', 'decisions', 'retention'];
 
@@ -20,7 +21,7 @@ const COPY = {
   FR: {
     eyebrow: 'PILOTE DE PROGRESSION · CONSOLIDATION',
     title: 'CNS-08 · Reporting institutionnel',
-    status: 'Périmètre cible à définir',
+    status: 'Cadre validé · détail à inventorier',
     body: 'Relier les journaux, l’agenda, la mémoire stratégique, les rapports périodiques, les indicateurs et les décisions dans une chaîne traçable. Cette vue ne transforme ni une synthèse en source maîtresse, ni une publication en approbation institutionnelle.',
     noMeasure: 'Progression non calculable · périodes, livrables, sources, responsabilités, preuves et règle de calcul à définir et valider',
     currentStage: 'Point de travail actuel',
@@ -57,7 +58,7 @@ const COPY = {
   EN: {
     eyebrow: 'PROGRESS PILOT · CONSOLIDATION',
     title: 'CNS-08 · Institutional reporting',
-    status: 'Target scope to define',
+    status: 'Framework validated · detail to inventory',
     body: 'Connect journals, agenda, strategic memory, periodic reports, indicators and decisions in a traceable chain. This view turns neither a synthesis into a master source nor a publication into institutional approval.',
     noMeasure: 'Progress cannot be calculated · periods, deliverables, sources, responsibilities, evidence and calculation rule must be defined and validated',
     currentStage: 'Current work point',
@@ -94,7 +95,7 @@ const COPY = {
   DE: {
     eyebrow: 'FORTSCHRITTSPILOT · KONSOLIDIERUNG',
     title: 'CNS-08 · Institutionelles Reporting',
-    status: 'Zielumfang zu definieren',
+    status: 'Arbeitsrahmen validiert · Details zu inventarisieren',
     body: 'Journale, Agenda, strategisches Gedächtnis, periodische Berichte, Kennzahlen und Entscheidungen in einer nachvollziehbaren Kette verbinden. Diese Ansicht macht weder eine Synthese zur Masterquelle noch eine Veröffentlichung zur institutionellen Genehmigung.',
     noMeasure: 'Fortschritt nicht berechenbar · Zeiträume, Lieferobjekte, Quellen, Verantwortungen, Nachweise und Berechnungsregel sind zu definieren und zu validieren',
     currentStage: 'Aktueller Arbeitspunkt',
@@ -156,6 +157,8 @@ const InstitutionalReportingConsolidationPilot = ({ language = 'FR', onNavigate 
       </div>
 
       <InstitutionalMeasurementReadiness language={language} headline={t.noMeasure} accent="blue" />
+
+      <InstitutionalConsolidationDecisionRecord cnsId="CNS-08" language={language} />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
