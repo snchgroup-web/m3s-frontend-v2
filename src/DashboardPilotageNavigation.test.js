@@ -21,6 +21,7 @@ jest.mock('./api', () => ({
 
 beforeEach(() => {
   mockLocation = { pathname: '/', search: '' };
+  window.history.replaceState({}, '', '/');
   mockNavigate.mockReset();
   api.getLatestIntelligence.mockResolvedValue({ success: true, data: null });
 });
@@ -61,8 +62,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Access, environments and continuity to consolidate')).toBeInTheDocument();
   expect(screen.getByText('Scope, contributions and allocations to reconcile')).toBeInTheDocument();
   expect(screen.getByText('Institutional scope and minimum inventory to define')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(13);
-  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(13);
+  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(14);
+  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(14);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Von der Idee zu einer nachhaltigen Institution' })).toBeInTheDocument();
@@ -70,8 +71,24 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Zugriffe, Umgebungen und Kontinuität zu konsolidieren')).toBeInTheDocument();
   expect(screen.getByText('Umfang, Beiträge und Zuordnungen abzustimmen')).toBeInTheDocument();
   expect(screen.getByText('Institutionellen Umfang und Mindestinventar definieren')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(13);
-  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(13);
+  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(14);
+  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(14);
+});
+
+test('keeps the current institutional programme section visible after a language change', () => {
+  const previousScrollIntoView = Element.prototype.scrollIntoView;
+  Element.prototype.scrollIntoView = jest.fn();
+  window.history.replaceState({}, '', '/?view=program#institutional-quality-lessons-consolidation-pilot');
+
+  const { rerender } = renderDashboardNavigation({ language: 'FR' }, '/?view=program');
+  expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith({ block: 'start' });
+  Element.prototype.scrollIntoView.mockClear();
+
+  rerender(<DashboardPilotageNavigation language="EN" onNavigate={jest.fn()} />);
+  expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith({ block: 'start' });
+
+  if (previousScrollIntoView) Element.prototype.scrollIntoView = previousScrollIntoView;
+  else delete Element.prototype.scrollIntoView;
 });
 
 test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
@@ -80,10 +97,10 @@ test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
   expect(screen.getByRole('heading', { name: 'MEP-01 · LEGAL' })).toBeInTheDocument();
   expect(screen.getByText('Progression non calculable · périmètre cible, tâches et preuves à valider')).toBeInTheDocument();
   expect(screen.getByText('Applicabilité à qualifier')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(13);
-  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(13);
-  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(13);
-  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(13);
+  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(14);
+  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(14);
+  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(14);
+  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(14);
   expect(document.body.textContent).not.toMatch(/MEP-01[^%]*\d+\s*%/);
 });
 
@@ -402,6 +419,37 @@ test('opens each CNS-06 governed IT view with the exact programme return context
   fireEvent.click(screen.getByRole('button', { name: /Ouvrir les ressources IT/ }));
   expect(onNavigate).toHaveBeenLastCalledWith(
     '/ged?tab=resources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-m3s-security-continuity-consolidation-pilot#it-support-resources-title'
+  );
+});
+
+test('shows CNS-07 quality and lessons learned without claiming acceptance, quality or closure', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  expect(screen.getByRole('heading', { name: 'CNS-07 · Qualité et retours d’expérience' })).toBeInTheDocument();
+  expect(screen.getByText('Définir la revue, les réserves, la décision de clôture et la capitalisation')).toBeInTheDocument();
+  expect(screen.getByText(/Un livrable remis n’est pas automatiquement accepté/)).toBeInTheDocument();
+  expect(document.body.textContent).not.toMatch(/CNS-07[^%]*\d+\s*%/);
+});
+
+test('opens each CNS-07 governed review view with the exact programme return context', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate }, '/?view=program');
+
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir le cycle de reporting/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=processes&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-quality-lessons-consolidation-pilot#process-reports'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir la revue hebdomadaire/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=processes&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-quality-lessons-consolidation-pilot#weekly-review-title'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir le journal de planification/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=planning&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-quality-lessons-consolidation-pilot#planning-journal-register'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir le Knowledge Management/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/ged?tab=knowledge&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-quality-lessons-consolidation-pilot'
   );
 });
 
