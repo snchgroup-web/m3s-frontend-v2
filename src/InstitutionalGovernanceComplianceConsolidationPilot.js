@@ -12,6 +12,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import InstitutionalMeasurementReadiness from './InstitutionalMeasurementReadiness';
+import InstitutionalGovernanceArbitrationProposal from './InstitutionalGovernanceArbitrationProposal';
 
 const CONSOLIDATION_STAGES = ['scope', 'decisions', 'deadlines', 'formalisation', 'deviations', 'review'];
 const CURRENT_STAGE_INDEX = 0;
@@ -163,6 +164,8 @@ const InstitutionalGovernanceComplianceConsolidationPilot = ({ language = 'FR', 
       </div>
 
       <InstitutionalMeasurementReadiness language={language} headline={t.noMeasure} accent="emerald" />
+
+      <InstitutionalGovernanceArbitrationProposal language={language} />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
