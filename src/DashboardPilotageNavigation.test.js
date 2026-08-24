@@ -61,8 +61,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Access, environments and continuity to consolidate')).toBeInTheDocument();
   expect(screen.getByText('Scope, contributions and allocations to reconcile')).toBeInTheDocument();
   expect(screen.getByText('Institutional scope and minimum inventory to define')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(8);
-  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(8);
+  expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(9);
+  expect(screen.getAllByText('Calculation not authorised')).toHaveLength(9);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Von der Idee zu einer nachhaltigen Institution' })).toBeInTheDocument();
@@ -70,8 +70,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Zugriffe, Umgebungen und Kontinuität zu konsolidieren')).toBeInTheDocument();
   expect(screen.getByText('Umfang, Beiträge und Zuordnungen abzustimmen')).toBeInTheDocument();
   expect(screen.getByText('Institutionellen Umfang und Mindestinventar definieren')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(8);
-  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(8);
+  expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(9);
+  expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(9);
 });
 
 test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
@@ -80,10 +80,10 @@ test('shows the governed MEP-01 LEGAL pilot without inventing progress', () => {
   expect(screen.getByRole('heading', { name: 'MEP-01 · LEGAL' })).toBeInTheDocument();
   expect(screen.getByText('Progression non calculable · périmètre cible, tâches et preuves à valider')).toBeInTheDocument();
   expect(screen.getByText('Applicabilité à qualifier')).toBeInTheDocument();
-  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(8);
-  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(8);
-  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(8);
-  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(8);
+  expect(screen.getAllByRole('region', { name: 'Méthode de mesure commune' })).toHaveLength(9);
+  expect(screen.getAllByText('Calcul non autorisé')).toHaveLength(9);
+  expect(screen.getAllByText(/^1\. Périmètre cible$/)).toHaveLength(9);
+  expect(screen.getAllByText(/Règle de calcul$/)).toHaveLength(9);
   expect(document.body.textContent).not.toMatch(/MEP-01[^%]*\d+\s*%/);
 });
 
@@ -259,6 +259,33 @@ test('opens each CNS-01 governed source with the exact programme return context'
   fireEvent.click(screen.getByRole('button', { name: /Ouvrir le journal d’audit/ }));
   expect(onNavigate).toHaveBeenLastCalledWith(
     '/administration?tab=audit&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-governance-compliance-consolidation-pilot#administration-audit-title'
+  );
+});
+
+test('shows CNS-02 processes and procedures without claiming they are already applied', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  expect(screen.getByRole('heading', { name: 'CNS-02 · Processus et procédures' })).toBeInTheDocument();
+  expect(screen.getByText('Prioriser les processus critiques et leur contrôle minimal')).toBeInTheDocument();
+  expect(screen.getByText(/Un processus décrit n’est pas nécessairement appliqué/)).toBeInTheDocument();
+  expect(document.body.textContent).not.toMatch(/CNS-02[^%]*\d+\s*%/);
+});
+
+test('opens each CNS-02 governed source with the exact programme return context', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate }, '/?view=program');
+
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir Processus Administration/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=processes&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-processes-procedures-consolidation-pilot#process-top'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir les contrôles globaux/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/?view=processes&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-processes-procedures-consolidation-pilot#minimum-global-controls'
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Ouvrir les ressources processus/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/administration?tab=resources&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-processes-procedures-consolidation-pilot#administration-resources-title'
   );
 });
 
