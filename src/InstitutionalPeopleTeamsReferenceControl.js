@@ -23,12 +23,12 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DETAILLE 1/11 · REF-01 · V0.3 · 25-08-2026',
+    eyebrow: 'CONTROLE DETAILLE 1/11 · REF-01 · V0.4 · 25-08-2026',
     title: 'REF-01 · Personnes et équipes',
     body: 'Ce contrôle rapproche l’annuaire RH-001, les sélecteurs Team/Agent et les règles déjà publiées pour les responsabilités collectives. Il prépare un modèle commun sans recopier l’annuaire, désigner une source maîtresse ou confondre personne, appartenance, équipe, rôle et accès M3S.',
     counters: [
       ['Axes contrôlés', '5', 'Identité, structure, cycle, responsabilité et preuve'],
-      ['Événements de cycle proposés', '6', 'Proposition à arbitrer avant mise en œuvre'],
+      ['Événements de cycle validés', '6', 'Cadre validé ; mise en œuvre séparée'],
       ['Données personnelles publiées', '0', 'Aucun nom, contact ou identifiant réel'],
       ['Sources maîtresses retenues dans REF-01', '0', 'Aucune promotion autorisée par cette décision']
     ],
@@ -45,11 +45,11 @@ const COPY = {
     rows: [
       ['Identité stable', 'RH-001 porte un identifiant technique stable et des libellés d’affichage assainis.', 'Conserver un identifiant non réutilisable ; confirmer séparément identité civile, alias et preuve dans l’espace autorisé.', 'observed'],
       ['Séparation des objets', 'Annuaire, comptes, droits et sélecteurs opérationnels sont déjà traités comme des objets distincts.', 'Personne, Appartenance, Équipe et Responsabilité collective sont retenus ; comptes et droits restent à REF-02.', 'validated'],
-      ['Cycle de vie', 'Un état actif/inactif est visible, mais l’entrée, la suspension, le transfert et la sortie ne sont pas versionnés dans la source observée.', 'Six familles d’événements et leur traçabilité minimale sont proposées ci-dessous pour arbitrage.', 'candidate'],
+      ['Cycle de vie', 'Un état actif/inactif est visible, mais l’entrée, la suspension, le transfert et la sortie ne sont pas versionnés dans la source observée.', 'Six familles d’événements et leur traçabilité minimale sont validées comme cadre de travail.', 'validated'],
       ['Collectifs TZH/TSN', 'Les formulaires distinguent une personne du collectif de son équipe et refusent les couples Team-Agent impossibles.', 'Interdire qu’un collectif soit résolu comme personne ; conserver la provenance des anciennes valeurs sans correction silencieuse.', 'observed'],
       ['Propriété et preuve', 'RH-001 est une source documentaire C2 en lecture seule ; les mandats et preuves restent séparés.', 'Organisation & RH porte le sens métier ; IT assure la garde technique ; la GED conserve les preuves et décisions.', 'validated']
     ],
-    decisionIntro: 'La validation humaine confirme le modèle et les responsabilités. Le cycle de vie ci-dessous reste une proposition distincte à arbitrer avant toute désignation de source maîtresse ou mesure.',
+    decisionIntro: 'La première décision confirme le modèle et les responsabilités. Une seconde décision distincte valide désormais le cadre du cycle de vie sans désigner de source maîtresse ni autoriser de mesure.',
     recordLabels: {
       eyebrow: 'Registre de décision gouverné',
       author: 'Auteur de la décision',
@@ -68,9 +68,19 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; contrôle détaillé REF-01 V0.1 publié par la PR frontend #181 ; commit de fusion 3421921.',
       limit: 'Le principe d’un cycle de vie est retenu. Ses détails sont proposés séparément dans REF-01 V0.3 mais ne sont pas encore validés. Cette décision ne désigne aucune source maîtresse, ne valide aucune donnée personnelle, ne crée aucun compte ou droit et ne déclare aucune progression.'
     },
-    lifecycleTitle: 'Cycle de vie candidat à arbitrer',
+    lifecycleRecord: {
+      id: 'REF-01-DEC-002',
+      version: 'V1.0',
+      status: 'Cycle REF-01 validé',
+      author: 'Cheikh Ndiaye',
+      date: '25-08-2026',
+      decision: 'Les six familles d’événements, les douze métadonnées minimales, les six familles de motifs et la séparation Demandeur autorisé–Organisation & RH–IT–GED sont retenues comme cadre du cycle de vie REF-01.',
+      evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; proposition REF-01 V0.3 publiée par la PR frontend #183 ; commit de fusion ca40008.',
+      limit: 'Cette validation porte sur le cadre de contrôle. Elle n’enregistre aucun événement réel, ne valide aucune donnée personnelle, ne désigne aucune source maîtresse ou schéma, n’ouvre aucune automatisation et ne calcule aucune progression.'
+    },
+    lifecycleTitle: 'Cycle de vie validé',
     lifecycleIntro: 'Chaque changement devient un événement daté et traçable. Un transfert clôt l’ancienne appartenance puis en ouvre une nouvelle ; il ne réécrit jamais silencieusement l’historique.',
-    lifecycleColumns: { event: 'Événement', objects: 'Objet concerné', rule: 'Effet contrôlé', evidence: 'Preuve minimale candidate' },
+    lifecycleColumns: { event: 'Événement', objects: 'Objet concerné', rule: 'Effet contrôlé', evidence: 'Preuve minimale retenue' },
     lifecycleEvents: [
       ['Enregistrer / créer', 'Personne ou Équipe', 'Créer un identifiant stable, un état préparé et une date d’effet ; aucune activation implicite.', 'Demande autorisée ou décision + référence GED'],
       ['Activer / affecter', 'Appartenance, Équipe ou Responsabilité collective', 'Ouvrir la relation à la date d’effet après validation métier ; l’accès M3S reste traité dans REF-02.', 'Validation Organisation & RH + pièce de fondement'],
@@ -79,7 +89,7 @@ const COPY = {
       ['Suspendre / réactiver', 'Appartenance ou Équipe', 'Interrompre ou reprendre temporairement la relation ; ne jamais supprimer la personne.', 'Autorisation datée + motif contrôlé'],
       ['Clôturer / archiver', 'Les quatre objets', 'Fermer la relation ou archiver l’objet selon sa nature, en conservant historique et preuves.', 'Acte de fin, décision ou constat autorisé + référence GED']
     ],
-    lifecycleMetadataTitle: 'Trace minimale obligatoire pour chaque événement',
+    lifecycleMetadataTitle: 'Trace minimale validée pour chaque événement',
     lifecycleMetadata: [
       'Identifiant de l’événement',
       'Type et identifiant de l’objet',
@@ -94,29 +104,29 @@ const COPY = {
       'Niveau de confidentialité',
       'Propagation technique requise ou non'
     ],
-    lifecycleReasonsTitle: 'Familles de motifs candidates',
+    lifecycleReasonsTitle: 'Familles de motifs validées',
     lifecycleReasons: ['Entrée institutionnelle', 'Évolution organisationnelle', 'Transfert territorial ou fonctionnel', 'Suspension temporaire', 'Fin de mandat ou de relation', 'Correction d’une erreur prouvée'],
     lifecycleReasonsNote: 'Seul le code de motif nécessaire au pilotage est exposé dans les vues globales. Le détail sensible reste dans l’espace RH autorisé et sa preuve dans la GED.',
-    lifecycleRolesTitle: 'Séparation des responsabilités',
+    lifecycleRolesTitle: 'Séparation des responsabilités validée',
     lifecycleRoles: [
       ['Demandeur autorisé', 'Initie l’événement et fournit son fondement sans décider seul de son entrée en vigueur.'],
       ['Organisation & RH', 'Valide le sens métier, la date d’effet, le motif et l’état résultant.'],
       ['IT', 'Propage les effets techniques autorisés sans devenir propriétaire de l’identité ou de l’appartenance.'],
       ['GED', 'Conserve la décision et la preuve ; la référence GED est portée par l’événement.']
     ],
-    lifecycleBoundary: 'Statut : proposition de contrôle V0.3. Aucun événement réel, schéma, source maîtresse, automatisation ou taux de progression n’est validé par ce lot.',
+    lifecycleBoundary: 'Statut : cadre de contrôle validé par Cheikh le 25-08-2026. Aucun événement réel, schéma, source maîtresse, automatisation ou taux de progression n’est validé par ce lot.',
     boundary: 'Limite : ce lot ne valide ni identité civile, ni appartenance actuelle, ni mandat, ni contrat, ni rôle applicatif. Il n’ouvre aucun accès et ne publie aucun enregistrement RH-001.',
-    source: 'Supports observés : contrat documentaire RH-001 en lecture seule, annuaire C2 protégé, sélecteurs Team/Agent partagés et décision REF-01-DEC-001 publiée par la PR frontend #182 au commit 83b1125.',
+    source: 'Supports observés : contrat documentaire RH-001 en lecture seule, annuaire C2 protégé, sélecteurs Team/Agent partagés, décision REF-01-DEC-001 et proposition V0.3 publiée par la PR frontend #183 au commit ca40008.',
     openDirectory: 'Ouvrir l’annuaire sécurisé',
     openArchitecture: 'Examiner l’architecture RH de REF-01'
   },
   EN: {
-    eyebrow: 'DETAILED CONTROL 1/11 · REF-01 · V0.3 · 25 AUG 2026',
+    eyebrow: 'DETAILED CONTROL 1/11 · REF-01 · V0.4 · 25 AUG 2026',
     title: 'REF-01 · People and teams',
     body: 'This control reconciles the RH-001 directory, Team/Agent selectors and the published rules for collective responsibilities. It prepares a shared model without copying the directory, designating a master source or confusing a person, membership, team, role and M3S access.',
     counters: [
       ['Controlled axes', '5', 'Identity, structure, lifecycle, responsibility and evidence'],
-      ['Proposed lifecycle events', '6', 'Proposal requiring review before implementation'],
+      ['Validated lifecycle events', '6', 'Framework validated; implementation separate'],
       ['Personal records published', '0', 'No name, contact detail or real identifier'],
       ['Master sources retained for REF-01', '0', 'No promotion authorised by this decision']
     ],
@@ -133,11 +143,11 @@ const COPY = {
     rows: [
       ['Stable identity', 'RH-001 carries a stable technical identifier and sanitised display labels.', 'Keep a non-reusable identifier; confirm civil identity, aliases and evidence separately in the authorised space.', 'observed'],
       ['Object separation', 'Directory, accounts, rights and operational selectors are already handled as separate objects.', 'Person, Membership, Team and Collective responsibility are retained; accounts and rights remain in REF-02.', 'validated'],
-      ['Lifecycle', 'An active/inactive state is visible, but entry, suspension, transfer and exit are not versioned in the observed source.', 'Six event families and their minimum traceability are proposed below for review.', 'candidate'],
+      ['Lifecycle', 'An active/inactive state is visible, but entry, suspension, transfer and exit are not versioned in the observed source.', 'Six event families and their minimum traceability are validated as a working framework.', 'validated'],
       ['TZH/TSN collectives', 'Forms distinguish a person from the team collective and reject impossible Team-Agent pairs.', 'Prevent a collective from resolving as a person; retain historical provenance without silent correction.', 'observed'],
       ['Ownership and evidence', 'RH-001 is a read-only C2 documentary source; mandates and evidence remain separate.', 'Organisation & HR owns business meaning; IT provides technical stewardship; the DMS retains evidence and decisions.', 'validated']
     ],
-    decisionIntro: 'Human validation confirms the model and responsibilities. The lifecycle below remains a separate proposal requiring review before any master-source designation or measurement.',
+    decisionIntro: 'The first decision confirms the model and responsibilities. A separate second decision now validates the lifecycle framework without designating a master source or authorising measurement.',
     recordLabels: {
       eyebrow: 'Governed decision record',
       author: 'Decision author',
@@ -156,9 +166,19 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh in the session dated 25-08-2026; REF-01 V0.1 detailed control published through frontend PR #181; merge commit 3421921.',
       limit: 'The lifecycle principle is retained. Its details are proposed separately in REF-01 V0.3 but are not yet validated. This decision designates no master source, validates no personal data, creates no account or right and declares no progress.'
     },
-    lifecycleTitle: 'Candidate lifecycle for review',
+    lifecycleRecord: {
+      id: 'REF-01-DEC-002',
+      version: 'V1.0',
+      status: 'REF-01 lifecycle validated',
+      author: 'Cheikh Ndiaye',
+      date: '25-08-2026',
+      decision: 'The six event families, twelve minimum metadata fields, six reason families and Authorised requester–Organisation & HR–IT–DMS segregation are retained as the REF-01 lifecycle framework.',
+      evidence: 'Explicit validation by Cheikh in the session dated 25-08-2026; REF-01 V0.3 proposal published through frontend PR #183; merge commit ca40008.',
+      limit: 'This validation covers the control framework. It records no real event, validates no personal data, designates no master source or schema, opens no automation and calculates no progress.'
+    },
+    lifecycleTitle: 'Validated lifecycle',
     lifecycleIntro: 'Each change becomes a dated, traceable event. A transfer closes the previous membership and then opens a new one; it never silently rewrites history.',
-    lifecycleColumns: { event: 'Event', objects: 'Affected object', rule: 'Controlled effect', evidence: 'Candidate minimum evidence' },
+    lifecycleColumns: { event: 'Event', objects: 'Affected object', rule: 'Controlled effect', evidence: 'Retained minimum evidence' },
     lifecycleEvents: [
       ['Register / create', 'Person or Team', 'Create a stable identifier, a prepared state and an effective date; no implicit activation.', 'Authorised request or decision + DMS reference'],
       ['Activate / assign', 'Membership, Team or Collective responsibility', 'Open the relationship on its effective date after business validation; M3S access remains in REF-02.', 'Organisation & HR validation + supporting basis'],
@@ -167,7 +187,7 @@ const COPY = {
       ['Suspend / reactivate', 'Membership or Team', 'Temporarily interrupt or resume the relationship; never delete the person.', 'Dated authorisation + controlled reason'],
       ['Close / archive', 'All four objects', 'Close the relationship or archive the object according to its nature while retaining history and evidence.', 'End instrument, decision or authorised finding + DMS reference']
     ],
-    lifecycleMetadataTitle: 'Minimum mandatory trace for each event',
+    lifecycleMetadataTitle: 'Validated minimum trace for each event',
     lifecycleMetadata: [
       'Event identifier',
       'Object type and identifier',
@@ -182,29 +202,29 @@ const COPY = {
       'Confidentiality level',
       'Technical propagation required or not'
     ],
-    lifecycleReasonsTitle: 'Candidate reason families',
+    lifecycleReasonsTitle: 'Validated reason families',
     lifecycleReasons: ['Institutional entry', 'Organisational change', 'Territorial or functional transfer', 'Temporary suspension', 'End of mandate or relationship', 'Correction of a proven error'],
     lifecycleReasonsNote: 'Only the reason code needed for steering is exposed in global views. Sensitive detail remains in the authorised HR space and its evidence in the DMS.',
-    lifecycleRolesTitle: 'Segregation of responsibilities',
+    lifecycleRolesTitle: 'Validated segregation of responsibilities',
     lifecycleRoles: [
       ['Authorised requester', 'Initiates the event and provides its basis without deciding alone when it takes effect.'],
       ['Organisation & HR', 'Validates business meaning, effective date, reason and resulting state.'],
       ['IT', 'Propagates authorised technical effects without owning identity or membership.'],
       ['DMS', 'Retains the decision and evidence; the DMS reference is carried by the event.']
     ],
-    lifecycleBoundary: 'Status: V0.3 control proposal. This lot validates no real event, schema, master source, automation or progress rate.',
+    lifecycleBoundary: 'Status: control framework validated by Cheikh on 25 Aug 2026. This lot validates no real event, schema, master source, automation or progress rate.',
     boundary: 'Boundary: this lot validates no civil identity, current membership, mandate, contract or application role. It opens no access and publishes no RH-001 record.',
-    source: 'Observed supports: read-only RH-001 documentary contract, protected C2 directory, shared Team/Agent selectors and decision REF-01-DEC-001 published through frontend PR #182 at commit 83b1125.',
+    source: 'Observed supports: read-only RH-001 documentary contract, protected C2 directory, shared Team/Agent selectors, decision REF-01-DEC-001 and V0.3 proposal published through frontend PR #183 at commit ca40008.',
     openDirectory: 'Open the secure directory',
     openArchitecture: 'Review the REF-01 HR architecture'
   },
   DE: {
-    eyebrow: 'DETAILKONTROLLE 1/11 · REF-01 · V0.3 · 25.08.2026',
+    eyebrow: 'DETAILKONTROLLE 1/11 · REF-01 · V0.4 · 25.08.2026',
     title: 'REF-01 · Personen und Teams',
     body: 'Diese Kontrolle gleicht das RH-001-Verzeichnis, die Team-/Agent-Auswahl und die veröffentlichten Regeln für kollektive Verantwortungen ab. Sie bereitet ein gemeinsames Modell vor, ohne das Verzeichnis zu kopieren, eine Masterquelle zu bestimmen oder Person, Mitgliedschaft, Team, Rolle und M3S-Zugriff zu vermischen.',
     counters: [
       ['Geprüfte Achsen', '5', 'Identität, Struktur, Lebenszyklus, Verantwortung und Nachweis'],
-      ['Vorgeschlagene Lebenszyklusereignisse', '6', 'Vorschlag vor Umsetzung zu entscheiden'],
+      ['Validierte Lebenszyklusereignisse', '6', 'Rahmen validiert; Umsetzung getrennt'],
       ['Veröffentlichte Personendaten', '0', 'Kein Name, Kontakt oder reale Kennung'],
       ['Für REF-01 festgelegte Masterquellen', '0', 'Keine Hochstufung durch diesen Entscheid']
     ],
@@ -221,11 +241,11 @@ const COPY = {
     rows: [
       ['Stabile Identität', 'RH-001 führt eine stabile technische Kennung und bereinigte Anzeigebezeichnungen.', 'Eine nicht wiederverwendbare Kennung beibehalten; Zivilidentität, Aliase und Nachweis getrennt im autorisierten Raum bestätigen.', 'observed'],
       ['Objekttrennung', 'Verzeichnis, Konten, Rechte und operative Auswahl werden bereits als getrennte Objekte behandelt.', 'Person, Mitgliedschaft, Team und kollektive Verantwortung sind festgehalten; Konten und Rechte bleiben in REF-02.', 'validated'],
-      ['Lebenszyklus', 'Ein Aktiv-/Inaktiv-Stand ist sichtbar; Eintritt, Suspendierung, Wechsel und Austritt sind in der beobachteten Quelle nicht versioniert.', 'Sechs Ereignisfamilien und ihre minimale Rückverfolgbarkeit werden unten zur Entscheidung vorgeschlagen.', 'candidate'],
+      ['Lebenszyklus', 'Ein Aktiv-/Inaktiv-Stand ist sichtbar; Eintritt, Suspendierung, Wechsel und Austritt sind in der beobachteten Quelle nicht versioniert.', 'Sechs Ereignisfamilien und ihre minimale Rückverfolgbarkeit sind als Arbeitsrahmen validiert.', 'validated'],
       ['Kollektive TZH/TSN', 'Formulare unterscheiden Person und Teamkollektiv und weisen unmögliche Team-Agent-Kombinationen ab.', 'Verhindern, dass ein Kollektiv als Person aufgelöst wird; historische Herkunft ohne stille Korrektur bewahren.', 'observed'],
       ['Verantwortung und Nachweis', 'RH-001 ist eine schreibgeschützte C2-Dokumentationsquelle; Mandate und Nachweise bleiben getrennt.', 'Organisation & Personal trägt die Fachverantwortung; IT die technische Pflege; GED verwahrt Nachweise und Entscheide.', 'validated']
     ],
-    decisionIntro: 'Die menschliche Validierung bestätigt Modell und Verantwortungen. Der folgende Lebenszyklus bleibt ein getrennter Vorschlag, der vor jeder Masterquellen-Festlegung oder Messung zu entscheiden ist.',
+    decisionIntro: 'Der erste Entscheid bestätigt Modell und Verantwortungen. Ein getrennter zweiter Entscheid validiert nun den Lebenszyklusrahmen, ohne eine Masterquelle festzulegen oder Messung zu erlauben.',
     recordLabels: {
       eyebrow: 'Governance-konformer Entscheidnachweis',
       author: 'Entscheidautor',
@@ -244,9 +264,19 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; REF-01-Detailkontrolle V0.1 mit Frontend-PR #181 veröffentlicht; Merge-Commit 3421921.',
       limit: 'Das Lebenszyklusprinzip ist festgehalten. Seine Details werden getrennt in REF-01 V0.3 vorgeschlagen, sind aber noch nicht validiert. Dieser Entscheid bestimmt keine Masterquelle, validiert keine Personendaten, erstellt kein Konto oder Recht und erklärt keinen Fortschritt.'
     },
-    lifecycleTitle: 'Vorgeschlagener Lebenszyklus zur Entscheidung',
+    lifecycleRecord: {
+      id: 'REF-01-DEC-002',
+      version: 'V1.0',
+      status: 'REF-01-Lebenszyklus validiert',
+      author: 'Cheikh Ndiaye',
+      date: '25.08.2026',
+      decision: 'Die sechs Ereignisfamilien, zwölf Mindestmetadaten, sechs Grundfamilien und die Funktionstrennung autorisierter Antragsteller–Organisation & Personal–IT–DMS werden als REF-01-Lebenszyklusrahmen festgehalten.',
+      evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; REF-01-Vorschlag V0.3 mit Frontend-PR #183 veröffentlicht; Merge-Commit ca40008.',
+      limit: 'Diese Validierung betrifft den Kontrollrahmen. Sie erfasst kein reales Ereignis, validiert keine Personendaten, bestimmt keine Masterquelle oder Schema, öffnet keine Automatisierung und berechnet keinen Fortschritt.'
+    },
+    lifecycleTitle: 'Validierter Lebenszyklus',
     lifecycleIntro: 'Jede Änderung wird zu einem datierten und rückverfolgbaren Ereignis. Ein Wechsel schliesst die bisherige Mitgliedschaft und öffnet danach eine neue; die Historie wird nie still überschrieben.',
-    lifecycleColumns: { event: 'Ereignis', objects: 'Betroffenes Objekt', rule: 'Kontrollierte Wirkung', evidence: 'Vorgeschlagener Mindestnachweis' },
+    lifecycleColumns: { event: 'Ereignis', objects: 'Betroffenes Objekt', rule: 'Kontrollierte Wirkung', evidence: 'Festgehaltener Mindestnachweis' },
     lifecycleEvents: [
       ['Erfassen / erstellen', 'Person oder Team', 'Stabile Kennung, vorbereiteten Stand und Wirksamkeitsdatum erstellen; keine implizite Aktivierung.', 'Autorisierte Anfrage oder Entscheid + DMS-Referenz'],
       ['Aktivieren / zuweisen', 'Mitgliedschaft, Team oder kollektive Verantwortung', 'Beziehung nach fachlicher Validierung zum Wirksamkeitsdatum öffnen; M3S-Zugriff bleibt in REF-02.', 'Validierung Organisation & Personal + Grundlage'],
@@ -255,7 +285,7 @@ const COPY = {
       ['Suspendieren / reaktivieren', 'Mitgliedschaft oder Team', 'Beziehung vorübergehend unterbrechen oder wieder aufnehmen; Person nie löschen.', 'Datierte Autorisierung + kontrollierter Grund'],
       ['Schliessen / archivieren', 'Alle vier Objekte', 'Beziehung schliessen oder Objekt seiner Art entsprechend archivieren und Historie sowie Nachweise bewahren.', 'Beendigungsakt, Entscheid oder autorisierter Befund + DMS-Referenz']
     ],
-    lifecycleMetadataTitle: 'Verbindliche Mindestspur für jedes Ereignis',
+    lifecycleMetadataTitle: 'Validierte Mindestspur für jedes Ereignis',
     lifecycleMetadata: [
       'Ereigniskennung',
       'Objekttyp und Kennung',
@@ -270,19 +300,19 @@ const COPY = {
       'Vertraulichkeitsstufe',
       'Technische Weitergabe erforderlich oder nicht'
     ],
-    lifecycleReasonsTitle: 'Vorgeschlagene Grundfamilien',
+    lifecycleReasonsTitle: 'Validierte Grundfamilien',
     lifecycleReasons: ['Institutioneller Eintritt', 'Organisatorische Änderung', 'Territorialer oder funktionaler Wechsel', 'Vorübergehende Suspendierung', 'Ende von Mandat oder Beziehung', 'Korrektur eines belegten Fehlers'],
     lifecycleReasonsNote: 'In globalen Ansichten wird nur der für die Steuerung notwendige Grundcode angezeigt. Sensible Details bleiben im autorisierten Personalbereich und der Nachweis im DMS.',
-    lifecycleRolesTitle: 'Funktionstrennung',
+    lifecycleRolesTitle: 'Validierte Funktionstrennung',
     lifecycleRoles: [
       ['Autorisierter Antragsteller', 'Initiiert das Ereignis und liefert seine Grundlage, ohne allein über das Inkrafttreten zu entscheiden.'],
       ['Organisation & Personal', 'Validiert fachliche Bedeutung, Wirksamkeitsdatum, Grund und resultierenden Stand.'],
       ['IT', 'Überträgt autorisierte technische Wirkungen, ohne Eigentümer von Identität oder Mitgliedschaft zu werden.'],
       ['DMS', 'Bewahrt Entscheid und Nachweis; die DMS-Referenz wird vom Ereignis getragen.']
     ],
-    lifecycleBoundary: 'Status: Kontrollvorschlag V0.3. Dieses Los validiert kein reales Ereignis, Schema, keine Masterquelle, Automatisierung oder Fortschrittsquote.',
+    lifecycleBoundary: 'Status: Kontrollrahmen von Cheikh am 25.08.2026 validiert. Dieses Los validiert kein reales Ereignis, Schema, keine Masterquelle, Automatisierung oder Fortschrittsquote.',
     boundary: 'Grenze: Dieses Los validiert weder Zivilidentität, aktuelle Mitgliedschaft, Mandat, Vertrag noch Anwendungsrolle. Es öffnet keinen Zugriff und veröffentlicht keinen RH-001-Datensatz.',
-    source: 'Beobachtete Träger: schreibgeschützter RH-001-Dokumentationsvertrag, geschütztes C2-Verzeichnis, gemeinsame Team-/Agent-Auswahl und Entscheid REF-01-DEC-001, veröffentlicht mit Frontend-PR #182 und Commit 83b1125.',
+    source: 'Beobachtete Träger: schreibgeschützter RH-001-Dokumentationsvertrag, geschütztes C2-Verzeichnis, gemeinsame Team-/Agent-Auswahl, Entscheid REF-01-DEC-001 und V0.3-Vorschlag, veröffentlicht mit Frontend-PR #183 und Commit ca40008.',
     openDirectory: 'Sicheres Verzeichnis öffnen',
     openArchitecture: 'REF-01-Personalarchitektur prüfen'
   }
@@ -350,6 +380,10 @@ const InstitutionalPeopleTeamsReferenceControl = ({ language = 'FR', onNavigate 
             <h6 className="text-sm font-semibold text-slate-100">{t.lifecycleTitle}</h6>
             <p className="mt-1 text-sm leading-6 text-slate-300">{t.lifecycleIntro}</p>
           </div>
+        </div>
+
+        <div className="m3s-ref01-decision">
+          <GovernedDecisionRecord labels={t.recordLabels} record={t.lifecycleRecord} />
         </div>
 
         <div className="mt-4 hidden overflow-x-auto border-y border-slate-700 md:block">
