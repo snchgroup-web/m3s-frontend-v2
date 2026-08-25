@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V0.5 · 25-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V0.6 · 25-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -444,8 +444,13 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(control.getAllByText('GED · preuves RH autorisées').length).toBeGreaterThan(0);
   expect(control.getByText('Sources maîtresses désignées')).toBeInTheDocument();
   expect(control.getByRole('heading', { name: 'Sept critères avant toute désignation de source maîtresse' })).toBeInTheDocument();
-  expect(control.getByText('Arbitrage distinct requis')).toBeInTheDocument();
-  expect(control.getByText(/Aucune source maîtresse, qualité, complétude, identité civile/)).toBeInTheDocument();
+  expect(control.getAllByText('Critères de décision validés', { selector: 'span' })).toHaveLength(2);
+  expect(control.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
+  expect(control.getByText(/Les sept critères sont retenus comme prérequis obligatoires/)).toBeInTheDocument();
+  expect(control.getByText(/comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185/)).toBeInTheDocument();
+  expect(control.getByText(/ne désigne ni ne valide aucun support candidat ou source maîtresse/)).toBeInTheDocument();
+  expect(control.getByText(/matrice de preuves critère par critère, sans score/)).toBeInTheDocument();
+  expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
   expect(section.textContent).not.toMatch(/Chantal|Gnilane|Ibrahima|Papa/);
@@ -471,7 +476,9 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByText('REF-01 lifecycle validated')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Compare supports without promoting them' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Seven criteria before any master-source designation' })).toBeInTheDocument();
-  expect(screen.getAllByText('Separate review required').length).toBeGreaterThan(0);
+  expect(screen.getAllByText('Decision criteria validated').length).toBeGreaterThan(0);
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByText(/criterion-by-criterion evidence matrix/)).toBeInTheDocument();
   expect(screen.getAllByText('Transfer')).toHaveLength(2);
   expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
 
@@ -484,7 +491,9 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByText('REF-01-Lebenszyklus validiert')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Träger vergleichen, ohne sie zu fördern' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Sieben Kriterien vor jeder Bestimmung einer Masterquelle' })).toBeInTheDocument();
-  expect(screen.getAllByText('Getrennter Entscheid erforderlich').length).toBeGreaterThan(0);
+  expect(screen.getAllByText('Entscheidungskriterien validiert').length).toBeGreaterThan(0);
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByText(/kriteriumsweise Nachweismatrix/)).toBeInTheDocument();
   expect(screen.getAllByText('Wechseln')).toHaveLength(2);
   expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
 });
@@ -737,7 +746,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-01 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-02 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(10);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(11);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(8);
@@ -747,7 +756,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-01 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-02 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(10);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(11);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(8);
