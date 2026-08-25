@@ -7,6 +7,7 @@ import {
   ListChecks,
   SlidersHorizontal
 } from 'lucide-react';
+import GovernedDecisionRecord from './GovernedDecisionRecord';
 
 const STATUS_STYLES = {
   connected: 'border-emerald-700/70 bg-emerald-950/25 text-emerald-200',
@@ -16,7 +17,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V0.5 · 25-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V0.6 · 25-08-2026',
     title: 'Comparer les supports sans les promouvoir',
     body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
     counters: [
@@ -73,7 +74,7 @@ const COPY = {
       }
     ],
     criteriaTitle: 'Sept critères avant toute désignation de source maîtresse',
-    criteriaIntro: 'Ces contrôles préparent une décision ultérieure. Ils ne constituent ni un score, ni un taux d’avancement.',
+    criteriaIntro: 'Ces sept critères sont validés comme prérequis obligatoires de toute décision ultérieure. Ils ne constituent ni un score, ni un taux d’avancement.',
     criteria: [
       ['Identifiant stable', 'Unicité, non-réutilisation et règle de correction prouvées.'],
       ['Périmètre et couverture', 'Objets inclus, exclusions, territoires et cas collectifs explicités.'],
@@ -83,12 +84,31 @@ const COPY = {
       ['Preuve et conservation', 'Références GED, durée de conservation et relations avec les événements définies.'],
       ['Qualité et propagation', 'Contrôles de cohérence, écarts, corrections et effets sur les consommateurs maîtrisés.']
     ],
-    decisionStatus: 'Arbitrage distinct requis',
-    boundary: 'Statut : comparatif préparatoire V0.5. Aucune source maîtresse, qualité, complétude, identité civile, donnée personnelle, modification de schéma, automatisation ou progression n’est validée par ce lot.',
-    source: 'Supports contrôlés dans le code publié : contrat API RH-001, composant Annuaire interne, utilitaire partagé Team/Agent, cadrage GED et décisions REF-01-DEC-001 et REF-01-DEC-002.'
+    decisionStatus: 'Critères de décision validés',
+    recordLabels: {
+      eyebrow: 'Registre de décision gouverné',
+      author: 'Auteur de la décision',
+      date: 'Date de décision',
+      decision: 'Décision enregistrée',
+      evidence: 'Preuve de traçabilité',
+      limit: 'Portée et réserve'
+    },
+    record: {
+      id: 'REF-01-DEC-003',
+      version: 'V1.0',
+      status: 'Critères de décision validés',
+      author: 'Cheikh Ndiaye',
+      date: '25-08-2026',
+      decision: 'Les sept critères sont retenus comme prérequis obligatoires avant toute future désignation d’une source maîtresse REF-01. Chaque support candidat devra être contrôlé critère par critère avec sa preuve, son responsable et son écart.',
+      evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
+      limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
+    },
+    nextControl: 'Prochain contrôle : établir pour les quatre supports une matrice de preuves critère par critère, sans score, sans taux et sans promotion de source.',
+    boundary: 'Statut : critères de décision validés dans REF-01 V0.6 ; sources maîtresses désignées : 0. Aucune qualité, complétude, identité civile, donnée personnelle, modification de schéma, automatisation ou progression n’est validée par ce lot.',
+    source: 'Supports contrôlés dans le code publié : contrat API RH-001, composant Annuaire interne, utilitaire partagé Team/Agent, cadrage GED, décisions REF-01-DEC-001 et REF-01-DEC-002, et comparatif V0.5 publié par la PR frontend #185 au commit 6be6a4a.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V0.5 · 25 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V0.6 · 25 AUG 2026',
     title: 'Compare supports without promoting them',
     body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
     counters: [
@@ -145,7 +165,7 @@ const COPY = {
       }
     ],
     criteriaTitle: 'Seven criteria before any master-source designation',
-    criteriaIntro: 'These controls prepare a later decision. They are neither a score nor a progress rate.',
+    criteriaIntro: 'These seven criteria are validated as mandatory prerequisites for any later decision. They are neither a score nor a progress rate.',
     criteria: [
       ['Stable identifier', 'Uniqueness, non-reuse and correction rule evidenced.'],
       ['Scope and coverage', 'Included objects, exclusions, territories and collective cases explicit.'],
@@ -155,12 +175,31 @@ const COPY = {
       ['Evidence and retention', 'DMS references, retention period and event relationships defined.'],
       ['Quality and propagation', 'Consistency controls, gaps, corrections and consumer effects governed.']
     ],
-    decisionStatus: 'Separate review required',
-    boundary: 'Status: V0.5 preparatory comparison. This lot validates no master source, quality, completeness, civil identity, personal data, schema change, automation or progress.',
-    source: 'Supports controlled in published code: RH-001 API contract, Internal Directory component, shared Team/Agent utility, DMS framing and decisions REF-01-DEC-001 and REF-01-DEC-002.'
+    decisionStatus: 'Decision criteria validated',
+    recordLabels: {
+      eyebrow: 'Governed decision record',
+      author: 'Decision author',
+      date: 'Decision date',
+      decision: 'Recorded decision',
+      evidence: 'Traceability evidence',
+      limit: 'Scope and reservation'
+    },
+    record: {
+      id: 'REF-01-DEC-003',
+      version: 'V1.0',
+      status: 'Decision criteria validated',
+      author: 'Cheikh Ndiaye',
+      date: '25 Aug 2026',
+      decision: 'The seven criteria are retained as mandatory prerequisites before any future designation of a REF-01 master source. Each candidate support must be reviewed criterion by criterion with its evidence, owner and gap.',
+      evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
+      limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
+    },
+    nextControl: 'Next control: establish a criterion-by-criterion evidence matrix for the four supports, without scoring, rates or source promotion.',
+    boundary: 'Status: decision criteria validated in REF-01 V0.6; designated master sources: 0. This lot validates no quality, completeness, civil identity, personal data, schema change, automation or progress.',
+    source: 'Supports controlled in published code: RH-001 API contract, Internal Directory component, shared Team/Agent utility, DMS framing, decisions REF-01-DEC-001 and REF-01-DEC-002, and the V0.5 comparison published through frontend PR #185 at commit 6be6a4a.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V0.5 · 25.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V0.6 · 25.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
     body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
     counters: [
@@ -217,7 +256,7 @@ const COPY = {
       }
     ],
     criteriaTitle: 'Sieben Kriterien vor jeder Bestimmung einer Masterquelle',
-    criteriaIntro: 'Diese Kontrollen bereiten einen späteren Entscheid vor. Sie sind weder Punktzahl noch Fortschrittsquote.',
+    criteriaIntro: 'Diese sieben Kriterien sind als zwingende Voraussetzungen für jeden späteren Entscheid validiert. Sie sind weder Punktzahl noch Fortschrittsquote.',
     criteria: [
       ['Stabile Kennung', 'Eindeutigkeit, Nichtwiederverwendung und Korrekturregel belegt.'],
       ['Umfang und Abdeckung', 'Enthaltene Objekte, Ausschlüsse, Gebiete und Kollektivfälle ausdrücklich.'],
@@ -227,9 +266,28 @@ const COPY = {
       ['Nachweis und Aufbewahrung', 'DMS-Referenzen, Aufbewahrungsdauer und Ereignisbeziehungen definiert.'],
       ['Qualität und Weitergabe', 'Konsistenzkontrollen, Abweichungen, Korrekturen und Verbraucherwirkungen gesteuert.']
     ],
-    decisionStatus: 'Getrennter Entscheid erforderlich',
-    boundary: 'Status: vorbereitender Vergleich V0.5. Dieses Los validiert keine Masterquelle, Qualität, Vollständigkeit, Zivilidentität, Personendaten, Schemaänderung, Automatisierung oder Fortschritt.',
-    source: 'Im veröffentlichten Code kontrollierte Träger: RH-001-API-Vertrag, Komponente Internes Verzeichnis, gemeinsames Team-/Agent-Werkzeug, DMS-Rahmen sowie REF-01-DEC-001 und REF-01-DEC-002.'
+    decisionStatus: 'Entscheidungskriterien validiert',
+    recordLabels: {
+      eyebrow: 'Governance-konformer Entscheidnachweis',
+      author: 'Entscheidautor',
+      date: 'Entscheiddatum',
+      decision: 'Dokumentierter Entscheid',
+      evidence: 'Nachweis der Rückverfolgbarkeit',
+      limit: 'Umfang und Vorbehalt'
+    },
+    record: {
+      id: 'REF-01-DEC-003',
+      version: 'V1.0',
+      status: 'Entscheidungskriterien validiert',
+      author: 'Cheikh Ndiaye',
+      date: '25.08.2026',
+      decision: 'Die sieben Kriterien werden als zwingende Voraussetzungen vor jeder künftigen Bestimmung einer REF-01-Masterquelle festgehalten. Jeder Kandidat muss Kriterium für Kriterium mit Nachweis, Verantwortung und Abweichung geprüft werden.',
+      evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
+      limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
+    },
+    nextControl: 'Nächste Kontrolle: für die vier Träger eine kriteriumsweise Nachweismatrix ohne Punktzahl, Quote oder Quellenförderung erstellen.',
+    boundary: 'Status: Entscheidungskriterien in REF-01 V0.6 validiert; bestimmte Masterquellen: 0. Dieses Los validiert keine Qualität, Vollständigkeit, Zivilidentität, Personendaten, Schemaänderung, Automatisierung oder Fortschritt.',
+    source: 'Im veröffentlichten Code kontrollierte Träger: RH-001-API-Vertrag, Komponente Internes Verzeichnis, gemeinsames Team-/Agent-Werkzeug, DMS-Rahmen, REF-01-DEC-001 und REF-01-DEC-002 sowie der mit Frontend-PR #185 am Commit 6be6a4a veröffentlichte Vergleich V0.5.'
   }
 };
 
@@ -323,7 +381,7 @@ const InstitutionalPeopleTeamsSourceControl = ({ language = 'FR' }) => {
             <div className="flex items-center gap-2"><ListChecks className="text-emerald-300" size={18} aria-hidden="true" /><h6 className="text-sm font-semibold text-slate-100">{t.criteriaTitle}</h6></div>
             <p className="mt-2 text-xs leading-5 text-slate-400">{t.criteriaIntro}</p>
           </div>
-          <span className="inline-flex w-fit rounded-md border border-amber-700/70 bg-amber-950/25 px-2 py-1 text-xs font-semibold text-amber-100">{t.decisionStatus}</span>
+          <span className="inline-flex w-fit rounded-md border border-emerald-700/70 bg-emerald-950/25 px-2 py-1 text-xs font-semibold text-emerald-200">{t.decisionStatus}</span>
         </div>
         <ol className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
           {t.criteria.map(([label, detail], index) => (
@@ -336,6 +394,9 @@ const InstitutionalPeopleTeamsSourceControl = ({ language = 'FR' }) => {
           ))}
         </ol>
       </div>
+
+      <GovernedDecisionRecord labels={t.recordLabels} record={t.record} />
+      <p className="mt-3 rounded-md border border-sky-800/70 bg-sky-950/15 p-3 text-xs font-semibold leading-5 text-sky-200">{t.nextControl}</p>
 
       <p className="mt-4 flex items-start gap-2 border-t border-slate-700 pt-4 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.boundary}</p>
       <p className="mt-3 text-xs leading-5 text-slate-400">{t.source}</p>
