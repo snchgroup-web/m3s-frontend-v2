@@ -13,6 +13,7 @@ import {
   UsersRound
 } from 'lucide-react';
 import GovernedDecisionRecord from './GovernedDecisionRecord';
+import InstitutionalPeopleTeamsSourceControl from './InstitutionalPeopleTeamsSourceControl';
 
 const STATUS_STYLES = {
   observed: 'border-emerald-700/70 bg-emerald-950/25 text-emerald-200',
@@ -23,7 +24,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DETAILLE 1/11 · REF-01 · V0.4 · 25-08-2026',
+    eyebrow: 'CONTROLE DETAILLE 1/11 · REF-01 · V0.5 · 25-08-2026',
     title: 'REF-01 · Personnes et équipes',
     body: 'Ce contrôle rapproche l’annuaire RH-001, les sélecteurs Team/Agent et les règles déjà publiées pour les responsabilités collectives. Il prépare un modèle commun sans recopier l’annuaire, désigner une source maîtresse ou confondre personne, appartenance, équipe, rôle et accès M3S.',
     counters: [
@@ -116,12 +117,12 @@ const COPY = {
     ],
     lifecycleBoundary: 'Statut : cadre de contrôle validé par Cheikh le 25-08-2026. Aucun événement réel, schéma, source maîtresse, automatisation ou taux de progression n’est validé par ce lot.',
     boundary: 'Limite : ce lot ne valide ni identité civile, ni appartenance actuelle, ni mandat, ni contrat, ni rôle applicatif. Il n’ouvre aucun accès et ne publie aucun enregistrement RH-001.',
-    source: 'Supports observés : contrat documentaire RH-001 en lecture seule, annuaire C2 protégé, sélecteurs Team/Agent partagés, décision REF-01-DEC-001 et proposition V0.3 publiée par la PR frontend #183 au commit ca40008.',
+    source: 'Supports observés : contrat documentaire RH-001 en lecture seule, annuaire C2 protégé, sélecteurs Team/Agent partagés et décisions REF-01-DEC-001 et REF-01-DEC-002 publiées jusqu’à la PR frontend #184 au commit 34376af.',
     openDirectory: 'Ouvrir l’annuaire sécurisé',
     openArchitecture: 'Examiner l’architecture RH de REF-01'
   },
   EN: {
-    eyebrow: 'DETAILED CONTROL 1/11 · REF-01 · V0.4 · 25 AUG 2026',
+    eyebrow: 'DETAILED CONTROL 1/11 · REF-01 · V0.5 · 25 AUG 2026',
     title: 'REF-01 · People and teams',
     body: 'This control reconciles the RH-001 directory, Team/Agent selectors and the published rules for collective responsibilities. It prepares a shared model without copying the directory, designating a master source or confusing a person, membership, team, role and M3S access.',
     counters: [
@@ -214,12 +215,12 @@ const COPY = {
     ],
     lifecycleBoundary: 'Status: control framework validated by Cheikh on 25 Aug 2026. This lot validates no real event, schema, master source, automation or progress rate.',
     boundary: 'Boundary: this lot validates no civil identity, current membership, mandate, contract or application role. It opens no access and publishes no RH-001 record.',
-    source: 'Observed supports: read-only RH-001 documentary contract, protected C2 directory, shared Team/Agent selectors, decision REF-01-DEC-001 and V0.3 proposal published through frontend PR #183 at commit ca40008.',
+    source: 'Observed supports: read-only RH-001 documentary contract, protected C2 directory, shared Team/Agent selectors and decisions REF-01-DEC-001 and REF-01-DEC-002 published through frontend PR #184 at commit 34376af.',
     openDirectory: 'Open the secure directory',
     openArchitecture: 'Review the REF-01 HR architecture'
   },
   DE: {
-    eyebrow: 'DETAILKONTROLLE 1/11 · REF-01 · V0.4 · 25.08.2026',
+    eyebrow: 'DETAILKONTROLLE 1/11 · REF-01 · V0.5 · 25.08.2026',
     title: 'REF-01 · Personen und Teams',
     body: 'Diese Kontrolle gleicht das RH-001-Verzeichnis, die Team-/Agent-Auswahl und die veröffentlichten Regeln für kollektive Verantwortungen ab. Sie bereitet ein gemeinsames Modell vor, ohne das Verzeichnis zu kopieren, eine Masterquelle zu bestimmen oder Person, Mitgliedschaft, Team, Rolle und M3S-Zugriff zu vermischen.',
     counters: [
@@ -312,7 +313,7 @@ const COPY = {
     ],
     lifecycleBoundary: 'Status: Kontrollrahmen von Cheikh am 25.08.2026 validiert. Dieses Los validiert kein reales Ereignis, Schema, keine Masterquelle, Automatisierung oder Fortschrittsquote.',
     boundary: 'Grenze: Dieses Los validiert weder Zivilidentität, aktuelle Mitgliedschaft, Mandat, Vertrag noch Anwendungsrolle. Es öffnet keinen Zugriff und veröffentlicht keinen RH-001-Datensatz.',
-    source: 'Beobachtete Träger: schreibgeschützter RH-001-Dokumentationsvertrag, geschütztes C2-Verzeichnis, gemeinsame Team-/Agent-Auswahl, Entscheid REF-01-DEC-001 und V0.3-Vorschlag, veröffentlicht mit Frontend-PR #183 und Commit ca40008.',
+    source: 'Beobachtete Träger: schreibgeschützter RH-001-Dokumentationsvertrag, geschütztes C2-Verzeichnis, gemeinsame Team-/Agent-Auswahl sowie REF-01-DEC-001 und REF-01-DEC-002, veröffentlicht bis Frontend-PR #184 und Commit 34376af.',
     openDirectory: 'Sicheres Verzeichnis öffnen',
     openArchitecture: 'REF-01-Personalarchitektur prüfen'
   }
@@ -460,6 +461,8 @@ const InstitutionalPeopleTeamsReferenceControl = ({ language = 'FR', onNavigate 
 
         <p className="mt-4 flex items-start gap-2 border-t border-slate-700 pt-4 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.lifecycleBoundary}</p>
       </div>
+
+      <InstitutionalPeopleTeamsSourceControl language={language} />
 
       <div className="mt-4 hidden overflow-x-auto rounded-md border border-slate-700 md:block">
         <table className="w-full min-w-[980px] border-collapse text-left text-sm">
