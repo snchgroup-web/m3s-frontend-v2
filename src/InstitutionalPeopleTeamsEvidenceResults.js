@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertTriangle, CheckCircle2, CircleDashed, SearchCheck } from 'lucide-react';
+import GovernedDecisionRecord from './GovernedDecisionRecord';
 
 const STATUS_STYLES = {
   observed: 'border-emerald-700/70 bg-emerald-950/25 text-emerald-200',
@@ -9,7 +10,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'RESULTATS DE RECHERCHE AUTORISEE · REF-01 · V1.0 · 25-08-2026',
+    eyebrow: 'RESULTATS DE RECHERCHE AUTORISEE · REF-01 · V1.1 · 25-08-2026',
     title: 'Distinguer les preuves observées, partielles et non observées',
     intro: 'Ce registre restitue la recherche autorisée par REF-01-DEC-004. Il décrit uniquement ce qui est vérifiable dans les contrats, le code et les contrôles existants, sans ouvrir les pièces RH ni conclure à la conformité.',
     counters: [['Demandes contrôlées', '12', 'Lot A validé'], ['Preuve observée', '1', 'Comportement et écart établis'], ['Preuves partielles', '5', 'Un ou plusieurs éléments manquent'], ['Non observées', '6', 'Preuve applicable absente du périmètre contrôlé']],
@@ -31,11 +32,18 @@ const COPY = {
     ],
     readingTitle: 'Lecture gouvernée du résultat',
     reading: ['Une preuve observée peut établir un comportement ou un écart sans rendre le support conforme.', 'Une preuve partielle doit être complétée avant toute qualification.', 'Non observée signifie absente du périmètre contrôlé, et non inexistante dans toute l’organisation.', 'Les contenus RH, identités civiles et pièces restent dans leurs espaces autorisés.'],
-    status: 'Position maintenue : 12 demandes contrôlées ; 1 preuve observée ; 5 partielles ; 6 non observées ; 0 source maîtresse ; aucune progression calculée.',
-    next: 'Prochain arbitrage humain : confirmer ou corriger cette qualification descriptive avant de prioriser les écarts à traiter.'
+    recordLabels: { eyebrow: 'Registre de décision gouverné', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision enregistrée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
+    record: {
+      id: 'REF-01-DEC-005', version: 'V1.0', status: 'Qualifications descriptives confirmées', author: 'Cheikh Ndiaye', date: '25-08-2026',
+      decision: 'Les douze qualifications descriptives REF-01 sont confirmées : une preuve observée, cinq preuves partielles et six preuves non observées dans le périmètre contrôlé. Elles deviennent la lecture gouvernée courante pour prioriser les écarts.',
+      evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; registre REF-01 V1.0 publié par la PR frontend nº 189 au commit 350d77fa ; sources et contrôles référencés dans les douze résultats.',
+      limit: 'Cette confirmation ne déclare aucune conformité, qualité globale ou complétude. Elle ne désigne aucune source maîtresse, n’ouvre aucun accès, n’expose aucune donnée personnelle, ne modifie aucun schéma, ne déclenche aucune automatisation ou migration et ne calcule aucune progression.'
+    },
+    status: 'Position confirmée : 12 demandes contrôlées ; 1 preuve observée ; 5 partielles ; 6 non observées ; 0 source maîtresse ; aucune progression calculée.',
+    next: 'Prochain contrôle : prioriser les écarts à traiter et préparer un premier micro-lot sans promouvoir de source ni modifier de schéma.'
   },
   EN: {
-    eyebrow: 'AUTHORISED SEARCH RESULTS · REF-01 · V1.0 · 25 AUG 2026',
+    eyebrow: 'AUTHORISED SEARCH RESULTS · REF-01 · V1.1 · 25 AUG 2026',
     title: 'Separate observed, partial and unobserved evidence',
     intro: 'This register reports the search authorised by REF-01-DEC-004. It describes only what can be verified in existing contracts, code and controls, without opening HR records or concluding on compliance.',
     counters: [['Requests reviewed', '12', 'Validated package A'], ['Observed evidence', '1', 'Behaviour and gap established'], ['Partial evidence', '5', 'One or more elements are missing'], ['Unobserved', '6', 'Applicable evidence absent from the controlled scope']],
@@ -57,11 +65,18 @@ const COPY = {
     ],
     readingTitle: 'Governed reading of the result',
     reading: ['Observed evidence may establish behaviour or a gap without making a support compliant.', 'Partial evidence must be completed before any qualification.', 'Unobserved means absent from the controlled scope, not nonexistent across the organisation.', 'HR content, civil identities and records remain in authorised spaces.'],
-    status: 'Position retained: 12 requests reviewed; 1 observed; 5 partial; 6 unobserved; 0 master sources; no calculated progress.',
-    next: 'Next human arbitration: confirm or correct this descriptive qualification before prioritising the gaps to address.'
+    recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
+    record: {
+      id: 'REF-01-DEC-005', version: 'V1.0', status: 'Descriptive qualifications confirmed', author: 'Cheikh Ndiaye', date: '25 Aug 2026',
+      decision: 'The twelve REF-01 descriptive qualifications are confirmed: one observed, five partial and six unobserved evidence items within the controlled scope. They become the current governed reading for prioritising gaps.',
+      evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V1.0 register published through frontend PR 189 at commit 350d77fa; sources and controls referenced in the twelve results.',
+      limit: 'This confirmation declares no compliance, overall quality or completeness. It designates no master source, opens no access, exposes no personal data, changes no schema, triggers no automation or migration and calculates no progress.'
+    },
+    status: 'Confirmed position: 12 requests reviewed; 1 observed; 5 partial; 6 unobserved; 0 master sources; no calculated progress.',
+    next: 'Next control: prioritise the gaps and prepare an initial micro-package without promoting a source or changing a schema.'
   },
   DE: {
-    eyebrow: 'ERGEBNISSE DER AUTORISIERTEN SUCHE · REF-01 · V1.0 · 25.08.2026',
+    eyebrow: 'ERGEBNISSE DER AUTORISIERTEN SUCHE · REF-01 · V1.1 · 25.08.2026',
     title: 'Beobachtete, teilweise und nicht beobachtete Nachweise trennen',
     intro: 'Dieses Register gibt die mit REF-01-DEC-004 autorisierte Suche wieder. Es beschreibt nur, was in bestehenden Verträgen, Code und Kontrollen prüfbar ist, ohne Personalunterlagen zu öffnen oder Konformität festzustellen.',
     counters: [['Geprüfte Anfragen', '12', 'Validiertes Paket A'], ['Beobachteter Nachweis', '1', 'Verhalten und Lücke festgestellt'], ['Teilnachweise', '5', 'Ein oder mehrere Elemente fehlen'], ['Nicht beobachtet', '6', 'Anwendbarer Nachweis im kontrollierten Umfang nicht vorhanden']],
@@ -83,8 +98,15 @@ const COPY = {
     ],
     readingTitle: 'Gesteuerte Lesart des Ergebnisses',
     reading: ['Ein beobachteter Nachweis kann Verhalten oder Lücke belegen, ohne einen Träger konform zu machen.', 'Ein Teilnachweis muss vor jeder Qualifizierung ergänzt werden.', 'Nicht beobachtet bedeutet im kontrollierten Umfang nicht vorhanden, nicht organisationsweit inexistent.', 'Personalinhalte, Zivilidentitäten und Unterlagen bleiben in autorisierten Räumen.'],
-    status: 'Position beibehalten: 12 Anfragen geprüft; 1 beobachtet; 5 teilweise; 6 nicht beobachtet; 0 Masterquellen; kein berechneter Fortschritt.',
-    next: 'Nächster menschlicher Entscheid: diese beschreibende Qualifizierung bestätigen oder korrigieren, bevor Lücken priorisiert werden.'
+    recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Dokumentierter Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
+    record: {
+      id: 'REF-01-DEC-005', version: 'V1.0', status: 'Beschreibende Qualifizierungen bestätigt', author: 'Cheikh Ndiaye', date: '25.08.2026',
+      decision: 'Die zwölf beschreibenden REF-01-Qualifizierungen werden bestätigt: ein beobachteter, fünf teilweise und sechs nicht beobachtete Nachweise im kontrollierten Umfang. Sie bilden die aktuelle gesteuerte Lesart zur Priorisierung der Lücken.',
+      evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; REF-01-V1.0-Register mit Frontend-PR Nr. 189 am Commit 350d77fa veröffentlicht; Quellen und Kontrollen in den zwölf Ergebnissen referenziert.',
+      limit: 'Diese Bestätigung erklärt weder Konformität noch Gesamtqualität oder Vollständigkeit. Sie bestimmt keine Masterquelle, öffnet keinen Zugriff, legt keine Personendaten offen, ändert kein Schema, löst keine Automatisierung oder Migration aus und berechnet keinen Fortschritt.'
+    },
+    status: 'Bestätigte Position: 12 Anfragen geprüft; 1 beobachtet; 5 teilweise; 6 nicht beobachtet; 0 Masterquellen; kein berechneter Fortschritt.',
+    next: 'Nächste Kontrolle: Lücken priorisieren und ein erstes Mikrolos vorbereiten, ohne eine Quelle zu fördern oder ein Schema zu ändern.'
   }
 };
 
@@ -143,6 +165,10 @@ const InstitutionalPeopleTeamsEvidenceResults = ({ language = 'FR' }) => {
         <h6 id="ref01-results-reading-title" className="text-sm font-semibold text-slate-100">{t.readingTitle}</h6>
         <ul className="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-2">{t.reading.map((item) => <li key={item} className="flex items-start gap-2 text-xs leading-5 text-slate-300"><CircleDashed className="mt-0.5 shrink-0 text-sky-300" size={15} aria-hidden="true" />{item}</li>)}</ul>
       </section>
+
+      <div className="m3s-ref01-decision">
+        <GovernedDecisionRecord labels={t.recordLabels} record={t.record} />
+      </div>
 
       <p className="mt-4 flex items-start gap-2 border-t border-slate-700 pt-4 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.status}</p>
       <p className="mt-3 rounded-md border border-sky-800/70 bg-sky-950/15 p-3 text-xs font-semibold leading-5 text-sky-200">{t.next}</p>
