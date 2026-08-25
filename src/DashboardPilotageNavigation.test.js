@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.1 · 25-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.2 · 26-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -474,7 +474,14 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(evidenceResults).getByRole('heading', { name: 'REF-01-DEC-005 · V1.0' })).toBeInTheDocument();
   expect(within(evidenceResults).getByText('Qualifications descriptives confirmées')).toBeInTheDocument();
   expect(within(evidenceResults).getByText(/1 preuve observée ; 5 partielles ; 6 non observées/)).toBeInTheDocument();
-  expect(control.getByText(/prioriser les écarts confirmés et préparer un premier micro-lot/)).toBeInTheDocument();
+  const priorities = control.getByRole('heading', { name: 'Traiter les dépendances avant les raccordements' }).closest('section');
+  expect(within(priorities).getByText('Écarts ordonnés')).toBeInTheDocument();
+  expect(within(priorities).getAllByTestId('ref01-priority-row')).toHaveLength(4);
+  expect(within(priorities).getByRole('heading', { name: 'Spécifier la trace d’événement RH-001' })).toBeInTheDocument();
+  expect(within(priorities).getAllByText(/A-01 · A-06 · A-07/)).toHaveLength(2);
+  expect(within(priorities).getAllByText(/A-04 · A-09 · A-10 · A-12/)).toHaveLength(2);
+  expect(within(priorities).getByText(/Cette proposition ne déclenche pas son implémentation/)).toBeInTheDocument();
+  expect(control.getAllByText(/confirmer l’ordre des quatre vagues et autoriser la préparation documentaire/)).toHaveLength(2);
   expect(control.getByText(/décisions sur le lot : 2/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
@@ -509,12 +516,14 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-005 · V1.0' })).toBeInTheDocument();
   expect(screen.getByText('Descriptive qualifications confirmed')).toBeInTheDocument();
   expect(screen.getByText(/1 observed; 5 partial; 6 unobserved/)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Address dependencies before connections' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Specify the RH-001 event trace' })).toBeInTheDocument();
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Decision criteria validated').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByText(/prioritise confirmed gaps and prepare an initial micro-package/)).toBeInTheDocument();
+  expect(screen.getAllByText(/confirm the four-wave order and authorise documentary preparation/)).toHaveLength(2);
   expect(screen.getAllByText('Transfer')).toHaveLength(2);
   expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
 
@@ -534,12 +543,14 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-005 · V1.0' })).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Qualifizierungen bestätigt')).toBeInTheDocument();
   expect(screen.getByText(/1 beobachtet; 5 teilweise; 6 nicht beobachtet/)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Abhängigkeiten vor Verbindungen behandeln' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'RH-001-Ereignisspur spezifizieren' })).toBeInTheDocument();
   expect(screen.getByText(/Erfasste Entscheide: 1/)).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
   expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Entscheidungskriterien validiert').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByText(/bestätigte Lücken priorisieren und ein erstes Mikrolos vorbereiten/)).toBeInTheDocument();
+  expect(screen.getAllByText(/Reihenfolge der vier Wellen bestätigen/)).toHaveLength(2);
   expect(screen.getAllByText('Wechseln')).toHaveLength(2);
   expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
 });
