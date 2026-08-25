@@ -10,6 +10,7 @@ import {
 import GovernedDecisionRecord from './GovernedDecisionRecord';
 import InstitutionalPeopleTeamsEvidenceMatrix from './InstitutionalPeopleTeamsEvidenceMatrix';
 import InstitutionalPeopleTeamsEvidenceReview from './InstitutionalPeopleTeamsEvidenceReview';
+import InstitutionalPeopleTeamsEvidenceResults from './InstitutionalPeopleTeamsEvidenceResults';
 
 const STATUS_STYLES = {
   connected: 'border-emerald-700/70 bg-emerald-950/25 text-emerald-200',
@@ -19,7 +20,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V0.9 · 25-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.0 · 25-08-2026',
     title: 'Comparer les supports sans les promouvoir',
     body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
     counters: [
@@ -105,12 +106,12 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Prochain contrôle : rechercher et référencer les douze preuves du lot A validé, sans qualifier ni promouvoir un support.',
-    boundary: 'Statut : critères validés, matrice descriptive établie et lot A validé dans REF-01 V0.9 ; décisions sur le lot : 1 ; sources maîtresses désignées : 0.',
+    nextControl: 'Prochain contrôle : faire confirmer ou corriger la qualification descriptive des douze résultats avant de prioriser les écarts.',
+    boundary: 'Statut : lot A contrôlé dans REF-01 V1.0 ; 1 preuve observée, 5 partielles, 6 non observées ; décisions sur le lot : 1 ; sources maîtresses désignées : 0.',
     source: 'Supports contrôlés dans le code publié : contrat API RH-001, composant Annuaire interne, utilitaire partagé Team/Agent, cadrage GED, décisions REF-01-DEC-001 et REF-01-DEC-002, et comparatif V0.5 publié par la PR frontend #185 au commit 6be6a4a.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V0.9 · 25 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.0 · 25 AUG 2026',
     title: 'Compare supports without promoting them',
     body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
     counters: [
@@ -196,12 +197,12 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'Next control: seek and reference the twelve evidence items in validated package A, without qualifying or promoting a support.',
-    boundary: 'Status: criteria validated, descriptive matrix established and package A validated in REF-01 V0.9; decisions on the package: 1; designated master sources: 0.',
+    nextControl: 'Next control: have the descriptive qualification of the twelve results confirmed or corrected before prioritising gaps.',
+    boundary: 'Status: package A reviewed in REF-01 V1.0; 1 observed, 5 partial and 6 unobserved evidence items; package decisions: 1; designated master sources: 0.',
     source: 'Supports controlled in published code: RH-001 API contract, Internal Directory component, shared Team/Agent utility, DMS framing, decisions REF-01-DEC-001 and REF-01-DEC-002, and the V0.5 comparison published through frontend PR #185 at commit 6be6a4a.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V0.9 · 25.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.0 · 25.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
     body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
     counters: [
@@ -287,8 +288,8 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'Nächste Kontrolle: die zwölf Nachweise des validierten Pakets A suchen und referenzieren, ohne einen Träger zu qualifizieren oder zu fördern.',
-    boundary: 'Stand: Kriterien validiert, beschreibende Matrix erstellt und Paket A in REF-01 V0.9 validiert; Entscheide zum Paket: 1; bestimmte Masterquellen: 0.',
+    nextControl: 'Nächste Kontrolle: die beschreibende Qualifizierung der zwölf Ergebnisse vor der Priorisierung der Lücken bestätigen oder korrigieren lassen.',
+    boundary: 'Stand: Paket A in REF-01 V1.0 geprüft; 1 beobachteter, 5 teilweise und 6 nicht beobachtete Nachweise; Entscheide zum Paket: 1; bestimmte Masterquellen: 0.',
     source: 'Im veröffentlichten Code kontrollierte Träger: RH-001-API-Vertrag, Komponente Internes Verzeichnis, gemeinsames Team-/Agent-Werkzeug, DMS-Rahmen, REF-01-DEC-001 und REF-01-DEC-002 sowie der mit Frontend-PR #185 am Commit 6be6a4a veröffentlichte Vergleich V0.5.'
   }
 };
@@ -400,6 +401,7 @@ const InstitutionalPeopleTeamsSourceControl = ({ language = 'FR' }) => {
       <GovernedDecisionRecord labels={t.recordLabels} record={t.record} />
       <InstitutionalPeopleTeamsEvidenceMatrix language={language} />
       <InstitutionalPeopleTeamsEvidenceReview language={language} />
+      <InstitutionalPeopleTeamsEvidenceResults language={language} />
       <p className="mt-3 rounded-md border border-sky-800/70 bg-sky-950/15 p-3 text-xs font-semibold leading-5 text-sky-200">{t.nextControl}</p>
 
       <p className="mt-4 flex items-start gap-2 border-t border-slate-700 pt-4 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.boundary}</p>

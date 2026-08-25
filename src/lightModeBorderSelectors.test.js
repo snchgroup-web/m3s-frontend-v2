@@ -9,6 +9,7 @@ const planningSource = fs.readFileSync(path.join(__dirname, 'PlanningOverview.js
 const loginSource = fs.readFileSync(path.join(__dirname, 'Login.js'), 'utf8');
 const dashboardPilotageSource = fs.readFileSync(path.join(__dirname, 'DashboardPilotageNavigation.js'), 'utf8');
 const layoutSource = fs.readFileSync(path.join(__dirname, 'Layout.js'), 'utf8');
+const designSystemSource = fs.readFileSync(path.join(__dirname, '..', 'public', 'designSystem.css'), 'utf8');
 
 const baseTokenSelector = (scope, color) =>
   `${scope} [class^="border-${color}-"],${scope} [class*=" border-${color}-"]`;
@@ -106,6 +107,13 @@ describe('light-mode accent border selectors', () => {
     expect(dashboardPilotageSource).toContain('text-xl font-semibold text-slate-100 sm:text-2xl');
     expect(indexHtml).toContain('html:not(.dark) .global-pilotage .text-slate-100');
     expect(indexHtml).toContain('html:not(.dark) .global-pilotage .bg-blue-700.text-white{color:#fff!important}');
+  });
+
+  test('keeps REF-01 evidence controls readable in light mode', () => {
+    expect(designSystemSource).toContain('html:not(.dark) .m3s-business-module .m3s-ref01-sources .text-sky-200');
+    expect(designSystemSource).toContain('html:not(.dark) .m3s-business-module .m3s-ref01-evidence-review .text-sky-200');
+    expect(designSystemSource).toContain('html:not(.dark) .m3s-business-module .m3s-ref01-evidence-results .text-sky-200');
+    expect(designSystemSource).toContain('color: #0369a1 !important;');
   });
 
   test('highlights Administration table rows without changing their layout', () => {
