@@ -370,6 +370,41 @@ test('records the CNS-03 working framework validation without inventing progress
   expect(document.body.textContent).not.toMatch(/CNS-03[^%]*\d+\s*%/);
 });
 
+test('shows the CNS-03 initial inventory with eleven controlled families and no promoted master source', () => {
+  renderDashboardNavigation({}, '/?view=program');
+
+  const inventorySection = screen
+    .getByRole('heading', { name: 'Onze familles de référentiels à consolider' })
+    .closest('section');
+  const inventory = within(inventorySection);
+  expect(inventory.getByText('INVENTAIRE INITIAL · V0.1 · 25-08-2026')).toBeInTheDocument();
+  expect(inventory.getByText('Familles cadrées')).toBeInTheDocument();
+  expect(inventory.getByText('Sources maîtresses désignées')).toBeInTheDocument();
+  expect(inventory.getByText('Contrôles ouverts')).toBeInTheDocument();
+  expect(inventory.getAllByText('REF-01')).toHaveLength(2);
+  expect(inventory.getAllByText('REF-11')).toHaveLength(2);
+  expect(inventory.getAllByText('Personnes et équipes')).toHaveLength(2);
+  expect(inventory.getAllByText('Lieux et actifs')).toHaveLength(2);
+  expect(inventory.getAllByText('Support observé').length).toBeGreaterThan(0);
+  expect(inventory.getAllByText('Raccordement partiel').length).toBeGreaterThan(0);
+  expect(inventory.getAllByText('Sources dispersées').length).toBeGreaterThan(0);
+  expect(inventory.getByText(/aucun export complet, schéma sensible/)).toBeInTheDocument();
+  expect(inventory.queryByText(/source maîtresse validée/i)).not.toBeInTheDocument();
+  expect(inventorySection.textContent).not.toMatch(/\d+\s*%/);
+});
+
+test('translates the CNS-03 initial inventory in English and German', () => {
+  const { rerender } = renderDashboardNavigation({ language: 'EN' }, '/?view=program');
+  expect(screen.getByRole('heading', { name: 'Eleven reference-system families to consolidate' })).toBeInTheDocument();
+  expect(screen.getByText('Designated master sources')).toBeInTheDocument();
+  expect(screen.getAllByText('People and teams')).toHaveLength(2);
+
+  rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
+  expect(screen.getByRole('heading', { name: 'Elf zu konsolidierende Referenzsystem-Familien' })).toBeInTheDocument();
+  expect(screen.getByText('Bezeichnete Masterquellen')).toBeInTheDocument();
+  expect(screen.getAllByText('Personen und Teams')).toHaveLength(2);
+});
+
 test('opens each CNS-03 governed source with the exact programme return context', () => {
   const onNavigate = jest.fn();
   renderDashboardNavigation({ onNavigate }, '/?view=program');

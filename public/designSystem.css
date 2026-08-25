@@ -658,6 +658,14 @@ html:not(.dark) .m3s-business-module .text-slate-500 {
   color: #64748b !important;
 }
 
+html:not(.dark) .m3s-business-module .m3s-cns03-inventory-head {
+  background: #e2e8f0 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-cns03-inventory-head th {
+  color: #334155 !important;
+}
+
 html:not(.dark) .m3s-business-module .text-blue-100,
 html:not(.dark) .m3s-business-module .text-blue-200,
 html:not(.dark) .m3s-business-module .text-blue-300,
