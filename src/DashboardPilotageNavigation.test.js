@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.2 · 26-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.3 · 26-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -428,9 +428,9 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(control.getByText('Cycle REF-01 validé')).toBeInTheDocument();
   expect(control.getByText(/Les six familles d’événements, les douze métadonnées minimales/)).toBeInTheDocument();
   expect(control.getByText(/proposition REF-01 V0.3 publiée par la PR frontend #183/)).toBeInTheDocument();
-  expect(control.getAllByText('Enregistrer / créer')).toHaveLength(2);
-  expect(control.getAllByText('Transférer')).toHaveLength(2);
-  expect(control.getAllByText('Clôturer / archiver')).toHaveLength(2);
+  expect(control.getAllByText('Enregistrer / créer')).toHaveLength(4);
+  expect(control.getAllByText('Transférer')).toHaveLength(4);
+  expect(control.getAllByText('Clôturer / archiver')).toHaveLength(4);
   expect(control.getByRole('heading', { name: 'Trace minimale validée pour chaque événement' })).toBeInTheDocument();
   expect(control.getByText('Date d’effet')).toBeInTheDocument();
   expect(control.getByText('Référence de preuve GED')).toBeInTheDocument();
@@ -478,11 +478,20 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(priorities).getByText('Écarts ordonnés')).toBeInTheDocument();
   expect(within(priorities).getAllByTestId('ref01-priority-row')).toHaveLength(4);
   expect(within(priorities).getByRole('heading', { name: 'Spécifier la trace d’événement RH-001' })).toBeInTheDocument();
+  expect(within(priorities).getByRole('heading', { name: 'REF-01-DEC-006 · V1.0' })).toBeInTheDocument();
+  expect(within(priorities).getByText('Ordre des quatre vagues validé')).toBeInTheDocument();
   expect(within(priorities).getAllByText(/A-01 · A-06 · A-07/)).toHaveLength(2);
   expect(within(priorities).getAllByText(/A-04 · A-09 · A-10 · A-12/)).toHaveLength(2);
-  expect(within(priorities).getByText(/Cette proposition ne déclenche pas son implémentation/)).toBeInTheDocument();
-  expect(control.getAllByText(/confirmer l’ordre des quatre vagues et autoriser la préparation documentaire/)).toHaveLength(2);
-  expect(control.getByText(/décisions sur le lot : 2/)).toBeInTheDocument();
+  expect(within(priorities).getByText(/prépare son contrat fonctionnel vérifiable avant toute décision d’implémentation/)).toBeInTheDocument();
+  const eventContract = control.getByRole('heading', { name: 'Rendre chaque changement daté, explicable et non destructif' }).closest('section');
+  expect(within(eventContract).getByText('Convention de référence : ML signifie micro-lot.')).toBeInTheDocument();
+  expect(within(eventContract).getAllByTestId('ref01-event-row')).toHaveLength(6);
+  expect(within(eventContract).getAllByTestId('ref01-metadata-field')).toHaveLength(12);
+  expect(within(eventContract).getAllByTestId('ref01-acceptance-criterion')).toHaveLength(8);
+  expect(within(eventContract).getByText('Événements enregistrés')).toBeInTheDocument();
+  expect(within(eventContract).getByText('0')).toBeInTheDocument();
+  expect(control.getAllByText(/confirmer, corriger ou rejeter le contrat fonctionnel candidat/)).toHaveLength(1);
+  expect(control.getByText(/décisions sur le lot : 3/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -518,13 +527,16 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByText(/1 observed; 5 partial; 6 unobserved/)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Address dependencies before connections' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Specify the RH-001 event trace' })).toBeInTheDocument();
+  expect(screen.getByText('Four-wave order validated')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Make every change dated, explainable and non-destructive' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Candidate functional transitions' })).toBeInTheDocument();
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Decision criteria validated').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText(/confirm the four-wave order and authorise documentary preparation/)).toHaveLength(2);
-  expect(screen.getAllByText('Transfer')).toHaveLength(2);
+  expect(screen.getAllByText(/confirm, amend or reject candidate functional contract/)).toHaveLength(1);
+  expect(screen.getAllByText('Transfer')).toHaveLength(4);
   expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
@@ -545,13 +557,16 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByText(/1 beobachtet; 5 teilweise; 6 nicht beobachtet/)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Abhängigkeiten vor Verbindungen behandeln' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'RH-001-Ereignisspur spezifizieren' })).toBeInTheDocument();
+  expect(screen.getByText('Reihenfolge der vier Wellen validiert')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Jede Änderung datiert, erklärbar und nicht destruktiv machen' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Vorgeschlagene funktionale Übergänge' })).toBeInTheDocument();
   expect(screen.getByText(/Erfasste Entscheide: 1/)).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
   expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Entscheidungskriterien validiert').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText(/Reihenfolge der vier Wellen bestätigen/)).toHaveLength(2);
-  expect(screen.getAllByText('Wechseln')).toHaveLength(2);
+  expect(screen.getAllByText(/funktionalen Vertragskandidaten REF-01-ML-001/)).toHaveLength(1);
+  expect(screen.getAllByText('Wechseln')).toHaveLength(4);
   expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
 });
 
@@ -803,7 +818,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-01 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-02 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(12);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(13);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(8);
@@ -813,7 +828,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-01 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-02 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(12);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(13);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(8);

@@ -7,6 +7,7 @@ import {
   Route,
   ShieldCheck
 } from 'lucide-react';
+import GovernedDecisionRecord from './GovernedDecisionRecord';
 
 const WAVE_STYLES = {
   foundation: 'border-rose-700/70 bg-rose-950/25 text-rose-100',
@@ -17,18 +18,18 @@ const WAVE_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'PRIORISATION DES ECARTS · REF-01 · V0.1 · 26-08-2026',
+    eyebrow: 'PRIORISATION DES ECARTS · REF-01 · V1.0 · 26-08-2026',
     title: 'Traiter les dépendances avant les raccordements',
-    intro: 'Cette proposition ordonne les douze écarts confirmés sans leur attribuer de score. L’ordre repose sur leurs dépendances : le cycle versionné précède l’historique des affectations, les contrôles d’accès et les liens de preuve.',
+    intro: 'Cette version ordonne les douze écarts confirmés sans leur attribuer de score. L’ordre validé repose sur leurs dépendances : le cycle versionné précède l’historique des affectations, les contrôles d’accès et les liens de preuve.',
     counters: [
       ['Écarts ordonnés', '12', 'Tous les résultats A-01 à A-12 sont couverts'],
-      ['Vagues proposées', '4', 'Fondation, identité, accès puis preuves'],
+      ['Vagues validées', '4', 'Fondation, identité, accès puis preuves'],
       ['Premier micro-lot', 'A-02', 'Cycle versionné RH-001'],
       ['Sources maîtresses', '0', 'Aucune promotion dans ce lot']
     ],
     columns: { wave: 'Vague', gaps: 'Écarts couverts', objective: 'Résultat attendu', dependency: 'Dépendance et ordre', state: 'Statut' },
     labels: { gaps: 'Écarts couverts', objective: 'Résultat attendu', dependency: 'Dépendance et ordre' },
-    status: 'Priorisation proposée',
+    status: 'Ordre validé',
     waves: [
       {
         key: 'foundation', wave: '1 · Fondation du cycle', gaps: 'A-02',
@@ -60,22 +61,29 @@ const COPY = {
       ['Contrôles de sortie', 'Chaque événement possède un identifiant, une date d’effet, un état résultant, une autorité métier et une référence de preuve autorisée ou un motif d’absence.'],
       ['Hors périmètre', 'Schéma de base, endpoint d’écriture, migration, événement réel, donnée personnelle, accès M3S, automatisation et calcul de progression.']
     ],
-    arbitration: 'Arbitrage humain attendu : confirmer l’ordre des quatre vagues et autoriser la préparation documentaire de REF-01-ML-001. Cette proposition ne déclenche pas son implémentation.',
+    recordLabels: { eyebrow: 'Registre de décision gouverné', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision enregistrée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
+    record: {
+      id: 'REF-01-DEC-006', version: 'V1.0', status: 'Ordre des quatre vagues validé', author: 'Cheikh Ndiaye', date: '26-08-2026',
+      decision: 'Les douze écarts REF-01 sont ordonnés selon les quatre vagues publiées. A-02 est retenu comme premier micro-lot et la préparation documentaire de REF-01-ML-001 peut commencer, sans implémentation.',
+      evidence: 'Validation explicite de Cheikh dans la session du 26-08-2026 ; priorisation REF-01 V0.1 publiée par la PR frontend nº 191 au commit 470b1bc5.',
+      limit: 'La décision ne qualifie aucune urgence juridique, conformité ou progression. Elle ne désigne aucune source maîtresse, n’ouvre aucun accès, n’expose aucune donnée personnelle, ne modifie aucun schéma et n’autorise ni migration ni automatisation.'
+    },
+    arbitration: 'Décision enregistrée : l’ordre des quatre vagues est validé et la préparation documentaire de REF-01-ML-001 est autorisée. Son implémentation reste soumise à une décision distincte.',
     boundary: 'Limite : une priorité exprime un ordre de dépendance, pas une urgence juridique, une conformité, un score ou un taux d’avancement.'
   },
   EN: {
-    eyebrow: 'GAP PRIORITISATION · REF-01 · V0.1 · 26 AUG 2026',
+    eyebrow: 'GAP PRIORITISATION · REF-01 · V1.0 · 26 AUG 2026',
     title: 'Address dependencies before connections',
-    intro: 'This proposal orders the twelve confirmed gaps without scoring them. The order follows their dependencies: a versioned lifecycle precedes assignment history, access controls and evidence links.',
+    intro: 'This version orders the twelve confirmed gaps without scoring them. The validated order follows their dependencies: a versioned lifecycle precedes assignment history, access controls and evidence links.',
     counters: [
       ['Ordered gaps', '12', 'All A-01 to A-12 results are covered'],
-      ['Proposed waves', '4', 'Foundation, identity, access, then evidence'],
+      ['Validated waves', '4', 'Foundation, identity, access, then evidence'],
       ['Initial micro-package', 'A-02', 'RH-001 versioned lifecycle'],
       ['Master sources', '0', 'No promotion in this package']
     ],
     columns: { wave: 'Wave', gaps: 'Covered gaps', objective: 'Expected outcome', dependency: 'Dependency and order', state: 'Status' },
     labels: { gaps: 'Covered gaps', objective: 'Expected outcome', dependency: 'Dependency and order' },
-    status: 'Proposed prioritisation',
+    status: 'Order validated',
     waves: [
       {
         key: 'foundation', wave: '1 · Lifecycle foundation', gaps: 'A-02',
@@ -107,22 +115,29 @@ const COPY = {
       ['Exit controls', 'Each event has an identifier, effective date, resulting state, business authority and authorised evidence reference or reason for absence.'],
       ['Out of scope', 'Database schema, write endpoint, migration, real event, personal data, M3S access, automation and progress calculation.']
     ],
-    arbitration: 'Expected human arbitration: confirm the four-wave order and authorise documentary preparation of REF-01-ML-001. This proposal does not trigger implementation.',
+    recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
+    record: {
+      id: 'REF-01-DEC-006', version: 'V1.0', status: 'Four-wave order validated', author: 'Cheikh Ndiaye', date: '26 Aug 2026',
+      decision: 'The twelve REF-01 gaps are ordered under the four published waves. A-02 is retained as the first micro-package and documentary preparation of REF-01-ML-001 may begin, without implementation.',
+      evidence: 'Explicit validation by Cheikh during the 26 Aug 2026 session; REF-01 V0.1 prioritisation published through frontend PR 191 at commit 470b1bc5.',
+      limit: 'The decision qualifies no legal urgency, compliance or progress. It designates no master source, opens no access, exposes no personal data, changes no schema and authorises no migration or automation.'
+    },
+    arbitration: 'Recorded decision: the four-wave order is validated and documentary preparation of REF-01-ML-001 is authorised. Implementation still requires a separate decision.',
     boundary: 'Boundary: priority expresses dependency order, not legal urgency, compliance, a score or a progress rate.'
   },
   DE: {
-    eyebrow: 'PRIORISIERUNG DER LÜCKEN · REF-01 · V0.1 · 26.08.2026',
+    eyebrow: 'PRIORISIERUNG DER LÜCKEN · REF-01 · V1.0 · 26.08.2026',
     title: 'Abhängigkeiten vor Verbindungen behandeln',
-    intro: 'Dieser Vorschlag ordnet die zwölf bestätigten Lücken ohne Bewertung. Die Reihenfolge folgt ihren Abhängigkeiten: Ein versionierter Lebenszyklus geht Zuweisungshistorie, Zugriffskontrollen und Nachweisverknüpfungen voraus.',
+    intro: 'Diese Version ordnet die zwölf bestätigten Lücken ohne Bewertung. Die validierte Reihenfolge folgt ihren Abhängigkeiten: Ein versionierter Lebenszyklus geht Zuweisungshistorie, Zugriffskontrollen und Nachweisverknüpfungen voraus.',
     counters: [
       ['Geordnete Lücken', '12', 'Alle Ergebnisse A-01 bis A-12 sind abgedeckt'],
-      ['Vorgeschlagene Wellen', '4', 'Grundlage, Identität, Zugriff, danach Nachweise'],
+      ['Validierte Wellen', '4', 'Grundlage, Identität, Zugriff, danach Nachweise'],
       ['Erstes Mikrolos', 'A-02', 'Versionierter RH-001-Lebenszyklus'],
       ['Masterquellen', '0', 'Keine Förderung in diesem Los']
     ],
     columns: { wave: 'Welle', gaps: 'Abgedeckte Lücken', objective: 'Erwartetes Ergebnis', dependency: 'Abhängigkeit und Reihenfolge', state: 'Stand' },
     labels: { gaps: 'Abgedeckte Lücken', objective: 'Erwartetes Ergebnis', dependency: 'Abhängigkeit und Reihenfolge' },
-    status: 'Vorgeschlagene Priorisierung',
+    status: 'Reihenfolge validiert',
     waves: [
       {
         key: 'foundation', wave: '1 · Lebenszyklus-Grundlage', gaps: 'A-02',
@@ -154,7 +169,14 @@ const COPY = {
       ['Ausgangskontrollen', 'Jedes Ereignis besitzt Kennung, Wirksamkeitsdatum, resultierenden Stand, Fachautorität und autorisierte Nachweisreferenz oder Abwesenheitsgrund.'],
       ['Ausserhalb des Umfangs', 'Datenbankschema, Schreibendpoint, Migration, reales Ereignis, Personendaten, M3S-Zugriff, Automatisierung und Fortschrittsberechnung.']
     ],
-    arbitration: 'Erwarteter menschlicher Entscheid: Reihenfolge der vier Wellen bestätigen und dokumentarische Vorbereitung von REF-01-ML-001 autorisieren. Dieser Vorschlag löst keine Umsetzung aus.',
+    recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Dokumentierter Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
+    record: {
+      id: 'REF-01-DEC-006', version: 'V1.0', status: 'Reihenfolge der vier Wellen validiert', author: 'Cheikh Ndiaye', date: '26.08.2026',
+      decision: 'Die zwölf REF-01-Lücken werden nach den vier veröffentlichten Wellen geordnet. A-02 wird als erstes Mikrolos festgehalten und die dokumentarische Vorbereitung von REF-01-ML-001 darf ohne Umsetzung beginnen.',
+      evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 26.08.2026; REF-01-Priorisierung V0.1 mit Frontend-PR Nr. 191 am Commit 470b1bc5 veröffentlicht.',
+      limit: 'Der Entscheid qualifiziert weder rechtliche Dringlichkeit noch Konformität oder Fortschritt. Er bestimmt keine Masterquelle, öffnet keinen Zugriff, legt keine Personendaten offen, ändert kein Schema und autorisiert weder Migration noch Automatisierung.'
+    },
+    arbitration: 'Dokumentierter Entscheid: Die Reihenfolge der vier Wellen ist validiert und die dokumentarische Vorbereitung von REF-01-ML-001 autorisiert. Die Umsetzung benötigt weiterhin einen getrennten Entscheid.',
     boundary: 'Grenze: Priorität bezeichnet eine Abhängigkeitsreihenfolge, keine rechtliche Dringlichkeit, Konformität, Punktzahl oder Fortschrittsquote.'
   }
 };
@@ -237,6 +259,8 @@ const InstitutionalPeopleTeamsGapPriorities = ({ language = 'FR' }) => {
       <div className="mt-4 grid grid-cols-1 gap-3 xl:hidden">
         {t.waves.map(row => <PriorityCard key={row.key} row={row} t={t} />)}
       </div>
+
+      <GovernedDecisionRecord labels={t.recordLabels} record={t.record} />
 
       <section className="mt-4 rounded-md border border-cyan-800/70 bg-cyan-950/10 p-4" aria-labelledby="ref01-first-micro-lot-title">
         <p className="text-xs font-semibold uppercase text-cyan-300">{t.lotEyebrow}</p>
