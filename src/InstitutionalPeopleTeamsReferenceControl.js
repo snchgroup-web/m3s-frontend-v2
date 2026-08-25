@@ -8,25 +8,27 @@ import {
   UserRoundCheck,
   UsersRound
 } from 'lucide-react';
+import GovernedDecisionRecord from './GovernedDecisionRecord';
 
 const STATUS_STYLES = {
   observed: 'border-emerald-700/70 bg-emerald-950/25 text-emerald-200',
+  validated: 'border-sky-700/70 bg-sky-950/25 text-sky-100',
   candidate: 'border-amber-700/70 bg-amber-950/25 text-amber-100',
   open: 'border-rose-700/70 bg-rose-950/20 text-rose-100'
 };
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DETAILLE 1/11 · REF-01 · V0.1 · 25-08-2026',
+    eyebrow: 'CONTROLE DETAILLE 1/11 · REF-01 · V0.2 · 25-08-2026',
     title: 'REF-01 · Personnes et équipes',
     body: 'Ce contrôle rapproche l’annuaire RH-001, les sélecteurs Team/Agent et les règles déjà publiées pour les responsabilités collectives. Il prépare un modèle commun sans recopier l’annuaire, désigner une source maîtresse ou confondre personne, appartenance, équipe, rôle et accès M3S.',
     counters: [
       ['Axes contrôlés', '5', 'Identité, structure, cycle, responsabilité et preuve'],
       ['Données personnelles publiées', '0', 'Aucun nom, contact ou identifiant réel'],
-      ['Sources maîtresses retenues dans REF-01', '0', 'Décision humaine encore requise']
+      ['Sources maîtresses retenues dans REF-01', '0', 'Aucune promotion autorisée par cette décision']
     ],
-    modelTitle: 'Modèle logique candidat à quatre objets',
-    modelIntro: 'Cette séparation reprend les distinctions déjà observées. Elle reste un cadrage fonctionnel et ne crée ni table, ni compte, ni droit.',
+    modelTitle: 'Modèle logique validé à quatre objets',
+    modelIntro: 'Cette séparation fonctionnelle est validée comme cadre de travail. Elle ne crée ni table, ni compte, ni droit et reste à traduire en règles détaillées.',
     model: [
       ['Personne', 'Identité institutionnelle distincte de ses fonctions, équipes et accès.'],
       ['Appartenance', 'Lien daté entre une personne, un statut institutionnel et une équipe.'],
@@ -34,30 +36,49 @@ const COPY = {
       ['Responsabilité collective', 'Affectation à toute l’équipe, distincte d’une affectation individuelle.']
     ],
     columns: { axis: 'Axe', observed: 'Constat observé', rule: 'Règle candidate ou contrôle', status: 'État' },
-    statuses: { observed: 'Contrat observé', candidate: 'Règle candidate', open: 'Décision ouverte' },
+    statuses: { observed: 'Contrat observé', validated: 'Cadre validé', candidate: 'Règle candidate', open: 'Définition ouverte' },
     rows: [
       ['Identité stable', 'RH-001 porte un identifiant technique stable et des libellés d’affichage assainis.', 'Conserver un identifiant non réutilisable ; confirmer séparément identité civile, alias et preuve dans l’espace autorisé.', 'observed'],
-      ['Séparation des objets', 'Annuaire, comptes, droits et sélecteurs opérationnels sont déjà traités comme des objets distincts.', 'Retenir Personne, Appartenance, Équipe et Responsabilité collective ; laisser comptes et droits à REF-02.', 'candidate'],
+      ['Séparation des objets', 'Annuaire, comptes, droits et sélecteurs opérationnels sont déjà traités comme des objets distincts.', 'Personne, Appartenance, Équipe et Responsabilité collective sont retenus ; comptes et droits restent à REF-02.', 'validated'],
       ['Cycle de vie', 'Un état actif/inactif est visible, mais l’entrée, la suspension, le transfert et la sortie ne sont pas versionnés ici.', 'Définir événements, dates d’effet, responsable, motif contrôlé et preuve avant toute mesure.', 'open'],
       ['Collectifs TZH/TSN', 'Les formulaires distinguent une personne du collectif de son équipe et refusent les couples Team-Agent impossibles.', 'Interdire qu’un collectif soit résolu comme personne ; conserver la provenance des anciennes valeurs sans correction silencieuse.', 'observed'],
-      ['Propriété et preuve', 'RH-001 est une source documentaire C2 en lecture seule ; les mandats et preuves restent séparés.', 'Confirmer Organisation & RH comme propriétaire métier candidat, IT comme gestionnaire technique et la GED comme conservateur de preuve.', 'open']
+      ['Propriété et preuve', 'RH-001 est une source documentaire C2 en lecture seule ; les mandats et preuves restent séparés.', 'Organisation & RH porte le sens métier ; IT assure la garde technique ; la GED conserve les preuves et décisions.', 'validated']
     ],
+    decisionIntro: 'La validation humaine confirme le modèle et les responsabilités. Le cycle de vie reste à détailler avant toute désignation de source maîtresse ou mesure.',
+    recordLabels: {
+      eyebrow: 'Registre de décision gouverné',
+      author: 'Auteur de la décision',
+      date: 'Date de décision',
+      decision: 'Décision enregistrée',
+      evidence: 'Preuve de traçabilité',
+      limit: 'Portée et réserve'
+    },
+    record: {
+      id: 'REF-01-DEC-001',
+      version: 'V1.0',
+      status: 'Cadre REF-01 validé',
+      author: 'Cheikh Ndiaye',
+      date: '25-08-2026',
+      decision: 'Le modèle Personne, Appartenance, Équipe et Responsabilité collective est retenu. Organisation & RH est propriétaire métier, IT gardien technique et la GED gardien des preuves et décisions.',
+      evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; contrôle détaillé REF-01 V0.1 publié par la PR frontend #181 ; commit de fusion 3421921.',
+      limit: 'Le principe d’un cycle de vie est retenu, mais ses événements, dates d’effet, motifs et preuves restent à définir. Cette décision ne désigne aucune source maîtresse, ne valide aucune donnée personnelle, ne crée aucun compte ou droit et ne déclare aucune progression.'
+    },
     boundary: 'Limite : ce lot ne valide ni identité civile, ni appartenance actuelle, ni mandat, ni contrat, ni rôle applicatif. Il n’ouvre aucun accès et ne publie aucun enregistrement RH-001.',
     source: 'Supports observés : contrat documentaire RH-001 en lecture seule, annuaire C2 protégé, sélecteurs Team/Agent partagés et décisions de gouvernance des 31-07 et 22-08-2026.',
     openDirectory: 'Ouvrir l’annuaire sécurisé',
     openArchitecture: 'Examiner l’architecture RH de REF-01'
   },
   EN: {
-    eyebrow: 'DETAILED CONTROL 1/11 · REF-01 · V0.1 · 25 AUG 2026',
+    eyebrow: 'DETAILED CONTROL 1/11 · REF-01 · V0.2 · 25 AUG 2026',
     title: 'REF-01 · People and teams',
     body: 'This control reconciles the RH-001 directory, Team/Agent selectors and the published rules for collective responsibilities. It prepares a shared model without copying the directory, designating a master source or confusing a person, membership, team, role and M3S access.',
     counters: [
       ['Controlled axes', '5', 'Identity, structure, lifecycle, responsibility and evidence'],
       ['Personal records published', '0', 'No name, contact detail or real identifier'],
-      ['Master sources retained for REF-01', '0', 'Human decision still required']
+      ['Master sources retained for REF-01', '0', 'No promotion authorised by this decision']
     ],
-    modelTitle: 'Candidate four-object logical model',
-    modelIntro: 'This separation reuses distinctions already observed. It remains functional framing and creates no table, account or right.',
+    modelTitle: 'Validated four-object logical model',
+    modelIntro: 'This functional separation is validated as a working framework. It creates no table, account or right and still requires detailed rules.',
     model: [
       ['Person', 'Institutional identity distinct from positions, teams and access.'],
       ['Membership', 'Dated link between a person, an institutional status and a team.'],
@@ -65,30 +86,49 @@ const COPY = {
       ['Collective responsibility', 'Assignment to the whole team, distinct from an individual assignment.']
     ],
     columns: { axis: 'Axis', observed: 'Observed finding', rule: 'Candidate rule or control', status: 'State' },
-    statuses: { observed: 'Observed contract', candidate: 'Candidate rule', open: 'Open decision' },
+    statuses: { observed: 'Observed contract', validated: 'Framework validated', candidate: 'Candidate rule', open: 'Definition open' },
     rows: [
       ['Stable identity', 'RH-001 carries a stable technical identifier and sanitised display labels.', 'Keep a non-reusable identifier; confirm civil identity, aliases and evidence separately in the authorised space.', 'observed'],
-      ['Object separation', 'Directory, accounts, rights and operational selectors are already handled as separate objects.', 'Retain Person, Membership, Team and Collective responsibility; leave accounts and rights to REF-02.', 'candidate'],
+      ['Object separation', 'Directory, accounts, rights and operational selectors are already handled as separate objects.', 'Person, Membership, Team and Collective responsibility are retained; accounts and rights remain in REF-02.', 'validated'],
       ['Lifecycle', 'An active/inactive state is visible, but entry, suspension, transfer and exit are not versioned here.', 'Define events, effective dates, owner, controlled reason and evidence before any measurement.', 'open'],
       ['TZH/TSN collectives', 'Forms distinguish a person from the team collective and reject impossible Team-Agent pairs.', 'Prevent a collective from resolving as a person; retain historical provenance without silent correction.', 'observed'],
-      ['Ownership and evidence', 'RH-001 is a read-only C2 documentary source; mandates and evidence remain separate.', 'Confirm Organisation & HR as candidate business owner, IT as technical steward and the DMS as evidence custodian.', 'open']
+      ['Ownership and evidence', 'RH-001 is a read-only C2 documentary source; mandates and evidence remain separate.', 'Organisation & HR owns business meaning; IT provides technical stewardship; the DMS retains evidence and decisions.', 'validated']
     ],
+    decisionIntro: 'Human validation confirms the model and responsibilities. Lifecycle details remain open before any master-source designation or measurement.',
+    recordLabels: {
+      eyebrow: 'Governed decision record',
+      author: 'Decision author',
+      date: 'Decision date',
+      decision: 'Recorded decision',
+      evidence: 'Traceability evidence',
+      limit: 'Scope and reservation'
+    },
+    record: {
+      id: 'REF-01-DEC-001',
+      version: 'V1.0',
+      status: 'REF-01 framework validated',
+      author: 'Cheikh Ndiaye',
+      date: '25-08-2026',
+      decision: 'The Person, Membership, Team and Collective responsibility model is retained. Organisation & HR is the business owner, IT the technical steward and the DMS the custodian of evidence and decisions.',
+      evidence: 'Explicit validation by Cheikh in the session dated 25-08-2026; REF-01 V0.1 detailed control published through frontend PR #181; merge commit 3421921.',
+      limit: 'The lifecycle principle is retained, but events, effective dates, reasons and evidence remain to be defined. This decision designates no master source, validates no personal data, creates no account or right and declares no progress.'
+    },
     boundary: 'Boundary: this lot validates no civil identity, current membership, mandate, contract or application role. It opens no access and publishes no RH-001 record.',
     source: 'Observed supports: read-only RH-001 documentary contract, protected C2 directory, shared Team/Agent selectors and governance decisions dated 31 Jul and 22 Aug 2026.',
     openDirectory: 'Open the secure directory',
     openArchitecture: 'Review the REF-01 HR architecture'
   },
   DE: {
-    eyebrow: 'DETAILKONTROLLE 1/11 · REF-01 · V0.1 · 25.08.2026',
+    eyebrow: 'DETAILKONTROLLE 1/11 · REF-01 · V0.2 · 25.08.2026',
     title: 'REF-01 · Personen und Teams',
     body: 'Diese Kontrolle gleicht das RH-001-Verzeichnis, die Team-/Agent-Auswahl und die veröffentlichten Regeln für kollektive Verantwortungen ab. Sie bereitet ein gemeinsames Modell vor, ohne das Verzeichnis zu kopieren, eine Masterquelle zu bestimmen oder Person, Mitgliedschaft, Team, Rolle und M3S-Zugriff zu vermischen.',
     counters: [
       ['Geprüfte Achsen', '5', 'Identität, Struktur, Lebenszyklus, Verantwortung und Nachweis'],
       ['Veröffentlichte Personendaten', '0', 'Kein Name, Kontakt oder reale Kennung'],
-      ['Für REF-01 festgelegte Masterquellen', '0', 'Menschlicher Entscheid weiterhin erforderlich']
+      ['Für REF-01 festgelegte Masterquellen', '0', 'Keine Hochstufung durch diesen Entscheid']
     ],
-    modelTitle: 'Vorgeschlagenes logisches Vier-Objekt-Modell',
-    modelIntro: 'Diese Trennung übernimmt bereits beobachtete Unterscheidungen. Sie bleibt ein funktionaler Rahmen und erstellt weder Tabelle, Konto noch Recht.',
+    modelTitle: 'Validiertes logisches Vier-Objekt-Modell',
+    modelIntro: 'Diese funktionale Trennung ist als Arbeitsrahmen validiert. Sie erstellt weder Tabelle, Konto noch Recht und benötigt weiterhin Detailregeln.',
     model: [
       ['Person', 'Institutionelle Identität, getrennt von Funktionen, Teams und Zugriffen.'],
       ['Mitgliedschaft', 'Datierte Verbindung zwischen Person, institutionellem Status und Team.'],
@@ -96,14 +136,33 @@ const COPY = {
       ['Kollektive Verantwortung', 'Zuweisung an das ganze Team, getrennt von einer individuellen Zuweisung.']
     ],
     columns: { axis: 'Achse', observed: 'Beobachteter Befund', rule: 'Vorgeschlagene Regel oder Kontrolle', status: 'Stand' },
-    statuses: { observed: 'Vertrag beobachtet', candidate: 'Regel vorgeschlagen', open: 'Entscheid offen' },
+    statuses: { observed: 'Vertrag beobachtet', validated: 'Rahmen validiert', candidate: 'Regel vorgeschlagen', open: 'Definition offen' },
     rows: [
       ['Stabile Identität', 'RH-001 führt eine stabile technische Kennung und bereinigte Anzeigebezeichnungen.', 'Eine nicht wiederverwendbare Kennung beibehalten; Zivilidentität, Aliase und Nachweis getrennt im autorisierten Raum bestätigen.', 'observed'],
-      ['Objekttrennung', 'Verzeichnis, Konten, Rechte und operative Auswahl werden bereits als getrennte Objekte behandelt.', 'Person, Mitgliedschaft, Team und kollektive Verantwortung übernehmen; Konten und Rechte REF-02 zuordnen.', 'candidate'],
+      ['Objekttrennung', 'Verzeichnis, Konten, Rechte und operative Auswahl werden bereits als getrennte Objekte behandelt.', 'Person, Mitgliedschaft, Team und kollektive Verantwortung sind festgehalten; Konten und Rechte bleiben in REF-02.', 'validated'],
       ['Lebenszyklus', 'Ein Aktiv-/Inaktiv-Stand ist sichtbar; Eintritt, Suspendierung, Wechsel und Austritt sind hier nicht versioniert.', 'Ereignisse, Wirksamkeitsdaten, Verantwortung, kontrollierten Grund und Nachweis vor jeder Messung definieren.', 'open'],
       ['Kollektive TZH/TSN', 'Formulare unterscheiden Person und Teamkollektiv und weisen unmögliche Team-Agent-Kombinationen ab.', 'Verhindern, dass ein Kollektiv als Person aufgelöst wird; historische Herkunft ohne stille Korrektur bewahren.', 'observed'],
-      ['Verantwortung und Nachweis', 'RH-001 ist eine schreibgeschützte C2-Dokumentationsquelle; Mandate und Nachweise bleiben getrennt.', 'Organisation & Personal als Fachverantwortung, IT als technische Datenpflege und GED als Nachweisverwahrung bestätigen.', 'open']
+      ['Verantwortung und Nachweis', 'RH-001 ist eine schreibgeschützte C2-Dokumentationsquelle; Mandate und Nachweise bleiben getrennt.', 'Organisation & Personal trägt die Fachverantwortung; IT die technische Pflege; GED verwahrt Nachweise und Entscheide.', 'validated']
     ],
+    decisionIntro: 'Die menschliche Validierung bestätigt Modell und Verantwortungen. Lebenszyklusdetails bleiben vor jeder Masterquellen-Festlegung oder Messung offen.',
+    recordLabels: {
+      eyebrow: 'Governance-konformer Entscheidnachweis',
+      author: 'Entscheidautor',
+      date: 'Entscheiddatum',
+      decision: 'Dokumentierter Entscheid',
+      evidence: 'Nachweis der Rückverfolgbarkeit',
+      limit: 'Umfang und Vorbehalt'
+    },
+    record: {
+      id: 'REF-01-DEC-001',
+      version: 'V1.0',
+      status: 'REF-01-Arbeitsrahmen validiert',
+      author: 'Cheikh Ndiaye',
+      date: '25.08.2026',
+      decision: 'Das Modell Person, Mitgliedschaft, Team und kollektive Verantwortung wird festgehalten. Organisation & Personal trägt die Fachverantwortung, IT die technische Pflege und GED verwahrt Nachweise und Entscheide.',
+      evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; REF-01-Detailkontrolle V0.1 mit Frontend-PR #181 veröffentlicht; Merge-Commit 3421921.',
+      limit: 'Das Lebenszyklusprinzip ist festgehalten; Ereignisse, Wirksamkeitsdaten, Gründe und Nachweise bleiben zu definieren. Dieser Entscheid bestimmt keine Masterquelle, validiert keine Personendaten, erstellt kein Konto oder Recht und erklärt keinen Fortschritt.'
+    },
     boundary: 'Grenze: Dieses Los validiert weder Zivilidentität, aktuelle Mitgliedschaft, Mandat, Vertrag noch Anwendungsrolle. Es öffnet keinen Zugriff und veröffentlicht keinen RH-001-Datensatz.',
     source: 'Beobachtete Träger: schreibgeschützter RH-001-Dokumentationsvertrag, geschütztes C2-Verzeichnis, gemeinsame Team-/Agent-Auswahl und Governance-Entscheide vom 31.07. und 22.08.2026.',
     openDirectory: 'Sicheres Verzeichnis öffnen',
@@ -159,6 +218,11 @@ const InstitutionalPeopleTeamsReferenceControl = ({ language = 'FR', onNavigate 
             </li>
           ))}
         </ol>
+      </div>
+
+      <div className="m3s-ref01-decision mt-4 rounded-md border border-emerald-800/70 bg-emerald-950/10 p-4">
+        <div className="flex items-center gap-2"><ShieldCheck className="text-emerald-300" size={18} aria-hidden="true" /><p className="text-sm leading-6 text-slate-200">{t.decisionIntro}</p></div>
+        <GovernedDecisionRecord labels={t.recordLabels} record={t.record} />
       </div>
 
       <div className="mt-4 hidden overflow-x-auto rounded-md border border-slate-700 md:block">
