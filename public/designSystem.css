@@ -684,6 +684,36 @@ html:not(.dark) .m3s-business-module .m3s-ref01-decision .text-sky-300 {
   color: #0369a1 !important;
 }
 
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .text-sky-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .text-sky-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .text-sky-300,
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .text-sky-400 {
+  color: #0369a1 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .ref01-evidence-support-heading {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .ref01-evidence-state--observed {
+  border-color: #a78bfa !important;
+  background: #f5f3ff !important;
+  color: #5b21b6 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .ref01-evidence-state--partial {
+  border-color: #7dd3fc !important;
+  background: #e0f2fe !important;
+  color: #075985 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .ref01-evidence-state--open {
+  border-color: #fbbf24 !important;
+  background: #fffbeb !important;
+  color: #92400e !important;
+}
+
 html:not(.dark) .m3s-business-module .text-emerald-100,
 html:not(.dark) .m3s-business-module .text-emerald-200,
 html:not(.dark) .m3s-business-module .text-emerald-300,

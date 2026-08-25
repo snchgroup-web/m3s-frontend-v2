@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V0.6 · 25-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V0.7 · 25-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -449,7 +449,14 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(control.getByText(/Les sept critères sont retenus comme prérequis obligatoires/)).toBeInTheDocument();
   expect(control.getByText(/comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185/)).toBeInTheDocument();
   expect(control.getByText(/ne désigne ni ne valide aucun support candidat ou source maîtresse/)).toBeInTheDocument();
-  expect(control.getByText(/matrice de preuves critère par critère, sans score/)).toBeInTheDocument();
+  const evidenceMatrix = control.getByRole('heading', { name: 'Contrôler chaque support selon les sept critères validés' }).closest('section');
+  expect(evidenceMatrix).toHaveAttribute('data-control-count', '28');
+  expect(within(evidenceMatrix).getByText('Contrôles descriptifs')).toBeInTheDocument();
+  expect(within(evidenceMatrix).getAllByTestId('ref01-evidence-row')).toHaveLength(28);
+  expect(within(evidenceMatrix).getAllByText('Identifiant stable').length).toBeGreaterThan(0);
+  expect(within(evidenceMatrix).getAllByText('Preuve à établir').length).toBeGreaterThan(0);
+  expect(within(evidenceMatrix).getAllByText(/La valeur opérationnelle n’est pas encore fondée sur l’identifiant stable RH-001/).length).toBeGreaterThan(0);
+  expect(control.getByText(/faire relire humainement les 28 constats/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -476,9 +483,12 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByText('REF-01 lifecycle validated')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Compare supports without promoting them' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Seven criteria before any master-source designation' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Review each support against the seven validated criteria' })).toBeInTheDocument();
+  expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
+  expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Decision criteria validated').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByText(/criterion-by-criterion evidence matrix/)).toBeInTheDocument();
+  expect(screen.getByText(/human review of the 28 findings/)).toBeInTheDocument();
   expect(screen.getAllByText('Transfer')).toHaveLength(2);
   expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
 
@@ -491,9 +501,12 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByText('REF-01-Lebenszyklus validiert')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Träger vergleichen, ohne sie zu fördern' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Sieben Kriterien vor jeder Bestimmung einer Masterquelle' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Jeden Träger anhand der sieben validierten Kriterien prüfen' })).toBeInTheDocument();
+  expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
+  expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Entscheidungskriterien validiert').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByText(/kriteriumsweise Nachweismatrix/)).toBeInTheDocument();
+  expect(screen.getByText(/28 Feststellungen menschlich prüfen/)).toBeInTheDocument();
   expect(screen.getAllByText('Wechseln')).toHaveLength(2);
   expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
 });
