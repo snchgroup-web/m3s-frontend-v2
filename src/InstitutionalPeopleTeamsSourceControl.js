@@ -8,6 +8,7 @@ import {
   SlidersHorizontal
 } from 'lucide-react';
 import GovernedDecisionRecord from './GovernedDecisionRecord';
+import InstitutionalPeopleTeamsEvidenceMatrix from './InstitutionalPeopleTeamsEvidenceMatrix';
 
 const STATUS_STYLES = {
   connected: 'border-emerald-700/70 bg-emerald-950/25 text-emerald-200',
@@ -17,7 +18,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V0.6 · 25-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V0.7 · 25-08-2026',
     title: 'Comparer les supports sans les promouvoir',
     body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
     counters: [
@@ -103,12 +104,12 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Prochain contrôle : établir pour les quatre supports une matrice de preuves critère par critère, sans score, sans taux et sans promotion de source.',
-    boundary: 'Statut : critères de décision validés dans REF-01 V0.6 ; sources maîtresses désignées : 0. Aucune qualité, complétude, identité civile, donnée personnelle, modification de schéma, automatisation ou progression n’est validée par ce lot.',
+    nextControl: 'Prochain contrôle : faire relire humainement les 28 constats et arbitrer uniquement les preuves à rechercher, sans qualifier ni promouvoir un support.',
+    boundary: 'Statut : critères de décision validés et matrice descriptive établie dans REF-01 V0.7 ; sources maîtresses désignées : 0. Aucune qualité, complétude, identité civile, donnée personnelle, modification de schéma, automatisation ou progression n’est validée par ce lot.',
     source: 'Supports contrôlés dans le code publié : contrat API RH-001, composant Annuaire interne, utilitaire partagé Team/Agent, cadrage GED, décisions REF-01-DEC-001 et REF-01-DEC-002, et comparatif V0.5 publié par la PR frontend #185 au commit 6be6a4a.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V0.6 · 25 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V0.7 · 25 AUG 2026',
     title: 'Compare supports without promoting them',
     body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
     counters: [
@@ -194,12 +195,12 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'Next control: establish a criterion-by-criterion evidence matrix for the four supports, without scoring, rates or source promotion.',
-    boundary: 'Status: decision criteria validated in REF-01 V0.6; designated master sources: 0. This lot validates no quality, completeness, civil identity, personal data, schema change, automation or progress.',
+    nextControl: 'Next control: conduct a human review of the 28 findings and arbitrate only the evidence to seek, without qualifying or promoting a support.',
+    boundary: 'Status: decision criteria validated and descriptive matrix established in REF-01 V0.7; designated master sources: 0. This lot validates no quality, completeness, civil identity, personal data, schema change, automation or progress.',
     source: 'Supports controlled in published code: RH-001 API contract, Internal Directory component, shared Team/Agent utility, DMS framing, decisions REF-01-DEC-001 and REF-01-DEC-002, and the V0.5 comparison published through frontend PR #185 at commit 6be6a4a.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V0.6 · 25.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V0.7 · 25.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
     body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
     counters: [
@@ -285,8 +286,8 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'Nächste Kontrolle: für die vier Träger eine kriteriumsweise Nachweismatrix ohne Punktzahl, Quote oder Quellenförderung erstellen.',
-    boundary: 'Status: Entscheidungskriterien in REF-01 V0.6 validiert; bestimmte Masterquellen: 0. Dieses Los validiert keine Qualität, Vollständigkeit, Zivilidentität, Personendaten, Schemaänderung, Automatisierung oder Fortschritt.',
+    nextControl: 'Nächste Kontrolle: die 28 Feststellungen menschlich prüfen und nur die zu suchenden Nachweise entscheiden, ohne einen Träger zu qualifizieren oder zu fördern.',
+    boundary: 'Stand: Entscheidungskriterien validiert und beschreibende Matrix in REF-01 V0.7 erstellt; bestimmte Masterquellen: 0. Dieses Los validiert keine Qualität, Vollständigkeit, Zivilidentität, Personendaten, Schemaänderung, Automatisierung oder Fortschritt.',
     source: 'Im veröffentlichten Code kontrollierte Träger: RH-001-API-Vertrag, Komponente Internes Verzeichnis, gemeinsames Team-/Agent-Werkzeug, DMS-Rahmen, REF-01-DEC-001 und REF-01-DEC-002 sowie der mit Frontend-PR #185 am Commit 6be6a4a veröffentlichte Vergleich V0.5.'
   }
 };
@@ -396,6 +397,7 @@ const InstitutionalPeopleTeamsSourceControl = ({ language = 'FR' }) => {
       </div>
 
       <GovernedDecisionRecord labels={t.recordLabels} record={t.record} />
+      <InstitutionalPeopleTeamsEvidenceMatrix language={language} />
       <p className="mt-3 rounded-md border border-sky-800/70 bg-sky-950/15 p-3 text-xs font-semibold leading-5 text-sky-200">{t.nextControl}</p>
 
       <p className="mt-4 flex items-start gap-2 border-t border-slate-700 pt-4 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.boundary}</p>
