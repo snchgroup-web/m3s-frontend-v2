@@ -413,14 +413,18 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V0.1 · 25-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V0.2 · 25-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
   expect(control.getByText('Sources maîtresses retenues dans REF-01')).toBeInTheDocument();
-  expect(control.getByRole('heading', { name: 'Modèle logique candidat à quatre objets' })).toBeInTheDocument();
+  expect(control.getByRole('heading', { name: 'Modèle logique validé à quatre objets' })).toBeInTheDocument();
+  expect(control.getByRole('heading', { name: 'REF-01-DEC-001 · V1.0' })).toBeInTheDocument();
+  expect(control.getByText('Cadre REF-01 validé')).toBeInTheDocument();
+  expect(control.getByText(/Organisation & RH est propriétaire métier/)).toBeInTheDocument();
+  expect(control.getByText(/ses événements, dates d’effet, motifs et preuves restent à définir/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
-  expect(section.textContent).not.toMatch(/Cheikh|Chantal|Gnilane|Ibrahima|Papa/);
+  expect(section.textContent).not.toMatch(/Chantal|Gnilane|Ibrahima|Papa/);
   expect(section.textContent).not.toMatch(/\d+\s*%/);
 
   fireEvent.click(control.getByRole('button', { name: /Ouvrir l’annuaire sécurisé/ }));
@@ -436,12 +440,14 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
 test('translates the REF-01 people and teams control in English and German', () => {
   const { rerender } = renderDashboardNavigation({ language: 'EN' }, '/?view=program');
   expect(screen.getByRole('heading', { name: 'REF-01 · People and teams' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Candidate four-object logical model' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Validated four-object logical model' })).toBeInTheDocument();
+  expect(screen.getByText('REF-01 framework validated')).toBeInTheDocument();
   expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'REF-01 · Personen und Teams' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Vorgeschlagenes logisches Vier-Objekt-Modell' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Validiertes logisches Vier-Objekt-Modell' })).toBeInTheDocument();
+  expect(screen.getByText('REF-01-Arbeitsrahmen validiert')).toBeInTheDocument();
   expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
 });
 
@@ -693,7 +699,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-01 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-02 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(8);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(9);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(8);
@@ -703,7 +709,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-01 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-02 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(8);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(9);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(8);

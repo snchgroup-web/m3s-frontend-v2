@@ -680,6 +680,10 @@ html:not(.dark) .m3s-business-module .text-cyan-400 {
   color: #0e7490 !important;
 }
 
+html:not(.dark) .m3s-business-module .m3s-ref01-decision .text-sky-300 {
+  color: #0369a1 !important;
+}
+
 html:not(.dark) .m3s-business-module .text-emerald-100,
 html:not(.dark) .m3s-business-module .text-emerald-200,
 html:not(.dark) .m3s-business-module .text-emerald-300,
