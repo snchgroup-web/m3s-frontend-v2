@@ -413,15 +413,26 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V0.2 · 25-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V0.3 · 25-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
+  expect(control.getByText('Événements de cycle proposés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
   expect(control.getByText('Sources maîtresses retenues dans REF-01')).toBeInTheDocument();
   expect(control.getByRole('heading', { name: 'Modèle logique validé à quatre objets' })).toBeInTheDocument();
   expect(control.getByRole('heading', { name: 'REF-01-DEC-001 · V1.0' })).toBeInTheDocument();
   expect(control.getByText('Cadre REF-01 validé')).toBeInTheDocument();
   expect(control.getByText(/Organisation & RH est propriétaire métier/)).toBeInTheDocument();
-  expect(control.getByText(/ses événements, dates d’effet, motifs et preuves restent à définir/)).toBeInTheDocument();
+  expect(control.getByText(/Ses détails sont proposés séparément dans REF-01 V0.3/)).toBeInTheDocument();
+  expect(control.getByRole('heading', { name: 'Cycle de vie candidat à arbitrer' })).toBeInTheDocument();
+  expect(control.getAllByText('Enregistrer / créer')).toHaveLength(2);
+  expect(control.getAllByText('Transférer')).toHaveLength(2);
+  expect(control.getAllByText('Clôturer / archiver')).toHaveLength(2);
+  expect(control.getByRole('heading', { name: 'Trace minimale obligatoire pour chaque événement' })).toBeInTheDocument();
+  expect(control.getByText('Date d’effet')).toBeInTheDocument();
+  expect(control.getByText('Référence de preuve GED')).toBeInTheDocument();
+  expect(control.getByRole('heading', { name: 'Familles de motifs candidates' })).toBeInTheDocument();
+  expect(control.getByRole('heading', { name: 'Séparation des responsabilités' })).toBeInTheDocument();
+  expect(control.getByText(/Aucun événement réel, schéma, source maîtresse, automatisation ou taux de progression/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
   expect(section.textContent).not.toMatch(/Chantal|Gnilane|Ibrahima|Papa/);
@@ -442,12 +453,18 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'REF-01 · People and teams' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Validated four-object logical model' })).toBeInTheDocument();
   expect(screen.getByText('REF-01 framework validated')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Candidate lifecycle for review' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Minimum mandatory trace for each event' })).toBeInTheDocument();
+  expect(screen.getAllByText('Transfer')).toHaveLength(2);
   expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'REF-01 · Personen und Teams' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Validiertes logisches Vier-Objekt-Modell' })).toBeInTheDocument();
   expect(screen.getByText('REF-01-Arbeitsrahmen validiert')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Vorgeschlagener Lebenszyklus zur Entscheidung' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Verbindliche Mindestspur für jedes Ereignis' })).toBeInTheDocument();
+  expect(screen.getAllByText('Wechseln')).toHaveLength(2);
   expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
 });
 
