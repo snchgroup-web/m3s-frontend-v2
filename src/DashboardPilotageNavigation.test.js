@@ -396,7 +396,7 @@ test('shows the CNS-03 initial inventory with eleven controlled families and no 
 test('translates the CNS-03 initial inventory in English and German', () => {
   const { rerender } = renderDashboardNavigation({ language: 'EN' }, '/?view=program');
   expect(screen.getByRole('heading', { name: 'Eleven reference-system families to consolidate' })).toBeInTheDocument();
-  expect(screen.getByText('Designated master sources')).toBeInTheDocument();
+  expect(screen.getAllByText('Designated master sources').length).toBeGreaterThan(0);
   expect(screen.getAllByText('People and teams')).toHaveLength(2);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V0.4 · 25-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V0.5 · 25-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -437,6 +437,15 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(control.getByRole('heading', { name: 'Familles de motifs validées' })).toBeInTheDocument();
   expect(control.getByRole('heading', { name: 'Séparation des responsabilités validée' })).toBeInTheDocument();
   expect(control.getByText(/Aucun événement réel, schéma, source maîtresse, automatisation ou taux de progression/)).toBeInTheDocument();
+  expect(control.getByRole('heading', { name: 'Comparer les supports sans les promouvoir' })).toBeInTheDocument();
+  expect(control.getAllByText('API RH-001 · /members-directory').length).toBeGreaterThan(0);
+  expect(control.getAllByText('Annuaire interne sécurisé').length).toBeGreaterThan(0);
+  expect(control.getAllByText('Sélecteurs partagés Team/Agent').length).toBeGreaterThan(0);
+  expect(control.getAllByText('GED · preuves RH autorisées').length).toBeGreaterThan(0);
+  expect(control.getByText('Sources maîtresses désignées')).toBeInTheDocument();
+  expect(control.getByRole('heading', { name: 'Sept critères avant toute désignation de source maîtresse' })).toBeInTheDocument();
+  expect(control.getByText('Arbitrage distinct requis')).toBeInTheDocument();
+  expect(control.getByText(/Aucune source maîtresse, qualité, complétude, identité civile/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
   expect(section.textContent).not.toMatch(/Chantal|Gnilane|Ibrahima|Papa/);
@@ -460,6 +469,9 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Validated lifecycle' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Validated minimum trace for each event' })).toBeInTheDocument();
   expect(screen.getByText('REF-01 lifecycle validated')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Compare supports without promoting them' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Seven criteria before any master-source designation' })).toBeInTheDocument();
+  expect(screen.getAllByText('Separate review required').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Transfer')).toHaveLength(2);
   expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
 
@@ -470,6 +482,9 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Validierter Lebenszyklus' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Validierte Mindestspur für jedes Ereignis' })).toBeInTheDocument();
   expect(screen.getByText('REF-01-Lebenszyklus validiert')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Träger vergleichen, ohne sie zu fördern' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Sieben Kriterien vor jeder Bestimmung einer Masterquelle' })).toBeInTheDocument();
+  expect(screen.getAllByText('Getrennter Entscheid erforderlich').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Wechseln')).toHaveLength(2);
   expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
 });
