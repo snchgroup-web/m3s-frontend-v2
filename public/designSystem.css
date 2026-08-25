@@ -684,6 +684,21 @@ html:not(.dark) .m3s-business-module .m3s-ref01-decision .text-sky-300 {
   color: #0369a1 !important;
 }
 
+html:not(.dark) .m3s-business-module .m3s-ref01-sources .text-sky-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-sources .text-sky-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-sources .text-sky-300,
+html:not(.dark) .m3s-business-module .m3s-ref01-sources .text-sky-400,
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-review .text-sky-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-review .text-sky-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-review .text-sky-300,
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-review .text-sky-400,
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-results .text-sky-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-results .text-sky-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-results .text-sky-300,
+html:not(.dark) .m3s-business-module .m3s-ref01-evidence-results .text-sky-400 {
+  color: #0369a1 !important;
+}
+
 html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .text-sky-100,
 html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .text-sky-200,
 html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .text-sky-300,
