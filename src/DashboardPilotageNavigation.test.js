@@ -405,6 +405,46 @@ test('translates the CNS-03 initial inventory in English and German', () => {
   expect(screen.getAllByText('Personen und Teams')).toHaveLength(2);
 });
 
+test('frames REF-01 people and teams without exposing RH-001 records or promoting a master source', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate }, '/?view=program');
+
+  const section = screen
+    .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
+    .closest('section');
+  const control = within(section);
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V0.1 · 25-08-2026')).toBeInTheDocument();
+  expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
+  expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
+  expect(control.getByText('Sources maîtresses retenues dans REF-01')).toBeInTheDocument();
+  expect(control.getByRole('heading', { name: 'Modèle logique candidat à quatre objets' })).toBeInTheDocument();
+  expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
+  expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
+  expect(section.textContent).not.toMatch(/Cheikh|Chantal|Gnilane|Ibrahima|Papa/);
+  expect(section.textContent).not.toMatch(/\d+\s*%/);
+
+  fireEvent.click(control.getByRole('button', { name: /Ouvrir l’annuaire sécurisé/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/rh?tab=directory&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-ref01-people-teams-control#members-directory-title'
+  );
+  fireEvent.click(control.getByRole('button', { name: /Examiner l’architecture RH de REF-01/ }));
+  expect(onNavigate).toHaveBeenLastCalledWith(
+    '/rh?tab=architecture&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-ref01-people-teams-control#rh-architecture-title'
+  );
+});
+
+test('translates the REF-01 people and teams control in English and German', () => {
+  const { rerender } = renderDashboardNavigation({ language: 'EN' }, '/?view=program');
+  expect(screen.getByRole('heading', { name: 'REF-01 · People and teams' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Candidate four-object logical model' })).toBeInTheDocument();
+  expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
+
+  rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
+  expect(screen.getByRole('heading', { name: 'REF-01 · Personen und Teams' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Vorgeschlagenes logisches Vier-Objekt-Modell' })).toBeInTheDocument();
+  expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
+});
+
 test('opens each CNS-03 governed source with the exact programme return context', () => {
   const onNavigate = jest.fn();
   renderDashboardNavigation({ onNavigate }, '/?view=program');
