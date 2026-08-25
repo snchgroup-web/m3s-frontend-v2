@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V0.7 · 25-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V0.9 · 25-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -456,7 +456,17 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(evidenceMatrix).getAllByText('Identifiant stable').length).toBeGreaterThan(0);
   expect(within(evidenceMatrix).getAllByText('Preuve à établir').length).toBeGreaterThan(0);
   expect(within(evidenceMatrix).getAllByText(/La valeur opérationnelle n’est pas encore fondée sur l’identifiant stable RH-001/).length).toBeGreaterThan(0);
-  expect(control.getByText(/faire relire humainement les 28 constats/)).toBeInTheDocument();
+  const evidenceReview = control.getByRole('heading', { name: 'Ouvrir un premier lot de preuves sans promouvoir de source' }).closest('section');
+  expect(within(evidenceReview).getByText('Preuves autorisées maintenant')).toBeInTheDocument();
+  expect(within(evidenceReview).getByText('Constats différés')).toBeInTheDocument();
+  expect(within(evidenceReview).getByText('Décisions enregistrées')).toBeInTheDocument();
+  expect(within(evidenceReview).getAllByTestId('ref01-review-row')).toHaveLength(12);
+  expect(within(evidenceReview).getByRole('heading', { name: 'Lot candidat A · Preuves structurantes' })).toBeInTheDocument();
+  expect(within(evidenceReview).getByRole('heading', { name: 'Seize constats maintenus pour une deuxième lecture' })).toBeInTheDocument();
+  expect(within(evidenceReview).getByRole('heading', { name: 'Résultat de l’arbitrage humain' })).toBeInTheDocument();
+  expect(within(evidenceReview).getByRole('heading', { name: 'REF-01-DEC-004 · V1.0' })).toBeInTheDocument();
+  expect(within(evidenceReview).getByText(/Décisions enregistrées : 1/)).toBeInTheDocument();
+  expect(control.getByText(/rechercher et référencer les douze preuves du lot A validé/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -484,11 +494,14 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Compare supports without promoting them' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Seven criteria before any master-source designation' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Review each support against the seven validated criteria' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Open an initial evidence package without promoting a source' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Candidate package A · Foundational evidence' })).toBeInTheDocument();
+  expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Decision criteria validated').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByText(/human review of the 28 findings/)).toBeInTheDocument();
+  expect(screen.getByText(/seek and reference the twelve evidence items in validated package A/)).toBeInTheDocument();
   expect(screen.getAllByText('Transfer')).toHaveLength(2);
   expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
 
@@ -502,11 +515,14 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Träger vergleichen, ohne sie zu fördern' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Sieben Kriterien vor jeder Bestimmung einer Masterquelle' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Jeden Träger anhand der sieben validierten Kriterien prüfen' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Ein erstes Nachweispaket öffnen, ohne eine Quelle zu fördern' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Kandidatenpaket A · Strukturierende Nachweise' })).toBeInTheDocument();
+  expect(screen.getByText(/Erfasste Entscheide: 1/)).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
   expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Entscheidungskriterien validiert').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByText(/28 Feststellungen menschlich prüfen/)).toBeInTheDocument();
+  expect(screen.getByText(/die zwölf Nachweise des validierten Pakets A suchen und referenzieren/)).toBeInTheDocument();
   expect(screen.getAllByText('Wechseln')).toHaveLength(2);
   expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
 });
