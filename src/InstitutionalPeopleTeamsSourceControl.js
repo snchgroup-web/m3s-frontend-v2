@@ -23,7 +23,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.6 · 26-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.7 · 26-08-2026',
     title: 'Comparer les supports sans les promouvoir',
     body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
     counters: [
@@ -109,12 +109,12 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Prochain arbitrage : décider séparément si une proposition d’implémentation peut être préparée, toujours sans exécution.',
-    boundary: 'Statut : base fonctionnelle REF-01-ML-001 V1.0 confirmée par REF-01-DEC-007 ; préparation autorisée par REF-01-DEC-008 ; cadrage candidat V0.2 confirmé par REF-01-DEC-009 ; décisions sur le lot : 6 ; sources maîtresses désignées : 0.',
-    source: 'Supports contrôlés : contrat API RH-001, composant Annuaire interne, utilitaire partagé Team/Agent, cadrage GED, décisions REF-01-DEC-001 à REF-01-DEC-009, base fonctionnelle REF-01-ML-001 V1.0 et cadrage technique candidat V0.2.'
+    nextControl: 'Prochain arbitrage : confirmer, corriger ou rejeter REF-01-IMP-001 V0.1 avant toute implémentation.',
+    boundary: 'Statut : base fonctionnelle V1.0 confirmée ; cadrage candidat V0.2 confirmé ; proposition d’implémentation V0.1 préparée par REF-01-DEC-010 ; décisions sur le lot : 7 ; sources maîtresses désignées : 0 ; changements appliqués : 0.',
+    source: 'Supports contrôlés : contrat API RH-001, Annuaire interne, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-010, base fonctionnelle V1.0, cadrage technique V0.2 et proposition REF-01-IMP-001 V0.1.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.6 · 26 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.7 · 26 AUG 2026',
     title: 'Compare supports without promoting them',
     body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
     counters: [
@@ -200,12 +200,12 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'Next review: separately decide whether an implementation proposal may be prepared, still without execution.',
-    boundary: 'Status: functional baseline REF-01-ML-001 V1.0 confirmed by REF-01-DEC-007; preparation authorised by REF-01-DEC-008; candidate framing V0.2 confirmed by REF-01-DEC-009; package decisions: 6; designated master sources: 0.',
-    source: 'Controlled supports: RH-001 API contract, Internal Directory component, shared Team/Agent utility, DMS framing, decisions REF-01-DEC-001 through REF-01-DEC-009, functional baseline REF-01-ML-001 V1.0 and candidate technical framing V0.2.'
+    nextControl: 'Next review: confirm, amend or reject REF-01-IMP-001 V0.1 before any implementation.',
+    boundary: 'Status: functional baseline V1.0 confirmed; candidate framing V0.2 confirmed; implementation proposal V0.1 prepared through REF-01-DEC-010; package decisions: 7; designated master sources: 0; applied changes: 0.',
+    source: 'Controlled supports: RH-001 API contract, Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-010, functional baseline V1.0, technical framing V0.2 and proposal REF-01-IMP-001 V0.1.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.6 · 26.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.7 · 26.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
     body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
     counters: [
@@ -291,9 +291,9 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'Nächster Entscheid: getrennt entscheiden, ob ein Umsetzungsvorschlag weiterhin ohne Ausführung vorbereitet werden darf.',
-    boundary: 'Stand: funktionale Basis REF-01-ML-001 V1.0 mit REF-01-DEC-007 bestätigt; Vorbereitung mit REF-01-DEC-008 autorisiert; Kandidatenausgestaltung V0.2 mit REF-01-DEC-009 bestätigt; Entscheide zum Paket: 6; bestimmte Masterquellen: 0.',
-    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Komponente Internes Verzeichnis, gemeinsames Team-/Agent-Werkzeug, DMS-Rahmen, REF-01-DEC-001 bis REF-01-DEC-009, funktionale Basis REF-01-ML-001 V1.0 und technische Kandidatenausgestaltung V0.2.'
+    nextControl: 'Nächster Entscheid: REF-01-IMP-001 V0.1 vor jeder Umsetzung bestätigen, ändern oder ablehnen.',
+    boundary: 'Stand: funktionale Basis V1.0 bestätigt; Kandidatenausgestaltung V0.2 bestätigt; Umsetzungsvorschlag V0.1 mit REF-01-DEC-010 vorbereitet; Entscheide zum Paket: 7; bestimmte Masterquellen: 0; angewendete Änderungen: 0.',
+    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Internes Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-010, funktionale Basis V1.0, technische Ausgestaltung V0.2 und Vorschlag REF-01-IMP-001 V0.1.'
   }
 };
 
