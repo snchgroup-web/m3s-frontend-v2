@@ -11,6 +11,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import GovernedDecisionRecord from './GovernedDecisionRecord';
+import InstitutionalPeopleTeamsImplementationProposal from './InstitutionalPeopleTeamsImplementationProposal';
 
 const COPY = {
   FR: {
@@ -95,7 +96,7 @@ const COPY = {
       'Préparer séparément migration, retour arrière et déploiement avant toute exécution.'
     ],
     status: 'Statut : cadrage technique candidat V0.2 confirmé comme base de travail ; aucune implémentation technique n’est autorisée ou appliquée.',
-    next: 'Prochain arbitrage : décider séparément si une proposition d’implémentation peut être préparée, toujours sans exécution.',
+    next: 'Prochain arbitrage : confirmer, corriger ou rejeter la proposition d’implémentation candidate REF-01-IMP-001 V0.1, toujours sans exécution.',
     boundary: 'Limite : zéro table, endpoint, permission, accès, donnée réelle, migration, déploiement, automatisation, source maîtresse ou taux de progression créé dans ce lot.'
   },
   EN: {
@@ -151,7 +152,7 @@ const COPY = {
     exitTitle: 'Conditions before any implementation proposal',
     exit: ['Confirm or amend the five candidate layers.', 'Confirm persistence technology and naming conventions.', 'Link technical subjects to users without exposing civil identity.', 'Decide the master source and owner for each object.', 'Map the four candidate permissions to real RBAC.', 'Validate classification, retention, audit and DMS references.', 'Approve contract, concurrency, security and recovery tests.', 'Prepare migration, rollback and deployment separately before execution.'],
     status: 'Status: candidate technical framing V0.2 confirmed as a working baseline; no technical implementation is authorised or applied.',
-    next: 'Next review: separately decide whether an implementation proposal may be prepared, still without execution.',
+    next: 'Next review: confirm, amend or reject candidate implementation proposal REF-01-IMP-001 V0.1, still without execution.',
     boundary: 'Boundary: zero table, endpoint, permission, access, real data, migration, deployment, automation, master source or progress rate is created in this package.'
   },
   DE: {
@@ -189,7 +190,7 @@ const COPY = {
     exitTitle: 'Bedingungen vor jedem Umsetzungsvorschlag',
     exit: ['Fünf Kandidatenebenen bestätigen oder ändern.', 'Persistenztechnologie und Namenskonventionen bestätigen.', 'Technische Subjekte ohne Offenlegung der Zivilidentität zuordnen.', 'Masterquelle und Verantwortung jedes Objekts entscheiden.', 'Vier Kandidatenberechtigungen auf das reale RBAC abbilden.', 'Klassifizierung, Aufbewahrung, Audit und DMS-Referenzen validieren.', 'Vertrags-, Parallelitäts-, Sicherheits- und Wiederherstellungstests genehmigen.', 'Migration, Rückkehr und Bereitstellung getrennt vor jeder Ausführung vorbereiten.'],
     status: 'Stand: technische Kandidatenausgestaltung V0.2 als Arbeitsbasis bestätigt; keine technische Umsetzung ist autorisiert oder angewendet.',
-    next: 'Nächster Entscheid: getrennt entscheiden, ob ein Umsetzungsvorschlag weiterhin ohne Ausführung vorbereitet werden darf.',
+    next: 'Nächster Entscheid: Den Kandidaten REF-01-IMP-001 V0.1 für den Umsetzungsvorschlag bestätigen, ändern oder ablehnen, weiterhin ohne Ausführung.',
     boundary: 'Grenze: Null Tabellen, Endpoints, Berechtigungen, Zugriffe, reale Daten, Migrationen, Bereitstellungen, Automatisierungen, Masterquellen oder Fortschrittsquoten werden in diesem Los erstellt.'
   }
 };
@@ -246,6 +247,7 @@ const InstitutionalPeopleTeamsTechnicalFraming = ({ language = 'FR' }) => {
       <p className="mt-4 rounded-md border border-amber-800/70 bg-amber-950/15 p-3 text-xs font-semibold leading-5 text-amber-100">{t.status}</p>
       <p className="mt-3 flex items-start gap-2 rounded-md border border-sky-800/70 bg-sky-950/15 p-3 text-xs font-semibold leading-5 text-sky-200"><ArrowRight className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.next}</p>
       <p className="mt-4 flex items-start gap-2 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.boundary}</p>
+      <InstitutionalPeopleTeamsImplementationProposal language={language} />
     </section>
   );
 };
