@@ -16,7 +16,7 @@ const COPY = {
       limit: 'Cette décision ne remplit aucun dossier, ne désigne ni n’autorise aucune identité, et n’autorise aucun contact ou envoi. Elle ne ferme pas G1, n’ouvre pas L2 et ne valide aucun fournisseur, compte, essai, achat, donnée réelle ou preuve.'
     },
     status: 'CONFIRMÉ · REF-01-G1-AUT-001 V1.0 gouverne désormais les autorisations unitaires, sans en accorder aucune.',
-    next: 'Prochaine étape : préparer IDN-001 V0.1, un gabarit unitaire vide pour documenter une seule identité candidate avant toute décision.',
+    next: 'Étape suivante accomplie : IDN-001 est confirmé en V1.0 par REF-01-DEC-020 ; PRI-001 V0.1 prépare maintenant la priorité documentaire entre AUT-A, B, C et D.',
     boundary: 'G1 reste ouverte. Confirmer le registre ne vaut ni inscription nominative, ni autorisation individuelle, ni autorisation d’envoi.'
   },
   EN: {
@@ -32,7 +32,7 @@ const COPY = {
       limit: 'This decision fills no file, designates or authorises no identity, and authorises no contact or send. It does not close G1, open L2 or validate any provider, account, trial, purchase, real data or evidence.'
     },
     status: 'CONFIRMED · REF-01-G1-AUT-001 V1.0 now governs individual authorisations without granting any.',
-    next: 'Next step: prepare IDN-001 V0.1, an empty individual template for documenting one candidate identity before any decision.',
+    next: 'Next step completed: IDN-001 is confirmed as V1.0 through REF-01-DEC-020; PRI-001 V0.1 now prepares documentary priority across AUT-A, B, C and D.',
     boundary: 'G1 remains open. Confirming the register is neither a named record nor an individual or send authorisation.'
   },
   DE: {
@@ -48,7 +48,7 @@ const COPY = {
       limit: 'Der Entscheid füllt keine Akte, bestimmt oder autorisiert keine Identität und erlaubt weder Kontakt noch Versand. Er schliesst G1 nicht, öffnet L2 nicht und validiert keinen Anbieter, Account, Test, Kauf, reale Daten oder Nachweise.'
     },
     status: 'BESTÄTIGT · REF-01-G1-AUT-001 V1.0 steuert nun Einzelautorisierungen, ohne eine zu erteilen.',
-    next: 'Nächster Schritt: IDN-001 V0.1 vorbereiten, eine leere Einzelvorlage für eine Kandidatenidentität vor jedem Entscheid.',
+    next: 'Nächster Schritt abgeschlossen: IDN-001 ist mit REF-01-DEC-020 als V1.0 bestätigt; PRI-001 V0.1 bereitet nun die dokumentarische Priorität zwischen AUT-A, B, C und D vor.',
     boundary: 'G1 bleibt offen. Die Registerbestätigung ist weder Namenseintrag noch Einzel- oder Versandautorisierung.'
   }
 };

@@ -3,48 +3,48 @@ import { AlertTriangle, FileUser, LockKeyhole } from 'lucide-react';
 
 const COPY = {
   FR: {
-    eyebrow: 'GABARIT CANDIDAT DE FICHE UNITAIRE · REF-01-G1-IDN-001 · V0.1 · 27-08-2026',
+    eyebrow: 'GABARIT CONFIRMÉ DE FICHE UNITAIRE · REF-01-G1-IDN-001 · V1.0 · 27-08-2026',
     title: 'Documenter une seule identité sans l’autoriser',
-    intro: 'Ce gabarit applique AUT-001 V1.0 à une future identité candidate. Il reste non affecté et vide : le choix du dossier AUT, l’identité, les preuves et la décision seront traités séparément.',
-    counters: [['Gabarits unitaires', '1', 'Réutilisable après validation'], ['Dossier AUT choisi', '0/4', 'Aucune affectation'], ['Identités inscrites', '0', 'Aucun nom réel'], ['Autorisations accordées', '0', 'Décision ultérieure']],
+    intro: 'Confirmé par REF-01-DEC-020, ce gabarit applique AUT-001 V1.0 à une future identité candidate. Il reste non affecté et vide : la priorité du dossier AUT, l’identité, les preuves et chaque décision seront traitées séparément.',
+    counters: [['Gabarits unitaires', '1', 'Cadre confirmé'], ['Dossier AUT prioritaire', '0/4', 'Aucune affectation'], ['Identités inscrites', '0', 'Aucun nom réel'], ['Autorisations accordées', '0', 'Décision ultérieure']],
     groups: [
       ['1 · Rattachement gouverné', ['Dossier AUT-A, B, C ou D', 'Lot REQ et profil REC correspondants', 'Finalité précise et nécessité documentée']],
       ['2 · Identité minimale', ['Nom ou fonction strictement nécessaire', 'Qualité professionnelle ou mandat', 'Source officielle et canal professionnel']],
       ['3 · Contrôles et preuves', ['Responsable interne et droits d’accès', 'Référence GED et niveau de sensibilité', 'Conservation, expiration et révision']],
       ['4 · Décisions séparées', ['Autoriser ou refuser l’inscription', 'Autoriser ou refuser le contact', 'Autoriser ou refuser chaque envoi']]
     ],
-    status: 'GABARIT VIDE · AUCUN DOSSIER AUT CHOISI · AUCUNE IDENTITÉ',
-    next: 'Prochain arbitrage humain : confirmer ou amender IDN-001 V0.1. Après confirmation seulement, choisir séparément AUT-A, AUT-B, AUT-C ou AUT-D avant toute donnée réelle.',
+    status: 'GABARIT CONFIRMÉ ET VIDE · AUCUN DOSSIER AUT PRIORISÉ · AUCUNE IDENTITÉ',
+    next: 'Prochain arbitrage humain : confirmer ou amender PRI-001 V0.1, puis indiquer séparément si AUT-A, AUT-B, AUT-C ou AUT-D doit être préparé en premier.',
     boundary: 'Limite : IDN-001 ne contient aucun nom, entreprise, adresse, coordonnée, canal, preuve réelle ou autorisation. Il ne déclenche aucun contact ou envoi et ne ferme pas G1.'
   },
   EN: {
-    eyebrow: 'CANDIDATE INDIVIDUAL RECORD TEMPLATE · REF-01-G1-IDN-001 · V0.1 · 27 AUG 2026',
+    eyebrow: 'CONFIRMED INDIVIDUAL RECORD TEMPLATE · REF-01-G1-IDN-001 · V1.0 · 27 AUG 2026',
     title: 'Document one identity without authorising it',
-    intro: 'This template applies AUT-001 V1.0 to one future candidate identity. It remains unassigned and empty: AUT-file selection, identity, evidence and decision are handled separately.',
-    counters: [['Individual templates', '1', 'Reusable after validation'], ['Selected AUT file', '0/4', 'No assignment'], ['Recorded identities', '0', 'No real name'], ['Granted authorisations', '0', 'Later decision']],
+    intro: 'Confirmed through REF-01-DEC-020, this template applies AUT-001 V1.0 to one future candidate identity. It remains unassigned and empty: AUT-file priority, identity, evidence and every decision are handled separately.',
+    counters: [['Individual templates', '1', 'Confirmed framework'], ['Priority AUT file', '0/4', 'No assignment'], ['Recorded identities', '0', 'No real name'], ['Granted authorisations', '0', 'Later decision']],
     groups: [
       ['1 · Governed link', ['AUT-A, B, C or D file', 'Matching REQ package and REC profile', 'Precise purpose and documented necessity']],
       ['2 · Minimal identity', ['Strictly necessary name or function', 'Professional capacity or mandate', 'Official source and professional channel']],
       ['3 · Controls and evidence', ['Internal owner and access rights', 'DMS reference and sensitivity level', 'Retention, expiry and review']],
       ['4 · Separate decisions', ['Authorise or refuse the record', 'Authorise or refuse contact', 'Authorise or refuse each send']]
     ],
-    status: 'EMPTY TEMPLATE · NO AUT FILE SELECTED · NO IDENTITY',
-    next: 'Next human decision: confirm or amend IDN-001 V0.1. Only after confirmation, select AUT-A, AUT-B, AUT-C or AUT-D separately before any real data.',
+    status: 'CONFIRMED EMPTY TEMPLATE · NO AUT FILE PRIORITISED · NO IDENTITY',
+    next: 'Next human decision: confirm or amend PRI-001 V0.1, then state separately whether AUT-A, AUT-B, AUT-C or AUT-D should be prepared first.',
     boundary: 'Boundary: IDN-001 contains no name, company, address, contact detail, channel, real evidence or authorisation. It triggers no contact or send and does not close G1.'
   },
   DE: {
-    eyebrow: 'KANDIDATENVORLAGE FÜR EINZELAKTEN · REF-01-G1-IDN-001 · V0.1 · 27.08.2026',
+    eyebrow: 'BESTÄTIGTE VORLAGE FÜR EINZELAKTEN · REF-01-G1-IDN-001 · V1.0 · 27.08.2026',
     title: 'Eine Identität dokumentieren, ohne sie zu autorisieren',
-    intro: 'Diese Vorlage wendet AUT-001 V1.0 auf eine künftige Kandidatenidentität an. Sie bleibt nicht zugeordnet und leer: AUT-Aktenwahl, Identität, Nachweise und Entscheid werden getrennt behandelt.',
-    counters: [['Einzelvorlagen', '1', 'Nach Validierung wiederverwendbar'], ['Gewählte AUT-Akte', '0/4', 'Keine Zuordnung'], ['Erfasste Identitäten', '0', 'Kein realer Name'], ['Erteilte Autorisierungen', '0', 'Späterer Entscheid']],
+    intro: 'Mit REF-01-DEC-020 bestätigt, wendet diese Vorlage AUT-001 V1.0 auf eine künftige Kandidatenidentität an. Sie bleibt nicht zugeordnet und leer: AUT-Aktenpriorität, Identität, Nachweise und jeder Entscheid werden getrennt behandelt.',
+    counters: [['Einzelvorlagen', '1', 'Bestätigter Rahmen'], ['Priorisierte AUT-Akte', '0/4', 'Keine Zuordnung'], ['Erfasste Identitäten', '0', 'Kein realer Name'], ['Erteilte Autorisierungen', '0', 'Späterer Entscheid']],
     groups: [
       ['1 · Gesteuerte Verbindung', ['AUT-Akte A, B, C oder D', 'Passendes REQ-Paket und REC-Profil', 'Präziser Zweck und dokumentierte Notwendigkeit']],
       ['2 · Minimale Identität', ['Nur notwendiger Name oder Funktion', 'Berufliche Eigenschaft oder Mandat', 'Offizielle Quelle und Fachkanal']],
       ['3 · Kontrollen und Nachweise', ['Interne Verantwortung und Zugriffsrechte', 'DMS-Referenz und Sensibilitätsstufe', 'Aufbewahrung, Ablauf und Prüfung']],
       ['4 · Getrennte Entscheide', ['Eintrag erlauben oder ablehnen', 'Kontakt erlauben oder ablehnen', 'Jeden Versand erlauben oder ablehnen']]
     ],
-    status: 'LEERE VORLAGE · KEINE AUT-AKTE GEWÄHLT · KEINE IDENTITÄT',
-    next: 'Nächster menschlicher Entscheid: IDN-001 V0.1 bestätigen oder ändern. Erst danach AUT-A, AUT-B, AUT-C oder AUT-D vor realen Daten getrennt wählen.',
+    status: 'BESTÄTIGTE LEERE VORLAGE · KEINE AUT-AKTE PRIORISIERT · KEINE IDENTITÄT',
+    next: 'Nächster menschlicher Entscheid: PRI-001 V0.1 bestätigen oder ändern und danach getrennt angeben, ob AUT-A, AUT-B, AUT-C oder AUT-D zuerst vorbereitet werden soll.',
     boundary: 'Grenze: IDN-001 enthält keinen Namen, keine Firma, Adresse, Kontaktdaten, keinen Kanal, realen Nachweis oder Autorisierung. Es löst keinen Kontakt oder Versand aus und schliesst G1 nicht.'
   }
 };
