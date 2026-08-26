@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.5 · 26-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.6 · 26-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -496,6 +496,8 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   const technicalFraming = control.getByRole('heading', { name: 'Traduire la base fonctionnelle sans modifier le système réel' }).closest('section');
   expect(within(technicalFraming).getByRole('heading', { name: 'REF-01-DEC-008 · V1.0' })).toBeInTheDocument();
   expect(within(technicalFraming).getByText('Préparation du cadrage autorisée')).toBeInTheDocument();
+  expect(within(technicalFraming).getByRole('heading', { name: 'REF-01-DEC-009 · V1.0' })).toBeInTheDocument();
+  expect(within(technicalFraming).getByText('Cadrage candidat confirmé')).toBeInTheDocument();
   expect(within(technicalFraming).getAllByTestId('ref01-technical-layer')).toHaveLength(5);
   expect(within(technicalFraming).getAllByTestId('ref01-technical-mapping-row')).toHaveLength(12);
   expect(within(technicalFraming).getAllByTestId('ref01-technical-interface')).toHaveLength(4);
@@ -503,8 +505,8 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(technicalFraming).getAllByTestId('ref01-technical-exit')).toHaveLength(8);
   expect(within(technicalFraming).getByText('Modifications techniques')).toBeInTheDocument();
   expect(within(technicalFraming).getByText('Aucun changement appliqué')).toBeInTheDocument();
-  expect(control.getAllByText(/confirmer, corriger ou rejeter le cadrage technique candidat/)).toHaveLength(1);
-  expect(control.getByText(/décisions sur le lot : 5/)).toBeInTheDocument();
+  expect(control.getAllByText(/décider séparément si une proposition d’implémentation peut être préparée/)).toHaveLength(2);
+  expect(control.getByText(/décisions sur le lot : 6/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -548,13 +550,15 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Translate the functional baseline without changing the real system' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-008 · V1.0' })).toBeInTheDocument();
   expect(screen.getByText('Framing preparation authorised')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-009 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByText('Candidate framing confirmed')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Five candidate technical layers' })).toBeInTheDocument();
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Decision criteria validated').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText(/confirm, amend or reject candidate technical framing/)).toHaveLength(1);
+  expect(screen.getAllByText(/separately decide whether an implementation proposal may be prepared/)).toHaveLength(2);
   expect(screen.getAllByText('Transfer')).toHaveLength(4);
   expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
 
@@ -584,12 +588,14 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Die funktionale Basis übersetzen, ohne das reale System zu ändern' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-008 · V1.0' })).toBeInTheDocument();
   expect(screen.getByText('Vorbereitung der Ausgestaltung autorisiert')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-009 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByText('Kandidatenausgestaltung bestätigt')).toBeInTheDocument();
   expect(screen.getByText(/Erfasste Entscheide: 1/)).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
   expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Entscheidungskriterien validiert').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText(/vor jedem Umsetzungsvorschlag bestätigen, ändern oder ablehnen/)).toHaveLength(2);
+  expect(screen.getAllByText(/getrennt entscheiden, ob ein Umsetzungsvorschlag/)).toHaveLength(2);
   expect(screen.getAllByText('Wechseln')).toHaveLength(4);
   expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
 });
@@ -842,7 +848,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-01 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-02 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(15);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(16);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(8);
@@ -852,7 +858,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-01 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-02 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(15);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(16);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(8);
