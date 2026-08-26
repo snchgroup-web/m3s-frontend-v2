@@ -16,7 +16,7 @@ const COPY = {
     ],
     preflightTitle: 'Contrôle obligatoire avant tout envoi',
     preflight: ['Destinataire nommé et qualité vérifiés.', 'Canal autorisé et traçable.', 'Demande limitée à une seule finalité.', 'Aucun secret ni donnée personnelle réelle.', 'Délai et emplacement GED renseignés.', 'Autorisation humaine d’envoi enregistrée séparément.'],
-    next: 'REF-01-G1-REC-001 V0.1 qualifie séparément les profils destinataires ; tout nom réel et tout envoi restent soumis à une autorisation humaine distincte.',
+    next: 'REF-01-G1-REC-001 V1.0 gouverne les profils destinataires ; REF-01-G1-NAM-001 V0.1 prépare quatre emplacements vides sans autoriser de nom ni d’envoi.',
     boundary: 'Limite : REQ-001 V1.0 gouverne le contenu, pas l’émission. Ce n’est ni une consultation lancée, ni un appel d’offres, ni une sélection, ni une autorisation d’achat, de test ou d’ouverture de L2.'
   },
   EN: {
@@ -33,7 +33,7 @@ const COPY = {
     ],
     preflightTitle: 'Mandatory control before any send',
     preflight: ['Named recipient and capacity verified.', 'Authorised traceable channel.', 'Request limited to one purpose.', 'No secret or real personal data.', 'Due date and DMS location recorded.', 'Separate human release authorisation recorded.'],
-    next: 'REF-01-G1-REC-001 V0.1 separately qualifies recipient profiles; every real name and every send remain subject to a distinct human authorisation.',
+    next: 'REF-01-G1-REC-001 V1.0 governs recipient profiles; REF-01-G1-NAM-001 V0.1 prepares four empty slots without authorising a name or send.',
     boundary: 'Boundary: REQ-001 V1.0 governs content, not release. It is neither a launched consultation, request for proposal, selection, purchase authorisation, test nor L2 opening.'
   },
   DE: {
@@ -50,7 +50,7 @@ const COPY = {
     ],
     preflightTitle: 'Pflichtkontrolle vor jedem Versand',
     preflight: ['Benannter Empfänger und Funktion geprüft.', 'Autorisierter nachvollziehbarer Kanal.', 'Anfrage auf einen Zweck begrenzt.', 'Kein Geheimnis und keine realen Personendaten.', 'Frist und DMS-Ablage erfasst.', 'Getrennte menschliche Versandfreigabe dokumentiert.'],
-    next: 'REF-01-G1-REC-001 V0.1 qualifiziert Empfängerprofile getrennt; jeder reale Name und jeder Versand bleiben einem eigenen menschlichen Entscheid vorbehalten.',
+    next: 'REF-01-G1-REC-001 V1.0 steuert Empfängerprofile; REF-01-G1-NAM-001 V0.1 bereitet vier leere Stellen vor, ohne Namen oder Versand zu autorisieren.',
     boundary: 'Grenze: REQ-001 V1.0 steuert den Inhalt, nicht den Versand. Es ist weder gestartete Konsultation, Ausschreibung, Auswahl, Kaufautorisierung, Test noch L2-Öffnung.'
   }
 };

@@ -22,7 +22,7 @@ const COPY = {
     refusalsTitle: 'Rejets obligatoires',
     refusals: ['Source ou version absente.', 'Document expiré ou contradictoire.', 'Secret, identifiant ou donnée personnelle réelle.', 'Promesse commerciale sans preuve contrôlable.', 'Pression pour choisir un fournisseur avant comparaison.'],
     verdict: 'PAQUET CONFIRMÉ · Sept emplacements gouvernés, zéro collecte, zéro destinataire nommé et zéro fournisseur retenu.',
-    next: 'REF-01-G1-REQ-001 V1.0 gouverne le contenu confirmé ; REF-01-G1-REC-001 V0.1 prépare les profils destinataires sans nommer ni contacter personne.',
+    next: 'REF-01-G1-REQ-001 V1.0 gouverne le contenu ; REF-01-G1-REC-001 V1.0 gouverne les profils et REF-01-G1-NAM-001 V0.1 prépare des emplacements vides sans nom ni contact.',
     boundary: 'Limite : ce paquet n’est ni un appel d’offres, ni une demande envoyée, ni une sélection, ni un test, ni une ouverture de L2.'
   },
   EN: {
@@ -40,7 +40,7 @@ const COPY = {
     ],
     workflowTitle: 'Proposed collection sequence', workflow: ['Authorise scope and channels.', 'Collect each requirement separately.', 'Record the ten metadata fields.', 'Independently check provenance, freshness and contradictions.', 'Submit results to a separate human decision.'],
     refusalsTitle: 'Mandatory rejections', refusals: ['Missing source or version.', 'Expired or contradictory record.', 'Secret, identifier or real personal data.', 'Marketing promise without controllable evidence.', 'Pressure to select a provider before comparison.'],
-    verdict: 'PACKAGE CONFIRMED · Seven governed slots, zero collection, zero named recipients and zero selected providers.', next: 'REF-01-G1-REQ-001 V1.0 governs confirmed content; REF-01-G1-REC-001 V0.1 prepares recipient profiles without naming or contacting anyone.', boundary: 'Boundary: this package is neither a request for proposal, sent request, selection, test nor L2 opening.'
+    verdict: 'PACKAGE CONFIRMED · Seven governed slots, zero collection, zero named recipients and zero selected providers.', next: 'REF-01-G1-REQ-001 V1.0 governs content; REF-01-G1-REC-001 V1.0 governs profiles and REF-01-G1-NAM-001 V0.1 prepares empty slots without names or contacts.', boundary: 'Boundary: this package is neither a request for proposal, sent request, selection, test nor L2 opening.'
   },
   DE: {
     eyebrow: 'GESTEUERTES SAMMLUNGSPAKET · REF-01-G1-COL-001 · V1.0 · 26.08.2026', title: 'Kontrollierte Sammlung steuern, ohne die Konsultation zu starten', intro: 'Mit REF-01-DEC-015 bestätigt, steuert dieses Paket sieben Sammelstellen, ihre zulässigen Kanäle, Kontrollen und Verantwortung. Es autorisiert keinen benannten Empfänger, Kontakt, Account, Test, Kauf oder Auswahl.',
@@ -57,7 +57,7 @@ const COPY = {
     ],
     workflowTitle: 'Vorgeschlagene Sammelfolge', workflow: ['Umfang und Kanäle autorisieren.', 'Jede Anforderung getrennt sammeln.', 'Zehn Metadaten erfassen.', 'Herkunft, Aktualität und Widersprüche unabhängig prüfen.', 'Ergebnisse einem getrennten menschlichen Entscheid vorlegen.'],
     refusalsTitle: 'Zwingende Ablehnungen', refusals: ['Quelle oder Version fehlt.', 'Abgelaufener oder widersprüchlicher Nachweis.', 'Geheimnis, Kennung oder reale Personendaten.', 'Werbeversprechen ohne kontrollierbaren Nachweis.', 'Druck zur Anbieterwahl vor dem Vergleich.'],
-    verdict: 'PAKET BESTÄTIGT · Sieben gesteuerte Stellen, null Sammlung, null benannte Empfänger und null gewählte Anbieter.', next: 'REF-01-G1-REQ-001 V1.0 steuert den bestätigten Inhalt; REF-01-G1-REC-001 V0.1 bereitet Empfängerprofile vor, ohne jemanden zu benennen oder zu kontaktieren.', boundary: 'Grenze: Dieses Paket ist weder Ausschreibung, versandte Anfrage, Auswahl, Test noch L2-Öffnung.'
+    verdict: 'PAKET BESTÄTIGT · Sieben gesteuerte Stellen, null Sammlung, null benannte Empfänger und null gewählte Anbieter.', next: 'REF-01-G1-REQ-001 V1.0 steuert den Inhalt; REF-01-G1-REC-001 V1.0 steuert Profile und REF-01-G1-NAM-001 V0.1 bereitet leere Stellen ohne Namen oder Kontakte vor.', boundary: 'Grenze: Dieses Paket ist weder Ausschreibung, versandte Anfrage, Auswahl, Test noch L2-Öffnung.'
   }
 };
 

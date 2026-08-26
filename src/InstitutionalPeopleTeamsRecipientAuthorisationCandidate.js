@@ -3,11 +3,11 @@ import { AlertTriangle, ContactRound, LockKeyhole, ShieldCheck } from 'lucide-re
 
 const COPY = {
   FR: {
-    eyebrow: 'FICHE CANDIDATE DES DESTINATAIRES · REF-01-G1-REC-001 · V0.1 · 26-08-2026',
-    title: 'Qualifier les destinataires sans inscrire de nom réel',
-    intro: 'Cette fiche dérive les profils nécessaires de REQ-001 V1.0. Elle définit les qualités à vérifier avant toute nomination, sans contenir de personne, d’entreprise, d’adresse ou de canal concret.',
+    eyebrow: 'FICHE GOUVERNÉE DES DESTINATAIRES · REF-01-G1-REC-001 · V1.0 · 26-08-2026',
+    title: 'Gouverner les profils sans inscrire de nom réel',
+    intro: 'Confirmée par REF-01-DEC-017, cette fiche dérive les profils nécessaires de REQ-001 V1.0. Elle définit les qualités à vérifier avant toute nomination, sans contenir de personne, d’entreprise, d’adresse ou de canal concret.',
     counters: [['Profils candidats', '4', 'Un profil par lot confirmé'], ['Noms réels inscrits', '0', 'Aucune identité publiée'], ['Contacts autorisés', '0', 'Autorisation humaine distincte'], ['Demandes envoyées', '0', 'Aucun déclenchement']],
-    labels: { profile: 'Profil destinataire candidat', qualification: 'Qualité à vérifier', channel: 'Canal admissible après autorisation', status: 'PROFIL CANDIDAT · AUCUN NOM' },
+    labels: { profile: 'Profil destinataire gouverné', qualification: 'Qualité à vérifier', channel: 'Canal admissible après autorisation', status: 'PROFIL CONFIRMÉ · AUCUN NOM' },
     recipients: [
       ['REQ-A · Documentation officielle', 'Service officiel, éditeur ou responsable contractuel capable de fournir une source datée et versionnée.', 'Autorité sur la documentation, provenance vérifiable, absence de secret et périmètre correspondant.', 'Page officielle ou contact professionnel autorisé et traçable.'],
       ['REQ-B · Preuves techniques', 'Responsable IT interne autorisé ou service technique compétent pour produire un rapport non productif.', 'Mandat explicite, environnement isolé, données synthétiques, méthode et contrôleur séparé.', 'Canal interne autorisé avec dépôt GED gouverné.'],
@@ -16,15 +16,15 @@ const COPY = {
     ],
     checksTitle: 'Conditions avant l’ajout d’un nom réel',
     checks: ['Besoin et lot REQ correspondants confirmés.', 'Qualité professionnelle ou fonction interne vérifiée.', 'Canal autorisé, traçable et limité à la finalité.', 'Aucune donnée personnelle non nécessaire.', 'Responsable interne de l’envoi et emplacement GED désignés.', 'Autorisation humaine de nomination enregistrée séparément.'],
-    next: 'Prochain arbitrage humain : confirmer ou amender ces quatre profils, puis décider séparément si des destinataires nommés peuvent être inscrits. Aucun envoi automatique.',
-    boundary: 'Limite : REC-001 ne nomme personne, ne recommande aucun fournisseur, n’autorise aucun contact, aucune transmission, aucun achat et aucune ouverture de L2.'
+    next: 'REF-01-G1-NAM-001 V0.1 prépare quatre emplacements nominatifs vides ; toute identité réelle et tout envoi restent soumis à une autorisation humaine distincte.',
+    boundary: 'Limite : REC-001 V1.0 ne nomme personne, ne recommande aucun fournisseur, n’autorise aucun contact, aucune transmission, aucun achat et aucune ouverture de L2.'
   },
   EN: {
-    eyebrow: 'CANDIDATE RECIPIENT SHEET · REF-01-G1-REC-001 · V0.1 · 26 AUG 2026',
-    title: 'Qualify recipients without recording a real name',
-    intro: 'This sheet derives the required profiles from REQ-001 V1.0. It defines the capacities to verify before any nomination and contains no person, company, address or concrete channel.',
+    eyebrow: 'GOVERNED RECIPIENT SHEET · REF-01-G1-REC-001 · V1.0 · 26 AUG 2026',
+    title: 'Govern recipient profiles without recording a real name',
+    intro: 'Confirmed through REF-01-DEC-017, this sheet derives the required profiles from REQ-001 V1.0. It defines the capacities to verify before any nomination and contains no person, company, address or concrete channel.',
     counters: [['Candidate profiles', '4', 'One profile per confirmed package'], ['Real names recorded', '0', 'No identity published'], ['Authorised contacts', '0', 'Separate human authorisation'], ['Requests sent', '0', 'No trigger']],
-    labels: { profile: 'Candidate recipient profile', qualification: 'Capacity to verify', channel: 'Admissible channel after authorisation', status: 'CANDIDATE PROFILE · NO NAME' },
+    labels: { profile: 'Governed recipient profile', qualification: 'Capacity to verify', channel: 'Admissible channel after authorisation', status: 'CONFIRMED PROFILE · NO NAME' },
     recipients: [
       ['REQ-A · Official documentation', 'Official service, publisher or contractual owner able to provide a dated and versioned source.', 'Authority over the documentation, verifiable provenance, no secret and matching scope.', 'Official page or authorised traceable professional contact.'],
       ['REQ-B · Technical evidence', 'Authorised internal IT owner or competent technical service able to produce a non-production report.', 'Explicit mandate, isolated environment, synthetic data, method and separated controller.', 'Authorised internal channel with governed DMS deposit.'],
@@ -33,15 +33,15 @@ const COPY = {
     ],
     checksTitle: 'Conditions before adding a real name',
     checks: ['Matching need and REQ package confirmed.', 'Professional capacity or internal function verified.', 'Authorised traceable channel limited to the purpose.', 'No unnecessary personal data.', 'Internal send owner and DMS location designated.', 'Separate human nomination authorisation recorded.'],
-    next: 'Next human decision: confirm or amend these four profiles, then decide separately whether named recipients may be recorded. No automatic send.',
-    boundary: 'Boundary: REC-001 names nobody, recommends no provider and authorises no contact, transmission, purchase or L2 opening.'
+    next: 'REF-01-G1-NAM-001 V0.1 prepares four empty named-recipient slots; every real identity and every send remain subject to a distinct human authorisation.',
+    boundary: 'Boundary: REC-001 V1.0 names nobody, recommends no provider and authorises no contact, transmission, purchase or L2 opening.'
   },
   DE: {
-    eyebrow: 'KANDIDATENBLATT EMPFÄNGER · REF-01-G1-REC-001 · V0.1 · 26.08.2026',
-    title: 'Empfänger qualifizieren, ohne einen realen Namen zu erfassen',
-    intro: 'Dieses Blatt leitet die nötigen Profile aus REQ-001 V1.0 ab. Es definiert die vor jeder Benennung zu prüfenden Eigenschaften und enthält keine Person, Firma, Adresse oder konkreten Kanal.',
+    eyebrow: 'GESTEUERTES EMPFÄNGERBLATT · REF-01-G1-REC-001 · V1.0 · 26.08.2026',
+    title: 'Empfängerprofile steuern, ohne einen realen Namen zu erfassen',
+    intro: 'Mit REF-01-DEC-017 bestätigt, leitet dieses Blatt die nötigen Profile aus REQ-001 V1.0 ab. Es definiert die vor jeder Benennung zu prüfenden Eigenschaften und enthält keine Person, Firma, Adresse oder konkreten Kanal.',
     counters: [['Kandidatenprofile', '4', 'Ein Profil je bestätigtem Paket'], ['Erfasste reale Namen', '0', 'Keine Identität veröffentlicht'], ['Autorisierte Kontakte', '0', 'Getrennte menschliche Autorisierung'], ['Gesendete Anfragen', '0', 'Keine Auslösung']],
-    labels: { profile: 'Kandidatenprofil Empfänger', qualification: 'Zu prüfende Eigenschaft', channel: 'Zulässiger Kanal nach Autorisierung', status: 'KANDIDATENPROFIL · KEIN NAME' },
+    labels: { profile: 'Gesteuertes Empfängerprofil', qualification: 'Zu prüfende Eigenschaft', channel: 'Zulässiger Kanal nach Autorisierung', status: 'BESTÄTIGTES PROFIL · KEIN NAME' },
     recipients: [
       ['REQ-A · Offizielle Dokumentation', 'Offizielle Stelle, Herausgeber oder Vertragsverantwortung, die eine datierte und versionierte Quelle liefern kann.', 'Befugnis für die Dokumentation, prüfbare Herkunft, kein Geheimnis und passender Umfang.', 'Offizielle Seite oder autorisierter nachvollziehbarer Fachkontakt.'],
       ['REQ-B · Technische Nachweise', 'Autorisierte interne IT-Verantwortung oder kompetente technische Stelle für einen Bericht ausserhalb der Produktion.', 'Ausdrückliches Mandat, isolierte Umgebung, synthetische Daten, Methode und getrennte Kontrolle.', 'Autorisierter interner Kanal mit gesteuerter DMS-Ablage.'],
@@ -50,8 +50,8 @@ const COPY = {
     ],
     checksTitle: 'Bedingungen vor dem Ergänzen eines realen Namens',
     checks: ['Passender Bedarf und passendes REQ-Paket bestätigt.', 'Fachliche Eigenschaft oder interne Funktion geprüft.', 'Autorisierter nachvollziehbarer Kanal auf den Zweck begrenzt.', 'Keine unnötigen Personendaten.', 'Interne Versandverantwortung und DMS-Ablage bestimmt.', 'Getrennte menschliche Benennungsautorisierung dokumentiert.'],
-    next: 'Nächster menschlicher Entscheid: diese vier Profile bestätigen oder ändern und danach getrennt entscheiden, ob benannte Empfänger erfasst werden dürfen. Kein automatischer Versand.',
-    boundary: 'Grenze: REC-001 benennt niemanden, empfiehlt keinen Anbieter und autorisiert weder Kontakt, Übermittlung, Kauf noch L2-Öffnung.'
+    next: 'REF-01-G1-NAM-001 V0.1 bereitet vier leere Stellen für benannte Empfänger vor; jede reale Identität und jeder Versand bleiben einem eigenen menschlichen Entscheid vorbehalten.',
+    boundary: 'Grenze: REC-001 V1.0 benennt niemanden, empfiehlt keinen Anbieter und autorisiert weder Kontakt, Übermittlung, Kauf noch L2-Öffnung.'
   }
 };
 
