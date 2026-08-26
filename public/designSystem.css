@@ -706,6 +706,31 @@ html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .text-sky-400 {
   color: #0369a1 !important;
 }
 
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-review .text-sky-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-review .text-sky-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-review .text-sky-300,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-review .text-sky-400 {
+  color: #0369a1 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-review .ref01-g1-status--partial {
+  border-color: #38bdf8 !important;
+  background: #f0f9ff !important;
+  color: #075985 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-review .ref01-g1-status--open {
+  border-color: #f59e0b !important;
+  background: #fffbeb !important;
+  color: #92400e !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-review .ref01-g1-status--locked {
+  border-color: #fb7185 !important;
+  background: #fff1f2 !important;
+  color: #9f1239 !important;
+}
+
 html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .ref01-evidence-support-heading {
   background: #e2e8f0 !important;
   color: #0f172a !important;

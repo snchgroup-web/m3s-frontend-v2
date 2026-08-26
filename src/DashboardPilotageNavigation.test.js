@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.9 · 26-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.10 · 26-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -532,7 +532,12 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(dataFoundations).getAllByTestId('ref01-l1-gate')).toHaveLength(6);
   expect(within(dataFoundations).getByText(/Backend PR #46 fusionnée au commit cf35120/)).toBeInTheDocument();
   expect(within(dataFoundations).getByText(/G1 reste ouverte/)).toBeInTheDocument();
-  expect(control.getByText(/confirmer, corriger ou rejeter les fondations L1 candidates/)).toBeInTheDocument();
+  const gateReview = screen.getByRole('heading', { name: 'Décider G1 sans confondre preuve et recommandation' }).closest('section');
+  expect(within(gateReview).getAllByTestId('ref01-g1-condition')).toHaveLength(6);
+  expect(within(gateReview).getByText('Partiellement étayées')).toBeInTheDocument();
+  expect(within(gateReview).getByText('Décisions enregistrées')).toBeInTheDocument();
+  expect(within(gateReview).getByText('ARBITRAGES NECESSAIRES · G1 reste ouverte. Les fondations sont suffisamment documentées pour décider, pas pour déployer.')).toBeInTheDocument();
+  expect(control.getByText(/examiner REF-01-G1-REV-001 V0.1/)).toBeInTheDocument();
   expect(control.getByText(/décisions sur le lot : 9/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
@@ -593,12 +598,14 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByText('Architecture and responsibilities confirmed')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Test the structure without touching real data' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'G1 still requires a decision' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Decide G1 without confusing evidence and recommendation' })).toBeInTheDocument();
+  expect(screen.getByText('DECISIONS REQUIRED · G1 remains open. Foundations are documented enough to decide, not to deploy.')).toBeInTheDocument();
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Decision criteria validated').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByText(/confirm, amend or reject the candidate L1 foundations/)).toBeInTheDocument();
+  expect(screen.getByText(/examine REF-01-G1-REV-001 V0.1/)).toBeInTheDocument();
   expect(screen.getAllByText('Transfer')).toHaveLength(4);
   expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
 
@@ -643,12 +650,14 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByText('Architektur und Verantwortungen bestätigt')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Die Struktur prüfen, ohne reale Daten zu berühren' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'G1 benötigt weiterhin einen Entscheid' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'G1 entscheiden, ohne Nachweis und Empfehlung zu verwechseln' })).toBeInTheDocument();
+  expect(screen.getByText('ENTSCHEIDE ERFORDERLICH · G1 bleibt offen. Die Grundlagen reichen zum Entscheiden, nicht zum Bereitstellen.')).toBeInTheDocument();
   expect(screen.getByText(/Erfasste Entscheide: 1/)).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
   expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Entscheidungskriterien validiert').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByText(/Kandidatengrundlagen L1 und sechs G1-Bedingungen/)).toBeInTheDocument();
+  expect(screen.getByText(/REF-01-G1-REV-001 V0.1 prüfen/)).toBeInTheDocument();
   expect(screen.getAllByText('Wechseln')).toHaveLength(4);
   expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
 });
