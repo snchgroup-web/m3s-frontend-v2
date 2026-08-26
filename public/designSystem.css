@@ -773,6 +773,49 @@ html:not(.dark) .m3s-business-module .m3s-ref01-g1-arbitration .ref01-g1-decisio
   color: #9f1239 !important;
 }
 
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-decision > article {
+  border-color: #cbd5e1 !important;
+  background: #f8fafc !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-decision .text-emerald-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-decision .text-emerald-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-decision .text-emerald-300 {
+  color: #047857 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-decision .text-sky-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-decision .text-sky-300 {
+  color: #075985 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-decision .text-amber-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-decision .text-amber-300 {
+  color: #92400e !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-decision .text-rose-200 {
+  color: #be123c !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-decision .ref01-g1-outcome--amended {
+  border-color: #fdba74 !important;
+  background: #fff7ed !important;
+  color: #9a3412 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-decision .ref01-g1-outcome--confirmed {
+  border-color: #6ee7b7 !important;
+  background: #ecfdf5 !important;
+  color: #047857 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-decision .ref01-g1-outcome--closed {
+  border-color: #fda4af !important;
+  background: #fff1f2 !important;
+  color: #be123c !important;
+}
+
 html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .ref01-evidence-support-heading {
   background: #e2e8f0 !important;
   color: #0f172a !important;
