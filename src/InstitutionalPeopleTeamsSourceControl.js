@@ -23,7 +23,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.9 · 26-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.10 · 26-08-2026',
     title: 'Comparer les supports sans les promouvoir',
     body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
     counters: [
@@ -109,12 +109,12 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Prochain arbitrage : confirmer, corriger ou rejeter les fondations L1 candidates et les six conditions G1 avant toute ouverture de L2.',
-    boundary: 'Statut : base fonctionnelle V1.0, cadrage V0.2 et proposition V1.0 confirmés ; ADR L0 V1.0 confirmé par REF-01-DEC-012 ; G0 clôturée ; fondations L1 V0.1 testées localement ; décisions sur le lot : 9 ; sources maîtresses désignées : 0 ; changements en production : 0.',
+    nextControl: 'Prochain arbitrage : examiner REF-01-G1-REV-001 V0.1 et confirmer, corriger ou rejeter chaque orientation candidate ; G1 reste ouverte et L2 fermé.',
+    boundary: 'Statut : base fonctionnelle V1.0, cadrage V0.2 et proposition V1.0 confirmés ; ADR L0 V1.0 confirmé par REF-01-DEC-012 ; G0 clôturée ; fondations L1 V0.1 testées localement ; revue G1 V0.1 préparée ; décisions sur le lot : 9 ; sources maîtresses désignées : 0 ; changements en production : 0.',
     source: 'Supports contrôlés : contrat API RH-001, Annuaire interne, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-012, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0 et fondations L1 candidates publiées par la PR backend #46 au commit cf35120.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.9 · 26 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.10 · 26 AUG 2026',
     title: 'Compare supports without promoting them',
     body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
     counters: [
@@ -200,12 +200,12 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'Next review: confirm, amend or reject the candidate L1 foundations and six G1 conditions before opening L2.',
-    boundary: 'Status: functional baseline V1.0, framing V0.2 and proposal V1.0 confirmed; L0 ADR V1.0 confirmed through REF-01-DEC-012; G0 closed; L1 foundations V0.1 tested locally; package decisions: 9; designated master sources: 0; production changes: 0.',
+    nextControl: 'Next review: examine REF-01-G1-REV-001 V0.1 and confirm, amend or reject each candidate direction; G1 remains open and L2 closed.',
+    boundary: 'Status: functional baseline V1.0, framing V0.2 and proposal V1.0 confirmed; L0 ADR V1.0 confirmed through REF-01-DEC-012; G0 closed; L1 foundations V0.1 tested locally; G1 review V0.1 prepared; package decisions: 9; designated master sources: 0; production changes: 0.',
     source: 'Controlled supports: RH-001 API contract, Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-012, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0 and candidate L1 foundations published through backend PR #46 at commit cf35120.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.9 · 26.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.10 · 26.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
     body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
     counters: [
@@ -291,8 +291,8 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'Nächster Entscheid: Kandidatengrundlagen L1 und sechs G1-Bedingungen vor Öffnung von L2 bestätigen, ändern oder ablehnen.',
-    boundary: 'Stand: funktionale Basis V1.0, Ausgestaltung V0.2 und Vorschlag V1.0 bestätigt; L0-ADR V1.0 mit REF-01-DEC-012 bestätigt; G0 geschlossen; L1-Grundlagen V0.1 lokal geprüft; Paketentscheide: 9; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
+    nextControl: 'Nächster Entscheid: REF-01-G1-REV-001 V0.1 prüfen und jede Kandidatenrichtung bestätigen, ändern oder ablehnen; G1 bleibt offen und L2 geschlossen.',
+    boundary: 'Stand: funktionale Basis V1.0, Ausgestaltung V0.2 und Vorschlag V1.0 bestätigt; L0-ADR V1.0 mit REF-01-DEC-012 bestätigt; G0 geschlossen; L1-Grundlagen V0.1 lokal geprüft; G1-Prüfung V0.1 vorbereitet; Paketentscheide: 9; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
     source: 'Kontrollierte Träger: RH-001-API-Vertrag, Internes Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-012, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0 und mit Backend-PR #46 am Commit cf35120 veröffentlichte Kandidatengrundlagen L1.'
   }
 };
