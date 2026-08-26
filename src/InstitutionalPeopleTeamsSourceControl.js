@@ -13,6 +13,7 @@ import InstitutionalPeopleTeamsEvidenceReview from './InstitutionalPeopleTeamsEv
 import InstitutionalPeopleTeamsEvidenceResults from './InstitutionalPeopleTeamsEvidenceResults';
 import InstitutionalPeopleTeamsGapPriorities from './InstitutionalPeopleTeamsGapPriorities';
 import InstitutionalPeopleTeamsEventContract from './InstitutionalPeopleTeamsEventContract';
+import InstitutionalPeopleTeamsTechnicalFraming from './InstitutionalPeopleTeamsTechnicalFraming';
 
 const STATUS_STYLES = {
   connected: 'border-emerald-700/70 bg-emerald-950/25 text-emerald-200',
@@ -22,7 +23,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.4 · 26-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.5 · 26-08-2026',
     title: 'Comparer les supports sans les promouvoir',
     body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
     counters: [
@@ -108,12 +109,12 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Prochain arbitrage : décider séparément si un cadrage technique candidat de REF-01-ML-001 peut être préparé, sans implémentation.',
-    boundary: 'Statut : quatre vagues validées par REF-01-DEC-006 ; base fonctionnelle REF-01-ML-001 V1.0 confirmée par REF-01-DEC-007 ; décisions sur le lot : 4 ; sources maîtresses désignées : 0.',
-    source: 'Supports contrôlés : contrat API RH-001, composant Annuaire interne, utilitaire partagé Team/Agent, cadrage GED, décisions REF-01-DEC-001 à REF-01-DEC-007, comparatif V0.5 publié au commit 6be6a4a et base fonctionnelle REF-01-ML-001 V1.0.'
+    nextControl: 'Prochain arbitrage : confirmer, corriger ou rejeter le cadrage technique candidat REF-01-ML-001 V0.1 avant toute proposition d’implémentation.',
+    boundary: 'Statut : base fonctionnelle REF-01-ML-001 V1.0 confirmée par REF-01-DEC-007 ; préparation du cadrage technique autorisée par REF-01-DEC-008 ; décisions sur le lot : 5 ; sources maîtresses désignées : 0.',
+    source: 'Supports contrôlés : contrat API RH-001, composant Annuaire interne, utilitaire partagé Team/Agent, cadrage GED, décisions REF-01-DEC-001 à REF-01-DEC-008, base fonctionnelle REF-01-ML-001 V1.0 et cadrage technique candidat V0.1.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.4 · 26 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.5 · 26 AUG 2026',
     title: 'Compare supports without promoting them',
     body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
     counters: [
@@ -199,12 +200,12 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'Next review: decide separately whether candidate technical framing for REF-01-ML-001 may be prepared, without implementation.',
-    boundary: 'Status: four waves validated by REF-01-DEC-006; functional baseline REF-01-ML-001 V1.0 confirmed by REF-01-DEC-007; package decisions: 4; designated master sources: 0.',
-    source: 'Controlled supports: RH-001 API contract, Internal Directory component, shared Team/Agent utility, DMS framing, decisions REF-01-DEC-001 through REF-01-DEC-007, V0.5 comparison published at commit 6be6a4a, and functional baseline REF-01-ML-001 V1.0.'
+    nextControl: 'Next review: confirm, amend or reject candidate technical framing REF-01-ML-001 V0.1 before any implementation proposal.',
+    boundary: 'Status: functional baseline REF-01-ML-001 V1.0 confirmed by REF-01-DEC-007; technical-framing preparation authorised by REF-01-DEC-008; package decisions: 5; designated master sources: 0.',
+    source: 'Controlled supports: RH-001 API contract, Internal Directory component, shared Team/Agent utility, DMS framing, decisions REF-01-DEC-001 through REF-01-DEC-008, functional baseline REF-01-ML-001 V1.0 and candidate technical framing V0.1.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.4 · 26.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.5 · 26.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
     body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
     counters: [
@@ -290,9 +291,9 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'Nächster Entscheid: getrennt entscheiden, ob eine technische Kandidatenausgestaltung für REF-01-ML-001 ohne Umsetzung vorbereitet werden darf.',
-    boundary: 'Stand: vier Wellen mit REF-01-DEC-006 validiert; funktionale Basis REF-01-ML-001 V1.0 mit REF-01-DEC-007 bestätigt; Entscheide zum Paket: 4; bestimmte Masterquellen: 0.',
-    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Komponente Internes Verzeichnis, gemeinsames Team-/Agent-Werkzeug, DMS-Rahmen, REF-01-DEC-001 bis REF-01-DEC-007, am Commit 6be6a4a veröffentlichter Vergleich V0.5 und funktionale Basis REF-01-ML-001 V1.0.'
+    nextControl: 'Nächster Entscheid: Die technische Kandidatenausgestaltung REF-01-ML-001 V0.1 vor jedem Umsetzungsvorschlag bestätigen, ändern oder ablehnen.',
+    boundary: 'Stand: funktionale Basis REF-01-ML-001 V1.0 mit REF-01-DEC-007 bestätigt; Vorbereitung der technischen Ausgestaltung mit REF-01-DEC-008 autorisiert; Entscheide zum Paket: 5; bestimmte Masterquellen: 0.',
+    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Komponente Internes Verzeichnis, gemeinsames Team-/Agent-Werkzeug, DMS-Rahmen, REF-01-DEC-001 bis REF-01-DEC-008, funktionale Basis REF-01-ML-001 V1.0 und technische Kandidatenausgestaltung V0.1.'
   }
 };
 
@@ -324,7 +325,7 @@ const InstitutionalPeopleTeamsSourceControl = ({ language = 'FR' }) => {
   const CounterIcons = [ListChecks, Database, SlidersHorizontal, FileArchive];
 
   return (
-    <section id="institutional-ref01-source-candidate-control" className="m3s-ref01-sources mt-4 rounded-md border border-violet-800/70 bg-violet-950/10 p-4 scroll-mt-24" aria-labelledby="institutional-ref01-source-candidate-control-title">
+    <section id="institutional-ref01-source-candidate-control" className="m3s-ref01-sources mt-4 rounded-md border border-violet-800/70 bg-violet-950/10 p-1 scroll-mt-24 sm:p-4" aria-labelledby="institutional-ref01-source-candidate-control-title">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-5xl">
           <p className="text-xs font-semibold uppercase text-violet-300">{t.eyebrow}</p>
@@ -406,6 +407,7 @@ const InstitutionalPeopleTeamsSourceControl = ({ language = 'FR' }) => {
       <InstitutionalPeopleTeamsEvidenceResults language={language} />
       <InstitutionalPeopleTeamsGapPriorities language={language} />
       <InstitutionalPeopleTeamsEventContract language={language} />
+      <InstitutionalPeopleTeamsTechnicalFraming language={language} />
       <p className="mt-3 rounded-md border border-sky-800/70 bg-sky-950/15 p-3 text-xs font-semibold leading-5 text-sky-200">{t.nextControl}</p>
 
       <p className="mt-4 flex items-start gap-2 border-t border-slate-700 pt-4 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.boundary}</p>

@@ -24,7 +24,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DETAILLE 1/11 · REF-01 · V1.4 · 26-08-2026',
+    eyebrow: 'CONTROLE DETAILLE 1/11 · REF-01 · V1.5 · 26-08-2026',
     title: 'REF-01 · Personnes et équipes',
     body: 'Ce contrôle rapproche l’annuaire RH-001, les sélecteurs Team/Agent et les règles déjà publiées pour les responsabilités collectives. Il prépare un modèle commun sans recopier l’annuaire, désigner une source maîtresse ou confondre personne, appartenance, équipe, rôle et accès M3S.',
     counters: [
@@ -122,7 +122,7 @@ const COPY = {
     openArchitecture: 'Examiner l’architecture RH de REF-01'
   },
   EN: {
-    eyebrow: 'DETAILED CONTROL 1/11 · REF-01 · V1.4 · 26 AUG 2026',
+    eyebrow: 'DETAILED CONTROL 1/11 · REF-01 · V1.5 · 26 AUG 2026',
     title: 'REF-01 · People and teams',
     body: 'This control reconciles the RH-001 directory, Team/Agent selectors and the published rules for collective responsibilities. It prepares a shared model without copying the directory, designating a master source or confusing a person, membership, team, role and M3S access.',
     counters: [
@@ -220,7 +220,7 @@ const COPY = {
     openArchitecture: 'Review the REF-01 HR architecture'
   },
   DE: {
-    eyebrow: 'DETAILKONTROLLE 1/11 · REF-01 · V1.4 · 26.08.2026',
+    eyebrow: 'DETAILKONTROLLE 1/11 · REF-01 · V1.5 · 26.08.2026',
     title: 'REF-01 · Personen und Teams',
     body: 'Diese Kontrolle gleicht das RH-001-Verzeichnis, die Team-/Agent-Auswahl und die veröffentlichten Regeln für kollektive Verantwortungen ab. Sie bereitet ein gemeinsames Modell vor, ohne das Verzeichnis zu kopieren, eine Masterquelle zu bestimmen oder Person, Mitgliedschaft, Team, Rolle und M3S-Zugriff zu vermischen.',
     counters: [
@@ -330,7 +330,7 @@ const InstitutionalPeopleTeamsReferenceControl = ({ language = 'FR', onNavigate 
   const returnContext = 'returnTo=dashboard&dashboardView=program&dashboardSection=institutional-ref01-people-teams-control';
 
   return (
-    <section id="institutional-ref01-people-teams-control" className="mt-4 rounded-md border border-cyan-800/70 bg-cyan-950/10 p-4 scroll-mt-24" aria-labelledby="institutional-ref01-people-teams-control-title">
+    <section id="institutional-ref01-people-teams-control" className="mt-4 rounded-md border border-cyan-800/70 bg-cyan-950/10 p-1 scroll-mt-24 sm:p-4" aria-labelledby="institutional-ref01-people-teams-control-title">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-5xl">
           <p className="text-xs font-semibold uppercase text-cyan-300">{t.eyebrow}</p>
