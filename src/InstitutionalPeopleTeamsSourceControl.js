@@ -23,7 +23,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.17 · 26-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.18 · 26-08-2026',
     title: 'Comparer les supports sans les promouvoir',
     body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
     counters: [
@@ -109,12 +109,12 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Prochain arbitrage : confirmer ou amender REF-01-G1-NAM-001 V0.1, puis autoriser ou refuser séparément chaque inscription nominative ; aucun nom ni envoi automatique, G1 reste ouverte et L2 fermé.',
-    boundary: 'Statut : base fonctionnelle V1.0, cadrage V0.2 et proposition V1.0 confirmés ; ADR L0 V1.0 confirmé par REF-01-DEC-012 ; G0 clôturée ; fondations L1 V0.1 testées localement ; quatre principes G1 confirmés ; fiche de preuve V1.0, paquet de collecte V1.0, fiche de sollicitation V1.0 et profils destinataires V1.0 confirmés ; fiche nominative V0.1 préparée avec quatre emplacements vides, zéro preuve reçue, zéro destinataire nommé, zéro demande envoyée, zéro fournisseur retenu et L2 fermé ; décisions sur le lot : 14 ; sources maîtresses désignées : 0 ; changements en production : 0.',
-    source: 'Supports contrôlés : contrat API RH-001, Annuaire interne, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-017, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0 et fondations L1 candidates publiées par la PR backend #46 au commit cf35120.'
+    nextControl: 'Prochain arbitrage : confirmer ou amender REF-01-G1-AUT-001 V0.1 ; chaque future identité et tout envoi exigent ensuite des décisions séparées, G1 reste ouverte et L2 fermé.',
+    boundary: 'Statut : base fonctionnelle V1.0, cadrage V0.2 et proposition V1.0 confirmés ; ADR L0 V1.0 confirmé par REF-01-DEC-012 ; G0 clôturée ; fondations L1 V0.1 testées localement ; quatre principes G1 confirmés ; fiche de preuve V1.0, paquet de collecte V1.0, fiche de sollicitation V1.0, profils destinataires V1.0 et fiche nominative V1.0 confirmés ; registre d’autorisation V0.1 préparé avec quatre dossiers vides, zéro preuve reçue, zéro destinataire nommé, zéro demande envoyée, zéro fournisseur retenu et L2 fermé ; décisions sur le lot : 15 ; sources maîtresses désignées : 0 ; changements en production : 0.',
+    source: 'Supports contrôlés : contrat API RH-001, Annuaire interne, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-018, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0 et fondations L1 candidates publiées par la PR backend #46 au commit cf35120.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.17 · 26 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.18 · 26 AUG 2026',
     title: 'Compare supports without promoting them',
     body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
     counters: [
@@ -200,12 +200,12 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'Next decision: confirm or amend REF-01-G1-NAM-001 V0.1, then separately authorise or refuse each named record; no automatic name or send, G1 remains open and L2 closed.',
-    boundary: 'Status: functional baseline V1.0, framing V0.2 and proposal V1.0 confirmed; L0 ADR V1.0 confirmed through REF-01-DEC-012; G0 closed; L1 foundations V0.1 tested locally; four G1 principles confirmed; evidence sheet V1.0, collection package V1.0, request sheet V1.0 and recipient profiles V1.0 confirmed; named-recipient sheet V0.1 prepared with four empty slots, zero evidence received, zero named recipients, zero requests sent, zero selected providers and L2 closed; package decisions: 14; designated master sources: 0; production changes: 0.',
-    source: 'Controlled supports: RH-001 API contract, Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-017, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0 and candidate L1 foundations published through backend PR #46 at commit cf35120.'
+    nextControl: 'Next decision: confirm or amend REF-01-G1-AUT-001 V0.1; every future identity and send then require separate decisions, G1 remains open and L2 closed.',
+    boundary: 'Status: functional baseline V1.0, framing V0.2 and proposal V1.0 confirmed; L0 ADR V1.0 confirmed through REF-01-DEC-012; G0 closed; L1 foundations V0.1 tested locally; four G1 principles confirmed; evidence sheet V1.0, collection package V1.0, request sheet V1.0, recipient profiles V1.0 and named-recipient sheet V1.0 confirmed; authorisation register V0.1 prepared with four empty files, zero evidence received, zero named recipients, zero requests sent, zero selected providers and L2 closed; package decisions: 15; designated master sources: 0; production changes: 0.',
+    source: 'Controlled supports: RH-001 API contract, Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-018, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0 and candidate L1 foundations published through backend PR #46 at commit cf35120.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.17 · 26.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.18 · 26.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
     body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
     counters: [
@@ -291,9 +291,9 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'Nächster Entscheid: REF-01-G1-NAM-001 V0.1 bestätigen oder ändern und danach jeden benannten Eintrag getrennt erlauben oder ablehnen; kein automatischer Name oder Versand, G1 bleibt offen und L2 geschlossen.',
-    boundary: 'Stand: funktionale Basis V1.0, Ausgestaltung V0.2 und Vorschlag V1.0 bestätigt; L0-ADR V1.0 mit REF-01-DEC-012 bestätigt; G0 geschlossen; L1-Grundlagen V0.1 lokal geprüft; vier G1-Prinzipien bestätigt; Nachweisblatt V1.0, Sammlungspaket V1.0, Anfrageblatt V1.0 und Empfängerprofile V1.0 bestätigt; Blatt für benannte Empfänger V0.1 mit vier leeren Stellen, null erhaltenen Nachweisen, null benannten Empfängern, null gesendeten Anfragen, null gewählten Anbietern und geschlossenem L2 vorbereitet; Paketentscheide: 14; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
-    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Internes Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-017, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0 und mit Backend-PR #46 am Commit cf35120 veröffentlichte Kandidatengrundlagen L1.'
+    nextControl: 'Nächster Entscheid: REF-01-G1-AUT-001 V0.1 bestätigen oder ändern; jede künftige Identität und jeder Versand brauchen danach getrennte Entscheide, G1 bleibt offen und L2 geschlossen.',
+    boundary: 'Stand: funktionale Basis V1.0, Ausgestaltung V0.2 und Vorschlag V1.0 bestätigt; L0-ADR V1.0 mit REF-01-DEC-012 bestätigt; G0 geschlossen; L1-Grundlagen V0.1 lokal geprüft; vier G1-Prinzipien bestätigt; Nachweisblatt V1.0, Sammlungspaket V1.0, Anfrageblatt V1.0, Empfängerprofile V1.0 und Blatt für benannte Empfänger V1.0 bestätigt; Autorisierungsregister V0.1 mit vier leeren Dossiers, null erhaltenen Nachweisen, null benannten Empfängern, null gesendeten Anfragen, null gewählten Anbietern und geschlossenem L2 vorbereitet; Paketentscheide: 15; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
+    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Internes Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-018, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0 und mit Backend-PR #46 am Commit cf35120 veröffentlichte Kandidatengrundlagen L1.'
   }
 };
 

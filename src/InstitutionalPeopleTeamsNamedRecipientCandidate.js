@@ -3,11 +3,11 @@ import { AlertTriangle, BadgeCheck, ContactRound, LockKeyhole } from 'lucide-rea
 
 const COPY = {
   FR: {
-    eyebrow: 'FICHE CANDIDATE D’INSCRIPTION NOMINATIVE · REF-01-G1-NAM-001 · V0.1 · 26-08-2026',
-    title: 'Préparer les emplacements sans enregistrer d’identité',
-    intro: 'Cette fiche applique REC-001 V1.0 en préparant quatre emplacements vides. Elle définit ce qui devra être prouvé avant chaque inscription réelle, sans publier de nom, d’entreprise, d’adresse ou de coordonnée.',
-    counters: [['Emplacements préparés', '4', 'Un par profil confirmé'], ['Identités réelles', '0', 'Aucune donnée nominative'], ['Inscriptions autorisées', '0', 'Décision individuelle requise'], ['Contacts ou envois', '0', 'Toujours interdits']],
-    labels: { target: 'Emplacement à compléter après autorisation', proof: 'Preuve avant inscription', status: 'VIDE · NON AUTORISÉ' },
+    eyebrow: 'FICHE GOUVERNÉE D’INSCRIPTION NOMINATIVE · REF-01-G1-NAM-001 · V1.0 · 26-08-2026',
+    title: 'Gouverner les emplacements sans enregistrer d’identité',
+    intro: 'Confirmée par REF-01-DEC-018, cette fiche applique REC-001 V1.0 avec quatre emplacements gouvernés qui restent vides. Elle définit les preuves requises avant chaque inscription réelle, sans publier de nom, d’entreprise, d’adresse ou de coordonnée.',
+    counters: [['Emplacements confirmés', '4/4', 'Un par profil confirmé'], ['Identités réelles', '0', 'Aucune donnée nominative'], ['Inscriptions autorisées', '0', 'Décision individuelle requise'], ['Contacts ou envois', '0', 'Toujours interdits']],
+    labels: { target: 'Emplacement à compléter après autorisation', proof: 'Preuve avant inscription', status: 'EMPLACEMENT CONFIRMÉ · VIDE' },
     slots: [
       ['REQ-A · Documentation officielle', 'Entité ou service officiel responsable de la documentation.', 'Autorité, source officielle, périmètre et canal professionnel vérifiés.'],
       ['REQ-B · Preuves techniques', 'Fonction IT interne autorisée ou service technique compétent.', 'Mandat, environnement isolé, données synthétiques et séparation du contrôle prouvés.'],
@@ -16,15 +16,15 @@ const COPY = {
     ],
     controlsTitle: 'Contrôles avant chaque inscription réelle',
     controls: ['Rattachement explicite au profil REC et au lot REQ.', 'Nécessité et minimisation des données démontrées.', 'Qualité professionnelle ou mandat interne prouvé.', 'Base d’autorisation et droits d’accès documentés.', 'Responsable interne et emplacement GED désignés.', 'Révision, expiration et autorisation d’envoi traitées séparément.'],
-    next: 'Prochain arbitrage humain : confirmer ou amender NAM-001 V0.1, puis autoriser ou refuser séparément la création de chaque fiche nominative. Aucun nom et aucun envoi automatiques.',
-    boundary: 'Limite : NAM-001 contient quatre emplacements vides. Il ne crée aucune identité, ne recommande aucun fournisseur et n’autorise aucun contact, envoi, achat ou ouverture de L2.'
+    next: 'REF-01-G1-AUT-001 V0.1 prépare désormais quatre dossiers d’autorisation vides ; chaque future identité et tout envoi restent soumis à des décisions humaines distinctes.',
+    boundary: 'Limite : NAM-001 V1.0 gouverne quatre emplacements vides. Il ne crée aucune identité, ne recommande aucun fournisseur et n’autorise aucun contact, envoi, achat ou ouverture de L2.'
   },
   EN: {
-    eyebrow: 'CANDIDATE NAMED-RECIPIENT RECORD · REF-01-G1-NAM-001 · V0.1 · 26 AUG 2026',
-    title: 'Prepare slots without recording an identity',
-    intro: 'This sheet applies REC-001 V1.0 by preparing four empty slots. It defines what must be evidenced before each real entry, without publishing a name, company, address or contact detail.',
-    counters: [['Prepared slots', '4', 'One per confirmed profile'], ['Real identities', '0', 'No named data'], ['Authorised records', '0', 'Individual decision required'], ['Contacts or sends', '0', 'Still forbidden']],
-    labels: { target: 'Slot to complete after authorisation', proof: 'Evidence before recording', status: 'EMPTY · NOT AUTHORISED' },
+    eyebrow: 'GOVERNED NAMED-RECIPIENT RECORD · REF-01-G1-NAM-001 · V1.0 · 26 AUG 2026',
+    title: 'Govern slots without recording an identity',
+    intro: 'Confirmed through REF-01-DEC-018, this sheet applies REC-001 V1.0 with four governed slots that remain empty. It defines the evidence required before each real entry, without publishing a name, company, address or contact detail.',
+    counters: [['Confirmed slots', '4/4', 'One per confirmed profile'], ['Real identities', '0', 'No named data'], ['Authorised records', '0', 'Individual decision required'], ['Contacts or sends', '0', 'Still forbidden']],
+    labels: { target: 'Slot to complete after authorisation', proof: 'Evidence before recording', status: 'CONFIRMED SLOT · EMPTY' },
     slots: [
       ['REQ-A · Official documentation', 'Official entity or service responsible for documentation.', 'Authority, official source, scope and professional channel verified.'],
       ['REQ-B · Technical evidence', 'Authorised internal IT function or competent technical service.', 'Mandate, isolated environment, synthetic data and separated control evidenced.'],
@@ -33,15 +33,15 @@ const COPY = {
     ],
     controlsTitle: 'Controls before each real entry',
     controls: ['Explicit link to the REC profile and REQ package.', 'Necessity and data minimisation demonstrated.', 'Professional capacity or internal mandate evidenced.', 'Authorisation basis and access rights documented.', 'Internal owner and DMS location designated.', 'Review, expiry and send authorisation handled separately.'],
-    next: 'Next human decision: confirm or amend NAM-001 V0.1, then separately authorise or refuse creation of each named record. No automatic names or sends.',
-    boundary: 'Boundary: NAM-001 contains four empty slots. It creates no identity, recommends no provider and authorises no contact, send, purchase or L2 opening.'
+    next: 'REF-01-G1-AUT-001 V0.1 now prepares four empty authorisation files; every future identity and send remain subject to distinct human decisions.',
+    boundary: 'Boundary: NAM-001 V1.0 governs four empty slots. It creates no identity, recommends no provider and authorises no contact, send, purchase or L2 opening.'
   },
   DE: {
-    eyebrow: 'KANDIDATENBLATT FÜR BENANNTE EMPFÄNGER · REF-01-G1-NAM-001 · V0.1 · 26.08.2026',
-    title: 'Leere Stellen vorbereiten, ohne eine Identität zu erfassen',
-    intro: 'Dieses Blatt wendet REC-001 V1.0 an und bereitet vier leere Stellen vor. Es definiert die vor jedem realen Eintrag nötigen Nachweise, ohne Namen, Firma, Adresse oder Kontaktdaten zu veröffentlichen.',
-    counters: [['Vorbereitete Stellen', '4', 'Eine je bestätigtem Profil'], ['Reale Identitäten', '0', 'Keine Namensdaten'], ['Autorisierte Einträge', '0', 'Einzelentscheid erforderlich'], ['Kontakte oder Versand', '0', 'Weiterhin verboten']],
-    labels: { target: 'Nach Autorisierung zu ergänzende Stelle', proof: 'Nachweis vor Erfassung', status: 'LEER · NICHT AUTORISIERT' },
+    eyebrow: 'GESTEUERTES BLATT FÜR BENANNTE EMPFÄNGER · REF-01-G1-NAM-001 · V1.0 · 26.08.2026',
+    title: 'Stellen steuern, ohne eine Identität zu erfassen',
+    intro: 'Mit REF-01-DEC-018 bestätigt, wendet dieses Blatt REC-001 V1.0 mit vier gesteuerten, weiterhin leeren Stellen an. Es definiert die vor jedem realen Eintrag nötigen Nachweise, ohne Namen, Firma, Adresse oder Kontaktdaten zu veröffentlichen.',
+    counters: [['Bestätigte Stellen', '4/4', 'Eine je bestätigtem Profil'], ['Reale Identitäten', '0', 'Keine Namensdaten'], ['Autorisierte Einträge', '0', 'Einzelentscheid erforderlich'], ['Kontakte oder Versand', '0', 'Weiterhin verboten']],
+    labels: { target: 'Nach Autorisierung zu ergänzende Stelle', proof: 'Nachweis vor Erfassung', status: 'BESTÄTIGTE STELLE · LEER' },
     slots: [
       ['REQ-A · Offizielle Dokumentation', 'Offizielle Entität oder Stelle mit Verantwortung für die Dokumentation.', 'Befugnis, offizielle Quelle, Umfang und Fachkanal geprüft.'],
       ['REQ-B · Technische Nachweise', 'Autorisierte interne IT-Funktion oder kompetente technische Stelle.', 'Mandat, isolierte Umgebung, synthetische Daten und getrennte Kontrolle belegt.'],
@@ -50,8 +50,8 @@ const COPY = {
     ],
     controlsTitle: 'Kontrollen vor jedem realen Eintrag',
     controls: ['Explizite Verbindung zum REC-Profil und REQ-Paket.', 'Notwendigkeit und Datenminimierung nachgewiesen.', 'Fachliche Eigenschaft oder internes Mandat belegt.', 'Autorisierungsgrundlage und Zugriffsrechte dokumentiert.', 'Interne Verantwortung und DMS-Ablage bestimmt.', 'Prüfung, Ablauf und Versandautorisierung getrennt behandelt.'],
-    next: 'Nächster menschlicher Entscheid: NAM-001 V0.1 bestätigen oder ändern und danach die Erstellung jedes benannten Eintrags getrennt erlauben oder ablehnen. Keine automatischen Namen oder Sendungen.',
-    boundary: 'Grenze: NAM-001 enthält vier leere Stellen. Es erstellt keine Identität, empfiehlt keinen Anbieter und autorisiert weder Kontakt, Versand, Kauf noch L2-Öffnung.'
+    next: 'REF-01-G1-AUT-001 V0.1 bereitet nun vier leere Autorisierungsdossiers vor; jede künftige Identität und jeder Versand bleiben getrennten menschlichen Entscheiden vorbehalten.',
+    boundary: 'Grenze: NAM-001 V1.0 steuert vier leere Stellen. Es erstellt keine Identität, empfiehlt keinen Anbieter und autorisiert weder Kontakt, Versand, Kauf noch L2-Öffnung.'
   }
 };
 

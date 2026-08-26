@@ -29,6 +29,8 @@ import InstitutionalPeopleTeamsRequestConfirmation from './InstitutionalPeopleTe
 import InstitutionalPeopleTeamsRecipientAuthorisationCandidate from './InstitutionalPeopleTeamsRecipientAuthorisationCandidate';
 import InstitutionalPeopleTeamsRecipientConfirmation from './InstitutionalPeopleTeamsRecipientConfirmation';
 import InstitutionalPeopleTeamsNamedRecipientCandidate from './InstitutionalPeopleTeamsNamedRecipientCandidate';
+import InstitutionalPeopleTeamsNamedRecipientConfirmation from './InstitutionalPeopleTeamsNamedRecipientConfirmation';
+import InstitutionalPeopleTeamsNamedRecordAuthorisationCandidate from './InstitutionalPeopleTeamsNamedRecordAuthorisationCandidate';
 
 const STAGES = ['scope', 'sources', 'owners', 'models', 'vocabulary', 'review'];
 
@@ -191,6 +193,8 @@ const InstitutionalDataReferenceSystemsConsolidationPilot = ({ language = 'FR', 
       <InstitutionalPeopleTeamsRecipientAuthorisationCandidate language={language} />
       <InstitutionalPeopleTeamsRecipientConfirmation language={language} />
       <InstitutionalPeopleTeamsNamedRecipientCandidate language={language} />
+      <InstitutionalPeopleTeamsNamedRecipientConfirmation language={language} />
+      <InstitutionalPeopleTeamsNamedRecordAuthorisationCandidate language={language} />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
