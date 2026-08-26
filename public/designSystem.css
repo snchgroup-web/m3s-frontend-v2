@@ -893,9 +893,48 @@ html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-collection .text-ros
 }
 
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-collection .ref01-g1-collection-status {
-  border-color: #8b5cf6 !important;
-  background: #f5f3ff !important;
+  border-color: #10b981 !important;
+  background: #ecfdf5 !important;
+  color: #047857 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-collection-confirmation .text-emerald-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-collection-confirmation .text-emerald-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-collection-confirmation .text-emerald-300 {
+  color: #047857 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-collection-confirmation .text-sky-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-external-request .text-sky-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-external-request .text-sky-300 {
+  color: #075985 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-collection-confirmation .text-rose-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-collection-confirmation .text-rose-300,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-external-request .text-rose-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-external-request .text-rose-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-external-request .text-rose-300 {
+  color: #be123c !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-external-request .text-violet-300 {
   color: #6d28d9 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-external-request .text-emerald-300 {
+  color: #047857 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-external-request .text-amber-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-external-request .text-amber-300 {
+  color: #92400e !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-external-request .ref01-g1-request-status {
+  border-color: #fb7185 !important;
+  background: #fff1f2 !important;
+  color: #be123c !important;
 }
 
 html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .ref01-evidence-support-heading {

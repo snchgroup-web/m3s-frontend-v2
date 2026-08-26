@@ -3,11 +3,11 @@ import { AlertTriangle, Archive, ClipboardList, FileSearch, LockKeyhole, ShieldC
 
 const COPY = {
   FR: {
-    eyebrow: 'PAQUET DE COLLECTE CANDIDAT · REF-01-G1-COL-001 · V0.1 · 26-08-2026',
-    title: 'Préparer la collecte contrôlée sans démarrer la consultation',
-    intro: 'Ce paquet transforme la fiche confirmée en sept emplacements de collecte. Il précise les canaux admissibles, les contrôles et les responsabilités, mais n’autorise encore aucun contact, compte, essai, achat ou sélection.',
-    counters: [['Emplacements préparés', '7', 'Un par exigence'], ['Preuves reçues', '0', 'Collecte non démarrée'], ['Destinataires autorisés', '0', 'Périmètre à décider'], ['Fournisseurs retenus', '0', 'Aucune sélection']],
-    labels: { channel: 'Canal admissible proposé', owner: 'Préparation et contrôle', control: 'Contrôle avant acceptation', status: 'A AUTORISER' },
+    eyebrow: 'PAQUET DE COLLECTE GOUVERNÉ · REF-01-G1-COL-001 · V1.0 · 26-08-2026',
+    title: 'Encadrer la collecte contrôlée sans démarrer la consultation',
+    intro: 'Ce paquet confirmé par REF-01-DEC-015 gouverne sept emplacements de collecte, leurs canaux admissibles, contrôles et responsabilités. Il n’autorise encore aucun destinataire nommé, contact, compte, essai, achat ou sélection.',
+    counters: [['Périmètre confirmé', '7/7', 'Un emplacement par exigence'], ['Preuves reçues', '0', 'Collecte non démarrée'], ['Destinataires nommés', '0', 'Autorisation séparée'], ['Fournisseurs retenus', '0', 'Aucune sélection']],
+    labels: { channel: 'Canal admissible gouverné', owner: 'Préparation et contrôle', control: 'Contrôle avant acceptation', status: 'CONFIRMÉ' },
     items: [
       ['1 · Chiffrement', 'Documentation officielle datée et, si autorisée, configuration expurgée.', 'IT & Support prépare ; Gouvernance contrôle ; GED conserve.', 'Refuser secret, clé, identifiant ou simple affirmation commerciale.'],
       ['2 · Sauvegarde automatique', 'Politique officielle et rapport non productif autorisé.', 'IT & Support prépare et teste ; GED conserve ; Gouvernance accepte les objectifs.', 'Fréquence, conservation, isolation, chiffrement, alertes et échecs doivent être explicites.'],
@@ -21,14 +21,14 @@ const COPY = {
     workflow: ['Autoriser le périmètre et les canaux.', 'Collecter chaque exigence séparément.', 'Enregistrer les dix métadonnées.', 'Contrôler indépendamment provenance, fraîcheur et contradictions.', 'Soumettre les résultats à une décision humaine distincte.'],
     refusalsTitle: 'Rejets obligatoires',
     refusals: ['Source ou version absente.', 'Document expiré ou contradictoire.', 'Secret, identifiant ou donnée personnelle réelle.', 'Promesse commerciale sans preuve contrôlable.', 'Pression pour choisir un fournisseur avant comparaison.'],
-    verdict: 'PAQUET PRET POUR ARBITRAGE · Sept emplacements vides, zéro collecte et zéro destinataire autorisé.',
-    next: 'Prochain arbitrage humain : confirmer ou amender le périmètre, les canaux et les responsables de collecte avant toute sollicitation externe.',
+    verdict: 'PAQUET CONFIRMÉ · Sept emplacements gouvernés, zéro collecte, zéro destinataire nommé et zéro fournisseur retenu.',
+    next: 'REF-01-G1-REQ-001 V0.1 prépare séparément les demandes candidates ; leurs destinataires et leur envoi restent soumis à une autorisation humaine distincte.',
     boundary: 'Limite : ce paquet n’est ni un appel d’offres, ni une demande envoyée, ni une sélection, ni un test, ni une ouverture de L2.'
   },
   EN: {
-    eyebrow: 'CANDIDATE COLLECTION PACKAGE · REF-01-G1-COL-001 · V0.1 · 26 AUG 2026', title: 'Prepare controlled collection without starting consultation', intro: 'This package turns the confirmed sheet into seven collection slots. It defines admissible channels, controls and responsibilities but authorises no contact, account, trial, purchase or selection.',
-    counters: [['Prepared slots', '7', 'One per requirement'], ['Evidence received', '0', 'Collection not started'], ['Authorised recipients', '0', 'Scope to decide'], ['Selected providers', '0', 'No selection']],
-    labels: { channel: 'Proposed admissible channel', owner: 'Preparation and control', control: 'Control before acceptance', status: 'TO AUTHORISE' },
+    eyebrow: 'GOVERNED COLLECTION PACKAGE · REF-01-G1-COL-001 · V1.0 · 26 AUG 2026', title: 'Govern controlled collection without starting consultation', intro: 'Confirmed through REF-01-DEC-015, this package governs seven collection slots, their admissible channels, controls and responsibilities. It authorises no named recipient, contact, account, trial, purchase or selection.',
+    counters: [['Confirmed scope', '7/7', 'One slot per requirement'], ['Evidence received', '0', 'Collection not started'], ['Named recipients', '0', 'Separate authorisation'], ['Selected providers', '0', 'No selection']],
+    labels: { channel: 'Governed admissible channel', owner: 'Preparation and control', control: 'Control before acceptance', status: 'CONFIRMED' },
     items: [
       ['1 · Encryption', 'Dated official documentation and, if authorised, redacted configuration.', 'IT & Support prepares; Governance controls; DMS retains.', 'Reject secrets, keys, identifiers or unsupported marketing claims.'],
       ['2 · Automated backup', 'Official policy and authorised non-production report.', 'IT & Support prepares and tests; DMS retains; Governance accepts objectives.', 'Frequency, retention, isolation, encryption, alerts and failures must be explicit.'],
@@ -40,12 +40,12 @@ const COPY = {
     ],
     workflowTitle: 'Proposed collection sequence', workflow: ['Authorise scope and channels.', 'Collect each requirement separately.', 'Record the ten metadata fields.', 'Independently check provenance, freshness and contradictions.', 'Submit results to a separate human decision.'],
     refusalsTitle: 'Mandatory rejections', refusals: ['Missing source or version.', 'Expired or contradictory record.', 'Secret, identifier or real personal data.', 'Marketing promise without controllable evidence.', 'Pressure to select a provider before comparison.'],
-    verdict: 'PACKAGE READY FOR DECISION · Seven empty slots, zero collection and zero authorised recipients.', next: 'Next human decision: confirm or amend collection scope, channels and owners before any external request.', boundary: 'Boundary: this package is neither a request for proposal, sent request, selection, test nor L2 opening.'
+    verdict: 'PACKAGE CONFIRMED · Seven governed slots, zero collection, zero named recipients and zero selected providers.', next: 'REF-01-G1-REQ-001 V0.1 separately prepares candidate requests; their recipients and release remain subject to a distinct human authorisation.', boundary: 'Boundary: this package is neither a request for proposal, sent request, selection, test nor L2 opening.'
   },
   DE: {
-    eyebrow: 'KANDIDATEN-SAMMLUNGSPAKET · REF-01-G1-COL-001 · V0.1 · 26.08.2026', title: 'Kontrollierte Sammlung vorbereiten, ohne die Konsultation zu starten', intro: 'Dieses Paket macht aus dem bestätigten Blatt sieben Sammelstellen. Es definiert zulässige Kanäle, Kontrollen und Verantwortung, autorisiert aber keinen Kontakt, kein Konto, keinen Test, Kauf oder Auswahl.',
-    counters: [['Vorbereitete Stellen', '7', 'Eine je Anforderung'], ['Erhaltene Nachweise', '0', 'Sammlung nicht gestartet'], ['Autorisierte Empfänger', '0', 'Umfang zu entscheiden'], ['Gewählte Anbieter', '0', 'Keine Auswahl']],
-    labels: { channel: 'Vorgeschlagener zulässiger Kanal', owner: 'Vorbereitung und Kontrolle', control: 'Kontrolle vor Annahme', status: 'ZU AUTORISIEREN' },
+    eyebrow: 'GESTEUERTES SAMMLUNGSPAKET · REF-01-G1-COL-001 · V1.0 · 26.08.2026', title: 'Kontrollierte Sammlung steuern, ohne die Konsultation zu starten', intro: 'Mit REF-01-DEC-015 bestätigt, steuert dieses Paket sieben Sammelstellen, ihre zulässigen Kanäle, Kontrollen und Verantwortung. Es autorisiert keinen benannten Empfänger, Kontakt, Account, Test, Kauf oder Auswahl.',
+    counters: [['Bestätigter Umfang', '7/7', 'Eine Stelle je Anforderung'], ['Erhaltene Nachweise', '0', 'Sammlung nicht gestartet'], ['Benannte Empfänger', '0', 'Getrennte Autorisierung'], ['Gewählte Anbieter', '0', 'Keine Auswahl']],
+    labels: { channel: 'Gesteuerter zulässiger Kanal', owner: 'Vorbereitung und Kontrolle', control: 'Kontrolle vor Annahme', status: 'BESTÄTIGT' },
     items: [
       ['1 · Verschlüsselung', 'Datierte offizielle Dokumentation und, falls autorisiert, bereinigte Konfiguration.', 'IT & Support bereitet vor; Governance kontrolliert; DMS bewahrt.', 'Geheimnisse, Schlüssel, Kennungen oder unbelegte Werbung ablehnen.'],
       ['2 · Automatische Sicherung', 'Offizielle Regel und autorisierter Bericht ausserhalb der Produktion.', 'IT & Support bereitet vor und testet; DMS bewahrt; Governance akzeptiert Ziele.', 'Frequenz, Aufbewahrung, Trennung, Verschlüsselung, Warnungen und Fehler ausdrücklich.'],
@@ -57,7 +57,7 @@ const COPY = {
     ],
     workflowTitle: 'Vorgeschlagene Sammelfolge', workflow: ['Umfang und Kanäle autorisieren.', 'Jede Anforderung getrennt sammeln.', 'Zehn Metadaten erfassen.', 'Herkunft, Aktualität und Widersprüche unabhängig prüfen.', 'Ergebnisse einem getrennten menschlichen Entscheid vorlegen.'],
     refusalsTitle: 'Zwingende Ablehnungen', refusals: ['Quelle oder Version fehlt.', 'Abgelaufener oder widersprüchlicher Nachweis.', 'Geheimnis, Kennung oder reale Personendaten.', 'Werbeversprechen ohne kontrollierbaren Nachweis.', 'Druck zur Anbieterwahl vor dem Vergleich.'],
-    verdict: 'PAKET ENTSCHEIDUNGSBEREIT · Sieben leere Stellen, null Sammlung und null autorisierte Empfänger.', next: 'Nächster menschlicher Entscheid: Umfang, Kanäle und Verantwortung vor jeder externen Anfrage bestätigen oder ändern.', boundary: 'Grenze: Dieses Paket ist weder Ausschreibung, versandte Anfrage, Auswahl, Test noch L2-Öffnung.'
+    verdict: 'PAKET BESTÄTIGT · Sieben gesteuerte Stellen, null Sammlung, null benannte Empfänger und null gewählte Anbieter.', next: 'REF-01-G1-REQ-001 V0.1 bereitet Anfrageentwürfe getrennt vor; Empfänger und Versand bleiben einem eigenen menschlichen Entscheid vorbehalten.', boundary: 'Grenze: Dieses Paket ist weder Ausschreibung, versandte Anfrage, Auswahl, Test noch L2-Öffnung.'
   }
 };
 
