@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.12 · 26-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.13 · 26-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -548,7 +548,12 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(gateDecision).getByRole('heading', { name: 'REF-01-DEC-013 · V1.0' })).toBeInTheDocument();
   expect(within(gateDecision).getByText('Arbitrage G1 partiel confirmé')).toBeInTheDocument();
   expect(within(gateDecision).getByText('STATUT · Quatre principes confirmés, un point amendé, G1 ouverte et L2 fermé.')).toBeInTheDocument();
-  expect(control.getByText(/documenter les sept preuves du point PostgreSQL\/restauration/)).toBeInTheDocument();
+  const evidenceSheet = screen.getByRole('heading', { name: 'Préparer les sept preuves sans choisir de service' }).closest('section');
+  expect(within(evidenceSheet).getAllByTestId('ref01-g1-evidence-item')).toHaveLength(7);
+  expect(within(evidenceSheet).getAllByTestId('ref01-g1-evidence-metadata')).toHaveLength(10);
+  expect(within(evidenceSheet).getByText('FICHE PRETE POUR VALIDATION · Sept exigences structurées, zéro preuve reçue, zéro fournisseur retenu et L2 fermé.')).toBeInTheDocument();
+  expect(within(evidenceSheet).getByRole('heading', { name: 'Porte de confirmation du point 1' })).toBeInTheDocument();
+  expect(control.getByText(/confirmer ou amender REF-01-G1-EVD-001 V0.1/)).toBeInTheDocument();
   expect(control.getByText(/décisions sur le lot : 10/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
@@ -617,12 +622,14 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-013 · V1.0' })).toBeInTheDocument();
   expect(screen.getByText('Partial G1 decision confirmed')).toBeInTheDocument();
   expect(screen.getByText('STATUS · Four principles confirmed, one point amended, G1 open and L2 closed.')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Prepare the seven evidence items without selecting a service' })).toBeInTheDocument();
+  expect(screen.getByText('SHEET READY FOR VALIDATION · Seven structured requirements, zero evidence received, zero selected providers and L2 closed.')).toBeInTheDocument();
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Decision criteria validated').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByText(/document the seven evidence items for the PostgreSQL\/restoration point/)).toBeInTheDocument();
+  expect(screen.getByText(/confirm or amend REF-01-G1-EVD-001 V0.1/)).toBeInTheDocument();
   expect(screen.getAllByText('Transfer')).toHaveLength(4);
   expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
 
@@ -675,12 +682,14 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-013 · V1.0' })).toBeInTheDocument();
   expect(screen.getByText('Teilentscheid G1 bestätigt')).toBeInTheDocument();
   expect(screen.getByText('STAND · Vier Prinzipien bestätigt, ein Punkt geändert, G1 offen und L2 geschlossen.')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Sieben Nachweise vorbereiten, ohne einen Dienst auszuwählen' })).toBeInTheDocument();
+  expect(screen.getByText('BLATT ZUR VALIDIERUNG BEREIT · Sieben strukturierte Anforderungen, null Nachweise, null Anbieter und L2 geschlossen.')).toBeInTheDocument();
   expect(screen.getByText(/Erfasste Entscheide: 1/)).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
   expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Entscheidungskriterien validiert').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByText(/sieben Nachweise für den mit REF-01-DEC-013 geänderten PostgreSQL-/)).toBeInTheDocument();
+  expect(screen.getByText(/REF-01-G1-EVD-001 V0.1, seine Kriterien und Kandidatenverantwortung/)).toBeInTheDocument();
   expect(screen.getAllByText('Wechseln')).toHaveLength(4);
   expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
 });

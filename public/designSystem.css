@@ -816,6 +816,43 @@ html:not(.dark) .m3s-business-module .m3s-ref01-g1-decision .ref01-g1-outcome--c
   color: #be123c !important;
 }
 
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence .text-sky-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence .text-sky-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence .text-sky-300 {
+  color: #075985 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence .text-emerald-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence .text-emerald-300 {
+  color: #047857 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence .text-violet-300 {
+  color: #6d28d9 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence .text-amber-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence .text-amber-300 {
+  color: #92400e !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence .text-rose-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence .text-rose-300 {
+  color: #be123c !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence .ref01-g1-evidence-status--open {
+  border-color: #f59e0b !important;
+  background: #fffbeb !important;
+  color: #92400e !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence .ref01-g1-evidence-status--partial {
+  border-color: #38bdf8 !important;
+  background: #f0f9ff !important;
+  color: #075985 !important;
+}
+
 html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .ref01-evidence-support-heading {
   background: #e2e8f0 !important;
   color: #0f172a !important;
