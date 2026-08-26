@@ -19,6 +19,7 @@ import InstitutionalPeopleTeamsReferenceControl from './InstitutionalPeopleTeams
 import InstitutionalPeopleTeamsDataFoundations from './InstitutionalPeopleTeamsDataFoundations';
 import InstitutionalPeopleTeamsGateG1Review from './InstitutionalPeopleTeamsGateG1Review';
 import InstitutionalPeopleTeamsGateG1Arbitration from './InstitutionalPeopleTeamsGateG1Arbitration';
+import InstitutionalPeopleTeamsGateG1Decision from './InstitutionalPeopleTeamsGateG1Decision';
 
 const STAGES = ['scope', 'sources', 'owners', 'models', 'vocabulary', 'review'];
 
@@ -171,6 +172,7 @@ const InstitutionalDataReferenceSystemsConsolidationPilot = ({ language = 'FR', 
       <InstitutionalPeopleTeamsGateG1Review language={language} />
 
       <InstitutionalPeopleTeamsGateG1Arbitration language={language} />
+      <InstitutionalPeopleTeamsGateG1Decision language={language} />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
