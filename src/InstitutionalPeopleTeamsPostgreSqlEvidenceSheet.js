@@ -21,9 +21,9 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'FICHE D’INSTRUCTION DU POINT 1 · REF-01-G1-EVD-001 · V0.1 · 26-08-2026',
-    title: 'Préparer les sept preuves sans choisir de service',
-    intro: 'Cette fiche traduit l’amendement REF-01-DEC-013 en contrôles documentaires. Elle définit ce qui devra être remis, accepté et conservé avant une confirmation séparée du point PostgreSQL/restauration. Elle ne collecte encore aucune offre et ne valide aucun fournisseur.',
+    eyebrow: 'FICHE GOUVERNEE DU POINT 1 · REF-01-G1-EVD-001 · V1.0 · 26-08-2026',
+    title: 'Encadrer les sept preuves sans choisir de service',
+    intro: 'Cette fiche confirmée par REF-01-DEC-014 traduit l’amendement REF-01-DEC-013 en contrôles documentaires. Elle définit ce qui devra être remis, accepté et conservé avant une confirmation séparée du point PostgreSQL/restauration. Elle ne collecte encore aucune offre et ne valide aucun fournisseur.',
     counters: [['Exigences définies', '7', 'Issues de REF-01-DEC-013'], ['Dossiers complets', '0', 'Aucune preuve reçue'], ['Fournisseurs retenus', '0', 'Aucune sélection autorisée'], ['Autorisations L2', '0', 'L2 reste fermé']],
     labels: { proof: 'Preuve attendue', acceptance: 'Critère d’acceptation', owner: 'Responsables candidats' },
     statuses: { open: 'PREUVE A ETABLIR', partial: 'CADRAGE PARTIEL' },
@@ -41,14 +41,14 @@ const COPY = {
     metadata: ['Identifiant stable', 'Titre et objet', 'Source ou émetteur', 'Date et version', 'Responsable de préparation', 'Contrôleur et validateur', 'Sensibilité', 'Environnement et données utilisées', 'Durée de validité ou fraîcheur', 'Référence GED et réserves'],
     gateTitle: 'Porte de confirmation du point 1',
     gateBody: 'Le point PostgreSQL/restauration ne pourra être soumis à confirmation que lorsque les sept preuves auront une source, un responsable, un critère accepté et une référence GED contrôlée. Un dossier incomplet, expiré ou contradictoire maintient G1 ouverte.',
-    verdict: 'FICHE PRETE POUR VALIDATION · Sept exigences structurées, zéro preuve reçue, zéro fournisseur retenu et L2 fermé.',
-    next: 'Prochain arbitrage humain : confirmer ou amender cette fiche, ses critères et ses responsables candidats avant toute collecte auprès d’un service ou fournisseur.',
+    verdict: 'FICHE CONFIRMEE · Sept exigences gouvernées, zéro preuve reçue, zéro fournisseur retenu et L2 fermé.',
+    next: 'REF-01-G1-COL-001 V0.1 prépare séparément la collecte ; aucune sollicitation externe ne commence sans autorisation humaine.',
     boundary: 'Limite : cette fiche ne vaut ni appel d’offres, ni choix de fournisseur, ni budget, ni avis juridique, ni configuration, ni sauvegarde active, ni test de production, ni ouverture de L2.'
   },
   EN: {
-    eyebrow: 'POINT 1 EVIDENCE INSTRUCTION · REF-01-G1-EVD-001 · V0.1 · 26 AUG 2026',
-    title: 'Prepare the seven evidence items without selecting a service',
-    intro: 'This sheet translates the REF-01-DEC-013 amendment into documentary controls. It defines what must be submitted, accepted and retained before separate confirmation of the PostgreSQL/restoration point. It collects no offer and validates no provider.',
+    eyebrow: 'POINT 1 GOVERNED EVIDENCE SHEET · REF-01-G1-EVD-001 · V1.0 · 26 AUG 2026',
+    title: 'Govern the seven evidence items without selecting a service',
+    intro: 'This sheet, confirmed through REF-01-DEC-014, translates the REF-01-DEC-013 amendment into documentary controls. It defines what must be submitted, accepted and retained before separate confirmation of the PostgreSQL/restoration point. It collects no offer and validates no provider.',
     counters: [['Defined requirements', '7', 'Derived from REF-01-DEC-013'], ['Complete packages', '0', 'No evidence received'], ['Selected providers', '0', 'No selection authorised'], ['L2 authorisations', '0', 'L2 remains closed']],
     labels: { proof: 'Expected evidence', acceptance: 'Acceptance criterion', owner: 'Candidate owners' },
     statuses: { open: 'EVIDENCE TO ESTABLISH', partial: 'PARTIAL FRAMING' },
@@ -64,14 +64,14 @@ const COPY = {
     metadataTitle: 'Mandatory metadata for every evidence item', metadataIntro: 'An item without provenance, version or owner remains unverifiable and cannot close point 1.',
     metadata: ['Stable identifier', 'Title and purpose', 'Source or issuer', 'Date and version', 'Preparation owner', 'Controller and validator', 'Sensitivity', 'Environment and data used', 'Validity or freshness period', 'DMS reference and reservations'],
     gateTitle: 'Point 1 confirmation gate', gateBody: 'The PostgreSQL/restoration point may be submitted for confirmation only when all seven evidence items have a source, an owner, an accepted criterion and a controlled DMS reference. An incomplete, expired or contradictory package keeps G1 open.',
-    verdict: 'SHEET READY FOR VALIDATION · Seven structured requirements, zero evidence received, zero selected providers and L2 closed.',
-    next: 'Next human decision: confirm or amend this sheet, its criteria and candidate owners before any collection from a service or provider.',
+    verdict: 'SHEET CONFIRMED · Seven governed requirements, zero evidence received, zero selected providers and L2 closed.',
+    next: 'REF-01-G1-COL-001 V0.1 separately prepares collection; no external request starts without human authorisation.',
     boundary: 'Boundary: this sheet is neither a request for proposal, provider choice, budget, legal opinion, configuration, active backup, production test nor L2 opening.'
   },
   DE: {
-    eyebrow: 'NACHWEISANWEISUNG PUNKT 1 · REF-01-G1-EVD-001 · V0.1 · 26.08.2026',
-    title: 'Sieben Nachweise vorbereiten, ohne einen Dienst auszuwählen',
-    intro: 'Dieses Blatt übersetzt die Änderung REF-01-DEC-013 in Dokumentationskontrollen. Es definiert, was vor der getrennten Bestätigung des PostgreSQL-/Restore-Punkts einzureichen, anzunehmen und aufzubewahren ist. Es sammelt kein Angebot und validiert keinen Anbieter.',
+    eyebrow: 'GESTEUERTES NACHWEISBLATT PUNKT 1 · REF-01-G1-EVD-001 · V1.0 · 26.08.2026',
+    title: 'Sieben Nachweise steuern, ohne einen Dienst auszuwählen',
+    intro: 'Dieses mit REF-01-DEC-014 bestätigte Blatt übersetzt die Änderung REF-01-DEC-013 in Dokumentationskontrollen. Es definiert, was vor der getrennten Bestätigung des PostgreSQL-/Restore-Punkts einzureichen, anzunehmen und aufzubewahren ist. Es sammelt kein Angebot und validiert keinen Anbieter.',
     counters: [['Definierte Anforderungen', '7', 'Aus REF-01-DEC-013'], ['Vollständige Dossiers', '0', 'Keine Nachweise erhalten'], ['Gewählte Anbieter', '0', 'Keine Auswahl autorisiert'], ['L2-Autorisierungen', '0', 'L2 bleibt geschlossen']],
     labels: { proof: 'Erwarteter Nachweis', acceptance: 'Annahmekriterium', owner: 'Kandidatenverantwortung' },
     statuses: { open: 'NACHWEIS ZU ERSTELLEN', partial: 'TEILRAHMEN' },
@@ -87,8 +87,8 @@ const COPY = {
     metadataTitle: 'Pflichtmetadaten für jeden Nachweis', metadataIntro: 'Ein Element ohne Herkunft, Version oder Verantwortung bleibt nicht prüfbar und kann Punkt 1 nicht schliessen.',
     metadata: ['Stabile Kennung', 'Titel und Zweck', 'Quelle oder Aussteller', 'Datum und Version', 'Erstellungsverantwortung', 'Kontrolle und Validierung', 'Sensibilität', 'Umgebung und verwendete Daten', 'Gültigkeit oder Aktualität', 'DMS-Referenz und Vorbehalte'],
     gateTitle: 'Bestätigungstor für Punkt 1', gateBody: 'Der PostgreSQL-/Restore-Punkt darf erst bestätigt werden, wenn alle sieben Nachweise eine Quelle, Verantwortung, ein angenommenes Kriterium und eine kontrollierte DMS-Referenz haben. Ein unvollständiges, abgelaufenes oder widersprüchliches Dossier hält G1 offen.',
-    verdict: 'BLATT ZUR VALIDIERUNG BEREIT · Sieben strukturierte Anforderungen, null Nachweise, null Anbieter und L2 geschlossen.',
-    next: 'Nächster menschlicher Entscheid: Dieses Blatt, seine Kriterien und Kandidatenverantwortung vor jeder Sammlung bei einem Dienst oder Anbieter bestätigen oder ändern.',
+    verdict: 'BLATT BESTÄTIGT · Sieben gesteuerte Anforderungen, null Nachweise, null Anbieter und L2 geschlossen.',
+    next: 'REF-01-G1-COL-001 V0.1 bereitet die Sammlung getrennt vor; ohne menschliche Autorisierung beginnt keine externe Anfrage.',
     boundary: 'Grenze: Dieses Blatt ist weder Ausschreibung, Anbieterwahl, Budget, Rechtsgutachten, Konfiguration, aktive Sicherung, Produktionstest noch L2-Öffnung.'
   }
 };

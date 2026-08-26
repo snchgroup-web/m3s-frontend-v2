@@ -853,6 +853,51 @@ html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence .ref01-g1-evidence-s
   color: #075985 !important;
 }
 
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-confirmation .text-emerald-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-confirmation .text-emerald-300 {
+  color: #047857 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-confirmation .text-sky-200 {
+  color: #075985 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-confirmation .text-rose-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-confirmation .text-rose-300 {
+  color: #be123c !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-collection .text-violet-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-collection .text-violet-300 {
+  color: #6d28d9 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-collection .text-sky-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-collection .text-sky-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-collection .text-sky-300 {
+  color: #075985 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-collection .text-emerald-300 {
+  color: #047857 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-collection .text-amber-300 {
+  color: #92400e !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-collection .text-rose-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-collection .text-rose-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-collection .text-rose-300 {
+  color: #be123c !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-evidence-collection .ref01-g1-collection-status {
+  border-color: #8b5cf6 !important;
+  background: #f5f3ff !important;
+  color: #6d28d9 !important;
+}
+
 html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .ref01-evidence-support-heading {
   background: #e2e8f0 !important;
   color: #0f172a !important;
