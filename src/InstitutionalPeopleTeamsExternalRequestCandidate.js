@@ -3,11 +3,11 @@ import { AlertTriangle, FileOutput, LockKeyhole, Send, ShieldCheck } from 'lucid
 
 const COPY = {
   FR: {
-    eyebrow: 'FICHE CANDIDATE DE SOLLICITATION · REF-01-G1-REQ-001 · V0.1 · 26-08-2026',
-    title: 'Préparer les demandes sans nommer ni contacter un destinataire',
-    intro: 'Cette fiche organise les demandes nécessaires aux sept preuves. Elle ne contient aucun fournisseur, aucune adresse, aucune date d’envoi et ne déclenche aucune communication.',
+    eyebrow: 'FICHE CONFIRMÉE DE SOLLICITATION · REF-01-G1-REQ-001 · V1.0 · 26-08-2026',
+    title: 'Structurer les demandes confirmées sans contacter un destinataire',
+    intro: 'Confirmée par REF-01-DEC-016, cette fiche organise les demandes nécessaires aux sept preuves. Elle ne contient aucun fournisseur, aucune adresse, aucune date d’envoi et ne déclenche aucune communication.',
     counters: [['Lots de demande', '4', 'Trois externes candidats, un interne'], ['Destinataires nommés', '0', 'Aucun contact autorisé'], ['Demandes envoyées', '0', 'Préparation uniquement'], ['Preuves reçues', '0', 'Aucune acceptation']],
-    labels: { purpose: 'Objet préparé', content: 'Contenu minimal', owner: 'Fonctions responsables', status: 'BROUILLON NON ENVOYABLE' },
+    labels: { purpose: 'Objet confirmé', content: 'Contenu minimal', owner: 'Fonctions responsables', status: 'CONTENU CONFIRMÉ · ENVOI INTERDIT' },
     requests: [
       ['REQ-A · Documentation officielle', 'Obtenir les versions datées sur chiffrement, sauvegarde, région d’hébergement et sous-traitants.', 'Référence, version, date, URL officielle ou pièce contractuelle expurgée.', 'IT & Support prépare ; Administration/Conformité contrôle ; GED conserve.'],
       ['REQ-B · Preuves techniques', 'Obtenir ou produire un rapport non productif sur restauration, alertes, RPO et RTO.', 'Scénario synthétique, date, résultat, écart, auteur, contrôleur et référence GED.', 'IT & Support exécute ; métier observe ; Gouvernance accepte les objectifs.'],
@@ -16,15 +16,15 @@ const COPY = {
     ],
     preflightTitle: 'Contrôle obligatoire avant tout envoi',
     preflight: ['Destinataire nommé et qualité vérifiés.', 'Canal autorisé et traçable.', 'Demande limitée à une seule finalité.', 'Aucun secret ni donnée personnelle réelle.', 'Délai et emplacement GED renseignés.', 'Autorisation humaine d’envoi enregistrée séparément.'],
-    next: 'Prochain arbitrage humain : confirmer ou amender cette fiche, puis décider séparément si des destinataires nommés peuvent être ajoutés. Aucun envoi ne part automatiquement.',
-    boundary: 'Limite : REQ-001 n’est ni une consultation lancée, ni un appel d’offres, ni une sélection, ni une autorisation d’achat, de test ou d’ouverture de L2.'
+    next: 'REF-01-G1-REC-001 V0.1 qualifie séparément les profils destinataires ; tout nom réel et tout envoi restent soumis à une autorisation humaine distincte.',
+    boundary: 'Limite : REQ-001 V1.0 gouverne le contenu, pas l’émission. Ce n’est ni une consultation lancée, ni un appel d’offres, ni une sélection, ni une autorisation d’achat, de test ou d’ouverture de L2.'
   },
   EN: {
-    eyebrow: 'CANDIDATE REQUEST SHEET · REF-01-G1-REQ-001 · V0.1 · 26 AUG 2026',
-    title: 'Prepare requests without naming or contacting a recipient',
-    intro: 'This sheet organises the requests needed for the seven evidence items. It contains no provider, address or send date and triggers no communication.',
+    eyebrow: 'CONFIRMED REQUEST SHEET · REF-01-G1-REQ-001 · V1.0 · 26 AUG 2026',
+    title: 'Structure confirmed requests without contacting a recipient',
+    intro: 'Confirmed through REF-01-DEC-016, this sheet organises the requests needed for the seven evidence items. It contains no provider, address or send date and triggers no communication.',
     counters: [['Request packages', '4', 'Three external candidates, one internal'], ['Named recipients', '0', 'No contact authorised'], ['Requests sent', '0', 'Preparation only'], ['Evidence received', '0', 'No acceptance']],
-    labels: { purpose: 'Prepared purpose', content: 'Minimum content', owner: 'Responsible functions', status: 'UNSENDABLE DRAFT' },
+    labels: { purpose: 'Confirmed purpose', content: 'Minimum content', owner: 'Responsible functions', status: 'CONTENT CONFIRMED · SEND FORBIDDEN' },
     requests: [
       ['REQ-A · Official documentation', 'Obtain dated versions for encryption, backup, hosting region and subprocessors.', 'Reference, version, date, official URL or redacted contractual record.', 'IT & Support prepares; Administration/Compliance controls; DMS retains.'],
       ['REQ-B · Technical evidence', 'Obtain or produce a non-production report on restoration, alerts, RPO and RTO.', 'Synthetic scenario, date, result, gap, author, controller and DMS reference.', 'IT & Support executes; business observes; Governance accepts objectives.'],
@@ -33,15 +33,15 @@ const COPY = {
     ],
     preflightTitle: 'Mandatory control before any send',
     preflight: ['Named recipient and capacity verified.', 'Authorised traceable channel.', 'Request limited to one purpose.', 'No secret or real personal data.', 'Due date and DMS location recorded.', 'Separate human release authorisation recorded.'],
-    next: 'Next human decision: confirm or amend this sheet, then decide separately whether named recipients may be added. No request is sent automatically.',
-    boundary: 'Boundary: REQ-001 is neither a launched consultation, request for proposal, selection, purchase authorisation, test nor L2 opening.'
+    next: 'REF-01-G1-REC-001 V0.1 separately qualifies recipient profiles; every real name and every send remain subject to a distinct human authorisation.',
+    boundary: 'Boundary: REQ-001 V1.0 governs content, not release. It is neither a launched consultation, request for proposal, selection, purchase authorisation, test nor L2 opening.'
   },
   DE: {
-    eyebrow: 'ANFRAGEENTWURF · REF-01-G1-REQ-001 · V0.1 · 26.08.2026',
-    title: 'Anfragen vorbereiten, ohne Empfänger zu benennen oder zu kontaktieren',
-    intro: 'Dieses Blatt ordnet die für sieben Nachweise nötigen Anfragen. Es enthält weder Anbieter, Adresse noch Versanddatum und löst keine Kommunikation aus.',
+    eyebrow: 'BESTÄTIGTES ANFRAGEBLATT · REF-01-G1-REQ-001 · V1.0 · 26.08.2026',
+    title: 'Bestätigte Anfragen ordnen, ohne Empfänger zu kontaktieren',
+    intro: 'Mit REF-01-DEC-016 bestätigt, ordnet dieses Blatt die für sieben Nachweise nötigen Anfragen. Es enthält weder Anbieter, Adresse noch Versanddatum und löst keine Kommunikation aus.',
     counters: [['Anfragepakete', '4', 'Drei externe Kandidaten, eines intern'], ['Benannte Empfänger', '0', 'Kein Kontakt autorisiert'], ['Gesendete Anfragen', '0', 'Nur Vorbereitung'], ['Erhaltene Nachweise', '0', 'Keine Annahme']],
-    labels: { purpose: 'Vorbereiteter Zweck', content: 'Mindestinhalt', owner: 'Verantwortliche Funktionen', status: 'NICHT VERSENDBARER ENTWURF' },
+    labels: { purpose: 'Bestätigter Zweck', content: 'Mindestinhalt', owner: 'Verantwortliche Funktionen', status: 'INHALT BESTÄTIGT · VERSAND VERBOTEN' },
     requests: [
       ['REQ-A · Offizielle Dokumentation', 'Datierte Versionen zu Verschlüsselung, Sicherung, Hostingregion und Unterauftragnehmern beschaffen.', 'Referenz, Version, Datum, offizielle URL oder bereinigte Vertragsunterlage.', 'IT & Support bereitet vor; Administration/Compliance kontrolliert; DMS bewahrt.'],
       ['REQ-B · Technische Nachweise', 'Bericht ausserhalb der Produktion zu Restore, Warnungen, RPO und RTO beschaffen oder erstellen.', 'Synthetisches Szenario, Datum, Ergebnis, Abweichung, Autor, Kontrolle und DMS-Referenz.', 'IT & Support führt aus; Fachseite beobachtet; Governance akzeptiert Ziele.'],
@@ -50,8 +50,8 @@ const COPY = {
     ],
     preflightTitle: 'Pflichtkontrolle vor jedem Versand',
     preflight: ['Benannter Empfänger und Funktion geprüft.', 'Autorisierter nachvollziehbarer Kanal.', 'Anfrage auf einen Zweck begrenzt.', 'Kein Geheimnis und keine realen Personendaten.', 'Frist und DMS-Ablage erfasst.', 'Getrennte menschliche Versandfreigabe dokumentiert.'],
-    next: 'Nächster menschlicher Entscheid: dieses Blatt bestätigen oder ändern und danach getrennt entscheiden, ob benannte Empfänger ergänzt werden dürfen. Kein automatischer Versand.',
-    boundary: 'Grenze: REQ-001 ist weder gestartete Konsultation, Ausschreibung, Auswahl, Kaufautorisierung, Test noch L2-Öffnung.'
+    next: 'REF-01-G1-REC-001 V0.1 qualifiziert Empfängerprofile getrennt; jeder reale Name und jeder Versand bleiben einem eigenen menschlichen Entscheid vorbehalten.',
+    boundary: 'Grenze: REQ-001 V1.0 steuert den Inhalt, nicht den Versand. Es ist weder gestartete Konsultation, Ausschreibung, Auswahl, Kaufautorisierung, Test noch L2-Öffnung.'
   }
 };
 

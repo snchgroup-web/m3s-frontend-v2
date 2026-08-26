@@ -937,6 +937,40 @@ html:not(.dark) .m3s-business-module .m3s-ref01-g1-external-request .ref01-g1-re
   color: #be123c !important;
 }
 
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-request-confirmation .text-emerald-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-request-confirmation .text-emerald-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-request-confirmation .text-emerald-300 {
+  color: #047857 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-request-confirmation .text-sky-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-request-confirmation .text-sky-300,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-recipient-candidate .text-sky-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-recipient-candidate .text-sky-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-recipient-candidate .text-sky-300 {
+  color: #075985 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-request-confirmation .text-rose-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-request-confirmation .text-rose-300,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-recipient-candidate .text-rose-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-recipient-candidate .text-rose-300 {
+  color: #be123c !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-recipient-candidate .text-emerald-300 {
+  color: #047857 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-recipient-candidate .text-violet-300 {
+  color: #6d28d9 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-recipient-candidate .text-amber-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-recipient-candidate .text-amber-300 {
+  color: #92400e !important;
+}
+
 html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .ref01-evidence-support-heading {
   background: #e2e8f0 !important;
   color: #0f172a !important;
