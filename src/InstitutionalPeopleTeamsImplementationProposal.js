@@ -72,9 +72,9 @@ const COPY = {
     ],
     rollbackTitle: 'Plan de retour arrière minimal',
     rollback: ['Feature flag global et par périmètre.', 'Sauvegarde vérifiée avant migration.', 'Migrations descendantes ou compensatoires versionnées.', 'Outbox suspendable sans perdre le journal.', 'Projection BigQuery reconstructible depuis les événements validés.', 'RH-001 lecture seule conservé comme service de continuité.'],
-    status: 'Statut : proposition d’implémentation V1.0 confirmée comme base de travail ; aucune exécution, estimation ou infrastructure n’est créée.',
-    next: 'Étape suivante : examiner REF-01-ADR-001 V0.1 et sa matrice des responsabilités avant toute ouverture de L1.',
-    boundary: 'Limite : zéro table, API, permission, secret, donnée réelle, migration, déploiement, automatisation, source maîtresse ou progression créé par cette proposition.'
+    status: 'Statut : proposition V1.0 confirmée ; L0 achevé ; fondations L1 candidates testées de manière isolée.',
+    next: 'Étape suivante : examiner le schéma candidat L1 et les conditions G1 avant toute ouverture de L2.',
+    boundary: 'Limite : aucune table de production, API, permission, secret, donnée réelle, migration déployée, automatisation, source maîtresse ou progression créée.'
   },
   EN: {
     eyebrow: 'CONFIRMED IMPLEMENTATION PROPOSAL · REF-01-IMP-001 · V1.0 · 26 AUG 2026',
@@ -93,7 +93,7 @@ const COPY = {
     testsTitle: 'Ten mandatory test families', tests: ['API contracts', 'Business transitions', 'Idempotency', 'Concurrency and versions', 'RBAC and separation of duties', 'Confidentiality and masking', 'Audit and traceability', 'Transaction and rollback', 'Outbox, replay and reconciliation', 'Migration, backup and restoration'],
     rolloutTitle: 'Proposed deployment path', rollout: [['1', 'Isolated local', 'Unit tests and synthetic data; no secret or real HR data.'], ['2', 'Preview', 'Integrated contracts, automated security and feature flag forced off.'], ['3', 'Staging', 'Migration, backup, restore and propagation dry-run rehearsal.'], ['4', 'Controlled production', 'Deploy disabled; activate only after G3 with enhanced monitoring.']],
     rollbackTitle: 'Minimum rollback plan', rollback: ['Global and scope feature flags.', 'Verified backup before migration.', 'Versioned down or compensating migrations.', 'Suspendable outbox without losing the journal.', 'BigQuery projection rebuildable from validated events.', 'Read-only RH-001 retained for continuity.'],
-    status: 'Status: implementation proposal V1.0 confirmed as a working baseline; no execution, estimate or infrastructure is created.', next: 'Next step: review REF-01-ADR-001 V0.1 and its responsibility matrix before opening L1.', boundary: 'Boundary: zero table, API, permission, secret, real data, migration, deployment, automation, master source or progress is created by this proposal.'
+    status: 'Status: proposal V1.0 confirmed; L0 completed; candidate L1 foundations tested in isolation.', next: 'Next step: review the candidate L1 schema and G1 conditions before opening L2.', boundary: 'Boundary: no production table, API, permission, secret, real data, deployed migration, automation, master source or progress is created.'
   },
   DE: {
     eyebrow: 'BESTÄTIGTER UMSETZUNGSVORSCHLAG · REF-01-IMP-001 · V1.0 · 26.08.2026',
@@ -112,7 +112,7 @@ const COPY = {
     testsTitle: 'Zehn verpflichtende Testfamilien', tests: ['API-Verträge', 'Fachübergänge', 'Idempotenz', 'Konkurrenz und Versionen', 'RBAC und Funktionstrennung', 'Vertraulichkeit und Maskierung', 'Audit und Rückverfolgbarkeit', 'Transaktion und Rollback', 'Outbox, Wiederholung und Abgleich', 'Migration, Sicherung und Wiederherstellung'],
     rolloutTitle: 'Vorgeschlagener Bereitstellungsweg', rollout: [['1', 'Isoliert lokal', 'Unit-Tests und synthetische Daten; keine Geheimnisse oder realen Personaldaten.'], ['2', 'Vorschau', 'Integrierte Verträge, automatisierte Sicherheit und Feature Flag zwingend aus.'], ['3', 'Staging', 'Migration, Sicherung, Wiederherstellung und Dry-run der Weitergabe proben.'], ['4', 'Kontrollierte Produktion', 'Deaktiviert bereitstellen; erst nach G3 mit verstärkter Überwachung aktivieren.']],
     rollbackTitle: 'Minimaler Rückkehrplan', rollback: ['Globales und bereichsbezogenes Feature Flag.', 'Geprüfte Sicherung vor Migration.', 'Versionierte Down- oder Ausgleichsmigrationen.', 'Anhaltbare Outbox ohne Verlust des Journals.', 'BigQuery-Projektion aus validierten Ereignissen rekonstruierbar.', 'RH-001 nur lesend für Kontinuität bewahrt.'],
-    status: 'Stand: Umsetzungsvorschlag V1.0 als Arbeitsbasis bestätigt; keine Ausführung, Schätzung oder Infrastruktur ist erstellt.', next: 'Nächster Schritt: REF-01-ADR-001 V0.1 und seine Verantwortungsmatrix vor Öffnung von L1 prüfen.', boundary: 'Grenze: Null Tabellen, APIs, Berechtigungen, Geheimnisse, reale Daten, Migrationen, Bereitstellungen, Automatisierungen, Masterquellen oder Fortschritt werden durch diesen Vorschlag erstellt.'
+    status: 'Stand: Vorschlag V1.0 bestätigt; L0 abgeschlossen; Kandidatengrundlagen L1 isoliert geprüft.', next: 'Nächster Schritt: Kandidatenschema L1 und G1-Bedingungen vor Öffnung von L2 prüfen.', boundary: 'Grenze: Keine Produktionstabelle, API, Berechtigung, Geheimnisse, realen Daten, bereitgestellte Migration, Automatisierung, Masterquelle oder Fortschrittsquote wird erstellt.'
   }
 };
 

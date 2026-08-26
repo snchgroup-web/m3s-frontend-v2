@@ -96,7 +96,7 @@ const COPY = {
       'Préparer séparément migration, retour arrière et déploiement avant toute exécution.'
     ],
     status: 'Statut : cadrage technique candidat V0.2 confirmé comme base de travail ; aucune implémentation technique n’est autorisée ou appliquée.',
-    next: 'Étape suivante : examiner l’ADR candidat REF-01-ADR-001 V0.1 préparé après confirmation de REF-01-IMP-001 V1.0, toujours sans exécution.',
+    next: 'Étape suivante : examiner les fondations L1 candidates préparées après confirmation de REF-01-ADR-001 V1.0.',
     boundary: 'Limite : zéro table, endpoint, permission, accès, donnée réelle, migration, déploiement, automatisation, source maîtresse ou taux de progression créé dans ce lot.'
   },
   EN: {
@@ -152,7 +152,7 @@ const COPY = {
     exitTitle: 'Conditions before any implementation proposal',
     exit: ['Confirm or amend the five candidate layers.', 'Confirm persistence technology and naming conventions.', 'Link technical subjects to users without exposing civil identity.', 'Decide the master source and owner for each object.', 'Map the four candidate permissions to real RBAC.', 'Validate classification, retention, audit and DMS references.', 'Approve contract, concurrency, security and recovery tests.', 'Prepare migration, rollback and deployment separately before execution.'],
     status: 'Status: candidate technical framing V0.2 confirmed as a working baseline; no technical implementation is authorised or applied.',
-    next: 'Next step: review candidate ADR REF-01-ADR-001 V0.1 prepared after confirmation of REF-01-IMP-001 V1.0, still without execution.',
+    next: 'Next step: review the candidate L1 foundations prepared after confirmation of REF-01-ADR-001 V1.0.',
     boundary: 'Boundary: zero table, endpoint, permission, access, real data, migration, deployment, automation, master source or progress rate is created in this package.'
   },
   DE: {
@@ -190,7 +190,7 @@ const COPY = {
     exitTitle: 'Bedingungen vor jedem Umsetzungsvorschlag',
     exit: ['Fünf Kandidatenebenen bestätigen oder ändern.', 'Persistenztechnologie und Namenskonventionen bestätigen.', 'Technische Subjekte ohne Offenlegung der Zivilidentität zuordnen.', 'Masterquelle und Verantwortung jedes Objekts entscheiden.', 'Vier Kandidatenberechtigungen auf das reale RBAC abbilden.', 'Klassifizierung, Aufbewahrung, Audit und DMS-Referenzen validieren.', 'Vertrags-, Parallelitäts-, Sicherheits- und Wiederherstellungstests genehmigen.', 'Migration, Rückkehr und Bereitstellung getrennt vor jeder Ausführung vorbereiten.'],
     status: 'Stand: technische Kandidatenausgestaltung V0.2 als Arbeitsbasis bestätigt; keine technische Umsetzung ist autorisiert oder angewendet.',
-    next: 'Nächster Schritt: Den ADR-Kandidaten REF-01-ADR-001 V0.1 prüfen, der nach Bestätigung von REF-01-IMP-001 V1.0 vorbereitet wurde, weiterhin ohne Ausführung.',
+    next: 'Nächster Schritt: Kandidatengrundlagen L1 prüfen, die nach Bestätigung von REF-01-ADR-001 V1.0 vorbereitet wurden.',
     boundary: 'Grenze: Null Tabellen, Endpoints, Berechtigungen, Zugriffe, reale Daten, Migrationen, Bereitstellungen, Automatisierungen, Masterquellen oder Fortschrittsquoten werden in diesem Los erstellt.'
   }
 };
