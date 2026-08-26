@@ -731,6 +731,48 @@ html:not(.dark) .m3s-business-module .m3s-ref01-g1-review .ref01-g1-status--lock
   color: #9f1239 !important;
 }
 
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-arbitration .text-cyan-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-arbitration .text-cyan-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-arbitration .text-cyan-300,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-arbitration .text-cyan-400 {
+  color: #0e7490 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-arbitration .text-amber-300 {
+  color: #92400e !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-arbitration .text-violet-300 {
+  color: #6d28d9 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-arbitration .text-sky-200 {
+  color: #0369a1 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-arbitration .text-rose-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-arbitration .text-rose-300 {
+  color: #9f1239 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-arbitration .ref01-g1-decision--amend {
+  border-color: #f59e0b !important;
+  background: #fffbeb !important;
+  color: #92400e !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-arbitration .ref01-g1-decision--confirm {
+  border-color: #10b981 !important;
+  background: #ecfdf5 !important;
+  color: #065f46 !important;
+}
+
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-arbitration .ref01-g1-decision--hold {
+  border-color: #fb7185 !important;
+  background: #fff1f2 !important;
+  color: #9f1239 !important;
+}
+
 html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .ref01-evidence-support-heading {
   background: #e2e8f0 !important;
   color: #0f172a !important;

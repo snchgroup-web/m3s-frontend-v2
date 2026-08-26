@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.10 · 26-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.11 · 26-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -537,7 +537,12 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(gateReview).getByText('Partiellement étayées')).toBeInTheDocument();
   expect(within(gateReview).getByText('Décisions enregistrées')).toBeInTheDocument();
   expect(within(gateReview).getByText('ARBITRAGES NECESSAIRES · G1 reste ouverte. Les fondations sont suffisamment documentées pour décider, pas pour déployer.')).toBeInTheDocument();
-  expect(control.getByText(/examiner REF-01-G1-REV-001 V0.1/)).toBeInTheDocument();
+  const gateArbitration = screen.getByRole('heading', { name: 'Arbitrer les six conditions sans ouvrir L2' }).closest('section');
+  expect(within(gateArbitration).getAllByTestId('ref01-g1-arbitration-item')).toHaveLength(6);
+  expect(within(gateArbitration).getByText('Garde-fous proposés')).toBeInTheDocument();
+  expect(within(gateArbitration).getByText('Ouverture L2 proposée')).toBeInTheDocument();
+  expect(within(gateArbitration).getByText('VALIDER LES CINQ GARDE-FOUS COMME PRINCIPES, AMENDER LE PREMIER AVANT CONFIRMATION ET MAINTENIR L2 FERME. Cette recommandation ne ferme pas G1.')).toBeInTheDocument();
+  expect(control.getByText(/examiner REF-01-G1-ARB-001 V0.1/)).toBeInTheDocument();
   expect(control.getByText(/décisions sur le lot : 9/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
@@ -600,12 +605,14 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'G1 still requires a decision' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Decide G1 without confusing evidence and recommendation' })).toBeInTheDocument();
   expect(screen.getByText('DECISIONS REQUIRED · G1 remains open. Foundations are documented enough to decide, not to deploy.')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Decide the six conditions without opening L2' })).toBeInTheDocument();
+  expect(screen.getByText('APPROVE THE FIVE SAFEGUARDS AS PRINCIPLES, AMEND THE FIRST BEFORE CONFIRMATION AND KEEP L2 CLOSED. This recommendation does not close G1.')).toBeInTheDocument();
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Decision criteria validated').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByText(/examine REF-01-G1-REV-001 V0.1/)).toBeInTheDocument();
+  expect(screen.getByText(/examine REF-01-G1-ARB-001 V0.1/)).toBeInTheDocument();
   expect(screen.getAllByText('Transfer')).toHaveLength(4);
   expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
 
@@ -652,12 +659,14 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'G1 benötigt weiterhin einen Entscheid' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'G1 entscheiden, ohne Nachweis und Empfehlung zu verwechseln' })).toBeInTheDocument();
   expect(screen.getByText('ENTSCHEIDE ERFORDERLICH · G1 bleibt offen. Die Grundlagen reichen zum Entscheiden, nicht zum Bereitstellen.')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Die sechs Bedingungen entscheiden, ohne L2 zu öffnen' })).toBeInTheDocument();
+  expect(screen.getByText('DIE FÜNF LEITPLANKEN ALS PRINZIPIEN GENEHMIGEN, DIE ERSTE VOR BESTÄTIGUNG ÄNDERN UND L2 GESCHLOSSEN HALTEN. Diese Empfehlung schließt G1 nicht.')).toBeInTheDocument();
   expect(screen.getByText(/Erfasste Entscheide: 1/)).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
   expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Entscheidungskriterien validiert').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByText(/REF-01-G1-REV-001 V0.1 prüfen/)).toBeInTheDocument();
+  expect(screen.getByText(/REF-01-G1-ARB-001 V0.1 prüfen/)).toBeInTheDocument();
   expect(screen.getAllByText('Wechseln')).toHaveLength(4);
   expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
 });
