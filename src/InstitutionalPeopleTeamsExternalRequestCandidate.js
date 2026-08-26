@@ -16,7 +16,7 @@ const COPY = {
     ],
     preflightTitle: 'Contrôle obligatoire avant tout envoi',
     preflight: ['Destinataire nommé et qualité vérifiés.', 'Canal autorisé et traçable.', 'Demande limitée à une seule finalité.', 'Aucun secret ni donnée personnelle réelle.', 'Délai et emplacement GED renseignés.', 'Autorisation humaine d’envoi enregistrée séparément.'],
-    next: 'REF-01-G1-REC-001 V1.0 gouverne les profils ; REF-01-G1-NAM-001 V1.0 gouverne les emplacements et AUT-001 V0.1 prépare les autorisations unitaires sans nom ni envoi.',
+    next: 'REF-01-G1-REC-001 V1.0 gouverne les profils, NAM-001 V1.0 les emplacements, AUT-001 V1.0 les autorisations et IDN-001 V0.1 la future fiche unitaire vide.',
     boundary: 'Limite : REQ-001 V1.0 gouverne le contenu, pas l’émission. Ce n’est ni une consultation lancée, ni un appel d’offres, ni une sélection, ni une autorisation d’achat, de test ou d’ouverture de L2.'
   },
   EN: {
@@ -33,7 +33,7 @@ const COPY = {
     ],
     preflightTitle: 'Mandatory control before any send',
     preflight: ['Named recipient and capacity verified.', 'Authorised traceable channel.', 'Request limited to one purpose.', 'No secret or real personal data.', 'Due date and DMS location recorded.', 'Separate human release authorisation recorded.'],
-    next: 'REF-01-G1-REC-001 V1.0 governs profiles; REF-01-G1-NAM-001 V1.0 governs slots and AUT-001 V0.1 prepares individual authorisations without names or sends.',
+    next: 'REF-01-G1-REC-001 V1.0 governs profiles, NAM-001 V1.0 slots, AUT-001 V1.0 authorisations and IDN-001 V0.1 the future empty individual record.',
     boundary: 'Boundary: REQ-001 V1.0 governs content, not release. It is neither a launched consultation, request for proposal, selection, purchase authorisation, test nor L2 opening.'
   },
   DE: {
@@ -50,7 +50,7 @@ const COPY = {
     ],
     preflightTitle: 'Pflichtkontrolle vor jedem Versand',
     preflight: ['Benannter Empfänger und Funktion geprüft.', 'Autorisierter nachvollziehbarer Kanal.', 'Anfrage auf einen Zweck begrenzt.', 'Kein Geheimnis und keine realen Personendaten.', 'Frist und DMS-Ablage erfasst.', 'Getrennte menschliche Versandfreigabe dokumentiert.'],
-    next: 'REF-01-G1-REC-001 V1.0 steuert Profile; REF-01-G1-NAM-001 V1.0 steuert Stellen und AUT-001 V0.1 bereitet Einzelautorisierungen ohne Namen oder Versand vor.',
+    next: 'REF-01-G1-REC-001 V1.0 steuert Profile, NAM-001 V1.0 Stellen, AUT-001 V1.0 Autorisierungen und IDN-001 V0.1 die künftige leere Einzelakte.',
     boundary: 'Grenze: REQ-001 V1.0 steuert den Inhalt, nicht den Versand. Es ist weder gestartete Konsultation, Ausschreibung, Auswahl, Kaufautorisierung, Test noch L2-Öffnung.'
   }
 };

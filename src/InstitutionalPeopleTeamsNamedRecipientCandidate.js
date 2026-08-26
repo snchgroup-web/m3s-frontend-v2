@@ -16,7 +16,7 @@ const COPY = {
     ],
     controlsTitle: 'Contrôles avant chaque inscription réelle',
     controls: ['Rattachement explicite au profil REC et au lot REQ.', 'Nécessité et minimisation des données démontrées.', 'Qualité professionnelle ou mandat interne prouvé.', 'Base d’autorisation et droits d’accès documentés.', 'Responsable interne et emplacement GED désignés.', 'Révision, expiration et autorisation d’envoi traitées séparément.'],
-    next: 'REF-01-G1-AUT-001 V0.1 prépare désormais quatre dossiers d’autorisation vides ; chaque future identité et tout envoi restent soumis à des décisions humaines distinctes.',
+    next: 'REF-01-G1-AUT-001 V1.0 gouverne quatre dossiers confirmés et vides ; IDN-001 V0.1 prépare une fiche unitaire sans identité réelle.',
     boundary: 'Limite : NAM-001 V1.0 gouverne quatre emplacements vides. Il ne crée aucune identité, ne recommande aucun fournisseur et n’autorise aucun contact, envoi, achat ou ouverture de L2.'
   },
   EN: {
@@ -33,7 +33,7 @@ const COPY = {
     ],
     controlsTitle: 'Controls before each real entry',
     controls: ['Explicit link to the REC profile and REQ package.', 'Necessity and data minimisation demonstrated.', 'Professional capacity or internal mandate evidenced.', 'Authorisation basis and access rights documented.', 'Internal owner and DMS location designated.', 'Review, expiry and send authorisation handled separately.'],
-    next: 'REF-01-G1-AUT-001 V0.1 now prepares four empty authorisation files; every future identity and send remain subject to distinct human decisions.',
+    next: 'REF-01-G1-AUT-001 V1.0 governs four confirmed empty files; IDN-001 V0.1 prepares an individual record without a real identity.',
     boundary: 'Boundary: NAM-001 V1.0 governs four empty slots. It creates no identity, recommends no provider and authorises no contact, send, purchase or L2 opening.'
   },
   DE: {
@@ -50,7 +50,7 @@ const COPY = {
     ],
     controlsTitle: 'Kontrollen vor jedem realen Eintrag',
     controls: ['Explizite Verbindung zum REC-Profil und REQ-Paket.', 'Notwendigkeit und Datenminimierung nachgewiesen.', 'Fachliche Eigenschaft oder internes Mandat belegt.', 'Autorisierungsgrundlage und Zugriffsrechte dokumentiert.', 'Interne Verantwortung und DMS-Ablage bestimmt.', 'Prüfung, Ablauf und Versandautorisierung getrennt behandelt.'],
-    next: 'REF-01-G1-AUT-001 V0.1 bereitet nun vier leere Autorisierungsdossiers vor; jede künftige Identität und jeder Versand bleiben getrennten menschlichen Entscheiden vorbehalten.',
+    next: 'REF-01-G1-AUT-001 V1.0 steuert vier bestätigte leere Akten; IDN-001 V0.1 bereitet eine Einzelakte ohne reale Identität vor.',
     boundary: 'Grenze: NAM-001 V1.0 steuert vier leere Stellen. Es erstellt keine Identität, empfiehlt keinen Anbieter und autorisiert weder Kontakt, Versand, Kauf noch L2-Öffnung.'
   }
 };

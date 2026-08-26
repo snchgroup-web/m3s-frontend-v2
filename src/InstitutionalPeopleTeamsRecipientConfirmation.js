@@ -16,7 +16,7 @@ const COPY = {
       limit: 'Cette décision n’inscrit et n’autorise aucun nom, entreprise, adresse, coordonnée, canal concret, contact ou envoi. Elle n’autorise ni compte, essai, achat, fournisseur, donnée réelle, acceptation de preuve ou ouverture de L2.'
     },
     status: 'CONFIRMÉ · REF-01-G1-REC-001 V1.0 gouverne désormais les profils admissibles, pas les identités ni les contacts.',
-    next: 'NAM-001 V1.0 gouverne désormais les emplacements vides ; AUT-001 V0.1 prépare les décisions unitaires avant toute identité réelle.',
+    next: 'NAM-001 V1.0 gouverne les emplacements, AUT-001 V1.0 les autorisations et IDN-001 V0.1 la future fiche unitaire vide.',
     boundary: 'G1 reste ouverte. Un profil confirmé n’est ni un destinataire désigné, ni une autorisation de contact ou d’envoi.'
   },
   EN: {
@@ -32,7 +32,7 @@ const COPY = {
       limit: 'This decision records or authorises no name, company, address, contact detail, concrete channel, contact or send. It authorises no account, trial, purchase, provider, real data, evidence acceptance or L2 opening.'
     },
     status: 'CONFIRMED · REF-01-G1-REC-001 V1.0 now governs admissible profiles, not identities or contacts.',
-    next: 'NAM-001 V1.0 now governs empty slots; AUT-001 V0.1 prepares individual decisions before any real identity.',
+    next: 'NAM-001 V1.0 governs slots, AUT-001 V1.0 authorisations and IDN-001 V0.1 the future empty individual record.',
     boundary: 'G1 remains open. A confirmed profile is neither a designated recipient nor an authorisation to contact or send.'
   },
   DE: {
@@ -48,7 +48,7 @@ const COPY = {
       limit: 'Der Entscheid erfasst oder autorisiert keinen Namen, keine Firma, Adresse, Kontaktdaten, keinen konkreten Kanal, Kontakt oder Versand. Er autorisiert weder Account, Test, Kauf, Anbieter, reale Daten, Nachweisannahme noch L2-Öffnung.'
     },
     status: 'BESTÄTIGT · REF-01-G1-REC-001 V1.0 steuert nun zulässige Profile, nicht Identitäten oder Kontakte.',
-    next: 'NAM-001 V1.0 steuert nun leere Stellen; AUT-001 V0.1 bereitet Einzelentscheide vor jeder realen Identität vor.',
+    next: 'NAM-001 V1.0 steuert Stellen, AUT-001 V1.0 Autorisierungen und IDN-001 V0.1 die künftige leere Einzelakte.',
     boundary: 'G1 bleibt offen. Ein bestätigtes Profil ist weder ein bestimmter Empfänger noch eine Kontakt- oder Versandautorisierung.'
   }
 };

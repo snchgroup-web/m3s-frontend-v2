@@ -16,7 +16,7 @@ const COPY = {
       limit: 'La décision ne nomme ni n’autorise aucun destinataire, contact, adresse, canal concret, date d’envoi ou transmission. Elle n’autorise ni compte, essai, achat, fournisseur, donnée réelle, acceptation de preuve ou ouverture de L2.'
     },
     status: 'CONFIRMÉ · REF-01-G1-REQ-001 V1.0 gouverne désormais le contenu des demandes, pas leur émission.',
-    next: 'REF-01-G1-REC-001 V1.0 gouverne les profils ; NAM-001 V1.0 les emplacements et AUT-001 V0.1 les futures autorisations unitaires.',
+    next: 'REF-01-G1-REC-001 V1.0 gouverne les profils, NAM-001 V1.0 les emplacements, AUT-001 V1.0 les autorisations et IDN-001 V0.1 la fiche unitaire vide.',
     boundary: 'G1 reste ouverte. Une demande confirmée n’est ni une demande envoyée, ni un appel d’offres, ni une sélection.'
   },
   EN: {
@@ -32,7 +32,7 @@ const COPY = {
       limit: 'This decision names or authorises no recipient, contact, address, concrete channel, send date or transmission. It authorises no account, trial, purchase, provider, real data, evidence acceptance or L2 opening.'
     },
     status: 'CONFIRMED · REF-01-G1-REQ-001 V1.0 now governs request content, not release.',
-    next: 'REF-01-G1-REC-001 V1.0 governs profiles; NAM-001 V1.0 governs slots and AUT-001 V0.1 future individual authorisations.',
+    next: 'REF-01-G1-REC-001 V1.0 governs profiles, NAM-001 V1.0 slots, AUT-001 V1.0 authorisations and IDN-001 V0.1 the empty individual record.',
     boundary: 'G1 remains open. A confirmed request is neither a sent request, request for proposal nor selection.'
   },
   DE: {
@@ -48,7 +48,7 @@ const COPY = {
       limit: 'Der Entscheid benennt oder autorisiert keinen Empfänger, Kontakt, keine Adresse, keinen konkreten Kanal, kein Versanddatum und keine Übermittlung. Er autorisiert weder Account, Test, Kauf, Anbieter, reale Daten, Nachweisannahme noch L2-Öffnung.'
     },
     status: 'BESTÄTIGT · REF-01-G1-REQ-001 V1.0 steuert nun den Anfrageinhalt, nicht den Versand.',
-    next: 'REF-01-G1-REC-001 V1.0 steuert Profile; NAM-001 V1.0 Stellen und AUT-001 V0.1 künftige Einzelautorisierungen.',
+    next: 'REF-01-G1-REC-001 V1.0 steuert Profile, NAM-001 V1.0 Stellen, AUT-001 V1.0 Autorisierungen und IDN-001 V0.1 die leere Einzelakte.',
     boundary: 'G1 bleibt offen. Eine bestätigte Anfrage ist weder versandte Anfrage noch Ausschreibung oder Auswahl.'
   }
 };

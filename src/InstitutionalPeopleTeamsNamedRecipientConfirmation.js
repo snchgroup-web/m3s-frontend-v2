@@ -16,7 +16,7 @@ const COPY = {
       limit: 'Cette décision ne crée ni n’autorise aucun nom, entreprise, adresse, coordonnée, canal, contact ou envoi. Elle n’autorise ni compte, essai, achat, fournisseur, donnée réelle, preuve acceptée, fermeture de G1 ou ouverture de L2.'
     },
     status: 'CONFIRMÉ · REF-01-G1-NAM-001 V1.0 gouverne désormais la préparation des inscriptions, pas les identités.',
-    next: 'Prochaine étape : préparer AUT-001 V0.1 afin que chaque future inscription nominative soit autorisée ou refusée séparément.',
+    next: 'AUT-001 V1.0 gouverne désormais les autorisations unitaires ; IDN-001 V0.1 prépare une fiche vide avant toute identité réelle.',
     boundary: 'G1 reste ouverte. Un emplacement confirmé ne vaut ni identité désignée, ni contact, ni autorisation d’envoi.'
   },
   EN: {
@@ -32,7 +32,7 @@ const COPY = {
       limit: 'This decision creates or authorises no name, company, address, contact detail, channel, contact or send. It authorises no account, trial, purchase, provider, real data, accepted evidence, G1 closure or L2 opening.'
     },
     status: 'CONFIRMED · REF-01-G1-NAM-001 V1.0 now governs record preparation, not identities.',
-    next: 'Next step: prepare AUT-001 V0.1 so every future named entry can be authorised or refused separately.',
+    next: 'AUT-001 V1.0 now governs individual authorisations; IDN-001 V0.1 prepares an empty record before any real identity.',
     boundary: 'G1 remains open. A confirmed slot is neither a designated identity nor an authorisation to contact or send.'
   },
   DE: {
@@ -48,7 +48,7 @@ const COPY = {
       limit: 'Der Entscheid erstellt oder autorisiert keinen Namen, keine Firma, Adresse, Kontaktdaten, keinen Kanal, Kontakt oder Versand. Er autorisiert weder Account, Test, Kauf, Anbieter, reale Daten, Nachweisannahme, G1-Schliessung noch L2-Öffnung.'
     },
     status: 'BESTÄTIGT · REF-01-G1-NAM-001 V1.0 steuert nun die Vorbereitung, nicht die Identitäten.',
-    next: 'Nächster Schritt: AUT-001 V0.1 vorbereiten, damit jeder künftige Namenseintrag getrennt erlaubt oder abgelehnt wird.',
+    next: 'AUT-001 V1.0 steuert nun Einzelautorisierungen; IDN-001 V0.1 bereitet vor jeder realen Identität eine leere Akte vor.',
     boundary: 'G1 bleibt offen. Eine bestätigte Stelle ist weder eine bestimmte Identität noch eine Kontakt- oder Versandautorisierung.'
   }
 };

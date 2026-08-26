@@ -976,6 +976,8 @@ html:not(.dark) .m3s-business-module .m3s-ref01-g1-recipient-confirmation .text-
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-recipient-confirmation .text-emerald-300,
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-recipient-confirmation .text-emerald-100,
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-recipient-confirmation .text-emerald-300,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-authorisation-register-confirmation .text-emerald-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-authorisation-register-confirmation .text-emerald-300,
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-record-authorisation-candidate .text-emerald-300 {
   color: #047857 !important;
 }
@@ -984,6 +986,7 @@ html:not(.dark) .m3s-business-module .m3s-ref01-g1-recipient-confirmation .text-
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-recipient-confirmation .text-sky-300,
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-recipient-candidate .text-sky-300,
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-recipient-confirmation .text-sky-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-authorisation-register-confirmation .text-sky-200,
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-record-authorisation-candidate .text-sky-100,
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-record-authorisation-candidate .text-sky-300 {
   color: #075985 !important;
@@ -995,8 +998,13 @@ html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-recipient-candidate .te
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-recipient-candidate .text-rose-300,
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-recipient-confirmation .text-rose-200,
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-recipient-confirmation .text-rose-300,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-authorisation-register-confirmation .text-rose-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-authorisation-register-confirmation .text-rose-300,
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-record-authorisation-candidate .text-rose-200,
-html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-record-authorisation-candidate .text-rose-300 {
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-record-authorisation-candidate .text-rose-300,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-identity-record-candidate .text-rose-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-identity-record-candidate .text-rose-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-identity-record-candidate .text-rose-300 {
   color: #be123c !important;
 }
 
@@ -1005,14 +1013,18 @@ html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-recipient-candidate .te
 }
 
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-recipient-candidate .text-violet-100,
-html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-recipient-candidate .text-violet-300 {
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-recipient-candidate .text-violet-300,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-identity-record-candidate .text-violet-100,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-identity-record-candidate .text-violet-200,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-identity-record-candidate .text-violet-300 {
   color: #6d28d9 !important;
 }
 
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-recipient-candidate .text-amber-100,
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-recipient-candidate .text-amber-300,
 html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-record-authorisation-candidate .text-amber-100,
-html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-record-authorisation-candidate .text-amber-300 {
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-named-record-authorisation-candidate .text-amber-300,
+html:not(.dark) .m3s-business-module .m3s-ref01-g1-identity-record-candidate .text-amber-300 {
   color: #92400e !important;
 }
 
