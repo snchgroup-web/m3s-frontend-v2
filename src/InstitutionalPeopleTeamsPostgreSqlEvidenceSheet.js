@@ -42,7 +42,7 @@ const COPY = {
     gateTitle: 'Porte de confirmation du point 1',
     gateBody: 'Le point PostgreSQL/restauration ne pourra être soumis à confirmation que lorsque les sept preuves auront une source, un responsable, un critère accepté et une référence GED contrôlée. Un dossier incomplet, expiré ou contradictoire maintient G1 ouverte.',
     verdict: 'FICHE CONFIRMEE · Sept exigences gouvernées, zéro preuve reçue, zéro fournisseur retenu et L2 fermé.',
-    next: 'COL-001 V1.0 gouverne la collecte, REQ-001 V1.0 les demandes, REC-001 V1.0 les profils, NAM-001 V1.0 les emplacements et AUT-001 V0.1 les autorisations unitaires.',
+    next: 'COL-001 V1.0 gouverne la collecte, REQ-001 V1.0 les demandes, REC-001 V1.0 les profils, NAM-001 V1.0 les emplacements, AUT-001 V1.0 les autorisations et IDN-001 V0.1 la future fiche unitaire.',
     boundary: 'Limite : cette fiche ne vaut ni appel d’offres, ni choix de fournisseur, ni budget, ni avis juridique, ni configuration, ni sauvegarde active, ni test de production, ni ouverture de L2.'
   },
   EN: {
@@ -65,7 +65,7 @@ const COPY = {
     metadata: ['Stable identifier', 'Title and purpose', 'Source or issuer', 'Date and version', 'Preparation owner', 'Controller and validator', 'Sensitivity', 'Environment and data used', 'Validity or freshness period', 'DMS reference and reservations'],
     gateTitle: 'Point 1 confirmation gate', gateBody: 'The PostgreSQL/restoration point may be submitted for confirmation only when all seven evidence items have a source, an owner, an accepted criterion and a controlled DMS reference. An incomplete, expired or contradictory package keeps G1 open.',
     verdict: 'SHEET CONFIRMED · Seven governed requirements, zero evidence received, zero selected providers and L2 closed.',
-    next: 'COL-001 V1.0 governs collection, REQ-001 V1.0 requests, REC-001 V1.0 profiles, NAM-001 V1.0 slots and AUT-001 V0.1 individual authorisations.',
+    next: 'COL-001 V1.0 governs collection, REQ-001 V1.0 requests, REC-001 V1.0 profiles, NAM-001 V1.0 slots, AUT-001 V1.0 authorisations and IDN-001 V0.1 the future individual record.',
     boundary: 'Boundary: this sheet is neither a request for proposal, provider choice, budget, legal opinion, configuration, active backup, production test nor L2 opening.'
   },
   DE: {
@@ -88,7 +88,7 @@ const COPY = {
     metadata: ['Stabile Kennung', 'Titel und Zweck', 'Quelle oder Aussteller', 'Datum und Version', 'Erstellungsverantwortung', 'Kontrolle und Validierung', 'Sensibilität', 'Umgebung und verwendete Daten', 'Gültigkeit oder Aktualität', 'DMS-Referenz und Vorbehalte'],
     gateTitle: 'Bestätigungstor für Punkt 1', gateBody: 'Der PostgreSQL-/Restore-Punkt darf erst bestätigt werden, wenn alle sieben Nachweise eine Quelle, Verantwortung, ein angenommenes Kriterium und eine kontrollierte DMS-Referenz haben. Ein unvollständiges, abgelaufenes oder widersprüchliches Dossier hält G1 offen.',
     verdict: 'BLATT BESTÄTIGT · Sieben gesteuerte Anforderungen, null Nachweise, null Anbieter und L2 geschlossen.',
-    next: 'COL-001 V1.0 steuert Sammlung, REQ-001 V1.0 Anfragen, REC-001 V1.0 Profile, NAM-001 V1.0 Stellen und AUT-001 V0.1 Einzelautorisierungen.',
+    next: 'COL-001 V1.0 steuert Sammlung, REQ-001 V1.0 Anfragen, REC-001 V1.0 Profile, NAM-001 V1.0 Stellen, AUT-001 V1.0 Autorisierungen und IDN-001 V0.1 die künftige Einzelakte.',
     boundary: 'Grenze: Dieses Blatt ist weder Ausschreibung, Anbieterwahl, Budget, Rechtsgutachten, Konfiguration, aktive Sicherung, Produktionstest noch L2-Öffnung.'
   }
 };

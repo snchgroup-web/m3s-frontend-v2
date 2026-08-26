@@ -16,7 +16,7 @@ const COPY = {
     ],
     checksTitle: 'Conditions avant l’ajout d’un nom réel',
     checks: ['Besoin et lot REQ correspondants confirmés.', 'Qualité professionnelle ou fonction interne vérifiée.', 'Canal autorisé, traçable et limité à la finalité.', 'Aucune donnée personnelle non nécessaire.', 'Responsable interne de l’envoi et emplacement GED désignés.', 'Autorisation humaine de nomination enregistrée séparément.'],
-    next: 'REF-01-G1-NAM-001 V1.0 gouverne quatre emplacements vides ; AUT-001 V0.1 prépare les futures autorisations unitaires sans identité réelle.',
+    next: 'REF-01-G1-NAM-001 V1.0 gouverne quatre emplacements vides ; AUT-001 V1.0 gouverne les autorisations et IDN-001 V0.1 prépare la fiche unitaire vide.',
     boundary: 'Limite : REC-001 V1.0 ne nomme personne, ne recommande aucun fournisseur, n’autorise aucun contact, aucune transmission, aucun achat et aucune ouverture de L2.'
   },
   EN: {
@@ -33,7 +33,7 @@ const COPY = {
     ],
     checksTitle: 'Conditions before adding a real name',
     checks: ['Matching need and REQ package confirmed.', 'Professional capacity or internal function verified.', 'Authorised traceable channel limited to the purpose.', 'No unnecessary personal data.', 'Internal send owner and DMS location designated.', 'Separate human nomination authorisation recorded.'],
-    next: 'REF-01-G1-NAM-001 V1.0 governs four empty slots; AUT-001 V0.1 prepares future individual authorisations without real identities.',
+    next: 'REF-01-G1-NAM-001 V1.0 governs four empty slots; AUT-001 V1.0 governs authorisations and IDN-001 V0.1 prepares the empty individual record.',
     boundary: 'Boundary: REC-001 V1.0 names nobody, recommends no provider and authorises no contact, transmission, purchase or L2 opening.'
   },
   DE: {
@@ -50,7 +50,7 @@ const COPY = {
     ],
     checksTitle: 'Bedingungen vor dem Ergänzen eines realen Namens',
     checks: ['Passender Bedarf und passendes REQ-Paket bestätigt.', 'Fachliche Eigenschaft oder interne Funktion geprüft.', 'Autorisierter nachvollziehbarer Kanal auf den Zweck begrenzt.', 'Keine unnötigen Personendaten.', 'Interne Versandverantwortung und DMS-Ablage bestimmt.', 'Getrennte menschliche Benennungsautorisierung dokumentiert.'],
-    next: 'REF-01-G1-NAM-001 V1.0 steuert vier leere Stellen; AUT-001 V0.1 bereitet künftige Einzelautorisierungen ohne reale Identitäten vor.',
+    next: 'REF-01-G1-NAM-001 V1.0 steuert vier leere Stellen; AUT-001 V1.0 steuert Autorisierungen und IDN-001 V0.1 bereitet die leere Einzelakte vor.',
     boundary: 'Grenze: REC-001 V1.0 benennt niemanden, empfiehlt keinen Anbieter und autorisiert weder Kontakt, Übermittlung, Kauf noch L2-Öffnung.'
   }
 };
