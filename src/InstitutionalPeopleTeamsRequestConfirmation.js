@@ -16,7 +16,7 @@ const COPY = {
       limit: 'La décision ne nomme ni n’autorise aucun destinataire, contact, adresse, canal concret, date d’envoi ou transmission. Elle n’autorise ni compte, essai, achat, fournisseur, donnée réelle, acceptation de preuve ou ouverture de L2.'
     },
     status: 'CONFIRMÉ · REF-01-G1-REQ-001 V1.0 gouverne désormais le contenu des demandes, pas leur émission.',
-    next: 'Prochaine étape : qualifier les profils destinataires candidats, puis soumettre séparément tout nom réel et tout envoi à autorisation humaine.',
+    next: 'REF-01-G1-REC-001 V1.0 gouverne désormais les profils ; REF-01-G1-NAM-001 V0.1 prépare les emplacements vides avant toute inscription réelle.',
     boundary: 'G1 reste ouverte. Une demande confirmée n’est ni une demande envoyée, ni un appel d’offres, ni une sélection.'
   },
   EN: {
@@ -32,7 +32,7 @@ const COPY = {
       limit: 'This decision names or authorises no recipient, contact, address, concrete channel, send date or transmission. It authorises no account, trial, purchase, provider, real data, evidence acceptance or L2 opening.'
     },
     status: 'CONFIRMED · REF-01-G1-REQ-001 V1.0 now governs request content, not release.',
-    next: 'Next step: qualify candidate recipient profiles, then submit every real name and every send separately for human authorisation.',
+    next: 'REF-01-G1-REC-001 V1.0 now governs profiles; REF-01-G1-NAM-001 V0.1 prepares empty slots before any real entry.',
     boundary: 'G1 remains open. A confirmed request is neither a sent request, request for proposal nor selection.'
   },
   DE: {
@@ -48,7 +48,7 @@ const COPY = {
       limit: 'Der Entscheid benennt oder autorisiert keinen Empfänger, Kontakt, keine Adresse, keinen konkreten Kanal, kein Versanddatum und keine Übermittlung. Er autorisiert weder Account, Test, Kauf, Anbieter, reale Daten, Nachweisannahme noch L2-Öffnung.'
     },
     status: 'BESTÄTIGT · REF-01-G1-REQ-001 V1.0 steuert nun den Anfrageinhalt, nicht den Versand.',
-    next: 'Nächster Schritt: Kandidatenprofile für Empfänger qualifizieren und danach jeden realen Namen sowie jeden Versand getrennt menschlich autorisieren lassen.',
+    next: 'REF-01-G1-REC-001 V1.0 steuert nun die Profile; REF-01-G1-NAM-001 V0.1 bereitet leere Stellen vor jedem realen Eintrag vor.',
     boundary: 'G1 bleibt offen. Eine bestätigte Anfrage ist weder versandte Anfrage noch Ausschreibung oder Auswahl.'
   }
 };
