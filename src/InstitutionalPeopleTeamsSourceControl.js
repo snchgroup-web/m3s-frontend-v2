@@ -22,7 +22,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.3 · 26-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.4 · 26-08-2026',
     title: 'Comparer les supports sans les promouvoir',
     body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
     counters: [
@@ -108,12 +108,12 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Prochain arbitrage : confirmer, corriger ou rejeter le contrat fonctionnel candidat REF-01-ML-001 avant tout cadrage technique.',
-    boundary: 'Statut : quatre vagues validées par REF-01-DEC-006 ; REF-01-ML-001 V0.1 préparé ; décisions sur le lot : 3 ; sources maîtresses désignées : 0.',
-    source: 'Supports contrôlés : contrat API RH-001, composant Annuaire interne, utilitaire partagé Team/Agent, cadrage GED, décisions REF-01-DEC-001 à REF-01-DEC-006, comparatif V0.5 publié au commit 6be6a4a et contrat fonctionnel candidat REF-01-ML-001 V0.1.'
+    nextControl: 'Prochain arbitrage : décider séparément si un cadrage technique candidat de REF-01-ML-001 peut être préparé, sans implémentation.',
+    boundary: 'Statut : quatre vagues validées par REF-01-DEC-006 ; base fonctionnelle REF-01-ML-001 V1.0 confirmée par REF-01-DEC-007 ; décisions sur le lot : 4 ; sources maîtresses désignées : 0.',
+    source: 'Supports contrôlés : contrat API RH-001, composant Annuaire interne, utilitaire partagé Team/Agent, cadrage GED, décisions REF-01-DEC-001 à REF-01-DEC-007, comparatif V0.5 publié au commit 6be6a4a et base fonctionnelle REF-01-ML-001 V1.0.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.3 · 26 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.4 · 26 AUG 2026',
     title: 'Compare supports without promoting them',
     body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
     counters: [
@@ -199,12 +199,12 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'Next review: confirm, amend or reject candidate functional contract REF-01-ML-001 before any technical framing.',
-    boundary: 'Status: four waves validated by REF-01-DEC-006; REF-01-ML-001 V0.1 prepared; package decisions: 3; designated master sources: 0.',
-    source: 'Controlled supports: RH-001 API contract, Internal Directory component, shared Team/Agent utility, DMS framing, decisions REF-01-DEC-001 through REF-01-DEC-006, V0.5 comparison published at commit 6be6a4a, and candidate functional contract REF-01-ML-001 V0.1.'
+    nextControl: 'Next review: decide separately whether candidate technical framing for REF-01-ML-001 may be prepared, without implementation.',
+    boundary: 'Status: four waves validated by REF-01-DEC-006; functional baseline REF-01-ML-001 V1.0 confirmed by REF-01-DEC-007; package decisions: 4; designated master sources: 0.',
+    source: 'Controlled supports: RH-001 API contract, Internal Directory component, shared Team/Agent utility, DMS framing, decisions REF-01-DEC-001 through REF-01-DEC-007, V0.5 comparison published at commit 6be6a4a, and functional baseline REF-01-ML-001 V1.0.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.3 · 26.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.4 · 26.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
     body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
     counters: [
@@ -290,9 +290,9 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'Nächster Entscheid: Den funktionalen Vertragskandidaten REF-01-ML-001 vor jeder technischen Ausgestaltung bestätigen, ändern oder ablehnen.',
-    boundary: 'Stand: vier Wellen mit REF-01-DEC-006 validiert; REF-01-ML-001 V0.1 vorbereitet; Entscheide zum Paket: 3; bestimmte Masterquellen: 0.',
-    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Komponente Internes Verzeichnis, gemeinsames Team-/Agent-Werkzeug, DMS-Rahmen, REF-01-DEC-001 bis REF-01-DEC-006, am Commit 6be6a4a veröffentlichter Vergleich V0.5 und funktionaler Vertragskandidat REF-01-ML-001 V0.1.'
+    nextControl: 'Nächster Entscheid: getrennt entscheiden, ob eine technische Kandidatenausgestaltung für REF-01-ML-001 ohne Umsetzung vorbereitet werden darf.',
+    boundary: 'Stand: vier Wellen mit REF-01-DEC-006 validiert; funktionale Basis REF-01-ML-001 V1.0 mit REF-01-DEC-007 bestätigt; Entscheide zum Paket: 4; bestimmte Masterquellen: 0.',
+    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Komponente Internes Verzeichnis, gemeinsames Team-/Agent-Werkzeug, DMS-Rahmen, REF-01-DEC-001 bis REF-01-DEC-007, am Commit 6be6a4a veröffentlichter Vergleich V0.5 und funktionale Basis REF-01-ML-001 V1.0.'
   }
 };
 

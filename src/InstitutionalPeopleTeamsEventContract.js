@@ -9,15 +9,16 @@ import {
   GitBranch,
   ShieldCheck
 } from 'lucide-react';
+import GovernedDecisionRecord from './GovernedDecisionRecord';
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTRAT FONCTIONNEL CANDIDAT · REF-01-ML-001 · V0.1 · 26-08-2026',
+    eyebrow: 'BASE FONCTIONNELLE CONFIRMEE · REF-01-ML-001 · V1.0 · 26-08-2026',
     reference: 'Convention de référence : ML signifie micro-lot.',
     title: 'Rendre chaque changement daté, explicable et non destructif',
-    intro: 'Ce contrat traduit le cycle validé par REF-01-DEC-002 en règles fonctionnelles vérifiables. Il prépare une décision d’implémentation ultérieure sans créer de schéma, d’API d’écriture ou d’événement réel.',
-    counters: [['Familles d’événements', '6', 'Cadre déjà validé'], ['Objets logiques', '4', 'Personne, appartenance, équipe, collectif'], ['Métadonnées minimales', '12', 'Trace validée à préciser techniquement'], ['Événements enregistrés', '0', 'Aucune donnée réelle dans ce lot']],
-    eventTitle: 'Transitions fonctionnelles candidates',
+    intro: 'Ce contrat traduit le cycle validé par REF-01-DEC-002 en règles fonctionnelles vérifiables. Son contenu fonctionnel est confirmé par REF-01-DEC-007, sans créer de schéma, d’API d’écriture ou d’événement réel.',
+    counters: [['Familles d’événements', '6', 'Contenu fonctionnel confirmé'], ['Objets logiques', '4', 'Personne, appartenance, équipe, collectif'], ['Métadonnées minimales', '12', 'Contenu fonctionnel confirmé'], ['Événements enregistrés', '0', 'Aucune donnée réelle dans ce lot']],
+    eventTitle: 'Transitions fonctionnelles confirmées',
     eventIntro: 'Les libellés ci-dessous décrivent des effets métier. Ils ne constituent ni codes de base de données ni endpoints.',
     eventColumns: { event: 'Famille', object: 'Objet', before: 'État de départ', after: 'État résultant', guard: 'Règle bloquante' },
     eventLabels: { object: 'Objet', before: 'État de départ', after: 'État résultant', guard: 'Règle bloquante' },
@@ -46,7 +47,7 @@ const COPY = {
       ['IT', 'Contrôle la représentation et la propagation autorisée.', 'Ne devient ni propriétaire métier ni validateur RH.'],
       ['GED', 'Conserve décision, preuve, version et intégrité.', 'Ne devient pas l’annuaire opérationnel.']
     ],
-    acceptanceTitle: 'Critères d’acceptation candidats',
+    acceptanceTitle: 'Critères d’acceptation confirmés',
     acceptance: [
       'Un événement possède un identifiant unique qui ne change jamais.',
       'La date d’effet et l’horodatage de saisie restent distincts.',
@@ -57,17 +58,24 @@ const COPY = {
       'Les vues globales n’exposent ni détail sensible du motif ni contenu de preuve.',
       'Aucune écriture réelle n’est autorisée avant validation du schéma, des droits, de la source et des tests.'
     ],
-    status: 'Statut : contrat fonctionnel candidat préparé ; validation humaine requise avant tout cadrage technique.',
-    next: 'Prochain arbitrage : confirmer, corriger ou rejeter les transitions, les douze métadonnées, la séparation des contrôles et les huit critères d’acceptation.',
-    boundary: 'Limite : ce document ne crée aucun identifiant réel, table, endpoint, rôle applicatif, droit, événement, preuve GED, migration, automatisation ou taux de progression.'
+    recordLabels: { eyebrow: 'Registre de décision gouverné', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision enregistrée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
+    record: {
+      id: 'REF-01-DEC-007', version: 'V1.0', status: 'Contrat fonctionnel confirmé', author: 'Cheikh Ndiaye', date: '26-08-2026',
+      decision: 'Le contenu fonctionnel de REF-01-ML-001 est confirmé : six transitions, douze métadonnées minimales, quatre rôles de contrôle et huit critères d’acceptation constituent la base fonctionnelle V1.0.',
+      evidence: 'Confirmation explicite de Cheikh dans la session du 26-08-2026 ; contrat candidat REF-01-ML-001 V0.1 publié par la PR frontend nº 192 au commit 72a16fb3.',
+      limit: 'La décision n’autorise aucun cadrage technique, schéma, endpoint, rôle applicatif, droit, accès, événement réel, donnée personnelle, preuve GED, migration, automatisation, source maîtresse ou calcul de progression.'
+    },
+    status: 'Statut : base fonctionnelle V1.0 confirmée ; aucune implémentation technique autorisée.',
+    next: 'Prochain arbitrage : décider séparément si un cadrage technique candidat peut être préparé, toujours sans implémentation.',
+    boundary: 'Limite : cette confirmation ne crée aucun identifiant réel, table, endpoint, rôle applicatif, droit, accès, événement, preuve GED, migration, automatisation, source maîtresse ou taux de progression.'
   },
   EN: {
-    eyebrow: 'CANDIDATE FUNCTIONAL CONTRACT · REF-01-ML-001 · V0.1 · 26 AUG 2026',
+    eyebrow: 'CONFIRMED FUNCTIONAL BASELINE · REF-01-ML-001 · V1.0 · 26 AUG 2026',
     reference: 'Reference convention: ML means micro-package.',
     title: 'Make every change dated, explainable and non-destructive',
-    intro: 'This contract turns the lifecycle validated by REF-01-DEC-002 into verifiable functional rules. It prepares a later implementation decision without creating a schema, write API or real event.',
-    counters: [['Event families', '6', 'Framework already validated'], ['Logical objects', '4', 'Person, membership, team, collective'], ['Minimum metadata', '12', 'Validated trace to detail technically'], ['Recorded events', '0', 'No real data in this package']],
-    eventTitle: 'Candidate functional transitions',
+    intro: 'This contract turns the lifecycle validated by REF-01-DEC-002 into verifiable functional rules. Its functional content is confirmed by REF-01-DEC-007 without creating a schema, write API or real event.',
+    counters: [['Event families', '6', 'Functional content confirmed'], ['Logical objects', '4', 'Person, membership, team, collective'], ['Minimum metadata', '12', 'Functional content confirmed'], ['Recorded events', '0', 'No real data in this package']],
+    eventTitle: 'Confirmed functional transitions',
     eventIntro: 'The labels below describe business effects. They are neither database codes nor endpoints.',
     eventColumns: { event: 'Family', object: 'Object', before: 'Starting state', after: 'Resulting state', guard: 'Blocking rule' },
     eventLabels: { object: 'Object', before: 'Starting state', after: 'Resulting state', guard: 'Blocking rule' },
@@ -96,7 +104,7 @@ const COPY = {
       ['IT', 'Controls representation and authorised propagation.', 'Becomes neither business owner nor HR validator.'],
       ['DMS', 'Retains decision, evidence, version and integrity.', 'Does not become the operational directory.']
     ],
-    acceptanceTitle: 'Candidate acceptance criteria',
+    acceptanceTitle: 'Confirmed acceptance criteria',
     acceptance: [
       'An event has a unique identifier that never changes.',
       'Effective date and capture timestamp remain distinct.',
@@ -107,17 +115,24 @@ const COPY = {
       'Global views expose neither sensitive reason detail nor evidence content.',
       'No real write is authorised before validation of schema, rights, source and tests.'
     ],
-    status: 'Status: candidate functional contract prepared; human validation required before technical framing.',
-    next: 'Next review: confirm, amend or reject the transitions, twelve metadata fields, segregation of controls and eight acceptance criteria.',
-    boundary: 'Boundary: this document creates no real identifier, table, endpoint, application role, right, event, DMS evidence, migration, automation or progress rate.'
+    recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
+    record: {
+      id: 'REF-01-DEC-007', version: 'V1.0', status: 'Functional contract confirmed', author: 'Cheikh Ndiaye', date: '26 Aug 2026',
+      decision: 'The functional content of REF-01-ML-001 is confirmed: six transitions, twelve minimum metadata fields, four control roles and eight acceptance criteria form functional baseline V1.0.',
+      evidence: 'Explicit confirmation by Cheikh during the 26 Aug 2026 session; candidate contract REF-01-ML-001 V0.1 published through frontend PR 192 at commit 72a16fb3.',
+      limit: 'The decision authorises no technical framing, schema, endpoint, application role, right, access, real event, personal data, DMS evidence, migration, automation, master source or progress calculation.'
+    },
+    status: 'Status: functional baseline V1.0 confirmed; no technical implementation authorised.',
+    next: 'Next review: decide separately whether candidate technical framing may be prepared, still without implementation.',
+    boundary: 'Boundary: this confirmation creates no real identifier, table, endpoint, application role, right, access, event, DMS evidence, migration, automation, master source or progress rate.'
   },
   DE: {
-    eyebrow: 'FUNKTIONALER VERTRAGSKANDIDAT · REF-01-ML-001 · V0.1 · 26.08.2026',
+    eyebrow: 'BESTAETIGTE FUNKTIONALE BASIS · REF-01-ML-001 · V1.0 · 26.08.2026',
     reference: 'Referenzkonvention: ML bedeutet Mikrolos.',
     title: 'Jede Änderung datiert, erklärbar und nicht destruktiv machen',
-    intro: 'Dieser Vertrag übersetzt den mit REF-01-DEC-002 validierten Lebenszyklus in prüfbare funktionale Regeln. Er bereitet einen späteren Umsetzungsentscheid vor, ohne Schema, Schreib-API oder reales Ereignis zu erstellen.',
-    counters: [['Ereignisfamilien', '6', 'Rahmen bereits validiert'], ['Logische Objekte', '4', 'Person, Mitgliedschaft, Team, Kollektiv'], ['Mindestmetadaten', '12', 'Validierte Spur technisch zu präzisieren'], ['Erfasste Ereignisse', '0', 'Keine realen Daten in diesem Los']],
-    eventTitle: 'Vorgeschlagene funktionale Übergänge',
+    intro: 'Dieser Vertrag übersetzt den mit REF-01-DEC-002 validierten Lebenszyklus in prüfbare funktionale Regeln. Sein funktionaler Inhalt ist mit REF-01-DEC-007 bestätigt, ohne Schema, Schreib-API oder reales Ereignis zu erstellen.',
+    counters: [['Ereignisfamilien', '6', 'Funktionaler Inhalt bestätigt'], ['Logische Objekte', '4', 'Person, Mitgliedschaft, Team, Kollektiv'], ['Mindestmetadaten', '12', 'Funktionaler Inhalt bestätigt'], ['Erfasste Ereignisse', '0', 'Keine realen Daten in diesem Los']],
+    eventTitle: 'Bestätigte funktionale Übergänge',
     eventIntro: 'Die folgenden Bezeichnungen beschreiben fachliche Wirkungen. Sie sind weder Datenbankcodes noch Endpoints.',
     eventColumns: { event: 'Familie', object: 'Objekt', before: 'Ausgangsstand', after: 'Resultierender Stand', guard: 'Sperrregel' },
     eventLabels: { object: 'Objekt', before: 'Ausgangsstand', after: 'Resultierender Stand', guard: 'Sperrregel' },
@@ -146,7 +161,7 @@ const COPY = {
       ['IT', 'Kontrolliert Darstellung und autorisierte Weitergabe.', 'Wird weder Fachverantwortung noch Personalvalidierung.'],
       ['DMS', 'Bewahrt Entscheid, Nachweis, Version und Integrität.', 'Wird nicht zum operativen Verzeichnis.']
     ],
-    acceptanceTitle: 'Vorgeschlagene Abnahmekriterien',
+    acceptanceTitle: 'Bestätigte Abnahmekriterien',
     acceptance: [
       'Ein Ereignis besitzt eine eindeutige Kennung, die sich nie ändert.',
       'Wirksamkeitsdatum und Erfassungszeitpunkt bleiben getrennt.',
@@ -157,9 +172,16 @@ const COPY = {
       'Globale Ansichten zeigen weder sensible Grunddetails noch Nachweisinhalte.',
       'Keine reale Schreiboperation vor Validierung von Schema, Rechten, Quelle und Tests.'
     ],
-    status: 'Stand: funktionaler Vertragskandidat vorbereitet; menschliche Validierung vor technischer Ausgestaltung erforderlich.',
-    next: 'Nächster Entscheid: Übergänge, zwölf Metadatenfelder, Kontrolltrennung und acht Abnahmekriterien bestätigen, ändern oder ablehnen.',
-    boundary: 'Grenze: Dieses Dokument erstellt keine reale Kennung, Tabelle, keinen Endpoint, Anwendungsrolle, Recht, Ereignis, DMS-Nachweis, Migration, Automatisierung oder Fortschrittsquote.'
+    recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Dokumentierter Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
+    record: {
+      id: 'REF-01-DEC-007', version: 'V1.0', status: 'Funktionaler Vertrag bestätigt', author: 'Cheikh Ndiaye', date: '26.08.2026',
+      decision: 'Der funktionale Inhalt von REF-01-ML-001 ist bestätigt: sechs Übergänge, zwölf Mindestmetadatenfelder, vier Kontrollrollen und acht Abnahmekriterien bilden die funktionale Basis V1.0.',
+      evidence: 'Ausdrückliche Bestätigung durch Cheikh in der Sitzung vom 26.08.2026; Vertragskandidat REF-01-ML-001 V0.1 mit Frontend-PR Nr. 192 am Commit 72a16fb3 veröffentlicht.',
+      limit: 'Der Entscheid autorisiert keine technische Ausgestaltung, kein Schema, keinen Endpoint, keine Anwendungsrolle, kein Recht, keinen Zugriff, kein reales Ereignis, keine Personendaten, keinen DMS-Nachweis, keine Migration, Automatisierung, Masterquelle oder Fortschrittsberechnung.'
+    },
+    status: 'Stand: funktionale Basis V1.0 bestätigt; keine technische Umsetzung autorisiert.',
+    next: 'Nächster Entscheid: getrennt entscheiden, ob eine technische Kandidatenausgestaltung weiterhin ohne Umsetzung vorbereitet werden darf.',
+    boundary: 'Grenze: Diese Bestätigung erstellt keine reale Kennung, Tabelle, keinen Endpoint, keine Anwendungsrolle, kein Recht, keinen Zugriff, kein Ereignis, keinen DMS-Nachweis, keine Migration, Automatisierung, Masterquelle oder Fortschrittsquote.'
   }
 };
 
@@ -197,6 +219,8 @@ const InstitutionalPeopleTeamsEventContract = ({ language = 'FR' }) => {
           return <article key={label} className="m3s-raised min-h-28 p-3"><div className="flex items-start justify-between gap-3"><div><p className="text-xs font-semibold text-slate-300">{label}</p><p className="mt-2 text-2xl font-semibold text-slate-100">{value}</p></div><Icon className={index === 3 ? 'text-amber-300' : 'text-cyan-300'} size={19} aria-hidden="true" /></div><p className="mt-2 text-xs leading-5 text-slate-400">{note}</p></article>;
         })}
       </div>
+
+      <GovernedDecisionRecord labels={t.recordLabels} record={t.record} className="mt-4" />
 
       <section className="mt-4" aria-labelledby="ref01-event-transitions-title">
         <h6 id="ref01-event-transitions-title" className="text-sm font-semibold text-slate-100">{t.eventTitle}</h6>
