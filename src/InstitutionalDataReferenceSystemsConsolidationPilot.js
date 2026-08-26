@@ -21,6 +21,8 @@ import InstitutionalPeopleTeamsGateG1Review from './InstitutionalPeopleTeamsGate
 import InstitutionalPeopleTeamsGateG1Arbitration from './InstitutionalPeopleTeamsGateG1Arbitration';
 import InstitutionalPeopleTeamsGateG1Decision from './InstitutionalPeopleTeamsGateG1Decision';
 import InstitutionalPeopleTeamsPostgreSqlEvidenceSheet from './InstitutionalPeopleTeamsPostgreSqlEvidenceSheet';
+import InstitutionalPeopleTeamsEvidenceConfirmation from './InstitutionalPeopleTeamsEvidenceConfirmation';
+import InstitutionalPeopleTeamsEvidenceCollectionPack from './InstitutionalPeopleTeamsEvidenceCollectionPack';
 
 const STAGES = ['scope', 'sources', 'owners', 'models', 'vocabulary', 'review'];
 
@@ -175,6 +177,8 @@ const InstitutionalDataReferenceSystemsConsolidationPilot = ({ language = 'FR', 
       <InstitutionalPeopleTeamsGateG1Arbitration language={language} />
       <InstitutionalPeopleTeamsGateG1Decision language={language} />
       <InstitutionalPeopleTeamsPostgreSqlEvidenceSheet language={language} />
+      <InstitutionalPeopleTeamsEvidenceConfirmation language={language} />
+      <InstitutionalPeopleTeamsEvidenceCollectionPack language={language} />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
