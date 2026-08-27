@@ -1166,17 +1166,23 @@ html:not(.dark) .m3s-business-module [class*="bg-rose-500/"] {
 }
 
 html:not(.dark) .m3s-ref01-g1-aut-cd-confirmation .text-slate-100,
-html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-slate-100 {
+html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-slate-100,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-slate-100,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-slate-100 {
   color: #0f172a !important;
 }
 
 html:not(.dark) .m3s-ref01-g1-aut-cd-confirmation .text-slate-300,
-html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-slate-300 {
+html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-slate-300,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-slate-300,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-slate-300 {
   color: #334155 !important;
 }
 
 html:not(.dark) .m3s-ref01-g1-aut-cd-confirmation .text-slate-400,
-html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-slate-400 {
+html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-slate-400,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-slate-400,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-slate-400 {
   color: #475569 !important;
 }
 
@@ -1185,7 +1191,13 @@ html:not(.dark) .m3s-ref01-g1-aut-cd-confirmation .text-emerald-200,
 html:not(.dark) .m3s-ref01-g1-aut-cd-confirmation .text-emerald-300,
 html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-emerald-100,
 html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-emerald-200,
-html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-emerald-300 {
+html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-emerald-300,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-emerald-100,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-emerald-200,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-emerald-300,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-emerald-100,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-emerald-200,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-emerald-300 {
   color: #047857 !important;
 }
 
@@ -1194,7 +1206,13 @@ html:not(.dark) .m3s-ref01-g1-aut-cd-confirmation .text-sky-200,
 html:not(.dark) .m3s-ref01-g1-aut-cd-confirmation .text-sky-300,
 html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-sky-100,
 html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-sky-200,
-html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-sky-300 {
+html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-sky-300,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-sky-100,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-sky-200,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-sky-300,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-sky-100,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-sky-200,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-sky-300 {
   color: #075985 !important;
 }
 
@@ -1203,7 +1221,13 @@ html:not(.dark) .m3s-ref01-g1-aut-cd-confirmation .text-violet-200,
 html:not(.dark) .m3s-ref01-g1-aut-cd-confirmation .text-violet-300,
 html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-violet-100,
 html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-violet-200,
-html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-violet-300 {
+html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-violet-300,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-violet-100,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-violet-200,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-violet-300,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-violet-100,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-violet-200,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-violet-300 {
   color: #6d28d9 !important;
 }
 
@@ -1212,14 +1236,24 @@ html:not(.dark) .m3s-ref01-g1-aut-cd-confirmation .text-amber-200,
 html:not(.dark) .m3s-ref01-g1-aut-cd-confirmation .text-amber-300,
 html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-amber-100,
 html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-amber-200,
-html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-amber-300 {
+html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-amber-300,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-amber-100,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-amber-200,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-amber-300,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-amber-100,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-amber-200,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-amber-300 {
   color: #92400e !important;
 }
 
 html:not(.dark) .m3s-ref01-g1-aut-cd-confirmation .text-rose-200,
 html:not(.dark) .m3s-ref01-g1-aut-cd-confirmation .text-rose-300,
 html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-rose-200,
-html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-rose-300 {
+html:not(.dark) .m3s-ref01-g1-aut-cd-documentary-files .text-rose-300,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-rose-200,
+html:not(.dark) .m3s-ref01-g1-aut-cd-files-confirmation .text-rose-300,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-rose-200,
+html:not(.dark) .m3s-ref01-g1-reassessment .text-rose-300 {
   color: #be123c !important;
 }
 
