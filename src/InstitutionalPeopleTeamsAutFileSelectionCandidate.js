@@ -3,7 +3,7 @@ import { AlertTriangle, Layers3, MousePointerClick } from 'lucide-react';
 
 const COPY = {
   FR: {
-    eyebrow: 'FICHE CANDIDATE DE SÉLECTION AUT · REF-01-G1-SEL-001 · V0.2 · 27-08-2026',
+    eyebrow: 'FICHE CONFIRMÉE DE SÉLECTION AUT · REF-01-G1-SEL-001 · V1.0 · 27-08-2026',
     title: 'Préparer les quatre dossiers dans un lot contrôlé',
     intro: 'Cette version amendée applique PRI-001 V1.0 et la demande d’accélération de Cheikh. AUT-A à AUT-D sont inclus dans un même lot candidat, sans exécution ni autorisation implicite.',
     options: [
@@ -14,11 +14,11 @@ const COPY = {
     ],
     labels: { scope: 'Périmètre', status: 'INCLUS AU LOT · NON EXÉCUTÉ' },
     status: 'LOT CANDIDAT · 4/4 DOSSIERS INCLUS · 0 EXÉCUTÉ · 0 IDENTITÉ · 0 AUTORISATION',
-    next: 'Point de reprise : confirmer ou amender ensemble SEL-001 V0.2 et BAT-001 V0.1 afin d’autoriser uniquement la préparation documentaire des quatre pistes.',
+    next: 'Étape accomplie : SEL-001 V1.0 et BAT-001 V1.0 sont confirmés par REF-01-DEC-022 ; la vague documentaire WAV-001 V0.1 est préparée sans contenu réel.',
     boundary: 'L’inclusion dans le lot ne vaut ni désignation d’une source maîtresse, ni choix d’une identité ou d’un fournisseur, ni autorisation de contact, d’envoi, d’accès, de collecte, de test ou de preuve réelle.'
   },
   EN: {
-    eyebrow: 'CANDIDATE AUT SELECTION SHEET · REF-01-G1-SEL-001 · V0.2 · 27 AUG 2026',
+    eyebrow: 'CONFIRMED AUT SELECTION SHEET · REF-01-G1-SEL-001 · V1.0 · 27 AUG 2026',
     title: 'Prepare all four files as one controlled package',
     intro: 'This amended version applies PRI-001 V1.0 and Cheikh’s request to accelerate. AUT-A through AUT-D are included in one candidate package, without execution or implicit authorisation.',
     options: [
@@ -29,11 +29,11 @@ const COPY = {
     ],
     labels: { scope: 'Scope', status: 'INCLUDED IN PACKAGE · NOT EXECUTED' },
     status: 'CANDIDATE PACKAGE · 4/4 FILES INCLUDED · 0 EXECUTED · 0 IDENTITY · 0 AUTHORISATION',
-    next: 'Resume point: confirm or amend SEL-001 V0.2 and BAT-001 V0.1 together to authorise documentary preparation of the four tracks only.',
+    next: 'Completed step: SEL-001 V1.0 and BAT-001 V1.0 are confirmed through REF-01-DEC-022; documentary wave WAV-001 V0.1 is prepared without real content.',
     boundary: 'Inclusion in the package does not designate a master source, identity or provider and does not authorise contact, send, access, collection, testing or real evidence.'
   },
   DE: {
-    eyebrow: 'KANDIDATENBLATT ZUR AUT-AUSWAHL · REF-01-G1-SEL-001 · V0.2 · 27.08.2026',
+    eyebrow: 'BESTÄTIGTES BLATT ZUR AUT-AUSWAHL · REF-01-G1-SEL-001 · V1.0 · 27.08.2026',
     title: 'Alle vier Akten als ein kontrolliertes Paket vorbereiten',
     intro: 'Diese geänderte Version wendet PRI-001 V1.0 und Cheikhs Beschleunigungswunsch an. AUT-A bis AUT-D sind in einem Kandidatenpaket enthalten, ohne Ausführung oder stillschweigende Autorisierung.',
     options: [
@@ -44,7 +44,7 @@ const COPY = {
     ],
     labels: { scope: 'Umfang', status: 'IM PAKET ENTHALTEN · NICHT AUSGEFÜHRT' },
     status: 'KANDIDATENPAKET · 4/4 AKTEN ENTHALTEN · 0 AUSGEFÜHRT · 0 IDENTITÄTEN · 0 AUTORISIERUNGEN',
-    next: 'Wiederaufnahmepunkt: SEL-001 V0.2 und BAT-001 V0.1 gemeinsam bestätigen oder ändern, um nur die dokumentarische Vorbereitung der vier Spuren zu erlauben.',
+    next: 'Abgeschlossener Schritt: SEL-001 V1.0 und BAT-001 V1.0 sind mit REF-01-DEC-022 bestätigt; Dokumentwelle WAV-001 V0.1 ist ohne reale Inhalte vorbereitet.',
     boundary: 'Die Aufnahme in das Paket bestimmt weder Masterquelle, Identität noch Anbieter und erlaubt weder Kontakt, Versand, Zugriff, Sammlung, Test noch reale Nachweise.'
   }
 };

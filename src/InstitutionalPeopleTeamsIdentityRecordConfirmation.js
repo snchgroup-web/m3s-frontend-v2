@@ -16,7 +16,7 @@ const COPY = {
       limit: 'Cette décision ne choisit aucun dossier AUT, ne remplit aucun champ, n’inscrit ni n’autorise aucune identité et n’autorise aucun contact ou envoi. Elle ne ferme pas G1 et n’ouvre pas L2.'
     },
     status: 'CONFIRMÉ · REF-01-G1-IDN-001 V1.0 gouverne désormais la structure des futures fiches unitaires, sans en créer aucune.',
-    next: 'Étape accomplie : PRI-001 est confirmé en V1.0 par REF-01-DEC-021 ; SEL-001 V0.2 et BAT-001 V0.1 préparent maintenant le lot AUT-A à AUT-D sans identité réelle.',
+    next: 'Étapes accomplies : PRI-001, SEL-001 et BAT-001 sont confirmés en V1.0 ; WAV-001 V0.1 prépare la vague 1 sans identité réelle.',
     boundary: 'G1 reste ouverte. Confirmer le gabarit ne vaut ni choix d’un dossier AUT, ni inscription nominative, ni autorisation individuelle, de contact ou d’envoi.'
   },
   EN: {
@@ -32,7 +32,7 @@ const COPY = {
       limit: 'This decision selects no AUT file, fills no field, records or authorises no identity and authorises no contact or send. It does not close G1 or open L2.'
     },
     status: 'CONFIRMED · REF-01-G1-IDN-001 V1.0 now governs the structure of future individual records without creating one.',
-    next: 'Step completed: PRI-001 is confirmed as V1.0 through REF-01-DEC-021; SEL-001 V0.2 and BAT-001 V0.1 now prepare the AUT-A through AUT-D package without a real identity.',
+    next: 'Completed steps: PRI-001, SEL-001 and BAT-001 are confirmed as V1.0; WAV-001 V0.1 prepares Wave 1 without a real identity.',
     boundary: 'G1 remains open. Confirming the template is neither an AUT-file choice nor a named record or individual, contact or send authorisation.'
   },
   DE: {
@@ -48,7 +48,7 @@ const COPY = {
       limit: 'Der Entscheid wählt keine AUT-Akte, füllt kein Feld, erfasst oder autorisiert keine Identität und erlaubt weder Kontakt noch Versand. Er schliesst G1 nicht und öffnet L2 nicht.'
     },
     status: 'BESTÄTIGT · REF-01-G1-IDN-001 V1.0 steuert nun die Struktur künftiger Einzelakten, ohne eine anzulegen.',
-    next: 'Schritt abgeschlossen: PRI-001 ist mit REF-01-DEC-021 als V1.0 bestätigt; SEL-001 V0.2 und BAT-001 V0.1 bereiten nun das Paket AUT-A bis AUT-D ohne reale Identität vor.',
+    next: 'Abgeschlossene Schritte: PRI-001, SEL-001 und BAT-001 sind als V1.0 bestätigt; WAV-001 V0.1 bereitet Welle 1 ohne reale Identität vor.',
     boundary: 'G1 bleibt offen. Die Vorlagenbestätigung ist weder Wahl einer AUT-Akte noch Namenseintrag oder Einzel-, Kontakt- oder Versandautorisierung.'
   }
 };

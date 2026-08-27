@@ -3,7 +3,7 @@ import { AlertTriangle, GitMerge, LockKeyhole, Rows3 } from 'lucide-react';
 
 const COPY = {
   FR: {
-    eyebrow: 'PROTOCOLE CANDIDAT DE TRAITEMENT GROUPÉ · REF-01-G1-BAT-001 · V0.1 · 27-08-2026',
+    eyebrow: 'PROTOCOLE CONFIRMÉ DE TRAITEMENT GROUPÉ · REF-01-G1-BAT-001 · V1.0 · 27-08-2026',
     title: 'Accélérer en deux vagues sans fusionner les contrôles',
     intro: 'Le lot complet réduit les attentes entre dossiers. AUT-A, AUT-B et AUT-C sont préparés en parallèle ; AUT-D commence ensuite comme revue croisée de leurs trois résultats.',
     counters: [['Dossiers inclus', '4/4', 'Un lot commun'], ['Vagues', '2', 'Trois pistes puis revue croisée'], ['Verdicts attendus', '4', 'Un verdict par dossier'], ['Actions réelles', '0', 'Arrêt humain commun']],
@@ -14,13 +14,13 @@ const COPY = {
       ['1', 'AUT-C · Retour indépendant', 'Brief de revue méthodologique bornée', 'Corpus, rôle du relecteur et conflits d’intérêts'],
       ['2', 'AUT-D · Revue croisée', 'Grille de rapprochement des résultats A–C', 'Écarts conservés, aucune promotion automatique']
     ],
-    labels: { output: 'Sortie préparée', control: 'Contrôle indépendant', status: 'CANDIDAT · NON EXÉCUTÉ' },
+    labels: { output: 'Sortie préparée', control: 'Contrôle indépendant', status: 'CONFIRMÉ · NON EXÉCUTÉ' },
     sequence: 'Dépendance conservée : AUT-D ne peut pas conclure avant la disponibilité des sorties A, B et C. Les quatre dossiers appartiennent néanmoins au même lot de pilotage.',
-    next: 'Prochain arbitrage groupé : confirmer ou amender SEL-001 V0.2 et BAT-001 V0.1 dans une seule décision. La confirmation autorisera la préparation documentaire des quatre dossiers, pas leur exécution réelle.',
+    next: 'Décision consignée : REF-01-DEC-022 confirme SEL-001 V1.0 et BAT-001 V1.0. WAV-001 V0.1 prépare maintenant les trois pistes de la vague 1.',
     boundary: 'Point d’arrêt commun obligatoire avant toute identité, désignation de fournisseur, création de compte, accès, contact, envoi, collecte, test sur données réelles ou promotion de source maîtresse.'
   },
   EN: {
-    eyebrow: 'CANDIDATE BATCH-PROCESSING PROTOCOL · REF-01-G1-BAT-001 · V0.1 · 27 AUG 2026',
+    eyebrow: 'CONFIRMED BATCH-PROCESSING PROTOCOL · REF-01-G1-BAT-001 · V1.0 · 27 AUG 2026',
     title: 'Accelerate in two waves without merging controls',
     intro: 'The complete package reduces waiting between files. AUT-A, AUT-B and AUT-C are prepared in parallel; AUT-D then starts as a cross-review of their three results.',
     counters: [['Included files', '4/4', 'One common package'], ['Waves', '2', 'Three tracks then cross-review'], ['Expected verdicts', '4', 'One verdict per file'], ['Real actions', '0', 'Common human hold point']],
@@ -31,13 +31,13 @@ const COPY = {
       ['1', 'AUT-C · Independent feedback', 'Bounded methodological-review brief', 'Corpus, reviewer role and conflicts of interest'],
       ['2', 'AUT-D · Cross-review', 'Reconciliation grid for A–C results', 'Gaps retained, no automatic promotion']
     ],
-    labels: { output: 'Prepared output', control: 'Independent control', status: 'CANDIDATE · NOT EXECUTED' },
+    labels: { output: 'Prepared output', control: 'Independent control', status: 'CONFIRMED · NOT EXECUTED' },
     sequence: 'Dependency retained: AUT-D cannot conclude before outputs A, B and C are available. All four files nevertheless belong to the same governed package.',
-    next: 'Next grouped decision: confirm or amend SEL-001 V0.2 and BAT-001 V0.1 in one decision. Confirmation will authorise documentary preparation of all four files, not their real execution.',
+    next: 'Decision recorded: REF-01-DEC-022 confirms SEL-001 V1.0 and BAT-001 V1.0. WAV-001 V0.1 now prepares the three Wave 1 tracks.',
     boundary: 'A common human hold point is mandatory before any identity, provider designation, account creation, access, contact, send, collection, real-data test or master-source promotion.'
   },
   DE: {
-    eyebrow: 'KANDIDATENPROTOKOLL FÜR PAKETVERARBEITUNG · REF-01-G1-BAT-001 · V0.1 · 27.08.2026',
+    eyebrow: 'BESTÄTIGTES PROTOKOLL FÜR PAKETVERARBEITUNG · REF-01-G1-BAT-001 · V1.0 · 27.08.2026',
     title: 'In zwei Wellen beschleunigen, ohne Kontrollen zu vermischen',
     intro: 'Das Gesamtpaket verkürzt Wartezeiten zwischen den Akten. AUT-A, AUT-B und AUT-C werden parallel vorbereitet; AUT-D beginnt danach als Gegenprüfung ihrer drei Ergebnisse.',
     counters: [['Enthaltene Akten', '4/4', 'Ein gemeinsames Paket'], ['Wellen', '2', 'Drei Spuren, dann Gegenprüfung'], ['Erwartete Urteile', '4', 'Ein Urteil je Akte'], ['Reale Aktionen', '0', 'Gemeinsamer menschlicher Haltepunkt']],
@@ -48,9 +48,9 @@ const COPY = {
       ['1', 'AUT-C · Unabhängige Rückmeldung', 'Begrenzter methodischer Prüfauftrag', 'Korpus, Prüferrolle und Interessenkonflikte'],
       ['2', 'AUT-D · Gegenprüfung', 'Abgleichraster der Ergebnisse A–C', 'Abweichungen erhalten, keine automatische Beförderung']
     ],
-    labels: { output: 'Vorbereitete Ausgabe', control: 'Unabhängige Kontrolle', status: 'KANDIDAT · NICHT AUSGEFÜHRT' },
+    labels: { output: 'Vorbereitete Ausgabe', control: 'Unabhängige Kontrolle', status: 'BESTÄTIGT · NICHT AUSGEFÜHRT' },
     sequence: 'Abhängigkeit bleibt bestehen: AUT-D kann vor Verfügbarkeit der Ausgaben A, B und C nicht abschliessen. Alle vier Akten gehören dennoch zum selben gesteuerten Paket.',
-    next: 'Nächster gebündelter Entscheid: SEL-001 V0.2 und BAT-001 V0.1 in einem Entscheid bestätigen oder ändern. Die Bestätigung erlaubt die dokumentarische Vorbereitung aller vier Akten, nicht ihre reale Ausführung.',
+    next: 'Entscheid erfasst: REF-01-DEC-022 bestätigt SEL-001 V1.0 und BAT-001 V1.0. WAV-001 V0.1 bereitet nun die drei Spuren der Welle 1 vor.',
     boundary: 'Ein gemeinsamer menschlicher Haltepunkt ist vor Identität, Anbieterbestimmung, Kontoerstellung, Zugriff, Kontakt, Versand, Sammlung, Echtdatentest oder Beförderung zur Masterquelle zwingend.'
   }
 };
