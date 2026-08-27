@@ -1465,3 +1465,60 @@ html:not(.dark) .m3s-ref01-g1-priority-one-packages .text-rose-300 {
     order: 2;
   }
 }
+
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-slate-100,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-slate-100 {
+  color: #0f172a !important;
+}
+
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-slate-300,
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-slate-400,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-slate-300,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-slate-400 {
+  color: #475569 !important;
+}
+
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-emerald-100,
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-emerald-200,
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-emerald-300,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-emerald-100,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-emerald-200,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-emerald-300 {
+  color: #047857 !important;
+}
+
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-sky-100,
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-sky-200,
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-sky-300,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-sky-100,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-sky-200,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-sky-300 {
+  color: #0369a1 !important;
+}
+
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-violet-100,
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-violet-200,
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-violet-300,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-violet-100,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-violet-200,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-violet-300 {
+  color: #6d28d9 !important;
+}
+
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-amber-100,
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-amber-200,
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-amber-300,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-amber-100,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-amber-200,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-amber-300 {
+  color: #92400e !important;
+}
+
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-rose-100,
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-rose-200,
+html:not(.dark) .m3s-ref01-g1-priority-one-confirmation .text-rose-300,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-rose-100,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-rose-200,
+html:not(.dark) .m3s-ref01-g1-postgres-recovery-package .text-rose-300 {
+  color: #be123c !important;
+}
