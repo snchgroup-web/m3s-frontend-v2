@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.24 · 27-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.25 · 27-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -633,6 +633,11 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   const waveOneConfirmation = screen.getByRole('heading', { name: 'Ouvrir trois travaux bornés sans ouvrir les données réelles' }).closest('section');
   expect(within(waveOneConfirmation).getByRole('heading', { name: 'REF-01-DEC-023 · V1.0' })).toBeInTheDocument();
   expect(within(waveOneConfirmation).getByText('WAV-001 confirmée et vague 1 ouverte dans un périmètre borné')).toBeInTheDocument();
+  const waveOneResults = screen.getByRole('heading', { name: 'Produire les preuves autorisées et arrêter une incohérence avant qu’elle ne se propage' }).closest('section');
+  expect(within(waveOneResults).getAllByTestId('ref01-aut-a-source')).toHaveLength(10);
+  expect(within(waveOneResults).getAllByTestId('ref01-aut-b-check')).toHaveLength(7);
+  expect(within(waveOneResults).getByText(/restaurer AUT-C « Coûts et capacité » et AUT-D « Gouvernance interne »/)).toBeInTheDocument();
+  expect(within(waveOneResults).getByText(/Aucun RPO ou RTO mesuré/)).toBeInTheDocument();
   expect(control.getByText(/décisions sur le lot : 20/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
@@ -742,12 +747,15 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Prepare three files in parallel within their confirmed limits' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Open three bounded work tracks without opening real data' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-023 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Produce authorised evidence and stop an inconsistency before it spreads' })).toBeInTheDocument();
+  expect(screen.getAllByTestId('ref01-aut-a-source')).toHaveLength(10);
+  expect(screen.getAllByTestId('ref01-aut-b-check')).toHaveLength(7);
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Decision criteria validated').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText(/Work authorised by REF-01-DEC-023/).length).toBeGreaterThan(0);
+  expect(screen.getAllByText(/One decision is required/).length).toBeGreaterThan(0);
   expect(screen.getAllByText('Transfer')).toHaveLength(4);
   expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
 
@@ -841,12 +849,15 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Drei Akten parallel innerhalb ihrer bestätigten Grenzen vorbereiten' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Drei begrenzte Arbeiten öffnen, ohne Echtdaten zu öffnen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-023 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Autorisierte Nachweise erstellen und eine Inkonsistenz vor der Weitergabe stoppen' })).toBeInTheDocument();
+  expect(screen.getAllByTestId('ref01-aut-a-source')).toHaveLength(10);
+  expect(screen.getAllByTestId('ref01-aut-b-check')).toHaveLength(7);
   expect(screen.getByText(/Erfasste Entscheide: 1/)).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
   expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Entscheidungskriterien validiert').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText(/Mit REF-01-DEC-023 autorisierte Arbeit/).length).toBeGreaterThan(0);
+  expect(screen.getAllByText(/Ein gemeinsamer Entscheid ist erforderlich/).length).toBeGreaterThan(0);
   expect(screen.getAllByText('Wechseln')).toHaveLength(4);
   expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
 });
