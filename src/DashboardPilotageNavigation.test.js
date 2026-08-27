@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.38 · 28-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.39 · 28-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -715,7 +715,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(exitEvidenceConfirmation).getByText('Matrice des preuves de sortie confirmée')).toBeInTheDocument();
   const exitEvidenceCollection = screen.getByRole('heading', { name: 'Organiser la collecte future sans ouvrir les accès ni lancer les tests' }).closest('section');
   expect(within(exitEvidenceCollection).getAllByTestId('ref01-g1-exit-evidence-collection-route')).toHaveLength(6);
-  expect(within(exitEvidenceCollection).getByText(/REF-01-G1-AUT-002 V0.1 prépare ci-dessous/)).toBeInTheDocument();
+  expect(within(exitEvidenceCollection).getByText(/REF-01-DEC-037 confirme ci-dessous AUT-002 V1.0/)).toBeInTheDocument();
   expect(within(exitEvidenceCollection).getAllByText('COLLECTE NON AUTORISÉE')).toHaveLength(6);
   const exitEvidenceCollectionConfirmation = screen.getByRole('heading', { name: 'Confirmer les six circuits sans autoriser leur exécution' }).closest('section');
   expect(within(exitEvidenceCollectionConfirmation).getByRole('heading', { name: 'REF-01-DEC-036 · V1.0' })).toBeInTheDocument();
@@ -724,8 +724,16 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(executionAuthorisationRegister).getAllByTestId('ref01-g1-execution-authorisation-file')).toHaveLength(6);
   expect(within(executionAuthorisationRegister).getAllByTestId('ref01-g1-execution-authorisation-control')).toHaveLength(6);
   expect(within(executionAuthorisationRegister).getAllByText('NON AUTORISÉ')).toHaveLength(6);
-  expect(within(executionAuthorisationRegister).getByText(/confirmer ou amender REF-01-G1-AUT-002 V0.1/)).toBeInTheDocument();
-  expect(control.getByText(/décisions sur le lot : 33/)).toBeInTheDocument();
+  expect(within(executionAuthorisationRegister).getByText(/REF-01-DEC-037 confirme AUT-002 V1.0/)).toBeInTheDocument();
+  const executionAuthorisationConfirmation = screen.getByRole('heading', { name: 'Confirmer le registre sans ouvrir les autorisations' }).closest('section');
+  expect(within(executionAuthorisationConfirmation).getByRole('heading', { name: 'REF-01-DEC-037 · V1.0' })).toBeInTheDocument();
+  expect(within(executionAuthorisationConfirmation).getByText('Registre AUT-002 confirmé sans autorisation')).toBeInTheDocument();
+  const executionAuthorisationPriority = screen.getByRole('heading', { name: 'Commencer par le documentaire, réserver la technique et garder L2 fermée' }).closest('section');
+  expect(within(executionAuthorisationPriority).getAllByTestId('ref01-g1-execution-authorisation-wave')).toHaveLength(3);
+  expect(within(executionAuthorisationPriority).getAllByTestId('ref01-g1-execution-authorisation-priority-rule')).toHaveLength(4);
+  expect(within(executionAuthorisationPriority).getAllByText('NON AUTORISÉE')).toHaveLength(3);
+  expect(within(executionAuthorisationPriority).getByText(/confirmer ou amender REF-01-G1-PRI-002 V0.1/)).toBeInTheDocument();
+  expect(control.getByText(/décisions sur le lot : 34/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -876,6 +884,9 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Confirm all six routes without authorising execution' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-036 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Prepare six individual decisions without opening a route' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Confirm the register without opening authorisations' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-037 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Start with documentary controls, reserve technical work and keep L2 closed' })).toBeInTheDocument();
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
@@ -1017,6 +1028,9 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Alle sechs Wege bestätigen, ohne ihre Ausführung zu erlauben' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-036 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Sechs Einzelentscheide vorbereiten, ohne einen Weg zu öffnen' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Das Register bestätigen, ohne Autorisierungen zu öffnen' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-037 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Mit Dokumentenkontrollen beginnen, Technik zurückstellen und L2 geschlossen halten' })).toBeInTheDocument();
   expect(screen.getByText(/Erfasste Entscheide: 1/)).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
   expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
@@ -1275,7 +1289,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-01 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-02 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(43);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(44);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(9);
@@ -1285,7 +1299,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-01 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-02 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(43);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(44);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(9);

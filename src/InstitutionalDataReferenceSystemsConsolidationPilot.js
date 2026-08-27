@@ -68,6 +68,8 @@ import InstitutionalPeopleTeamsGateG1ExitEvidenceConfirmation from './Institutio
 import InstitutionalPeopleTeamsGateG1ExitEvidenceCollectionProtocol from './InstitutionalPeopleTeamsGateG1ExitEvidenceCollectionProtocol';
 import InstitutionalPeopleTeamsGateG1ExitEvidenceCollectionConfirmation from './InstitutionalPeopleTeamsGateG1ExitEvidenceCollectionConfirmation';
 import InstitutionalPeopleTeamsGateG1ExecutionAuthorisationRegister from './InstitutionalPeopleTeamsGateG1ExecutionAuthorisationRegister';
+import InstitutionalPeopleTeamsGateG1ExecutionAuthorisationRegisterConfirmation from './InstitutionalPeopleTeamsGateG1ExecutionAuthorisationRegisterConfirmation';
+import InstitutionalPeopleTeamsGateG1ExecutionAuthorisationPriority from './InstitutionalPeopleTeamsGateG1ExecutionAuthorisationPriority';
 import InstitutionalReferenceCodeLegend from './InstitutionalReferenceCodeLegend';
 
 const STAGES = ['scope', 'sources', 'owners', 'models', 'vocabulary', 'review'];
@@ -272,6 +274,8 @@ const InstitutionalDataReferenceSystemsConsolidationPilot = ({ language = 'FR', 
       <InstitutionalPeopleTeamsGateG1ExitEvidenceCollectionProtocol language={language} />
       <InstitutionalPeopleTeamsGateG1ExitEvidenceCollectionConfirmation language={language} />
       <InstitutionalPeopleTeamsGateG1ExecutionAuthorisationRegister language={language} />
+      <InstitutionalPeopleTeamsGateG1ExecutionAuthorisationRegisterConfirmation language={language} />
+      <InstitutionalPeopleTeamsGateG1ExecutionAuthorisationPriority language={language} />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">

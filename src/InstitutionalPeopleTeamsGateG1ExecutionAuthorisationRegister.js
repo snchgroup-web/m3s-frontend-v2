@@ -3,9 +3,9 @@ import { AlertTriangle, ClipboardSignature, LockKeyhole, ShieldCheck } from 'luc
 
 const COPY = {
   FR: {
-    eyebrow: 'REGISTRE CANDIDAT DES AUTORISATIONS D’EXÉCUTION · REF-01-G1-AUT-002 · V0.1 · 28-08-2026',
+    eyebrow: 'REGISTRE CONFIRMÉ DES AUTORISATIONS D’EXÉCUTION · REF-01-G1-AUT-002 · V1.0 · 28-08-2026',
     title: 'Préparer six décisions unitaires sans ouvrir un circuit',
-    intro: 'Ce registre traduit COL-002 V1.0 en six dossiers d’autorisation séparés. Il expose le périmètre, les prérequis et les limites de chaque décision sans inscrire de titulaire ni accorder une autorisation.',
+    intro: 'Confirmé par REF-01-DEC-037, ce registre traduit COL-002 V1.0 en six dossiers d’autorisation séparés. Il expose le périmètre, les prérequis et les limites de chaque décision sans inscrire de titulaire ni accorder une autorisation.',
     counters: [['Dossiers préparés', '6/6', 'Un par circuit confirmé'], ['Autorisations accordées', '0', 'Tous les dossiers sont fermés'], ['Exécutions lancées', '0', 'Aucun environnement'], ['Preuves acceptées', '0', 'G1 reste ouverte']],
     labels: { scope: 'Périmètre candidat', prerequisites: 'Prérequis avant décision', permitted: 'Ce qu’une autorisation bornée pourrait permettre', forbidden: 'Ce qui resterait interdit' },
     state: 'NON AUTORISÉ',
@@ -19,13 +19,13 @@ const COPY = {
     ],
     controlsTitle: 'Contrôles communs avant toute autorisation',
     controls: ['Un seul circuit et un périmètre mesurable par décision.', 'Titulaires, contrôleur et canal conservés hors du bundle public.', 'Données synthétiques par défaut ; toute exception exige une décision distincte.', 'Critères d’arrêt, de succès, d’échec et de retour arrière écrits.', 'Dépôt GED et métadonnées de preuve définis avant exécution.', 'Résultat soumis à acceptation humaine séparée après contrôle.'],
-    next: 'Prochain arbitrage humain unique : confirmer ou amender REF-01-G1-AUT-002 V0.1. Une confirmation validera seulement le registre ; elle n’autorisera encore aucun des six dossiers.',
+    next: 'Statut : REF-01-DEC-037 confirme AUT-002 V1.0. L’ordonnancement candidat PRI-002 ci-dessous propose trois vagues sans autoriser aucun dossier.',
     boundary: 'État courant : 0 autorisation, 0 collecte, 0 test, 0 preuve acceptée. Chaque ouverture future exigera une décision humaine bornée et distincte.'
   },
   EN: {
-    eyebrow: 'CANDIDATE EXECUTION-AUTHORISATION REGISTER · REF-01-G1-AUT-002 · V0.1 · 28 AUG 2026',
+    eyebrow: 'CONFIRMED EXECUTION-AUTHORISATION REGISTER · REF-01-G1-AUT-002 · V1.0 · 28 AUG 2026',
     title: 'Prepare six individual decisions without opening a route',
-    intro: 'This register translates COL-002 V1.0 into six separate authorisation files. It exposes each decision’s scope, prerequisites and limits without naming a holder or granting authorisation.',
+    intro: 'Confirmed through REF-01-DEC-037, this register translates COL-002 V1.0 into six separate authorisation files. It exposes each decision’s scope, prerequisites and limits without naming a holder or granting authorisation.',
     counters: [['Prepared files', '6/6', 'One per confirmed route'], ['Granted authorisations', '0', 'All files remain closed'], ['Started executions', '0', 'No environment'], ['Accepted evidence', '0', 'G1 remains open']],
     labels: { scope: 'Candidate scope', prerequisites: 'Prerequisites before decision', permitted: 'What a bounded authorisation could permit', forbidden: 'What would remain prohibited' },
     state: 'NOT AUTHORISED',
@@ -39,13 +39,13 @@ const COPY = {
     ],
     controlsTitle: 'Shared controls before any authorisation',
     controls: ['One route and one measurable scope per decision.', 'Holders, controller and channel retained outside the public bundle.', 'Synthetic data by default; every exception requires a distinct decision.', 'Written stop, success, failure and rollback criteria.', 'DMS deposit and evidence metadata defined before execution.', 'Outcome submitted for separate human acceptance after control.'],
-    next: 'Next single human decision: confirm or amend REF-01-G1-AUT-002 V0.1. Confirmation will validate only the register and will still authorise none of its six files.',
+    next: 'Status: REF-01-DEC-037 confirms AUT-002 V1.0. Candidate ordering PRI-002 below proposes three waves without authorising any file.',
     boundary: 'Current state: 0 authorisations, 0 collections, 0 tests and 0 accepted evidence. Every future opening requires a separate bounded human decision.'
   },
   DE: {
-    eyebrow: 'KANDIDATENREGISTER DER AUSFÜHRUNGSAUTORISIERUNGEN · REF-01-G1-AUT-002 · V0.1 · 28.08.2026',
+    eyebrow: 'BESTÄTIGTES REGISTER DER AUSFÜHRUNGSAUTORISIERUNGEN · REF-01-G1-AUT-002 · V1.0 · 28.08.2026',
     title: 'Sechs Einzelentscheide vorbereiten, ohne einen Weg zu öffnen',
-    intro: 'Dieses Register überführt COL-002 V1.0 in sechs getrennte Autorisierungsakten. Es zeigt Umfang, Voraussetzungen und Grenzen jedes Entscheids, ohne Träger zu benennen oder eine Autorisierung zu erteilen.',
+    intro: 'Mit REF-01-DEC-037 bestätigt, überführt dieses Register COL-002 V1.0 in sechs getrennte Autorisierungsakten. Es zeigt Umfang, Voraussetzungen und Grenzen jedes Entscheids, ohne Träger zu benennen oder eine Autorisierung zu erteilen.',
     counters: [['Vorbereitete Akten', '6/6', 'Eine je bestätigtem Weg'], ['Erteilte Autorisierungen', '0', 'Alle Akten bleiben geschlossen'], ['Gestartete Ausführungen', '0', 'Keine Umgebung'], ['Angenommene Nachweise', '0', 'G1 bleibt offen']],
     labels: { scope: 'Kandidatenumfang', prerequisites: 'Voraussetzungen vor Entscheid', permitted: 'Was eine begrenzte Autorisierung erlauben könnte', forbidden: 'Was verboten bliebe' },
     state: 'NICHT AUTORISIERT',
@@ -59,7 +59,7 @@ const COPY = {
     ],
     controlsTitle: 'Gemeinsame Kontrollen vor jeder Autorisierung',
     controls: ['Ein Weg und ein messbarer Umfang je Entscheid.', 'Träger, Kontrolle und Kanal ausserhalb des öffentlichen Bundles verwahrt.', 'Synthetische Daten als Standard; jede Ausnahme braucht einen eigenen Entscheid.', 'Schriftliche Stopp-, Erfolgs-, Fehler- und Rollback-Kriterien.', 'DMS-Ablage und Nachweismetadaten vor Ausführung definiert.', 'Ergebnis nach Kontrolle zur getrennten menschlichen Annahme vorgelegt.'],
-    next: 'Nächster einzelner menschlicher Entscheid: REF-01-G1-AUT-002 V0.1 bestätigen oder ändern. Die Bestätigung validiert nur das Register und autorisiert noch keine seiner sechs Akten.',
+    next: 'Stand: REF-01-DEC-037 bestätigt AUT-002 V1.0. Die nachfolgende Kandidatenreihenfolge PRI-002 schlägt drei Wellen vor, ohne eine Akte zu autorisieren.',
     boundary: 'Aktueller Stand: 0 Autorisierungen, 0 Sammlungen, 0 Tests und 0 angenommene Nachweise. Jede künftige Öffnung braucht einen getrennten begrenzten menschlichen Entscheid.'
   }
 };
