@@ -15,7 +15,7 @@ const COPY = {
       ['AUT-D · Revue croisée', 'Préparer une revue croisée bornée pour REQ-D.', 'REC-D · Fonction interne ou partenaire de contrôle', 'Confirmer la priorité D séparément ; aucun partage réel autorisé.']
     ],
     status: 'MATRICE CONFIRMÉE · 0/4 DOSSIER PRIORISÉ · 0 IDENTITÉ · 0 AUTORISATION',
-    next: 'Étape suivante accomplie : SEL-001 V1.0 et BAT-001 V1.0 sont confirmés par REF-01-DEC-022 ; WAV-001 V0.1 prépare la vague 1.',
+    next: 'Étape suivante accomplie : REF-01-DEC-023 confirme WAV-001 V1.0 et ouvre la vague 1 dans ses limites bornées.',
     boundary: 'Limite : une priorité autorise uniquement la préparation documentaire du dossier choisi. Elle n’autorise aucun nom, fournisseur, compte, accès, contact, envoi, collecte, test ou preuve réelle et ne ferme pas G1.'
   },
   EN: {
@@ -31,7 +31,7 @@ const COPY = {
       ['AUT-D · Cross-review', 'Prepare a bounded cross-review for REQ-D.', 'REC-D · Internal function or control partner', 'Confirm priority D separately; no real sharing is authorised.']
     ],
     status: 'CONFIRMED MATRIX · 0/4 PRIORITISED FILE · 0 IDENTITY · 0 AUTHORISATION',
-    next: 'Completed next step: SEL-001 V1.0 and BAT-001 V1.0 are confirmed through REF-01-DEC-022; WAV-001 V0.1 prepares Wave 1.',
+    next: 'Completed next step: REF-01-DEC-023 confirms WAV-001 V1.0 and opens Wave 1 within its bounded limits.',
     boundary: 'Boundary: a priority only authorises documentary preparation of the selected file. It authorises no name, provider, account, access, contact, send, collection, trial or real evidence and does not close G1.'
   },
   DE: {
@@ -47,7 +47,7 @@ const COPY = {
       ['AUT-D · Gegenprüfung', 'Eine begrenzte Gegenprüfung für REQ-D vorbereiten.', 'REC-D · Interne Funktion oder Kontrollpartner', 'Priorität D getrennt bestätigen; keine reale Weitergabe autorisiert.']
     ],
     status: 'BESTÄTIGTE MATRIX · 0/4 PRIORISIERTE AKTE · 0 IDENTITÄT · 0 AUTORISIERUNG',
-    next: 'Abgeschlossener nächster Schritt: SEL-001 V1.0 und BAT-001 V1.0 sind mit REF-01-DEC-022 bestätigt; WAV-001 V0.1 bereitet Welle 1 vor.',
+    next: 'Abgeschlossener nächster Schritt: REF-01-DEC-023 bestätigt WAV-001 V1.0 und öffnet Welle 1 innerhalb ihrer begrenzten Umfänge.',
     boundary: 'Grenze: Eine Priorität erlaubt nur die dokumentarische Vorbereitung der gewählten Akte. Sie autorisiert keinen Namen, Anbieter, Account, Zugriff, Kontakt, Versand, Sammlung, Test oder realen Nachweis und schliesst G1 nicht.'
   }
 };

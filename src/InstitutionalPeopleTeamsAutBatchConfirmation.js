@@ -16,7 +16,7 @@ const COPY = {
       limit: 'Cette décision autorise des gabarits et travaux documentaires vides ou synthétiques. Elle n’autorise aucune identité, fournisseur, compte, accès, prise de contact, envoi, collecte réelle, test sur données réelles, preuve réelle ou promotion de source maîtresse. Elle ne ferme pas G1 et n’ouvre pas L2.'
     },
     status: 'CONFIRMÉ · SEL-001 V1.0 et BAT-001 V1.0 gouvernent désormais le lot documentaire AUT-A à AUT-D.',
-    next: 'Étape suivante autorisée : préparer WAV-001 V0.1 pour les trois pistes documentaires de la vague 1, sans remplir de source, preuve ou identité réelle.',
+    next: 'Étape accomplie : REF-01-DEC-023 confirme WAV-001 V1.0 et ouvre les trois pistes documentaires dans leurs limites bornées.',
     boundary: 'AUT-D reste en attente des sorties A, B et C. Tout passage d’un gabarit vide à une collecte ou une sollicitation réelle exige un nouvel arbitrage humain.'
   },
   EN: {
@@ -32,7 +32,7 @@ const COPY = {
       limit: 'This decision authorises empty or synthetic templates and documentary work. It authorises no identity, provider, account, access, contact, send, real collection, real-data test, real evidence or master-source promotion. It does not close G1 or open L2.'
     },
     status: 'CONFIRMED · SEL-001 V1.0 and BAT-001 V1.0 now govern the AUT-A through AUT-D documentary package.',
-    next: 'Authorised next step: prepare WAV-001 V0.1 for the three Wave 1 documentary tracks without entering a real source, evidence or identity.',
+    next: 'Completed step: REF-01-DEC-023 confirms WAV-001 V1.0 and opens the three documentary tracks within their bounded limits.',
     boundary: 'AUT-D remains pending outputs A, B and C. Moving from an empty template to real collection or outreach requires a new human decision.'
   },
   DE: {
@@ -48,7 +48,7 @@ const COPY = {
       limit: 'Der Entscheid erlaubt leere oder synthetische Vorlagen und Dokumentarbeit. Er erlaubt keine Identität, Anbieter, Konten, Zugriffe, Kontakte, Sendungen, reale Sammlung, Echtdatentests, realen Nachweise oder Masterquellenförderung. Er schliesst G1 nicht und öffnet L2 nicht.'
     },
     status: 'BESTÄTIGT · SEL-001 V1.0 und BAT-001 V1.0 steuern nun das Dokumentationspaket AUT-A bis AUT-D.',
-    next: 'Autorisierter nächster Schritt: WAV-001 V0.1 für die drei Dokumentationsspuren der Welle 1 vorbereiten, ohne reale Quelle, Nachweis oder Identität einzutragen.',
+    next: 'Abgeschlossener Schritt: REF-01-DEC-023 bestätigt WAV-001 V1.0 und öffnet die drei Dokumentationsspuren innerhalb ihrer begrenzten Umfänge.',
     boundary: 'AUT-D wartet weiterhin auf die Ausgaben A, B und C. Der Übergang von einer leeren Vorlage zu realer Sammlung oder Ansprache erfordert einen neuen menschlichen Entscheid.'
   }
 };

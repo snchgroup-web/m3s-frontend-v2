@@ -40,6 +40,7 @@ import InstitutionalPeopleTeamsAutFileSelectionCandidate from './InstitutionalPe
 import InstitutionalPeopleTeamsAutBatchCandidate from './InstitutionalPeopleTeamsAutBatchCandidate';
 import InstitutionalPeopleTeamsAutBatchConfirmation from './InstitutionalPeopleTeamsAutBatchConfirmation';
 import InstitutionalPeopleTeamsAutWaveOneCandidate from './InstitutionalPeopleTeamsAutWaveOneCandidate';
+import InstitutionalPeopleTeamsAutWaveOneConfirmation from './InstitutionalPeopleTeamsAutWaveOneConfirmation';
 import InstitutionalReferenceCodeLegend from './InstitutionalReferenceCodeLegend';
 
 const STAGES = ['scope', 'sources', 'owners', 'models', 'vocabulary', 'review'];
@@ -216,6 +217,7 @@ const InstitutionalDataReferenceSystemsConsolidationPilot = ({ language = 'FR', 
       <InstitutionalPeopleTeamsAutBatchCandidate language={language} />
       <InstitutionalPeopleTeamsAutBatchConfirmation language={language} />
       <InstitutionalPeopleTeamsAutWaveOneCandidate language={language} />
+      <InstitutionalPeopleTeamsAutWaveOneConfirmation language={language} />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
