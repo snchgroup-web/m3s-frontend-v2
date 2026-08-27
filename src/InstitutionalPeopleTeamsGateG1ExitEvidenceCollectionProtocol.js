@@ -3,9 +3,9 @@ import { AlertTriangle, Archive, ClipboardList, LockKeyhole, ShieldCheck } from 
 
 const COPY = {
   FR: {
-    eyebrow: 'PROTOCOLE CANDIDAT DE COLLECTE DES PREUVES · REF-01-G1-COL-002 · V0.1 · 27-08-2026',
+    eyebrow: 'PROTOCOLE CONFIRMÉ DE COLLECTE DES PREUVES · REF-01-G1-COL-002 · V1.0 · 28-08-2026',
     title: 'Organiser la collecte future sans ouvrir les accès ni lancer les tests',
-    intro: 'Ce protocole traduit EVD-002 V1.0 en six circuits contrôlables. Il prépare les sources admissibles, les fonctions et les arrêts obligatoires ; il ne désigne aucune personne et n’autorise aucune action réelle.',
+    intro: 'Confirmé par REF-01-DEC-036, ce protocole traduit EVD-002 V1.0 en six circuits contrôlables. Il gouverne les sources admissibles, les fonctions et les arrêts obligatoires ; il ne désigne aucune personne et n’autorise aucune action réelle.',
     counters: [['Circuits préparés', '6/6', 'Cinq preuves et une porte'], ['Collectes lancées', '0', 'Aucune demande'], ['Tests lancés', '0', 'Aucun environnement'], ['Autorisations L2', '0', 'L2 reste fermé']],
     labels: { source: 'Sources et canaux admissibles', prepare: 'Préparation candidate', control: 'Contrôle avant acceptation', stop: 'Arrêt obligatoire' },
     state: 'COLLECTE NON AUTORISÉE',
@@ -21,13 +21,13 @@ const COPY = {
     workflow: ['Autoriser explicitement un circuit et son périmètre.', 'Nommer les titulaires autorisés sans les exposer dans le bundle public.', 'Collecter ou tester dans le canal et l’environnement approuvés.', 'Contrôler provenance, date, version, résultat et réserves.', 'Soumettre chaque preuve à acceptation humaine distincte.'],
     refusalsTitle: 'Interdictions maintenues maintenant',
     refusals: ['Aucun destinataire, fournisseur, compte, accès, secret ou environnement.', 'Aucune donnée personnelle ou métier réelle dans un support public.', 'Aucune collecte, sauvegarde, restauration, migration, notification ou test.', 'Aucune preuve acceptée par défaut et aucun calcul de progression.', 'Aucune fermeture de G1 ni ouverture de L2.'],
-    next: 'Prochain arbitrage humain unique : confirmer ou amender REF-01-G1-COL-002 V0.1. Une confirmation validera seulement le protocole ; une autorisation d’exécution restera séparée.',
-    boundary: 'État courant : 0 collecte, 0 test, 0 preuve acceptée et 0 autorisation L2. EVD-002 V1.0 définit les preuves ; COL-002 V0.1 ne fait qu’en préparer les circuits.'
+    next: 'REF-01-G1-AUT-002 V0.1 prépare ci-dessous six dossiers d’autorisation unitaires, tous encore fermés.',
+    boundary: 'État courant : 0 collecte, 0 test, 0 preuve acceptée et 0 autorisation L2. EVD-002 V1.0 définit les preuves ; COL-002 V1.0 gouverne leurs circuits sans les ouvrir.'
   },
   EN: {
-    eyebrow: 'CANDIDATE EVIDENCE-COLLECTION PROTOCOL · REF-01-G1-COL-002 · V0.1 · 27 AUG 2026',
+    eyebrow: 'CONFIRMED EVIDENCE-COLLECTION PROTOCOL · REF-01-G1-COL-002 · V1.0 · 28 AUG 2026',
     title: 'Organise future collection without opening access or starting tests',
-    intro: 'This protocol translates EVD-002 V1.0 into six controllable routes. It prepares admissible sources, functions and mandatory stops; it names no person and authorises no real action.',
+    intro: 'Confirmed through REF-01-DEC-036, this protocol translates EVD-002 V1.0 into six controllable routes. It governs admissible sources, functions and mandatory stops; it names no person and authorises no real action.',
     counters: [['Prepared routes', '6/6', 'Five evidence files and one gate'], ['Collections started', '0', 'No request'], ['Tests started', '0', 'No environment'], ['L2 authorisations', '0', 'L2 remains closed']],
     labels: { source: 'Admissible sources and channels', prepare: 'Candidate preparation', control: 'Control before acceptance', stop: 'Mandatory stop' },
     state: 'COLLECTION NOT AUTHORISED',
@@ -43,13 +43,13 @@ const COPY = {
     workflow: ['Explicitly authorise one route and its scope.', 'Name authorised holders without exposing them in the public bundle.', 'Collect or test through the approved channel and environment.', 'Control provenance, date, version, outcome and reservations.', 'Submit each evidence item for distinct human acceptance.'],
     refusalsTitle: 'Current prohibitions',
     refusals: ['No recipient, provider, account, access, secret or environment.', 'No real personal or business data in a public support.', 'No collection, backup, restoration, migration, notification or test.', 'No evidence accepted by default and no progress calculation.', 'No G1 closure or L2 opening.'],
-    next: 'Next single human decision: confirm or amend REF-01-G1-COL-002 V0.1. Confirmation will validate only the protocol; execution authorisation will remain separate.',
-    boundary: 'Current state: 0 collection, 0 tests, 0 accepted evidence and 0 L2 authorisations. EVD-002 V1.0 defines evidence; COL-002 V0.1 only prepares its routes.'
+    next: 'REF-01-G1-AUT-002 V0.1 prepares six individual authorisation files below; all remain closed.',
+    boundary: 'Current state: 0 collection, 0 tests, 0 accepted evidence and 0 L2 authorisations. EVD-002 V1.0 defines evidence; COL-002 V1.0 governs its routes without opening them.'
   },
   DE: {
-    eyebrow: 'KANDIDATENPROTOKOLL DER NACHWEISSAMMLUNG · REF-01-G1-COL-002 · V0.1 · 27.08.2026',
+    eyebrow: 'BESTÄTIGTES PROTOKOLL DER NACHWEISSAMMLUNG · REF-01-G1-COL-002 · V1.0 · 28.08.2026',
     title: 'Künftige Sammlung organisieren, ohne Zugriffe oder Tests zu öffnen',
-    intro: 'Dieses Protokoll überführt EVD-002 V1.0 in sechs kontrollierbare Wege. Es bereitet zulässige Quellen, Funktionen und Pflichtstopps vor; es nennt keine Person und erlaubt keine reale Aktion.',
+    intro: 'Mit REF-01-DEC-036 bestätigt, überführt dieses Protokoll EVD-002 V1.0 in sechs kontrollierbare Wege. Es steuert zulässige Quellen, Funktionen und Pflichtstopps; es nennt keine Person und erlaubt keine reale Aktion.',
     counters: [['Vorbereitete Wege', '6/6', 'Fünf Nachweise und ein Tor'], ['Gestartete Sammlungen', '0', 'Keine Anfrage'], ['Gestartete Tests', '0', 'Keine Umgebung'], ['L2-Autorisierungen', '0', 'L2 bleibt geschlossen']],
     labels: { source: 'Zulässige Quellen und Kanäle', prepare: 'Kandidatenvorbereitung', control: 'Kontrolle vor Annahme', stop: 'Pflichtstopp' },
     state: 'SAMMLUNG NICHT AUTORISIERT',
@@ -65,8 +65,8 @@ const COPY = {
     workflow: ['Einen Weg und seinen Umfang ausdrücklich autorisieren.', 'Autorisierte Träger benennen, ohne sie im öffentlichen Bundle offenzulegen.', 'Im genehmigten Kanal und in der genehmigten Umgebung sammeln oder testen.', 'Herkunft, Datum, Version, Ergebnis und Vorbehalte kontrollieren.', 'Jeden Nachweis getrennt zur menschlichen Annahme vorlegen.'],
     refusalsTitle: 'Aktuell bestehende Verbote',
     refusals: ['Kein Empfänger, Anbieter, Konto, Zugriff, Geheimnis oder Umgebung.', 'Keine realen Personen- oder Geschäftsdaten in einem öffentlichen Träger.', 'Keine Sammlung, Sicherung, Wiederherstellung, Migration, Benachrichtigung oder Prüfung.', 'Kein automatisch angenommener Nachweis und keine Fortschrittsberechnung.', 'Keine G1-Schliessung oder L2-Öffnung.'],
-    next: 'Nächster einzelner menschlicher Entscheid: REF-01-G1-COL-002 V0.1 bestätigen oder ändern. Die Bestätigung validiert nur das Protokoll; die Ausführungsautorisierung bleibt getrennt.',
-    boundary: 'Aktueller Stand: 0 Sammlungen, 0 Tests, 0 angenommene Nachweise und 0 L2-Autorisierungen. EVD-002 V1.0 definiert die Nachweise; COL-002 V0.1 bereitet nur ihre Wege vor.'
+    next: 'REF-01-G1-AUT-002 V0.1 bereitet nachfolgend sechs einzelne Autorisierungsakten vor; alle bleiben geschlossen.',
+    boundary: 'Aktueller Stand: 0 Sammlungen, 0 Tests, 0 angenommene Nachweise und 0 L2-Autorisierungen. EVD-002 V1.0 definiert die Nachweise; COL-002 V1.0 steuert ihre Wege, ohne sie zu öffnen.'
   }
 };
 

@@ -1731,14 +1731,20 @@ html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-rose-300 {
 }
 
 html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-slate-100,
-html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-slate-100 {
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-slate-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-confirmation .text-slate-100,
+html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-slate-100 {
   color: #0f172a !important;
 }
 
 html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-slate-300,
 html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-slate-400,
 html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-slate-300,
-html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-slate-400 {
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-slate-400,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-confirmation .text-slate-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-confirmation .text-slate-400,
+html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-slate-300,
+html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-slate-400 {
   color: #475569 !important;
 }
 
@@ -1747,7 +1753,13 @@ html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-emerald-200,
 html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-emerald-300,
 html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-emerald-100,
 html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-emerald-200,
-html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-emerald-300 {
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-emerald-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-confirmation .text-emerald-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-confirmation .text-emerald-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-confirmation .text-emerald-300,
+html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-emerald-100,
+html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-emerald-200,
+html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-emerald-300 {
   color: #047857 !important;
 }
 
@@ -1756,7 +1768,13 @@ html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-sky-200,
 html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-sky-300,
 html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-sky-100,
 html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-sky-200,
-html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-sky-300 {
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-sky-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-confirmation .text-sky-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-confirmation .text-sky-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-confirmation .text-sky-300,
+html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-sky-100,
+html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-sky-200,
+html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-sky-300 {
   color: #0369a1 !important;
 }
 
@@ -1774,6 +1792,18 @@ html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-rose-200,
 html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-rose-300,
 html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-rose-100,
 html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-rose-200,
-html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-rose-300 {
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-rose-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-confirmation .text-rose-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-confirmation .text-rose-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-confirmation .text-rose-300,
+html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-rose-100,
+html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-rose-200,
+html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-rose-300 {
   color: #be123c !important;
+}
+
+html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-amber-100,
+html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-amber-200,
+html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-amber-300 {
+  color: #b45309 !important;
 }
