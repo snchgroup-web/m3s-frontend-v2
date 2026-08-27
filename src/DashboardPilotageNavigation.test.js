@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.21 · 27-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.22 · 27-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -604,14 +604,20 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   const priorityCandidate = screen.getByRole('heading', { name: 'Choisir le premier dossier sans choisir une identité' }).closest('section');
   expect(within(priorityCandidate).getAllByTestId('ref01-g1-aut-priority-option')).toHaveLength(4);
   expect(within(priorityCandidate).getByText('0/4')).toBeInTheDocument();
-  expect(within(priorityCandidate).getByText(/confirmer ou amender SEL-001 V0.1/)).toBeInTheDocument();
+  expect(within(priorityCandidate).getByText(/examiner SEL-001 V0.2 et BAT-001 V0.1/)).toBeInTheDocument();
   const priorityConfirmation = screen.getByRole('heading', { name: 'Confirmer la méthode sans choisir un dossier' }).closest('section');
   expect(within(priorityConfirmation).getByRole('heading', { name: 'REF-01-DEC-021 · V1.0' })).toBeInTheDocument();
   expect(within(priorityConfirmation).getByText('Matrice PRI-001 confirmée sans dossier sélectionné')).toBeInTheDocument();
-  const selectionCandidate = screen.getByRole('heading', { name: 'Préparer le choix sans présélectionner la réponse' }).closest('section');
+  const selectionCandidate = screen.getByRole('heading', { name: 'Préparer les quatre dossiers dans un lot contrôlé' }).closest('section');
   expect(within(selectionCandidate).getAllByTestId('ref01-g1-aut-selection-option')).toHaveLength(4);
-  expect(within(selectionCandidate).getByText(/0\/4 DOSSIER SÉLECTIONNÉ/)).toBeInTheDocument();
-  expect(within(selectionCandidate).getByText(/confirmer ou amender SEL-001 V0.1/)).toBeInTheDocument();
+  expect(within(selectionCandidate).getAllByText('INCLUS AU LOT · NON EXÉCUTÉ')).toHaveLength(4);
+  expect(within(selectionCandidate).getByText(/4\/4 DOSSIERS INCLUS/)).toBeInTheDocument();
+  expect(within(selectionCandidate).getByText(/SEL-001 V0.2 et BAT-001 V0.1/)).toBeInTheDocument();
+  const batchCandidate = screen.getByRole('heading', { name: 'Accélérer en deux vagues sans fusionner les contrôles' }).closest('section');
+  expect(within(batchCandidate).getAllByTestId('ref01-g1-aut-batch-lane')).toHaveLength(4);
+  expect(within(batchCandidate).getAllByText('Vague 1')).toHaveLength(3);
+  expect(within(batchCandidate).getByText('Vague 2')).toBeInTheDocument();
+  expect(within(batchCandidate).getByText(/AUT-D ne peut pas conclure avant la disponibilité des sorties A, B et C/)).toBeInTheDocument();
   expect(control.getByText(/décisions sur le lot : 18/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
@@ -713,13 +719,14 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Choose the first file without choosing an identity' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Confirm the method without choosing a file' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-021 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Prepare the choice without preselecting the answer' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Prepare all four files as one controlled package' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Accelerate in two waves without merging controls' })).toBeInTheDocument();
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Decision criteria validated').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByText(/confirm or amend REF-01-G1-SEL-001 V0.1/)).toBeInTheDocument();
+  expect(screen.getAllByText(/confirm or amend REF-01-G1-SEL-001 V0.2 and REF-01-G1-BAT-001 V0.1/).length).toBeGreaterThan(0);
   expect(screen.getAllByText('Transfer')).toHaveLength(4);
   expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
 
@@ -805,13 +812,14 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Die erste Akte wählen, ohne eine Identität zu wählen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Die Methode bestätigen, ohne eine Akte zu wählen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-021 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Die Wahl vorbereiten, ohne eine Antwort vorauszuwählen' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Alle vier Akten als ein kontrolliertes Paket vorbereiten' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'In zwei Wellen beschleunigen, ohne Kontrollen zu vermischen' })).toBeInTheDocument();
   expect(screen.getByText(/Erfasste Entscheide: 1/)).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
   expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Entscheidungskriterien validiert').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByText(/REF-01-G1-SEL-001 V0.1 bestätigen oder ändern/)).toBeInTheDocument();
+  expect(screen.getAllByText(/REF-01-G1-SEL-001 V0.2 und REF-01-G1-BAT-001 V0.1 gemeinsam bestätigen oder ändern/).length).toBeGreaterThan(0);
   expect(screen.getAllByText('Wechseln')).toHaveLength(4);
   expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
 });

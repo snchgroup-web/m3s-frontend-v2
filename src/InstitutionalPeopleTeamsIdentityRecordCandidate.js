@@ -14,7 +14,7 @@ const COPY = {
       ['4 · Décisions séparées', ['Autoriser ou refuser l’inscription', 'Autoriser ou refuser le contact', 'Autoriser ou refuser chaque envoi']]
     ],
     status: 'GABARIT CONFIRMÉ ET VIDE · AUCUN DOSSIER AUT PRIORISÉ · AUCUNE IDENTITÉ',
-    next: 'PRI-001 est confirmé en V1.0 par REF-01-DEC-021 ; SEL-001 V0.1 prépare maintenant le choix séparé du premier dossier AUT.',
+    next: 'PRI-001 est confirmé en V1.0 par REF-01-DEC-021 ; SEL-001 V0.2 et BAT-001 V0.1 préparent maintenant le lot AUT-A à AUT-D sans identité réelle.',
     boundary: 'Limite : IDN-001 ne contient aucun nom, entreprise, adresse, coordonnée, canal, preuve réelle ou autorisation. Il ne déclenche aucun contact ou envoi et ne ferme pas G1.'
   },
   EN: {
@@ -29,7 +29,7 @@ const COPY = {
       ['4 · Separate decisions', ['Authorise or refuse the record', 'Authorise or refuse contact', 'Authorise or refuse each send']]
     ],
     status: 'CONFIRMED EMPTY TEMPLATE · NO AUT FILE PRIORITISED · NO IDENTITY',
-    next: 'PRI-001 is confirmed as V1.0 through REF-01-DEC-021; SEL-001 V0.1 now prepares the separate choice of the first AUT file.',
+    next: 'PRI-001 is confirmed as V1.0 through REF-01-DEC-021; SEL-001 V0.2 and BAT-001 V0.1 now prepare the AUT-A through AUT-D package without a real identity.',
     boundary: 'Boundary: IDN-001 contains no name, company, address, contact detail, channel, real evidence or authorisation. It triggers no contact or send and does not close G1.'
   },
   DE: {
@@ -44,7 +44,7 @@ const COPY = {
       ['4 · Getrennte Entscheide', ['Eintrag erlauben oder ablehnen', 'Kontakt erlauben oder ablehnen', 'Jeden Versand erlauben oder ablehnen']]
     ],
     status: 'BESTÄTIGTE LEERE VORLAGE · KEINE AUT-AKTE PRIORISIERT · KEINE IDENTITÄT',
-    next: 'PRI-001 ist mit REF-01-DEC-021 als V1.0 bestätigt; SEL-001 V0.1 bereitet nun die getrennte Wahl der ersten AUT-Akte vor.',
+    next: 'PRI-001 ist mit REF-01-DEC-021 als V1.0 bestätigt; SEL-001 V0.2 und BAT-001 V0.1 bereiten nun das Paket AUT-A bis AUT-D ohne reale Identität vor.',
     boundary: 'Grenze: IDN-001 enthält keinen Namen, keine Firma, Adresse, Kontaktdaten, keinen Kanal, realen Nachweis oder Autorisierung. Es löst keinen Kontakt oder Versand aus und schliesst G1 nicht.'
   }
 };
