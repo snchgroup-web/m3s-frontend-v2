@@ -3,9 +3,9 @@ import { AlertTriangle, Archive, DatabaseBackup, FileStack, KeyRound, LockKeyhol
 
 const COPY = {
   FR: {
-    eyebrow: 'REGISTRE CANDIDAT DE PRÉPARATION G1 · REF-01-G1-PKG-001 · V0.1 · 27-08-2026',
-    title: 'Préparer les cinq lots sans action réelle',
-    intro: 'Ce registre traduit PLN-001 V1.0 en cinq fiches de préparation. Il attribue des fonctions candidates, jamais des personnes, et maintient chaque lot arrêté avant la collecte, le test ou le changement réel.',
+    eyebrow: 'REGISTRE CONFIRMÉ DE PRÉPARATION G1 · REF-01-G1-PKG-001 · V1.0 · 27-08-2026',
+    title: 'Encadrer les cinq lots sans action réelle',
+    intro: 'Ce registre confirmé traduit PLN-001 V1.0 en cinq fiches de préparation. Il attribue des fonctions candidates, jamais des personnes, et maintient chaque lot arrêté avant la collecte, le test ou le changement réel.',
     counters: [['Fiches candidates', '5', 'Une par lot'], ['Responsables nommés', '0', 'Fonctions seulement'], ['Preuves réelles', '0', 'Aucune reçue'], ['Actions réelles', '0', 'Arrêt obligatoire']],
     labels: { functions: 'Fonctions candidates', dependencies: 'Dépendances', evidence: 'Preuves attendues', stop: 'Condition d’arrêt' },
     items: [
@@ -15,14 +15,14 @@ const COPY = {
       ['PKG-04 · Migration et retour arrière', 'PLN-04', 'IT & Support · Gouvernance · Administration', 'PKG-01 et PKG-03 préparés ; autorités et scénario synthétique identifiés.', 'Procédure candidate de migration isolée, double approbation, sauvegarde vérifiée et rollback.', 'Arrêt avant table, endpoint, donnée réelle, migration ou changement de démarrage.'],
       ['PKG-05 · Outbox et supervision', 'PLN-05', 'IT & Support · Gouvernance', 'PKG-01 préparé ; responsabilité, seuils et règle d’escalade à confirmer.', 'Spécification candidate du worker, métriques, alertes, quarantaine, reprise et preuves.', 'Arrêt avant worker, notification, alerte, surveillance ou automatisation réelle.']
     ],
-    gate: 'PORTE FINALE · Les cinq fiches restent candidates. Leur confirmation ne remplacera ni l’autorisation propre à chaque action réelle, ni la réévaluation finale des six conditions G1.',
-    next: 'Prochain arbitrage humain unique : confirmer ou amender REF-01-G1-PKG-001 V0.1.',
+    gate: 'REGISTRE CONFIRMÉ · Les cinq fiches encadrent la préparation. Cette confirmation ne remplace ni l’autorisation propre à chaque action réelle, ni la réévaluation finale des six conditions G1.',
+    next: 'Décision consignée ci-dessous : REF-01-DEC-029 confirme REF-01-G1-PKG-001 V1.0 sans démarrer les lots.',
     boundary: 'Aucun responsable nominatif, calendrier, budget, fournisseur, environnement, droit, donnée, preuve réelle, source maîtresse, progression ou autorisation L2 n’est créé.'
   },
   EN: {
-    eyebrow: 'CANDIDATE G1 PREPARATION REGISTER · REF-01-G1-PKG-001 · V0.1 · 27 AUG 2026',
-    title: 'Prepare the five packages without real action',
-    intro: 'This register turns PLN-001 V1.0 into five preparation sheets. It assigns candidate functions, never people, and stops each package before any real collection, test or change.',
+    eyebrow: 'CONFIRMED G1 PREPARATION REGISTER · REF-01-G1-PKG-001 · V1.0 · 27 AUG 2026',
+    title: 'Govern the five packages without real action',
+    intro: 'This confirmed register turns PLN-001 V1.0 into five preparation sheets. It assigns candidate functions, never people, and stops each package before any real collection, test or change.',
     counters: [['Candidate sheets', '5', 'One per package'], ['Named owners', '0', 'Functions only'], ['Real evidence', '0', 'None received'], ['Real actions', '0', 'Mandatory stop']],
     labels: { functions: 'Candidate functions', dependencies: 'Dependencies', evidence: 'Expected evidence', stop: 'Stop condition' },
     items: [
@@ -32,14 +32,14 @@ const COPY = {
       ['PKG-04 · Migration and rollback', 'PLN-04', 'IT & Support · Governance · Administration', 'PKG-01 and PKG-03 prepared; authorities and synthetic scenario identified.', 'Candidate isolated-migration procedure, dual approval, verified backup and rollback.', 'Stop before any table, endpoint, real data, migration or startup change.'],
       ['PKG-05 · Outbox and monitoring', 'PLN-05', 'IT & Support · Governance', 'PKG-01 prepared; ownership, thresholds and escalation rule to confirm.', 'Candidate worker, metrics, alerts, quarantine, recovery and evidence specification.', 'Stop before any real worker, notification, alert, monitoring or automation.']
     ],
-    gate: 'FINAL GATE · The five sheets remain candidates. Their confirmation will replace neither package-specific authorisation for real action nor the final reassessment of all six G1 conditions.',
-    next: 'Next single human decision: confirm or amend REF-01-G1-PKG-001 V0.1.',
+    gate: 'CONFIRMED REGISTER · The five sheets govern preparation. This confirmation replaces neither package-specific authorisation for real action nor the final reassessment of all six G1 conditions.',
+    next: 'Decision recorded below: REF-01-DEC-029 confirms REF-01-G1-PKG-001 V1.0 without starting the packages.',
     boundary: 'No named owner, schedule, budget, provider, environment, right, data, real evidence, master source, progress or L2 authorisation is created.'
   },
   DE: {
-    eyebrow: 'KANDIDATENREGISTER DER G1-VORBEREITUNG · REF-01-G1-PKG-001 · V0.1 · 27.08.2026',
-    title: 'Die fünf Pakete ohne reale Aktion vorbereiten',
-    intro: 'Dieses Register überführt PLN-001 V1.0 in fünf Vorbereitungsblätter. Es ordnet Kandidatenfunktionen, niemals Personen, zu und stoppt jedes Paket vor realer Sammlung, Prüfung oder Änderung.',
+    eyebrow: 'BESTÄTIGTES REGISTER DER G1-VORBEREITUNG · REF-01-G1-PKG-001 · V1.0 · 27.08.2026',
+    title: 'Die fünf Pakete ohne reale Aktion steuern',
+    intro: 'Dieses bestätigte Register überführt PLN-001 V1.0 in fünf Vorbereitungsblätter. Es ordnet Kandidatenfunktionen, niemals Personen, zu und stoppt jedes Paket vor realer Sammlung, Prüfung oder Änderung.',
     counters: [['Kandidatenblätter', '5', 'Eines je Paket'], ['Benannte Verantwortliche', '0', 'Nur Funktionen'], ['Realnachweise', '0', 'Keine erhalten'], ['Reale Aktionen', '0', 'Pflichtstopp']],
     labels: { functions: 'Kandidatenfunktionen', dependencies: 'Abhängigkeiten', evidence: 'Erwartete Nachweise', stop: 'Stoppbedingung' },
     items: [
@@ -49,8 +49,8 @@ const COPY = {
       ['PKG-04 · Migration und Rollback', 'PLN-04', 'IT & Support · Governance · Administration', 'PKG-01 und PKG-03 vorbereitet; Autoritäten und synthetisches Szenario identifiziert.', 'Kandidatenverfahren für isolierte Migration, Doppelgenehmigung, geprüfte Sicherung und Rollback.', 'Stopp vor Tabelle, Endpunkt, Echtdaten, Migration oder Startänderung.'],
       ['PKG-05 · Outbox und Überwachung', 'PLN-05', 'IT & Support · Governance', 'PKG-01 vorbereitet; Verantwortung, Schwellen und Eskalationsregel zu bestätigen.', 'Kandidatenspezifikation für Worker, Messwerte, Alarme, Quarantäne, Wiederanlauf und Nachweise.', 'Stopp vor realem Worker, Hinweis, Alarm, Monitoring oder Automatisierung.']
     ],
-    gate: 'FINALE SCHRANKE · Die fünf Blätter bleiben Kandidaten. Ihre Bestätigung ersetzt weder die paketspezifische Autorisierung realer Aktionen noch die finale Neubewertung aller sechs G1-Bedingungen.',
-    next: 'Nächster einzelner menschlicher Entscheid: REF-01-G1-PKG-001 V0.1 bestätigen oder ändern.',
+    gate: 'BESTÄTIGTES REGISTER · Die fünf Blätter steuern die Vorbereitung. Diese Bestätigung ersetzt weder die paketspezifische Autorisierung realer Aktionen noch die finale Neubewertung aller sechs G1-Bedingungen.',
+    next: 'Nachfolgend erfasster Entscheid: REF-01-DEC-029 bestätigt REF-01-G1-PKG-001 V1.0, ohne die Pakete zu starten.',
     boundary: 'Es entstehen keine benannte Verantwortung, Terminplanung, Budget, Anbieter, Umgebung, Rechte, Daten, Realnachweise, Masterquelle, Fortschritt oder L2-Autorisierung.'
   }
 };
