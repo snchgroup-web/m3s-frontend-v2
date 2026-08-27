@@ -3,10 +3,10 @@ import { Activity, AlertTriangle, Bell, LockKeyhole, RotateCcw, ShieldCheck, Wor
 
 const COPY = {
   FR: {
-    eyebrow: 'SUPPORT CANDIDAT · LOT 5 · REF-01-G1-PKG-05-001 · V0.1 · 27-08-2026',
-    title: 'Préparer outbox, supervision et reprise sans activer de worker',
-    intro: 'Ce dossier transforme PKG-05 en spécification documentaire candidate. Il ordonne traitement idempotent, métriques, alertes, quarantaine et reprise sans démarrer de worker ni surveiller un système réel.',
-    counters: [['Dossier candidat', '1', 'PKG-05-001 V0.1'], ['Axes contrôlés', '4', 'Spécification documentaire'], ['Workers actifs', '0', 'Aucun traitement'], ['Alertes réelles', '0', 'Aucune surveillance']],
+    eyebrow: 'SUPPORT CONFIRMÉ · LOT 5 · REF-01-G1-PKG-05-001 · V1.0 · 27-08-2026',
+    title: 'Spécification outbox, supervision et reprise confirmée sans activation réelle',
+    intro: 'Ce dossier confirmé ordonne traitement idempotent, métriques, alertes, quarantaine et reprise. Il reste documentaire : aucun worker ne démarre et aucun système réel n’est surveillé.',
+    counters: [['Dossier confirmé', '1/1', 'PKG-05-001 V1.0'], ['Axes contrôlés', '4', 'Spécification documentaire'], ['Workers actifs', '0', 'Aucun traitement'], ['Alertes réelles', '0', 'Aucune surveillance']],
     labels: { purpose: 'Finalité', checks: 'Points à documenter', outputs: 'Livrables candidats', unknowns: 'Valeurs à qualifier' },
     areas: [
       { title: 'Contrat du worker et idempotence', icon: Workflow, purpose: 'Définir le traitement d’un message sans l’exécuter.', checks: ['États, verrouillage et ordre de lecture', 'Clé d’idempotence et refus des doublons', 'Tentatives et temporisation progressive', 'Arrêt propre et reprise sans perte'], outputs: ['Contrat de worker candidat', 'Matrice états et transitions'], unknowns: 'Runtime, fréquence, lots, délais, limite de tentatives, concurrence et responsabilité.' },
@@ -14,15 +14,15 @@ const COPY = {
       { title: 'Alertes, escalade et quarantaine', icon: Bell, purpose: 'Préparer la réaction aux écarts sans envoyer de notification.', checks: ['Conditions d’alerte et niveaux de gravité', 'Canaux autorisés et destinataires fonctionnels', 'Quarantaine et examen humain', 'Acquittement, escalade et clôture'], outputs: ['Matrice d’alerte candidate', 'Procédure de quarantaine'], unknowns: 'Seuils, canaux, destinataires, délais, astreinte, escalades et durée de quarantaine.' },
       { title: 'Reprise, rejeu et preuve', icon: RotateCcw, purpose: 'Préparer un rejeu contrôlé avant toute propagation.', checks: ['Préconditions et autorité de rejeu', 'Rejeu idempotent et rapprochement', 'Arrêt, compensation et reprise après échec', 'Journal de décision, résultat et anomalies'], outputs: ['Runbook de reprise candidat', 'Fiche de rapprochement et preuve'], unknowns: 'Périmètre, volume, fenêtre, autorité, contrôles, tolérances et preuve de réussite.' }
     ],
-    status: 'CANDIDAT · Une spécification documentaire préparée ; zéro worker, zéro alerte, zéro notification, zéro rejeu et zéro automatisation réelle.',
-    next: 'Prochain arbitrage humain : confirmer ou amender REF-01-G1-PKG-05-001 V0.1. Une confirmation validera seulement la spécification documentaire.',
+    status: 'CONFIRMÉ · REF-01-DEC-033 confirme PKG-05-001 V1.0 comme spécification documentaire gouvernée.',
+    next: 'Étape produite ci-dessous : REF-01-G1-REV-003 V0.1 réévalue les six conditions G1 après confirmation des cinq lots documentaires.',
     boundary: 'Arrêt obligatoire avant worker, connexion à une file, planification, notification, alerte, métrique réelle, quarantaine, rejeu, rapprochement ou automatisation.'
   },
   EN: {
-    eyebrow: 'CANDIDATE SUPPORT · PACKAGE 5 · REF-01-G1-PKG-05-001 · V0.1 · 27 AUG 2026',
-    title: 'Prepare outbox, monitoring and recovery without activating a worker',
-    intro: 'This file turns PKG-05 into a candidate documentary specification. It orders idempotent processing, metrics, alerts, quarantine and recovery without starting a worker or monitoring a real system.',
-    counters: [['Candidate file', '1', 'PKG-05-001 V0.1'], ['Controlled areas', '4', 'Documentary specification'], ['Active workers', '0', 'No processing'], ['Real alerts', '0', 'No monitoring']],
+    eyebrow: 'CONFIRMED SUPPORT · PACKAGE 5 · REF-01-G1-PKG-05-001 · V1.0 · 27 AUG 2026',
+    title: 'Confirmed outbox, monitoring and recovery specification without real activation',
+    intro: 'This confirmed file orders idempotent processing, metrics, alerts, quarantine and recovery. It remains documentary: no worker starts and no real system is monitored.',
+    counters: [['Confirmed file', '1/1', 'PKG-05-001 V1.0'], ['Controlled areas', '4', 'Documentary specification'], ['Active workers', '0', 'No processing'], ['Real alerts', '0', 'No monitoring']],
     labels: { purpose: 'Purpose', checks: 'Points to document', outputs: 'Candidate outputs', unknowns: 'Values to qualify' },
     areas: [
       { title: 'Worker contract and idempotence', icon: Workflow, purpose: 'Define message processing without executing it.', checks: ['States, locking and reading order', 'Idempotency key and duplicate refusal', 'Attempts and progressive delay', 'Clean stop and lossless recovery'], outputs: ['Candidate worker contract', 'State and transition matrix'], unknowns: 'Runtime, frequency, batches, delays, attempt ceiling, concurrency and ownership.' },
@@ -30,15 +30,15 @@ const COPY = {
       { title: 'Alerts, escalation and quarantine', icon: Bell, purpose: 'Prepare a response to gaps without sending notifications.', checks: ['Alert conditions and severity levels', 'Authorised channels and functional recipients', 'Quarantine and human review', 'Acknowledgement, escalation and closure'], outputs: ['Candidate alert matrix', 'Quarantine procedure'], unknowns: 'Thresholds, channels, recipients, delays, on-call duty, escalations and quarantine duration.' },
       { title: 'Recovery, replay and evidence', icon: RotateCcw, purpose: 'Prepare controlled replay before propagation.', checks: ['Replay prerequisites and authority', 'Idempotent replay and reconciliation', 'Stop, compensation and failure recovery', 'Decision, result and anomaly log'], outputs: ['Candidate recovery runbook', 'Reconciliation and evidence sheet'], unknowns: 'Scope, volume, window, authority, controls, tolerances and success evidence.' }
     ],
-    status: 'CANDIDATE · One documentary specification prepared; zero workers, alerts, notifications, replays or real automation.',
-    next: 'Next human decision: confirm or amend REF-01-G1-PKG-05-001 V0.1. Confirmation will validate only the documentary specification.',
+    status: 'CONFIRMED · REF-01-DEC-033 confirms PKG-05-001 V1.0 as a governed documentary specification.',
+    next: 'Produced step below: REF-01-G1-REV-003 V0.1 reassesses all six G1 conditions after confirmation of the five documentary packages.',
     boundary: 'Mandatory stop before a worker, queue connection, scheduling, notification, alert, real metric, quarantine, replay, reconciliation or automation.'
   },
   DE: {
-    eyebrow: 'KANDIDATENTRÄGER · PAKET 5 · REF-01-G1-PKG-05-001 · V0.1 · 27.08.2026',
-    title: 'Outbox, Überwachung und Wiederanlauf ohne Worker-Aktivierung vorbereiten',
-    intro: 'Diese Akte überführt PKG-05 in eine Kandidaten-Dokumentspezifikation. Sie ordnet idempotente Verarbeitung, Messwerte, Alarme, Quarantäne und Wiederanlauf, ohne einen Worker zu starten oder ein reales System zu überwachen.',
-    counters: [['Kandidatenakte', '1', 'PKG-05-001 V0.1'], ['Kontrollbereiche', '4', 'Dokumentspezifikation'], ['Aktive Worker', '0', 'Keine Verarbeitung'], ['Reale Alarme', '0', 'Keine Überwachung']],
+    eyebrow: 'BESTÄTIGTER TRÄGER · PAKET 5 · REF-01-G1-PKG-05-001 · V1.0 · 27.08.2026',
+    title: 'Bestätigte Outbox-, Überwachungs- und Wiederanlaufspezifikation ohne Realaktivierung',
+    intro: 'Diese bestätigte Akte ordnet idempotente Verarbeitung, Messwerte, Alarme, Quarantäne und Wiederanlauf. Sie bleibt dokumentarisch: kein Worker startet und kein reales System wird überwacht.',
+    counters: [['Bestätigte Akte', '1/1', 'PKG-05-001 V1.0'], ['Kontrollbereiche', '4', 'Dokumentspezifikation'], ['Aktive Worker', '0', 'Keine Verarbeitung'], ['Reale Alarme', '0', 'Keine Überwachung']],
     labels: { purpose: 'Zweck', checks: 'Zu dokumentierende Punkte', outputs: 'Kandidatenergebnisse', unknowns: 'Zu qualifizierende Werte' },
     areas: [
       { title: 'Worker-Vertrag und Idempotenz', icon: Workflow, purpose: 'Die Nachrichtenverarbeitung ohne Ausführung definieren.', checks: ['Stände, Sperre und Lesereihenfolge', 'Idempotenzschlüssel und Dublettenverweigerung', 'Versuche und progressive Wartezeit', 'Sauberer Stopp und verlustfreier Wiederanlauf'], outputs: ['Kandidaten-Worker-Vertrag', 'Stand- und Übergangsmatrix'], unknowns: 'Runtime, Frequenz, Lose, Verzögerungen, Versuchslimit, Parallelität und Verantwortung.' },
@@ -46,8 +46,8 @@ const COPY = {
       { title: 'Alarme, Eskalation und Quarantäne', icon: Bell, purpose: 'Die Reaktion auf Abweichungen ohne Hinweisversand vorbereiten.', checks: ['Alarmbedingungen und Schweregrade', 'Autorisierte Kanäle und Funktionsempfänger', 'Quarantäne und menschliche Prüfung', 'Bestätigung, Eskalation und Abschluss'], outputs: ['Kandidaten-Alarmmatrix', 'Quarantäneverfahren'], unknowns: 'Schwellen, Kanäle, Empfänger, Fristen, Bereitschaft, Eskalationen und Quarantänedauer.' },
       { title: 'Wiederanlauf, Wiederholung und Nachweis', icon: RotateCcw, purpose: 'Kontrollierte Wiederholung vor jeder Weitergabe vorbereiten.', checks: ['Voraussetzungen und Autorität der Wiederholung', 'Idempotente Wiederholung und Abstimmung', 'Stopp, Kompensation und Fehlerwiederanlauf', 'Entscheid-, Ergebnis- und Abweichungsjournal'], outputs: ['Kandidaten-Wiederanlauf-Runbook', 'Abstimmungs- und Nachweisblatt'], unknowns: 'Umfang, Volumen, Fenster, Autorität, Kontrollen, Toleranzen und Erfolgsnachweis.' }
     ],
-    status: 'KANDIDAT · Eine Dokumentspezifikation vorbereitet; null Worker, Alarme, Hinweise, Wiederholungen oder reale Automatisierungen.',
-    next: 'Nächster menschlicher Entscheid: REF-01-G1-PKG-05-001 V0.1 bestätigen oder ändern. Eine Bestätigung validiert nur die Dokumentspezifikation.',
+    status: 'BESTÄTIGT · REF-01-DEC-033 bestätigt PKG-05-001 V1.0 als gesteuerte Dokumentspezifikation.',
+    next: 'Nachfolgend erstellter Schritt: REF-01-G1-REV-003 V0.1 bewertet alle sechs G1-Bedingungen nach Bestätigung der fünf Dokumentpakete neu.',
     boundary: 'Pflichtstopp vor Worker, Queue-Verbindung, Planung, Hinweis, Alarm, realem Messwert, Quarantäne, Wiederholung, Abstimmung oder Automatisierung.'
   }
 };
