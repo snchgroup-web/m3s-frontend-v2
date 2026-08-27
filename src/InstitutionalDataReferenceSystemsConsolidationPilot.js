@@ -38,6 +38,9 @@ import InstitutionalPeopleTeamsAutFilePriorityCandidate from './InstitutionalPeo
 import InstitutionalPeopleTeamsAutFilePriorityConfirmation from './InstitutionalPeopleTeamsAutFilePriorityConfirmation';
 import InstitutionalPeopleTeamsAutFileSelectionCandidate from './InstitutionalPeopleTeamsAutFileSelectionCandidate';
 import InstitutionalPeopleTeamsAutBatchCandidate from './InstitutionalPeopleTeamsAutBatchCandidate';
+import InstitutionalPeopleTeamsAutBatchConfirmation from './InstitutionalPeopleTeamsAutBatchConfirmation';
+import InstitutionalPeopleTeamsAutWaveOneCandidate from './InstitutionalPeopleTeamsAutWaveOneCandidate';
+import InstitutionalReferenceCodeLegend from './InstitutionalReferenceCodeLegend';
 
 const STAGES = ['scope', 'sources', 'owners', 'models', 'vocabulary', 'review'];
 
@@ -183,6 +186,8 @@ const InstitutionalDataReferenceSystemsConsolidationPilot = ({ language = 'FR', 
 
       <InstitutionalDataReferenceInventory language={language} />
 
+      <InstitutionalReferenceCodeLegend language={language} />
+
       <InstitutionalPeopleTeamsReferenceControl language={language} onNavigate={onNavigate} />
 
       <InstitutionalPeopleTeamsDataFoundations language={language} />
@@ -209,6 +214,8 @@ const InstitutionalDataReferenceSystemsConsolidationPilot = ({ language = 'FR', 
       <InstitutionalPeopleTeamsAutFilePriorityConfirmation language={language} />
       <InstitutionalPeopleTeamsAutFileSelectionCandidate language={language} />
       <InstitutionalPeopleTeamsAutBatchCandidate language={language} />
+      <InstitutionalPeopleTeamsAutBatchConfirmation language={language} />
+      <InstitutionalPeopleTeamsAutWaveOneCandidate language={language} />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">

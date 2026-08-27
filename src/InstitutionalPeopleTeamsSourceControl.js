@@ -23,7 +23,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.22 · 27-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.23 · 27-08-2026',
     title: 'Comparer les supports sans les promouvoir',
     body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
     counters: [
@@ -109,12 +109,12 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Prochain arbitrage groupé : confirmer ou amender ensemble REF-01-G1-SEL-001 V0.2 et REF-01-G1-BAT-001 V0.1 ; la décision portera sur la préparation documentaire des quatre dossiers, sans identité, contact ni envoi, G1 reste ouverte et L2 fermé.',
-    boundary: 'Statut : base fonctionnelle V1.0, cadrage V0.2 et proposition V1.0 confirmés ; ADR L0 V1.0 confirmé par REF-01-DEC-012 ; G0 clôturée ; fondations L1 V0.1 testées localement ; quatre principes G1 confirmés ; fiche de preuve V1.0, paquet de collecte V1.0, fiche de sollicitation V1.0, profils destinataires V1.0, fiche nominative V1.0, registre d’autorisation V1.0, gabarit unitaire IDN-001 V1.0 et matrice PRI-001 V1.0 confirmés ; SEL-001 V0.2 et BAT-001 V0.1 proposent un lot A–D en deux vagues, avec quatre dossiers inclus mais zéro exécution, zéro preuve reçue, zéro destinataire nommé, zéro autorisation accordée, zéro demande envoyée, zéro fournisseur retenu et L2 fermé ; décisions sur le lot : 18 ; sources maîtresses désignées : 0 ; changements en production : 0.',
-    source: 'Supports contrôlés : contrat API RH-001, Annuaire interne, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-021, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0 et fondations L1 candidates publiées par la PR backend #46 au commit cf35120.'
+    nextControl: 'Prochain arbitrage : confirmer ou amender REF-01-G1-WAV-001 V0.1 avant toute recherche officielle, preuve technique ou désignation d’un relecteur réel ; G1 reste ouverte et L2 fermé.',
+    boundary: 'Statut : base fonctionnelle V1.0, cadrage V0.2 et proposition V1.0 confirmés ; ADR L0 V1.0 confirmé par REF-01-DEC-012 ; G0 clôturée ; fondations L1 V0.1 testées localement ; quatre principes G1 confirmés ; fiche de preuve V1.0, paquet de collecte V1.0, fiche de sollicitation V1.0, profils destinataires V1.0, fiche nominative V1.0, registre d’autorisation V1.0, gabarit unitaire IDN-001 V1.0, matrice PRI-001 V1.0, SEL-001 V1.0 et BAT-001 V1.0 confirmés ; WAV-001 V0.1 prépare trois gabarits vides pour AUT-A, AUT-B et AUT-C, tandis que AUT-D reste en attente ; zéro exécution, zéro preuve reçue, zéro destinataire nommé, zéro autorisation accordée, zéro demande envoyée, zéro fournisseur retenu et L2 fermé ; décisions sur le lot : 19 ; sources maîtresses désignées : 0 ; changements en production : 0.',
+    source: 'Supports contrôlés : contrat API RH-001, Annuaire interne, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-022, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0 et fondations L1 candidates publiées par la PR backend #46 au commit cf35120.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.22 · 27 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.23 · 27 AUG 2026',
     title: 'Compare supports without promoting them',
     body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
     counters: [
@@ -200,12 +200,12 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'Next grouped decision: confirm or amend REF-01-G1-SEL-001 V0.2 and REF-01-G1-BAT-001 V0.1 together; the decision covers documentary preparation of all four files, without identity, contact or send, G1 remains open and L2 closed.',
-    boundary: 'Status: functional baseline V1.0, framing V0.2 and proposal V1.0 confirmed; L0 ADR V1.0 confirmed through REF-01-DEC-012; G0 closed; L1 foundations V0.1 tested locally; four G1 principles confirmed; evidence sheet V1.0, collection package V1.0, request sheet V1.0, recipient profiles V1.0, named-recipient sheet V1.0, authorisation register V1.0, individual template IDN-001 V1.0 and PRI-001 V1.0 matrix confirmed; SEL-001 V0.2 and BAT-001 V0.1 propose a two-wave A–D package, with four files included but zero execution, zero evidence received, zero named recipients, zero authorisations granted, zero requests sent, zero selected providers and L2 closed; package decisions: 18; designated master sources: 0; production changes: 0.',
-    source: 'Controlled supports: RH-001 API contract, Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-021, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0 and candidate L1 foundations published through backend PR #46 at commit cf35120.'
+    nextControl: 'Next decision: confirm or amend REF-01-G1-WAV-001 V0.1 before any official research, technical evidence or designation of a real reviewer; G1 remains open and L2 closed.',
+    boundary: 'Status: functional baseline V1.0, framing V0.2 and proposal V1.0 confirmed; L0 ADR V1.0 confirmed through REF-01-DEC-012; G0 closed; L1 foundations V0.1 tested locally; four G1 principles confirmed; evidence sheet V1.0, collection package V1.0, request sheet V1.0, recipient profiles V1.0, named-recipient sheet V1.0, authorisation register V1.0, individual template IDN-001 V1.0, PRI-001 V1.0 matrix, SEL-001 V1.0 and BAT-001 V1.0 confirmed; WAV-001 V0.1 prepares three empty templates for AUT-A, AUT-B and AUT-C while AUT-D remains pending; zero execution, zero evidence received, zero named recipients, zero authorisations granted, zero requests sent, zero selected providers and L2 closed; package decisions: 19; designated master sources: 0; production changes: 0.',
+    source: 'Controlled supports: RH-001 API contract, Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-022, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0 and candidate L1 foundations published through backend PR #46 at commit cf35120.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.22 · 27.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.23 · 27.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
     body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
     counters: [
@@ -291,9 +291,9 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'Nächster gebündelter Entscheid: REF-01-G1-SEL-001 V0.2 und REF-01-G1-BAT-001 V0.1 gemeinsam bestätigen oder ändern; der Entscheid betrifft die dokumentarische Vorbereitung aller vier Akten, ohne Identität, Kontakt oder Versand, G1 bleibt offen und L2 geschlossen.',
-    boundary: 'Stand: funktionale Basis V1.0, Ausgestaltung V0.2 und Vorschlag V1.0 bestätigt; L0-ADR V1.0 mit REF-01-DEC-012 bestätigt; G0 geschlossen; L1-Grundlagen V0.1 lokal geprüft; vier G1-Prinzipien bestätigt; Nachweisblatt V1.0, Sammlungspaket V1.0, Anfrageblatt V1.0, Empfängerprofile V1.0, Blatt für benannte Empfänger V1.0, Autorisierungsregister V1.0, Einzelvorlage IDN-001 V1.0 und PRI-001-Matrix V1.0 bestätigt; SEL-001 V0.2 und BAT-001 V0.1 schlagen ein A–D-Paket in zwei Wellen vor, mit vier enthaltenen Akten, aber null Ausführung, null erhaltenen Nachweisen, null benannten Empfängern, null erteilten Autorisierungen, null gesendeten Anfragen, null gewählten Anbietern und geschlossenem L2; Paketentscheide: 18; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
-    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Internes Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-021, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0 und mit Backend-PR #46 am Commit cf35120 veröffentlichte Kandidatengrundlagen L1.'
+    nextControl: 'Nächster Entscheid: REF-01-G1-WAV-001 V0.1 bestätigen oder ändern, bevor offizielle Recherche, technischer Nachweis oder Benennung eines realen Prüfers beginnt; G1 bleibt offen und L2 geschlossen.',
+    boundary: 'Stand: funktionale Basis V1.0, Ausgestaltung V0.2 und Vorschlag V1.0 bestätigt; L0-ADR V1.0 mit REF-01-DEC-012 bestätigt; G0 geschlossen; L1-Grundlagen V0.1 lokal geprüft; vier G1-Prinzipien bestätigt; Nachweisblatt V1.0, Sammlungspaket V1.0, Anfrageblatt V1.0, Empfängerprofile V1.0, Blatt für benannte Empfänger V1.0, Autorisierungsregister V1.0, Einzelvorlage IDN-001 V1.0, PRI-001-Matrix V1.0, SEL-001 V1.0 und BAT-001 V1.0 bestätigt; WAV-001 V0.1 bereitet drei leere Vorlagen für AUT-A, AUT-B und AUT-C vor, während AUT-D wartet; null Ausführung, null erhaltene Nachweise, null benannte Empfänger, null erteilte Autorisierungen, null gesendete Anfragen, null gewählte Anbieter und geschlossenes L2; Paketentscheide: 19; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
+    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Internes Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-022, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0 und mit Backend-PR #46 am Commit cf35120 veröffentlichte Kandidatengrundlagen L1.'
   }
 };
 

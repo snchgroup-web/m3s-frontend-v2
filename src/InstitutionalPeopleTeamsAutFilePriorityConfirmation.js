@@ -16,7 +16,7 @@ const COPY = {
       limit: 'Cette décision confirme la méthode et les quatre options, mais ne choisit aucun dossier AUT. Elle n’inscrit aucune identité et n’autorise aucun fournisseur, compte, accès, contact, envoi, collecte, test ou preuve réelle. Elle ne ferme pas G1 et n’ouvre pas L2.'
     },
     status: 'CONFIRMÉ · REF-01-G1-PRI-001 V1.0 gouverne désormais la sélection documentaire, avec 0/4 dossier choisi.',
-    next: 'Prochaine étape amendée : confirmer ou amender ensemble SEL-001 V0.2 et BAT-001 V0.1 pour préparer les quatre dossiers en deux vagues contrôlées.',
+    next: 'Étape suivante accomplie : REF-01-DEC-022 confirme SEL-001 V1.0 et BAT-001 V1.0 ; WAV-001 V0.1 prépare la vague 1.',
     boundary: 'G1 reste ouverte. Confirmer la matrice ne vaut ni choix d’un dossier AUT, ni inscription nominative, ni autorisation individuelle, de contact ou d’envoi.'
   },
   EN: {
@@ -32,7 +32,7 @@ const COPY = {
       limit: 'This decision confirms the method and four options but selects no AUT file. It records no identity and authorises no provider, account, access, contact, send, collection, test or real evidence. It does not close G1 or open L2.'
     },
     status: 'CONFIRMED · REF-01-G1-PRI-001 V1.0 now governs documentary selection, with 0/4 file chosen.',
-    next: 'Amended next step: confirm or amend SEL-001 V0.2 and BAT-001 V0.1 together to prepare all four files in two controlled waves.',
+    next: 'Completed next step: REF-01-DEC-022 confirms SEL-001 V1.0 and BAT-001 V1.0; WAV-001 V0.1 prepares Wave 1.',
     boundary: 'G1 remains open. Confirming the matrix is neither an AUT-file choice nor a named record or individual, contact or send authorisation.'
   },
   DE: {
@@ -48,7 +48,7 @@ const COPY = {
       limit: 'Der Entscheid bestätigt Methode und vier Optionen, wählt aber keine AUT-Akte. Er erfasst keine Identität und erlaubt weder Anbieter, Account, Zugriff, Kontakt, Versand, Sammlung, Test noch realen Nachweis. Er schliesst G1 nicht und öffnet L2 nicht.'
     },
     status: 'BESTÄTIGT · REF-01-G1-PRI-001 V1.0 steuert nun die dokumentarische Auswahl; 0/4 Akten sind gewählt.',
-    next: 'Geänderter nächster Schritt: SEL-001 V0.2 und BAT-001 V0.1 gemeinsam bestätigen oder ändern, um alle vier Akten in zwei kontrollierten Wellen vorzubereiten.',
+    next: 'Abgeschlossener nächster Schritt: REF-01-DEC-022 bestätigt SEL-001 V1.0 und BAT-001 V1.0; WAV-001 V0.1 bereitet Welle 1 vor.',
     boundary: 'G1 bleibt offen. Die Matrixbestätigung ist weder Wahl einer AUT-Akte noch Namenseintrag oder Einzel-, Kontakt- oder Versandautorisierung.'
   }
 };
