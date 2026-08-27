@@ -1638,14 +1638,20 @@ html:not(.dark) .m3s-ref01-g1-outbox-monitoring-package .text-rose-300 {
 }
 
 html:not(.dark) .m3s-ref01-g1-outbox-monitoring-confirmation .text-slate-100,
-html:not(.dark) .m3s-ref01-g1-final-package-review .text-slate-100 {
+html:not(.dark) .m3s-ref01-g1-final-package-review .text-slate-100,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-slate-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-slate-100 {
   color: #0f172a !important;
 }
 
 html:not(.dark) .m3s-ref01-g1-outbox-monitoring-confirmation .text-slate-300,
 html:not(.dark) .m3s-ref01-g1-outbox-monitoring-confirmation .text-slate-400,
 html:not(.dark) .m3s-ref01-g1-final-package-review .text-slate-300,
-html:not(.dark) .m3s-ref01-g1-final-package-review .text-slate-400 {
+html:not(.dark) .m3s-ref01-g1-final-package-review .text-slate-400,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-slate-300,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-slate-400,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-slate-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-slate-400 {
   color: #475569 !important;
 }
 
@@ -1654,7 +1660,13 @@ html:not(.dark) .m3s-ref01-g1-outbox-monitoring-confirmation .text-emerald-200,
 html:not(.dark) .m3s-ref01-g1-outbox-monitoring-confirmation .text-emerald-300,
 html:not(.dark) .m3s-ref01-g1-final-package-review .text-emerald-100,
 html:not(.dark) .m3s-ref01-g1-final-package-review .text-emerald-200,
-html:not(.dark) .m3s-ref01-g1-final-package-review .text-emerald-300 {
+html:not(.dark) .m3s-ref01-g1-final-package-review .text-emerald-300,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-emerald-100,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-emerald-200,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-emerald-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-emerald-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-emerald-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-emerald-300 {
   color: #047857 !important;
 }
 
@@ -1663,7 +1675,13 @@ html:not(.dark) .m3s-ref01-g1-outbox-monitoring-confirmation .text-sky-200,
 html:not(.dark) .m3s-ref01-g1-outbox-monitoring-confirmation .text-sky-300,
 html:not(.dark) .m3s-ref01-g1-final-package-review .text-sky-100,
 html:not(.dark) .m3s-ref01-g1-final-package-review .text-sky-200,
-html:not(.dark) .m3s-ref01-g1-final-package-review .text-sky-300 {
+html:not(.dark) .m3s-ref01-g1-final-package-review .text-sky-300,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-sky-100,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-sky-200,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-sky-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-sky-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-sky-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-sky-300 {
   color: #0369a1 !important;
 }
 
@@ -1672,7 +1690,13 @@ html:not(.dark) .m3s-ref01-g1-outbox-monitoring-confirmation .text-violet-200,
 html:not(.dark) .m3s-ref01-g1-outbox-monitoring-confirmation .text-violet-300,
 html:not(.dark) .m3s-ref01-g1-final-package-review .text-violet-100,
 html:not(.dark) .m3s-ref01-g1-final-package-review .text-violet-200,
-html:not(.dark) .m3s-ref01-g1-final-package-review .text-violet-300 {
+html:not(.dark) .m3s-ref01-g1-final-package-review .text-violet-300,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-violet-100,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-violet-200,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-violet-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-violet-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-violet-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-violet-300 {
   color: #6d28d9 !important;
 }
 
@@ -1681,7 +1705,13 @@ html:not(.dark) .m3s-ref01-g1-outbox-monitoring-confirmation .text-amber-200,
 html:not(.dark) .m3s-ref01-g1-outbox-monitoring-confirmation .text-amber-300,
 html:not(.dark) .m3s-ref01-g1-final-package-review .text-amber-100,
 html:not(.dark) .m3s-ref01-g1-final-package-review .text-amber-200,
-html:not(.dark) .m3s-ref01-g1-final-package-review .text-amber-300 {
+html:not(.dark) .m3s-ref01-g1-final-package-review .text-amber-300,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-amber-100,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-amber-200,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-amber-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-amber-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-amber-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-amber-300 {
   color: #92400e !important;
 }
 
@@ -1690,6 +1720,12 @@ html:not(.dark) .m3s-ref01-g1-outbox-monitoring-confirmation .text-rose-200,
 html:not(.dark) .m3s-ref01-g1-outbox-monitoring-confirmation .text-rose-300,
 html:not(.dark) .m3s-ref01-g1-final-package-review .text-rose-100,
 html:not(.dark) .m3s-ref01-g1-final-package-review .text-rose-200,
-html:not(.dark) .m3s-ref01-g1-final-package-review .text-rose-300 {
+html:not(.dark) .m3s-ref01-g1-final-package-review .text-rose-300,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-rose-100,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-rose-200,
+html:not(.dark) .m3s-ref01-g1-final-review-confirmation .text-rose-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-rose-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-rose-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-rose-300 {
   color: #be123c !important;
 }

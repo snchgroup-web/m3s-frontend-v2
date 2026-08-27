@@ -62,6 +62,8 @@ import InstitutionalPeopleTeamsGateG1MigrationRollbackConfirmation from './Insti
 import InstitutionalPeopleTeamsGateG1OutboxMonitoringPackage from './InstitutionalPeopleTeamsGateG1OutboxMonitoringPackage';
 import InstitutionalPeopleTeamsGateG1OutboxMonitoringConfirmation from './InstitutionalPeopleTeamsGateG1OutboxMonitoringConfirmation';
 import InstitutionalPeopleTeamsGateG1FinalPackageReview from './InstitutionalPeopleTeamsGateG1FinalPackageReview';
+import InstitutionalPeopleTeamsGateG1FinalReviewConfirmation from './InstitutionalPeopleTeamsGateG1FinalReviewConfirmation';
+import InstitutionalPeopleTeamsGateG1ExitEvidenceRegister from './InstitutionalPeopleTeamsGateG1ExitEvidenceRegister';
 import InstitutionalReferenceCodeLegend from './InstitutionalReferenceCodeLegend';
 
 const STAGES = ['scope', 'sources', 'owners', 'models', 'vocabulary', 'review'];
@@ -260,6 +262,8 @@ const InstitutionalDataReferenceSystemsConsolidationPilot = ({ language = 'FR', 
       <InstitutionalPeopleTeamsGateG1OutboxMonitoringPackage language={language} />
       <InstitutionalPeopleTeamsGateG1OutboxMonitoringConfirmation language={language} />
       <InstitutionalPeopleTeamsGateG1FinalPackageReview language={language} />
+      <InstitutionalPeopleTeamsGateG1FinalReviewConfirmation language={language} />
+      <InstitutionalPeopleTeamsGateG1ExitEvidenceRegister language={language} />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
