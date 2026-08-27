@@ -3,10 +3,10 @@ import { AlertTriangle, FileClock, GitPullRequestArrow, LockKeyhole, RotateCcw, 
 
 const COPY = {
   FR: {
-    eyebrow: 'SUPPORT CANDIDAT · LOT 4 · REF-01-G1-PKG-04-001 · V0.1 · 27-08-2026',
-    title: 'Préparer migration et retour arrière sans toucher aux données réelles',
-    intro: 'Ce dossier transforme PKG-04 en procédure documentaire candidate. Il ordonne prérequis, autorités, séquence isolée et retour arrière sans choisir d’environnement ni appliquer une migration.',
-    counters: [['Dossier candidat', '1', 'PKG-04-001 V0.1'], ['Axes contrôlés', '4', 'Procédure documentaire'], ['Environnements touchés', '0', 'Aucun accès'], ['Actions réelles', '0', 'Aucune migration']],
+    eyebrow: 'SUPPORT CONFIRMÉ · LOT 4 · REF-01-G1-PKG-04-001 · V1.0 · 27-08-2026',
+    title: 'Procédure migration et retour arrière confirmée sans environnement réel',
+    intro: 'Cette procédure confirmée ordonne prérequis, autorités, séquence isolée et retour arrière sans choisir d’environnement, fixer de commande ni appliquer une migration.',
+    counters: [['Dossier confirmé', '1', 'PKG-04-001 V1.0'], ['Axes contrôlés', '4', 'Décision documentaire'], ['Environnements touchés', '0', 'Aucun accès'], ['Actions réelles', '0', 'Aucune migration']],
     labels: { purpose: 'Finalité', checks: 'Points à documenter', outputs: 'Livrables candidats', unknowns: 'Valeurs à qualifier' },
     areas: [
       { title: 'Périmètre et prérequis', icon: FileClock, purpose: 'Définir une migration bornée avant tout environnement partagé.', checks: ['Source, cible et objets concernés', 'Dépendances PKG-01 et PKG-03', 'Jeu strictement synthétique et isolé', 'Critères d’entrée et d’arrêt'], outputs: ['Mandat de migration candidat', 'Checklist de prérequis'], unknowns: 'Source, cible, tables, endpoints, volumes, fenêtre et environnement.' },
@@ -14,15 +14,15 @@ const COPY = {
       { title: 'Séquence de migration isolée', icon: GitPullRequestArrow, purpose: 'Rendre la séquence vérifiable sans l’exécuter.', checks: ['État initial et empreintes attendues', 'Ordre des transformations', 'Contrôles de qualité et de complétude', 'Critères de réussite et de suspension'], outputs: ['Runbook candidat', 'Grille de contrôle synthétique'], unknowns: 'Commandes, outils, durée, tolérances, jeux de contrôle et preuves.' },
       { title: 'Retour arrière et preuve', icon: RotateCcw, purpose: 'Préparer l’arrêt et le retour à l’état initial avant tout changement.', checks: ['Point de retour et sauvegarde vérifiable', 'Déclencheurs de rollback', 'Contrôles après retour arrière', 'Archivage des décisions et anomalies'], outputs: ['Plan de rollback candidat', 'Fiche de résultat et anomalies'], unknowns: 'RPO/RTO applicables, seuils, responsables, preuve de sauvegarde et décision finale.' }
     ],
-    status: 'CANDIDAT · Une procédure documentaire préparée ; zéro environnement, zéro table, zéro endpoint, zéro donnée réelle et zéro migration.',
-    next: 'Prochain arbitrage humain : confirmer ou amender REF-01-G1-PKG-04-001 V0.1. Une confirmation validera seulement la procédure documentaire.',
+    status: 'CONFIRMÉ · Une procédure documentaire gouvernée ; zéro environnement, zéro table, zéro endpoint, zéro donnée réelle et zéro migration.',
+    next: 'Décision consignée ci-dessous : REF-01-DEC-032 confirme REF-01-G1-PKG-04-001 V1.0 sans autoriser de migration.',
     boundary: 'Arrêt obligatoire avant accès à un environnement, commande, sauvegarde réelle, table, endpoint, donnée, migration, rollback ou changement de démarrage.'
   },
   EN: {
-    eyebrow: 'CANDIDATE SUPPORT · PACKAGE 4 · REF-01-G1-PKG-04-001 · V0.1 · 27 AUG 2026',
-    title: 'Prepare migration and rollback without touching real data',
-    intro: 'This file turns PKG-04 into a candidate documentary procedure. It orders prerequisites, authorities, isolated sequence and rollback without selecting an environment or applying a migration.',
-    counters: [['Candidate file', '1', 'PKG-04-001 V0.1'], ['Controlled areas', '4', 'Documentary procedure'], ['Touched environments', '0', 'No access'], ['Real actions', '0', 'No migration']],
+    eyebrow: 'CONFIRMED SUPPORT · PACKAGE 4 · REF-01-G1-PKG-04-001 · V1.0 · 27 AUG 2026',
+    title: 'Confirmed migration and rollback procedure without a real environment',
+    intro: 'This confirmed procedure orders prerequisites, authorities, isolated sequence and rollback without selecting an environment, setting commands or applying a migration.',
+    counters: [['Confirmed file', '1', 'PKG-04-001 V1.0'], ['Controlled areas', '4', 'Documentary decision'], ['Touched environments', '0', 'No access'], ['Real actions', '0', 'No migration']],
     labels: { purpose: 'Purpose', checks: 'Points to document', outputs: 'Candidate outputs', unknowns: 'Values to qualify' },
     areas: [
       { title: 'Scope and prerequisites', icon: FileClock, purpose: 'Define a bounded migration before any shared environment.', checks: ['Relevant source, target and objects', 'PKG-01 and PKG-03 dependencies', 'Strictly synthetic isolated dataset', 'Entry and stop criteria'], outputs: ['Candidate migration mandate', 'Prerequisite checklist'], unknowns: 'Source, target, tables, endpoints, volumes, window and environment.' },
@@ -30,15 +30,15 @@ const COPY = {
       { title: 'Isolated migration sequence', icon: GitPullRequestArrow, purpose: 'Make the sequence verifiable without executing it.', checks: ['Initial state and expected fingerprints', 'Transformation order', 'Quality and completeness controls', 'Success and suspension criteria'], outputs: ['Candidate runbook', 'Synthetic control grid'], unknowns: 'Commands, tools, duration, tolerances, control datasets and evidence.' },
       { title: 'Rollback and evidence', icon: RotateCcw, purpose: 'Prepare stop and return to the initial state before any change.', checks: ['Return point and verifiable backup', 'Rollback triggers', 'Controls after rollback', 'Archiving decisions and anomalies'], outputs: ['Candidate rollback plan', 'Result and anomaly sheet'], unknowns: 'Applicable RPO/RTO, thresholds, owners, backup evidence and final decision.' }
     ],
-    status: 'CANDIDATE · One documentary procedure prepared; zero environments, tables, endpoints, real data or migrations.',
-    next: 'Next human decision: confirm or amend REF-01-G1-PKG-04-001 V0.1. Confirmation will validate only the documentary procedure.',
+    status: 'CONFIRMED · One governed documentary procedure; zero environments, tables, endpoints, real data or migrations.',
+    next: 'Decision recorded below: REF-01-DEC-032 confirms REF-01-G1-PKG-04-001 V1.0 without authorising migration.',
     boundary: 'Mandatory stop before environment access, commands, real backup, table, endpoint, data, migration, rollback or startup change.'
   },
   DE: {
-    eyebrow: 'KANDIDATENTRÄGER · PAKET 4 · REF-01-G1-PKG-04-001 · V0.1 · 27.08.2026',
-    title: 'Migration und Rollback ohne Eingriff in Echtdaten vorbereiten',
-    intro: 'Diese Akte überführt PKG-04 in ein Kandidaten-Dokumentverfahren. Sie ordnet Voraussetzungen, Autoritäten, isolierte Sequenz und Rollback, ohne eine Umgebung zu wählen oder eine Migration anzuwenden.',
-    counters: [['Kandidatenakte', '1', 'PKG-04-001 V0.1'], ['Kontrollbereiche', '4', 'Dokumentverfahren'], ['Berührte Umgebungen', '0', 'Kein Zugriff'], ['Reale Aktionen', '0', 'Keine Migration']],
+    eyebrow: 'BESTÄTIGTER TRÄGER · PAKET 4 · REF-01-G1-PKG-04-001 · V1.0 · 27.08.2026',
+    title: 'Bestätigtes Migration- und Rollback-Verfahren ohne reale Umgebung',
+    intro: 'Dieses bestätigte Verfahren ordnet Voraussetzungen, Autoritäten, isolierte Sequenz und Rollback, ohne eine Umgebung zu wählen, Befehle festzulegen oder eine Migration anzuwenden.',
+    counters: [['Bestätigte Akte', '1', 'PKG-04-001 V1.0'], ['Kontrollbereiche', '4', 'Dokumentarischer Entscheid'], ['Berührte Umgebungen', '0', 'Kein Zugriff'], ['Reale Aktionen', '0', 'Keine Migration']],
     labels: { purpose: 'Zweck', checks: 'Zu dokumentierende Punkte', outputs: 'Kandidatenergebnisse', unknowns: 'Zu qualifizierende Werte' },
     areas: [
       { title: 'Umfang und Voraussetzungen', icon: FileClock, purpose: 'Eine begrenzte Migration vor jeder gemeinsamen Umgebung definieren.', checks: ['Betroffene Quelle, Ziel und Objekte', 'Abhängigkeiten PKG-01 und PKG-03', 'Streng synthetischer isolierter Datensatz', 'Eintritts- und Stoppkriterien'], outputs: ['Kandidaten-Migrationsmandat', 'Voraussetzungscheckliste'], unknowns: 'Quelle, Ziel, Tabellen, Endpunkte, Volumen, Fenster und Umgebung.' },
@@ -46,8 +46,8 @@ const COPY = {
       { title: 'Isolierte Migrationssequenz', icon: GitPullRequestArrow, purpose: 'Die Sequenz ohne Ausführung prüfbar machen.', checks: ['Anfangszustand und erwartete Fingerabdrücke', 'Reihenfolge der Transformationen', 'Qualitäts- und Vollständigkeitskontrollen', 'Erfolgs- und Aussetzungskriterien'], outputs: ['Kandidaten-Runbook', 'Synthetisches Kontrollraster'], unknowns: 'Befehle, Werkzeuge, Dauer, Toleranzen, Kontrolldatensätze und Nachweise.' },
       { title: 'Rollback und Nachweis', icon: RotateCcw, purpose: 'Stopp und Rückkehr zum Ausgangszustand vor jeder Änderung vorbereiten.', checks: ['Rückkehrpunkt und prüfbare Sicherung', 'Rollback-Auslöser', 'Kontrollen nach dem Rollback', 'Archivierung von Entscheiden und Abweichungen'], outputs: ['Kandidaten-Rollbackplan', 'Ergebnis- und Abweichungsblatt'], unknowns: 'Anwendbare RPO/RTO, Schwellen, Verantwortliche, Sicherungsnachweis und Schlussentscheid.' }
     ],
-    status: 'KANDIDAT · Ein Dokumentverfahren vorbereitet; null Umgebungen, Tabellen, Endpunkte, Echtdaten oder Migrationen.',
-    next: 'Nächster menschlicher Entscheid: REF-01-G1-PKG-04-001 V0.1 bestätigen oder ändern. Eine Bestätigung validiert nur das Dokumentverfahren.',
+    status: 'BESTÄTIGT · Ein gesteuertes Dokumentverfahren; null Umgebungen, Tabellen, Endpunkte, Echtdaten oder Migrationen.',
+    next: 'Nachfolgend erfasster Entscheid: REF-01-DEC-032 bestätigt REF-01-G1-PKG-04-001 V1.0 ohne Migrationsfreigabe.',
     boundary: 'Pflichtstopp vor Umgebungszugriff, Befehl, realer Sicherung, Tabelle, Endpunkt, Daten, Migration, Rollback oder Startänderung.'
   }
 };
