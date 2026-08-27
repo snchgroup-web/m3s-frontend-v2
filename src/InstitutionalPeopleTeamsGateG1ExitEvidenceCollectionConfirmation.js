@@ -16,7 +16,7 @@ const COPY = {
       limit: 'La décision n’autorise aucune collecte, demande, personne, fournisseur, compte, accès, secret, environnement, sauvegarde, restauration, attribution de droit, déplacement GED, migration, worker, alerte, notification, test, acceptation de preuve, fermeture de G1 ou ouverture de L2.'
     },
     status: 'CONFIRMÉ · REF-01-G1-COL-002 V1.0 gouverne les six circuits ; zéro circuit est autorisé.',
-    next: 'Étape préparée ci-dessous : REF-01-G1-AUT-002 V0.1 distingue les six futures autorisations unitaires sans en accorder aucune.',
+    next: 'Étape accomplie ci-dessous : REF-01-DEC-037 confirme REF-01-G1-AUT-002 V1.0 sans accorder aucune autorisation.',
     boundary: 'Confirmer le protocole valide la manière de préparer et contrôler les preuves ; cela ne prouve aucune condition technique et ne déclenche aucune action.'
   },
   EN: {
@@ -32,7 +32,7 @@ const COPY = {
       limit: 'This decision authorises no collection, request, person, provider, account, access, secret, environment, backup, restoration, right assignment, DMS move, migration, worker, alert, notification, test, evidence acceptance, G1 closure or L2 opening.'
     },
     status: 'CONFIRMED · REF-01-G1-COL-002 V1.0 governs all six routes; zero routes are authorised.',
-    next: 'Prepared step below: REF-01-G1-AUT-002 V0.1 separates the six future individual authorisations without granting any.',
+    next: 'Completed step below: REF-01-DEC-037 confirms REF-01-G1-AUT-002 V1.0 without granting any authorisation.',
     boundary: 'Confirming the protocol validates how evidence is prepared and controlled; it proves no technical condition and triggers no action.'
   },
   DE: {
@@ -48,7 +48,7 @@ const COPY = {
       limit: 'Der Entscheid erlaubt keine Sammlung, Anfrage, Person, keinen Anbieter, Account, Zugriff, kein Geheimnis, keine Umgebung, Sicherung, Wiederherstellung, Rechtezuweisung, DMS-Verschiebung, Migration, Worker, Warnung, Benachrichtigung, Prüfung, Nachweisannahme, G1-Schliessung oder L2-Öffnung.'
     },
     status: 'BESTÄTIGT · REF-01-G1-COL-002 V1.0 steuert alle sechs Wege; null Wege sind autorisiert.',
-    next: 'Nachfolgend erstellter Schritt: REF-01-G1-AUT-002 V0.1 trennt die sechs künftigen Einzelautorisierungen, ohne eine zu erteilen.',
+    next: 'Nachfolgend abgeschlossener Schritt: REF-01-DEC-037 bestätigt REF-01-G1-AUT-002 V1.0, ohne eine Autorisierung zu erteilen.',
     boundary: 'Die Protokollbestätigung validiert die Vorbereitung und Kontrolle der Nachweise; sie beweist keine technische Bedingung und löst keine Aktion aus.'
   }
 };

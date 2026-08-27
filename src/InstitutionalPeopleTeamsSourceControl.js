@@ -23,7 +23,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.38 · 28-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.39 · 28-08-2026',
     title: 'Comparer les supports sans les promouvoir',
     body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
     counters: [
@@ -109,12 +109,12 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Arbitrage requis : confirmer ou amender REF-01-G1-AUT-002 V0.1 ; une confirmation acceptera seulement le registre sans autoriser aucun de ses six dossiers.',
-    boundary: 'Statut : REF-01-DEC-036 confirme COL-002 V1.0. Les six circuits et leurs arrêts sont gouvernés ; zéro autorisation, preuve reçue ou testée, collecte ou test réel, G1 reste ouverte et L2 fermé. Zéro accès réel, worker actif, alerte envoyée, rejeu exécuté ou fournisseur retenu ; décisions sur le lot : 33 ; sources maîtresses désignées : 0 ; changements en production : 0.',
-    source: 'Supports contrôlés : contrat API RH-001, Annuaire interne, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-036, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0, AUT-C-001/AUT-D-001 V1.0, REV-002 V1.0, PLN-001 V1.0, PKG-001 V1.0, PKG-01-001 à PKG-05-001 V1.0, REV-003 V1.0, EVD-002 V1.0, COL-002 V1.0 et registre candidat REF-01-G1-AUT-002 V0.1.'
+    nextControl: 'Arbitrage requis : confirmer ou amender REF-01-G1-PRI-002 V0.1 ; une confirmation acceptera seulement l’ordre des trois vagues sans ouvrir la vague 1.',
+    boundary: 'Statut : REF-01-DEC-037 confirme AUT-002 V1.0. Les six dossiers et leurs garde-fous sont gouvernés ; zéro autorisation, preuve reçue ou testée, collecte ou test réel, G1 reste ouverte et L2 fermé. Zéro accès réel, worker actif, alerte envoyée, rejeu exécuté ou fournisseur retenu ; décisions sur le lot : 34 ; sources maîtresses désignées : 0 ; changements en production : 0.',
+    source: 'Supports contrôlés : contrat API RH-001, Annuaire interne, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-037, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0, AUT-C-001/AUT-D-001 V1.0, REV-002 V1.0, PLN-001 V1.0, PKG-001 V1.0, PKG-01-001 à PKG-05-001 V1.0, REV-003 V1.0, EVD-002 V1.0, COL-002 V1.0, AUT-002 V1.0 et ordonnancement candidat PRI-002 V0.1.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.38 · 28 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.39 · 28 AUG 2026',
     title: 'Compare supports without promoting them',
     body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
     counters: [
@@ -200,12 +200,12 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'One decision is required: confirm or amend REF-01-G1-AUT-002 V0.1; confirmation will accept only the register without authorising any of its six files.',
-    boundary: 'Status: REF-01-DEC-036 confirms COL-002 V1.0. All six routes and stops are governed; zero authorisations, received or tested evidence, real collections or tests, G1 remains open and L2 closed. Zero real access, active workers, sent alerts, executed replays or selected providers; package decisions: 33; designated master sources: 0; production changes: 0.',
-    source: 'Controlled supports: RH-001 API contract, Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-036, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0, AUT-C-001/AUT-D-001 V1.0, REV-002 V1.0, PLN-001 V1.0, PKG-001 V1.0, PKG-01-001 through PKG-05-001 V1.0, REV-003 V1.0, EVD-002 V1.0, COL-002 V1.0 and candidate register REF-01-G1-AUT-002 V0.1.'
+    nextControl: 'One decision is required: confirm or amend REF-01-G1-PRI-002 V0.1; confirmation will accept only the three-wave order without opening Wave 1.',
+    boundary: 'Status: REF-01-DEC-037 confirms AUT-002 V1.0. All six files and safeguards are governed; zero authorisations, received or tested evidence, real collections or tests, G1 remains open and L2 closed. Zero real access, active workers, sent alerts, executed replays or selected providers; package decisions: 34; designated master sources: 0; production changes: 0.',
+    source: 'Controlled supports: RH-001 API contract, Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-037, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0, AUT-C-001/AUT-D-001 V1.0, REV-002 V1.0, PLN-001 V1.0, PKG-001 V1.0, PKG-01-001 through PKG-05-001 V1.0, REV-003 V1.0, EVD-002 V1.0, COL-002 V1.0, AUT-002 V1.0 and candidate PRI-002 order V0.1.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.38 · 28.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.39 · 28.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
     body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
     counters: [
@@ -291,9 +291,9 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'Ein Entscheid ist erforderlich: REF-01-G1-AUT-002 V0.1 bestätigen oder ändern; die Bestätigung nimmt nur das Register an, ohne eine seiner sechs Akten zu autorisieren.',
-    boundary: 'Stand: REF-01-DEC-036 bestätigt COL-002 V1.0. Alle sechs Wege und Stopps sind gesteuert; null Autorisierungen, erhaltene oder getestete Nachweise, reale Sammlungen oder Tests, G1 bleibt offen und L2 geschlossen. Null Realzugriffe, aktive Worker, gesendete Alarme, ausgeführte Wiederholungen oder gewählte Anbieter; Paketentscheide: 33; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
-    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Internes Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-036, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0, AUT-C-001/AUT-D-001 V1.0, REV-002 V1.0, PLN-001 V1.0, PKG-001 V1.0, PKG-01-001 bis PKG-05-001 V1.0, REV-003 V1.0, EVD-002 V1.0, COL-002 V1.0 und Kandidatenregister REF-01-G1-AUT-002 V0.1.'
+    nextControl: 'Ein Entscheid ist erforderlich: REF-01-G1-PRI-002 V0.1 bestätigen oder ändern; die Bestätigung nimmt nur die Reihenfolge der drei Wellen an, ohne Welle 1 zu öffnen.',
+    boundary: 'Stand: REF-01-DEC-037 bestätigt AUT-002 V1.0. Alle sechs Akten und Schutzmassnahmen sind gesteuert; null Autorisierungen, erhaltene oder getestete Nachweise, reale Sammlungen oder Tests, G1 bleibt offen und L2 geschlossen. Null Realzugriffe, aktive Worker, gesendete Alarme, ausgeführte Wiederholungen oder gewählte Anbieter; Paketentscheide: 34; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
+    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Internes Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-037, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0, AUT-C-001/AUT-D-001 V1.0, REV-002 V1.0, PLN-001 V1.0, PKG-001 V1.0, PKG-01-001 bis PKG-05-001 V1.0, REV-003 V1.0, EVD-002 V1.0, COL-002 V1.0, AUT-002 V1.0 und Kandidatenreihenfolge PRI-002 V0.1.'
   }
 };
 

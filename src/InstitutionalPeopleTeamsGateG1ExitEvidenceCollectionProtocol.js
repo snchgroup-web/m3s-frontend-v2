@@ -21,7 +21,7 @@ const COPY = {
     workflow: ['Autoriser explicitement un circuit et son périmètre.', 'Nommer les titulaires autorisés sans les exposer dans le bundle public.', 'Collecter ou tester dans le canal et l’environnement approuvés.', 'Contrôler provenance, date, version, résultat et réserves.', 'Soumettre chaque preuve à acceptation humaine distincte.'],
     refusalsTitle: 'Interdictions maintenues maintenant',
     refusals: ['Aucun destinataire, fournisseur, compte, accès, secret ou environnement.', 'Aucune donnée personnelle ou métier réelle dans un support public.', 'Aucune collecte, sauvegarde, restauration, migration, notification ou test.', 'Aucune preuve acceptée par défaut et aucun calcul de progression.', 'Aucune fermeture de G1 ni ouverture de L2.'],
-    next: 'REF-01-G1-AUT-002 V0.1 prépare ci-dessous six dossiers d’autorisation unitaires, tous encore fermés.',
+    next: 'REF-01-DEC-037 confirme ci-dessous AUT-002 V1.0 ; ses six dossiers restent fermés.',
     boundary: 'État courant : 0 collecte, 0 test, 0 preuve acceptée et 0 autorisation L2. EVD-002 V1.0 définit les preuves ; COL-002 V1.0 gouverne leurs circuits sans les ouvrir.'
   },
   EN: {
@@ -43,7 +43,7 @@ const COPY = {
     workflow: ['Explicitly authorise one route and its scope.', 'Name authorised holders without exposing them in the public bundle.', 'Collect or test through the approved channel and environment.', 'Control provenance, date, version, outcome and reservations.', 'Submit each evidence item for distinct human acceptance.'],
     refusalsTitle: 'Current prohibitions',
     refusals: ['No recipient, provider, account, access, secret or environment.', 'No real personal or business data in a public support.', 'No collection, backup, restoration, migration, notification or test.', 'No evidence accepted by default and no progress calculation.', 'No G1 closure or L2 opening.'],
-    next: 'REF-01-G1-AUT-002 V0.1 prepares six individual authorisation files below; all remain closed.',
+    next: 'REF-01-DEC-037 confirms AUT-002 V1.0 below; all six files remain closed.',
     boundary: 'Current state: 0 collection, 0 tests, 0 accepted evidence and 0 L2 authorisations. EVD-002 V1.0 defines evidence; COL-002 V1.0 governs its routes without opening them.'
   },
   DE: {
@@ -65,7 +65,7 @@ const COPY = {
     workflow: ['Einen Weg und seinen Umfang ausdrücklich autorisieren.', 'Autorisierte Träger benennen, ohne sie im öffentlichen Bundle offenzulegen.', 'Im genehmigten Kanal und in der genehmigten Umgebung sammeln oder testen.', 'Herkunft, Datum, Version, Ergebnis und Vorbehalte kontrollieren.', 'Jeden Nachweis getrennt zur menschlichen Annahme vorlegen.'],
     refusalsTitle: 'Aktuell bestehende Verbote',
     refusals: ['Kein Empfänger, Anbieter, Konto, Zugriff, Geheimnis oder Umgebung.', 'Keine realen Personen- oder Geschäftsdaten in einem öffentlichen Träger.', 'Keine Sammlung, Sicherung, Wiederherstellung, Migration, Benachrichtigung oder Prüfung.', 'Kein automatisch angenommener Nachweis und keine Fortschrittsberechnung.', 'Keine G1-Schliessung oder L2-Öffnung.'],
-    next: 'REF-01-G1-AUT-002 V0.1 bereitet nachfolgend sechs einzelne Autorisierungsakten vor; alle bleiben geschlossen.',
+    next: 'REF-01-DEC-037 bestätigt nachfolgend AUT-002 V1.0; alle sechs Akten bleiben geschlossen.',
     boundary: 'Aktueller Stand: 0 Sammlungen, 0 Tests, 0 angenommene Nachweise und 0 L2-Autorisierungen. EVD-002 V1.0 definiert die Nachweise; COL-002 V1.0 steuert ihre Wege, ohne sie zu öffnen.'
   }
 };
