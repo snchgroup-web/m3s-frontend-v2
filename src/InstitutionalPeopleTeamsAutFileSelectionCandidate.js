@@ -14,7 +14,7 @@ const COPY = {
     ],
     labels: { scope: 'Périmètre', status: 'INCLUS AU LOT · NON EXÉCUTÉ' },
     status: 'LOT CANDIDAT · 4/4 DOSSIERS INCLUS · 0 EXÉCUTÉ · 0 IDENTITÉ · 0 AUTORISATION',
-    next: 'Étape accomplie : SEL-001 V1.0 et BAT-001 V1.0 sont confirmés par REF-01-DEC-022 ; la vague documentaire WAV-001 V0.1 est préparée sans contenu réel.',
+    next: 'Étape accomplie : REF-01-DEC-023 confirme WAV-001 V1.0 et ouvre la vague documentaire dans ses limites bornées.',
     boundary: 'L’inclusion dans le lot ne vaut ni désignation d’une source maîtresse, ni choix d’une identité ou d’un fournisseur, ni autorisation de contact, d’envoi, d’accès, de collecte, de test ou de preuve réelle.'
   },
   EN: {
@@ -29,7 +29,7 @@ const COPY = {
     ],
     labels: { scope: 'Scope', status: 'INCLUDED IN PACKAGE · NOT EXECUTED' },
     status: 'CANDIDATE PACKAGE · 4/4 FILES INCLUDED · 0 EXECUTED · 0 IDENTITY · 0 AUTHORISATION',
-    next: 'Completed step: SEL-001 V1.0 and BAT-001 V1.0 are confirmed through REF-01-DEC-022; documentary wave WAV-001 V0.1 is prepared without real content.',
+    next: 'Completed step: REF-01-DEC-023 confirms WAV-001 V1.0 and opens the documentary wave within its bounded limits.',
     boundary: 'Inclusion in the package does not designate a master source, identity or provider and does not authorise contact, send, access, collection, testing or real evidence.'
   },
   DE: {
@@ -44,7 +44,7 @@ const COPY = {
     ],
     labels: { scope: 'Umfang', status: 'IM PAKET ENTHALTEN · NICHT AUSGEFÜHRT' },
     status: 'KANDIDATENPAKET · 4/4 AKTEN ENTHALTEN · 0 AUSGEFÜHRT · 0 IDENTITÄTEN · 0 AUTORISIERUNGEN',
-    next: 'Abgeschlossener Schritt: SEL-001 V1.0 und BAT-001 V1.0 sind mit REF-01-DEC-022 bestätigt; Dokumentwelle WAV-001 V0.1 ist ohne reale Inhalte vorbereitet.',
+    next: 'Abgeschlossener Schritt: REF-01-DEC-023 bestätigt WAV-001 V1.0 und öffnet die Dokumentwelle innerhalb ihrer begrenzten Umfänge.',
     boundary: 'Die Aufnahme in das Paket bestimmt weder Masterquelle, Identität noch Anbieter und erlaubt weder Kontakt, Versand, Zugriff, Sammlung, Test noch reale Nachweise.'
   }
 };

@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.23 · 27-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.24 · 27-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -604,7 +604,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   const priorityCandidate = screen.getByRole('heading', { name: 'Choisir le premier dossier sans choisir une identité' }).closest('section');
   expect(within(priorityCandidate).getAllByTestId('ref01-g1-aut-priority-option')).toHaveLength(4);
   expect(within(priorityCandidate).getByText('0/4')).toBeInTheDocument();
-  expect(within(priorityCandidate).getByText(/SEL-001 V1.0 et BAT-001 V1.0 sont confirmés/)).toBeInTheDocument();
+  expect(within(priorityCandidate).getByText(/REF-01-DEC-023 confirme WAV-001 V1.0/)).toBeInTheDocument();
   const priorityConfirmation = screen.getByRole('heading', { name: 'Confirmer la méthode sans choisir un dossier' }).closest('section');
   expect(within(priorityConfirmation).getByRole('heading', { name: 'REF-01-DEC-021 · V1.0' })).toBeInTheDocument();
   expect(within(priorityConfirmation).getByText('Matrice PRI-001 confirmée sans dossier sélectionné')).toBeInTheDocument();
@@ -612,7 +612,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(selectionCandidate).getAllByTestId('ref01-g1-aut-selection-option')).toHaveLength(4);
   expect(within(selectionCandidate).getAllByText('INCLUS AU LOT · NON EXÉCUTÉ')).toHaveLength(4);
   expect(within(selectionCandidate).getByText(/4\/4 DOSSIERS INCLUS/)).toBeInTheDocument();
-  expect(within(selectionCandidate).getByText(/SEL-001 V1.0 et BAT-001 V1.0 sont confirmés/)).toBeInTheDocument();
+  expect(within(selectionCandidate).getByText(/REF-01-DEC-023 confirme WAV-001 V1.0/)).toBeInTheDocument();
   const batchCandidate = screen.getByRole('heading', { name: 'Accélérer en deux vagues sans fusionner les contrôles' }).closest('section');
   expect(within(batchCandidate).getAllByTestId('ref01-g1-aut-batch-lane')).toHaveLength(4);
   expect(within(batchCandidate).getAllByText('Vague 1')).toHaveLength(3);
@@ -625,12 +625,15 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   const batchConfirmation = screen.getByRole('heading', { name: 'Confirmer ensemble la sélection et les deux vagues' }).closest('section');
   expect(within(batchConfirmation).getByRole('heading', { name: 'REF-01-DEC-022 · V1.0' })).toBeInTheDocument();
   expect(within(batchConfirmation).getByText('SEL-001 et BAT-001 confirmés pour préparation documentaire')).toBeInTheDocument();
-  const waveOne = screen.getByRole('heading', { name: 'Préparer trois dossiers en parallèle sans commencer la collecte' }).closest('section');
+  const waveOne = screen.getByRole('heading', { name: 'Préparer trois dossiers en parallèle dans leurs limites confirmées' }).closest('section');
   expect(within(waveOne).getAllByTestId('ref01-g1-aut-wave-one-track')).toHaveLength(3);
-  expect(within(waveOne).getByText(/0 source enregistrée/)).toBeInTheDocument();
-  expect(within(waveOne).getByText(/0 preuve jointe/)).toBeInTheDocument();
-  expect(within(waveOne).getByText(/0 relecteur nommé/)).toBeInTheDocument();
-  expect(control.getByText(/décisions sur le lot : 19/)).toBeInTheDocument();
+  expect(within(waveOne).getByText(/AUTORISÉ · Sources officielles publiques/)).toBeInTheDocument();
+  expect(within(waveOne).getByText(/AUTORISÉ · Données synthétiques isolées/)).toBeInTheDocument();
+  expect(within(waveOne).getByText(/AUTORISÉ · Profil sans identité réelle/)).toBeInTheDocument();
+  const waveOneConfirmation = screen.getByRole('heading', { name: 'Ouvrir trois travaux bornés sans ouvrir les données réelles' }).closest('section');
+  expect(within(waveOneConfirmation).getByRole('heading', { name: 'REF-01-DEC-023 · V1.0' })).toBeInTheDocument();
+  expect(within(waveOneConfirmation).getByText('WAV-001 confirmée et vague 1 ouverte dans un périmètre borné')).toBeInTheDocument();
+  expect(control.getByText(/décisions sur le lot : 20/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -736,13 +739,15 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Understand the codes without leaving the file' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Confirm the selection and two waves together' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-022 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Prepare three files in parallel without starting collection' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Prepare three files in parallel within their confirmed limits' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Open three bounded work tracks without opening real data' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-023 · V1.0' })).toBeInTheDocument();
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Decision criteria validated').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText(/confirm or amend REF-01-G1-WAV-001 V0.1/).length).toBeGreaterThan(0);
+  expect(screen.getAllByText(/Work authorised by REF-01-DEC-023/).length).toBeGreaterThan(0);
   expect(screen.getAllByText('Transfer')).toHaveLength(4);
   expect(screen.getAllByText('Collective responsibility').length).toBeGreaterThan(0);
 
@@ -833,13 +838,15 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Die Kürzel verstehen, ohne die Akte zu verlassen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Auswahl und zwei Wellen gemeinsam bestätigen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-022 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Drei Akten parallel vorbereiten, ohne die Sammlung zu beginnen' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Drei Akten parallel innerhalb ihrer bestätigten Grenzen vorbereiten' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Drei begrenzte Arbeiten öffnen, ohne Echtdaten zu öffnen' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-023 · V1.0' })).toBeInTheDocument();
   expect(screen.getByText(/Erfasste Entscheide: 1/)).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
   expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
   expect(screen.getAllByText('Entscheidungskriterien validiert').length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-003 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText(/REF-01-G1-WAV-001 V0.1 bestätigen oder ändern/).length).toBeGreaterThan(0);
+  expect(screen.getAllByText(/Mit REF-01-DEC-023 autorisierte Arbeit/).length).toBeGreaterThan(0);
   expect(screen.getAllByText('Wechseln')).toHaveLength(4);
   expect(screen.getAllByText('Kollektive Verantwortung').length).toBeGreaterThan(0);
 });
@@ -1092,7 +1099,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-01 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-02 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(29);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(30);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(8);
@@ -1102,7 +1109,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-01 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-02 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(29);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(30);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(8);

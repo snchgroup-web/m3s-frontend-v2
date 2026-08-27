@@ -16,7 +16,7 @@ const COPY = {
     ],
     labels: { output: 'Sortie préparée', control: 'Contrôle indépendant', status: 'CONFIRMÉ · NON EXÉCUTÉ' },
     sequence: 'Dépendance conservée : AUT-D ne peut pas conclure avant la disponibilité des sorties A, B et C. Les quatre dossiers appartiennent néanmoins au même lot de pilotage.',
-    next: 'Décision consignée : REF-01-DEC-022 confirme SEL-001 V1.0 et BAT-001 V1.0. WAV-001 V0.1 prépare maintenant les trois pistes de la vague 1.',
+    next: 'Décisions consignées : REF-01-DEC-022 confirme SEL-001 et BAT-001 ; REF-01-DEC-023 confirme WAV-001 V1.0 et ouvre les trois pistes bornées de la vague 1.',
     boundary: 'Point d’arrêt commun obligatoire avant toute identité, désignation de fournisseur, création de compte, accès, contact, envoi, collecte, test sur données réelles ou promotion de source maîtresse.'
   },
   EN: {
@@ -33,7 +33,7 @@ const COPY = {
     ],
     labels: { output: 'Prepared output', control: 'Independent control', status: 'CONFIRMED · NOT EXECUTED' },
     sequence: 'Dependency retained: AUT-D cannot conclude before outputs A, B and C are available. All four files nevertheless belong to the same governed package.',
-    next: 'Decision recorded: REF-01-DEC-022 confirms SEL-001 V1.0 and BAT-001 V1.0. WAV-001 V0.1 now prepares the three Wave 1 tracks.',
+    next: 'Decisions recorded: REF-01-DEC-022 confirms SEL-001 and BAT-001; REF-01-DEC-023 confirms WAV-001 V1.0 and opens the three bounded Wave 1 tracks.',
     boundary: 'A common human hold point is mandatory before any identity, provider designation, account creation, access, contact, send, collection, real-data test or master-source promotion.'
   },
   DE: {
@@ -50,7 +50,7 @@ const COPY = {
     ],
     labels: { output: 'Vorbereitete Ausgabe', control: 'Unabhängige Kontrolle', status: 'BESTÄTIGT · NICHT AUSGEFÜHRT' },
     sequence: 'Abhängigkeit bleibt bestehen: AUT-D kann vor Verfügbarkeit der Ausgaben A, B und C nicht abschliessen. Alle vier Akten gehören dennoch zum selben gesteuerten Paket.',
-    next: 'Entscheid erfasst: REF-01-DEC-022 bestätigt SEL-001 V1.0 und BAT-001 V1.0. WAV-001 V0.1 bereitet nun die drei Spuren der Welle 1 vor.',
+    next: 'Entscheide erfasst: REF-01-DEC-022 bestätigt SEL-001 und BAT-001; REF-01-DEC-023 bestätigt WAV-001 V1.0 und öffnet die drei begrenzten Spuren der Welle 1.',
     boundary: 'Ein gemeinsamer menschlicher Haltepunkt ist vor Identität, Anbieterbestimmung, Kontoerstellung, Zugriff, Kontakt, Versand, Sammlung, Echtdatentest oder Beförderung zur Masterquelle zwingend.'
   }
 };
