@@ -1729,3 +1729,51 @@ html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-rose-200,
 html:not(.dark) .m3s-ref01-g1-exit-evidence-register .text-rose-300 {
   color: #be123c !important;
 }
+
+html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-slate-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-slate-100 {
+  color: #0f172a !important;
+}
+
+html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-slate-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-slate-400,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-slate-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-slate-400 {
+  color: #475569 !important;
+}
+
+html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-emerald-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-emerald-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-emerald-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-emerald-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-emerald-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-emerald-300 {
+  color: #047857 !important;
+}
+
+html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-sky-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-sky-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-sky-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-sky-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-sky-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-sky-300 {
+  color: #0369a1 !important;
+}
+
+html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-violet-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-violet-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-violet-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-violet-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-violet-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-violet-300 {
+  color: #6d28d9 !important;
+}
+
+html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-rose-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-rose-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-confirmation .text-rose-300,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-rose-100,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-rose-200,
+html:not(.dark) .m3s-ref01-g1-exit-evidence-collection-protocol .text-rose-300 {
+  color: #be123c !important;
+}

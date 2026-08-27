@@ -3,7 +3,7 @@ import { AlertTriangle, Archive, DatabaseBackup, GitBranch, KeyRound, LockKeyhol
 
 const COPY = {
   FR: {
-    eyebrow: 'REGISTRE CANDIDAT DES PREUVES DE SORTIE · REF-01-G1-EVD-002 · V0.1 · 27-08-2026',
+    eyebrow: 'REGISTRE GOUVERNÉ DES PREUVES DE SORTIE · REF-01-G1-EVD-002 · V1.0 · 27-08-2026',
     title: 'Préparer les preuves attendues sans lancer leur collecte',
     intro: 'Cette matrice traduit REV-003 V1.0 en six dossiers de preuve contrôlables. Elle nomme des fonctions candidates et des critères d’acceptation, jamais des personnes ni des résultats inexistants.',
     counters: [['Conditions cartographiées', '6/6', 'Cinq preuves et une porte'], ['Lots documentaires', '5/5', 'Cadres réutilisés'], ['Preuves reçues', '0', 'Aucune pièce versée'], ['Autorisations L2', '0', 'L2 reste fermé']],
@@ -18,11 +18,11 @@ const COPY = {
       ['EVD-02-05 · Outbox, supervision et reprise', 'IT & Support · fonctions consommatrices · Gouvernance', 'Worker et file isolés ; idempotence ; métriques ; seuils ; canaux ; destinataires autorisés ; quarantaine ; rejeu et rapprochement.', 'Test synthétique traçable couvrant succès, doublon, échec, quarantaine, rejeu et arrêt contrôlé sans notification réelle.', 'open'],
       ['EVD-02-06 · Décision éventuelle L2', 'Management & Gouvernance · propriétaires métier · IT & Support', 'Dossiers 01 à 05 acceptés ; écarts résiduels ; risques ; rollback ; responsabilités ; décision explicite, datée et versionnée.', 'Les cinq conditions techniques sont décidées séparément, sans réserve bloquante, puis une autorisation L2 distincte est enregistrée.', 'gate']
     ],
-    next: 'Prochain arbitrage humain unique : confirmer ou amender REF-01-G1-EVD-002 V0.1. Une confirmation validera seulement la matrice de préparation, sans autoriser la collecte ni l’exécution.',
+    next: 'Statut : REF-01-DEC-035 confirme REF-01-G1-EVD-002 V1.0. Le protocole candidat COL-002 ci-dessous prépare les circuits sans autoriser leur exécution.',
     boundary: 'Zéro preuve réelle est reçue. Aucun fournisseur, compte, accès, rôle, durée, environnement, sauvegarde, migration, worker, alerte, test, contact, collecte ou source maîtresse n’est créé ou autorisé.'
   },
   EN: {
-    eyebrow: 'CANDIDATE EXIT-EVIDENCE REGISTER · REF-01-G1-EVD-002 · V0.1 · 27 AUG 2026',
+    eyebrow: 'GOVERNED EXIT-EVIDENCE REGISTER · REF-01-G1-EVD-002 · V1.0 · 27 AUG 2026',
     title: 'Prepare expected evidence without starting collection',
     intro: 'This matrix translates REV-003 V1.0 into six controllable evidence files. It names candidate functions and acceptance criteria, never people or nonexistent results.',
     counters: [['Mapped conditions', '6/6', 'Five evidence files and one gate'], ['Documentary packages', '5/5', 'Frameworks reused'], ['Evidence received', '0', 'No records supplied'], ['L2 authorisations', '0', 'L2 remains closed']],
@@ -37,11 +37,11 @@ const COPY = {
       ['EVD-02-05 · Outbox, monitoring and recovery', 'IT & Support · consuming functions · Governance', 'Isolated worker and queue; idempotency; metrics; thresholds; channels; authorised recipients; quarantine; replay and reconciliation.', 'Traceable synthetic test covering success, duplicate, failure, quarantine, replay and controlled stop without a real notification.', 'open'],
       ['EVD-02-06 · Possible L2 decision', 'Management & Governance · business owners · IT & Support', 'Accepted files 01 to 05; residual gaps; risks; rollback; responsibilities; explicit dated and versioned decision.', 'All five technical conditions are decided separately without a blocking reservation, then a distinct L2 authorisation is recorded.', 'gate']
     ],
-    next: 'Next single human decision: confirm or amend REF-01-G1-EVD-002 V0.1. Confirmation will validate only the preparation matrix, without authorising collection or execution.',
+    next: 'Status: REF-01-DEC-035 confirms REF-01-G1-EVD-002 V1.0. Candidate protocol COL-002 below prepares the routes without authorising execution.',
     boundary: 'Zero real evidence is received. No provider, account, access, role, period, environment, backup, migration, worker, alert, test, contact, collection or master source is created or authorised.'
   },
   DE: {
-    eyebrow: 'KANDIDATENREGISTER DER AUSTRITTSNACHWEISE · REF-01-G1-EVD-002 · V0.1 · 27.08.2026',
+    eyebrow: 'GESTEUERTES REGISTER DER AUSTRITTSNACHWEISE · REF-01-G1-EVD-002 · V1.0 · 27.08.2026',
     title: 'Erwartete Nachweise vorbereiten, ohne ihre Sammlung zu starten',
     intro: 'Diese Matrix überführt REV-003 V1.0 in sechs kontrollierbare Nachweisakten. Sie nennt Kandidatenfunktionen und Abnahmekriterien, niemals Personen oder nicht vorhandene Ergebnisse.',
     counters: [['Abgebildete Bedingungen', '6/6', 'Fünf Nachweise und ein Tor'], ['Dokumentpakete', '5/5', 'Rahmen wiederverwendet'], ['Erhaltene Nachweise', '0', 'Keine Unterlage eingereicht'], ['L2-Autorisierungen', '0', 'L2 bleibt geschlossen']],
@@ -56,7 +56,7 @@ const COPY = {
       ['EVD-02-05 · Outbox, Überwachung und Wiederanlauf', 'IT & Support · nutzende Funktionen · Governance', 'Isolierter Worker und Queue; Idempotenz; Messwerte; Schwellen; Kanäle; autorisierte Empfänger; Quarantäne; Wiederholung und Abstimmung.', 'Nachvollziehbarer synthetischer Test für Erfolg, Duplikat, Fehler, Quarantäne, Wiederholung und kontrollierten Stopp ohne Realbenachrichtigung.', 'open'],
       ['EVD-02-06 · Möglicher L2-Entscheid', 'Management & Governance · Fachverantwortungen · IT & Support', 'Akzeptierte Akten 01 bis 05; Restlücken; Risiken; Rollback; Verantwortungen; ausdrücklicher datierter und versionierter Entscheid.', 'Alle fünf technischen Bedingungen sind einzeln und ohne blockierenden Vorbehalt entschieden; danach wird eine getrennte L2-Autorisierung erfasst.', 'gate']
     ],
-    next: 'Nächster einzelner menschlicher Entscheid: REF-01-G1-EVD-002 V0.1 bestätigen oder ändern. Die Bestätigung validiert nur die Vorbereitungsmatrix, ohne Sammlung oder Ausführung zu erlauben.',
+    next: 'Stand: REF-01-DEC-035 bestätigt REF-01-G1-EVD-002 V1.0. Das Kandidatenprotokoll COL-002 unten bereitet die Wege vor, ohne die Ausführung zu erlauben.',
     boundary: 'Null Realnachweise sind eingegangen. Kein Anbieter, Konto, Zugriff, Rolle, Frist, Umgebung, Sicherung, Migration, Worker, Alarm, Test, Kontakt, Sammlung oder Masterquelle wird erstellt oder autorisiert.'
   }
 };
