@@ -23,7 +23,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.26 · 27-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.27 · 27-08-2026',
     title: 'Comparer les supports sans les promouvoir',
     body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
     counters: [
@@ -109,12 +109,12 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Arbitrage unique requis : confirmer ou amender REF-01-G1-CD-001 V0.1 avant de produire les dossiers documentaires AUT-C « Coûts et capacité » et AUT-D « Gouvernance interne » ; G1 reste ouverte et L2 fermé.',
-    boundary: 'Statut : REF-01-DEC-024 confirme RES-001 V1.0, accepte AUT-A/AUT-B comme résultats préparatoires et restaure la correspondance AUT-C/AUT-D. CD-001 V0.1 prépare douze axes non exécutés. Zéro accès réel, preuve réelle reçue, prix contractuel, destinataire nommé, demande envoyée ou fournisseur retenu ; décisions sur le lot : 21 ; sources maîtresses désignées : 0 ; changements en production : 0.',
-    source: 'Supports contrôlés : contrat API RH-001, Annuaire interne, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-024, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, fondations L1 candidates publiées par la PR backend #46 au commit cf35120 et RES-001 V1.0 avec 10 pages officielles publiques PostgreSQL/Google Cloud.'
+    nextControl: 'Arbitrage unique requis : confirmer ou amender ensemble REF-01-G1-AUT-C-001 V0.1 et REF-01-G1-AUT-D-001 V0.1 ; cette décision ne rendra pas disponibles les valeurs absentes, ne fermera pas G1 et n’ouvrira pas L2.',
+    boundary: 'Statut : REF-01-DEC-025 confirme CD-001 V1.0 et autorise la production documentaire bornée. AUT-C-001 et AUT-D-001 V0.1 documentent douze axes ; coûts, charge, capacité, contrôles périodiques et seuils non sourcés restent indisponibles ou candidats. Zéro accès réel, preuve réelle reçue, prix contractuel, destinataire nommé, demande envoyée ou fournisseur retenu ; décisions sur le lot : 22 ; sources maîtresses désignées : 0 ; changements en production : 0.',
+    source: 'Supports contrôlés : contrat API RH-001, Annuaire interne, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-025, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0 et dossiers documentaires AUT-C-001/AUT-D-001 V0.1.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.26 · 27 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.27 · 27 AUG 2026',
     title: 'Compare supports without promoting them',
     body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
     counters: [
@@ -200,12 +200,12 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'One decision is required: confirm or amend REF-01-G1-CD-001 V0.1 before producing the AUT-C “Costs and capacity” and AUT-D “Internal governance” documentary files; G1 remains open and L2 closed.',
-    boundary: 'Status: REF-01-DEC-024 confirms RES-001 V1.0, accepts AUT-A/AUT-B as preparatory results and restores the AUT-C/AUT-D mapping. CD-001 V0.1 prepares twelve unexecuted axes. Zero real access, real evidence received, contractual price, named recipients, sent requests or selected providers; package decisions: 21; designated master sources: 0; production changes: 0.',
-    source: 'Controlled supports: RH-001 API contract, Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-024, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, candidate L1 foundations published through backend PR #46 at commit cf35120 and RES-001 V1.0 with 10 public official PostgreSQL/Google Cloud pages.'
+    nextControl: 'One decision is required: confirm or amend REF-01-G1-AUT-C-001 V0.1 and REF-01-G1-AUT-D-001 V0.1 together; that decision will not make missing values available, close G1 or open L2.',
+    boundary: 'Status: REF-01-DEC-025 confirms CD-001 V1.0 and authorises bounded documentary production. AUT-C-001 and AUT-D-001 V0.1 document twelve axes; unsupported costs, load, capacity, periodic controls and thresholds remain unavailable or candidate. Zero real access, real evidence received, contractual price, named recipients, sent requests or selected providers; package decisions: 22; designated master sources: 0; production changes: 0.',
+    source: 'Controlled supports: RH-001 API contract, Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-025, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0 and AUT-C-001/AUT-D-001 V0.1 documentary files.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.26 · 27.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.27 · 27.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
     body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
     counters: [
@@ -291,9 +291,9 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'Ein gemeinsamer Entscheid ist erforderlich: REF-01-G1-CD-001 V0.1 bestätigen oder ändern, bevor die Dokumentakten AUT-C „Kosten und Kapazität“ und AUT-D „Interne Governance“ erstellt werden; G1 bleibt offen und L2 geschlossen.',
-    boundary: 'Stand: REF-01-DEC-024 bestätigt RES-001 V1.0, nimmt AUT-A/AUT-B als vorbereitende Ergebnisse an und stellt die AUT-C-/AUT-D-Zuordnung wieder her. CD-001 V0.1 bereitet zwölf nicht ausgeführte Achsen vor. Null Realzugriffe, erhaltene Realnachweise, Vertragspreise, benannte Empfänger, versandte Anfragen oder gewählte Anbieter; Paketentscheide: 21; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
-    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Internes Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-024, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, mit Backend-PR #46 am Commit cf35120 veröffentlichte Kandidatengrundlagen L1 und RES-001 V1.0 mit 10 öffentlichen offiziellen PostgreSQL-/Google-Cloud-Seiten.'
+    nextControl: 'Ein gemeinsamer Entscheid ist erforderlich: REF-01-G1-AUT-C-001 V0.1 und REF-01-G1-AUT-D-001 V0.1 gemeinsam bestätigen oder ändern; dieser Entscheid macht fehlende Werte nicht verfügbar, schliesst G1 nicht und öffnet L2 nicht.',
+    boundary: 'Stand: REF-01-DEC-025 bestätigt CD-001 V1.0 und erlaubt begrenzte Dokumentproduktion. AUT-C-001 und AUT-D-001 V0.1 dokumentieren zwölf Achsen; unbelegte Kosten, Last, Kapazität, periodische Kontrollen und Schwellen bleiben nicht verfügbar oder Kandidaten. Null Realzugriffe, erhaltene Realnachweise, Vertragspreise, benannte Empfänger, versandte Anfragen oder gewählte Anbieter; Paketentscheide: 22; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
+    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Internes Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-025, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0 und Dokumentakten AUT-C-001/AUT-D-001 V0.1.'
   }
 };
 

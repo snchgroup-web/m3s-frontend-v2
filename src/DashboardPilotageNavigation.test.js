@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.26 · 27-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.27 · 27-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -645,7 +645,16 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(correctedScopes).getAllByTestId('ref01-aut-cost-scope')).toHaveLength(1);
   expect(within(correctedScopes).getAllByTestId('ref01-aut-governance-scope')).toHaveLength(1);
   expect(within(correctedScopes).getByText(/douze axes sont préparés, non confirmés et non exécutés/i)).toBeInTheDocument();
-  expect(control.getByText(/décisions sur le lot : 21/)).toBeInTheDocument();
+  const scopesConfirmation = screen.getByRole('heading', { name: 'Confirmer les deux périmètres avant leur production documentaire' }).closest('section');
+  expect(within(scopesConfirmation).getByRole('heading', { name: 'REF-01-DEC-025 · V1.0' })).toBeInTheDocument();
+  expect(within(scopesConfirmation).getByText('CD-001 confirmé pour production documentaire bornée')).toBeInTheDocument();
+  const documentaryFiles = screen.getByRole('heading', { name: 'Documenter ce qui est établi, candidat ou encore indisponible' }).closest('section');
+  expect(within(documentaryFiles).getAllByTestId('ref01-aut-cost-documentary-file')).toHaveLength(1);
+  expect(within(documentaryFiles).getAllByTestId('ref01-aut-governance-documentary-file')).toHaveLength(1);
+  expect(within(documentaryFiles).getAllByTestId('ref01-aut-cost-axis')).toHaveLength(6);
+  expect(within(documentaryFiles).getAllByTestId('ref01-aut-governance-axis')).toHaveLength(6);
+  expect(within(documentaryFiles).getByText(/Aucun montant nul n’est utilisé pour remplacer une donnée absente/)).toBeInTheDocument();
+  expect(control.getByText(/décisions sur le lot : 22/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -760,6 +769,9 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Accept preparatory evidence and restore the meaning of the authorisations' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-024 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Prepare the two remaining files within their true scope' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Confirm both scopes before documentary production' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-025 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Document what is established, candidate or still unavailable' })).toBeInTheDocument();
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
@@ -865,6 +877,9 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Vorbereitende Nachweise annehmen und die Bedeutung der Autorisierungen wiederherstellen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-024 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Die zwei verbleibenden Akten in ihrem richtigen Umfang vorbereiten' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Beide Umfänge vor der Dokumentproduktion bestätigen' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-025 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Dokumentieren, was belegt, Kandidat oder noch nicht verfügbar ist' })).toBeInTheDocument();
   expect(screen.getByText(/Erfasste Entscheide: 1/)).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
   expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
@@ -1123,20 +1138,20 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-01 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-02 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(31);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(32);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
-  expect(screen.getAllByText('Unavailable')).toHaveLength(8);
+  expect(screen.getAllByText('Unavailable')).toHaveLength(9);
 
   rerender(<DashboardPilotageNavigation language="DE" onNavigate={jest.fn()} />);
   expect(screen.getByRole('heading', { name: 'Matrix der validierten Arbeitsrahmen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-01 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-02 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(31);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(32);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
-  expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(8);
+  expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(9);
 });
 
 test('keeps Intelligence honest when no edition is published', async () => {
