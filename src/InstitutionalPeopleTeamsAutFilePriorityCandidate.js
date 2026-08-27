@@ -3,9 +3,9 @@ import { AlertTriangle, ListOrdered, LockKeyhole } from 'lucide-react';
 
 const COPY = {
   FR: {
-    eyebrow: 'PRIORISATION CANDIDATE DES DOSSIERS AUT · REF-01-G1-PRI-001 · V0.1 · 27-08-2026',
+    eyebrow: 'MATRICE CONFIRMÉE DE PRIORISATION AUT · REF-01-G1-PRI-001 · V1.0 · 27-08-2026',
     title: 'Choisir le premier dossier sans choisir une identité',
-    intro: 'Cette matrice présente les quatre dossiers AUT confirmés afin de décider lequel préparer en premier. Aucune option n’est présélectionnée et ce choix d’ordre ne vaut ni choix d’une personne, ni autorisation de contact ou d’envoi.',
+    intro: 'Confirmée par REF-01-DEC-021, cette matrice présente les quatre dossiers AUT afin de préparer leur future sélection. Aucune option n’est présélectionnée et la confirmation du cadre ne vaut ni choix d’une personne, ni autorisation de contact ou d’envoi.',
     counters: [['Dossiers disponibles', '4/4', 'Cadres confirmés'], ['Priorité choisie', '0/4', 'Aucune présélection'], ['Fiches IDN ouvertes', '0', 'Aucune identité'], ['Contacts ou envois', '0', 'Toujours interdits']],
     labels: { purpose: 'Objet du dossier', profile: 'Profil gouverné', gate: 'Condition avant ouverture', status: 'OPTION NON SÉLECTIONNÉE' },
     options: [
@@ -14,14 +14,14 @@ const COPY = {
       ['AUT-C · Retour indépendant', 'Préparer un retour méthodologique indépendant pour REQ-C.', 'REC-C · Relecteur ou expert indépendant', 'Confirmer la priorité C séparément ; aucun contact réel autorisé.'],
       ['AUT-D · Revue croisée', 'Préparer une revue croisée bornée pour REQ-D.', 'REC-D · Fonction interne ou partenaire de contrôle', 'Confirmer la priorité D séparément ; aucun partage réel autorisé.']
     ],
-    status: 'MATRICE CANDIDATE · 0/4 DOSSIER PRIORISÉ · 0 IDENTITÉ · 0 AUTORISATION',
-    next: 'Prochain arbitrage humain : confirmer ou amender PRI-001 V0.1, puis indiquer séparément AUT-A, AUT-B, AUT-C ou AUT-D comme premier dossier à préparer.',
+    status: 'MATRICE CONFIRMÉE · 0/4 DOSSIER PRIORISÉ · 0 IDENTITÉ · 0 AUTORISATION',
+    next: 'Étape suivante : confirmer ou amender SEL-001 V0.1, puis indiquer séparément AUT-A, AUT-B, AUT-C ou AUT-D comme premier dossier à préparer.',
     boundary: 'Limite : une priorité autorise uniquement la préparation documentaire du dossier choisi. Elle n’autorise aucun nom, fournisseur, compte, accès, contact, envoi, collecte, test ou preuve réelle et ne ferme pas G1.'
   },
   EN: {
-    eyebrow: 'CANDIDATE AUT-FILE PRIORITISATION · REF-01-G1-PRI-001 · V0.1 · 27 AUG 2026',
+    eyebrow: 'CONFIRMED AUT-FILE PRIORITISATION MATRIX · REF-01-G1-PRI-001 · V1.0 · 27 AUG 2026',
     title: 'Choose the first file without choosing an identity',
-    intro: 'This matrix exposes the four confirmed AUT files so that one can be prepared first. No option is preselected, and this ordering choice is neither a person choice nor a contact or send authorisation.',
+    intro: 'Confirmed through REF-01-DEC-021, this matrix exposes the four AUT files to prepare their future selection. No option is preselected, and confirming the framework is neither a person choice nor a contact or send authorisation.',
     counters: [['Available files', '4/4', 'Confirmed frameworks'], ['Chosen priority', '0/4', 'No preselection'], ['Open IDN records', '0', 'No identity'], ['Contacts or sends', '0', 'Still prohibited']],
     labels: { purpose: 'File purpose', profile: 'Governed profile', gate: 'Condition before opening', status: 'OPTION NOT SELECTED' },
     options: [
@@ -30,14 +30,14 @@ const COPY = {
       ['AUT-C · Independent feedback', 'Prepare bounded independent methodological feedback for REQ-C.', 'REC-C · Independent reviewer or expert', 'Confirm priority C separately; no real contact is authorised.'],
       ['AUT-D · Cross-review', 'Prepare a bounded cross-review for REQ-D.', 'REC-D · Internal function or control partner', 'Confirm priority D separately; no real sharing is authorised.']
     ],
-    status: 'CANDIDATE MATRIX · 0/4 PRIORITISED FILE · 0 IDENTITY · 0 AUTHORISATION',
-    next: 'Next human decision: confirm or amend PRI-001 V0.1, then separately name AUT-A, AUT-B, AUT-C or AUT-D as the first file to prepare.',
+    status: 'CONFIRMED MATRIX · 0/4 PRIORITISED FILE · 0 IDENTITY · 0 AUTHORISATION',
+    next: 'Next step: confirm or amend SEL-001 V0.1, then separately name AUT-A, AUT-B, AUT-C or AUT-D as the first file to prepare.',
     boundary: 'Boundary: a priority only authorises documentary preparation of the selected file. It authorises no name, provider, account, access, contact, send, collection, trial or real evidence and does not close G1.'
   },
   DE: {
-    eyebrow: 'KANDIDATENPRIORISIERUNG DER AUT-AKTEN · REF-01-G1-PRI-001 · V0.1 · 27.08.2026',
+    eyebrow: 'BESTÄTIGTE PRIORISIERUNGSMATRIX DER AUT-AKTEN · REF-01-G1-PRI-001 · V1.0 · 27.08.2026',
     title: 'Die erste Akte wählen, ohne eine Identität zu wählen',
-    intro: 'Diese Matrix zeigt die vier bestätigten AUT-Akten, damit eine zuerst vorbereitet werden kann. Keine Option ist vorausgewählt; die Reihenfolge ist weder Personenwahl noch Kontakt- oder Versandautorisierung.',
+    intro: 'Mit REF-01-DEC-021 bestätigt, zeigt diese Matrix die vier AUT-Akten zur Vorbereitung ihrer künftigen Auswahl. Keine Option ist vorausgewählt; die Rahmenbestätigung ist weder Personenwahl noch Kontakt- oder Versandautorisierung.',
     counters: [['Verfügbare Akten', '4/4', 'Bestätigte Rahmen'], ['Gewählte Priorität', '0/4', 'Keine Vorauswahl'], ['Offene IDN-Akten', '0', 'Keine Identität'], ['Kontakte oder Versand', '0', 'Weiterhin untersagt']],
     labels: { purpose: 'Zweck der Akte', profile: 'Gesteuertes Profil', gate: 'Bedingung vor Öffnung', status: 'OPTION NICHT GEWÄHLT' },
     options: [
@@ -46,8 +46,8 @@ const COPY = {
       ['AUT-C · Unabhängige Rückmeldung', 'Begrenzte unabhängige methodische Rückmeldung für REQ-C vorbereiten.', 'REC-C · Unabhängige Prüfung oder Fachperson', 'Priorität C getrennt bestätigen; kein realer Kontakt autorisiert.'],
       ['AUT-D · Gegenprüfung', 'Eine begrenzte Gegenprüfung für REQ-D vorbereiten.', 'REC-D · Interne Funktion oder Kontrollpartner', 'Priorität D getrennt bestätigen; keine reale Weitergabe autorisiert.']
     ],
-    status: 'KANDIDATENMATRIX · 0/4 PRIORISIERTE AKTE · 0 IDENTITÄT · 0 AUTORISIERUNG',
-    next: 'Nächster menschlicher Entscheid: PRI-001 V0.1 bestätigen oder ändern und danach AUT-A, AUT-B, AUT-C oder AUT-D getrennt als zuerst vorzubereitende Akte nennen.',
+    status: 'BESTÄTIGTE MATRIX · 0/4 PRIORISIERTE AKTE · 0 IDENTITÄT · 0 AUTORISIERUNG',
+    next: 'Nächster Schritt: SEL-001 V0.1 bestätigen oder ändern und danach AUT-A, AUT-B, AUT-C oder AUT-D getrennt als zuerst vorzubereitende Akte nennen.',
     boundary: 'Grenze: Eine Priorität erlaubt nur die dokumentarische Vorbereitung der gewählten Akte. Sie autorisiert keinen Namen, Anbieter, Account, Zugriff, Kontakt, Versand, Sammlung, Test oder realen Nachweis und schliesst G1 nicht.'
   }
 };
