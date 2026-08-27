@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.29 · 27-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.30 · 27-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -666,8 +666,14 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(reassessmentConfirmation).getByText('Réévaluation G1 confirmée comme lecture gouvernée')).toBeInTheDocument();
   const evidencePlan = screen.getByRole('heading', { name: 'Ordonner les preuves sans lancer d’action réelle' }).closest('section');
   expect(within(evidencePlan).getAllByTestId('ref01-g1-evidence-plan-package')).toHaveLength(5);
-  expect(within(evidencePlan).getByText(/confirmer ou amender REF-01-G1-PLN-001 V0.1/)).toBeInTheDocument();
-  expect(control.getByText(/décisions sur le lot : 24/)).toBeInTheDocument();
+  expect(within(evidencePlan).getByText(/REF-01-G1-PLN-001 V1.0 est confirmé/)).toBeInTheDocument();
+  const planConfirmation = screen.getByRole('heading', { name: 'Confirmer le plan sans lancer les cinq lots' }).closest('section');
+  expect(within(planConfirmation).getByRole('heading', { name: 'REF-01-DEC-028 · V1.0' })).toBeInTheDocument();
+  expect(within(planConfirmation).getByText('Plan de preuves G1 confirmé')).toBeInTheDocument();
+  const packageRegister = screen.getByRole('heading', { name: 'Préparer les cinq lots sans action réelle' }).closest('section');
+  expect(within(packageRegister).getAllByTestId('ref01-g1-package-register-item')).toHaveLength(5);
+  expect(within(packageRegister).getByText(/confirmer ou amender REF-01-G1-PKG-001 V0.1/)).toBeInTheDocument();
+  expect(control.getByText(/décisions sur le lot : 25/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -791,6 +797,9 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Confirm the reassessment without closing G1' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-027 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Order the evidence without starting real action' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Confirm the plan without starting the five packages' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-028 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Prepare the five packages without real action' })).toBeInTheDocument();
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
@@ -905,6 +914,9 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Die Neubewertung bestätigen, ohne G1 zu schliessen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-027 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Nachweise ordnen, ohne reale Aktionen zu starten' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Den Plan bestätigen, ohne die fünf Pakete zu starten' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-028 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Die fünf Pakete ohne reale Aktion vorbereiten' })).toBeInTheDocument();
   expect(screen.getByText(/Erfasste Entscheide: 1/)).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
   expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
@@ -1163,7 +1175,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-01 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-02 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(34);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(35);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(9);
@@ -1173,7 +1185,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-01 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-02 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(34);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(35);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(9);

@@ -3,9 +3,9 @@ import { AlertTriangle, Archive, DatabaseBackup, KeyRound, LockKeyhole, RadioTow
 
 const COPY = {
   FR: {
-    eyebrow: 'PLAN CANDIDAT DE LEVÉE DES ÉCARTS G1 · REF-01-G1-PLN-001 · V0.1 · 27-08-2026',
+    eyebrow: 'PLAN CONFIRMÉ DE LEVÉE DES ÉCARTS G1 · REF-01-G1-PLN-001 · V1.0 · 27-08-2026',
     title: 'Ordonner les preuves sans lancer d’action réelle',
-    intro: 'Ce plan transforme la réévaluation confirmée en cinq lots documentaires et techniques bornés. Il décrit l’ordre, le livrable et la condition de sortie ; il n’autorise pas encore leur exécution.',
+    intro: 'Ce plan confirmé transforme la réévaluation en cinq lots documentaires et techniques bornés. Il décrit l’ordre, le livrable et la condition de sortie ; il n’autorise pas leur exécution réelle.',
     counters: [['Lots candidats', '5', 'Un par écart principal'], ['Conditions couvertes', '6/6', 'L2 reste une porte'], ['Actions réelles', '0', 'Préparation seulement'], ['Progression calculée', '0', 'Aucun taux autorisé']],
     labels: { output: 'Livrable candidat', exit: 'Condition de sortie', boundary: 'Limite du lot' },
     items: [
@@ -16,13 +16,13 @@ const COPY = {
       ['PLN-05 · Outbox, supervision et reprise', 'Priorité 3 · Après PLN-01', 'Spécification candidate du worker, seuils, alertes, quarantaine, métriques, fréquence et escalade.', 'Seuils, responsabilité, arrêt, test synthétique et preuves de reprise approuvés.', 'Aucun worker, alerte, notification, surveillance ou automatisation réelle activé.']
     ],
     gate: 'PORTE FINALE · Une nouvelle réévaluation des six conditions sera requise après preuves. G1 restera ouverte et L2 fermé tant que chaque condition de sortie ne sera pas démontrée et décidée séparément.',
-    next: 'Prochain arbitrage humain unique : confirmer ou amender REF-01-G1-PLN-001 V0.1. Une confirmation autorisera seulement la préparation bornée des lots, pas leur exécution réelle.',
+    next: 'Statut : REF-01-G1-PLN-001 V1.0 est confirmé. La préparation détaillée des cinq lots reste soumise au registre candidat PKG-001 ci-dessous.',
     boundary: 'Le plan ne crée ni fournisseur, prix, compte, accès, rôle, durée, donnée, sauvegarde, migration, alerte, source maîtresse, progrès ou autorisation L2.'
   },
   EN: {
-    eyebrow: 'CANDIDATE G1 GAP-EVIDENCE PLAN · REF-01-G1-PLN-001 · V0.1 · 27 AUG 2026',
+    eyebrow: 'CONFIRMED G1 GAP-EVIDENCE PLAN · REF-01-G1-PLN-001 · V1.0 · 27 AUG 2026',
     title: 'Order the evidence without starting real action',
-    intro: 'This plan turns the confirmed reassessment into five bounded documentary and technical packages. It defines order, output and exit condition; it does not yet authorise execution.',
+    intro: 'This confirmed plan turns the reassessment into five bounded documentary and technical packages. It defines order, output and exit condition; it does not authorise real execution.',
     counters: [['Candidate packages', '5', 'One per main gap'], ['Covered conditions', '6/6', 'L2 remains a gate'], ['Real actions', '0', 'Preparation only'], ['Calculated progress', '0', 'No rate authorised']],
     labels: { output: 'Candidate output', exit: 'Exit condition', boundary: 'Package boundary' },
     items: [
@@ -33,13 +33,13 @@ const COPY = {
       ['PLN-05 · Outbox monitoring and recovery', 'Priority 3 · After PLN-01', 'Candidate specification for worker, thresholds, alerts, quarantine, metrics, frequency and escalation.', 'Thresholds, ownership, stop rule, synthetic test and recovery evidence approved.', 'No real worker, alert, notification, monitoring or automation activated.']
     ],
     gate: 'FINAL GATE · A new reassessment of all six conditions will be required after evidence. G1 remains open and L2 closed until every exit condition is demonstrated and decided separately.',
-    next: 'Next single human decision: confirm or amend REF-01-G1-PLN-001 V0.1. Confirmation will authorise only bounded package preparation, not real execution.',
+    next: 'Status: REF-01-G1-PLN-001 V1.0 is confirmed. Detailed preparation of the five packages remains subject to the candidate PKG-001 register below.',
     boundary: 'The plan creates no provider, price, account, access, role, period, data, backup, migration, alert, master source, progress or L2 authorisation.'
   },
   DE: {
-    eyebrow: 'KANDIDATENPLAN FÜR G1-LÜCKENNACHWEISE · REF-01-G1-PLN-001 · V0.1 · 27.08.2026',
+    eyebrow: 'BESTÄTIGTER PLAN FÜR G1-LÜCKENNACHWEISE · REF-01-G1-PLN-001 · V1.0 · 27.08.2026',
     title: 'Nachweise ordnen, ohne reale Aktionen zu starten',
-    intro: 'Dieser Plan überführt die bestätigte Neubewertung in fünf begrenzte Dokumentations- und Technikpakete. Er beschreibt Reihenfolge, Ergebnis und Austrittsbedingung; die Ausführung ist noch nicht erlaubt.',
+    intro: 'Dieser bestätigte Plan überführt die Neubewertung in fünf begrenzte Dokumentations- und Technikpakete. Er beschreibt Reihenfolge, Ergebnis und Austrittsbedingung; reale Ausführung ist nicht erlaubt.',
     counters: [['Kandidatenpakete', '5', 'Eines je Hauptlücke'], ['Abgedeckte Bedingungen', '6/6', 'L2 bleibt eine Schranke'], ['Reale Aktionen', '0', 'Nur Vorbereitung'], ['Berechneter Fortschritt', '0', 'Kein Satz autorisiert']],
     labels: { output: 'Kandidatenergebnis', exit: 'Austrittsbedingung', boundary: 'Paketgrenze' },
     items: [
@@ -50,7 +50,7 @@ const COPY = {
       ['PLN-05 · Outbox-Überwachung und Wiederanlauf', 'Priorität 3 · Nach PLN-01', 'Kandidatenspezifikation für Worker, Schwellen, Alarme, Quarantäne, Messwerte, Rhythmus und Eskalation.', 'Schwellen, Verantwortung, Stoppregel, synthetischer Test und Wiederanlaufnachweise genehmigt.', 'Kein realer Worker, Alarm, Hinweis, Monitoring oder Automatisierung aktiviert.']
     ],
     gate: 'FINALE SCHRANKE · Nach den Nachweisen ist eine neue Prüfung aller sechs Bedingungen erforderlich. G1 bleibt offen und L2 geschlossen, bis jede Austrittsbedingung getrennt belegt und entschieden ist.',
-    next: 'Nächster einzelner menschlicher Entscheid: REF-01-G1-PLN-001 V0.1 bestätigen oder ändern. Eine Bestätigung erlaubt nur die begrenzte Paketvorbereitung, nicht die reale Ausführung.',
+    next: 'Stand: REF-01-G1-PLN-001 V1.0 ist bestätigt. Die Detailvorbereitung der fünf Pakete bleibt dem nachfolgenden Kandidatenregister PKG-001 unterstellt.',
     boundary: 'Der Plan erzeugt weder Anbieter, Preis, Konto, Zugriff, Rolle, Dauer, Daten, Sicherung, Migration, Alarm, Masterquelle, Fortschritt noch L2-Autorisierung.'
   }
 };
