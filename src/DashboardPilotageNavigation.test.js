@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.25 · 27-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.26 · 27-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -638,7 +638,14 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(waveOneResults).getAllByTestId('ref01-aut-b-check')).toHaveLength(7);
   expect(within(waveOneResults).getByText(/restaurer AUT-C « Coûts et capacité » et AUT-D « Gouvernance interne »/)).toBeInTheDocument();
   expect(within(waveOneResults).getByText(/Aucun RPO ou RTO mesuré/)).toBeInTheDocument();
-  expect(control.getByText(/décisions sur le lot : 20/)).toBeInTheDocument();
+  const resultsConfirmation = screen.getByRole('heading', { name: 'Accepter les preuves préparatoires et rétablir le sens des autorisations' }).closest('section');
+  expect(within(resultsConfirmation).getByRole('heading', { name: 'REF-01-DEC-024 · V1.0' })).toBeInTheDocument();
+  expect(within(resultsConfirmation).getByText('RES-001 confirmée et correspondance AUT-C/AUT-D rétablie')).toBeInTheDocument();
+  const correctedScopes = screen.getByRole('heading', { name: 'Préparer les deux dossiers restants avec leur vrai périmètre' }).closest('section');
+  expect(within(correctedScopes).getAllByTestId('ref01-aut-cost-scope')).toHaveLength(1);
+  expect(within(correctedScopes).getAllByTestId('ref01-aut-governance-scope')).toHaveLength(1);
+  expect(within(correctedScopes).getByText(/douze axes sont préparés, non confirmés et non exécutés/i)).toBeInTheDocument();
+  expect(control.getByText(/décisions sur le lot : 21/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -750,6 +757,9 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Produce authorised evidence and stop an inconsistency before it spreads' })).toBeInTheDocument();
   expect(screen.getAllByTestId('ref01-aut-a-source')).toHaveLength(10);
   expect(screen.getAllByTestId('ref01-aut-b-check')).toHaveLength(7);
+  expect(screen.getByRole('heading', { name: 'Accept preparatory evidence and restore the meaning of the authorisations' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-024 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Prepare the two remaining files within their true scope' })).toBeInTheDocument();
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
@@ -852,6 +862,9 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Autorisierte Nachweise erstellen und eine Inkonsistenz vor der Weitergabe stoppen' })).toBeInTheDocument();
   expect(screen.getAllByTestId('ref01-aut-a-source')).toHaveLength(10);
   expect(screen.getAllByTestId('ref01-aut-b-check')).toHaveLength(7);
+  expect(screen.getByRole('heading', { name: 'Vorbereitende Nachweise annehmen und die Bedeutung der Autorisierungen wiederherstellen' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-024 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Die zwei verbleibenden Akten in ihrem richtigen Umfang vorbereiten' })).toBeInTheDocument();
   expect(screen.getByText(/Erfasste Entscheide: 1/)).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
   expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
@@ -1110,7 +1123,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-01 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-02 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(30);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(31);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(8);
@@ -1120,7 +1133,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-01 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-02 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(30);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(31);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(8);
