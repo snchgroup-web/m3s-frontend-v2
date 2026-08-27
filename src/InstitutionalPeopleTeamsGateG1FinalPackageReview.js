@@ -3,9 +3,9 @@ import { AlertTriangle, Archive, DatabaseBackup, KeyRound, LockKeyhole, RadioTow
 
 const COPY = {
   FR: {
-    eyebrow: 'REVUE CONSOLIDÉE APRÈS LES CINQ LOTS · REF-01-G1-REV-003 · V0.1 · 27-08-2026',
+    eyebrow: 'REVUE CONSOLIDÉE CONFIRMÉE APRÈS LES CINQ LOTS · REF-01-G1-REV-003 · V1.0 · 27-08-2026',
     title: 'Réévaluer G1 après confirmation documentaire des cinq lots',
-    intro: 'Cette revue distingue l’achèvement documentaire des lots et la disponibilité des preuves réelles. Les cinq dossiers sont confirmés ; aucune condition G1 n’est pour autant clôturable.',
+    intro: 'REF-01-DEC-034 confirme cette revue en V1.0. Elle distingue l’achèvement documentaire des lots et la disponibilité des preuves réelles ; aucune condition G1 n’est pour autant clôturable.',
     counters: [['Lots documentaires', '5/5', 'Tous confirmés V1.0'], ['Axes documentés', '20', 'Quatre par lot'], ['Conditions clôturables', '0/6', 'Preuves réelles manquantes'], ['Autorisations L2', '0', 'L2 reste fermé']],
     labels: { support: 'Support confirmé', gap: 'Preuve réelle manquante', next: 'Suite gouvernée possible' },
     statuses: { partial: 'DOCUMENTÉ · NON PROUVÉ', locked: 'L2 FERMÉ' },
@@ -18,13 +18,13 @@ const COPY = {
       ['6 · Ouverture éventuelle de L2', 'Les cinq lots documentaires sont confirmés et réutilisables comme cadres.', 'Aucune des cinq conditions précédentes ne possède toutes ses preuves de sortie.', 'Maintenir G1 ouverte et soumettre cette revue à confirmation humaine.', 'locked']
     ],
     verdict: 'G1 RESTE OUVERTE · 5/5 lots documentaires sont confirmés, mais 0/6 condition est clôturable et L2 n’est pas autorisé.',
-    next: 'Prochain arbitrage humain unique : confirmer ou amender REF-01-G1-REV-003 V0.1. Cette confirmation acceptera la revue sans fermer G1 ni ouvrir L2.',
+    next: 'Statut : REF-01-DEC-034 confirme REF-01-G1-REV-003 V1.0. La matrice candidate EVD-002 ci-dessous prépare les preuves manquantes sans lancer leur collecte.',
     boundary: 'Cette revue ne crée aucune preuve réelle, aucun droit, environnement, service, sauvegarde, migration, worker, alerte, source maîtresse ou progression.'
   },
   EN: {
-    eyebrow: 'CONSOLIDATED REVIEW AFTER FIVE PACKAGES · REF-01-G1-REV-003 · V0.1 · 27 AUG 2026',
+    eyebrow: 'CONFIRMED CONSOLIDATED REVIEW AFTER FIVE PACKAGES · REF-01-G1-REV-003 · V1.0 · 27 AUG 2026',
     title: 'Reassess G1 after documentary confirmation of all five packages',
-    intro: 'This review separates completion of documentary packages from availability of real evidence. All five files are confirmed; this does not make any G1 condition closable.',
+    intro: 'REF-01-DEC-034 confirms this review as V1.0. It separates completion of documentary packages from availability of real evidence; this makes no G1 condition closable.',
     counters: [['Documentary packages', '5/5', 'All confirmed V1.0'], ['Documented areas', '20', 'Four per package'], ['Closable conditions', '0/6', 'Real evidence missing'], ['L2 authorisations', '0', 'L2 remains closed']],
     labels: { support: 'Confirmed support', gap: 'Missing real evidence', next: 'Possible governed next step' },
     statuses: { partial: 'DOCUMENTED · NOT PROVEN', locked: 'L2 CLOSED' },
@@ -37,13 +37,13 @@ const COPY = {
       ['6 · Possible L2 opening', 'All five documentary packages are confirmed and reusable as frameworks.', 'None of the five preceding conditions has all exit evidence.', 'Keep G1 open and submit this review for human confirmation.', 'locked']
     ],
     verdict: 'G1 REMAINS OPEN · 5/5 documentary packages are confirmed, but 0/6 conditions are closable and L2 is not authorised.',
-    next: 'Next single human decision: confirm or amend REF-01-G1-REV-003 V0.1. Confirmation will accept the review without closing G1 or opening L2.',
+    next: 'Status: REF-01-DEC-034 confirms REF-01-G1-REV-003 V1.0. The candidate EVD-002 matrix below prepares missing evidence without starting collection.',
     boundary: 'This review creates no real evidence, right, environment, service, backup, migration, worker, alert, master source or progress.'
   },
   DE: {
-    eyebrow: 'KONSOLIDIERTE PRÜFUNG NACH FÜNF PAKETEN · REF-01-G1-REV-003 · V0.1 · 27.08.2026',
+    eyebrow: 'BESTÄTIGTE KONSOLIDIERTE PRÜFUNG NACH FÜNF PAKETEN · REF-01-G1-REV-003 · V1.0 · 27.08.2026',
     title: 'G1 nach dokumentarischer Bestätigung aller fünf Pakete neu bewerten',
-    intro: 'Diese Prüfung trennt den Abschluss der Dokumentpakete von der Verfügbarkeit realer Nachweise. Alle fünf Akten sind bestätigt; dadurch wird keine G1-Bedingung schliessbar.',
+    intro: 'REF-01-DEC-034 bestätigt diese Prüfung als V1.0. Sie trennt den Abschluss der Dokumentpakete von der Verfügbarkeit realer Nachweise; dadurch wird keine G1-Bedingung schliessbar.',
     counters: [['Dokumentpakete', '5/5', 'Alle als V1.0 bestätigt'], ['Dokumentierte Bereiche', '20', 'Vier je Paket'], ['Schliessbare Bedingungen', '0/6', 'Realnachweise fehlen'], ['L2-Autorisierungen', '0', 'L2 bleibt geschlossen']],
     labels: { support: 'Bestätigter Träger', gap: 'Fehlender Realnachweis', next: 'Möglicher gesteuerter Folgeschritt' },
     statuses: { partial: 'DOKUMENTIERT · NICHT BELEGT', locked: 'L2 GESCHLOSSEN' },
@@ -56,7 +56,7 @@ const COPY = {
       ['6 · Mögliche L2-Öffnung', 'Alle fünf Dokumentpakete sind bestätigt und als Rahmen wiederverwendbar.', 'Keine der fünf vorangehenden Bedingungen besitzt alle Austrittsnachweise.', 'G1 offen halten und diese Prüfung menschlich bestätigen lassen.', 'locked']
     ],
     verdict: 'G1 BLEIBT OFFEN · 5/5 Dokumentpakete sind bestätigt, aber 0/6 Bedingungen schliessbar und L2 nicht autorisiert.',
-    next: 'Nächster einzelner menschlicher Entscheid: REF-01-G1-REV-003 V0.1 bestätigen oder ändern. Die Bestätigung nimmt die Prüfung an, ohne G1 zu schliessen oder L2 zu öffnen.',
+    next: 'Stand: REF-01-DEC-034 bestätigt REF-01-G1-REV-003 V1.0. Die nachfolgende Kandidatenmatrix EVD-002 bereitet fehlende Nachweise vor, ohne die Sammlung zu starten.',
     boundary: 'Diese Prüfung erzeugt keine Realnachweise, Rechte, Umgebung, Dienste, Sicherung, Migration, Worker, Alarme, Masterquelle oder Fortschritte.'
   }
 };

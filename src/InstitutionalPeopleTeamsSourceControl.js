@@ -23,7 +23,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.35 · 27-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.36 · 27-08-2026',
     title: 'Comparer les supports sans les promouvoir',
     body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
     counters: [
@@ -109,12 +109,12 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Arbitrage requis : confirmer ou amender REF-01-G1-REV-003 V0.1 ; une confirmation acceptera la revue consolidée sans fermer G1 ni ouvrir L2.',
-    boundary: 'Statut : REF-01-DEC-033 confirme PKG-05-001 V1.0. Les cinq lots documentaires sont confirmés ; cinq conditions restent documentées mais non prouvées, zéro des six est clôturable et L2 reste fermé. Zéro accès réel, preuve réelle reçue, worker actif, alerte envoyée, rejeu exécuté ou fournisseur retenu ; décisions sur le lot : 30 ; sources maîtresses désignées : 0 ; changements en production : 0.',
-    source: 'Supports contrôlés : contrat API RH-001, Annuaire interne, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-033, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0, AUT-C-001/AUT-D-001 V1.0, REV-002 V1.0, PLN-001 V1.0, PKG-001 V1.0, PKG-01-001 à PKG-05-001 V1.0 et revue candidate REF-01-G1-REV-003 V0.1.'
+    nextControl: 'Arbitrage requis : confirmer ou amender REF-01-G1-EVD-002 V0.1 ; une confirmation acceptera seulement la matrice de préparation des preuves sans lancer leur collecte.',
+    boundary: 'Statut : REF-01-DEC-034 confirme REV-003 V1.0. Les cinq lots documentaires et la revue sont confirmés ; zéro des six conditions est clôturable, zéro preuve réelle est reçue et L2 reste fermé. Zéro accès réel, worker actif, alerte envoyée, rejeu exécuté ou fournisseur retenu ; décisions sur le lot : 31 ; sources maîtresses désignées : 0 ; changements en production : 0.',
+    source: 'Supports contrôlés : contrat API RH-001, Annuaire interne, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-034, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0, AUT-C-001/AUT-D-001 V1.0, REV-002 V1.0, PLN-001 V1.0, PKG-001 V1.0, PKG-01-001 à PKG-05-001 V1.0, REV-003 V1.0 et registre candidat REF-01-G1-EVD-002 V0.1.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.35 · 27 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.36 · 27 AUG 2026',
     title: 'Compare supports without promoting them',
     body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
     counters: [
@@ -200,12 +200,12 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'One decision is required: confirm or amend REF-01-G1-REV-003 V0.1; confirmation will accept the consolidated review without closing G1 or opening L2.',
-    boundary: 'Status: REF-01-DEC-033 confirms PKG-05-001 V1.0. All five documentary packages are confirmed; five conditions remain documented but unproven, zero of six is closable and L2 remains closed. Zero real access, real evidence received, active workers, sent alerts, executed replays or selected providers; package decisions: 30; designated master sources: 0; production changes: 0.',
-    source: 'Controlled supports: RH-001 API contract, Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-033, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0, AUT-C-001/AUT-D-001 V1.0, REV-002 V1.0, PLN-001 V1.0, PKG-001 V1.0, PKG-01-001 through PKG-05-001 V1.0 and candidate review REF-01-G1-REV-003 V0.1.'
+    nextControl: 'One decision is required: confirm or amend REF-01-G1-EVD-002 V0.1; confirmation will accept only the evidence-preparation matrix without starting collection.',
+    boundary: 'Status: REF-01-DEC-034 confirms REV-003 V1.0. All five documentary packages and the review are confirmed; zero of six conditions is closable, zero real evidence is received and L2 remains closed. Zero real access, active workers, sent alerts, executed replays or selected providers; package decisions: 31; designated master sources: 0; production changes: 0.',
+    source: 'Controlled supports: RH-001 API contract, Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-034, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0, AUT-C-001/AUT-D-001 V1.0, REV-002 V1.0, PLN-001 V1.0, PKG-001 V1.0, PKG-01-001 through PKG-05-001 V1.0, REV-003 V1.0 and candidate register REF-01-G1-EVD-002 V0.1.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.35 · 27.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.36 · 27.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
     body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
     counters: [
@@ -291,9 +291,9 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'Ein Entscheid ist erforderlich: REF-01-G1-REV-003 V0.1 bestätigen oder ändern; die Bestätigung nimmt die konsolidierte Prüfung an, ohne G1 zu schliessen oder L2 zu öffnen.',
-    boundary: 'Stand: REF-01-DEC-033 bestätigt PKG-05-001 V1.0. Alle fünf Dokumentpakete sind bestätigt; fünf Bedingungen bleiben dokumentiert, aber unbelegt, null von sechs schliessbar und L2 geschlossen. Null Realzugriffe, erhaltene Realnachweise, aktive Worker, gesendete Alarme, ausgeführte Wiederholungen oder gewählte Anbieter; Paketentscheide: 30; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
-    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Internes Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-033, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0, AUT-C-001/AUT-D-001 V1.0, REV-002 V1.0, PLN-001 V1.0, PKG-001 V1.0, PKG-01-001 bis PKG-05-001 V1.0 und Kandidatenprüfung REF-01-G1-REV-003 V0.1.'
+    nextControl: 'Ein Entscheid ist erforderlich: REF-01-G1-EVD-002 V0.1 bestätigen oder ändern; die Bestätigung nimmt nur die Nachweisvorbereitungsmatrix an, ohne die Sammlung zu starten.',
+    boundary: 'Stand: REF-01-DEC-034 bestätigt REV-003 V1.0. Alle fünf Dokumentpakete und die Prüfung sind bestätigt; null von sechs Bedingungen sind schliessbar, null Realnachweise eingegangen und L2 bleibt geschlossen. Null Realzugriffe, aktive Worker, gesendete Alarme, ausgeführte Wiederholungen oder gewählte Anbieter; Paketentscheide: 31; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
+    source: 'Kontrollierte Träger: RH-001-API-Vertrag, Internes Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-034, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0, AUT-C-001/AUT-D-001 V1.0, REV-002 V1.0, PLN-001 V1.0, PKG-001 V1.0, PKG-01-001 bis PKG-05-001 V1.0, REV-003 V1.0 und Kandidatenregister REF-01-G1-EVD-002 V0.1.'
   }
 };
 
