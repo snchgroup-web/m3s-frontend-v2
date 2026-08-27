@@ -44,6 +44,8 @@ import InstitutionalPeopleTeamsAutWaveOneConfirmation from './InstitutionalPeopl
 import InstitutionalPeopleTeamsAutWaveOneResults from './InstitutionalPeopleTeamsAutWaveOneResults';
 import InstitutionalPeopleTeamsAutWaveOneResultsConfirmation from './InstitutionalPeopleTeamsAutWaveOneResultsConfirmation';
 import InstitutionalPeopleTeamsAutCorrectedScopesCandidate from './InstitutionalPeopleTeamsAutCorrectedScopesCandidate';
+import InstitutionalPeopleTeamsAutCorrectedScopesConfirmation from './InstitutionalPeopleTeamsAutCorrectedScopesConfirmation';
+import InstitutionalPeopleTeamsAutDocumentaryFiles from './InstitutionalPeopleTeamsAutDocumentaryFiles';
 import InstitutionalReferenceCodeLegend from './InstitutionalReferenceCodeLegend';
 
 const STAGES = ['scope', 'sources', 'owners', 'models', 'vocabulary', 'review'];
@@ -224,6 +226,8 @@ const InstitutionalDataReferenceSystemsConsolidationPilot = ({ language = 'FR', 
       <InstitutionalPeopleTeamsAutWaveOneResults language={language} />
       <InstitutionalPeopleTeamsAutWaveOneResultsConfirmation language={language} />
       <InstitutionalPeopleTeamsAutCorrectedScopesCandidate language={language} />
+      <InstitutionalPeopleTeamsAutCorrectedScopesConfirmation language={language} />
+      <InstitutionalPeopleTeamsAutDocumentaryFiles language={language} />
 
       <div className="mt-4 rounded-md border border-slate-700 bg-slate-950/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
