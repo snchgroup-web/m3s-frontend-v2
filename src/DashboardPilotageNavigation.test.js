@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.32 · 27-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.33 · 27-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -682,10 +682,16 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   const priorityOneConfirmation = screen.getByRole('heading', { name: 'Confirmer les deux matrices sans attribuer de droits ni agir sur la GED' }).closest('section');
   expect(within(priorityOneConfirmation).getByRole('heading', { name: 'REF-01-DEC-030 · V1.0' })).toBeInTheDocument();
   expect(within(priorityOneConfirmation).getByText('Matrices PKG-01 et PKG-02 confirmées')).toBeInTheDocument();
-  const postgresRecoveryPackage = screen.getByRole('heading', { name: 'Préparer la comparaison PostgreSQL et reprise sans choisir de service' }).closest('section');
+  const postgresRecoveryPackage = screen.getByRole('heading', { name: 'Grille PostgreSQL et reprise confirmée sans choix de service' }).closest('section');
   expect(within(postgresRecoveryPackage).getAllByTestId('ref01-g1-postgres-recovery-area')).toHaveLength(4);
-  expect(within(postgresRecoveryPackage).getByText(/confirmer ou amender REF-01-G1-PKG-03-001 V0.1/)).toBeInTheDocument();
-  expect(control.getByText(/décisions sur le lot : 27/)).toBeInTheDocument();
+  expect(within(postgresRecoveryPackage).getByText(/REF-01-DEC-031 confirme REF-01-G1-PKG-03-001 V1.0/)).toBeInTheDocument();
+  const postgresRecoveryConfirmation = screen.getByRole('heading', { name: 'Confirmer la grille sans retenir de service ni lancer de test' }).closest('section');
+  expect(within(postgresRecoveryConfirmation).getByRole('heading', { name: 'REF-01-DEC-031 · V1.0' })).toBeInTheDocument();
+  expect(within(postgresRecoveryConfirmation).getByText('Grille PKG-03 confirmée')).toBeInTheDocument();
+  const migrationRollbackPackage = screen.getByRole('heading', { name: 'Préparer migration et retour arrière sans toucher aux données réelles' }).closest('section');
+  expect(within(migrationRollbackPackage).getAllByTestId('ref01-g1-migration-rollback-area')).toHaveLength(4);
+  expect(within(migrationRollbackPackage).getByText(/confirmer ou amender REF-01-G1-PKG-04-001 V0.1/)).toBeInTheDocument();
+  expect(control.getByText(/décisions sur le lot : 28/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -817,7 +823,10 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Two governed matrices without access or record operations' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Confirm both matrices without assigning rights or operating on the DMS' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-030 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Prepare the PostgreSQL and recovery comparison without selecting a service' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Confirmed PostgreSQL and recovery grid without selecting a service' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Confirm the grid without selecting a service or starting a test' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-031 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Prepare migration and rollback without touching real data' })).toBeInTheDocument();
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
@@ -940,7 +949,10 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Zwei gesteuerte Matrizen ohne Zugriff oder Unterlagenoperation' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Beide Matrizen bestätigen, ohne Rechte zuzuweisen oder im DMS zu handeln' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-030 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Den PostgreSQL- und Wiederanlaufvergleich ohne Dienstwahl vorbereiten' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Bestätigtes PostgreSQL- und Wiederanlaufraster ohne Dienstwahl' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Das Raster ohne Dienstwahl oder Teststart bestätigen' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-031 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Migration und Rollback ohne Eingriff in Echtdaten vorbereiten' })).toBeInTheDocument();
   expect(screen.getByText(/Erfasste Entscheide: 1/)).toBeInTheDocument();
   expect(screen.getByText('Beschreibende Kontrollen')).toBeInTheDocument();
   expect(screen.getAllByText('Nachweis zu erstellen').length).toBeGreaterThan(0);
@@ -1199,7 +1211,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-01 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-02 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(37);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(38);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(9);
@@ -1209,7 +1221,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-01 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-02 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(37);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(38);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(9);
