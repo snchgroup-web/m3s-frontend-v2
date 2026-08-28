@@ -17,7 +17,7 @@ const COPY = {
       ['Mandats, délégations, décisions et journaux d accès', 'Gouvernance', 'Administration suit les actes ; IT porte les journaux techniques ; GED garde les décisions et preuves.', 'Entrée en vigueur ; modification, révocation ou expiration ; clôture d accès ; incident ou gel de sécurité.', 'Séparer chaque sous-catégorie et obtenir l autorité, la preuve et le sort final avant toute opération.']
     ],
     status: 'CONFIRMÉ · Cinq fonctions pilotes retenues. Zéro mandat nominatif, règle automatique ou opération GED.',
-    next: 'Étape suivante : examiner REF-01-G1-AUT-02-03-006 V0.1, qui transforme les déclencheurs en cinq cas de revue humaine sans ouvrir leur exécution.',
+    next: 'Étape suivante accomplie : REF-01-G1-AUT-02-03-006 V1.0 transforme les déclencheurs en cinq protocoles de revue humaine sans ouvrir leur exécution.',
     boundary: 'Les déclencheurs sont des événements de contrôle. Ils ne démarrent aucune durée, suppression, anonymisation, archive, gel ou notification sans règle validée et décision autorisée.'
   },
   EN: {
@@ -35,7 +35,7 @@ const COPY = {
       ['Mandates, delegations, decisions and access logs', 'Governance', 'Administration follows instruments; IT owns technical logs; DMS retains decisions and evidence.', 'Entry into force; change, revocation or expiry; access closure; incident or security hold.', 'Separate every subcategory and obtain authority, evidence and final outcome before any operation.']
     ],
     status: 'CONFIRMED · Five lead functions retained. Zero named mandate, automated rule or DMS operation.',
-    next: 'Next step: review REF-01-G1-AUT-02-03-006 V0.1, which turns the triggers into five human-review cases without opening execution.',
+    next: 'Next step completed: REF-01-G1-AUT-02-03-006 V1.0 turns the triggers into five human-review protocols without opening execution.',
     boundary: 'Triggers are review events. They start no period, deletion, anonymisation, archive, hold or notification without a validated rule and authorised decision.'
   },
   DE: {
@@ -53,7 +53,7 @@ const COPY = {
       ['Mandate, Delegationen, Entscheide und Zugriffsprotokolle', 'Governance', 'Verwaltung verfolgt Akte; IT trägt technische Protokolle; DMS bewahrt Entscheide und Nachweise.', 'Inkrafttreten; Änderung, Widerruf oder Ablauf; Zugriffsschluss; Vorfall oder Sicherheitssperre.', 'Jede Unterkategorie trennen und Autorität, Nachweis und Endbehandlung vor jeder Operation einholen.']
     ],
     status: 'BESTÄTIGT · Fünf verantwortliche Funktionen festgehalten. Null Namensmandat, automatisierte Regel oder DMS-Operation.',
-    next: 'Nächster Schritt: REF-01-G1-AUT-02-03-006 V0.1 prüfen; die Akte überführt Auslöser in fünf menschliche Prüffälle, ohne Ausführung zu öffnen.',
+    next: 'Nächster Schritt abgeschlossen: REF-01-G1-AUT-02-03-006 V1.0 überführt Auslöser in fünf menschliche Prüfprotokolle, ohne Ausführung zu öffnen.',
     boundary: 'Auslöser sind Prüfereignisse. Ohne validierte Regel und autorisierten Entscheid starten sie keine Frist, Löschung, Anonymisierung, Archivierung, Sperre oder Meldung.'
   }
 };
