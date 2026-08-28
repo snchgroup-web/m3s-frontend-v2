@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.41 · 28-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.42 · 28-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -745,6 +745,15 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(documentaryAuthorisationFiles).getByText('Champs restant ouverts').closest('article')).toHaveTextContent('Cinq + six');
   expect(screen.getByRole('heading', { name: 'Confirmer deux cadres distincts sans ouvrir leur exécution' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
+  const elevenFieldMatrices = screen.getByRole('heading', { name: 'Structurer les onze décisions sans remplir les inconnues' }).closest('section');
+  expect(within(elevenFieldMatrices).getAllByTestId('ref01-g1-eleven-field-candidate-matrix')).toHaveLength(2);
+  expect(within(elevenFieldMatrices).getAllByTestId('ref01-g1-eleven-field-candidate-row')).toHaveLength(11);
+  expect(within(elevenFieldMatrices).getByRole('heading', { name: 'REF-01-G1-AUT-02-03-002 · V0.1' }).closest('article')).toContainElement(within(elevenFieldMatrices).getByText('Durées applicables'));
+  expect(within(elevenFieldMatrices).getByRole('heading', { name: 'REF-01-G1-AUT-02-02-002 · V0.1' }).closest('article')).toContainElement(within(elevenFieldMatrices).getByText('Titulaires réels'));
+  expect(within(elevenFieldMatrices).getAllByText('Non renseignée')).toHaveLength(11);
+  expect(within(elevenFieldMatrices).getAllByText('À confirmer')).toHaveLength(11);
+  expect(within(elevenFieldMatrices).getByText('Valeurs réelles').closest('article')).toHaveTextContent('0');
+  expect(within(elevenFieldMatrices).getByText('Autorisations').closest('article')).toHaveTextContent('0');
   expect(control.getByText(/décisions sur le lot : 37/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
@@ -904,6 +913,8 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Open two preparations without opening real rights or records' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-039 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Prepare both files together without merging their decisions' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Structure the eleven decisions without filling the unknowns' })).toBeInTheDocument();
+  expect(screen.getAllByText('Not provided')).toHaveLength(11);
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
@@ -920,6 +931,8 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Validierter Lebenszyklus' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Validierte Mindestspur für jedes Ereignis' })).toBeInTheDocument();
   expect(screen.getByText('REF-01-Lebenszyklus validiert')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Die elf Entscheide strukturieren, ohne Unbekannte auszufüllen' })).toBeInTheDocument();
+  expect(screen.getAllByText('Nicht angegeben')).toHaveLength(11);
   expect(screen.getByRole('heading', { name: 'Träger vergleichen, ohne sie zu fördern' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Sieben Kriterien vor jeder Bestimmung einer Masterquelle' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Jeden Träger anhand der sieben validierten Kriterien prüfen' })).toBeInTheDocument();
