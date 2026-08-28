@@ -17,7 +17,7 @@ const COPY = {
       ['Mandats, délégations, décisions et journaux d accès', 'Entrée en vigueur, modification, révocation, expiration, clôture d accès, incident ou gel de sécurité.', 'Sous-catégorie, autorité, dates d effet, décision, référence de journal ou preuve, état du droit et motif contrôlé.', 'Séparer les sous-catégories ; confirmer le fait générateur ; demander un contrôle Gouvernance, IT ou LEGAL ; préparer le sort candidat.', 'La revue ne retire aucun droit, ne purge aucun journal et ne clôture aucun compte.']
     ],
     status: 'CONFIRMÉ · Cinq protocoles de revue retenus. Zéro affectation nominative, échéance calculée ou opération exécutée.',
-    next: 'Étape suivante : préparer un registre vide et traçable dans REF-01-G1-AUT-02-03-007 V0.1.',
+    next: 'Étape suivante accomplie : REF-01-G1-AUT-02-03-007 V1.0 fournit le registre vide et traçable.',
     boundary: 'Chaque cas reste en lecture documentaire. Toute affectation réelle, collecte C3/C4, calcul de délai, décision de sort final ou opération GED exige une autorisation distincte.'
   },
   EN: {
@@ -35,7 +35,7 @@ const COPY = {
       ['Mandates, delegations, decisions and access logs', 'Entry into force, change, revocation, expiry, access closure, incident or security hold.', 'Subcategory, authority, effective dates, decision, log or evidence reference, right state and controlled reason.', 'Separate subcategories; confirm the generating event; request Governance, IT or LEGAL control; prepare a candidate outcome.', 'The review removes no right, purges no log and closes no account.']
     ],
     status: 'CONFIRMED · Five review protocols retained. Zero named assignments, calculated periods or executed operations.',
-    next: 'Next step: prepare an empty, traceable register in REF-01-G1-AUT-02-03-007 V0.1.',
+    next: 'Next step completed: REF-01-G1-AUT-02-03-007 V1.0 provides the empty, traceable register.',
     boundary: 'Each case remains a documentary read. Any real assignment, C3/C4 collection, period calculation, final-treatment decision or DMS operation requires a separate authorisation.'
   },
   DE: {
@@ -53,7 +53,7 @@ const COPY = {
       ['Mandate, Delegationen, Entscheide und Zugriffsprotokolle', 'Inkrafttreten, Änderung, Widerruf, Ablauf, Zugriffsschluss, Vorfall oder Sicherheitssperre.', 'Unterkategorie, Autorität, Wirksamkeitsdaten, Entscheid, Protokoll- oder Nachweisreferenz, Rechtsstand und kontrollierter Grund.', 'Unterkategorien trennen; auslösendes Ereignis bestätigen; Governance-, IT- oder LEGAL-Kontrolle verlangen; Kandidatenbehandlung vorbereiten.', 'Die Prüfung entzieht kein Recht, löscht kein Protokoll und schliesst kein Konto.']
     ],
     status: 'BESTÄTIGT · Fünf Prüfprotokolle festgehalten. Null Namenszuweisungen, berechnete Fristen oder ausgeführte Operationen.',
-    next: 'Nächster Schritt: ein leeres, nachvollziehbares Register in REF-01-G1-AUT-02-03-007 V0.1 vorbereiten.',
+    next: 'Nächster Schritt abgeschlossen: REF-01-G1-AUT-02-03-007 V1.0 stellt das leere, nachvollziehbare Register bereit.',
     boundary: 'Jeder Fall bleibt eine dokumentarische Lesung. Reale Zuweisungen, C3/C4-Sammlungen, Fristberechnungen, Endbehandlungsentscheide oder DMS-Operationen benötigen eine getrennte Autorisierung.'
   }
 };
