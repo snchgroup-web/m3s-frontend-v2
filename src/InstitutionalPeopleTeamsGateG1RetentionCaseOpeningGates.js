@@ -3,11 +3,11 @@ import { AlertTriangle, CheckSquare2, FileLock2, LockKeyhole, ShieldCheck } from
 
 const COPY = {
   FR: {
-    eyebrow: 'PORTES D OUVERTURE D UN CAS · CANDIDAT V0.1 · 28-08-2026',
+    eyebrow: 'PORTES D OUVERTURE D UN CAS · CONFIRMÉ V1.0 · 28-08-2026',
     title: 'Contrôler l admissibilité avant toute inscription réelle',
     intro: 'Cette fiche candidate définit six contrôles préalables. Elle ne crée aucun formulaire actif, cas réel, identité, accès, délai ou opération.',
     counters: [['Portes préparées', '6/6', 'Toutes obligatoires'], ['Verdicts proposés', '4', 'Décision humaine distincte'], ['Cas préremplis', '0', 'Aucune donnée réelle'], ['Exécutions', '0', 'Aucune action automatique']],
-    badge: 'CANDIDAT · À CONFIRMER',
+    badge: 'CONFIRMÉ · V1.0',
     labels: { expected: 'Contrôle attendu', evidence: 'Trace minimale', stop: 'Arrêt obligatoire' },
     gates: [
       ['1 · Catégorie et déclencheur', 'Rattacher le signal à une catégorie V1.0 et à un événement observable, daté et qualifié.', 'Catégorie, événement, date candidate et origine du signal.', 'Refuser toute ouverture automatique ou catégorie libre non qualifiée.'],
@@ -19,16 +19,16 @@ const COPY = {
     ],
     verdictsTitle: 'Quatre verdicts documentaires proposés',
     verdicts: ['Ouvrir sous réserve', 'Refuser', 'Demander des éléments', 'Mettre en attente'],
-    status: 'CANDIDAT · Six portes et quatre verdicts préparés. Zéro cas réel, donnée sensible ou exécution.',
-    next: 'Prochain arbitrage humain : confirmer ou amender REF-01-G1-AUT-02-03-008 V0.1.',
-    boundary: 'Une confirmation validera uniquement les portes et verdicts. La première ouverture réelle exigera une autorisation séparée, un environnement protégé et un contrôle du cas lui-même.'
+    status: 'CONFIRMÉ · Six portes et quatre verdicts retenus. Zéro cas réel, donnée sensible ou exécution.',
+    next: 'Étape suivante : préparer la fiche de décision vide REF-01-G1-AUT-02-03-009 V0.1.',
+    boundary: 'La confirmation valide uniquement les portes et verdicts. La première ouverture réelle exigera une autorisation séparée, un environnement protégé et un contrôle du cas lui-même.'
   },
   EN: {
-    eyebrow: 'CASE-OPENING GATES · V0.1 CANDIDATE · 28 AUG 2026',
+    eyebrow: 'CASE-OPENING GATES · V1.0 CONFIRMED · 28 AUG 2026',
     title: 'Control admissibility before any real registration',
     intro: 'This candidate file defines six prior controls. It creates no active form, real case, identity, access, period or operation.',
     counters: [['Prepared gates', '6/6', 'All mandatory'], ['Proposed outcomes', '4', 'Separate human decision'], ['Prefilled cases', '0', 'No real data'], ['Executions', '0', 'No automated action']],
-    badge: 'CANDIDATE · TO CONFIRM',
+    badge: 'CONFIRMED · V1.0',
     labels: { expected: 'Expected control', evidence: 'Minimum trace', stop: 'Mandatory stop' },
     gates: [
       ['1 · Category and trigger', 'Link the signal to a V1.0 category and an observable, dated and qualified event.', 'Category, event, candidate date and signal origin.', 'Reject automatic opening or an unqualified free category.'],
@@ -40,16 +40,16 @@ const COPY = {
     ],
     verdictsTitle: 'Four proposed documentary outcomes',
     verdicts: ['Open with reservations', 'Reject', 'Request information', 'Place on hold'],
-    status: 'CANDIDATE · Six gates and four outcomes prepared. Zero real cases, sensitive data or execution.',
-    next: 'Next human decision: confirm or amend REF-01-G1-AUT-02-03-008 V0.1.',
-    boundary: 'Confirmation will validate only the gates and outcomes. The first real opening will require separate authorisation, a protected environment and review of the case itself.'
+    status: 'CONFIRMED · Six gates and four outcomes retained. Zero real cases, sensitive data or execution.',
+    next: 'Next step: prepare the empty decision sheet REF-01-G1-AUT-02-03-009 V0.1.',
+    boundary: 'Confirmation validates only the gates and outcomes. The first real opening will require separate authorisation, a protected environment and review of the case itself.'
   },
   DE: {
-    eyebrow: 'TORE ZUR FALLERÖFFNUNG · KANDIDAT V0.1 · 28.08.2026',
+    eyebrow: 'TORE ZUR FALLERÖFFNUNG · BESTÄTIGT V1.0 · 28.08.2026',
     title: 'Zulässigkeit vor jedem realen Eintrag kontrollieren',
     intro: 'Diese Kandidatenakte definiert sechs vorgängige Kontrollen. Sie erstellt kein aktives Formular, keinen realen Fall, keine Identität, keinen Zugriff, keine Frist und keine Operation.',
     counters: [['Vorbereitete Tore', '6/6', 'Alle obligatorisch'], ['Vorgeschlagene Ergebnisse', '4', 'Getrennter menschlicher Entscheid'], ['Vorausgefüllte Fälle', '0', 'Keine realen Daten'], ['Ausführungen', '0', 'Keine automatische Aktion']],
-    badge: 'KANDIDAT · ZU BESTÄTIGEN',
+    badge: 'BESTÄTIGT · V1.0',
     labels: { expected: 'Erwartete Kontrolle', evidence: 'Mindestspur', stop: 'Pflichtstopp' },
     gates: [
       ['1 · Kategorie und Auslöser', 'Das Signal einer V1.0-Kategorie und einem beobachtbaren, datierten und qualifizierten Ereignis zuordnen.', 'Kategorie, Ereignis, Kandidatendatum und Signalherkunft.', 'Automatische Öffnung oder unqualifizierte freie Kategorie ablehnen.'],
@@ -61,9 +61,9 @@ const COPY = {
     ],
     verdictsTitle: 'Vier vorgeschlagene Dokumentationsergebnisse',
     verdicts: ['Unter Vorbehalt öffnen', 'Ablehnen', 'Angaben anfordern', 'In Wartestellung setzen'],
-    status: 'KANDIDAT · Sechs Tore und vier Ergebnisse vorbereitet. Null reale Fälle, sensible Daten oder Ausführung.',
-    next: 'Nächster menschlicher Entscheid: REF-01-G1-AUT-02-03-008 V0.1 bestätigen oder ändern.',
-    boundary: 'Eine Bestätigung validiert nur Tore und Ergebnisse. Die erste reale Öffnung erfordert eine getrennte Autorisierung, eine geschützte Umgebung und die Kontrolle des Falls selbst.'
+    status: 'BESTÄTIGT · Sechs Tore und vier Ergebnisse festgehalten. Null reale Fälle, sensible Daten oder Ausführung.',
+    next: 'Nächster Schritt: das leere Entscheidblatt REF-01-G1-AUT-02-03-009 V0.1 vorbereiten.',
+    boundary: 'Die Bestätigung validiert nur Tore und Ergebnisse. Die erste reale Öffnung erfordert eine getrennte Autorisierung, eine geschützte Umgebung und die Kontrolle des Falls selbst.'
   }
 };
 
@@ -73,7 +73,7 @@ const InstitutionalPeopleTeamsGateG1RetentionCaseOpeningGates = ({ language = 'F
     <section data-testid="ref01-g1-retention-case-opening-gates" className="mt-5 rounded-md border border-slate-700 bg-slate-950/25 p-3 sm:p-4">
       <div className="flex items-start gap-3"><ShieldCheck className="mt-0.5 shrink-0 text-cyan-300" size={20} aria-hidden="true" /><div className="min-w-0"><p className="text-[11px] font-semibold uppercase text-cyan-300">{t.eyebrow}</p><h5 className="mt-1 break-words text-base font-semibold text-slate-100 sm:text-lg">{t.title}</h5><p className="mt-2 text-xs leading-5 text-slate-300">{t.intro}</p></div></div>
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">{t.counters.map(([label, value, note], index) => { const Icon = index < 2 ? CheckSquare2 : index === 2 ? FileLock2 : LockKeyhole; return <article key={label} className="m3s-raised p-3"><div className="flex items-start justify-between gap-2"><div><p className="text-xs font-semibold text-slate-300">{label}</p><p className="mt-2 text-xl font-semibold text-slate-100 sm:text-2xl">{value}</p></div><Icon className={index < 2 ? 'shrink-0 text-cyan-300' : 'shrink-0 text-amber-300'} size={19} aria-hidden="true" /></div><p className="mt-2 text-xs leading-5 text-slate-400">{note}</p></article>; })}</div>
-      <article className="mt-4 m3s-raised p-3 sm:p-4"><div className="flex flex-wrap items-start justify-between gap-2"><h6 className="break-words text-sm font-semibold text-slate-100">REF-01-G1-AUT-02-03-008 · V0.1</h6><span className="rounded-md border border-amber-700/70 bg-amber-950/25 px-2 py-1 text-[10px] font-semibold text-amber-100">{t.badge}</span></div><div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">{t.gates.map(([title, expected, evidence, stop]) => <section key={title} data-testid="ref01-g1-retention-case-opening-gate" className="min-w-0 rounded-md border border-slate-700 bg-slate-950/20 p-3"><h6 className="break-words text-xs font-semibold text-slate-100">{title}</h6><dl className="mt-3 space-y-2 text-xs leading-5"><div><dt className="font-semibold text-cyan-200">{t.labels.expected}</dt><dd className="mt-0.5 text-slate-300">{expected}</dd></div><div><dt className="font-semibold text-emerald-200">{t.labels.evidence}</dt><dd className="mt-0.5 text-slate-300">{evidence}</dd></div><div><dt className="font-semibold text-amber-200">{t.labels.stop}</dt><dd className="mt-0.5 text-slate-300">{stop}</dd></div></dl></section>)}</div><div className="mt-4"><p className="text-xs font-semibold text-violet-200">{t.verdictsTitle}</p><div className="mt-2 flex flex-wrap gap-2">{t.verdicts.map(verdict => <span key={verdict} className="rounded-md border border-violet-700/60 bg-violet-950/20 px-2 py-1 text-[11px] font-semibold text-violet-100">{verdict}</span>)}</div></div></article>
+      <article className="mt-4 m3s-raised p-3 sm:p-4"><div className="flex flex-wrap items-start justify-between gap-2"><h6 className="break-words text-sm font-semibold text-slate-100">REF-01-G1-AUT-02-03-008 · V1.0</h6><span className="rounded-md border border-emerald-700/70 bg-emerald-950/25 px-2 py-1 text-[10px] font-semibold text-emerald-100">{t.badge}</span></div><div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">{t.gates.map(([title, expected, evidence, stop]) => <section key={title} data-testid="ref01-g1-retention-case-opening-gate" className="min-w-0 rounded-md border border-slate-700 bg-slate-950/20 p-3"><h6 className="break-words text-xs font-semibold text-slate-100">{title}</h6><dl className="mt-3 space-y-2 text-xs leading-5"><div><dt className="font-semibold text-cyan-200">{t.labels.expected}</dt><dd className="mt-0.5 text-slate-300">{expected}</dd></div><div><dt className="font-semibold text-emerald-200">{t.labels.evidence}</dt><dd className="mt-0.5 text-slate-300">{evidence}</dd></div><div><dt className="font-semibold text-amber-200">{t.labels.stop}</dt><dd className="mt-0.5 text-slate-300">{stop}</dd></div></dl></section>)}</div><div className="mt-4"><p className="text-xs font-semibold text-violet-200">{t.verdictsTitle}</p><div className="mt-2 flex flex-wrap gap-2">{t.verdicts.map(verdict => <span key={verdict} className="rounded-md border border-violet-700/60 bg-violet-950/20 px-2 py-1 text-[11px] font-semibold text-violet-100">{verdict}</span>)}</div></div></article>
       <p className="mt-4 rounded-md border border-amber-700/70 bg-amber-950/20 p-3 text-xs font-semibold leading-5 text-amber-100">{t.status}</p>
       <p className="mt-3 text-xs font-semibold leading-5 text-cyan-200">{t.next}</p>
       <p className="mt-3 flex items-start gap-2 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={15} aria-hidden="true" />{t.boundary}</p>
