@@ -14,11 +14,11 @@ const COPY = {
       ['3 · Délégation et revue', ['Délégant et délégataire', 'Portée et expiration', 'Déclencheur de revue', 'Responsable et preuve attendue']],
       ['4 · Exception et arrêt', ['Motif et autorité', 'Contrôle compensatoire', 'Expiration obligatoire', 'Refus, retrait et escalade']]
     ],
-    rulesTitle: 'Cinq règles candidates de moindre privilège',
+    rulesTitle: 'Cinq règles confirmées de moindre privilège',
     rules: ['Rôle canonique distinct du droit', 'Périmètre explicite avant accès', 'Délégation datée et révocable', 'Exception temporaire et tracée', 'Refus par défaut pour C4/C5'],
     status: 'CONFIRMÉ · Modèle documentaire de qualification retenu en V1.0. Zéro création de compte, attribution, retrait, délégation, exception, accès C3/C4/C5 ou modification de production.',
     next: 'Suite préparée : qualifier séparément les droits observés et les refus dans REF-01-G1-AUT-02-02-004 V0.1.',
-    boundary: 'Une confirmation validera seulement le modèle de qualification. Les titulaires, droits, périmètres et exceptions réels resteront soumis à une décision nominative séparée et à des preuves hors bundle public.'
+    boundary: 'La confirmation valide seulement le modèle de qualification. Les titulaires, droits, périmètres et exceptions réels restent soumis à une décision nominative séparée et à des preuves hors bundle public.'
   },
   EN: {
     eyebrow: 'ROLES AND LEAST PRIVILEGE · V1.0 CONFIRMED MODEL · 28 AUG 2026',
@@ -32,11 +32,11 @@ const COPY = {
       ['3 · Delegation and review', ['Delegator and delegate', 'Scope and expiry', 'Review trigger', 'Owner and expected evidence']],
       ['4 · Exception and stop', ['Reason and authority', 'Compensating control', 'Mandatory expiry', 'Denial, withdrawal and escalation']]
     ],
-    rulesTitle: 'Five candidate least-privilege rules',
+    rulesTitle: 'Five confirmed least-privilege rules',
     rules: ['Canonical role separate from right', 'Explicit scope before access', 'Dated and revocable delegation', 'Temporary and traced exception', 'Default denial for C4/C5'],
     status: 'CONFIRMED · Documentary qualification model retained in V1.0. Zero account creation, assignment, withdrawal, delegation, exception, C3/C4/C5 access or production change.',
     next: 'Next prepared step: qualify observed rights and denials separately in REF-01-G1-AUT-02-02-004 V0.1.',
-    boundary: 'Confirmation will validate only the qualification model. Real holders, rights, scopes and exceptions will still require a separate named decision and evidence outside the public bundle.'
+    boundary: 'The confirmation validates only the qualification model. Real holders, rights, scopes and exceptions still require a separate named decision and evidence outside the public bundle.'
   },
   DE: {
     eyebrow: 'ROLLEN UND GERINGSTE BERECHTIGUNG · BESTÄTIGTES MODELL V1.0 · 28.08.2026',
@@ -50,11 +50,11 @@ const COPY = {
       ['3 · Delegation und Prüfung', ['Delegierende und delegierte Person', 'Umfang und Ablauf', 'Prüfauslöser', 'Verantwortung und erwarteter Nachweis']],
       ['4 · Ausnahme und Stopp', ['Grund und Autorität', 'Kompensierende Kontrolle', 'Obligatorischer Ablauf', 'Ablehnung, Entzug und Eskalation']]
     ],
-    rulesTitle: 'Fünf Kandidatenregeln zur geringsten Berechtigung',
+    rulesTitle: 'Fünf bestätigte Regeln zur geringsten Berechtigung',
     rules: ['Kanonische Rolle vom Recht getrennt', 'Expliziter Umfang vor Zugriff', 'Datierte und widerrufbare Delegation', 'Temporäre und protokollierte Ausnahme', 'Standardablehnung für C4/C5'],
     status: 'BESTÄTIGT · Dokumentarisches Qualifikationsmodell in V1.0 übernommen. Null Kontoerstellungen, Zuweisungen, Entzüge, Delegationen, Ausnahmen, C3/C4/C5-Zugriffe oder Produktionsänderungen.',
     next: 'Nächster vorbereiteter Schritt: beobachtete Rechte und Ablehnungen in REF-01-G1-AUT-02-02-004 V0.1 getrennt qualifizieren.',
-    boundary: 'Eine Bestätigung validiert nur das Qualifikationsmodell. Reale Inhaber, Rechte, Umfänge und Ausnahmen benötigen weiterhin einen getrennten namentlichen Entscheid und Nachweise ausserhalb des öffentlichen Bundles.'
+    boundary: 'Die Bestätigung validiert nur das Qualifikationsmodell. Reale Inhaber, Rechte, Umfänge und Ausnahmen benötigen weiterhin einen getrennten namentlichen Entscheid und Nachweise ausserhalb des öffentlichen Bundles.'
   }
 };
 
