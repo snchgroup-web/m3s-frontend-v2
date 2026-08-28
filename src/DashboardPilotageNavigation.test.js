@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.51 · 28-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.52 · 28-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -745,7 +745,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(documentaryAuthorisationFiles).getByText('Champs restant ouverts').closest('article')).toHaveTextContent('Cinq + six');
   expect(screen.getByRole('heading', { name: 'Confirmer deux cadres distincts sans ouvrir leur exécution' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  const elevenFieldMatrices = screen.getByRole('heading', { name: 'Confirmer la fiche et préparer la première utilisation' }).closest('section');
+  const elevenFieldMatrices = screen.getByRole('heading', { name: 'Confirmer le protocole et préparer la décision GO/NO-GO' }).closest('section');
   expect(within(elevenFieldMatrices).getAllByTestId('ref01-g1-eleven-field-candidate-matrix')).toHaveLength(2);
   expect(within(elevenFieldMatrices).getAllByTestId('ref01-g1-eleven-field-candidate-row')).toHaveLength(11);
   expect(within(elevenFieldMatrices).getByRole('heading', { name: 'REF-01-G1-AUT-02-03-002 · V1.0' }).closest('article')).toContainElement(within(elevenFieldMatrices).getByText('Durées applicables'));
@@ -765,6 +765,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(elevenFieldMatrices).getByRole('heading', { name: 'REF-01-DEC-047 · V1.0' })).toBeInTheDocument();
   expect(within(elevenFieldMatrices).getByRole('heading', { name: 'REF-01-DEC-048 · V1.0' })).toBeInTheDocument();
   expect(within(elevenFieldMatrices).getByRole('heading', { name: 'REF-01-DEC-049 · V1.0' })).toBeInTheDocument();
+  expect(within(elevenFieldMatrices).getByRole('heading', { name: 'REF-01-DEC-050 · V1.0' })).toBeInTheDocument();
   expect(within(elevenFieldMatrices).getByText(/jusqu à 3 mois/)).toBeInTheDocument();
   expect(within(elevenFieldMatrices).getByText(/Lecture seule de l’annuaire C2 assaini/)).toBeInTheDocument();
   const legalFramework = within(elevenFieldMatrices).getByTestId('ref01-g1-legal-retention-framework');
@@ -803,11 +804,16 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(openingDecisionSheet).getByText('Portes à tracer').closest('article')).toHaveTextContent('6/6');
   expect(within(openingDecisionSheet).getByText('Cas réels').closest('article')).toHaveTextContent('0');
   const firstUseProtocol = within(elevenFieldMatrices).getByTestId('ref01-g1-retention-first-use-authorisation-protocol');
-  expect(within(firstUseProtocol).getByRole('heading', { name: 'REF-01-G1-AUT-02-03-010 · V0.1' })).toBeInTheDocument();
+  expect(within(firstUseProtocol).getByRole('heading', { name: 'REF-01-G1-AUT-02-03-010 · V1.0' })).toBeInTheDocument();
   expect(within(firstUseProtocol).getAllByTestId('ref01-g1-retention-first-use-authorisation-group')).toHaveLength(4);
   expect(within(firstUseProtocol).getByText('Préconditions à contrôler').closest('article')).toHaveTextContent('6/6');
   expect(within(firstUseProtocol).getByText('Cas actifs').closest('article')).toHaveTextContent('0');
-  expect(control.getByText(/décisions sur le lot : 46/)).toBeInTheDocument();
+  const firstUseDecision = within(elevenFieldMatrices).getByTestId('ref01-g1-retention-first-use-decision-sheet');
+  expect(within(firstUseDecision).getByRole('heading', { name: 'REF-01-G1-AUT-02-03-011 · V0.1' })).toBeInTheDocument();
+  expect(within(firstUseDecision).getAllByTestId('ref01-g1-retention-first-use-decision-group')).toHaveLength(4);
+  expect(within(firstUseDecision).getByText('Préconditions à tracer').closest('article')).toHaveTextContent('6/6');
+  expect(within(firstUseDecision).getByText('Décisions actives').closest('article')).toHaveTextContent('0');
+  expect(control.getByText(/décisions sur le lot : 47/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -966,7 +972,7 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Open two preparations without opening real rights or records' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-039 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Prepare both files together without merging their decisions' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Confirm the sheet and prepare first use' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Confirm the protocol and prepare the GO/NO-GO decision' })).toBeInTheDocument();
   expect(screen.getAllByText('SOURCED · CONFIRMED')).toHaveLength(4);
   expect(screen.getAllByText('WORKING VALUE · CONFIRMED')).toHaveLength(5);
   expect(screen.getAllByText('LEGAL VALIDATED · APPLICABILITY RETAINED')).toHaveLength(2);
@@ -979,13 +985,15 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-047 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-048 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-049 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-050 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-004 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-005 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-006 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-007 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-008 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-009 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-010 · V0.1' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-010 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-011 · V0.1' })).toBeInTheDocument();
   expect(screen.getByText(/Recorded decisions: 1/)).toBeInTheDocument();
   expect(screen.getByText('Descriptive controls')).toBeInTheDocument();
   expect(screen.getAllByText('Evidence to establish').length).toBeGreaterThan(0);
@@ -1002,7 +1010,7 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Validierter Lebenszyklus' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Validierte Mindestspur für jedes Ereignis' })).toBeInTheDocument();
   expect(screen.getByText('REF-01-Lebenszyklus validiert')).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Entscheidblatt bestätigen und Erstnutzung vorbereiten' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Protokoll bestätigen und GO/NO-GO-Entscheid vorbereiten' })).toBeInTheDocument();
   expect(screen.getAllByText('BELEGT · BESTÄTIGT')).toHaveLength(4);
   expect(screen.getAllByText('ARBEITSWERT · BESTÄTIGT')).toHaveLength(5);
   expect(screen.getAllByText('LEGAL VALIDIERT · ANWENDBARKEIT BESTÄTIGT')).toHaveLength(2);
@@ -1015,13 +1023,15 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-047 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-048 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-049 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-050 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-004 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-005 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-006 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-007 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-008 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-009 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-010 · V0.1' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-010 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-011 · V0.1' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Träger vergleichen, ohne sie zu fördern' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Sieben Kriterien vor jeder Bestimmung einer Masterquelle' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Jeden Träger anhand der sieben validierten Kriterien prüfen' })).toBeInTheDocument();
@@ -1415,7 +1425,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Confirm two separate frameworks without opening execution' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(56);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(57);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(9);
@@ -1427,7 +1437,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Zwei getrennte Rahmen bestätigen, ohne ihre Ausführung zu öffnen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(56);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(57);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(9);
