@@ -23,7 +23,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.43 · 28-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.44 · 28-08-2026',
     title: 'Comparer les supports sans les promouvoir',
     body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
     counters: [
@@ -109,12 +109,12 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Confirmer ou amender le rapprochement des quatre valeurs sourcées et des cinq valeurs partielles ; instruire ensuite avec LEGAL les durées applicables et les règles locales.',
-    boundary: 'Statut : REF-01-DEC-041 confirme séparément les deux structures AUT-02-03-002 et AUT-02-02-002 V1.0. Les onze champs sont qualifiés : quatre valeurs sourcées, cinq partielles ou candidates et deux ouvertes. Zéro autorisation d’exécution, preuve C3/C4 reçue ou testée, collecte ou test réel ; G1 reste ouverte et L2 fermé. Zéro nouveau droit, délégation, exception, worker, alerte, rejeu ou fournisseur ; décisions sur le lot : 38 ; sources maîtresses désignées : 0 ; changements en production : 0.',
-    source: 'Supports contrôlés : contrat API RH-001, Annuaire interne C2, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-041, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0, AUT-C-001/AUT-D-001 V1.0, REV-002 V1.0, PLN-001 V1.0, PKG-001 V1.0, PKG-01-001 à PKG-05-001 V1.0, REV-003 V1.0, EVD-002 V1.0, COL-002 V1.0, AUT-002 V1.0, PRI-002 V1.0, WAV-002 V1.0 et matrices AUT-02-03-002/AUT-02-02-002 V1.0.'
+    nextControl: 'Faire contrôler par LEGAL l applicabilité du cadre AUT-02-03-003 V0.1, puis désigner les catégories réellement utilisées avant toute règle opérationnelle.',
+    boundary: 'Statut : REF-01-DEC-042 confirme les quatre valeurs sourcées et cinq valeurs de travail. Les deux champs LEGAL sont instruits par un cadre officiel candidat, sans conclusion de conformité. Zéro autorisation d’exécution, preuve C3/C4 reçue ou testée, collecte ou test réel ; G1 reste ouverte et L2 fermé. Zéro nouveau droit, délégation, exception, worker, alerte, rejeu ou fournisseur ; décisions sur le lot : 39 ; sources maîtresses désignées : 0 ; changements en production : 0.',
+    source: 'Supports contrôlés : contrat API RH-001, Annuaire interne C2, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-042, matrices AUT-02-03-002/AUT-02-02-002 V1.0 et cadre LEGAL candidat AUT-02-03-003 V0.1 ; sources officielles PFPDT Suisse, CDP Sénégal et OHADA.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.43 · 28 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.44 · 28 AUG 2026',
     title: 'Compare supports without promoting them',
     body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
     counters: [
@@ -200,12 +200,12 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'Confirm or amend the reconciliation of the four sourced and five partial values; then establish applicable periods and local rules with LEGAL.',
-    boundary: 'Status: REF-01-DEC-041 separately confirms the AUT-02-03-002 and AUT-02-02-002 V1.0 structures. Eleven fields are qualified: four sourced, five partial or candidate, and two open. Zero execution authorisations, received or tested C3/C4 evidence, real collections or tests; G1 remains open and L2 closed. Zero new rights, delegations, exceptions, workers, alerts, replays or providers; package decisions: 38; designated master sources: 0; production changes: 0.',
-    source: 'Controlled supports: RH-001 API contract, C2 Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-041, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0, AUT-C-001/AUT-D-001 V1.0, REV-002 V1.0, PLN-001 V1.0, PKG-001 V1.0, PKG-01-001 through PKG-05-001 V1.0, REV-003 V1.0, EVD-002 V1.0, COL-002 V1.0, AUT-002 V1.0, PRI-002 V1.0, WAV-002 V1.0 and AUT-02-03-002/AUT-02-02-002 V1.0 matrices.'
+    nextControl: 'Have LEGAL review the applicability of AUT-02-03-003 V0.1, then designate the categories actually used before any operational rule.',
+    boundary: 'Status: REF-01-DEC-042 confirms the four sourced and five working values. The two LEGAL fields are established through an official candidate framework, without a compliance conclusion. Zero execution authorisations, received or tested C3/C4 evidence, real collections or tests; G1 remains open and L2 closed. Zero new rights, delegations, exceptions, workers, alerts, replays or providers; package decisions: 39; designated master sources: 0; production changes: 0.',
+    source: 'Controlled supports: RH-001 API contract, C2 Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-042, AUT-02-03-002/AUT-02-02-002 V1.0 matrices and AUT-02-03-003 V0.1 LEGAL candidate framework; official Swiss FDPIC, Senegal CDP and OHADA sources.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.43 · 28.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.44 · 28.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
     body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
     counters: [
@@ -291,9 +291,9 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'Den Abgleich der vier belegten und fünf teilweisen Werte bestätigen oder ändern; danach Fristen und lokale Regeln mit LEGAL bestimmen.',
-    boundary: 'Stand: REF-01-DEC-041 bestätigt die Strukturen AUT-02-03-002 und AUT-02-02-002 V1.0 getrennt. Elf Felder sind qualifiziert: vier belegt, fünf teilweise oder Kandidaten und zwei offen. Null Ausführungsautorisierungen, erhaltene oder getestete C3/C4-Nachweise, reale Sammlungen oder Tests; G1 bleibt offen und L2 geschlossen. Null neue Rechte, Delegationen, Ausnahmen, Worker, Alarme, Wiederholungen oder Anbieter; Paketentscheide: 38; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
-    source: 'Kontrollierte Träger: RH-001-API-Vertrag, internes C2-Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-041, REF-01-IMP-001 V1.0, REF-01-ADR-001 V1.0, RES-001 V1.0, CD-001 V1.0, AUT-C-001/AUT-D-001 V1.0, REV-002 V1.0, PLN-001 V1.0, PKG-001 V1.0, PKG-01-001 bis PKG-05-001 V1.0, REV-003 V1.0, EVD-002 V1.0, COL-002 V1.0, AUT-002 V1.0, PRI-002 V1.0, WAV-002 V1.0 und Matrizen AUT-02-03-002/AUT-02-02-002 V1.0.'
+    nextControl: 'Anwendbarkeit von AUT-02-03-003 V0.1 durch LEGAL prüfen lassen und danach die tatsächlich genutzten Kategorien vor jeder operativen Regel bestimmen.',
+    boundary: 'Stand: REF-01-DEC-042 bestätigt vier belegte und fünf Arbeitswerte. Die beiden LEGAL-Felder sind durch einen amtlichen Kandidatenrahmen bestimmt, ohne Konformitätsaussage. Null Ausführungsautorisierungen, erhaltene oder getestete C3/C4-Nachweise, reale Sammlungen oder Tests; G1 bleibt offen und L2 geschlossen. Null neue Rechte, Delegationen, Ausnahmen, Worker, Alarme, Wiederholungen oder Anbieter; Paketentscheide: 39; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
+    source: 'Kontrollierte Träger: RH-001-API-Vertrag, internes C2-Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-042, Matrizen AUT-02-03-002/AUT-02-02-002 V1.0 und LEGAL-Kandidatenrahmen AUT-02-03-003 V0.1; amtliche Quellen EDOEB Schweiz, CDP Senegal und OHADA.'
   }
 };
 
