@@ -20,7 +20,7 @@ const COPY = {
     verdictsTitle: 'Quatre verdicts documentaires proposés',
     verdicts: ['Ouvrir sous réserve', 'Refuser', 'Demander des éléments', 'Mettre en attente'],
     status: 'CONFIRMÉ · Six portes et quatre verdicts retenus. Zéro cas réel, donnée sensible ou exécution.',
-    next: 'Étape suivante : préparer la fiche de décision vide REF-01-G1-AUT-02-03-009 V0.1.',
+    next: 'Étape réalisée : la fiche de décision vide REF-01-G1-AUT-02-03-009 est confirmée en V1.0.',
     boundary: 'La confirmation valide uniquement les portes et verdicts. La première ouverture réelle exigera une autorisation séparée, un environnement protégé et un contrôle du cas lui-même.'
   },
   EN: {
@@ -41,7 +41,7 @@ const COPY = {
     verdictsTitle: 'Four proposed documentary outcomes',
     verdicts: ['Open with reservations', 'Reject', 'Request information', 'Place on hold'],
     status: 'CONFIRMED · Six gates and four outcomes retained. Zero real cases, sensitive data or execution.',
-    next: 'Next step: prepare the empty decision sheet REF-01-G1-AUT-02-03-009 V0.1.',
+    next: 'Completed step: the empty REF-01-G1-AUT-02-03-009 decision sheet is confirmed as V1.0.',
     boundary: 'Confirmation validates only the gates and outcomes. The first real opening will require separate authorisation, a protected environment and review of the case itself.'
   },
   DE: {
@@ -62,7 +62,7 @@ const COPY = {
     verdictsTitle: 'Vier vorgeschlagene Dokumentationsergebnisse',
     verdicts: ['Unter Vorbehalt öffnen', 'Ablehnen', 'Angaben anfordern', 'In Wartestellung setzen'],
     status: 'BESTÄTIGT · Sechs Tore und vier Ergebnisse festgehalten. Null reale Fälle, sensible Daten oder Ausführung.',
-    next: 'Nächster Schritt: das leere Entscheidblatt REF-01-G1-AUT-02-03-009 V0.1 vorbereiten.',
+    next: 'Erledigter Schritt: Das leere Entscheidblatt REF-01-G1-AUT-02-03-009 ist als V1.0 bestätigt.',
     boundary: 'Die Bestätigung validiert nur Tore und Ergebnisse. Die erste reale Öffnung erfordert eine getrennte Autorisierung, eine geschützte Umgebung und die Kontrolle des Falls selbst.'
   }
 };
