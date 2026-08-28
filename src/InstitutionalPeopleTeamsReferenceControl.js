@@ -24,7 +24,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DETAILLE 1/11 · REF-01 · V1.48 · 28-08-2026',
+    eyebrow: 'CONTROLE DETAILLE 1/11 · REF-01 · V1.49 · 28-08-2026',
     title: 'REF-01 · Personnes et équipes',
     body: 'Ce contrôle rapproche l’annuaire RH-001, les sélecteurs Team/Agent et les règles déjà publiées pour les responsabilités collectives. Il prépare un modèle commun sans recopier l’annuaire, désigner une source maîtresse ou confondre personne, appartenance, équipe, rôle et accès M3S.',
     counters: [
@@ -122,7 +122,7 @@ const COPY = {
     openArchitecture: 'Examiner l’architecture RH de REF-01'
   },
   EN: {
-    eyebrow: 'DETAILED CONTROL 1/11 · REF-01 · V1.48 · 28 AUG 2026',
+    eyebrow: 'DETAILED CONTROL 1/11 · REF-01 · V1.49 · 28 AUG 2026',
     title: 'REF-01 · People and teams',
     body: 'This control reconciles the RH-001 directory, Team/Agent selectors and the published rules for collective responsibilities. It prepares a shared model without copying the directory, designating a master source or confusing a person, membership, team, role and M3S access.',
     counters: [
@@ -220,7 +220,7 @@ const COPY = {
     openArchitecture: 'Review the REF-01 HR architecture'
   },
   DE: {
-    eyebrow: 'DETAILKONTROLLE 1/11 · REF-01 · V1.48 · 28.08.2026',
+    eyebrow: 'DETAILKONTROLLE 1/11 · REF-01 · V1.49 · 28.08.2026',
     title: 'REF-01 · Personen und Teams',
     body: 'Diese Kontrolle gleicht das RH-001-Verzeichnis, die Team-/Agent-Auswahl und die veröffentlichten Regeln für kollektive Verantwortungen ab. Sie bereitet ein gemeinsames Modell vor, ohne das Verzeichnis zu kopieren, eine Masterquelle zu bestimmen oder Person, Mitgliedschaft, Team, Rolle und M3S-Zugriff zu vermischen.',
     counters: [
