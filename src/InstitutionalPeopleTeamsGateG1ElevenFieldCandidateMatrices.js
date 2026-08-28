@@ -8,6 +8,7 @@ import InstitutionalPeopleTeamsGateG1RetentionReviewCases from './InstitutionalP
 import InstitutionalPeopleTeamsGateG1RetentionReviewRegister from './InstitutionalPeopleTeamsGateG1RetentionReviewRegister';
 import InstitutionalPeopleTeamsGateG1RetentionCaseOpeningGates from './InstitutionalPeopleTeamsGateG1RetentionCaseOpeningGates';
 import InstitutionalPeopleTeamsGateG1RetentionCaseOpeningDecisionSheet from './InstitutionalPeopleTeamsGateG1RetentionCaseOpeningDecisionSheet';
+import InstitutionalPeopleTeamsGateG1RetentionFirstUseAuthorisationProtocol from './InstitutionalPeopleTeamsGateG1RetentionFirstUseAuthorisationProtocol';
 
 const STATE_STYLES = {
   sourced: 'border-emerald-700/70 bg-emerald-950/25 text-emerald-100',
@@ -21,8 +22,8 @@ const STATE_STYLES = {
 const COPY = {
   FR: {
     eyebrow: 'MATRICES, CATÉGORIES ET PILOTAGE CONFIRMÉS · 28-08-2026',
-    title: 'Confirmer les portes et préparer la décision d ouverture',
-    intro: 'Cheikh confirme les six portes et quatre verdicts en V1.0. La fiche candidate suivante prépare leur trace de décision sans créer de formulaire actif, ouvrir un cas réel ou autoriser une exécution.',
+    title: 'Confirmer la fiche et préparer la première utilisation',
+    intro: 'Cheikh confirme la fiche documentaire d ouverture en V1.0. Le protocole candidat suivant prépare les contrôles d une éventuelle première utilisation sans créer de cas réel, d accès, d espace protégé ou d autorisation active.',
     counters: [['Matrices confirmées', '2/2', 'Deux portées toujours séparées'], ['Valeurs confirmées', '9/9', 'Quatre sourcées · cinq de travail'], ['Champs LEGAL validés', '2/2', 'Cadre V1.0 · application contrôlée'], ['Autorisations', '0', 'Aucun droit ni traitement ouvert']],
     badge: 'STRUCTURE CONFIRMÉE · V1.0',
     labels: { basis: 'Cadre et preuve', format: 'Structure retenue', supports: 'Sources rapprochées', value: 'Valeur qualifiée', stop: 'Arrêt obligatoire' },
@@ -63,14 +64,15 @@ const COPY = {
     reviewRecord: { id: 'REF-01-DEC-046', version: 'V1.0', status: 'Protocoles de revue confirmés', author: 'Cheikh Ndiaye', date: '28-08-2026', decision: 'REF-01-G1-AUT-02-03-006 V0.1 est confirmé et promu en V1.0. Les cinq cas sont retenus comme protocoles documentaires de revue humaine.', evidence: 'Confirmation explicite de Cheikh dans la session du 28-08-2026 : « on valide REF-01-G1-AUT-02-03-006 V0.1 » ; fiche candidate publiée avec REF-01 V1.47 par la PR frontend nº 236.', limit: 'La décision ne crée aucun cas réel, affectation nominative, collecte C3/C4, calcul de délai, décision de sort final, suppression, archivage, gel, retrait de droit ou opération GED.' },
     registerRecord: { id: 'REF-01-DEC-047', version: 'V1.0', status: 'Registre vide confirmé', author: 'Cheikh Ndiaye', date: '28-08-2026', decision: 'REF-01-G1-AUT-02-03-007 V0.1 est confirmé et promu en V1.0. Ses seize métadonnées, quatre groupes et cinq états sont retenus comme gabarit documentaire vide.', evidence: 'Confirmation explicite de Cheikh dans la session du 28-08-2026 : « confirmer REF-01-G1-AUT-02-03-007 V0.1 » ; gabarit candidat publié avec REF-01 V1.48 par la PR frontend nº 237.', limit: 'La décision ne crée aucun formulaire actif, cas réel, identité, donnée C3/C4, affectation nominative, accès, délai, traitement ou opération GED.' },
     openingRecord: { id: 'REF-01-DEC-048', version: 'V1.0', status: 'Portes d ouverture confirmées', author: 'Cheikh Ndiaye', date: '28-08-2026', decision: 'REF-01-G1-AUT-02-03-008 V0.1 est confirmé et promu en V1.0. Les six portes obligatoires et quatre verdicts documentaires sont retenus avant toute ouverture réelle.', evidence: 'Confirmation explicite de Cheikh dans la session du 28-08-2026 : « confirmé le REF-01-G1-AUT-02-03-008 V0.1 » ; fiche candidate publiée avec REF-01 V1.49 par la PR frontend nº 238.', limit: 'La décision valide uniquement les contrôles et verdicts. Elle ne crée aucun formulaire actif, cas réel, identité, donnée C3/C4, affectation nominative, accès, échéance, traitement ou opération GED.' },
-    status: 'PORTES CONFIRMÉES · AUT-02-03-008 V1.0. Zéro autorisation d exécution.',
-    next: 'Prochain arbitrage humain : confirmer ou amender REF-01-G1-AUT-02-03-009 V0.1, la fiche candidate de décision d ouverture.',
+    openingDecisionRecord: { id: 'REF-01-DEC-049', version: 'V1.0', status: 'Fiche de décision d ouverture confirmée', author: 'Cheikh Ndiaye', date: '28-08-2026', decision: 'REF-01-G1-AUT-02-03-009 V0.1 est confirmé et promu en V1.0. Ses quatre groupes et quatre règles de complétude sont retenus comme structure documentaire vide.', evidence: 'Confirmation explicite de Cheikh dans la session du 28-08-2026 : « Merci, je confirme REF-01-G1-AUT-02-03-009 V0.1 » ; fiche candidate publiée avec REF-01 V1.50 par la PR frontend nº 239.', limit: 'La décision confirme uniquement la structure vide. Elle ne crée aucun formulaire actif, cas réel, identité, donnée C3/C4, signature, accès, espace protégé, traitement ou opération GED.' },
+    status: 'FICHE CONFIRMÉE · AUT-02-03-009 V1.0. Zéro autorisation d exécution.',
+    next: 'Prochain arbitrage humain : confirmer ou amender REF-01-G1-AUT-02-03-010 V0.1, le protocole documentaire de première utilisation.',
     boundary: 'La validation porte sur le cadre interne et son applicabilité gouvernée. Elle ne crée aucun droit, aucune conclusion générale de conformité, aucune délégation, aucun accès C3/C4/C5 et aucune opération GED.'
   },
   EN: {
     eyebrow: 'MATRICES, CATEGORIES AND STEWARDSHIP CONFIRMED · 28 AUG 2026',
-    title: 'Confirm the gates and prepare the opening decision',
-    intro: 'Cheikh confirms the six gates and four outcomes as V1.0. The next candidate file prepares their decision trace without creating an active form, opening a real case or authorising execution.',
+    title: 'Confirm the sheet and prepare first use',
+    intro: 'Cheikh confirms the documentary opening-decision sheet as V1.0. The next candidate protocol prepares checks for a possible first use without creating a real case, access, protected workspace or active authorisation.',
     counters: [['Confirmed matrices', '2/2', 'Two scopes remain separate'], ['Confirmed values', '9/9', 'Four sourced · five working values'], ['LEGAL fields validated', '2/2', 'V1.0 framework · controlled application'], ['Authorisations', '0', 'No right or processing opened']],
     badge: 'CONFIRMED STRUCTURE · V1.0',
     labels: { basis: 'Framework and evidence', format: 'Retained structure', supports: 'Reconciled sources', value: 'Qualified value', stop: 'Mandatory stop' },
@@ -111,14 +113,15 @@ const COPY = {
     reviewRecord: { id: 'REF-01-DEC-046', version: 'V1.0', status: 'Review protocols confirmed', author: 'Cheikh Ndiaye', date: '28 Aug 2026', decision: 'REF-01-G1-AUT-02-03-006 V0.1 is confirmed and promoted to V1.0. Its five cases are retained as documentary human-review protocols.', evidence: 'Explicit confirmation by Cheikh during the 28 Aug 2026 session: “on valide REF-01-G1-AUT-02-03-006 V0.1”; candidate file published with REF-01 V1.47 through frontend PR 236.', limit: 'The decision creates no real case, named assignment, C3/C4 collection, period calculation, final-treatment decision, deletion, archive, hold, right removal or DMS operation.' },
     registerRecord: { id: 'REF-01-DEC-047', version: 'V1.0', status: 'Empty register confirmed', author: 'Cheikh Ndiaye', date: '28 Aug 2026', decision: 'REF-01-G1-AUT-02-03-007 V0.1 is confirmed and promoted to V1.0. Its sixteen metadata fields, four groups and five states are retained as an empty documentary template.', evidence: 'Explicit confirmation by Cheikh during the 28 Aug 2026 session: “confirmer REF-01-G1-AUT-02-03-007 V0.1”; candidate template published with REF-01 V1.48 through frontend PR 237.', limit: 'The decision creates no active form, real case, identity, C3/C4 data, named assignment, access, period, processing or DMS operation.' },
     openingRecord: { id: 'REF-01-DEC-048', version: 'V1.0', status: 'Opening gates confirmed', author: 'Cheikh Ndiaye', date: '28 Aug 2026', decision: 'REF-01-G1-AUT-02-03-008 V0.1 is confirmed and promoted to V1.0. Its six mandatory gates and four documentary outcomes are retained before any real opening.', evidence: 'Explicit confirmation by Cheikh during the 28 Aug 2026 session: “confirmé le REF-01-G1-AUT-02-03-008 V0.1”; candidate file published with REF-01 V1.49 through frontend PR 238.', limit: 'The decision validates controls and outcomes only. It creates no active form, real case, identity, C3/C4 data, named assignment, access, deadline, processing or DMS operation.' },
-    status: 'GATES CONFIRMED · AUT-02-03-008 V1.0. Zero execution authorisations.',
-    next: 'Next human decision: confirm or amend REF-01-G1-AUT-02-03-009 V0.1, the candidate opening-decision sheet.',
+    openingDecisionRecord: { id: 'REF-01-DEC-049', version: 'V1.0', status: 'Opening-decision sheet confirmed', author: 'Cheikh Ndiaye', date: '28 Aug 2026', decision: 'REF-01-G1-AUT-02-03-009 V0.1 is confirmed and promoted to V1.0. Its four groups and four completion rules are retained as an empty documentary structure.', evidence: 'Explicit confirmation by Cheikh during the 28 Aug 2026 session: “Merci, je confirme REF-01-G1-AUT-02-03-009 V0.1”; candidate sheet published with REF-01 V1.50 through frontend PR 239.', limit: 'The decision confirms the empty structure only. It creates no active form, real case, identity, C3/C4 data, signature, access, protected workspace, processing or DMS operation.' },
+    status: 'SHEET CONFIRMED · AUT-02-03-009 V1.0. Zero execution authorisations.',
+    next: 'Next human decision: confirm or amend REF-01-G1-AUT-02-03-010 V0.1, the first-use documentary protocol.',
     boundary: 'Validation covers the internal framework and its governed applicability. It creates no right, blanket compliance conclusion, delegation, C3/C4/C5 access or DMS operation.'
   },
   DE: {
     eyebrow: 'MATRIZEN, KATEGORIEN UND VERANTWORTUNG BESTÄTIGT · 28.08.2026',
-    title: 'Tore bestätigen und Eröffnungsentscheid vorbereiten',
-    intro: 'Cheikh bestätigt die sechs Tore und vier Ergebnisse als V1.0. Die folgende Kandidatenakte bereitet ihre Entscheidungsspur vor, ohne aktives Formular, realen Fall oder Ausführungsautorisierung.',
+    title: 'Entscheidblatt bestätigen und Erstnutzung vorbereiten',
+    intro: 'Cheikh bestätigt das dokumentarische Eröffnungs-Entscheidblatt als V1.0. Das folgende Kandidatenprotokoll bereitet Kontrollen für eine mögliche Erstnutzung vor, ohne realen Fall, Zugriff, geschützten Raum oder aktive Autorisierung.',
     counters: [['Bestätigte Matrizen', '2/2', 'Zwei getrennte Umfänge'], ['Bestätigte Werte', '9/9', 'Vier belegt · fünf Arbeitswerte'], ['Validierte LEGAL-Felder', '2/2', 'Rahmen V1.0 · kontrollierte Anwendung'], ['Autorisierungen', '0', 'Kein Recht oder Vorgang geöffnet']],
     badge: 'STRUKTUR BESTÄTIGT · V1.0',
     labels: { basis: 'Rahmen und Nachweis', format: 'Bestätigte Struktur', supports: 'Abgeglichene Quellen', value: 'Qualifizierter Wert', stop: 'Pflichtstopp' },
@@ -159,8 +162,9 @@ const COPY = {
     reviewRecord: { id: 'REF-01-DEC-046', version: 'V1.0', status: 'Prüfprotokolle bestätigt', author: 'Cheikh Ndiaye', date: '28.08.2026', decision: 'REF-01-G1-AUT-02-03-006 V0.1 ist bestätigt und zu V1.0 hochgestuft. Die fünf Fälle gelten als dokumentarische Protokolle menschlicher Prüfung.', evidence: 'Ausdrückliche Bestätigung durch Cheikh in der Sitzung vom 28.08.2026: « on valide REF-01-G1-AUT-02-03-006 V0.1 »; Kandidatenakte mit REF-01 V1.47 über Frontend-PR 236 veröffentlicht.', limit: 'Der Entscheid schafft keinen realen Fall, keine Namenszuweisung, C3/C4-Sammlung, Fristberechnung, Endbehandlung, Löschung, Archivierung, Sperre, Rechteentzug oder DMS-Operation.' },
     registerRecord: { id: 'REF-01-DEC-047', version: 'V1.0', status: 'Leeres Register bestätigt', author: 'Cheikh Ndiaye', date: '28.08.2026', decision: 'REF-01-G1-AUT-02-03-007 V0.1 ist bestätigt und zu V1.0 hochgestuft. Seine sechzehn Metadatenfelder, vier Gruppen und fünf Stände gelten als leere Dokumentationsvorlage.', evidence: 'Ausdrückliche Bestätigung durch Cheikh in der Sitzung vom 28.08.2026: « confirmer REF-01-G1-AUT-02-03-007 V0.1 »; Kandidatenvorlage mit REF-01 V1.48 über Frontend-PR 237 veröffentlicht.', limit: 'Der Entscheid erstellt kein aktives Formular, keinen realen Fall, keine Identität, C3/C4-Daten, Namenszuweisung, keinen Zugriff, keine Frist, Verarbeitung oder DMS-Operation.' },
     openingRecord: { id: 'REF-01-DEC-048', version: 'V1.0', status: 'Öffnungstore bestätigt', author: 'Cheikh Ndiaye', date: '28.08.2026', decision: 'REF-01-G1-AUT-02-03-008 V0.1 ist bestätigt und zu V1.0 hochgestuft. Die sechs obligatorischen Tore und vier Dokumentationsergebnisse gelten vor jeder realen Eröffnung.', evidence: 'Ausdrückliche Bestätigung durch Cheikh in der Sitzung vom 28.08.2026: « confirmé le REF-01-G1-AUT-02-03-008 V0.1 »; Kandidatenakte mit REF-01 V1.49 über Frontend-PR 238 veröffentlicht.', limit: 'Der Entscheid validiert nur Kontrollen und Ergebnisse. Er erstellt kein aktives Formular, keinen realen Fall, keine Identität, C3/C4-Daten, Namenszuweisung, keinen Zugriff, keine Frist, Verarbeitung oder DMS-Operation.' },
-    status: 'TORE BESTÄTIGT · AUT-02-03-008 V1.0. Null Ausführungsautorisierungen.',
-    next: 'Nächster menschlicher Entscheid: REF-01-G1-AUT-02-03-009 V0.1, das Kandidaten-Entscheidblatt zur Eröffnung, bestätigen oder ändern.',
+    openingDecisionRecord: { id: 'REF-01-DEC-049', version: 'V1.0', status: 'Eröffnungs-Entscheidblatt bestätigt', author: 'Cheikh Ndiaye', date: '28.08.2026', decision: 'REF-01-G1-AUT-02-03-009 V0.1 ist bestätigt und zu V1.0 hochgestuft. Seine vier Gruppen und vier Vollständigkeitsregeln gelten als leere Dokumentationsstruktur.', evidence: 'Ausdrückliche Bestätigung durch Cheikh in der Sitzung vom 28.08.2026: « Merci, je confirme REF-01-G1-AUT-02-03-009 V0.1 »; Kandidatenblatt mit REF-01 V1.50 über Frontend-PR 239 veröffentlicht.', limit: 'Der Entscheid bestätigt nur die leere Struktur. Er erstellt kein aktives Formular, keinen realen Fall, keine Identität, C3/C4-Daten, Unterschrift, keinen Zugriff, geschützten Raum, Verarbeitung oder DMS-Operation.' },
+    status: 'BLATT BESTÄTIGT · AUT-02-03-009 V1.0. Null Ausführungsautorisierungen.',
+    next: 'Nächster menschlicher Entscheid: REF-01-G1-AUT-02-03-010 V0.1, das Dokumentationsprotokoll zur Erstnutzung, bestätigen oder ändern.',
     boundary: 'Die Validierung betrifft den internen Rahmen und seine gesteuerte Anwendbarkeit. Sie schafft kein Recht, keine allgemeine Konformitätsaussage, Delegation, keinen C3/C4/C5-Zugriff und keine DMS-Operation.'
   }
 };
@@ -181,6 +185,7 @@ const InstitutionalPeopleTeamsGateG1ElevenFieldCandidateMatrices = ({ language =
       <InstitutionalPeopleTeamsGateG1RetentionReviewRegister language={language} />
       <InstitutionalPeopleTeamsGateG1RetentionCaseOpeningGates language={language} />
       <InstitutionalPeopleTeamsGateG1RetentionCaseOpeningDecisionSheet language={language} />
+      <InstitutionalPeopleTeamsGateG1RetentionFirstUseAuthorisationProtocol language={language} />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.previousRecord} className="mt-4" />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.record} className="mt-4" />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.legalRecord} className="mt-4" />
@@ -189,6 +194,7 @@ const InstitutionalPeopleTeamsGateG1ElevenFieldCandidateMatrices = ({ language =
       <GovernedDecisionRecord labels={t.recordLabels} record={t.reviewRecord} className="mt-4" />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.registerRecord} className="mt-4" />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.openingRecord} className="mt-4" />
+      <GovernedDecisionRecord labels={t.recordLabels} record={t.openingDecisionRecord} className="mt-4" />
       <p className="mt-4 rounded-md border border-sky-700/70 bg-sky-950/20 p-3 text-xs font-semibold leading-5 text-sky-100">{t.status}</p>
       <p className="mt-3 text-xs font-semibold leading-5 text-violet-200">{t.next}</p>
       <p className="mt-3 flex items-start gap-2 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.boundary}</p>
