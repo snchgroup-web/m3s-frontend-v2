@@ -3,6 +3,7 @@ import { AlertTriangle, Archive, CheckCircle2, KeyRound, ListChecks, LockKeyhole
 import GovernedDecisionRecord from './GovernedDecisionRecord';
 import InstitutionalPeopleTeamsGateG1LegalRetentionFramework from './InstitutionalPeopleTeamsGateG1LegalRetentionFramework';
 import InstitutionalPeopleTeamsGateG1RetentionCategoryDesignation from './InstitutionalPeopleTeamsGateG1RetentionCategoryDesignation';
+import InstitutionalPeopleTeamsGateG1RetentionOwnersTriggers from './InstitutionalPeopleTeamsGateG1RetentionOwnersTriggers';
 
 const STATE_STYLES = {
   sourced: 'border-emerald-700/70 bg-emerald-950/25 text-emerald-100',
@@ -15,9 +16,9 @@ const STATE_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'MATRICES CONFIRMÉES · CADRE LEGAL VALIDÉ · 28-08-2026',
-    title: 'Valider les deux champs LEGAL et désigner les catégories',
-    intro: 'Cheikh confirme les neuf valeurs de travail et valide en interne le cadre LEGAL V1.0. Cette validation ne conclut pas à une conformité générale et n ouvre aucune exécution.',
+    eyebrow: 'MATRICES ET CATÉGORIES CONFIRMÉES · 28-08-2026',
+    title: 'Valider le cadre LEGAL, les catégories et préparer leur pilotage',
+    intro: 'Cheikh valide en interne le cadre LEGAL V1.0 puis confirme la désignation V1.0 des cinq catégories. La fiche suivante prépare leurs responsabilités et déclencheurs sans conclure à une conformité générale ni ouvrir une exécution.',
     counters: [['Matrices confirmées', '2/2', 'Deux portées toujours séparées'], ['Valeurs confirmées', '9/9', 'Quatre sourcées · cinq de travail'], ['Champs LEGAL validés', '2/2', 'Cadre V1.0 · application contrôlée'], ['Autorisations', '0', 'Aucun droit ni traitement ouvert']],
     badge: 'STRUCTURE CONFIRMÉE · V1.0',
     labels: { basis: 'Cadre et preuve', format: 'Structure retenue', supports: 'Sources rapprochées', value: 'Valeur qualifiée', stop: 'Arrêt obligatoire' },
@@ -53,14 +54,15 @@ const COPY = {
     previousRecord: { id: 'REF-01-DEC-041', version: 'V1.0', status: 'Deux structures de matrice confirmées', author: 'Cheikh Ndiaye', date: '28-08-2026', decision: 'REF-01-G1-AUT-02-03-002 V0.1 et REF-01-G1-AUT-02-02-002 V0.1 sont confirmées ensemble et promues en V1.0 comme structures distinctes. Les onze champs peuvent être qualifiés uniquement selon le niveau de preuve disponible.', evidence: 'Confirmation explicite de Cheikh dans la session du 28-08-2026 : « je confirme les 2 matrices V0.1 » ; matrices candidates publiées par la PR frontend nº 231 au commit 9ec7e0d.', limit: 'La confirmation porte sur les structures. Elle ne fixe aucune durée légale et n’autorise aucun compte, droit, délégation, exception, accès, pièce ou opération GED.' },
     record: { id: 'REF-01-DEC-042', version: 'V1.0', status: 'Neuf valeurs confirmées · deux champs LEGAL instruits', author: 'Cheikh Ndiaye', date: '28-08-2026', decision: 'Les quatre valeurs sourcées et les cinq valeurs partielles sont confirmées comme état gouverné du lot. Les durées applicables et règles locales sont instruites dans REF-01-G1-AUT-02-03-003 V0.1 à partir de sources officielles Suisse, Sénégal et OHADA.', evidence: 'Confirmation explicite de Cheikh dans la session du 28-08-2026 : « je confirme les 4 et les 5 » ; rapprochement LEGAL borné aux sources officielles référencées dans la matrice candidate.', limit: 'La confirmation des cinq valeurs conserve leurs réserves. Le cadre LEGAL reste candidat : il ne constitue pas un avis juridique, ne conclut pas à la conformité, ne tranche pas seul l applicabilité et ne déclenche aucune conservation, suppression, archive, gel ou opération GED.' },
     legalRecord: { id: 'REF-01-DEC-043', version: 'V1.0', status: 'Cadre LEGAL V1.0 validé en interne', author: 'Cheikh Ndiaye', date: '28-08-2026', decision: 'REF-01-G1-AUT-02-03-003 V0.1 est confirmé et promu en V1.0. Les cinq catégories et l articulation Suisse centrale avec Sénégal/OHADA conditionnelle sont retenues comme cadre interne de qualification.', evidence: 'Validation explicite de Cheikh dans la session du 28-08-2026 : « woow merci. on valide LEGAL » ; cadre rapproché des sources officielles référencées.', limit: 'Validation interne uniquement : ni avis juridique externe, ni affirmation générale de conformité, ni durée automatiquement appliquée, ni suppression, archivage, gel, traitement réel ou ouverture L2.' },
-    status: 'NEUF VALEURS CONFIRMÉES · Deux champs LEGAL validés dans le cadre V1.0. Zéro autorisation d exécution.',
-    next: 'Prochain arbitrage humain : confirmer ou amender REF-01-G1-AUT-02-03-004 V0.1, qui désigne les catégories réellement utilisées avant toute règle opérationnelle.',
+    designationRecord: { id: 'REF-01-DEC-044', version: 'V1.0', status: 'Désignation des cinq catégories confirmée', author: 'Cheikh Ndiaye', date: '28-08-2026', decision: 'REF-01-G1-AUT-02-03-004 V0.1 est confirmé et promu en V1.0. Deux catégories directes, deux reliées sans copie et une conditionnelle sont retenues comme désignation gouvernée de REF-01.', evidence: 'Confirmation explicite de Cheikh dans la session du 28-08-2026 : « on la confirme, merci de continuer » ; désignation candidate publiée avec REF-01 V1.45.', limit: 'La décision confirme les catégories et leurs rattachements fonctionnels. Elle ne désigne aucun mandataire nominatif, ne démarre aucune durée et n autorise aucune règle automatique, suppression, archive, gel ou opération GED.' },
+    status: 'CATÉGORIES CONFIRMÉES · Désignation AUT-02-03-004 V1.0. Zéro autorisation d exécution.',
+    next: 'Prochain arbitrage humain : confirmer ou amender REF-01-G1-AUT-02-03-005 V0.1, qui attribue les fonctions pilotes et les déclencheurs documentaires candidats.',
     boundary: 'La validation porte sur le cadre interne et son applicabilité gouvernée. Elle ne crée aucun droit, aucune conclusion générale de conformité, aucune délégation, aucun accès C3/C4/C5 et aucune opération GED.'
   },
   EN: {
-    eyebrow: 'CONFIRMED MATRICES · LEGAL FRAMEWORK VALIDATED · 28 AUG 2026',
-    title: 'Validate the two LEGAL fields and designate categories',
-    intro: 'Cheikh confirms the nine working values and internally validates the V1.0 LEGAL framework. This validation makes no blanket compliance conclusion and opens no execution.',
+    eyebrow: 'MATRICES AND CATEGORIES CONFIRMED · 28 AUG 2026',
+    title: 'Validate the LEGAL framework and categories, then prepare stewardship',
+    intro: 'Cheikh internally validates the V1.0 LEGAL framework and confirms the V1.0 designation of five categories. The next file prepares responsibilities and triggers without making a blanket compliance conclusion or opening execution.',
     counters: [['Confirmed matrices', '2/2', 'Two scopes remain separate'], ['Confirmed values', '9/9', 'Four sourced · five working values'], ['LEGAL fields validated', '2/2', 'V1.0 framework · controlled application'], ['Authorisations', '0', 'No right or processing opened']],
     badge: 'CONFIRMED STRUCTURE · V1.0',
     labels: { basis: 'Framework and evidence', format: 'Retained structure', supports: 'Reconciled sources', value: 'Qualified value', stop: 'Mandatory stop' },
@@ -96,14 +98,15 @@ const COPY = {
     previousRecord: { id: 'REF-01-DEC-041', version: 'V1.0', status: 'Two matrix structures confirmed', author: 'Cheikh Ndiaye', date: '28 Aug 2026', decision: 'REF-01-G1-AUT-02-03-002 V0.1 and REF-01-G1-AUT-02-02-002 V0.1 are confirmed together and promoted to V1.0 as separate structures. Their eleven fields may be qualified only according to available evidence.', evidence: 'Explicit confirmation by Cheikh during the 28 Aug 2026 session: “je confirme les 2 matrices V0.1”; candidate matrices published through frontend PR 231 at commit 9ec7e0d.', limit: 'Confirmation covers the structures. It sets no legal period and authorises no account, right, delegation, exception, access, record or DMS operation.' },
     record: { id: 'REF-01-DEC-042', version: 'V1.0', status: 'Nine values confirmed · two LEGAL fields established', author: 'Cheikh Ndiaye', date: '28 Aug 2026', decision: 'The four sourced and five partial values are confirmed as the governed package state. Applicable periods and local rules are established in REF-01-G1-AUT-02-03-003 V0.1 from official Swiss, Senegalese and OHADA sources.', evidence: 'Explicit confirmation by Cheikh during the 28 Aug 2026 session: “je confirme les 4 et les 5”; LEGAL reconciliation bounded to the official sources referenced in the candidate matrix.', limit: 'Confirmation of the five values preserves their reservations. The LEGAL framework remains a candidate: it is not legal advice, does not assert compliance, does not by itself settle applicability, and triggers no retention, deletion, archive, hold or DMS operation.' },
     legalRecord: { id: 'REF-01-DEC-043', version: 'V1.0', status: 'V1.0 LEGAL framework internally validated', author: 'Cheikh Ndiaye', date: '28 Aug 2026', decision: 'REF-01-G1-AUT-02-03-003 V0.1 is confirmed and promoted to V1.0. Its five categories and central Swiss articulation with conditional Senegal/OHADA scope are retained as the internal qualification framework.', evidence: 'Explicit validation by Cheikh during the 28 Aug 2026 session: “woow merci. on valide LEGAL”; framework reconciled with the referenced official sources.', limit: 'Internal validation only: no external legal advice, blanket compliance assertion, automatically applied period, deletion, archive, hold, real processing or L2 opening.' },
-    status: 'NINE VALUES CONFIRMED · Two LEGAL fields validated in the V1.0 framework. Zero execution authorisations.',
-    next: 'Next human decision: confirm or amend REF-01-G1-AUT-02-03-004 V0.1, which designates categories actually used before any operational rule.',
+    designationRecord: { id: 'REF-01-DEC-044', version: 'V1.0', status: 'Five-category designation confirmed', author: 'Cheikh Ndiaye', date: '28 Aug 2026', decision: 'REF-01-G1-AUT-02-03-004 V0.1 is confirmed and promoted to V1.0. Two direct categories, two linked without copying and one conditional category are retained as the governed REF-01 designation.', evidence: 'Explicit confirmation by Cheikh during the 28 Aug 2026 session: “on la confirme, merci de continuer”; candidate designation published with REF-01 V1.45.', limit: 'The decision confirms categories and their functional links. It names no individual mandate, starts no period and authorises no automated rule, deletion, archive, hold or DMS operation.' },
+    status: 'CATEGORIES CONFIRMED · AUT-02-03-004 V1.0 designation. Zero execution authorisations.',
+    next: 'Next human decision: confirm or amend REF-01-G1-AUT-02-03-005 V0.1, which assigns candidate lead functions and documentary triggers.',
     boundary: 'Validation covers the internal framework and its governed applicability. It creates no right, blanket compliance conclusion, delegation, C3/C4/C5 access or DMS operation.'
   },
   DE: {
-    eyebrow: 'BESTÄTIGTE MATRIZEN · LEGAL-RAHMEN VALIDIERT · 28.08.2026',
-    title: 'Die zwei LEGAL-Felder validieren und Kategorien bestimmen',
-    intro: 'Cheikh bestätigt die neun Arbeitswerte und validiert den LEGAL-Rahmen V1.0 intern. Diese Validierung enthält keine allgemeine Konformitätsaussage und öffnet keine Ausführung.',
+    eyebrow: 'MATRIZEN UND KATEGORIEN BESTÄTIGT · 28.08.2026',
+    title: 'LEGAL-Rahmen und Kategorien validieren, dann Steuerung vorbereiten',
+    intro: 'Cheikh validiert den LEGAL-Rahmen V1.0 intern und bestätigt die V1.0-Zuordnung der fünf Kategorien. Die nächste Akte bereitet Verantwortungen und Auslöser vor, ohne allgemeine Konformitätsaussage oder Ausführungsöffnung.',
     counters: [['Bestätigte Matrizen', '2/2', 'Zwei getrennte Umfänge'], ['Bestätigte Werte', '9/9', 'Vier belegt · fünf Arbeitswerte'], ['Validierte LEGAL-Felder', '2/2', 'Rahmen V1.0 · kontrollierte Anwendung'], ['Autorisierungen', '0', 'Kein Recht oder Vorgang geöffnet']],
     badge: 'STRUKTUR BESTÄTIGT · V1.0',
     labels: { basis: 'Rahmen und Nachweis', format: 'Bestätigte Struktur', supports: 'Abgeglichene Quellen', value: 'Qualifizierter Wert', stop: 'Pflichtstopp' },
@@ -139,8 +142,9 @@ const COPY = {
     previousRecord: { id: 'REF-01-DEC-041', version: 'V1.0', status: 'Zwei Matrixstrukturen bestätigt', author: 'Cheikh Ndiaye', date: '28.08.2026', decision: 'REF-01-G1-AUT-02-03-002 V0.1 und REF-01-G1-AUT-02-02-002 V0.1 sind gemeinsam bestätigt und werden als getrennte Strukturen zu V1.0. Ihre elf Felder dürfen nur gemäss verfügbarer Nachweise qualifiziert werden.', evidence: 'Ausdrückliche Bestätigung durch Cheikh in der Sitzung vom 28.08.2026: « je confirme les 2 matrices V0.1 »; Kandidatenmatrizen veröffentlicht mit Frontend-PR 231 am Commit 9ec7e0d.', limit: 'Die Bestätigung betrifft die Strukturen. Sie setzt keine Rechtsfrist fest und autorisiert kein Konto, Recht, Delegation, Ausnahme, keinen Zugriff, keine Unterlage und keine DMS-Operation.' },
     record: { id: 'REF-01-DEC-042', version: 'V1.0', status: 'Neun Werte bestätigt · zwei LEGAL-Felder bestimmt', author: 'Cheikh Ndiaye', date: '28.08.2026', decision: 'Die vier belegten und fünf teilweisen Werte sind als gesteuerter Paketstand bestätigt. Anwendbare Fristen und lokale Regeln werden in REF-01-G1-AUT-02-03-003 V0.1 anhand amtlicher Schweizer, senegalesischer und OHADA-Quellen bestimmt.', evidence: 'Ausdrückliche Bestätigung durch Cheikh in der Sitzung vom 28.08.2026: « je confirme les 4 et les 5 »; LEGAL-Abgleich begrenzt auf die in der Kandidatenmatrix referenzierten amtlichen Quellen.', limit: 'Die Bestätigung der fünf Werte bewahrt ihre Vorbehalte. Der LEGAL-Rahmen bleibt Kandidat: keine Rechtsberatung, keine Konformitätsaussage, keine alleinige Klärung der Anwendbarkeit und keine Aufbewahrung, Löschung, Archivierung, Sperre oder DMS-Operation.' },
     legalRecord: { id: 'REF-01-DEC-043', version: 'V1.0', status: 'LEGAL-Rahmen V1.0 intern validiert', author: 'Cheikh Ndiaye', date: '28.08.2026', decision: 'REF-01-G1-AUT-02-03-003 V0.1 ist bestätigt und zu V1.0 hochgestuft. Die fünf Kategorien und die zentrale Schweizer Zuordnung mit bedingtem Senegal/OHADA-Umfang gelten als interner Qualifikationsrahmen.', evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 28.08.2026: « woow merci. on valide LEGAL »; Rahmen mit den referenzierten amtlichen Quellen abgeglichen.', limit: 'Nur interne Validierung: keine externe Rechtsberatung, allgemeine Konformitätsaussage, automatisch angewandte Frist, Löschung, Archivierung, Sperre, reale Verarbeitung oder Öffnung von L2.' },
-    status: 'NEUN WERTE BESTÄTIGT · Zwei LEGAL-Felder im Rahmen V1.0 validiert. Null Ausführungsautorisierungen.',
-    next: 'Nächster menschlicher Entscheid: REF-01-G1-AUT-02-03-004 V0.1 bestätigen oder ändern; diese Akte bestimmt die tatsächlich genutzten Kategorien vor jeder operativen Regel.',
+    designationRecord: { id: 'REF-01-DEC-044', version: 'V1.0', status: 'Zuordnung der fünf Kategorien bestätigt', author: 'Cheikh Ndiaye', date: '28.08.2026', decision: 'REF-01-G1-AUT-02-03-004 V0.1 ist bestätigt und zu V1.0 hochgestuft. Zwei direkte, zwei ohne Kopie verknüpfte und eine bedingte Kategorie gelten als gesteuerte REF-01-Zuordnung.', evidence: 'Ausdrückliche Bestätigung durch Cheikh in der Sitzung vom 28.08.2026: « on la confirme, merci de continuer »; Kandidatenzuordnung mit REF-01 V1.45 veröffentlicht.', limit: 'Der Entscheid bestätigt Kategorien und funktionale Verknüpfungen. Er benennt kein persönliches Mandat, startet keine Frist und autorisiert keine automatisierte Regel, Löschung, Archivierung, Sperre oder DMS-Operation.' },
+    status: 'KATEGORIEN BESTÄTIGT · Zuordnung AUT-02-03-004 V1.0. Null Ausführungsautorisierungen.',
+    next: 'Nächster menschlicher Entscheid: REF-01-G1-AUT-02-03-005 V0.1 bestätigen oder ändern; die Akte weist Kandidatenfunktionen und dokumentarische Auslöser zu.',
     boundary: 'Die Validierung betrifft den internen Rahmen und seine gesteuerte Anwendbarkeit. Sie schafft kein Recht, keine allgemeine Konformitätsaussage, Delegation, keinen C3/C4/C5-Zugriff und keine DMS-Operation.'
   }
 };
@@ -156,9 +160,11 @@ const InstitutionalPeopleTeamsGateG1ElevenFieldCandidateMatrices = ({ language =
       </div>
       <InstitutionalPeopleTeamsGateG1LegalRetentionFramework language={language} />
       <InstitutionalPeopleTeamsGateG1RetentionCategoryDesignation language={language} />
+      <InstitutionalPeopleTeamsGateG1RetentionOwnersTriggers language={language} />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.previousRecord} className="mt-4" />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.record} className="mt-4" />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.legalRecord} className="mt-4" />
+      <GovernedDecisionRecord labels={t.recordLabels} record={t.designationRecord} className="mt-4" />
       <p className="mt-4 rounded-md border border-sky-700/70 bg-sky-950/20 p-3 text-xs font-semibold leading-5 text-sky-100">{t.status}</p>
       <p className="mt-3 text-xs font-semibold leading-5 text-violet-200">{t.next}</p>
       <p className="mt-3 flex items-start gap-2 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.boundary}</p>
