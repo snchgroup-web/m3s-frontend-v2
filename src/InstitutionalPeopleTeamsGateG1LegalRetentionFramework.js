@@ -3,10 +3,10 @@ import { ExternalLink, Globe2, LockKeyhole, Scale } from 'lucide-react';
 
 const COPY = {
   FR: {
-    eyebrow: 'CADRE LEGAL SOURCÉ · CANDIDAT V0.1 · 28-08-2026',
-    title: 'Qualifier les durées et les règles locales par catégorie',
-    intro: 'Les sources officielles excluent une durée unique pour toutes les pièces. Cette matrice distingue la finalité, la catégorie, la juridiction, le point de départ et le sort final avant toute future règle opérationnelle.',
-    badge: 'SOURCÉ · APPLICABILITÉ À VALIDER',
+    eyebrow: 'CADRE LEGAL SOURCÉ · VALIDÉ V1.0 · 28-08-2026',
+    title: 'Appliquer le cadre validé par catégorie',
+    intro: 'Cheikh valide en interne le cadre fondé sur les sources officielles. Il exclut une durée unique pour toutes les pièces et distingue finalité, catégorie, juridiction, point de départ et sort final avant toute future règle opérationnelle.',
+    badge: 'SOURCÉ · VALIDÉ EN INTERNE',
     labels: { category: 'Catégorie', rule: 'Règle candidate', trigger: 'Point de départ et sort final', jurisdiction: 'Juridiction', source: 'Source officielle' },
     categories: [
       ['Annuaire C2 · personnes et équipes', 'Conserver pendant la finalité active. Supprimer ou anonymiser lorsque les données ne sont plus nécessaires, sauf obligation documentée, intérêt prépondérant ou gel lié à un litige.', 'Revue au départ, à la fin du mandat ou à la disparition de la finalité ; décision de fin à tracer.', 'CH + SN', 0],
@@ -18,7 +18,7 @@ const COPY = {
     jurisdictions: [
       ['Suisse', 'La LPD impose finalité, proportionnalité et transparence. La personne doit être informée de la durée ou des critères utilisés ; les associations doivent effacer ou anonymiser les données devenues inutiles.', 0],
       ['Sénégal', 'La loi n° 2008-12 limite la conservation à la durée nécessaire aux finalités. Une prolongation n est admise que dans les cas prévus ; la CDP exige d informer sur la durée et de détruire ou archiver à l échéance légale.', 3],
-      ['Articulation territoriale', 'Le siège suisse de 2SG rend le cadre suisse central. L application du droit sénégalais, d OHADA et des règles de transfert dépend du responsable, du traitement, du territoire et de la structure concernée ; ce rattachement reste à valider.', 4]
+      ['Articulation territoriale', 'Le siège suisse de 2SG rend le cadre suisse central. Le droit sénégalais, OHADA et les règles de transfert s ajoutent lorsque le responsable, le traitement, le territoire ou la structure concernés le commandent ; tout changement de rattachement impose une nouvelle revue.', 4]
     ],
     sources: [
       ['PFPDT · Associations et protection des données', 'https://www.edoeb.admin.ch/en/data-protection-in-clubs-and-associations'],
@@ -27,13 +27,13 @@ const COPY = {
       ['CDP Sénégal · Obligations des entreprises', 'https://www.cdp.sn/obligations-entreprises'],
       ['CDP Sénégal · Textes législatifs et loi n° 2008-12', 'https://www.cdp.sn/legislation/textes-legislatifs']
     ],
-    stop: 'Aucune durée n est appliquée automatiquement. Avant exécution, LEGAL doit confirmer l applicabilité, Administration/RH la catégorie et le déclencheur, la GED le sort final, et la Gouvernance l autorité de décision.'
+    stop: 'Le cadre est validé, mais aucune durée n est appliquée automatiquement. Avant exécution, la catégorie, le déclencheur, le sort final et l autorité doivent être désignés ; tout nouveau territoire, transfert ou conflit impose une revue LEGAL.'
   },
   EN: {
-    eyebrow: 'SOURCED LEGAL FRAMEWORK · V0.1 CANDIDATE · 28 AUG 2026',
-    title: 'Qualify periods and local rules by category',
-    intro: 'Official sources rule out one period for every record. This matrix separates purpose, category, jurisdiction, starting event and final treatment before any future operational rule.',
-    badge: 'SOURCED · APPLICABILITY TO VALIDATE',
+    eyebrow: 'SOURCED LEGAL FRAMEWORK · V1.0 VALIDATED · 28 AUG 2026',
+    title: 'Apply the validated framework by category',
+    intro: 'Cheikh internally validates the framework grounded in official sources. It rules out one period for every record and separates purpose, category, jurisdiction, starting event and final treatment before any future operational rule.',
+    badge: 'SOURCED · INTERNALLY VALIDATED',
     labels: { category: 'Category', rule: 'Candidate rule', trigger: 'Starting event and final treatment', jurisdiction: 'Jurisdiction', source: 'Official source' },
     categories: [
       ['C2 directory · people and teams', 'Retain for the active purpose. Delete or anonymise when no longer needed, unless a documented obligation, overriding interest or litigation hold applies.', 'Review on departure, end of mandate or end of purpose; trace the final decision.', 'CH + SN', 0],
@@ -45,7 +45,7 @@ const COPY = {
     jurisdictions: [
       ['Switzerland', 'The FADP requires purpose limitation, proportionality and transparency. People must be told the period or criteria used; associations must delete or anonymise data that is no longer needed.', 0],
       ['Senegal', 'Law No. 2008-12 limits retention to what is necessary for the purposes. Extension is allowed only in provided cases; the CDP requires notice of the period and destruction or archiving at legal expiry.', 3],
-      ['Territorial articulation', '2SG s Swiss seat makes the Swiss framework central. Senegalese law, OHADA and transfer rules depend on the controller, processing, territory and concerned structure; that connection still needs validation.', 4]
+      ['Territorial articulation', '2SG s Swiss seat makes the Swiss framework central. Senegalese law, OHADA and transfer rules are added when the controller, processing, territory or concerned structure requires them; any connection change requires a new review.', 4]
     ],
     sources: [
       ['FDPIC · Data protection in clubs and associations', 'https://www.edoeb.admin.ch/en/data-protection-in-clubs-and-associations'],
@@ -54,13 +54,13 @@ const COPY = {
       ['Senegal CDP · Business obligations', 'https://www.cdp.sn/obligations-entreprises'],
       ['Senegal CDP · Legislation and Law No. 2008-12', 'https://www.cdp.sn/legislation/textes-legislatifs']
     ],
-    stop: 'No period is applied automatically. Before execution, LEGAL must confirm applicability, Administration/HR the category and trigger, the DMS the final treatment, and Governance the decision authority.'
+    stop: 'The framework is validated, but no period is applied automatically. Before execution, the category, trigger, final treatment and authority must be designated; any new territory, transfer or conflict requires LEGAL review.'
   },
   DE: {
-    eyebrow: 'BELEGTER RECHTSRAHMEN · KANDIDAT V0.1 · 28.08.2026',
-    title: 'Fristen und lokale Regeln nach Kategorie bestimmen',
-    intro: 'Amtliche Quellen schliessen eine Einheitsfrist fuer alle Unterlagen aus. Diese Matrix trennt Zweck, Kategorie, Rechtsraum, Startereignis und Endbehandlung vor jeder kuenftigen operativen Regel.',
-    badge: 'BELEGT · ANWENDBARKEIT ZU PRUEFEN',
+    eyebrow: 'BELEGTER RECHTSRAHMEN · V1.0 VALIDIERT · 28.08.2026',
+    title: 'Den validierten Rahmen nach Kategorie anwenden',
+    intro: 'Cheikh validiert den auf amtlichen Quellen beruhenden Rahmen intern. Er schliesst eine Einheitsfrist fuer alle Unterlagen aus und trennt Zweck, Kategorie, Rechtsraum, Startereignis und Endbehandlung vor jeder kuenftigen operativen Regel.',
+    badge: 'BELEGT · INTERN VALIDIERT',
     labels: { category: 'Kategorie', rule: 'Kandidatenregel', trigger: 'Startereignis und Endbehandlung', jurisdiction: 'Rechtsraum', source: 'Amtliche Quelle' },
     categories: [
       ['C2-Verzeichnis · Personen und Teams', 'Fuer den aktiven Zweck aufbewahren. Loeschen oder anonymisieren, sobald die Daten nicht mehr noetig sind, ausser bei dokumentierter Pflicht, ueberwiegendem Interesse oder Verfahrenssperre.', 'Pruefung bei Austritt, Mandatsende oder Zweckfortfall; Endentscheid protokollieren.', 'CH + SN', 0],
@@ -72,7 +72,7 @@ const COPY = {
     jurisdictions: [
       ['Schweiz', 'Das DSG verlangt Zweckbindung, Verhaeltnismaessigkeit und Transparenz. Betroffene muessen Frist oder Kriterien kennen; Vereine muessen nicht mehr noetige Daten loeschen oder anonymisieren.', 0],
       ['Senegal', 'Gesetz Nr. 2008-12 begrenzt die Aufbewahrung auf den fuer die Zwecke noetigen Zeitraum. Eine Verlaengerung gilt nur in vorgesehenen Faellen; die CDP verlangt Fristinformation und Loeschung oder Archivierung bei gesetzlichem Ablauf.', 3],
-      ['Territoriale Zuordnung', 'Der Schweizer Sitz von 2SG macht den Schweizer Rahmen zentral. Senegal-Recht, OHADA und Transferregeln haengen von Verantwortlichem, Verarbeitung, Gebiet und betroffener Struktur ab; diese Zuordnung ist noch zu validieren.', 4]
+      ['Territoriale Zuordnung', 'Der Schweizer Sitz von 2SG macht den Schweizer Rahmen zentral. Senegal-Recht, OHADA und Transferregeln kommen hinzu, wenn Verantwortlicher, Verarbeitung, Gebiet oder betroffene Struktur dies verlangen; jede Aenderung der Zuordnung erfordert eine neue Pruefung.', 4]
     ],
     sources: [
       ['EDOEB · Datenschutz in Vereinen', 'https://www.edoeb.admin.ch/en/data-protection-in-clubs-and-associations'],
@@ -81,7 +81,7 @@ const COPY = {
       ['CDP Senegal · Pflichten der Unternehmen', 'https://www.cdp.sn/obligations-entreprises'],
       ['CDP Senegal · Gesetzgebung und Gesetz Nr. 2008-12', 'https://www.cdp.sn/legislation/textes-legislatifs']
     ],
-    stop: 'Keine Frist wird automatisch angewandt. Vor einer Ausfuehrung bestaetigt LEGAL die Anwendbarkeit, Verwaltung/HR Kategorie und Ausloeser, das DMS die Endbehandlung und Governance die Entscheidautoritaet.'
+    stop: 'Der Rahmen ist validiert, aber keine Frist wird automatisch angewandt. Vor einer Ausfuehrung muessen Kategorie, Ausloeser, Endbehandlung und Autoritaet bestimmt sein; jedes neue Gebiet, jeder Transfer oder Konflikt erfordert eine LEGAL-Pruefung.'
   }
 };
 
