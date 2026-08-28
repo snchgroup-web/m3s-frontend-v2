@@ -17,7 +17,7 @@ const COPY = {
     rulesTitle: 'Quatre règles de complétude confirmées',
     rules: ['Six portes renseignées', 'Un seul verdict retenu', 'Autorité et mandat contrôlés', 'Aucune donnée C3/C4 dans REF-01'],
     status: 'CONFIRMÉ · Gabarit documentaire V1.0. Zéro formulaire actif, signature, cas réel, accès ou opération GED.',
-    next: 'Étape suivante : préparer REF-01-G1-AUT-02-03-010 V0.1, le protocole documentaire de première utilisation.',
+    next: 'Étape suivante franchie : REF-01-G1-AUT-02-03-010 est confirmé en V1.0 et la fiche GO/NO-GO 011 est préparée.',
     boundary: 'La confirmation valide uniquement la structure documentaire. Toute première utilisation réelle exige une autorisation séparée, un espace protégé et le contrôle du cas concerné.'
   },
   EN: {
@@ -35,7 +35,7 @@ const COPY = {
     rulesTitle: 'Four confirmed completion rules',
     rules: ['Six gates recorded', 'One outcome only', 'Authority and mandate checked', 'No C3/C4 data in REF-01'],
     status: 'CONFIRMED · V1.0 documentary template. Zero active forms, signatures, real cases, access or DMS operations.',
-    next: 'Next step: prepare REF-01-G1-AUT-02-03-010 V0.1, the first-use documentary protocol.',
+    next: 'Next step completed: REF-01-G1-AUT-02-03-010 is confirmed as V1.0 and GO/NO-GO sheet 011 is prepared.',
     boundary: 'Confirmation validates only the documentary structure. Any first real use requires separate authorisation, a protected space and review of the relevant case.'
   },
   DE: {
@@ -53,7 +53,7 @@ const COPY = {
     rulesTitle: 'Vier bestätigte Vollständigkeitsregeln',
     rules: ['Sechs Tore dokumentiert', 'Nur ein Ergebnis gewählt', 'Autorität und Mandat geprüft', 'Keine C3/C4-Daten in REF-01'],
     status: 'BESTÄTIGT · Dokumentationsvorlage V1.0. Null aktive Formulare, Unterschriften, reale Fälle, Zugriffe oder DMS-Operationen.',
-    next: 'Nächster Schritt: REF-01-G1-AUT-02-03-010 V0.1, das Dokumentationsprotokoll zur Erstnutzung, vorbereiten.',
+    next: 'Nächster Schritt abgeschlossen: REF-01-G1-AUT-02-03-010 ist als V1.0 bestätigt und GO/NO-GO-Blatt 011 vorbereitet.',
     boundary: 'Die Bestätigung validiert nur die Dokumentationsstruktur. Jede erste reale Nutzung erfordert eine getrennte Autorisierung, einen geschützten Raum und die Prüfung des betreffenden Falls.'
   }
 };
