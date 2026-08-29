@@ -19,6 +19,8 @@ import InstitutionalPeopleTeamsGateG1LeastPrivilegeAccessOpeningDecisionSheet fr
 import InstitutionalPeopleTeamsGateG1LeastPrivilegeFirstUseAuthorisationProtocol from './InstitutionalPeopleTeamsGateG1LeastPrivilegeFirstUseAuthorisationProtocol';
 import InstitutionalPeopleTeamsGateG1LeastPrivilegeFirstExecutionDecisionSheet from './InstitutionalPeopleTeamsGateG1LeastPrivilegeFirstExecutionDecisionSheet';
 import InstitutionalPeopleTeamsGateG1PostAuthorisationReassessment from './InstitutionalPeopleTeamsGateG1PostAuthorisationReassessment';
+import InstitutionalPeopleTeamsGateG1PostAuthorisationReassessmentConfirmation from './InstitutionalPeopleTeamsGateG1PostAuthorisationReassessmentConfirmation';
+import InstitutionalPeopleTeamsGateG1SyntheticWaveCandidate from './InstitutionalPeopleTeamsGateG1SyntheticWaveCandidate';
 
 const STATE_STYLES = {
   sourced: 'border-emerald-700/70 bg-emerald-950/25 text-emerald-100',
@@ -33,7 +35,7 @@ const COPY = {
   FR: {
     eyebrow: 'MATRICES ET DEUX SOUS-LOTS CONFIRMÉS · 29-08-2026',
     title: 'Confirmer les deux chaînes documentaires et réévaluer G1 sans ouvrir de droit',
-    intro: 'Cheikh confirme la fiche GO/NO-GO de première exécution en V1.0. Les deux sous-lots sont désormais préparés ; REV-004 réévalue les six conditions sans enregistrer d’identité, créer de compte, modifier un droit ni ouvrir L2.',
+    intro: 'Cheikh confirme REV-004 en V1.0 après les deux sous-lots documentaires. WAV-003 V0.1 prépare maintenant la vague technique synthétique sans environnement, test ni ouverture L2.',
     counters: [['Matrices confirmées', '2/2', 'Deux portées toujours séparées'], ['Valeurs non LEGAL relues', '9/9', 'Une sourcée · cinq gouvernées · trois requalifiées'], ['Champs LEGAL validés', '2/2', 'Cadre V1.0 · application contrôlée'], ['Autorisations', '0', 'Aucun droit ni traitement ouvert']],
     badge: 'STRUCTURE CONFIRMÉE · V1.0',
     labels: { basis: 'Cadre et preuve', format: 'Structure retenue', supports: 'Sources rapprochées', value: 'Valeur qualifiée', stop: 'Arrêt obligatoire' },
@@ -86,13 +88,13 @@ const COPY = {
     firstExecutionRecord: { id: 'REF-01-DEC-058', version: 'V1.0', status: 'Protocole de première exécution confirmé', author: 'Cheikh Ndiaye', date: '29-08-2026', decision: 'REF-01-G1-AUT-02-02-009 V0.1 est confirmé et promu en V1.0. Ses quatre groupes, six préconditions et quatre issues documentaires sont retenus avant toute future exécution technique.', evidence: 'Confirmation explicite de Cheikh dans la session du 29-08-2026 : « merci de continuer, je confirme REF-01-G1-AUT-02-02-009 V0.1 » ; protocole candidat publié avec REF-01 V1.60 par la PR frontend nº 249 au commit 20259d2.', limit: 'La décision confirme uniquement le protocole documentaire. Elle ne crée aucune autorisation active, identité, titulaire, compte, droit, accès C3/C4/C5, instruction IT ni modification de production.' },
     firstExecutionDecisionRecord: { id: 'REF-01-DEC-059', version: 'V1.0', status: 'Fiche GO/NO-GO de première exécution confirmée', author: 'Cheikh Ndiaye', date: '29-08-2026', decision: 'REF-01-G1-AUT-02-02-010 V0.1 est confirmé et promu en V1.0. Ses quatre groupes et cinq règles sont retenus comme fiche documentaire vide pour une future décision d exécution séparée.', evidence: 'Confirmation explicite de Cheikh dans la session du 29-08-2026 : « je confirme on continue avec REF-01-G1-AUT-02-02-010 V0.1 » ; fiche candidate publiée avec REF-01 V1.61 par la PR frontend nº 250 au commit 78dba2b.', limit: 'La décision confirme uniquement la structure vide. Elle ne constitue aucun GO, ne crée aucun titulaire, compte, droit, accès C3/C4/C5, instruction IT, exécution ou modification de production.' },
     status: 'DEUX SOUS-LOTS PRÉPARÉS · AUT-02-03 et AUT-02-02 sont confirmés jusqu à leur fiche GO/NO-GO ; zéro décision active ou droit exécuté.',
-    next: 'Prochain arbitrage humain : confirmer ou amender REF-01-G1-REV-004 V0.1, la réévaluation des six conditions après les deux sous-lots.',
+    next: 'Prochain arbitrage humain : confirmer ou amender REF-01-G1-WAV-003 V0.1, l’ouverture préparatoire de trois dossiers techniques isolés.',
     boundary: 'La validation porte sur le cadre interne et son applicabilité gouvernée. Elle ne crée aucun droit, aucune conclusion générale de conformité, aucune délégation, aucun accès C3/C4/C5 et aucune opération GED.'
   },
   EN: {
     eyebrow: 'MATRICES AND BOTH SUB-PACKAGES CONFIRMED · 29 AUG 2026',
     title: 'Confirm both documentary chains and reassess G1 without opening a right',
-    intro: 'Cheikh confirms the first-execution GO/NO-GO sheet as V1.0. Both sub-packages are now prepared; REV-004 reassesses all six conditions without recording an identity, creating an account, changing a right or opening L2.',
+    intro: 'Cheikh confirms REV-004 as V1.0 after both documentary sub-packages. WAV-003 V0.1 now prepares the synthetic technical wave without an environment, test or L2 opening.',
     counters: [['Confirmed matrices', '2/2', 'Two scopes remain separate'], ['Reviewed non-LEGAL values', '9/9', 'One sourced · five governed · three requalified'], ['LEGAL fields validated', '2/2', 'V1.0 framework · controlled application'], ['Authorisations', '0', 'No right or processing opened']],
     badge: 'CONFIRMED STRUCTURE · V1.0',
     labels: { basis: 'Framework and evidence', format: 'Retained structure', supports: 'Reconciled sources', value: 'Qualified value', stop: 'Mandatory stop' },
@@ -145,13 +147,13 @@ const COPY = {
     firstExecutionRecord: { id: 'REF-01-DEC-058', version: 'V1.0', status: 'First-execution protocol confirmed', author: 'Cheikh Ndiaye', date: '29 Aug 2026', decision: 'REF-01-G1-AUT-02-02-009 V0.1 is confirmed and promoted to V1.0. Its four groups, six prerequisites and four documentary outcomes are retained before any future technical execution.', evidence: 'Explicit confirmation by Cheikh during the 29 Aug 2026 session: “merci de continuer, je confirme REF-01-G1-AUT-02-02-009 V0.1”; candidate protocol published with REF-01 V1.60 through frontend PR 249 at commit 20259d2.', limit: 'The decision confirms the documentary protocol only. It creates no active authorisation, identity, holder, account, right, C3/C4/C5 access, IT instruction or production change.' },
     firstExecutionDecisionRecord: { id: 'REF-01-DEC-059', version: 'V1.0', status: 'First-execution GO/NO-GO sheet confirmed', author: 'Cheikh Ndiaye', date: '29 Aug 2026', decision: 'REF-01-G1-AUT-02-02-010 V0.1 is confirmed and promoted to V1.0. Its four groups and five rules are retained as an empty documentary sheet for a future separate execution decision.', evidence: 'Explicit confirmation by Cheikh during the 29 Aug 2026 session: “je confirme on continue avec REF-01-G1-AUT-02-02-010 V0.1”; candidate sheet published with REF-01 V1.61 through frontend PR 250 at commit 78dba2b.', limit: 'The decision confirms the empty structure only. It is no GO and creates no holder, account, right, C3/C4/C5 access, IT instruction, execution or production change.' },
     status: 'BOTH SUB-PACKAGES PREPARED · AUT-02-03 and AUT-02-02 are confirmed through their GO/NO-GO sheets; zero active decisions or executed rights.',
-    next: 'Next human decision: confirm or amend REF-01-G1-REV-004 V0.1, the reassessment of all six conditions after both sub-packages.',
+    next: 'Next human decision: confirm or amend REF-01-G1-WAV-003 V0.1, the preparatory opening of three isolated technical files.',
     boundary: 'Validation covers the internal framework and its governed applicability. It creates no right, blanket compliance conclusion, delegation, C3/C4/C5 access or DMS operation.'
   },
   DE: {
     eyebrow: 'MATRIZEN UND BEIDE TEILPAKETE BESTÄTIGT · 29.08.2026',
     title: 'Beide Dokumentketten bestätigen und G1 ohne Rechteöffnung neu bewerten',
-    intro: 'Cheikh bestätigt das GO/NO-GO-Blatt zur ersten Ausführung als V1.0. Beide Teilpakete sind nun vorbereitet; REV-004 bewertet alle sechs Bedingungen neu, ohne Identität zu erfassen, Konto zu erstellen, Recht zu ändern oder L2 zu öffnen.',
+    intro: 'Cheikh bestätigt REV-004 nach beiden Dokumentteilpaketen als V1.0. WAV-003 V0.1 bereitet nun die synthetische technische Welle ohne Umgebung, Prüfung oder L2-Öffnung vor.',
     counters: [['Bestätigte Matrizen', '2/2', 'Zwei getrennte Umfänge'], ['Geprüfte Nicht-LEGAL-Werte', '9/9', 'Einer belegt · fünf gesteuert · drei neu qualifiziert'], ['Validierte LEGAL-Felder', '2/2', 'Rahmen V1.0 · kontrollierte Anwendung'], ['Autorisierungen', '0', 'Kein Recht oder Vorgang geöffnet']],
     badge: 'STRUKTUR BESTÄTIGT · V1.0',
     labels: { basis: 'Rahmen und Nachweis', format: 'Bestätigte Struktur', supports: 'Abgeglichene Quellen', value: 'Qualifizierter Wert', stop: 'Pflichtstopp' },
@@ -204,7 +206,7 @@ const COPY = {
     firstExecutionRecord: { id: 'REF-01-DEC-058', version: 'V1.0', status: 'Protokoll zur ersten Ausführung bestätigt', author: 'Cheikh Ndiaye', date: '29.08.2026', decision: 'REF-01-G1-AUT-02-02-009 V0.1 ist bestätigt und zu V1.0 hochgestuft. Seine vier Gruppen, sechs Voraussetzungen und vier Dokumentationsergebnisse gelten vor jeder künftigen technischen Ausführung.', evidence: 'Ausdrückliche Bestätigung durch Cheikh in der Sitzung vom 29.08.2026: « merci de continuer, je confirme REF-01-G1-AUT-02-02-009 V0.1 »; Kandidatenprotokoll mit REF-01 V1.60 über Frontend-PR 249 am Commit 20259d2 veröffentlicht.', limit: 'Der Entscheid bestätigt nur das Dokumentationsprotokoll. Er erstellt keine aktive Autorisierung, Identität, keinen Inhaber, kein Konto, Recht, keinen C3/C4/C5-Zugriff, keine IT-Anweisung oder Produktionsänderung.' },
     firstExecutionDecisionRecord: { id: 'REF-01-DEC-059', version: 'V1.0', status: 'GO/NO-GO-Blatt zur ersten Ausführung bestätigt', author: 'Cheikh Ndiaye', date: '29.08.2026', decision: 'REF-01-G1-AUT-02-02-010 V0.1 ist bestätigt und zu V1.0 hochgestuft. Seine vier Gruppen und fünf Regeln gelten als leeres Dokumentationsblatt für einen späteren getrennten Ausführungsentscheid.', evidence: 'Ausdrückliche Bestätigung durch Cheikh in der Sitzung vom 29.08.2026: « je confirme on continue avec REF-01-G1-AUT-02-02-010 V0.1 »; Kandidatenblatt mit REF-01 V1.61 über Frontend-PR 250 am Commit 78dba2b veröffentlicht.', limit: 'Der Entscheid bestätigt nur die leere Struktur. Er ist kein GO und erstellt keinen Inhaber, kein Konto, Recht, keinen C3/C4/C5-Zugriff, keine IT-Anweisung, Ausführung oder Produktionsänderung.' },
     status: 'BEIDE TEILPAKETE VORBEREITET · AUT-02-03 und AUT-02-02 sind bis zu ihren GO/NO-GO-Blättern bestätigt; null aktive Entscheide oder ausgeführte Rechte.',
-    next: 'Nächster menschlicher Entscheid: REF-01-G1-REV-004 V0.1, die Neubewertung aller sechs Bedingungen nach beiden Teilpaketen, bestätigen oder ändern.',
+    next: 'Nächster menschlicher Entscheid: REF-01-G1-WAV-003 V0.1, die vorbereitende Öffnung von drei isolierten technischen Akten, bestätigen oder ändern.',
     boundary: 'Die Validierung betrifft den internen Rahmen und seine gesteuerte Anwendbarkeit. Sie schafft kein Recht, keine allgemeine Konformitätsaussage, Delegation, keinen C3/C4/C5-Zugriff und keine DMS-Operation.'
   }
 };
@@ -236,6 +238,8 @@ const InstitutionalPeopleTeamsGateG1ElevenFieldCandidateMatrices = ({ language =
       <InstitutionalPeopleTeamsGateG1LeastPrivilegeFirstUseAuthorisationProtocol language={language} />
       <InstitutionalPeopleTeamsGateG1LeastPrivilegeFirstExecutionDecisionSheet language={language} />
       <InstitutionalPeopleTeamsGateG1PostAuthorisationReassessment language={language} />
+      <InstitutionalPeopleTeamsGateG1PostAuthorisationReassessmentConfirmation language={language} />
+      <InstitutionalPeopleTeamsGateG1SyntheticWaveCandidate language={language} />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.previousRecord} className="mt-4" />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.record} className="mt-4" />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.legalRecord} className="mt-4" />
