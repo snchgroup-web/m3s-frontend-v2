@@ -6,10 +6,10 @@ const COPY = {
     eyebrow: 'DROITS TESTÉS ET REFUS · MATRICE CANDIDATE V0.2 · 29-08-2026',
     title: 'Distinguer le comportement testé de tout droit réel',
     intro: 'Cette matrice s’appuie sur le contrat candidat RH-001 du lot L1 isolé et ses tests synthétiques locaux. Elle qualifie une future lecture C2, les refus 401/403 et ce qui n’est pas ouvert, sans présenter ces résultats comme un comportement de production.',
-    counters: [['Scénarios testés', '4/4', 'Lecture · 401 · 403 · aucune écriture ouverte'], ['Champs projetés', '8', 'Contrat candidat C2 assaini'], ['Lignes de fixture', '6', 'Jeu documentaire, pas un total global'], ['Droits modifiés', '0', 'Qualification documentaire seulement']],
+    counters: [['Tests synthétiques', '3/3', '200 Utilisateur · 401 · 403 Auditeur'], ['Champs projetés', '8', 'Contrat candidat C2 assaini'], ['Lignes de fixture', '6', 'Jeu documentaire, pas un total global'], ['Droits modifiés', '0', 'Qualification documentaire seulement']],
     badge: 'CANDIDAT · À CONFIRMER',
     groups: [
-      ['1 · Contexte de contrôle', ['Fondations L1 isolées, non raccordées', 'Route candidate : GET /api/members-directory', 'Rôles testés : Admin et Utilisateur', 'Alias historique : Manager vers Admin']],
+      ['1 · Contexte de contrôle', ['Fondations L1 isolées, non raccordées', 'Route candidate : GET /api/members-directory', 'Rôles candidats : Admin et Utilisateur · alias Manager vers Admin', 'Tests : Utilisateur autorisé · Auditeur refusé']],
       ['2 · Lecture synthétique', ['Action candidate : lecture seule', 'Réponse 200 dans le test local autorisé', 'Huit champs projetés et assainis', 'Six lignes dans la fixture C2']],
       ['3 · Refus et non-ouvertures', ['401 testé sans authentification', '403 testé avec le rôle Auditeur', 'Aucun endpoint d’écriture ouvert dans L1', 'Aucune donnée C3/C4/C5 dans le contrat']],
       ['4 · Preuve et revue', ['Contrat candidat API RH-001', 'Tests synthétiques locaux du 31-07-2026', 'Journalisation requise avant activation', 'Vérification de production encore requise']]
@@ -24,10 +24,10 @@ const COPY = {
     eyebrow: 'TESTED RIGHTS AND DENIALS · V0.2 CANDIDATE MATRIX · 29 AUG 2026',
     title: 'Separate tested behaviour from any real right',
     intro: 'This matrix relies on the isolated L1 candidate RH-001 contract and its local synthetic tests. It qualifies future C2 reading, 401/403 denials and what is not opened without presenting those results as production behaviour.',
-    counters: [['Tested scenarios', '4/4', 'Read · 401 · 403 · no write opened'], ['Projected fields', '8', 'Sanitised candidate C2 contract'], ['Fixture rows', '6', 'Documentary set, not a global total'], ['Changed rights', '0', 'Documentary qualification only']],
+    counters: [['Synthetic tests', '3/3', '200 User · 401 · 403 Auditor'], ['Projected fields', '8', 'Sanitised candidate C2 contract'], ['Fixture rows', '6', 'Documentary set, not a global total'], ['Changed rights', '0', 'Documentary qualification only']],
     badge: 'CANDIDATE · TO CONFIRM',
     groups: [
-      ['1 · Control context', ['Isolated L1 foundations, not wired in', 'Candidate route: GET /api/members-directory', 'Tested roles: Admin and User', 'Historical alias: Manager to Admin']],
+      ['1 · Control context', ['Isolated L1 foundations, not wired in', 'Candidate route: GET /api/members-directory', 'Candidate roles: Admin and User · Manager alias to Admin', 'Tests: User allowed · Auditor denied']],
       ['2 · Synthetic reading', ['Candidate action: read only', '200 response in the authorised local test', 'Eight projected sanitised fields', 'Six rows in the C2 fixture']],
       ['3 · Denials and unopened paths', ['401 tested without authentication', '403 tested with the Auditor role', 'No write endpoint opened in L1', 'No C3/C4/C5 data in the contract']],
       ['4 · Evidence and review', ['Candidate RH-001 API contract', 'Local synthetic tests dated 31 Jul 2026', 'Logging required before activation', 'Production verification still required']]
@@ -42,10 +42,10 @@ const COPY = {
     eyebrow: 'GETESTETE RECHTE UND ABLEHNUNGEN · KANDIDATENMATRIX V0.2 · 29.08.2026',
     title: 'Getestetes Verhalten von jedem realen Recht trennen',
     intro: 'Diese Matrix stützt sich auf den isolierten RH-001-Kandidatenvertrag des L1-Loses und seine lokalen synthetischen Tests. Sie qualifiziert künftiges C2-Lesen, 401/403-Ablehnungen und nicht geöffnete Wege, ohne diese Ergebnisse als Produktionsverhalten darzustellen.',
-    counters: [['Getestete Szenarien', '4/4', 'Lesen · 401 · 403 · kein Schreiben geöffnet'], ['Projizierte Felder', '8', 'Bereinigter C2-Kandidatenvertrag'], ['Fixture-Zeilen', '6', 'Dokumentationssatz, keine Gesamtsumme'], ['Geänderte Rechte', '0', 'Nur dokumentarische Qualifikation']],
+    counters: [['Synthetische Tests', '3/3', '200 Benutzer · 401 · 403 Auditor'], ['Projizierte Felder', '8', 'Bereinigter C2-Kandidatenvertrag'], ['Fixture-Zeilen', '6', 'Dokumentationssatz, keine Gesamtsumme'], ['Geänderte Rechte', '0', 'Nur dokumentarische Qualifikation']],
     badge: 'KANDIDAT · ZU BESTÄTIGEN',
     groups: [
-      ['1 · Kontrollkontext', ['Isolierte L1-Grundlagen, nicht angebunden', 'Kandidatenroute: GET /api/members-directory', 'Getestete Rollen: Admin und Benutzer', 'Historischer Alias: Manager zu Admin']],
+      ['1 · Kontrollkontext', ['Isolierte L1-Grundlagen, nicht angebunden', 'Kandidatenroute: GET /api/members-directory', 'Kandidatenrollen: Admin und Benutzer · Manager-Alias zu Admin', 'Tests: Benutzer erlaubt · Auditor abgelehnt']],
       ['2 · Synthetisches Lesen', ['Kandidatenaktion: nur Lesen', 'Antwort 200 im autorisierten lokalen Test', 'Acht projizierte bereinigte Felder', 'Sechs Zeilen in der C2-Fixture']],
       ['3 · Ablehnungen und ungeöffnete Wege', ['401 ohne Authentifizierung getestet', '403 mit der Rolle Auditor getestet', 'Kein Schreibendpunkt in L1 geöffnet', 'Keine C3/C4/C5-Daten im Vertrag']],
       ['4 · Nachweis und Prüfung', ['RH-001-API-Kandidatenvertrag', 'Lokale synthetische Tests vom 31.07.2026', 'Protokollierung vor Aktivierung erforderlich', 'Produktionsprüfung weiterhin erforderlich']]
