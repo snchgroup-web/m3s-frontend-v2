@@ -17,7 +17,7 @@ const COPY = {
     rulesTitle: 'Cinq règles candidates de lecture des accès',
     rules: ['Authentification explicite', 'Rôles autorisés explicitement', 'Lecture C2 seulement si elle est activée', 'Décision séparée pour écriture ou C3/C4/C5', 'Refus par défaut hors périmètre'],
     status: 'CONFIRMÉ · Matrice de qualification du contrat L1 et de ses tests synthétiques retenue en V1.0. Zéro compte, attribution, retrait, délégation, exception, accès C3/C4/C5 ou modification de production.',
-    next: 'Suite préparée : cadrer l’attribution et le retrait dans REF-01-G1-AUT-02-02-005 V0.1.',
+    next: 'Protocole AUT-02-02-005 confirmé en V1.0 ; registre d’habilitations vide AUT-02-02-006 préparé en V0.1.',
     boundary: 'Les codes 200, 401 et 403 proviennent ici du handler testé localement avec une fixture synthétique. Ils ne prouvent ni un déploiement ni une autorisation de production ; toute activation exigera une décision séparée, un périmètre explicite et une preuve protégée.'
   },
   EN: {
@@ -35,7 +35,7 @@ const COPY = {
     rulesTitle: 'Five candidate access-reading rules',
     rules: ['Explicit authentication', 'Explicitly allowed roles', 'C2 reading only if activated', 'Separate decision for writes or C3/C4/C5', 'Default denial outside scope'],
     status: 'CONFIRMED · Qualification matrix for the L1 contract and its synthetic tests retained as V1.0. Zero account, assignment, withdrawal, delegation, exception, C3/C4/C5 access or production change.',
-    next: 'Prepared next step: frame grant and withdrawal in REF-01-G1-AUT-02-02-005 V0.1.',
+    next: 'AUT-02-02-005 protocol confirmed as V1.0; empty AUT-02-02-006 access-rights register prepared as V0.1.',
     boundary: 'The 200, 401 and 403 statuses come from the locally tested handler with a synthetic fixture. They prove neither deployment nor production authorisation; any activation requires a separate decision, explicit scope and protected evidence.'
   },
   DE: {
@@ -53,7 +53,7 @@ const COPY = {
     rulesTitle: 'Fünf Kandidatenregeln zur Zugriffslektüre',
     rules: ['Explizite Authentifizierung', 'Explizit zugelassene Rollen', 'C2-Lesen nur bei Aktivierung', 'Getrennter Entscheid für Schreiben oder C3/C4/C5', 'Standardablehnung ausserhalb des Umfangs'],
     status: 'BESTÄTIGT · Qualifikationsmatrix für den L1-Vertrag und seine synthetischen Tests als V1.0 festgehalten. Null Konten, Zuweisungen, Entzüge, Delegationen, Ausnahmen, C3/C4/C5-Zugriffe oder Produktionsänderungen.',
-    next: 'Nächster vorbereiteter Schritt: Zuweisung und Entzug in REF-01-G1-AUT-02-02-005 V0.1 strukturieren.',
+    next: 'Protokoll AUT-02-02-005 als V1.0 bestätigt; leeres Berechtigungsregister AUT-02-02-006 als V0.1 vorbereitet.',
     boundary: 'Die Statuscodes 200, 401 und 403 stammen aus dem lokal getesteten Handler mit synthetischer Fixture. Sie belegen weder Bereitstellung noch Produktionsautorisierung; jede Aktivierung erfordert einen getrennten Entscheid, expliziten Umfang und geschützte Nachweise.'
   }
 };
