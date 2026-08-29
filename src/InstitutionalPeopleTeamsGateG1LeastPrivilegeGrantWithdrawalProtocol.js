@@ -17,7 +17,7 @@ const COPY = {
     rulesTitle: 'Six préconditions avant toute future exécution',
     rules: ['Besoin métier explicite', 'Titulaire et périmètre autorisés séparément', 'Demandeur différent de l’approbateur', 'Refus par défaut avant décision', 'Expiration ou revue obligatoire', 'Preuve conservée hors bundle public'],
     status: 'CONFIRMÉ · Protocole documentaire retenu en V1.0. Zéro demande active, compte créé, droit attribué, modifié ou retiré, délégation, exception, accès C3/C4/C5 ou changement de production.',
-    next: 'Registre AUT-02-02-006 confirmé en V1.0 ; portes d’ouverture AUT-02-02-007 préparées en V0.1.',
+    next: 'Registre AUT-02-02-006 et portes AUT-02-02-007 confirmés en V1.0 ; fiche AUT-02-02-008 préparée en V0.1.',
     boundary: 'Ce protocole ne vaut ni autorisation nominative ni procédure technique exécutable. Une future opération exigera une décision distincte, les preuves requises et un contrôle hors bundle public.'
   },
   EN: {
@@ -35,7 +35,7 @@ const COPY = {
     rulesTitle: 'Six prerequisites before any future execution',
     rules: ['Explicit business need', 'Holder and scope authorised separately', 'Requester differs from approver', 'Default denial before decision', 'Mandatory expiry or review', 'Evidence retained outside the public bundle'],
     status: 'CONFIRMED · Documentary protocol retained as V1.0. Zero active requests, created accounts, granted, changed or withdrawn rights, delegations, exceptions, C3/C4/C5 access or production changes.',
-    next: 'AUT-02-02-006 register confirmed as V1.0; AUT-02-02-007 opening gates prepared as V0.1.',
+    next: 'AUT-02-02-006 register and AUT-02-02-007 gates confirmed as V1.0; AUT-02-02-008 sheet prepared as V0.1.',
     boundary: 'This protocol is neither a named authorisation nor an executable technical procedure. Any future operation will require a separate decision, the required evidence and control outside the public bundle.'
   },
   DE: {
@@ -53,7 +53,7 @@ const COPY = {
     rulesTitle: 'Sechs Voraussetzungen vor jeder künftigen Ausführung',
     rules: ['Ausdrücklicher Fachbedarf', 'Inhaber und Umfang getrennt autorisiert', 'Antragsteller nicht Genehmiger', 'Standardverweigerung vor Entscheid', 'Obligatorischer Ablauf oder Prüfung', 'Nachweis ausserhalb des öffentlichen Bundles'],
     status: 'BESTÄTIGT · Dokumentarisches Protokoll in V1.0 übernommen. Null aktive Anträge, erstellte Konten, zugewiesene, geänderte oder entzogene Rechte, Delegationen, Ausnahmen, C3/C4/C5-Zugriffe oder Produktionsänderungen.',
-    next: 'Register AUT-02-02-006 als V1.0 bestätigt; Öffnungstore AUT-02-02-007 als V0.1 vorbereitet.',
+    next: 'Register AUT-02-02-006 und Tore AUT-02-02-007 als V1.0 bestätigt; Blatt AUT-02-02-008 als V0.1 vorbereitet.',
     boundary: 'Dieses Protokoll ist weder eine namentliche Autorisierung noch ein ausführbares technisches Verfahren. Jede künftige Operation erfordert einen getrennten Entscheid, die nötigen Nachweise und eine Kontrolle ausserhalb des öffentlichen Bundles.'
   }
 };

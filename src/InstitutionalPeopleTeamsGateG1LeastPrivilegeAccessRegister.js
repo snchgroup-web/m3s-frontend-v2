@@ -17,7 +17,7 @@ const COPY = {
     statesTitle: 'Six états candidats du registre',
     states: ['Brouillon', 'À valider', 'Autorisé', 'Appliqué', 'Retiré ou expiré', 'Refusé'],
     status: 'CONFIRMÉ · Registre documentaire vide retenu en V1.0. Aucun formulaire actif, titulaire, compte, droit, accès C3/C4/C5, décision, journal technique ou changement de production.',
-    next: 'Suite préparée : confirmer ou amender les portes d’ouverture REF-01-G1-AUT-02-02-007 V0.1.',
+    next: 'Portes AUT-02-02-007 confirmées en V1.0 ; fiche de décision AUT-02-02-008 préparée en V0.1.',
     boundary: 'Ce gabarit ne vaut ni registre opérationnel ni preuve d’habilitation. Toute future fiche devra être autorisée séparément, protégée hors bundle public et reliée à des preuves contrôlées.'
   },
   EN: {
@@ -35,7 +35,7 @@ const COPY = {
     statesTitle: 'Six candidate register states',
     states: ['Draft', 'Pending validation', 'Authorised', 'Applied', 'Withdrawn or expired', 'Denied'],
     status: 'CONFIRMED · Empty documentary register retained as V1.0. No active form, holder, account, right, C3/C4/C5 access, decision, technical log or production change.',
-    next: 'Prepared next step: confirm or amend the opening gates REF-01-G1-AUT-02-02-007 V0.1.',
+    next: 'AUT-02-02-007 gates confirmed as V1.0; AUT-02-02-008 decision sheet prepared as V0.1.',
     boundary: 'This template is neither an operational register nor proof of access. Any future record must be authorised separately, protected outside the public bundle and linked to controlled evidence.'
   },
   DE: {
@@ -53,7 +53,7 @@ const COPY = {
     statesTitle: 'Sechs Kandidatenzustände des Registers',
     states: ['Entwurf', 'Zu validieren', 'Autorisiert', 'Angewendet', 'Entzogen oder abgelaufen', 'Abgelehnt'],
     status: 'BESTÄTIGT · Leeres Dokumentationsregister als V1.0 übernommen. Kein aktives Formular, Inhaber, Konto, Recht, C3/C4/C5-Zugriff, Entscheid, technisches Protokoll oder Produktionsänderung.',
-    next: 'Nächster vorbereiteter Schritt: die Öffnungstore REF-01-G1-AUT-02-02-007 V0.1 bestätigen oder ändern.',
+    next: 'Tore AUT-02-02-007 als V1.0 bestätigt; Entscheidblatt AUT-02-02-008 als V0.1 vorbereitet.',
     boundary: 'Diese Vorlage ist weder ein operatives Register noch ein Berechtigungsnachweis. Jeder künftige Eintrag muss getrennt autorisiert, ausserhalb des öffentlichen Bundles geschützt und mit kontrollierten Nachweisen verknüpft werden.'
   }
 };
