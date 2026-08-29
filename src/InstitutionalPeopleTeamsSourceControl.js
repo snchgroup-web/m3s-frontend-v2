@@ -23,51 +23,51 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.54 · 28-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.55 · 29-08-2026',
     title: 'Comparer les supports sans les promouvoir',
-    body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
+    body: 'Ce comparatif distingue le contrat backend RH-001 candidat du lot L1 isolé, les consommations qu il prévoit et les preuves GED. Aucun endpoint ni raccordement de production n est établi par ce contrôle.',
     counters: [
-      ['Supports contrôlés', '4', 'Un contrat, deux consommations dérivées et un dépôt de preuves'],
-      ['Contrats backend observés', '1', 'Endpoint RH-001 protégé et en lecture seule'],
-      ['Consommations dérivées', '2', 'Annuaire sécurisé et sélecteurs Team/Agent'],
+      ['Supports contrôlés', '4', 'Un contrat candidat, deux consommations prévues et un dépôt de preuves'],
+      ['Contrats backend candidats', '1', 'Contrat L1 isolé ; aucun endpoint de production vérifié'],
+      ['Consommations candidates', '2', 'Annuaire et sélecteurs prévus ; aucun raccordement de production vérifié'],
       ['Sources maîtresses désignées', '0', 'Décision humaine distincte requise']
     ],
     columns: {
-      support: 'Support observé',
+      support: 'Support candidat',
       classification: 'Nature',
-      role: 'Rôle réellement observé',
+      role: 'Rôle documenté ou testé',
       responsibility: 'Responsabilité retenue',
       gap: 'Écart avant décision',
       status: 'État'
     },
     statuses: {
-      connected: 'Support raccordé',
-      derived: 'Consommation dérivée',
+      connected: 'Contrat candidat isolé',
+      derived: 'Consommation candidate',
       evidence: 'Preuve séparée'
     },
     rows: [
       {
         support: 'API RH-001 · /members-directory',
-        classification: 'Contrat documentaire C2',
-        role: 'Expose, après autorisation, un annuaire assaini en lecture seule avec identifiant technique, libellés, équipe, type et état ; aucune coordonnée personnelle.',
-        responsibility: 'Organisation & RH porte le sens métier ; IT protège et maintient le contrat technique.',
-        gap: 'Unicité, couverture, version du contenu, événements de cycle et circuit de correction restent à prouver sur la durée.',
+        classification: 'Contrat documentaire C2 candidat',
+        role: 'Projette huit champs assainis. Le handler local répond sur une fixture synthétique ; aucun endpoint ni annuaire de production n est vérifié.',
+        responsibility: 'Organisation & RH porterait le sens métier ; IT protégerait et maintiendrait le contrat après décision et raccordement distincts.',
+        gap: 'Déploiement, autorisation de production, unicité, couverture, version du contenu, événements de cycle et circuit de correction restent à établir.',
         status: 'connected'
       },
       {
         support: 'Annuaire interne sécurisé',
-        classification: 'Vue de lecture de RH-001',
-        role: 'Affiche la réponse RH-001 selon les droits, avec recherche, filtres et traductions locales ; ne conserve pas un second annuaire.',
-        responsibility: 'Organisation & RH valide le contenu ; IT maintient l’interface et les états d’accès.',
-        gap: 'La date et la version de l’extrait doivent rester visibles ; cette vue ne peut pas être promue comme source indépendante.',
+        classification: 'Vue candidate de lecture RH-001',
+        role: 'Prévoit recherche, filtres et traductions à partir de la réponse candidate RH-001 ; ce contrôle ne prouve ni raccordement ni affichage de données réelles.',
+        responsibility: 'Organisation & RH validerait le contenu ; IT maintiendrait l interface et les états d accès après ouverture autorisée.',
+        gap: 'Le raccordement, la date et la version de l extrait restent à prouver ; cette vue ne peut pas être promue comme source indépendante.',
         status: 'derived'
       },
       {
         support: 'Sélecteurs partagés Team/Agent',
-        classification: 'Projection opérationnelle dérivée',
-        role: 'Construit des options à partir des membres actifs RH-001, normalise TZH/TSN et ajoute un collectif distinct pour chaque équipe.',
-        responsibility: 'La fonction consommatrice valide l’affectation métier ; IT maintient les règles de projection.',
-        gap: 'Alias et libellés ne valent pas identifiant maître ; les anciennes valeurs et changements d’équipe doivent garder leur provenance.',
+        classification: 'Projection opérationnelle candidate',
+        role: 'Prévoit des options issues des membres actifs RH-001, la normalisation TZH/TSN et un collectif distinct par équipe ; aucune alimentation de production n est établie.',
+        responsibility: 'La fonction consommatrice validerait l affectation métier ; IT maintiendrait les règles après raccordement autorisé.',
+        gap: 'Alimentation réelle, alias, identifiants maîtres, anciennes valeurs et changements d équipe restent à relier à une provenance vérifiée.',
         status: 'derived'
       },
       {
@@ -109,56 +109,56 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Confirmer ou amender AUT-02-02-004 V0.1, la matrice candidate Droits observés et refus.',
-    boundary: 'Statut : REF-01-DEC-052 confirme le modèle AUT-02-02-003 V1.0 sans créer de droit réel. La matrice AUT-02-02-004 V0.1 qualifie les comportements observés ; G1 reste ouverte et L2 fermé. Zéro nouveau droit, mandat nominatif, délégation, exception, accès C3/C4/C5, worker, alerte, rejeu ou fournisseur ; décisions sur le lot : 49 ; sources maîtresses désignées : 0 ; changements en production : 0.',
-    source: 'Supports contrôlés : contrat API RH-001, Annuaire interne C2, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-052, matrices AUT-02-03-002/AUT-02-02-002 V1.0, cadre LEGAL AUT-02-03-003 V1.0, désignation AUT-02-03-004 V1.0, responsabilités/déclencheurs AUT-02-03-005 V1.0, protocoles de revue AUT-02-03-006 V1.0, registre vide AUT-02-03-007 V1.0, portes AUT-02-03-008 V1.0, fiche de décision AUT-02-03-009 V1.0, protocole AUT-02-03-010 V1.0, fiche GO/NO-GO AUT-02-03-011 V1.0, modèle Rôles et moindre privilège AUT-02-02-003 V1.0 et matrice candidate Droits observés et refus AUT-02-02-004 V0.1 ; sources officielles PFPDT Suisse, CDP Sénégal et OHADA.'
+    nextControl: 'Confirmer ou amender AUT-02-02-004 V0.2, la matrice candidate Droits testés et refus.',
+    boundary: 'Statut : REF-01-DEC-052 confirme le modèle AUT-02-02-003 V1.0 sans créer de droit réel. La matrice AUT-02-02-004 V0.2 qualifie le contrat L1 isolé et ses tests synthétiques locaux, sans les présenter comme une autorisation de production ; G1 reste ouverte et L2 fermé. Zéro nouveau droit, mandat nominatif, délégation, exception, accès C3/C4/C5, worker, alerte, rejeu ou fournisseur ; décisions sur le lot : 49 ; sources maîtresses désignées : 0 ; changements en production : 0.',
+    source: 'Supports contrôlés : contrat candidat API RH-001 du lot L1 isolé, fixture C2 synthétique et tests locaux du handler, Annuaire interne C2, Team/Agent, cadrage GED, décisions REF-01-DEC-001 à REF-01-DEC-052, matrices AUT-02-03-002/AUT-02-02-002 V1.0, cadre LEGAL AUT-02-03-003 V1.0, désignation AUT-02-03-004 V1.0, responsabilités/déclencheurs AUT-02-03-005 V1.0, protocoles de revue AUT-02-03-006 V1.0, registre vide AUT-02-03-007 V1.0, portes AUT-02-03-008 V1.0, fiche de décision AUT-02-03-009 V1.0, protocole AUT-02-03-010 V1.0, fiche GO/NO-GO AUT-02-03-011 V1.0, modèle Rôles et moindre privilège AUT-02-02-003 V1.0 et matrice candidate Droits testés et refus AUT-02-02-004 V0.2 ; sources officielles PFPDT Suisse, CDP Sénégal et OHADA.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.54 · 28 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.55 · 29 AUG 2026',
     title: 'Compare supports without promoting them',
-    body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
+    body: 'This comparison separates the isolated L1 candidate RH-001 backend contract, its planned consumers and DMS evidence. This control establishes neither a production endpoint nor a production connection.',
     counters: [
-      ['Controlled supports', '4', 'One contract, two derived consumers and one evidence repository'],
-      ['Observed backend contracts', '1', 'Protected read-only RH-001 endpoint'],
-      ['Derived consumers', '2', 'Secure directory and Team/Agent selectors'],
+      ['Controlled supports', '4', 'One candidate contract, two planned consumers and one evidence repository'],
+      ['Candidate backend contracts', '1', 'Isolated L1 contract; no verified production endpoint'],
+      ['Candidate consumers', '2', 'Planned directory and selectors; no verified production connection'],
       ['Designated master sources', '0', 'Separate human decision required']
     ],
     columns: {
-      support: 'Observed support',
+      support: 'Candidate support',
       classification: 'Nature',
-      role: 'Actually observed role',
+      role: 'Documented or tested role',
       responsibility: 'Retained responsibility',
       gap: 'Gap before decision',
       status: 'State'
     },
     statuses: {
-      connected: 'Connected support',
-      derived: 'Derived consumer',
+      connected: 'Isolated candidate contract',
+      derived: 'Candidate consumer',
       evidence: 'Separate evidence'
     },
     rows: [
       {
         support: 'RH-001 API · /members-directory',
-        classification: 'C2 documentary contract',
-        role: 'After authorisation, exposes a sanitised read-only directory with technical identifier, labels, team, type and state; no personal contact details.',
-        responsibility: 'Organisation & HR owns business meaning; IT protects and maintains the technical contract.',
-        gap: 'Uniqueness, coverage, content version, lifecycle events and the correction workflow still require durable evidence.',
+        classification: 'Candidate C2 documentary contract',
+        role: 'Projects eight sanitised fields. The local handler responds against a synthetic fixture; no production endpoint or directory is verified.',
+        responsibility: 'Organisation & HR would own business meaning; IT would protect and maintain the contract after separate decision and connection.',
+        gap: 'Deployment, production authorisation, uniqueness, coverage, content version, lifecycle events and correction workflow remain to be established.',
         status: 'connected'
       },
       {
         support: 'Secure internal directory',
-        classification: 'RH-001 read view',
-        role: 'Displays the RH-001 response according to rights, with search, filters and local translations; it retains no second directory.',
-        responsibility: 'Organisation & HR validates content; IT maintains the interface and access states.',
-        gap: 'Extract date and version must remain visible; this view cannot be promoted as an independent source.',
+        classification: 'Candidate RH-001 read view',
+        role: 'Plans search, filters and translations from the candidate RH-001 response; this control proves neither a connection nor the display of real data.',
+        responsibility: 'Organisation & HR would validate content; IT would maintain the interface and access states after an authorised opening.',
+        gap: 'Connection, extract date and version remain to be evidenced; this view cannot be promoted as an independent source.',
         status: 'derived'
       },
       {
         support: 'Shared Team/Agent selectors',
-        classification: 'Derived operational projection',
-        role: 'Builds options from active RH-001 members, normalises TZH/TSN and adds a separate collective for each team.',
-        responsibility: 'The consuming function validates the business assignment; IT maintains projection rules.',
-        gap: 'Aliases and labels are not master identifiers; former values and team changes must retain provenance.',
+        classification: 'Candidate operational projection',
+        role: 'Plans options from active RH-001 members, TZH/TSN normalisation and a separate collective per team; no production feed is established.',
+        responsibility: 'The consuming function would validate business assignment; IT would maintain rules after an authorised connection.',
+        gap: 'Real feed, aliases, master identifiers, former values and team changes still require verified provenance.',
         status: 'derived'
       },
       {
@@ -200,56 +200,56 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'Confirm or amend AUT-02-02-004 V0.1, the candidate Observed rights and denials matrix.',
-    boundary: 'Status: REF-01-DEC-052 confirms the AUT-02-02-003 V1.0 model without creating a real right. The AUT-02-02-004 V0.1 matrix qualifies observed behaviours; G1 remains open and L2 closed. Zero new rights, named mandates, delegations, exceptions, C3/C4/C5 access, workers, alerts, replays or providers; package decisions: 49; designated master sources: 0; production changes: 0.',
-    source: 'Controlled supports: RH-001 API contract, C2 Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-052, AUT-02-03-002/AUT-02-02-002 V1.0 matrices, AUT-02-03-003 V1.0 LEGAL framework, AUT-02-03-004 V1.0 designation, AUT-02-03-005 V1.0 ownership/triggers, AUT-02-03-006 V1.0 review protocols, AUT-02-03-007 V1.0 empty register, AUT-02-03-008 V1.0 gates, AUT-02-03-009 V1.0 decision sheet, AUT-02-03-010 V1.0 protocol, AUT-02-03-011 V1.0 GO/NO-GO sheet, AUT-02-02-003 V1.0 Roles and least privilege model and AUT-02-02-004 V0.1 candidate Observed rights and denials matrix; official Swiss FDPIC, Senegal CDP and OHADA sources.'
+    nextControl: 'Confirm or amend AUT-02-02-004 V0.2, the candidate Tested rights and denials matrix.',
+    boundary: 'Status: REF-01-DEC-052 confirms the AUT-02-02-003 V1.0 model without creating a real right. The AUT-02-02-004 V0.2 matrix qualifies the isolated L1 contract and its local synthetic tests without presenting them as a production authorisation; G1 remains open and L2 closed. Zero new rights, named mandates, delegations, exceptions, C3/C4/C5 access, workers, alerts, replays or providers; package decisions: 49; designated master sources: 0; production changes: 0.',
+    source: 'Controlled supports: isolated L1 candidate RH-001 API contract, synthetic C2 fixture and local handler tests, C2 Internal Directory, Team/Agent, DMS framing, decisions REF-01-DEC-001 through REF-01-DEC-052, AUT-02-03-002/AUT-02-02-002 V1.0 matrices, AUT-02-03-003 V1.0 LEGAL framework, AUT-02-03-004 V1.0 designation, AUT-02-03-005 V1.0 ownership/triggers, AUT-02-03-006 V1.0 review protocols, AUT-02-03-007 V1.0 empty register, AUT-02-03-008 V1.0 gates, AUT-02-03-009 V1.0 decision sheet, AUT-02-03-010 V1.0 protocol, AUT-02-03-011 V1.0 GO/NO-GO sheet, AUT-02-02-003 V1.0 Roles and least privilege model and AUT-02-02-004 V0.2 candidate Tested rights and denials matrix; official Swiss FDPIC, Senegal CDP and OHADA sources.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.54 · 28.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.55 · 29.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
-    body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
+    body: 'Dieser Vergleich trennt den isolierten RH-001-Backend-Kandidatenvertrag des L1-Loses, seine geplanten Verbraucher und DMS-Nachweise. Diese Kontrolle belegt weder einen Produktionsendpunkt noch eine Produktionsverbindung.',
     counters: [
-      ['Geprüfte Träger', '4', 'Ein Vertrag, zwei abgeleitete Verbraucher und ein Nachweisdepot'],
-      ['Beobachtete Backendverträge', '1', 'Geschützter schreibgeschützter RH-001-Endpunkt'],
-      ['Abgeleitete Verbraucher', '2', 'Sicheres Verzeichnis und Team-/Agent-Auswahl'],
+      ['Geprüfte Träger', '4', 'Ein Kandidatenvertrag, zwei geplante Verbraucher und ein Nachweisdepot'],
+      ['Backend-Kandidatenverträge', '1', 'Isolierter L1-Vertrag; kein verifizierter Produktionsendpunkt'],
+      ['Kandidatenverbraucher', '2', 'Geplantes Verzeichnis und Auswahl; keine verifizierte Produktionsverbindung'],
       ['Bestimmte Masterquellen', '0', 'Getrennter menschlicher Entscheid erforderlich']
     ],
     columns: {
-      support: 'Beobachteter Träger',
+      support: 'Quellkandidat',
       classification: 'Art',
-      role: 'Tatsächlich beobachtete Rolle',
+      role: 'Dokumentierte oder getestete Rolle',
       responsibility: 'Festgehaltene Verantwortung',
       gap: 'Abweichung vor Entscheid',
       status: 'Stand'
     },
     statuses: {
-      connected: 'Verbundener Träger',
-      derived: 'Abgeleiteter Verbraucher',
+      connected: 'Isolierter Kandidatenvertrag',
+      derived: 'Kandidatenverbraucher',
       evidence: 'Getrennter Nachweis'
     },
     rows: [
       {
         support: 'RH-001-API · /members-directory',
-        classification: 'C2-Dokumentationsvertrag',
-        role: 'Stellt nach Autorisierung ein bereinigtes schreibgeschütztes Verzeichnis mit technischer Kennung, Bezeichnungen, Team, Typ und Stand bereit; keine privaten Kontaktdaten.',
-        responsibility: 'Organisation & Personal trägt die Fachbedeutung; IT schützt und pflegt den technischen Vertrag.',
-        gap: 'Eindeutigkeit, Abdeckung, Inhaltsversion, Lebenszyklusereignisse und Korrekturablauf benötigen noch dauerhafte Nachweise.',
+        classification: 'C2-Dokumentations-Kandidatenvertrag',
+        role: 'Projiziert acht bereinigte Felder. Der lokale Handler antwortet mit einer synthetischen Fixture; kein Produktionsendpunkt oder reales Verzeichnis ist verifiziert.',
+        responsibility: 'Organisation & Personal würde die Fachbedeutung tragen; IT würde den Vertrag nach getrenntem Entscheid und Anschluss schützen und pflegen.',
+        gap: 'Bereitstellung, Produktionsautorisierung, Eindeutigkeit, Abdeckung, Inhaltsversion, Lebenszyklusereignisse und Korrekturablauf sind noch zu belegen.',
         status: 'connected'
       },
       {
         support: 'Sicheres internes Verzeichnis',
-        classification: 'RH-001-Leseansicht',
-        role: 'Zeigt die RH-001-Antwort gemäss Rechten mit Suche, Filtern und lokalen Übersetzungen; es speichert kein zweites Verzeichnis.',
-        responsibility: 'Organisation & Personal validiert den Inhalt; IT pflegt Oberfläche und Zugriffszustände.',
-        gap: 'Datum und Version des Auszugs müssen sichtbar bleiben; diese Ansicht kann nicht als unabhängige Quelle gefördert werden.',
+        classification: 'RH-001-Leseansicht als Kandidat',
+        role: 'Plant Suche, Filter und Übersetzungen aus der RH-001-Kandidatenantwort; diese Kontrolle belegt weder Anschluss noch Anzeige realer Daten.',
+        responsibility: 'Organisation & Personal würde den Inhalt validieren; IT würde Oberfläche und Zugriffszustände nach autorisierter Öffnung pflegen.',
+        gap: 'Anschluss, Datum und Version des Auszugs sind noch zu belegen; diese Ansicht kann nicht als unabhängige Quelle gefördert werden.',
         status: 'derived'
       },
       {
         support: 'Gemeinsame Team-/Agent-Auswahl',
-        classification: 'Abgeleitete operative Projektion',
-        role: 'Erstellt Optionen aus aktiven RH-001-Mitgliedern, normalisiert TZH/TSN und ergänzt je Team ein getrenntes Kollektiv.',
-        responsibility: 'Die verbrauchende Funktion validiert die fachliche Zuweisung; IT pflegt die Projektionsregeln.',
-        gap: 'Aliase und Bezeichnungen sind keine Masterkennungen; frühere Werte und Teamwechsel müssen ihre Herkunft bewahren.',
+        classification: 'Operative Kandidatenprojektion',
+        role: 'Plant Optionen aus aktiven RH-001-Mitgliedern, TZH/TSN-Normalisierung und ein getrenntes Kollektiv je Team; keine Produktionszufuhr ist belegt.',
+        responsibility: 'Die verbrauchende Funktion würde die fachliche Zuweisung validieren; IT würde die Regeln nach autorisiertem Anschluss pflegen.',
+        gap: 'Reale Zufuhr, Aliase, Masterkennungen, frühere Werte und Teamwechsel benötigen noch eine verifizierte Herkunft.',
         status: 'derived'
       },
       {
@@ -291,9 +291,9 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'AUT-02-02-004 V0.1, die Kandidatenmatrix Beobachtete Rechte und Ablehnungen, bestätigen oder ändern.',
-    boundary: 'Stand: REF-01-DEC-052 bestätigt das Modell AUT-02-02-003 V1.0, ohne ein reales Recht zu erstellen. Die Matrix AUT-02-02-004 V0.1 qualifiziert beobachtete Verhaltensweisen; G1 bleibt offen und L2 geschlossen. Null neue Rechte, Namensmandate, Delegationen, Ausnahmen, C3/C4/C5-Zugriffe, Worker, Alarme, Wiederholungen oder Anbieter; Paketentscheide: 49; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
-    source: 'Kontrollierte Träger: RH-001-API-Vertrag, internes C2-Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-052, Matrizen AUT-02-03-002/AUT-02-02-002 V1.0, LEGAL-Rahmen AUT-02-03-003 V1.0, Zuordnung AUT-02-03-004 V1.0, Verantwortung/Auslöser AUT-02-03-005 V1.0, Prüfprotokolle AUT-02-03-006 V1.0, leeres Register AUT-02-03-007 V1.0, Tore AUT-02-03-008 V1.0, Entscheidblatt AUT-02-03-009 V1.0, Protokoll AUT-02-03-010 V1.0, GO/NO-GO-Blatt AUT-02-03-011 V1.0, Modell AUT-02-02-003 V1.0 Rollen und geringste Berechtigung sowie Kandidatenmatrix AUT-02-02-004 V0.1 Beobachtete Rechte und Ablehnungen; amtliche Quellen EDOEB Schweiz, CDP Senegal und OHADA.'
+    nextControl: 'AUT-02-02-004 V0.2, die Kandidatenmatrix Getestete Rechte und Ablehnungen, bestätigen oder ändern.',
+    boundary: 'Stand: REF-01-DEC-052 bestätigt das Modell AUT-02-02-003 V1.0, ohne ein reales Recht zu erstellen. Die Matrix AUT-02-02-004 V0.2 qualifiziert den isolierten L1-Vertrag und seine lokalen synthetischen Tests, ohne sie als Produktionsautorisierung darzustellen; G1 bleibt offen und L2 geschlossen. Null neue Rechte, Namensmandate, Delegationen, Ausnahmen, C3/C4/C5-Zugriffe, Worker, Alarme, Wiederholungen oder Anbieter; Paketentscheide: 49; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
+    source: 'Kontrollierte Träger: isolierter RH-001-API-Kandidatenvertrag des L1-Loses, synthetische C2-Fixture und lokale Handler-Tests, internes C2-Verzeichnis, Team/Agent, DMS-Rahmen, REF-01-DEC-001 bis REF-01-DEC-052, Matrizen AUT-02-03-002/AUT-02-02-002 V1.0, LEGAL-Rahmen AUT-02-03-003 V1.0, Zuordnung AUT-02-03-004 V1.0, Verantwortung/Auslöser AUT-02-03-005 V1.0, Prüfprotokolle AUT-02-03-006 V1.0, leeres Register AUT-02-03-007 V1.0, Tore AUT-02-03-008 V1.0, Entscheidblatt AUT-02-03-009 V1.0, Protokoll AUT-02-03-010 V1.0, GO/NO-GO-Blatt AUT-02-03-011 V1.0, Modell AUT-02-02-003 V1.0 Rollen und geringste Berechtigung sowie Kandidatenmatrix AUT-02-02-004 V0.2 Getestete Rechte und Ablehnungen; amtliche Quellen EDOEB Schweiz, CDP Senegal und OHADA.'
   }
 };
 

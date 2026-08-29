@@ -6,10 +6,10 @@ const COPY = {
     eyebrow: 'RÔLES ET MOINDRE PRIVILÈGE · MODÈLE CONFIRMÉ V1.0 · 28-08-2026',
     title: 'Qualifier les six champs sans ouvrir de droit réel',
     intro: 'Ce modèle reprend les valeurs déjà contrôlées dans AUT-02-02-002 V1.0. Il distingue rôle canonique, droit effectif, périmètre, délégation, revue et exception sans modifier un compte ni exposer de donnée C3/C4/C5.',
-    counters: [['Champs rapprochés', '6/6', 'Deux sourcés · quatre gouvernés'], ['Titulaire observé', '1', 'Compte historique uniquement'], ['Délégations actives', '0', 'Aucune preuve disponible'], ['Droits modifiés', '0', 'Lecture documentaire seulement']],
+    counters: [['Champs rapprochés', '6/6', 'Structure confirmée · valeurs à qualifier'], ['Titulaires réels établis', '0', 'Aucun compte de production prouvé'], ['Délégations actives', '0', 'Aucune preuve disponible'], ['Droits modifiés', '0', 'Lecture documentaire seulement']],
     badge: 'CONFIRMÉ · V1.0',
     groups: [
-      ['1 · Identité fonctionnelle et rôle', ['Identifiant institutionnel opaque', 'Fonction et équipe', 'Rôle source observé', 'Rôle canonique candidat']],
+      ['1 · Identité fonctionnelle et rôle', ['Identifiant institutionnel opaque', 'Fonction et équipe', 'Rôle source à qualifier', 'Rôle canonique candidat']],
       ['2 · Droits et périmètre', ['Action autorisée', 'Objet et niveau de donnée', 'Périmètre de lignes', 'Justification métier et preuve']],
       ['3 · Délégation et revue', ['Délégant et délégataire', 'Portée et expiration', 'Déclencheur de revue', 'Responsable et preuve attendue']],
       ['4 · Exception et arrêt', ['Motif et autorité', 'Contrôle compensatoire', 'Expiration obligatoire', 'Refus, retrait et escalade']]
@@ -17,17 +17,17 @@ const COPY = {
     rulesTitle: 'Cinq règles confirmées de moindre privilège',
     rules: ['Rôle canonique distinct du droit', 'Périmètre explicite avant accès', 'Délégation datée et révocable', 'Exception temporaire et tracée', 'Refus par défaut pour C4/C5'],
     status: 'CONFIRMÉ · Modèle documentaire de qualification retenu en V1.0. Zéro création de compte, attribution, retrait, délégation, exception, accès C3/C4/C5 ou modification de production.',
-    next: 'Suite préparée : qualifier séparément les droits observés et les refus dans REF-01-G1-AUT-02-02-004 V0.1.',
+    next: 'Suite préparée : qualifier séparément le contrat L1, ses tests synthétiques et ses refus dans REF-01-G1-AUT-02-02-004 V0.2.',
     boundary: 'La confirmation valide seulement le modèle de qualification. Les titulaires, droits, périmètres et exceptions réels restent soumis à une décision nominative séparée et à des preuves hors bundle public.'
   },
   EN: {
     eyebrow: 'ROLES AND LEAST PRIVILEGE · V1.0 CONFIRMED MODEL · 28 AUG 2026',
     title: 'Qualify all six fields without opening a real right',
     intro: 'This model reuses the values already reviewed in AUT-02-02-002 V1.0. It separates canonical role, effective right, scope, delegation, review and exception without changing an account or exposing C3/C4/C5 data.',
-    counters: [['Reconciled fields', '6/6', 'Two sourced · four governed'], ['Observed holder', '1', 'Historical account only'], ['Active delegations', '0', 'No evidence available'], ['Changed rights', '0', 'Documentary reading only']],
+    counters: [['Reconciled fields', '6/6', 'Confirmed structure · values to qualify'], ['Established real holders', '0', 'No production account evidenced'], ['Active delegations', '0', 'No evidence available'], ['Changed rights', '0', 'Documentary reading only']],
     badge: 'CONFIRMED · V1.0',
     groups: [
-      ['1 · Functional identity and role', ['Opaque institutional identifier', 'Function and team', 'Observed source role', 'Candidate canonical role']],
+      ['1 · Functional identity and role', ['Opaque institutional identifier', 'Function and team', 'Source role to qualify', 'Candidate canonical role']],
       ['2 · Rights and scope', ['Authorised action', 'Object and data level', 'Row scope', 'Business rationale and evidence']],
       ['3 · Delegation and review', ['Delegator and delegate', 'Scope and expiry', 'Review trigger', 'Owner and expected evidence']],
       ['4 · Exception and stop', ['Reason and authority', 'Compensating control', 'Mandatory expiry', 'Denial, withdrawal and escalation']]
@@ -35,17 +35,17 @@ const COPY = {
     rulesTitle: 'Five confirmed least-privilege rules',
     rules: ['Canonical role separate from right', 'Explicit scope before access', 'Dated and revocable delegation', 'Temporary and traced exception', 'Default denial for C4/C5'],
     status: 'CONFIRMED · Documentary qualification model retained in V1.0. Zero account creation, assignment, withdrawal, delegation, exception, C3/C4/C5 access or production change.',
-    next: 'Next prepared step: qualify observed rights and denials separately in REF-01-G1-AUT-02-02-004 V0.1.',
+    next: 'Next prepared step: qualify the L1 contract, its synthetic tests and denials separately in REF-01-G1-AUT-02-02-004 V0.2.',
     boundary: 'The confirmation validates only the qualification model. Real holders, rights, scopes and exceptions still require a separate named decision and evidence outside the public bundle.'
   },
   DE: {
     eyebrow: 'ROLLEN UND GERINGSTE BERECHTIGUNG · BESTÄTIGTES MODELL V1.0 · 28.08.2026',
     title: 'Sechs Felder qualifizieren, ohne ein reales Recht zu öffnen',
     intro: 'Dieses Modell übernimmt die bereits in AUT-02-02-002 V1.0 geprüften Werte. Es trennt kanonische Rolle, wirksames Recht, Umfang, Delegation, Prüfung und Ausnahme, ohne ein Konto zu ändern oder C3/C4/C5-Daten offenzulegen.',
-    counters: [['Abgeglichene Felder', '6/6', 'Zwei belegt · vier gesteuert'], ['Beobachteter Inhaber', '1', 'Nur historisches Konto'], ['Aktive Delegationen', '0', 'Kein Nachweis verfügbar'], ['Geänderte Rechte', '0', 'Nur dokumentarische Lektüre']],
+    counters: [['Abgeglichene Felder', '6/6', 'Bestätigte Struktur · Werte zu qualifizieren'], ['Belegte reale Inhaber', '0', 'Kein Produktionskonto nachgewiesen'], ['Aktive Delegationen', '0', 'Kein Nachweis verfügbar'], ['Geänderte Rechte', '0', 'Nur dokumentarische Lektüre']],
     badge: 'BESTÄTIGT · V1.0',
     groups: [
-      ['1 · Funktionale Identität und Rolle', ['Opake institutionelle Kennung', 'Funktion und Team', 'Beobachtete Quellrolle', 'Kanonische Kandidatenrolle']],
+      ['1 · Funktionale Identität und Rolle', ['Opake institutionelle Kennung', 'Funktion und Team', 'Zu qualifizierende Quellrolle', 'Kanonische Kandidatenrolle']],
       ['2 · Rechte und Umfang', ['Erlaubte Aktion', 'Objekt und Datenstufe', 'Zeilenumfang', 'Geschäftliche Begründung und Nachweis']],
       ['3 · Delegation und Prüfung', ['Delegierende und delegierte Person', 'Umfang und Ablauf', 'Prüfauslöser', 'Verantwortung und erwarteter Nachweis']],
       ['4 · Ausnahme und Stopp', ['Grund und Autorität', 'Kompensierende Kontrolle', 'Obligatorischer Ablauf', 'Ablehnung, Entzug und Eskalation']]
@@ -53,7 +53,7 @@ const COPY = {
     rulesTitle: 'Fünf bestätigte Regeln zur geringsten Berechtigung',
     rules: ['Kanonische Rolle vom Recht getrennt', 'Expliziter Umfang vor Zugriff', 'Datierte und widerrufbare Delegation', 'Temporäre und protokollierte Ausnahme', 'Standardablehnung für C4/C5'],
     status: 'BESTÄTIGT · Dokumentarisches Qualifikationsmodell in V1.0 übernommen. Null Kontoerstellungen, Zuweisungen, Entzüge, Delegationen, Ausnahmen, C3/C4/C5-Zugriffe oder Produktionsänderungen.',
-    next: 'Nächster vorbereiteter Schritt: beobachtete Rechte und Ablehnungen in REF-01-G1-AUT-02-02-004 V0.1 getrennt qualifizieren.',
+    next: 'Nächster vorbereiteter Schritt: L1-Vertrag, synthetische Tests und Ablehnungen in REF-01-G1-AUT-02-02-004 V0.2 getrennt qualifizieren.',
     boundary: 'Die Bestätigung validiert nur das Qualifikationsmodell. Reale Inhaber, Rechte, Umfänge und Ausnahmen benötigen weiterhin einen getrennten namentlichen Entscheid und Nachweise ausserhalb des öffentlichen Bundles.'
   }
 };

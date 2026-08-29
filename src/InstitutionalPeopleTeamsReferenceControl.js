@@ -24,9 +24,9 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DETAILLE 1/11 · REF-01 · V1.54 · 28-08-2026',
+    eyebrow: 'CONTROLE DETAILLE 1/11 · REF-01 · V1.55 · 29-08-2026',
     title: 'REF-01 · Personnes et équipes',
-    body: 'Ce contrôle rapproche l’annuaire RH-001, les sélecteurs Team/Agent et les règles déjà publiées pour les responsabilités collectives. Il prépare un modèle commun sans recopier l’annuaire, désigner une source maîtresse ou confondre personne, appartenance, équipe, rôle et accès M3S.',
+    body: 'Ce contrôle rapproche le contrat candidat RH-001 du lot L1 isolé, sa fixture synthétique, les sélecteurs Team/Agent et les règles publiées pour les responsabilités collectives. Il ne prouve aucun annuaire, compte, droit ou raccordement de production.',
     counters: [
       ['Axes contrôlés', '5', 'Identité, structure, cycle, responsabilité et preuve'],
       ['Événements de cycle validés', '6', 'Cadre validé ; mise en œuvre séparée'],
@@ -41,14 +41,14 @@ const COPY = {
       ['Équipe', 'Regroupement opérationnel territorial ou fonctionnel, par exemple TZH ou TSN.'],
       ['Responsabilité collective', 'Affectation à toute l’équipe, distincte d’une affectation individuelle.']
     ],
-    columns: { axis: 'Axe', observed: 'Constat observé', rule: 'Règle candidate ou contrôle', status: 'État' },
-    statuses: { observed: 'Contrat observé', validated: 'Cadre validé', candidate: 'Règle candidate', open: 'Définition ouverte' },
+    columns: { axis: 'Axe', observed: 'Constat documentaire', rule: 'Règle candidate ou contrôle', status: 'État' },
+    statuses: { observed: 'Preuve candidate', validated: 'Cadre validé', candidate: 'Preuve candidate', open: 'Définition ouverte' },
     rows: [
-      ['Identité stable', 'RH-001 porte un identifiant technique stable et des libellés d’affichage assainis.', 'Conserver un identifiant non réutilisable ; confirmer séparément identité civile, alias et preuve dans l’espace autorisé.', 'observed'],
+      ['Identité stable', 'Le contrat candidat RH-001 projette un identifiant technique et des libellés assainis dans une fixture synthétique ; aucun identifiant réel n est établi.', 'Conserver un identifiant non réutilisable ; confirmer séparément identité civile, alias et preuve dans l’espace autorisé.', 'candidate'],
       ['Séparation des objets', 'Annuaire, comptes, droits et sélecteurs opérationnels sont déjà traités comme des objets distincts.', 'Personne, Appartenance, Équipe et Responsabilité collective sont retenus ; comptes et droits restent à REF-02.', 'validated'],
-      ['Cycle de vie', 'Un état actif/inactif est visible, mais l’entrée, la suspension, le transfert et la sortie ne sont pas versionnés dans la source observée.', 'Six familles d’événements et leur traçabilité minimale sont validées comme cadre de travail.', 'validated'],
-      ['Collectifs TZH/TSN', 'Les formulaires distinguent une personne du collectif de son équipe et refusent les couples Team-Agent impossibles.', 'Interdire qu’un collectif soit résolu comme personne ; conserver la provenance des anciennes valeurs sans correction silencieuse.', 'observed'],
-      ['Propriété et preuve', 'RH-001 est une source documentaire C2 en lecture seule ; les mandats et preuves restent séparés.', 'Organisation & RH porte le sens métier ; IT assure la garde technique ; la GED conserve les preuves et décisions.', 'validated']
+      ['Cycle de vie', 'Le contrat candidat contient un champ active et la fixture synthétique des valeurs actives/inactives ; aucun état réel ni événement de production n est établi.', 'Six familles d’événements et leur traçabilité minimale sont validées comme cadre de travail.', 'validated'],
+      ['Collectifs TZH/TSN', 'Les règles de formulaire prévoient la distinction entre personne et collectif et le refus des couples impossibles ; aucune alimentation RH-001 de production n est établie.', 'Interdire qu’un collectif soit résolu comme personne ; conserver la provenance des anciennes valeurs sans correction silencieuse.', 'candidate'],
+      ['Propriété et preuve', 'RH-001 est un contrat candidat C2 en lecture seule, non raccordé et non désigné comme source ; les mandats et preuves restent séparés.', 'Organisation & RH porte le sens métier ; IT assure la garde technique ; la GED conserve les preuves et décisions.', 'validated']
     ],
     decisionIntro: 'La première décision confirme le modèle et les responsabilités. Une seconde décision distincte valide désormais le cadre du cycle de vie sans désigner de source maîtresse ni autoriser de mesure.',
     recordLabels: {
@@ -117,14 +117,14 @@ const COPY = {
     ],
     lifecycleBoundary: 'Statut : cadre de contrôle validé par Cheikh le 25-08-2026. Aucun événement réel, schéma, source maîtresse, automatisation ou taux de progression n’est validé par ce lot.',
     boundary: 'Limite : ce lot ne valide ni identité civile, ni appartenance actuelle, ni mandat, ni contrat, ni rôle applicatif. Il n’ouvre aucun accès et ne publie aucun enregistrement RH-001.',
-    source: 'Supports observés : contrat documentaire RH-001 en lecture seule, annuaire C2 protégé, sélecteurs Team/Agent partagés, décisions REF-01-DEC-001 et REF-01-DEC-002, et comparatif des supports publié par la PR frontend #185 au commit 6be6a4a.',
-    openDirectory: 'Ouvrir l’annuaire sécurisé',
+    source: 'Supports candidats et cadres contrôlés : contrat RH-001 du lot L1 isolé, fixture C2 synthétique, vues et sélecteurs prévus, décisions REF-01-DEC-001 et REF-01-DEC-002, et comparatif des supports publié par la PR frontend #185 au commit 6be6a4a. Aucun raccordement de production n est établi.',
+    openDirectory: 'Ouvrir l’annuaire candidat',
     openArchitecture: 'Examiner l’architecture RH de REF-01'
   },
   EN: {
-    eyebrow: 'DETAILED CONTROL 1/11 · REF-01 · V1.54 · 28 AUG 2026',
+    eyebrow: 'DETAILED CONTROL 1/11 · REF-01 · V1.55 · 29 AUG 2026',
     title: 'REF-01 · People and teams',
-    body: 'This control reconciles the RH-001 directory, Team/Agent selectors and the published rules for collective responsibilities. It prepares a shared model without copying the directory, designating a master source or confusing a person, membership, team, role and M3S access.',
+    body: 'This control reconciles the isolated L1 candidate RH-001 contract, its synthetic fixture, Team/Agent selectors and published collective-responsibility rules. It proves no production directory, account, right or connection.',
     counters: [
       ['Controlled axes', '5', 'Identity, structure, lifecycle, responsibility and evidence'],
       ['Validated lifecycle events', '6', 'Framework validated; implementation separate'],
@@ -139,14 +139,14 @@ const COPY = {
       ['Team', 'Territorial or functional operational group, such as TZH or TSN.'],
       ['Collective responsibility', 'Assignment to the whole team, distinct from an individual assignment.']
     ],
-    columns: { axis: 'Axis', observed: 'Observed finding', rule: 'Candidate rule or control', status: 'State' },
-    statuses: { observed: 'Observed contract', validated: 'Framework validated', candidate: 'Candidate rule', open: 'Definition open' },
+    columns: { axis: 'Axis', observed: 'Documentary finding', rule: 'Candidate rule or control', status: 'State' },
+    statuses: { observed: 'Candidate evidence', validated: 'Framework validated', candidate: 'Candidate evidence', open: 'Definition open' },
     rows: [
-      ['Stable identity', 'RH-001 carries a stable technical identifier and sanitised display labels.', 'Keep a non-reusable identifier; confirm civil identity, aliases and evidence separately in the authorised space.', 'observed'],
+      ['Stable identity', 'The candidate RH-001 contract projects a technical identifier and sanitised labels in a synthetic fixture; no real identifier is established.', 'Keep a non-reusable identifier; confirm civil identity, aliases and evidence separately in the authorised space.', 'candidate'],
       ['Object separation', 'Directory, accounts, rights and operational selectors are already handled as separate objects.', 'Person, Membership, Team and Collective responsibility are retained; accounts and rights remain in REF-02.', 'validated'],
-      ['Lifecycle', 'An active/inactive state is visible, but entry, suspension, transfer and exit are not versioned in the observed source.', 'Six event families and their minimum traceability are validated as a working framework.', 'validated'],
-      ['TZH/TSN collectives', 'Forms distinguish a person from the team collective and reject impossible Team-Agent pairs.', 'Prevent a collective from resolving as a person; retain historical provenance without silent correction.', 'observed'],
-      ['Ownership and evidence', 'RH-001 is a read-only C2 documentary source; mandates and evidence remain separate.', 'Organisation & HR owns business meaning; IT provides technical stewardship; the DMS retains evidence and decisions.', 'validated']
+      ['Lifecycle', 'The candidate contract contains an active field and the synthetic fixture contains active/inactive values; no real state or production event is established.', 'Six event families and their minimum traceability are validated as a working framework.', 'validated'],
+      ['TZH/TSN collectives', 'Form rules plan the distinction between a person and a collective and rejection of impossible pairs; no production RH-001 feed is established.', 'Prevent a collective from resolving as a person; retain historical provenance without silent correction.', 'candidate'],
+      ['Ownership and evidence', 'RH-001 is a disconnected read-only C2 candidate contract and is not designated as a source; mandates and evidence remain separate.', 'Organisation & HR owns business meaning; IT provides technical stewardship; the DMS retains evidence and decisions.', 'validated']
     ],
     decisionIntro: 'The first decision confirms the model and responsibilities. A separate second decision now validates the lifecycle framework without designating a master source or authorising measurement.',
     recordLabels: {
@@ -215,14 +215,14 @@ const COPY = {
     ],
     lifecycleBoundary: 'Status: control framework validated by Cheikh on 25 Aug 2026. This lot validates no real event, schema, master source, automation or progress rate.',
     boundary: 'Boundary: this lot validates no civil identity, current membership, mandate, contract or application role. It opens no access and publishes no RH-001 record.',
-    source: 'Observed supports: read-only RH-001 documentary contract, protected C2 directory, shared Team/Agent selectors, decisions REF-01-DEC-001 and REF-01-DEC-002, and the support comparison published through frontend PR #185 at commit 6be6a4a.',
-    openDirectory: 'Open the secure directory',
+    source: 'Controlled candidates and frameworks: isolated L1 RH-001 contract, synthetic C2 fixture, planned views and selectors, decisions REF-01-DEC-001 and REF-01-DEC-002, and the support comparison published through frontend PR #185 at commit 6be6a4a. No production connection is established.',
+    openDirectory: 'Open the candidate directory',
     openArchitecture: 'Review the REF-01 HR architecture'
   },
   DE: {
-    eyebrow: 'DETAILKONTROLLE 1/11 · REF-01 · V1.54 · 28.08.2026',
+    eyebrow: 'DETAILKONTROLLE 1/11 · REF-01 · V1.55 · 29.08.2026',
     title: 'REF-01 · Personen und Teams',
-    body: 'Diese Kontrolle gleicht das RH-001-Verzeichnis, die Team-/Agent-Auswahl und die veröffentlichten Regeln für kollektive Verantwortungen ab. Sie bereitet ein gemeinsames Modell vor, ohne das Verzeichnis zu kopieren, eine Masterquelle zu bestimmen oder Person, Mitgliedschaft, Team, Rolle und M3S-Zugriff zu vermischen.',
+    body: 'Diese Kontrolle gleicht den isolierten RH-001-Kandidatenvertrag des L1-Loses, seine synthetische Fixture, die Team-/Agent-Auswahl und veröffentlichte Regeln für kollektive Verantwortungen ab. Sie belegt kein Produktionsverzeichnis, Konto, Recht oder Anschluss.',
     counters: [
       ['Geprüfte Achsen', '5', 'Identität, Struktur, Lebenszyklus, Verantwortung und Nachweis'],
       ['Validierte Lebenszyklusereignisse', '6', 'Rahmen validiert; Umsetzung getrennt'],
@@ -237,14 +237,14 @@ const COPY = {
       ['Team', 'Territoriale oder funktionale operative Gruppe wie TZH oder TSN.'],
       ['Kollektive Verantwortung', 'Zuweisung an das ganze Team, getrennt von einer individuellen Zuweisung.']
     ],
-    columns: { axis: 'Achse', observed: 'Beobachteter Befund', rule: 'Vorgeschlagene Regel oder Kontrolle', status: 'Stand' },
-    statuses: { observed: 'Vertrag beobachtet', validated: 'Rahmen validiert', candidate: 'Regel vorgeschlagen', open: 'Definition offen' },
+    columns: { axis: 'Achse', observed: 'Dokumentarischer Befund', rule: 'Vorgeschlagene Regel oder Kontrolle', status: 'Stand' },
+    statuses: { observed: 'Kandidatennachweis', validated: 'Rahmen validiert', candidate: 'Kandidatennachweis', open: 'Definition offen' },
     rows: [
-      ['Stabile Identität', 'RH-001 führt eine stabile technische Kennung und bereinigte Anzeigebezeichnungen.', 'Eine nicht wiederverwendbare Kennung beibehalten; Zivilidentität, Aliase und Nachweis getrennt im autorisierten Raum bestätigen.', 'observed'],
+      ['Stabile Identität', 'Der RH-001-Kandidatenvertrag projiziert eine technische Kennung und bereinigte Bezeichnungen in einer synthetischen Fixture; keine reale Kennung ist belegt.', 'Eine nicht wiederverwendbare Kennung beibehalten; Zivilidentität, Aliase und Nachweis getrennt im autorisierten Raum bestätigen.', 'candidate'],
       ['Objekttrennung', 'Verzeichnis, Konten, Rechte und operative Auswahl werden bereits als getrennte Objekte behandelt.', 'Person, Mitgliedschaft, Team und kollektive Verantwortung sind festgehalten; Konten und Rechte bleiben in REF-02.', 'validated'],
-      ['Lebenszyklus', 'Ein Aktiv-/Inaktiv-Stand ist sichtbar; Eintritt, Suspendierung, Wechsel und Austritt sind in der beobachteten Quelle nicht versioniert.', 'Sechs Ereignisfamilien und ihre minimale Rückverfolgbarkeit sind als Arbeitsrahmen validiert.', 'validated'],
-      ['Kollektive TZH/TSN', 'Formulare unterscheiden Person und Teamkollektiv und weisen unmögliche Team-Agent-Kombinationen ab.', 'Verhindern, dass ein Kollektiv als Person aufgelöst wird; historische Herkunft ohne stille Korrektur bewahren.', 'observed'],
-      ['Verantwortung und Nachweis', 'RH-001 ist eine schreibgeschützte C2-Dokumentationsquelle; Mandate und Nachweise bleiben getrennt.', 'Organisation & Personal trägt die Fachverantwortung; IT die technische Pflege; GED verwahrt Nachweise und Entscheide.', 'validated']
+      ['Lebenszyklus', 'Der Kandidatenvertrag enthält ein active-Feld und die synthetische Fixture aktive/inaktive Werte; kein realer Stand oder Produktionsereignis ist belegt.', 'Sechs Ereignisfamilien und ihre minimale Rückverfolgbarkeit sind als Arbeitsrahmen validiert.', 'validated'],
+      ['Kollektive TZH/TSN', 'Formularregeln planen die Trennung von Person und Kollektiv sowie die Ablehnung unmöglicher Paare; keine RH-001-Produktionszufuhr ist belegt.', 'Verhindern, dass ein Kollektiv als Person aufgelöst wird; historische Herkunft ohne stille Korrektur bewahren.', 'candidate'],
+      ['Verantwortung und Nachweis', 'RH-001 ist ein nicht angeschlossener schreibgeschützter C2-Kandidatenvertrag und keine bestimmte Quelle; Mandate und Nachweise bleiben getrennt.', 'Organisation & Personal trägt die Fachverantwortung; IT die technische Pflege; GED verwahrt Nachweise und Entscheide.', 'validated']
     ],
     decisionIntro: 'Der erste Entscheid bestätigt Modell und Verantwortungen. Ein getrennter zweiter Entscheid validiert nun den Lebenszyklusrahmen, ohne eine Masterquelle festzulegen oder Messung zu erlauben.',
     recordLabels: {
@@ -313,8 +313,8 @@ const COPY = {
     ],
     lifecycleBoundary: 'Status: Kontrollrahmen von Cheikh am 25.08.2026 validiert. Dieses Los validiert kein reales Ereignis, Schema, keine Masterquelle, Automatisierung oder Fortschrittsquote.',
     boundary: 'Grenze: Dieses Los validiert weder Zivilidentität, aktuelle Mitgliedschaft, Mandat, Vertrag noch Anwendungsrolle. Es öffnet keinen Zugriff und veröffentlicht keinen RH-001-Datensatz.',
-    source: 'Beobachtete Träger: schreibgeschützter RH-001-Dokumentationsvertrag, geschütztes C2-Verzeichnis, gemeinsame Team-/Agent-Auswahl, REF-01-DEC-001 und REF-01-DEC-002 sowie der mit Frontend-PR #185 am Commit 6be6a4a veröffentlichte Trägervergleich.',
-    openDirectory: 'Sicheres Verzeichnis öffnen',
+    source: 'Kontrollierte Kandidaten und Rahmen: isolierter RH-001-Vertrag des L1-Loses, synthetische C2-Fixture, geplante Ansichten und Auswahl, REF-01-DEC-001 und REF-01-DEC-002 sowie der mit Frontend-PR #185 am Commit 6be6a4a veröffentlichte Trägervergleich. Kein Produktionsanschluss ist belegt.',
+    openDirectory: 'Kandidatenverzeichnis öffnen',
     openArchitecture: 'REF-01-Personalarchitektur prüfen'
   }
 };
