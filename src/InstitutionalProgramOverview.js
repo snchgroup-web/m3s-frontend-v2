@@ -17,6 +17,8 @@ import InstitutionalQualityLessonsConsolidationPilot from './InstitutionalQualit
 import InstitutionalReportingConsolidationPilot from './InstitutionalReportingConsolidationPilot';
 import InstitutionalConsolidationIntegratedReview from './InstitutionalConsolidationIntegratedReview';
 import InstitutionalPeopleTeamsGateG1PostAuthorisationReassessment from './InstitutionalPeopleTeamsGateG1PostAuthorisationReassessment';
+import InstitutionalPeopleTeamsGateG1PostAuthorisationReassessmentConfirmation from './InstitutionalPeopleTeamsGateG1PostAuthorisationReassessmentConfirmation';
+import InstitutionalPeopleTeamsGateG1SyntheticWaveCandidate from './InstitutionalPeopleTeamsGateG1SyntheticWaveCandidate';
 
 const translations = {
   FR: {
@@ -54,9 +56,9 @@ const translations = {
     sourceMatrix: 'Matrice de cadrage V0.1 · 29 composantes',
     openResources: 'Voir les ressources',
     openArchitecture: 'Voir l’architecture',
-    focusedEyebrow: 'ARBITRAGE COURANT · REF-01',
-    focusedTitle: 'Réévaluation G1 après les deux sous-lots',
-    focusedBody: 'Cette vue légère ouvre directement REV-004 sans charger tout l’historique du Programme institutionnel.',
+    focusedEyebrow: 'ARBITRAGE COURANT · REF-01 · WAV-003',
+    focusedTitle: 'REV-004 confirmée · Vague technique à arbitrer',
+    focusedBody: 'Cette vue légère présente la réévaluation confirmée, sa décision et le candidat WAV-003 sans charger tout l’historique du Programme institutionnel.',
     openFullProgram: 'Ouvrir le programme complet',
     returnToFocusedReview: 'Retour à l’arbitrage REV-004'
   },
@@ -95,9 +97,9 @@ const translations = {
     sourceMatrix: 'Framing matrix V0.1 · 29 components',
     openResources: 'View resources',
     openArchitecture: 'View architecture',
-    focusedEyebrow: 'CURRENT DECISION · REF-01',
-    focusedTitle: 'G1 reassessment after both sub-packages',
-    focusedBody: 'This lightweight view opens REV-004 directly without loading the full Institutional Programme history.',
+    focusedEyebrow: 'CURRENT DECISION · REF-01 · WAV-003',
+    focusedTitle: 'REV-004 confirmed · Technical wave to decide',
+    focusedBody: 'This lightweight view presents the confirmed reassessment, its decision and candidate WAV-003 without loading the full Institutional Programme history.',
     openFullProgram: 'Open the full programme',
     returnToFocusedReview: 'Back to the REV-004 decision'
   },
@@ -136,9 +138,9 @@ const translations = {
     sourceMatrix: 'Strukturierungsmatrix V0.1 · 29 Komponenten',
     openResources: 'Ressourcen anzeigen',
     openArchitecture: 'Architektur anzeigen',
-    focusedEyebrow: 'AKTUELLER ENTSCHEID · REF-01',
-    focusedTitle: 'G1-Neubewertung nach beiden Teilpaketen',
-    focusedBody: 'Diese leichte Ansicht öffnet REV-004 direkt, ohne die gesamte Historie des institutionellen Programms zu laden.',
+    focusedEyebrow: 'AKTUELLER ENTSCHEID · REF-01 · WAV-003',
+    focusedTitle: 'REV-004 bestätigt · Technische Welle zu entscheiden',
+    focusedBody: 'Diese leichte Ansicht zeigt die bestätigte Neubewertung, ihren Entscheid und den Kandidaten WAV-003, ohne die gesamte Historie des institutionellen Programms zu laden.',
     openFullProgram: 'Vollständiges Programm öffnen',
     returnToFocusedReview: 'Zurück zum REV-004-Entscheid'
   }
@@ -173,6 +175,8 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
           </a>
         </header>
         <InstitutionalPeopleTeamsGateG1PostAuthorisationReassessment language={language} />
+        <InstitutionalPeopleTeamsGateG1PostAuthorisationReassessmentConfirmation language={language} />
+        <InstitutionalPeopleTeamsGateG1SyntheticWaveCandidate language={language} />
       </div>
     );
   }

@@ -3,7 +3,7 @@ import { AlertTriangle, Archive, DatabaseBackup, KeyRound, LockKeyhole, RadioTow
 
 const COPY = {
   FR: {
-    eyebrow: 'RÉÉVALUATION APRÈS LES DEUX SOUS-LOTS · REF-01-G1-REV-004 · V0.1 · 29-08-2026',
+    eyebrow: 'RÉÉVALUATION APRÈS LES DEUX SOUS-LOTS · REF-01-G1-REV-004 · V1.0 · 29-08-2026',
     title: 'Réévaluer G1 sans confondre supports confirmés et preuves réelles',
     intro: 'Les branches Conservation/GED et Rôles/moindre privilège ont achevé leur préparation documentaire. Cette revue candidate mesure uniquement cette maturité documentaire ; elle ne transforme aucun support en preuve d exécution et ne ferme aucune condition G1.',
     counters: [['Sous-lots documentaires', '2/2', 'Deux branches préparées'], ['Supports confirmés', '18/18', 'Dix Conservation · huit Rôles'], ['Conditions clôturables', '0/6', 'Preuves réelles manquantes'], ['Autorisations L2', '0', 'L2 reste fermé']],
@@ -15,14 +15,14 @@ const COPY = {
       ['3 · Conservation et GED', 'AUT-02-03-002 à 011 sont confirmés : matrice, cadre LEGAL, catégories, responsabilités, revues, registre, portes, décisions et première utilisation.', 'Cas réel autorisé, durée appliquée, référence GED, gel/suppression et contrôles exécutés dans l espace protégé.', 'Préparer ultérieurement une collecte de preuves bornée, après autorisation distincte.', 'prepared'],
       ['4 · Migration et retour arrière', 'La procédure PKG-04 V1.0 reste documentaire et isolée.', 'Source, cible, identité d exécution, fenêtre, sauvegarde, répétition et retour arrière vérifiés.', 'Maintenir toute migration fermée jusqu à une décision séparée.', 'open'],
       ['5 · Outbox, supervision et reprise', 'Le cadre PKG-05 V1.0 reste documentaire, sans worker ni alerte active.', 'Worker, file, seuils, canaux, destinataires, quarantaine, rejeu et rapprochement testés.', 'Maintenir toute activation fermée jusqu à une décision séparée.', 'open'],
-      ['6 · Ouverture éventuelle de L2', 'Deux conditions disposent désormais de chaînes documentaires complètes, mais aucune ne possède sa preuve réelle de sortie.', 'Les cinq conditions techniques et métier doivent être prouvées et décidées séparément.', 'Maintenir G1 ouverte et soumettre REV-004 à confirmation humaine.', 'locked']
+      ['6 · Ouverture éventuelle de L2', 'Deux conditions disposent désormais de chaînes documentaires complètes, mais aucune ne possède sa preuve réelle de sortie.', 'Les cinq conditions techniques et métier doivent être prouvées et décidées séparément.', 'Maintenir G1 ouverte et préparer la vague technique sans ouvrir L2.', 'locked']
     ],
     verdict: 'G1 RESTE OUVERTE · 18 supports documentaires sont confirmés, mais 0/6 condition est clôturable et L2 n est pas autorisé.',
-    next: 'Prochain arbitrage humain : confirmer ou amender REF-01-G1-REV-004 V0.1. Cette confirmation ne vaudra ni GO, ni preuve réelle, ni ouverture de L2.',
+    next: 'Statut : REF-01-DEC-060 confirme REV-004 V1.0. Le prochain arbitrage porte sur WAV-003 V0.1, sans GO ni ouverture de L2.',
     boundary: 'Cette revue ne crée aucun titulaire, compte, droit, accès C3/C4/C5, cas GED, durée appliquée, environnement, migration, worker, alerte, test réel, source maîtresse ou progression.'
   },
   EN: {
-    eyebrow: 'REASSESSMENT AFTER BOTH SUB-PACKAGES · REF-01-G1-REV-004 · V0.1 · 29 AUG 2026',
+    eyebrow: 'REASSESSMENT AFTER BOTH SUB-PACKAGES · REF-01-G1-REV-004 · V1.0 · 29 AUG 2026',
     title: 'Reassess G1 without confusing confirmed supports and real evidence',
     intro: 'The Retention/DMS and Roles/least-privilege branches have completed documentary preparation. This candidate review measures documentary maturity only; it turns no support into execution evidence and closes no G1 condition.',
     counters: [['Documentary sub-packages', '2/2', 'Both branches prepared'], ['Confirmed supports', '18/18', 'Ten Retention · eight Roles'], ['Closable conditions', '0/6', 'Real evidence missing'], ['L2 authorisations', '0', 'L2 remains closed']],
@@ -34,14 +34,14 @@ const COPY = {
       ['3 · Retention and DMS', 'AUT-02-03-002 through 011 are confirmed: matrix, LEGAL framework, categories, ownership, reviews, register, gates, decisions and first use.', 'Authorised real case, applied period, DMS reference, hold/deletion and controls executed in the protected space.', 'Prepare a bounded evidence collection later, after a separate authorisation.', 'prepared'],
       ['4 · Migration and rollback', 'PKG-04 V1.0 remains documentary and isolated.', 'Source, target, execution identity, window, backup, rehearsal and rollback verified.', 'Keep every migration closed until a separate decision.', 'open'],
       ['5 · Outbox, monitoring and recovery', 'PKG-05 V1.0 remains documentary, with no active worker or alert.', 'Worker, queue, thresholds, channels, recipients, quarantine, replay and reconciliation tested.', 'Keep every activation closed until a separate decision.', 'open'],
-      ['6 · Possible L2 opening', 'Two conditions now have complete documentary chains, but neither has real exit evidence.', 'All five technical and business conditions must be proven and decided separately.', 'Keep G1 open and submit REV-004 for human confirmation.', 'locked']
+      ['6 · Possible L2 opening', 'Two conditions now have complete documentary chains, but neither has real exit evidence.', 'All five technical and business conditions must be proven and decided separately.', 'Keep G1 open and prepare the technical wave without opening L2.', 'locked']
     ],
     verdict: 'G1 REMAINS OPEN · 18 documentary supports are confirmed, but 0/6 conditions are closable and L2 is not authorised.',
-    next: 'Next human decision: confirm or amend REF-01-G1-REV-004 V0.1. Confirmation will be neither a GO, real evidence nor an L2 opening.',
+    next: 'Status: REF-01-DEC-060 confirms REV-004 V1.0. The next decision concerns WAV-003 V0.1, with no GO or L2 opening.',
     boundary: 'This review creates no holder, account, right, C3/C4/C5 access, DMS case, applied period, environment, migration, worker, alert, real test, master source or progress.'
   },
   DE: {
-    eyebrow: 'NEUBEWERTUNG NACH BEIDEN TEILPAKETEN · REF-01-G1-REV-004 · V0.1 · 29.08.2026',
+    eyebrow: 'NEUBEWERTUNG NACH BEIDEN TEILPAKETEN · REF-01-G1-REV-004 · V1.0 · 29.08.2026',
     title: 'G1 neu bewerten, ohne bestätigte Träger mit Realnachweisen zu verwechseln',
     intro: 'Die Zweige Aufbewahrung/DMS und Rollen/geringste Berechtigung haben ihre dokumentarische Vorbereitung abgeschlossen. Diese Kandidatenprüfung misst nur die Dokumentreife; sie macht keinen Träger zum Ausführungsnachweis und schliesst keine G1-Bedingung.',
     counters: [['Dokumentarische Teilpakete', '2/2', 'Beide Zweige vorbereitet'], ['Bestätigte Träger', '18/18', 'Zehn Aufbewahrung · acht Rollen'], ['Schliessbare Bedingungen', '0/6', 'Realnachweise fehlen'], ['L2-Autorisierungen', '0', 'L2 bleibt geschlossen']],
@@ -53,10 +53,10 @@ const COPY = {
       ['3 · Aufbewahrung und DMS', 'AUT-02-03-002 bis 011 sind bestätigt: Matrix, LEGAL-Rahmen, Kategorien, Verantwortung, Prüfungen, Register, Tore, Entscheide und Erstnutzung.', 'Autorisierter Realfall, angewandte Frist, DMS-Referenz, Sperre/Löschung und ausgeführte Kontrollen im geschützten Raum.', 'Später eine begrenzte Nachweissammlung nach getrennter Autorisierung vorbereiten.', 'prepared'],
       ['4 · Migration und Rollback', 'PKG-04 V1.0 bleibt dokumentarisch und isoliert.', 'Quelle, Ziel, Ausführungsidentität, Fenster, Sicherung, Probe und Rollback geprüft.', 'Jede Migration bis zu einem getrennten Entscheid geschlossen halten.', 'open'],
       ['5 · Outbox, Überwachung und Wiederanlauf', 'PKG-05 V1.0 bleibt dokumentarisch, ohne aktiven Worker oder Alarm.', 'Worker, Queue, Schwellen, Kanäle, Empfänger, Quarantäne, Wiederholung und Abstimmung getestet.', 'Jede Aktivierung bis zu einem getrennten Entscheid geschlossen halten.', 'open'],
-      ['6 · Mögliche L2-Öffnung', 'Zwei Bedingungen besitzen nun vollständige Dokumentketten, aber keine reale Austrittsnachweise.', 'Alle fünf technischen und fachlichen Bedingungen müssen getrennt belegt und entschieden werden.', 'G1 offen halten und REV-004 zur menschlichen Bestätigung vorlegen.', 'locked']
+      ['6 · Mögliche L2-Öffnung', 'Zwei Bedingungen besitzen nun vollständige Dokumentketten, aber keine reale Austrittsnachweise.', 'Alle fünf technischen und fachlichen Bedingungen müssen getrennt belegt und entschieden werden.', 'G1 offen halten und die technische Welle vorbereiten, ohne L2 zu öffnen.', 'locked']
     ],
     verdict: 'G1 BLEIBT OFFEN · 18 Dokumentträger sind bestätigt, aber 0/6 Bedingungen schliessbar und L2 nicht autorisiert.',
-    next: 'Nächster menschlicher Entscheid: REF-01-G1-REV-004 V0.1 bestätigen oder ändern. Die Bestätigung ist weder GO, Realnachweis noch L2-Öffnung.',
+    next: 'Stand: REF-01-DEC-060 bestätigt REV-004 V1.0. Der nächste Entscheid betrifft WAV-003 V0.1, ohne GO oder L2-Öffnung.',
     boundary: 'Diese Prüfung erstellt keinen Inhaber, kein Konto, Recht, keinen C3/C4/C5-Zugriff, DMS-Fall, keine angewandte Frist, Umgebung, Migration, Worker, Alarm, Realtest, Masterquelle oder Fortschritte.'
   }
 };
