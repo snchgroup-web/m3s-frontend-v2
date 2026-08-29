@@ -55,11 +55,11 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });
 
-test('opens the current REF-01 reassessment in a lightweight dedicated programme view', () => {
+test('opens the current REF-01 technical wave in a lightweight dedicated programme view', () => {
   renderDashboardNavigation({}, '/?view=program&focus=ref01-rev004');
 
-  expect(screen.getByRole('heading', { name: 'REV-004 confirmée · Vague technique à arbitrer' })).toBeInTheDocument();
-  expect(screen.getByRole('link', { name: 'Ouvrir le programme complet' })).toHaveAttribute('href', '/?view=program&returnTo=ref01-rev004#institutional-ref01-g1-rev-004');
+  expect(screen.getByRole('heading', { name: 'WAV-003 confirmée · PostgreSQL à cadrer' })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Ouvrir le programme complet' })).toHaveAttribute('href', '/?view=program&returnTo=ref01-wav003#institutional-ref01-g1-wave-003-confirmation');
   const reassessment = screen.getByTestId('ref01-g1-post-authorisation-reassessment');
   expect(reassessment).toHaveAttribute('id', 'institutional-ref01-g1-rev-004');
   expect(within(reassessment).getByText('Supports confirmés').closest('article')).toHaveTextContent('18/18');
@@ -71,14 +71,19 @@ test('opens the current REF-01 reassessment in a lightweight dedicated programme
   expect(within(waveCandidate).getByText('Autorisations unitaires').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Tests lancés').closest('article')).toHaveTextContent('0');
   expect(within(waveCandidate).getByRole('heading', { name: 'Sept garde-fous communs avant toute préparation' }).nextSibling.children).toHaveLength(7);
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-061 · V1.0' })).toBeInTheDocument();
+  const postgresCandidate = screen.getByTestId('ref01-g1-postgres-authorisation-candidate');
+  expect(within(postgresCandidate).getAllByTestId('ref01-g1-postgres-authorisation-field')).toHaveLength(11);
+  expect(within(postgresCandidate).getByText('Champs structurés').closest('article')).toHaveTextContent('11/11');
+  expect(within(postgresCandidate).getByText('Autorisation d’exécution').closest('article')).toHaveTextContent('0');
   expect(screen.queryByRole('heading', { name: 'MEP-01 · LEGAL' })).not.toBeInTheDocument();
 });
 
-test('offers an explicit return to the lightweight REV-004 decision from the full programme', () => {
+test('offers an explicit return to the lightweight AUT-02-01 decision from the full programme', () => {
   renderDashboardNavigation({}, '/?view=program&returnTo=ref01-rev004');
 
   expect(screen.getByRole('heading', { name: 'De l’idée à une institution durable' })).toBeInTheDocument();
-  expect(screen.getByRole('link', { name: 'Retour à l’arbitrage REV-004' })).toHaveAttribute('href', '/?view=program&focus=ref01-rev004');
+  expect(screen.getByRole('link', { name: 'Retour à l’arbitrage AUT-02-01' })).toHaveAttribute('href', '/?view=program&focus=ref01-wav003');
 });
 
 test('opens the institutional programme in all three interface languages', () => {
@@ -439,7 +444,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.63 · 29-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.64 · 29-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -817,6 +822,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(elevenFieldMatrices).getByRole('heading', { name: 'REF-01-DEC-058 · V1.0' })).toBeInTheDocument();
   expect(within(elevenFieldMatrices).getByRole('heading', { name: 'REF-01-DEC-059 · V1.0' })).toBeInTheDocument();
   expect(within(elevenFieldMatrices).getByRole('heading', { name: 'REF-01-DEC-060 · V1.0' })).toBeInTheDocument();
+  expect(within(elevenFieldMatrices).getByRole('heading', { name: 'REF-01-DEC-061 · V1.0' })).toBeInTheDocument();
   expect(within(elevenFieldMatrices).getByText(/jusqu à 3 mois/)).toBeInTheDocument();
   const legalFramework = within(elevenFieldMatrices).getByTestId('ref01-g1-legal-retention-framework');
   expect(within(legalFramework).getAllByTestId('ref01-g1-legal-retention-row')).toHaveLength(5);
@@ -936,7 +942,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(waveCandidate).getByText('Autorisations unitaires').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Environnements désignés').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Tests lancés').closest('article')).toHaveTextContent('0');
-  expect(control.getByText(/décisions sur le lot : 57/)).toBeInTheDocument();
+  expect(control.getByText(/décisions sur le lot : 58/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -1126,7 +1132,9 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-058 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-059 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-060 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-061 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Prepare three isolated technical files without authorising a test' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Frame PostgreSQL and synthetic restoration before any designation' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-004 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-005 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-006 · V1.0' })).toBeInTheDocument();
@@ -1200,7 +1208,9 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-058 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-059 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-060 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-061 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Drei isolierte technische Akten vorbereiten, ohne Prüfung zu erlauben' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'PostgreSQL und synthetische Wiederherstellung vor jeder Bestimmung abgrenzen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-004 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-005 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-006 · V1.0' })).toBeInTheDocument();
@@ -1620,7 +1630,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Confirm two separate frameworks without opening execution' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(67);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(68);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(9);
@@ -1632,7 +1642,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Zwei getrennte Rahmen bestätigen, ohne ihre Ausführung zu öffnen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(67);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(68);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(9);
