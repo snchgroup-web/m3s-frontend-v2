@@ -23,6 +23,8 @@ import InstitutionalPeopleTeamsGateG1PostAuthorisationReassessmentConfirmation f
 import InstitutionalPeopleTeamsGateG1SyntheticWaveCandidate from './InstitutionalPeopleTeamsGateG1SyntheticWaveCandidate';
 import InstitutionalPeopleTeamsGateG1SyntheticWaveConfirmation from './InstitutionalPeopleTeamsGateG1SyntheticWaveConfirmation';
 import InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationCandidate from './InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationCandidate';
+import InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationConfirmation from './InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationConfirmation';
+import InstitutionalPeopleTeamsGateG1MigrationRollbackAuthorisationCandidate from './InstitutionalPeopleTeamsGateG1MigrationRollbackAuthorisationCandidate';
 
 const STATE_STYLES = {
   sourced: 'border-emerald-700/70 bg-emerald-950/25 text-emerald-100',
@@ -37,7 +39,7 @@ const COPY = {
   FR: {
     eyebrow: 'MATRICES ET DEUX SOUS-LOTS CONFIRMÉS · 29-08-2026',
     title: 'Confirmer les deux chaînes documentaires et réévaluer G1 sans ouvrir de droit',
-    intro: 'Cheikh confirme WAV-003 en V1.0. Trois préparations unitaires sont ouvertes et AUT-02-01-001 V0.1 cadre maintenant PostgreSQL et la restauration synthétique sans environnement, test ni ouverture L2.',
+    intro: 'Cheikh confirme AUT-02-01-001 en V1.0 comme première structure unitaire de la vague. AUT-02-04-001 V0.1 cadre maintenant la migration et le retour arrière sans source réelle, environnement, test ni ouverture L2.',
     counters: [['Matrices confirmées', '2/2', 'Deux portées toujours séparées'], ['Valeurs non LEGAL relues', '9/9', 'Une sourcée · cinq gouvernées · trois requalifiées'], ['Champs LEGAL validés', '2/2', 'Cadre V1.0 · application contrôlée'], ['Autorisations', '0', 'Aucun droit ni traitement ouvert']],
     badge: 'STRUCTURE CONFIRMÉE · V1.0',
     labels: { basis: 'Cadre et preuve', format: 'Structure retenue', supports: 'Sources rapprochées', value: 'Valeur qualifiée', stop: 'Arrêt obligatoire' },
@@ -90,13 +92,13 @@ const COPY = {
     firstExecutionRecord: { id: 'REF-01-DEC-058', version: 'V1.0', status: 'Protocole de première exécution confirmé', author: 'Cheikh Ndiaye', date: '29-08-2026', decision: 'REF-01-G1-AUT-02-02-009 V0.1 est confirmé et promu en V1.0. Ses quatre groupes, six préconditions et quatre issues documentaires sont retenus avant toute future exécution technique.', evidence: 'Confirmation explicite de Cheikh dans la session du 29-08-2026 : « merci de continuer, je confirme REF-01-G1-AUT-02-02-009 V0.1 » ; protocole candidat publié avec REF-01 V1.60 par la PR frontend nº 249 au commit 20259d2.', limit: 'La décision confirme uniquement le protocole documentaire. Elle ne crée aucune autorisation active, identité, titulaire, compte, droit, accès C3/C4/C5, instruction IT ni modification de production.' },
     firstExecutionDecisionRecord: { id: 'REF-01-DEC-059', version: 'V1.0', status: 'Fiche GO/NO-GO de première exécution confirmée', author: 'Cheikh Ndiaye', date: '29-08-2026', decision: 'REF-01-G1-AUT-02-02-010 V0.1 est confirmé et promu en V1.0. Ses quatre groupes et cinq règles sont retenus comme fiche documentaire vide pour une future décision d exécution séparée.', evidence: 'Confirmation explicite de Cheikh dans la session du 29-08-2026 : « je confirme on continue avec REF-01-G1-AUT-02-02-010 V0.1 » ; fiche candidate publiée avec REF-01 V1.61 par la PR frontend nº 250 au commit 78dba2b.', limit: 'La décision confirme uniquement la structure vide. Elle ne constitue aucun GO, ne crée aucun titulaire, compte, droit, accès C3/C4/C5, instruction IT, exécution ou modification de production.' },
     status: 'DEUX SOUS-LOTS PRÉPARÉS · AUT-02-03 et AUT-02-02 sont confirmés jusqu à leur fiche GO/NO-GO ; zéro décision active ou droit exécuté.',
-    next: 'Prochain arbitrage humain : confirmer ou amender REF-01-G1-AUT-02-01-001 V0.1, la première structure unitaire PostgreSQL et restauration.',
+    next: 'Prochain arbitrage humain : confirmer ou amender REF-01-G1-AUT-02-04-001 V0.1, la structure unitaire Migration et retour arrière.',
     boundary: 'La validation porte sur le cadre interne et son applicabilité gouvernée. Elle ne crée aucun droit, aucune conclusion générale de conformité, aucune délégation, aucun accès C3/C4/C5 et aucune opération GED.'
   },
   EN: {
     eyebrow: 'MATRICES AND BOTH SUB-PACKAGES CONFIRMED · 29 AUG 2026',
     title: 'Confirm both documentary chains and reassess G1 without opening a right',
-    intro: 'Cheikh confirms WAV-003 as V1.0. Three individual preparations are open and AUT-02-01-001 V0.1 now frames PostgreSQL and synthetic restoration without an environment, test or L2 opening.',
+    intro: 'Cheikh confirms AUT-02-01-001 as V1.0, the first individual wave structure. AUT-02-04-001 V0.1 now frames migration and rollback without a real source, environment, test or L2 opening.',
     counters: [['Confirmed matrices', '2/2', 'Two scopes remain separate'], ['Reviewed non-LEGAL values', '9/9', 'One sourced · five governed · three requalified'], ['LEGAL fields validated', '2/2', 'V1.0 framework · controlled application'], ['Authorisations', '0', 'No right or processing opened']],
     badge: 'CONFIRMED STRUCTURE · V1.0',
     labels: { basis: 'Framework and evidence', format: 'Retained structure', supports: 'Reconciled sources', value: 'Qualified value', stop: 'Mandatory stop' },
@@ -149,13 +151,13 @@ const COPY = {
     firstExecutionRecord: { id: 'REF-01-DEC-058', version: 'V1.0', status: 'First-execution protocol confirmed', author: 'Cheikh Ndiaye', date: '29 Aug 2026', decision: 'REF-01-G1-AUT-02-02-009 V0.1 is confirmed and promoted to V1.0. Its four groups, six prerequisites and four documentary outcomes are retained before any future technical execution.', evidence: 'Explicit confirmation by Cheikh during the 29 Aug 2026 session: “merci de continuer, je confirme REF-01-G1-AUT-02-02-009 V0.1”; candidate protocol published with REF-01 V1.60 through frontend PR 249 at commit 20259d2.', limit: 'The decision confirms the documentary protocol only. It creates no active authorisation, identity, holder, account, right, C3/C4/C5 access, IT instruction or production change.' },
     firstExecutionDecisionRecord: { id: 'REF-01-DEC-059', version: 'V1.0', status: 'First-execution GO/NO-GO sheet confirmed', author: 'Cheikh Ndiaye', date: '29 Aug 2026', decision: 'REF-01-G1-AUT-02-02-010 V0.1 is confirmed and promoted to V1.0. Its four groups and five rules are retained as an empty documentary sheet for a future separate execution decision.', evidence: 'Explicit confirmation by Cheikh during the 29 Aug 2026 session: “je confirme on continue avec REF-01-G1-AUT-02-02-010 V0.1”; candidate sheet published with REF-01 V1.61 through frontend PR 250 at commit 78dba2b.', limit: 'The decision confirms the empty structure only. It is no GO and creates no holder, account, right, C3/C4/C5 access, IT instruction, execution or production change.' },
     status: 'BOTH SUB-PACKAGES PREPARED · AUT-02-03 and AUT-02-02 are confirmed through their GO/NO-GO sheets; zero active decisions or executed rights.',
-    next: 'Next human decision: confirm or amend REF-01-G1-AUT-02-01-001 V0.1, the first individual PostgreSQL and restoration structure.',
+    next: 'Next human decision: confirm or amend REF-01-G1-AUT-02-04-001 V0.1, the individual Migration and rollback structure.',
     boundary: 'Validation covers the internal framework and its governed applicability. It creates no right, blanket compliance conclusion, delegation, C3/C4/C5 access or DMS operation.'
   },
   DE: {
     eyebrow: 'MATRIZEN UND BEIDE TEILPAKETE BESTÄTIGT · 29.08.2026',
     title: 'Beide Dokumentketten bestätigen und G1 ohne Rechteöffnung neu bewerten',
-    intro: 'Cheikh bestätigt WAV-003 als V1.0. Drei Einzelvorbereitungen sind offen und AUT-02-01-001 V0.1 grenzt nun PostgreSQL und synthetische Wiederherstellung ohne Umgebung, Prüfung oder L2-Öffnung ab.',
+    intro: 'Cheikh bestätigt AUT-02-01-001 als V1.0 und damit die erste Einzelstruktur der Welle. AUT-02-04-001 V0.1 grenzt nun Migration und Rollback ohne Realquelle, Umgebung, Prüfung oder L2-Öffnung ab.',
     counters: [['Bestätigte Matrizen', '2/2', 'Zwei getrennte Umfänge'], ['Geprüfte Nicht-LEGAL-Werte', '9/9', 'Einer belegt · fünf gesteuert · drei neu qualifiziert'], ['Validierte LEGAL-Felder', '2/2', 'Rahmen V1.0 · kontrollierte Anwendung'], ['Autorisierungen', '0', 'Kein Recht oder Vorgang geöffnet']],
     badge: 'STRUKTUR BESTÄTIGT · V1.0',
     labels: { basis: 'Rahmen und Nachweis', format: 'Bestätigte Struktur', supports: 'Abgeglichene Quellen', value: 'Qualifizierter Wert', stop: 'Pflichtstopp' },
@@ -208,7 +210,7 @@ const COPY = {
     firstExecutionRecord: { id: 'REF-01-DEC-058', version: 'V1.0', status: 'Protokoll zur ersten Ausführung bestätigt', author: 'Cheikh Ndiaye', date: '29.08.2026', decision: 'REF-01-G1-AUT-02-02-009 V0.1 ist bestätigt und zu V1.0 hochgestuft. Seine vier Gruppen, sechs Voraussetzungen und vier Dokumentationsergebnisse gelten vor jeder künftigen technischen Ausführung.', evidence: 'Ausdrückliche Bestätigung durch Cheikh in der Sitzung vom 29.08.2026: « merci de continuer, je confirme REF-01-G1-AUT-02-02-009 V0.1 »; Kandidatenprotokoll mit REF-01 V1.60 über Frontend-PR 249 am Commit 20259d2 veröffentlicht.', limit: 'Der Entscheid bestätigt nur das Dokumentationsprotokoll. Er erstellt keine aktive Autorisierung, Identität, keinen Inhaber, kein Konto, Recht, keinen C3/C4/C5-Zugriff, keine IT-Anweisung oder Produktionsänderung.' },
     firstExecutionDecisionRecord: { id: 'REF-01-DEC-059', version: 'V1.0', status: 'GO/NO-GO-Blatt zur ersten Ausführung bestätigt', author: 'Cheikh Ndiaye', date: '29.08.2026', decision: 'REF-01-G1-AUT-02-02-010 V0.1 ist bestätigt und zu V1.0 hochgestuft. Seine vier Gruppen und fünf Regeln gelten als leeres Dokumentationsblatt für einen späteren getrennten Ausführungsentscheid.', evidence: 'Ausdrückliche Bestätigung durch Cheikh in der Sitzung vom 29.08.2026: « je confirme on continue avec REF-01-G1-AUT-02-02-010 V0.1 »; Kandidatenblatt mit REF-01 V1.61 über Frontend-PR 250 am Commit 78dba2b veröffentlicht.', limit: 'Der Entscheid bestätigt nur die leere Struktur. Er ist kein GO und erstellt keinen Inhaber, kein Konto, Recht, keinen C3/C4/C5-Zugriff, keine IT-Anweisung, Ausführung oder Produktionsänderung.' },
     status: 'BEIDE TEILPAKETE VORBEREITET · AUT-02-03 und AUT-02-02 sind bis zu ihren GO/NO-GO-Blättern bestätigt; null aktive Entscheide oder ausgeführte Rechte.',
-    next: 'Nächster menschlicher Entscheid: REF-01-G1-AUT-02-01-001 V0.1, die erste Einzelstruktur für PostgreSQL und Wiederherstellung, bestätigen oder ändern.',
+    next: 'Nächster menschlicher Entscheid: REF-01-G1-AUT-02-04-001 V0.1, die Einzelstruktur für Migration und Rollback, bestätigen oder ändern.',
     boundary: 'Die Validierung betrifft den internen Rahmen und seine gesteuerte Anwendbarkeit. Sie schafft kein Recht, keine allgemeine Konformitätsaussage, Delegation, keinen C3/C4/C5-Zugriff und keine DMS-Operation.'
   }
 };
@@ -244,6 +246,8 @@ const InstitutionalPeopleTeamsGateG1ElevenFieldCandidateMatrices = ({ language =
       <InstitutionalPeopleTeamsGateG1SyntheticWaveCandidate language={language} />
       <InstitutionalPeopleTeamsGateG1SyntheticWaveConfirmation language={language} />
       <InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationCandidate language={language} />
+      <InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationConfirmation language={language} />
+      <InstitutionalPeopleTeamsGateG1MigrationRollbackAuthorisationCandidate language={language} />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.previousRecord} className="mt-4" />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.record} className="mt-4" />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.legalRecord} className="mt-4" />
