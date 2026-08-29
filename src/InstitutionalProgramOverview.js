@@ -16,6 +16,7 @@ import InstitutionalM3SSecurityContinuityConsolidationPilot from './Institutiona
 import InstitutionalQualityLessonsConsolidationPilot from './InstitutionalQualityLessonsConsolidationPilot';
 import InstitutionalReportingConsolidationPilot from './InstitutionalReportingConsolidationPilot';
 import InstitutionalConsolidationIntegratedReview from './InstitutionalConsolidationIntegratedReview';
+import InstitutionalPeopleTeamsGateG1PostAuthorisationReassessment from './InstitutionalPeopleTeamsGateG1PostAuthorisationReassessment';
 
 const translations = {
   FR: {
@@ -52,7 +53,11 @@ const translations = {
     sourceModel: 'Modèle du Programme institutionnel global V0.2 · 23.08.2026',
     sourceMatrix: 'Matrice de cadrage V0.1 · 29 composantes',
     openResources: 'Voir les ressources',
-    openArchitecture: 'Voir l’architecture'
+    openArchitecture: 'Voir l’architecture',
+    focusedEyebrow: 'ARBITRAGE COURANT · REF-01',
+    focusedTitle: 'Réévaluation G1 après les deux sous-lots',
+    focusedBody: 'Cette vue légère ouvre directement REV-004 sans charger tout l’historique du Programme institutionnel.',
+    openFullProgram: 'Ouvrir le programme complet'
   },
   EN: {
     eyebrow: '2SG GLOBAL INSTITUTIONAL PROGRAMME',
@@ -88,7 +93,11 @@ const translations = {
     sourceModel: 'Global Institutional Programme model V0.2 · 23 Aug 2026',
     sourceMatrix: 'Framing matrix V0.1 · 29 components',
     openResources: 'View resources',
-    openArchitecture: 'View architecture'
+    openArchitecture: 'View architecture',
+    focusedEyebrow: 'CURRENT DECISION · REF-01',
+    focusedTitle: 'G1 reassessment after both sub-packages',
+    focusedBody: 'This lightweight view opens REV-004 directly without loading the full Institutional Programme history.',
+    openFullProgram: 'Open the full programme'
   },
   DE: {
     eyebrow: 'GLOBALES INSTITUTIONELLES 2SG-PROGRAMM',
@@ -124,7 +133,11 @@ const translations = {
     sourceModel: 'Modell des globalen institutionellen Programms V0.2 · 23.08.2026',
     sourceMatrix: 'Strukturierungsmatrix V0.1 · 29 Komponenten',
     openResources: 'Ressourcen anzeigen',
-    openArchitecture: 'Architektur anzeigen'
+    openArchitecture: 'Architektur anzeigen',
+    focusedEyebrow: 'AKTUELLER ENTSCHEID · REF-01',
+    focusedTitle: 'G1-Neubewertung nach beiden Teilpaketen',
+    focusedBody: 'Diese leichte Ansicht öffnet REV-004 direkt, ohne die gesamte Historie des institutionellen Programms zu laden.',
+    openFullProgram: 'Vollständiges Programm öffnen'
   }
 };
 
@@ -133,8 +146,9 @@ const cyclePresentation = {
   development: { icon: TrendingUp, accent: 'text-emerald-300', surface: 'bg-emerald-950/25', border: 'border-emerald-800/70' }
 };
 
-const InstitutionalProgramOverview = ({ language = 'FR', onSelectView, onNavigate }) => {
+const InstitutionalProgramOverview = ({ language = 'FR', focus = '', onSelectView, onNavigate }) => {
   const t = translations[language] || translations.FR;
+  const focusedReview = focus === 'ref01-rev004';
 
   useEffect(() => {
     const sectionId = decodeURIComponent(window.location.hash.replace(/^#/, ''));
@@ -142,6 +156,22 @@ const InstitutionalProgramOverview = ({ language = 'FR', onSelectView, onNavigat
     const section = document.getElementById(sectionId);
     if (typeof section?.scrollIntoView === 'function') section.scrollIntoView({ block: 'start' });
   }, [language]);
+
+  if (focusedReview) {
+    return (
+      <div className="institutional-program-view m3s-business-module m3s-design-scope mt-5 space-y-4">
+        <header className="m3s-panel p-4 sm:p-5">
+          <p className="text-xs font-semibold uppercase text-blue-300">{t.focusedEyebrow}</p>
+          <h3 className="mt-1 text-xl font-semibold text-slate-100 sm:text-2xl">{t.focusedTitle}</h3>
+          <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-300">{t.focusedBody}</p>
+          <a href="/?view=program#institutional-ref01-g1-rev-004" className="mt-4 inline-flex min-h-11 items-center justify-center rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-blue-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            {t.openFullProgram}
+          </a>
+        </header>
+        <InstitutionalPeopleTeamsGateG1PostAuthorisationReassessment language={language} />
+      </div>
+    );
+  }
 
   return (
     <div className="institutional-program-view m3s-business-module m3s-design-scope mt-5 space-y-4">
