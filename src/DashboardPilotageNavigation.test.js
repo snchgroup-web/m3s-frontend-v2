@@ -898,6 +898,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(firstExecutionDecision).getByText('Décisions actives').closest('article')).toHaveTextContent('0');
   expect(within(firstExecutionDecision).getByText('Droits exécutés').closest('article')).toHaveTextContent('0');
   const postAuthorisationReview = within(elevenFieldMatrices).getByTestId('ref01-g1-post-authorisation-reassessment');
+  expect(postAuthorisationReview).toHaveAttribute('id', 'institutional-ref01-g1-rev-004');
   expect(within(postAuthorisationReview).getByText(/REF-01-G1-REV-004 · V0.1/)).toBeInTheDocument();
   expect(within(postAuthorisationReview).getAllByTestId('ref01-g1-post-authorisation-condition')).toHaveLength(6);
   expect(within(postAuthorisationReview).getByText('Supports confirmés').closest('article')).toHaveTextContent('18/18');
