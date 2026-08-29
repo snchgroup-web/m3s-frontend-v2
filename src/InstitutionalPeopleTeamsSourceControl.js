@@ -25,49 +25,49 @@ const COPY = {
   FR: {
     eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.55 · 29-08-2026',
     title: 'Comparer les supports sans les promouvoir',
-    body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
+    body: 'Ce comparatif distingue le contrat backend RH-001 candidat du lot L1 isolé, les consommations qu il prévoit et les preuves GED. Aucun endpoint ni raccordement de production n est établi par ce contrôle.',
     counters: [
-      ['Supports contrôlés', '4', 'Un contrat, deux consommations dérivées et un dépôt de preuves'],
-      ['Contrats backend observés', '1', 'Endpoint RH-001 protégé et en lecture seule'],
-      ['Consommations dérivées', '2', 'Annuaire sécurisé et sélecteurs Team/Agent'],
+      ['Supports contrôlés', '4', 'Un contrat candidat, deux consommations prévues et un dépôt de preuves'],
+      ['Contrats backend candidats', '1', 'Contrat L1 isolé ; aucun endpoint de production vérifié'],
+      ['Consommations candidates', '2', 'Annuaire et sélecteurs prévus ; aucun raccordement de production vérifié'],
       ['Sources maîtresses désignées', '0', 'Décision humaine distincte requise']
     ],
     columns: {
-      support: 'Support observé',
+      support: 'Support candidat',
       classification: 'Nature',
-      role: 'Rôle réellement observé',
+      role: 'Rôle documenté ou testé',
       responsibility: 'Responsabilité retenue',
       gap: 'Écart avant décision',
       status: 'État'
     },
     statuses: {
-      connected: 'Support raccordé',
-      derived: 'Consommation dérivée',
+      connected: 'Contrat candidat isolé',
+      derived: 'Consommation candidate',
       evidence: 'Preuve séparée'
     },
     rows: [
       {
         support: 'API RH-001 · /members-directory',
-        classification: 'Contrat documentaire C2',
-        role: 'Expose, après autorisation, un annuaire assaini en lecture seule avec identifiant technique, libellés, équipe, type et état ; aucune coordonnée personnelle.',
-        responsibility: 'Organisation & RH porte le sens métier ; IT protège et maintient le contrat technique.',
-        gap: 'Unicité, couverture, version du contenu, événements de cycle et circuit de correction restent à prouver sur la durée.',
+        classification: 'Contrat documentaire C2 candidat',
+        role: 'Projette huit champs assainis. Le handler local répond sur une fixture synthétique ; aucun endpoint ni annuaire de production n est vérifié.',
+        responsibility: 'Organisation & RH porterait le sens métier ; IT protégerait et maintiendrait le contrat après décision et raccordement distincts.',
+        gap: 'Déploiement, autorisation de production, unicité, couverture, version du contenu, événements de cycle et circuit de correction restent à établir.',
         status: 'connected'
       },
       {
         support: 'Annuaire interne sécurisé',
-        classification: 'Vue de lecture de RH-001',
-        role: 'Affiche la réponse RH-001 selon les droits, avec recherche, filtres et traductions locales ; ne conserve pas un second annuaire.',
-        responsibility: 'Organisation & RH valide le contenu ; IT maintient l’interface et les états d’accès.',
-        gap: 'La date et la version de l’extrait doivent rester visibles ; cette vue ne peut pas être promue comme source indépendante.',
+        classification: 'Vue candidate de lecture RH-001',
+        role: 'Prévoit recherche, filtres et traductions à partir de la réponse candidate RH-001 ; ce contrôle ne prouve ni raccordement ni affichage de données réelles.',
+        responsibility: 'Organisation & RH validerait le contenu ; IT maintiendrait l interface et les états d accès après ouverture autorisée.',
+        gap: 'Le raccordement, la date et la version de l extrait restent à prouver ; cette vue ne peut pas être promue comme source indépendante.',
         status: 'derived'
       },
       {
         support: 'Sélecteurs partagés Team/Agent',
-        classification: 'Projection opérationnelle dérivée',
-        role: 'Construit des options à partir des membres actifs RH-001, normalise TZH/TSN et ajoute un collectif distinct pour chaque équipe.',
-        responsibility: 'La fonction consommatrice valide l’affectation métier ; IT maintient les règles de projection.',
-        gap: 'Alias et libellés ne valent pas identifiant maître ; les anciennes valeurs et changements d’équipe doivent garder leur provenance.',
+        classification: 'Projection opérationnelle candidate',
+        role: 'Prévoit des options issues des membres actifs RH-001, la normalisation TZH/TSN et un collectif distinct par équipe ; aucune alimentation de production n est établie.',
+        responsibility: 'La fonction consommatrice validerait l affectation métier ; IT maintiendrait les règles après raccordement autorisé.',
+        gap: 'Alimentation réelle, alias, identifiants maîtres, anciennes valeurs et changements d équipe restent à relier à une provenance vérifiée.',
         status: 'derived'
       },
       {
@@ -116,49 +116,49 @@ const COPY = {
   EN: {
     eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.55 · 29 AUG 2026',
     title: 'Compare supports without promoting them',
-    body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
+    body: 'This comparison separates the isolated L1 candidate RH-001 backend contract, its planned consumers and DMS evidence. This control establishes neither a production endpoint nor a production connection.',
     counters: [
-      ['Controlled supports', '4', 'One contract, two derived consumers and one evidence repository'],
-      ['Observed backend contracts', '1', 'Protected read-only RH-001 endpoint'],
-      ['Derived consumers', '2', 'Secure directory and Team/Agent selectors'],
+      ['Controlled supports', '4', 'One candidate contract, two planned consumers and one evidence repository'],
+      ['Candidate backend contracts', '1', 'Isolated L1 contract; no verified production endpoint'],
+      ['Candidate consumers', '2', 'Planned directory and selectors; no verified production connection'],
       ['Designated master sources', '0', 'Separate human decision required']
     ],
     columns: {
-      support: 'Observed support',
+      support: 'Candidate support',
       classification: 'Nature',
-      role: 'Actually observed role',
+      role: 'Documented or tested role',
       responsibility: 'Retained responsibility',
       gap: 'Gap before decision',
       status: 'State'
     },
     statuses: {
-      connected: 'Connected support',
-      derived: 'Derived consumer',
+      connected: 'Isolated candidate contract',
+      derived: 'Candidate consumer',
       evidence: 'Separate evidence'
     },
     rows: [
       {
         support: 'RH-001 API · /members-directory',
-        classification: 'C2 documentary contract',
-        role: 'After authorisation, exposes a sanitised read-only directory with technical identifier, labels, team, type and state; no personal contact details.',
-        responsibility: 'Organisation & HR owns business meaning; IT protects and maintains the technical contract.',
-        gap: 'Uniqueness, coverage, content version, lifecycle events and the correction workflow still require durable evidence.',
+        classification: 'Candidate C2 documentary contract',
+        role: 'Projects eight sanitised fields. The local handler responds against a synthetic fixture; no production endpoint or directory is verified.',
+        responsibility: 'Organisation & HR would own business meaning; IT would protect and maintain the contract after separate decision and connection.',
+        gap: 'Deployment, production authorisation, uniqueness, coverage, content version, lifecycle events and correction workflow remain to be established.',
         status: 'connected'
       },
       {
         support: 'Secure internal directory',
-        classification: 'RH-001 read view',
-        role: 'Displays the RH-001 response according to rights, with search, filters and local translations; it retains no second directory.',
-        responsibility: 'Organisation & HR validates content; IT maintains the interface and access states.',
-        gap: 'Extract date and version must remain visible; this view cannot be promoted as an independent source.',
+        classification: 'Candidate RH-001 read view',
+        role: 'Plans search, filters and translations from the candidate RH-001 response; this control proves neither a connection nor the display of real data.',
+        responsibility: 'Organisation & HR would validate content; IT would maintain the interface and access states after an authorised opening.',
+        gap: 'Connection, extract date and version remain to be evidenced; this view cannot be promoted as an independent source.',
         status: 'derived'
       },
       {
         support: 'Shared Team/Agent selectors',
-        classification: 'Derived operational projection',
-        role: 'Builds options from active RH-001 members, normalises TZH/TSN and adds a separate collective for each team.',
-        responsibility: 'The consuming function validates the business assignment; IT maintains projection rules.',
-        gap: 'Aliases and labels are not master identifiers; former values and team changes must retain provenance.',
+        classification: 'Candidate operational projection',
+        role: 'Plans options from active RH-001 members, TZH/TSN normalisation and a separate collective per team; no production feed is established.',
+        responsibility: 'The consuming function would validate business assignment; IT would maintain rules after an authorised connection.',
+        gap: 'Real feed, aliases, master identifiers, former values and team changes still require verified provenance.',
         status: 'derived'
       },
       {
@@ -207,49 +207,49 @@ const COPY = {
   DE: {
     eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.55 · 29.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
-    body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
+    body: 'Dieser Vergleich trennt den isolierten RH-001-Backend-Kandidatenvertrag des L1-Loses, seine geplanten Verbraucher und DMS-Nachweise. Diese Kontrolle belegt weder einen Produktionsendpunkt noch eine Produktionsverbindung.',
     counters: [
-      ['Geprüfte Träger', '4', 'Ein Vertrag, zwei abgeleitete Verbraucher und ein Nachweisdepot'],
-      ['Beobachtete Backendverträge', '1', 'Geschützter schreibgeschützter RH-001-Endpunkt'],
-      ['Abgeleitete Verbraucher', '2', 'Sicheres Verzeichnis und Team-/Agent-Auswahl'],
+      ['Geprüfte Träger', '4', 'Ein Kandidatenvertrag, zwei geplante Verbraucher und ein Nachweisdepot'],
+      ['Backend-Kandidatenverträge', '1', 'Isolierter L1-Vertrag; kein verifizierter Produktionsendpunkt'],
+      ['Kandidatenverbraucher', '2', 'Geplantes Verzeichnis und Auswahl; keine verifizierte Produktionsverbindung'],
       ['Bestimmte Masterquellen', '0', 'Getrennter menschlicher Entscheid erforderlich']
     ],
     columns: {
-      support: 'Beobachteter Träger',
+      support: 'Quellkandidat',
       classification: 'Art',
-      role: 'Tatsächlich beobachtete Rolle',
+      role: 'Dokumentierte oder getestete Rolle',
       responsibility: 'Festgehaltene Verantwortung',
       gap: 'Abweichung vor Entscheid',
       status: 'Stand'
     },
     statuses: {
-      connected: 'Verbundener Träger',
-      derived: 'Abgeleiteter Verbraucher',
+      connected: 'Isolierter Kandidatenvertrag',
+      derived: 'Kandidatenverbraucher',
       evidence: 'Getrennter Nachweis'
     },
     rows: [
       {
         support: 'RH-001-API · /members-directory',
-        classification: 'C2-Dokumentationsvertrag',
-        role: 'Stellt nach Autorisierung ein bereinigtes schreibgeschütztes Verzeichnis mit technischer Kennung, Bezeichnungen, Team, Typ und Stand bereit; keine privaten Kontaktdaten.',
-        responsibility: 'Organisation & Personal trägt die Fachbedeutung; IT schützt und pflegt den technischen Vertrag.',
-        gap: 'Eindeutigkeit, Abdeckung, Inhaltsversion, Lebenszyklusereignisse und Korrekturablauf benötigen noch dauerhafte Nachweise.',
+        classification: 'C2-Dokumentations-Kandidatenvertrag',
+        role: 'Projiziert acht bereinigte Felder. Der lokale Handler antwortet mit einer synthetischen Fixture; kein Produktionsendpunkt oder reales Verzeichnis ist verifiziert.',
+        responsibility: 'Organisation & Personal würde die Fachbedeutung tragen; IT würde den Vertrag nach getrenntem Entscheid und Anschluss schützen und pflegen.',
+        gap: 'Bereitstellung, Produktionsautorisierung, Eindeutigkeit, Abdeckung, Inhaltsversion, Lebenszyklusereignisse und Korrekturablauf sind noch zu belegen.',
         status: 'connected'
       },
       {
         support: 'Sicheres internes Verzeichnis',
-        classification: 'RH-001-Leseansicht',
-        role: 'Zeigt die RH-001-Antwort gemäss Rechten mit Suche, Filtern und lokalen Übersetzungen; es speichert kein zweites Verzeichnis.',
-        responsibility: 'Organisation & Personal validiert den Inhalt; IT pflegt Oberfläche und Zugriffszustände.',
-        gap: 'Datum und Version des Auszugs müssen sichtbar bleiben; diese Ansicht kann nicht als unabhängige Quelle gefördert werden.',
+        classification: 'RH-001-Leseansicht als Kandidat',
+        role: 'Plant Suche, Filter und Übersetzungen aus der RH-001-Kandidatenantwort; diese Kontrolle belegt weder Anschluss noch Anzeige realer Daten.',
+        responsibility: 'Organisation & Personal würde den Inhalt validieren; IT würde Oberfläche und Zugriffszustände nach autorisierter Öffnung pflegen.',
+        gap: 'Anschluss, Datum und Version des Auszugs sind noch zu belegen; diese Ansicht kann nicht als unabhängige Quelle gefördert werden.',
         status: 'derived'
       },
       {
         support: 'Gemeinsame Team-/Agent-Auswahl',
-        classification: 'Abgeleitete operative Projektion',
-        role: 'Erstellt Optionen aus aktiven RH-001-Mitgliedern, normalisiert TZH/TSN und ergänzt je Team ein getrenntes Kollektiv.',
-        responsibility: 'Die verbrauchende Funktion validiert die fachliche Zuweisung; IT pflegt die Projektionsregeln.',
-        gap: 'Aliase und Bezeichnungen sind keine Masterkennungen; frühere Werte und Teamwechsel müssen ihre Herkunft bewahren.',
+        classification: 'Operative Kandidatenprojektion',
+        role: 'Plant Optionen aus aktiven RH-001-Mitgliedern, TZH/TSN-Normalisierung und ein getrenntes Kollektiv je Team; keine Produktionszufuhr ist belegt.',
+        responsibility: 'Die verbrauchende Funktion würde die fachliche Zuweisung validieren; IT würde die Regeln nach autorisiertem Anschluss pflegen.',
+        gap: 'Reale Zufuhr, Aliase, Masterkennungen, frühere Werte und Teamwechsel benötigen noch eine verifizierte Herkunft.',
         status: 'derived'
       },
       {

@@ -442,6 +442,13 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(control.getAllByText('Annuaire interne sécurisé').length).toBeGreaterThan(0);
   expect(control.getAllByText('Sélecteurs partagés Team/Agent').length).toBeGreaterThan(0);
   expect(control.getAllByText('GED · preuves RH autorisées').length).toBeGreaterThan(0);
+  expect(control.getByText('Contrats backend candidats')).toBeInTheDocument();
+  expect(control.getByText(/aucun endpoint de production vérifié/)).toBeInTheDocument();
+  expect(control.getAllByText('Consommation candidate').length).toBeGreaterThan(0);
+  expect(control.queryAllByText('Contrats backend observés')).toHaveLength(0);
+  expect(control.queryAllByText(/Endpoint RH-001 protégé/)).toHaveLength(0);
+  expect(control.queryAllByText('Support raccordé')).toHaveLength(0);
+  expect(control.queryAllByText(/Expose, après autorisation/)).toHaveLength(0);
   expect(control.getByText('Sources maîtresses désignées')).toBeInTheDocument();
   expect(control.getByRole('heading', { name: 'Sept critères avant toute désignation de source maîtresse' })).toBeInTheDocument();
   expect(control.getAllByText('Critères de décision validés', { selector: 'span' })).toHaveLength(2);
@@ -998,6 +1005,8 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Confirm roles and qualify access tests without opening a right' })).toBeInTheDocument();
   expect(screen.getByText(/No effective production right is established/)).toBeInTheDocument();
   expect(screen.getByText(/The six rows are synthetic fixture records/)).toBeInTheDocument();
+  expect(screen.getByText('Candidate backend contracts')).toBeInTheDocument();
+  expect(screen.getByText(/no verified production endpoint/)).toBeInTheDocument();
   expect(screen.getAllByText('SOURCED · CONFIRMED')).toHaveLength(1);
   expect(screen.getAllByText('WORKING VALUE · CONFIRMED')).toHaveLength(5);
   expect(screen.getAllByText('PARTIAL · DECISION REQUIRED')).toHaveLength(3);
@@ -1044,6 +1053,8 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Rollen bestätigen und Zugriffstests ohne Rechteöffnung qualifizieren' })).toBeInTheDocument();
   expect(screen.getByText(/Kein wirksames Produktionsrecht ist belegt/)).toBeInTheDocument();
   expect(screen.getByText(/Die sechs Zeilen sind synthetische Fixture-Datensätze/)).toBeInTheDocument();
+  expect(screen.getByText('Backend-Kandidatenverträge')).toBeInTheDocument();
+  expect(screen.getByText(/kein verifizierter Produktionsendpunkt/)).toBeInTheDocument();
   expect(screen.getAllByText('BELEGT · BESTÄTIGT')).toHaveLength(1);
   expect(screen.getAllByText('ARBEITSWERT · BESTÄTIGT')).toHaveLength(5);
   expect(screen.getAllByText('TEILWEISE · ENTSCHEID NÖTIG')).toHaveLength(3);
