@@ -59,10 +59,18 @@ test('opens the current REF-01 reassessment in a lightweight dedicated programme
   renderDashboardNavigation({}, '/?view=program&focus=ref01-rev004');
 
   expect(screen.getByRole('heading', { name: 'Réévaluation G1 après les deux sous-lots' })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Ouvrir le programme complet' })).toHaveAttribute('href', '/?view=program&returnTo=ref01-rev004#institutional-ref01-g1-rev-004');
   expect(screen.getByTestId('ref01-g1-post-authorisation-reassessment')).toHaveAttribute('id', 'institutional-ref01-g1-rev-004');
   expect(screen.getByText('Supports confirmés').closest('article')).toHaveTextContent('18/18');
   expect(screen.getByText('Conditions clôturables').closest('article')).toHaveTextContent('0/6');
   expect(screen.queryByRole('heading', { name: 'MEP-01 · LEGAL' })).not.toBeInTheDocument();
+});
+
+test('offers an explicit return to the lightweight REV-004 decision from the full programme', () => {
+  renderDashboardNavigation({}, '/?view=program&returnTo=ref01-rev004');
+
+  expect(screen.getByRole('heading', { name: 'De l’idée à une institution durable' })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Retour à l’arbitrage REV-004' })).toHaveAttribute('href', '/?view=program&focus=ref01-rev004');
 });
 
 test('opens the institutional programme in all three interface languages', () => {

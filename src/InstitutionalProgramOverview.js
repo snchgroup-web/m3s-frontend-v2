@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Activity, Briefcase, Building2, Network, ShieldCheck, Target, TrendingUp } from 'lucide-react';
+import { Activity, ArrowLeft, Briefcase, Building2, Network, ShieldCheck, Target, TrendingUp } from 'lucide-react';
 import InstitutionalLegalPilot from './InstitutionalLegalPilot';
 import InstitutionalGovernancePilot from './InstitutionalGovernancePilot';
 import InstitutionalDigitalInfrastructurePilot from './InstitutionalDigitalInfrastructurePilot';
@@ -57,7 +57,8 @@ const translations = {
     focusedEyebrow: 'ARBITRAGE COURANT · REF-01',
     focusedTitle: 'Réévaluation G1 après les deux sous-lots',
     focusedBody: 'Cette vue légère ouvre directement REV-004 sans charger tout l’historique du Programme institutionnel.',
-    openFullProgram: 'Ouvrir le programme complet'
+    openFullProgram: 'Ouvrir le programme complet',
+    returnToFocusedReview: 'Retour à l’arbitrage REV-004'
   },
   EN: {
     eyebrow: '2SG GLOBAL INSTITUTIONAL PROGRAMME',
@@ -97,7 +98,8 @@ const translations = {
     focusedEyebrow: 'CURRENT DECISION · REF-01',
     focusedTitle: 'G1 reassessment after both sub-packages',
     focusedBody: 'This lightweight view opens REV-004 directly without loading the full Institutional Programme history.',
-    openFullProgram: 'Open the full programme'
+    openFullProgram: 'Open the full programme',
+    returnToFocusedReview: 'Back to the REV-004 decision'
   },
   DE: {
     eyebrow: 'GLOBALES INSTITUTIONELLES 2SG-PROGRAMM',
@@ -137,7 +139,8 @@ const translations = {
     focusedEyebrow: 'AKTUELLER ENTSCHEID · REF-01',
     focusedTitle: 'G1-Neubewertung nach beiden Teilpaketen',
     focusedBody: 'Diese leichte Ansicht öffnet REV-004 direkt, ohne die gesamte Historie des institutionellen Programms zu laden.',
-    openFullProgram: 'Vollständiges Programm öffnen'
+    openFullProgram: 'Vollständiges Programm öffnen',
+    returnToFocusedReview: 'Zurück zum REV-004-Entscheid'
   }
 };
 
@@ -146,9 +149,10 @@ const cyclePresentation = {
   development: { icon: TrendingUp, accent: 'text-emerald-300', surface: 'bg-emerald-950/25', border: 'border-emerald-800/70' }
 };
 
-const InstitutionalProgramOverview = ({ language = 'FR', focus = '', onSelectView, onNavigate }) => {
+const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = '', onSelectView, onNavigate }) => {
   const t = translations[language] || translations.FR;
   const focusedReview = focus === 'ref01-rev004';
+  const canReturnToFocusedReview = returnTo === 'ref01-rev004';
 
   useEffect(() => {
     const sectionId = decodeURIComponent(window.location.hash.replace(/^#/, ''));
@@ -164,7 +168,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', onSelectVie
           <p className="text-xs font-semibold uppercase text-blue-300">{t.focusedEyebrow}</p>
           <h3 className="mt-1 text-xl font-semibold text-slate-100 sm:text-2xl">{t.focusedTitle}</h3>
           <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-300">{t.focusedBody}</p>
-          <a href="/?view=program#institutional-ref01-g1-rev-004" className="mt-4 inline-flex min-h-11 items-center justify-center rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-blue-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <a href="/?view=program&returnTo=ref01-rev004#institutional-ref01-g1-rev-004" className="mt-4 inline-flex min-h-11 items-center justify-center rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-blue-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
             {t.openFullProgram}
           </a>
         </header>
@@ -187,6 +191,11 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', onSelectVie
           </span>
         </div>
         <p className="mt-4 rounded-md border border-amber-800/60 bg-amber-950/20 px-3 py-2 text-sm text-amber-200">{t.sourceStatus}</p>
+        {canReturnToFocusedReview && (
+          <a href="/?view=program&focus=ref01-rev004" className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-blue-700 bg-blue-950/35 px-4 py-2 text-sm font-semibold text-blue-100 transition hover:border-blue-400 hover:bg-blue-900/50 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:w-auto">
+            <ArrowLeft size={17} aria-hidden="true" />{t.returnToFocusedReview}
+          </a>
+        )}
       </header>
 
       <section className="institutional-program-root m3s-panel p-4 sm:p-5" aria-labelledby="institutional-program-root-title">

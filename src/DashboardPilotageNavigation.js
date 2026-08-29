@@ -604,7 +604,7 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
       )}
 
       {activeView === 'program' && (
-        <InstitutionalProgramOverview language={language} focus={new URLSearchParams(location.search).get('focus') || ''} onSelectView={selectView} onNavigate={onNavigate} />
+        <InstitutionalProgramOverview language={language} focus={new URLSearchParams(location.search).get('focus') || ''} returnTo={new URLSearchParams(location.search).get('returnTo') || ''} onSelectView={selectView} onNavigate={onNavigate} />
       )}
 
       <DashboardGovernanceViews activeView={activeView} language={language} selectedKpi={selectedKpi} onNavigate={onNavigate} />
