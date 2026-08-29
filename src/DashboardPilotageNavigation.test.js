@@ -438,6 +438,10 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(control.getByRole('heading', { name: 'Séparation des responsabilités validée' })).toBeInTheDocument();
   expect(control.getByText(/Aucun événement réel, schéma, source maîtresse, automatisation ou taux de progression/)).toBeInTheDocument();
   expect(control.getByRole('heading', { name: 'Comparer les supports sans les promouvoir' })).toBeInTheDocument();
+  expect(control.getAllByText('Constat documentaire').length).toBeGreaterThan(0);
+  expect(control.getAllByText('Preuve candidate').length).toBeGreaterThan(0);
+  expect(control.getAllByText(/aucun identifiant réel n est établi/).length).toBeGreaterThan(0);
+  expect(control.queryAllByText('Contrat observé')).toHaveLength(0);
   expect(control.getAllByText('API RH-001 · /members-directory').length).toBeGreaterThan(0);
   expect(control.getAllByText('Annuaire interne sécurisé').length).toBeGreaterThan(0);
   expect(control.getAllByText('Sélecteurs partagés Team/Agent').length).toBeGreaterThan(0);
@@ -829,6 +833,9 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(leastPrivilegeModel).getByRole('heading', { name: 'REF-01-G1-AUT-02-02-003 · V1.0' })).toBeInTheDocument();
   expect(within(leastPrivilegeModel).getAllByTestId('ref01-g1-least-privilege-role-model-group')).toHaveLength(4);
   expect(within(leastPrivilegeModel).getByText('Champs rapprochés').closest('article')).toHaveTextContent('6/6');
+  expect(within(leastPrivilegeModel).getByText('Titulaires réels établis').closest('article')).toHaveTextContent('0');
+  expect(within(leastPrivilegeModel).getByText('Rôle source à qualifier')).toBeInTheDocument();
+  expect(within(leastPrivilegeModel).queryByText('Titulaire observé')).not.toBeInTheDocument();
   expect(within(leastPrivilegeModel).getByText('Droits modifiés').closest('article')).toHaveTextContent('0');
   const observedAccessMatrix = within(elevenFieldMatrices).getByTestId('ref01-g1-least-privilege-observed-access-matrix');
   expect(within(observedAccessMatrix).getByRole('heading', { name: 'REF-01-G1-AUT-02-02-004 · V0.2' })).toBeInTheDocument();
@@ -850,7 +857,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(section.textContent).not.toMatch(/Chantal|Gnilane|Ibrahima|Papa/);
   expect(section.textContent).not.toMatch(/\d+\s*%/);
 
-  fireEvent.click(control.getByRole('button', { name: /Ouvrir l’annuaire sécurisé/ }));
+  fireEvent.click(control.getByRole('button', { name: /Ouvrir l’annuaire candidat/ }));
   expect(onNavigate).toHaveBeenLastCalledWith(
     '/rh?tab=directory&returnTo=dashboard&dashboardView=program&dashboardSection=institutional-ref01-people-teams-control#members-directory-title'
   );
@@ -1005,6 +1012,8 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Confirm roles and qualify access tests without opening a right' })).toBeInTheDocument();
   expect(screen.getByText(/No effective production right is established/)).toBeInTheDocument();
   expect(screen.getByText(/The six rows are synthetic fixture records/)).toBeInTheDocument();
+  expect(screen.getByText('Established real holders').closest('article')).toHaveTextContent('0');
+  expect(screen.queryByText('Observed holder')).not.toBeInTheDocument();
   expect(screen.getByText('Candidate backend contracts')).toBeInTheDocument();
   expect(screen.getByText(/no verified production endpoint/)).toBeInTheDocument();
   expect(screen.getAllByText('SOURCED · CONFIRMED')).toHaveLength(1);
@@ -1053,6 +1062,8 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'Rollen bestätigen und Zugriffstests ohne Rechteöffnung qualifizieren' })).toBeInTheDocument();
   expect(screen.getByText(/Kein wirksames Produktionsrecht ist belegt/)).toBeInTheDocument();
   expect(screen.getByText(/Die sechs Zeilen sind synthetische Fixture-Datensätze/)).toBeInTheDocument();
+  expect(screen.getByText('Belegte reale Inhaber').closest('article')).toHaveTextContent('0');
+  expect(screen.queryByText('Beobachteter Inhaber')).not.toBeInTheDocument();
   expect(screen.getByText('Backend-Kandidatenverträge')).toBeInTheDocument();
   expect(screen.getByText(/kein verifizierter Produktionsendpunkt/)).toBeInTheDocument();
   expect(screen.getAllByText('BELEGT · BESTÄTIGT')).toHaveLength(1);
