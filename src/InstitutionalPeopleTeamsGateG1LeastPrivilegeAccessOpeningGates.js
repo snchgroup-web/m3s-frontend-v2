@@ -20,7 +20,7 @@ const COPY = {
     verdictsTitle: 'Quatre verdicts documentaires proposés',
     verdicts: ['Ouvrir la fiche sous réserve', 'Refuser', 'Demander des éléments', 'Mettre en attente'],
     status: 'CONFIRMÉ · Six portes et quatre verdicts retenus en V1.0. Zéro fiche active, titulaire, compte, droit réel ou exécution.',
-    next: 'Suite préparée : confirmer ou amender la fiche de décision REF-01-G1-AUT-02-02-008 V0.1.',
+    next: 'Suite préparée : la fiche 008 est confirmée en V1.0 ; confirmer ou amender le protocole REF-01-G1-AUT-02-02-009 V0.1.',
     boundary: 'Ces portes contrôlent seulement l’admissibilité documentaire. La première fiche réelle, son stockage protégé et toute exécution technique exigeront des décisions séparées.'
   },
   EN: {
@@ -41,7 +41,7 @@ const COPY = {
     verdictsTitle: 'Four proposed documentary outcomes',
     verdicts: ['Open the record with reservations', 'Reject', 'Request information', 'Place on hold'],
     status: 'CONFIRMED · Six gates and four outcomes retained as V1.0. Zero active records, holders, accounts, real rights or executions.',
-    next: 'Prepared next step: confirm or amend decision sheet REF-01-G1-AUT-02-02-008 V0.1.',
+    next: 'Prepared next step: sheet 008 is confirmed as V1.0; confirm or amend protocol REF-01-G1-AUT-02-02-009 V0.1.',
     boundary: 'These gates control documentary admissibility only. The first real record, its protected storage and any technical execution will require separate decisions.'
   },
   DE: {
@@ -62,7 +62,7 @@ const COPY = {
     verdictsTitle: 'Vier vorgeschlagene Dokumentationsergebnisse',
     verdicts: ['Eintrag unter Vorbehalt öffnen', 'Ablehnen', 'Angaben anfordern', 'In Wartestellung setzen'],
     status: 'BESTÄTIGT · Sechs Tore und vier Ergebnisse als V1.0 übernommen. Null aktive Einträge, Inhaber, Konten, reale Rechte oder Ausführungen.',
-    next: 'Nächster vorbereiteter Schritt: Entscheidblatt REF-01-G1-AUT-02-02-008 V0.1 bestätigen oder ändern.',
+    next: 'Nächster vorbereiteter Schritt: Blatt 008 ist als V1.0 bestätigt; Protokoll REF-01-G1-AUT-02-02-009 V0.1 bestätigen oder ändern.',
     boundary: 'Diese Tore kontrollieren nur die dokumentarische Zulässigkeit. Der erste reale Eintrag, seine geschützte Ablage und jede technische Ausführung erfordern getrennte Entscheide.'
   }
 };
