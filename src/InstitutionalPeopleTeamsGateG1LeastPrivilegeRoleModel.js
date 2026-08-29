@@ -17,7 +17,7 @@ const COPY = {
     rulesTitle: 'Cinq règles confirmées de moindre privilège',
     rules: ['Rôle canonique distinct du droit', 'Périmètre explicite avant accès', 'Délégation datée et révocable', 'Exception temporaire et tracée', 'Refus par défaut pour C4/C5'],
     status: 'CONFIRMÉ · Modèle documentaire de qualification retenu en V1.0. Zéro création de compte, attribution, retrait, délégation, exception, accès C3/C4/C5 ou modification de production.',
-    next: 'Matrice AUT-02-02-004, protocole AUT-02-02-005 et registre AUT-02-02-006 confirmés en V1.0 ; portes AUT-02-02-007 préparées en V0.1.',
+    next: 'Matrice AUT-02-02-004, protocole AUT-02-02-005, registre AUT-02-02-006 et portes AUT-02-02-007 confirmés en V1.0 ; fiche AUT-02-02-008 préparée en V0.1.',
     boundary: 'La confirmation valide seulement le modèle de qualification. Les titulaires, droits, périmètres et exceptions réels restent soumis à une décision nominative séparée et à des preuves hors bundle public.'
   },
   EN: {
@@ -35,7 +35,7 @@ const COPY = {
     rulesTitle: 'Five confirmed least-privilege rules',
     rules: ['Canonical role separate from right', 'Explicit scope before access', 'Dated and revocable delegation', 'Temporary and traced exception', 'Default denial for C4/C5'],
     status: 'CONFIRMED · Documentary qualification model retained in V1.0. Zero account creation, assignment, withdrawal, delegation, exception, C3/C4/C5 access or production change.',
-    next: 'AUT-02-02-004 matrix, AUT-02-02-005 protocol and AUT-02-02-006 register confirmed as V1.0; AUT-02-02-007 gates prepared as V0.1.',
+    next: 'AUT-02-02-004 matrix, AUT-02-02-005 protocol, AUT-02-02-006 register and AUT-02-02-007 gates confirmed as V1.0; AUT-02-02-008 sheet prepared as V0.1.',
     boundary: 'The confirmation validates only the qualification model. Real holders, rights, scopes and exceptions still require a separate named decision and evidence outside the public bundle.'
   },
   DE: {
@@ -53,7 +53,7 @@ const COPY = {
     rulesTitle: 'Fünf bestätigte Regeln zur geringsten Berechtigung',
     rules: ['Kanonische Rolle vom Recht getrennt', 'Expliziter Umfang vor Zugriff', 'Datierte und widerrufbare Delegation', 'Temporäre und protokollierte Ausnahme', 'Standardablehnung für C4/C5'],
     status: 'BESTÄTIGT · Dokumentarisches Qualifikationsmodell in V1.0 übernommen. Null Kontoerstellungen, Zuweisungen, Entzüge, Delegationen, Ausnahmen, C3/C4/C5-Zugriffe oder Produktionsänderungen.',
-    next: 'Matrix AUT-02-02-004, Protokoll AUT-02-02-005 und Register AUT-02-02-006 als V1.0 bestätigt; Tore AUT-02-02-007 als V0.1 vorbereitet.',
+    next: 'Matrix AUT-02-02-004, Protokoll AUT-02-02-005, Register AUT-02-02-006 und Tore AUT-02-02-007 als V1.0 bestätigt; Blatt AUT-02-02-008 als V0.1 vorbereitet.',
     boundary: 'Die Bestätigung validiert nur das Qualifikationsmodell. Reale Inhaber, Rechte, Umfänge und Ausnahmen benötigen weiterhin einen getrennten namentlichen Entscheid und Nachweise ausserhalb des öffentlichen Bundles.'
   }
 };
