@@ -55,6 +55,16 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });
 
+test('opens the current REF-01 reassessment in a lightweight dedicated programme view', () => {
+  renderDashboardNavigation({}, '/?view=program&focus=ref01-rev004');
+
+  expect(screen.getByRole('heading', { name: 'Réévaluation G1 après les deux sous-lots' })).toBeInTheDocument();
+  expect(screen.getByTestId('ref01-g1-post-authorisation-reassessment')).toHaveAttribute('id', 'institutional-ref01-g1-rev-004');
+  expect(screen.getByText('Supports confirmés').closest('article')).toHaveTextContent('18/18');
+  expect(screen.getByText('Conditions clôturables').closest('article')).toHaveTextContent('0/6');
+  expect(screen.queryByRole('heading', { name: 'MEP-01 · LEGAL' })).not.toBeInTheDocument();
+});
+
 test('opens the institutional programme in all three interface languages', () => {
   const { rerender } = renderDashboardNavigation({ language: 'EN' }, '/?view=program');
   expect(screen.getByRole('heading', { name: 'From an idea to a sustainable institution' })).toBeInTheDocument();
