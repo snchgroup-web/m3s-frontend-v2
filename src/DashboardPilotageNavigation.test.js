@@ -413,7 +413,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.60 · 29-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.61 · 29-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -788,6 +788,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(elevenFieldMatrices).getByRole('heading', { name: 'REF-01-DEC-055 · V1.0' })).toBeInTheDocument();
   expect(within(elevenFieldMatrices).getByRole('heading', { name: 'REF-01-DEC-056 · V1.0' })).toBeInTheDocument();
   expect(within(elevenFieldMatrices).getByRole('heading', { name: 'REF-01-DEC-057 · V1.0' })).toBeInTheDocument();
+  expect(within(elevenFieldMatrices).getByRole('heading', { name: 'REF-01-DEC-058 · V1.0' })).toBeInTheDocument();
   expect(within(elevenFieldMatrices).getByText(/jusqu à 3 mois/)).toBeInTheDocument();
   const legalFramework = within(elevenFieldMatrices).getByTestId('ref01-g1-legal-retention-framework');
   expect(within(legalFramework).getAllByTestId('ref01-g1-legal-retention-row')).toHaveLength(5);
@@ -883,13 +884,19 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(accessOpeningDecision).getByText('Décisions actives').closest('article')).toHaveTextContent('0');
   expect(within(accessOpeningDecision).getByText('Droits exécutés').closest('article')).toHaveTextContent('0');
   const firstUseAuthorisation = within(elevenFieldMatrices).getByTestId('ref01-g1-least-privilege-first-use-authorisation-protocol');
-  expect(within(firstUseAuthorisation).getByRole('heading', { name: 'REF-01-G1-AUT-02-02-009 · V0.1' })).toBeInTheDocument();
+  expect(within(firstUseAuthorisation).getByRole('heading', { name: 'REF-01-G1-AUT-02-02-009 · V1.0' })).toBeInTheDocument();
   expect(within(firstUseAuthorisation).getAllByTestId('ref01-g1-least-privilege-first-use-authorisation-group')).toHaveLength(4);
   expect(within(firstUseAuthorisation).getByText('Préconditions à contrôler').closest('article')).toHaveTextContent('6/6');
   expect(within(firstUseAuthorisation).getByText('Décision séparée').closest('article')).toHaveTextContent('1/1');
   expect(within(firstUseAuthorisation).getByText('Autorisations actives').closest('article')).toHaveTextContent('0');
   expect(within(firstUseAuthorisation).getByText('Droits exécutés').closest('article')).toHaveTextContent('0');
-  expect(control.getByText(/décisions sur le lot : 54/)).toBeInTheDocument();
+  const firstExecutionDecision = within(elevenFieldMatrices).getByTestId('ref01-g1-least-privilege-first-execution-decision-sheet');
+  expect(within(firstExecutionDecision).getByRole('heading', { name: 'REF-01-G1-AUT-02-02-010 · V0.1' })).toBeInTheDocument();
+  expect(within(firstExecutionDecision).getAllByTestId('ref01-g1-least-privilege-first-execution-decision-group')).toHaveLength(4);
+  expect(within(firstExecutionDecision).getByText('Préconditions à tracer').closest('article')).toHaveTextContent('6/6');
+  expect(within(firstExecutionDecision).getByText('Décisions actives').closest('article')).toHaveTextContent('0');
+  expect(within(firstExecutionDecision).getByText('Droits exécutés').closest('article')).toHaveTextContent('0');
+  expect(control.getByText(/décisions sur le lot : 55/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -1076,6 +1083,7 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-055 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-056 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-057 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-058 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-004 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-005 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-006 · V1.0' })).toBeInTheDocument();
@@ -1090,11 +1098,13 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-02-006 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-02-007 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-02-008 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-02-009 · V0.1' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-02-009 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-02-010 · V0.1' })).toBeInTheDocument();
   expect(within(screen.getByTestId('ref01-g1-least-privilege-access-opening-gates')).getByText('Four proposed documentary outcomes')).toBeInTheDocument();
   expect(within(screen.getByTestId('ref01-g1-least-privilege-access-opening-decision-sheet')).getByText('Four confirmed completion rules')).toBeInTheDocument();
   expect(within(screen.getByTestId('ref01-g1-least-privilege-first-use-authorisation-protocol')).getByText('Six proposed mandatory prerequisites')).toBeInTheDocument();
   expect(within(screen.getByTestId('ref01-g1-least-privilege-first-use-authorisation-protocol')).getByText('Four proposed documentary outcomes')).toBeInTheDocument();
+  expect(within(screen.getByTestId('ref01-g1-least-privilege-first-execution-decision-sheet')).getByText('Five proposed decision rules')).toBeInTheDocument();
   expect(screen.getByText('Six candidate register states')).toBeInTheDocument();
   expect(screen.getByText('Six prerequisites before any future execution')).toBeInTheDocument();
   expect(screen.getByText('Local synthetic tests dated 31 Jul 2026')).toBeInTheDocument();
@@ -1142,6 +1152,7 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-055 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-056 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-057 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-058 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-004 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-005 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-03-006 · V1.0' })).toBeInTheDocument();
@@ -1156,11 +1167,13 @@ test('translates the REF-01 people and teams control in English and German', () 
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-02-006 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-02-007 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-02-008 · V1.0' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-02-009 · V0.1' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-02-009 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-G1-AUT-02-02-010 · V0.1' })).toBeInTheDocument();
   expect(within(screen.getByTestId('ref01-g1-least-privilege-access-opening-gates')).getByText('Vier vorgeschlagene Dokumentationsergebnisse')).toBeInTheDocument();
   expect(within(screen.getByTestId('ref01-g1-least-privilege-access-opening-decision-sheet')).getByText('Vier bestätigte Vollständigkeitsregeln')).toBeInTheDocument();
   expect(within(screen.getByTestId('ref01-g1-least-privilege-first-use-authorisation-protocol')).getByText('Sechs vorgeschlagene Pflichtvoraussetzungen')).toBeInTheDocument();
   expect(within(screen.getByTestId('ref01-g1-least-privilege-first-use-authorisation-protocol')).getByText('Vier vorgeschlagene Dokumentationsergebnisse')).toBeInTheDocument();
+  expect(within(screen.getByTestId('ref01-g1-least-privilege-first-execution-decision-sheet')).getByText('Fünf vorgeschlagene Entscheidregeln')).toBeInTheDocument();
   expect(screen.getByText('Sechs Kandidatenzustände des Registers')).toBeInTheDocument();
   expect(screen.getByText('Sechs Voraussetzungen vor jeder künftigen Ausführung')).toBeInTheDocument();
   expect(screen.getByText('Lokale synthetische Tests vom 31.07.2026')).toBeInTheDocument();
@@ -1557,7 +1570,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Confirm two separate frameworks without opening execution' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(64);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(65);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(9);
@@ -1569,7 +1582,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Zwei getrennte Rahmen bestätigen, ohne ihre Ausführung zu öffnen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(64);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(65);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(9);
