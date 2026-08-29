@@ -23,7 +23,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.54 · 28-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.55 · 29-08-2026',
     title: 'Comparer les supports sans les promouvoir',
     body: 'Ce comparatif distingue le contrat backend RH-001, ses vues de lecture, ses projections opérationnelles et les preuves GED. Un support raccordé ou utile ne devient pas automatiquement une source maîtresse.',
     counters: [
@@ -109,12 +109,12 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Confirmer ou amender AUT-02-02-004 V0.1, la matrice candidate Droits observés et refus.',
-    boundary: 'Statut : REF-01-DEC-052 confirme le modèle AUT-02-02-003 V1.0 sans créer de droit réel. La matrice AUT-02-02-004 V0.1 qualifie les comportements observés ; G1 reste ouverte et L2 fermé. Zéro nouveau droit, mandat nominatif, délégation, exception, accès C3/C4/C5, worker, alerte, rejeu ou fournisseur ; décisions sur le lot : 49 ; sources maîtresses désignées : 0 ; changements en production : 0.',
-    source: 'Supports contrôlés : contrat API RH-001, Annuaire interne C2, Team/Agent, cadrage GED, backend Node.js/Express et BigQuery observés, décisions REF-01-DEC-001 à REF-01-DEC-052, matrices AUT-02-03-002/AUT-02-02-002 V1.0, cadre LEGAL AUT-02-03-003 V1.0, désignation AUT-02-03-004 V1.0, responsabilités/déclencheurs AUT-02-03-005 V1.0, protocoles de revue AUT-02-03-006 V1.0, registre vide AUT-02-03-007 V1.0, portes AUT-02-03-008 V1.0, fiche de décision AUT-02-03-009 V1.0, protocole AUT-02-03-010 V1.0, fiche GO/NO-GO AUT-02-03-011 V1.0, modèle Rôles et moindre privilège AUT-02-02-003 V1.0 et matrice candidate Droits observés et refus AUT-02-02-004 V0.1 ; sources officielles PFPDT Suisse, CDP Sénégal et OHADA.'
+    nextControl: 'Confirmer ou amender AUT-02-02-004 V0.2, la matrice candidate Droits testés et refus.',
+    boundary: 'Statut : REF-01-DEC-052 confirme le modèle AUT-02-02-003 V1.0 sans créer de droit réel. La matrice AUT-02-02-004 V0.2 qualifie le contrat L1 isolé et ses tests synthétiques locaux, sans les présenter comme une autorisation de production ; G1 reste ouverte et L2 fermé. Zéro nouveau droit, mandat nominatif, délégation, exception, accès C3/C4/C5, worker, alerte, rejeu ou fournisseur ; décisions sur le lot : 49 ; sources maîtresses désignées : 0 ; changements en production : 0.',
+    source: 'Supports contrôlés : contrat candidat API RH-001 du lot L1 isolé, fixture C2 synthétique et tests locaux du handler, Annuaire interne C2, Team/Agent, cadrage GED, décisions REF-01-DEC-001 à REF-01-DEC-052, matrices AUT-02-03-002/AUT-02-02-002 V1.0, cadre LEGAL AUT-02-03-003 V1.0, désignation AUT-02-03-004 V1.0, responsabilités/déclencheurs AUT-02-03-005 V1.0, protocoles de revue AUT-02-03-006 V1.0, registre vide AUT-02-03-007 V1.0, portes AUT-02-03-008 V1.0, fiche de décision AUT-02-03-009 V1.0, protocole AUT-02-03-010 V1.0, fiche GO/NO-GO AUT-02-03-011 V1.0, modèle Rôles et moindre privilège AUT-02-02-003 V1.0 et matrice candidate Droits testés et refus AUT-02-02-004 V0.2 ; sources officielles PFPDT Suisse, CDP Sénégal et OHADA.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.54 · 28 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.55 · 29 AUG 2026',
     title: 'Compare supports without promoting them',
     body: 'This comparison separates the RH-001 backend contract, its read views, its operational projections and DMS evidence. A connected or useful support does not automatically become a master source.',
     counters: [
@@ -200,12 +200,12 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'Confirm or amend AUT-02-02-004 V0.1, the candidate Observed rights and denials matrix.',
-    boundary: 'Status: REF-01-DEC-052 confirms the AUT-02-02-003 V1.0 model without creating a real right. The AUT-02-02-004 V0.1 matrix qualifies observed behaviours; G1 remains open and L2 closed. Zero new rights, named mandates, delegations, exceptions, C3/C4/C5 access, workers, alerts, replays or providers; package decisions: 49; designated master sources: 0; production changes: 0.',
-    source: 'Controlled supports: RH-001 API contract, C2 Internal Directory, Team/Agent, DMS framing, observed Node.js/Express backend and BigQuery, decisions REF-01-DEC-001 through REF-01-DEC-052, AUT-02-03-002/AUT-02-02-002 V1.0 matrices, AUT-02-03-003 V1.0 LEGAL framework, AUT-02-03-004 V1.0 designation, AUT-02-03-005 V1.0 ownership/triggers, AUT-02-03-006 V1.0 review protocols, AUT-02-03-007 V1.0 empty register, AUT-02-03-008 V1.0 gates, AUT-02-03-009 V1.0 decision sheet, AUT-02-03-010 V1.0 protocol, AUT-02-03-011 V1.0 GO/NO-GO sheet, AUT-02-02-003 V1.0 Roles and least privilege model and AUT-02-02-004 V0.1 candidate Observed rights and denials matrix; official Swiss FDPIC, Senegal CDP and OHADA sources.'
+    nextControl: 'Confirm or amend AUT-02-02-004 V0.2, the candidate Tested rights and denials matrix.',
+    boundary: 'Status: REF-01-DEC-052 confirms the AUT-02-02-003 V1.0 model without creating a real right. The AUT-02-02-004 V0.2 matrix qualifies the isolated L1 contract and its local synthetic tests without presenting them as a production authorisation; G1 remains open and L2 closed. Zero new rights, named mandates, delegations, exceptions, C3/C4/C5 access, workers, alerts, replays or providers; package decisions: 49; designated master sources: 0; production changes: 0.',
+    source: 'Controlled supports: isolated L1 candidate RH-001 API contract, synthetic C2 fixture and local handler tests, C2 Internal Directory, Team/Agent, DMS framing, decisions REF-01-DEC-001 through REF-01-DEC-052, AUT-02-03-002/AUT-02-02-002 V1.0 matrices, AUT-02-03-003 V1.0 LEGAL framework, AUT-02-03-004 V1.0 designation, AUT-02-03-005 V1.0 ownership/triggers, AUT-02-03-006 V1.0 review protocols, AUT-02-03-007 V1.0 empty register, AUT-02-03-008 V1.0 gates, AUT-02-03-009 V1.0 decision sheet, AUT-02-03-010 V1.0 protocol, AUT-02-03-011 V1.0 GO/NO-GO sheet, AUT-02-02-003 V1.0 Roles and least privilege model and AUT-02-02-004 V0.2 candidate Tested rights and denials matrix; official Swiss FDPIC, Senegal CDP and OHADA sources.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.54 · 28.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.55 · 29.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
     body: 'Dieser Vergleich trennt den RH-001-Backendvertrag, seine Leseansichten, operativen Projektionen und DMS-Nachweise. Ein verbundener oder nützlicher Träger wird nicht automatisch zur Masterquelle.',
     counters: [
@@ -291,9 +291,9 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'AUT-02-02-004 V0.1, die Kandidatenmatrix Beobachtete Rechte und Ablehnungen, bestätigen oder ändern.',
-    boundary: 'Stand: REF-01-DEC-052 bestätigt das Modell AUT-02-02-003 V1.0, ohne ein reales Recht zu erstellen. Die Matrix AUT-02-02-004 V0.1 qualifiziert beobachtete Verhaltensweisen; G1 bleibt offen und L2 geschlossen. Null neue Rechte, Namensmandate, Delegationen, Ausnahmen, C3/C4/C5-Zugriffe, Worker, Alarme, Wiederholungen oder Anbieter; Paketentscheide: 49; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
-    source: 'Kontrollierte Träger: RH-001-API-Vertrag, internes C2-Verzeichnis, Team/Agent, DMS-Rahmen, beobachtetes Node.js/Express-Backend und BigQuery, REF-01-DEC-001 bis REF-01-DEC-052, Matrizen AUT-02-03-002/AUT-02-02-002 V1.0, LEGAL-Rahmen AUT-02-03-003 V1.0, Zuordnung AUT-02-03-004 V1.0, Verantwortung/Auslöser AUT-02-03-005 V1.0, Prüfprotokolle AUT-02-03-006 V1.0, leeres Register AUT-02-03-007 V1.0, Tore AUT-02-03-008 V1.0, Entscheidblatt AUT-02-03-009 V1.0, Protokoll AUT-02-03-010 V1.0, GO/NO-GO-Blatt AUT-02-03-011 V1.0, Modell AUT-02-02-003 V1.0 Rollen und geringste Berechtigung sowie Kandidatenmatrix AUT-02-02-004 V0.1 Beobachtete Rechte und Ablehnungen; amtliche Quellen EDOEB Schweiz, CDP Senegal und OHADA.'
+    nextControl: 'AUT-02-02-004 V0.2, die Kandidatenmatrix Getestete Rechte und Ablehnungen, bestätigen oder ändern.',
+    boundary: 'Stand: REF-01-DEC-052 bestätigt das Modell AUT-02-02-003 V1.0, ohne ein reales Recht zu erstellen. Die Matrix AUT-02-02-004 V0.2 qualifiziert den isolierten L1-Vertrag und seine lokalen synthetischen Tests, ohne sie als Produktionsautorisierung darzustellen; G1 bleibt offen und L2 geschlossen. Null neue Rechte, Namensmandate, Delegationen, Ausnahmen, C3/C4/C5-Zugriffe, Worker, Alarme, Wiederholungen oder Anbieter; Paketentscheide: 49; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
+    source: 'Kontrollierte Träger: isolierter RH-001-API-Kandidatenvertrag des L1-Loses, synthetische C2-Fixture und lokale Handler-Tests, internes C2-Verzeichnis, Team/Agent, DMS-Rahmen, REF-01-DEC-001 bis REF-01-DEC-052, Matrizen AUT-02-03-002/AUT-02-02-002 V1.0, LEGAL-Rahmen AUT-02-03-003 V1.0, Zuordnung AUT-02-03-004 V1.0, Verantwortung/Auslöser AUT-02-03-005 V1.0, Prüfprotokolle AUT-02-03-006 V1.0, leeres Register AUT-02-03-007 V1.0, Tore AUT-02-03-008 V1.0, Entscheidblatt AUT-02-03-009 V1.0, Protokoll AUT-02-03-010 V1.0, GO/NO-GO-Blatt AUT-02-03-011 V1.0, Modell AUT-02-02-003 V1.0 Rollen und geringste Berechtigung sowie Kandidatenmatrix AUT-02-02-004 V0.2 Getestete Rechte und Ablehnungen; amtliche Quellen EDOEB Schweiz, CDP Senegal und OHADA.'
   }
 };
 

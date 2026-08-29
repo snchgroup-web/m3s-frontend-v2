@@ -17,7 +17,7 @@ const COPY = {
     rulesTitle: 'Cinq règles confirmées de moindre privilège',
     rules: ['Rôle canonique distinct du droit', 'Périmètre explicite avant accès', 'Délégation datée et révocable', 'Exception temporaire et tracée', 'Refus par défaut pour C4/C5'],
     status: 'CONFIRMÉ · Modèle documentaire de qualification retenu en V1.0. Zéro création de compte, attribution, retrait, délégation, exception, accès C3/C4/C5 ou modification de production.',
-    next: 'Suite préparée : qualifier séparément les droits observés et les refus dans REF-01-G1-AUT-02-02-004 V0.1.',
+    next: 'Suite préparée : qualifier séparément le contrat L1, ses tests synthétiques et ses refus dans REF-01-G1-AUT-02-02-004 V0.2.',
     boundary: 'La confirmation valide seulement le modèle de qualification. Les titulaires, droits, périmètres et exceptions réels restent soumis à une décision nominative séparée et à des preuves hors bundle public.'
   },
   EN: {
@@ -35,7 +35,7 @@ const COPY = {
     rulesTitle: 'Five confirmed least-privilege rules',
     rules: ['Canonical role separate from right', 'Explicit scope before access', 'Dated and revocable delegation', 'Temporary and traced exception', 'Default denial for C4/C5'],
     status: 'CONFIRMED · Documentary qualification model retained in V1.0. Zero account creation, assignment, withdrawal, delegation, exception, C3/C4/C5 access or production change.',
-    next: 'Next prepared step: qualify observed rights and denials separately in REF-01-G1-AUT-02-02-004 V0.1.',
+    next: 'Next prepared step: qualify the L1 contract, its synthetic tests and denials separately in REF-01-G1-AUT-02-02-004 V0.2.',
     boundary: 'The confirmation validates only the qualification model. Real holders, rights, scopes and exceptions still require a separate named decision and evidence outside the public bundle.'
   },
   DE: {
@@ -53,7 +53,7 @@ const COPY = {
     rulesTitle: 'Fünf bestätigte Regeln zur geringsten Berechtigung',
     rules: ['Kanonische Rolle vom Recht getrennt', 'Expliziter Umfang vor Zugriff', 'Datierte und widerrufbare Delegation', 'Temporäre und protokollierte Ausnahme', 'Standardablehnung für C4/C5'],
     status: 'BESTÄTIGT · Dokumentarisches Qualifikationsmodell in V1.0 übernommen. Null Kontoerstellungen, Zuweisungen, Entzüge, Delegationen, Ausnahmen, C3/C4/C5-Zugriffe oder Produktionsänderungen.',
-    next: 'Nächster vorbereiteter Schritt: beobachtete Rechte und Ablehnungen in REF-01-G1-AUT-02-02-004 V0.1 getrennt qualifizieren.',
+    next: 'Nächster vorbereiteter Schritt: L1-Vertrag, synthetische Tests und Ablehnungen in REF-01-G1-AUT-02-02-004 V0.2 getrennt qualifizieren.',
     boundary: 'Die Bestätigung validiert nur das Qualifikationsmodell. Reale Inhaber, Rechte, Umfänge und Ausnahmen benötigen weiterhin einen getrennten namentlichen Entscheid und Nachweise ausserhalb des öffentlichen Bundles.'
   }
 };
