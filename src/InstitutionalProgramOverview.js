@@ -21,6 +21,8 @@ import InstitutionalPeopleTeamsGateG1PostAuthorisationReassessmentConfirmation f
 import InstitutionalPeopleTeamsGateG1SyntheticWaveCandidate from './InstitutionalPeopleTeamsGateG1SyntheticWaveCandidate';
 import InstitutionalPeopleTeamsGateG1SyntheticWaveConfirmation from './InstitutionalPeopleTeamsGateG1SyntheticWaveConfirmation';
 import InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationCandidate from './InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationCandidate';
+import InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationConfirmation from './InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationConfirmation';
+import InstitutionalPeopleTeamsGateG1MigrationRollbackAuthorisationCandidate from './InstitutionalPeopleTeamsGateG1MigrationRollbackAuthorisationCandidate';
 
 const translations = {
   FR: {
@@ -58,11 +60,11 @@ const translations = {
     sourceMatrix: 'Matrice de cadrage V0.1 · 29 composantes',
     openResources: 'Voir les ressources',
     openArchitecture: 'Voir l’architecture',
-    focusedEyebrow: 'ARBITRAGE COURANT · REF-01 · AUT-02-01',
-    focusedTitle: 'WAV-003 confirmée · PostgreSQL à cadrer',
-    focusedBody: 'Cette vue légère présente la vague technique confirmée, sa décision et la première autorisation unitaire candidate sans charger tout l’historique du Programme institutionnel.',
+    focusedEyebrow: 'ARBITRAGE COURANT · REF-01 · AUT-02-04',
+    focusedTitle: 'PostgreSQL cadré · Migration à structurer',
+    focusedBody: 'Cette vue légère présente AUT-02-01 confirmée comme structure documentaire et la candidate AUT-02-04 pour migration et retour arrière, sans charger tout l’historique du Programme institutionnel.',
     openFullProgram: 'Ouvrir le programme complet',
-    returnToFocusedReview: 'Retour à l’arbitrage AUT-02-01'
+    returnToFocusedReview: 'Retour à l’arbitrage AUT-02-04'
   },
   EN: {
     eyebrow: '2SG GLOBAL INSTITUTIONAL PROGRAMME',
@@ -99,11 +101,11 @@ const translations = {
     sourceMatrix: 'Framing matrix V0.1 · 29 components',
     openResources: 'View resources',
     openArchitecture: 'View architecture',
-    focusedEyebrow: 'CURRENT DECISION · REF-01 · AUT-02-01',
-    focusedTitle: 'WAV-003 confirmed · PostgreSQL to frame',
-    focusedBody: 'This lightweight view presents the confirmed technical wave, its decision and the first candidate individual authorisation without loading the full Institutional Programme history.',
+    focusedEyebrow: 'CURRENT DECISION · REF-01 · AUT-02-04',
+    focusedTitle: 'PostgreSQL framed · Migration to structure',
+    focusedBody: 'This lightweight view presents AUT-02-01 confirmed as a documentary structure and candidate AUT-02-04 for migration and rollback without loading the full Institutional Programme history.',
     openFullProgram: 'Open the full programme',
-    returnToFocusedReview: 'Back to the AUT-02-01 decision'
+    returnToFocusedReview: 'Back to the AUT-02-04 decision'
   },
   DE: {
     eyebrow: 'GLOBALES INSTITUTIONELLES 2SG-PROGRAMM',
@@ -140,11 +142,11 @@ const translations = {
     sourceMatrix: 'Strukturierungsmatrix V0.1 · 29 Komponenten',
     openResources: 'Ressourcen anzeigen',
     openArchitecture: 'Architektur anzeigen',
-    focusedEyebrow: 'AKTUELLER ENTSCHEID · REF-01 · AUT-02-01',
-    focusedTitle: 'WAV-003 bestätigt · PostgreSQL abzugrenzen',
-    focusedBody: 'Diese leichte Ansicht zeigt die bestätigte technische Welle, ihren Entscheid und die erste Kandidaten-Einzelautorisierung, ohne die gesamte Historie des institutionellen Programms zu laden.',
+    focusedEyebrow: 'AKTUELLER ENTSCHEID · REF-01 · AUT-02-04',
+    focusedTitle: 'PostgreSQL abgegrenzt · Migration zu strukturieren',
+    focusedBody: 'Diese leichte Ansicht zeigt AUT-02-01 als bestätigte Dokumentstruktur und den Kandidaten AUT-02-04 für Migration und Rollback, ohne die gesamte Historie des institutionellen Programms zu laden.',
     openFullProgram: 'Vollständiges Programm öffnen',
-    returnToFocusedReview: 'Zurück zum AUT-02-01-Entscheid'
+    returnToFocusedReview: 'Zurück zum AUT-02-04-Entscheid'
   }
 };
 
@@ -155,8 +157,8 @@ const cyclePresentation = {
 
 const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = '', onSelectView, onNavigate }) => {
   const t = translations[language] || translations.FR;
-  const focusedReview = focus === 'ref01-rev004' || focus === 'ref01-wav003';
-  const canReturnToFocusedReview = returnTo === 'ref01-rev004' || returnTo === 'ref01-wav003';
+  const focusedReview = focus === 'ref01-rev004' || focus === 'ref01-wav003' || focus === 'ref01-aut0201';
+  const canReturnToFocusedReview = returnTo === 'ref01-rev004' || returnTo === 'ref01-wav003' || returnTo === 'ref01-aut0201';
 
   useEffect(() => {
     const sectionId = decodeURIComponent(window.location.hash.replace(/^#/, ''));
@@ -172,7 +174,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
           <p className="text-xs font-semibold uppercase text-blue-300">{t.focusedEyebrow}</p>
           <h3 className="mt-1 text-xl font-semibold text-slate-100 sm:text-2xl">{t.focusedTitle}</h3>
           <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-300">{t.focusedBody}</p>
-          <a href="/?view=program&returnTo=ref01-wav003#institutional-ref01-g1-wave-003-confirmation" className="mt-4 inline-flex min-h-11 items-center justify-center rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-blue-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <a href="/?view=program&returnTo=ref01-aut0201#institutional-ref01-g1-aut-02-01-confirmation" className="mt-4 inline-flex min-h-11 items-center justify-center rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-blue-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
             {t.openFullProgram}
           </a>
         </header>
@@ -181,6 +183,8 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
         <InstitutionalPeopleTeamsGateG1SyntheticWaveCandidate language={language} />
         <InstitutionalPeopleTeamsGateG1SyntheticWaveConfirmation language={language} />
         <InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationCandidate language={language} />
+        <InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationConfirmation language={language} />
+        <InstitutionalPeopleTeamsGateG1MigrationRollbackAuthorisationCandidate language={language} />
       </div>
     );
   }
@@ -200,7 +204,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
         </div>
         <p className="mt-4 rounded-md border border-amber-800/60 bg-amber-950/20 px-3 py-2 text-sm text-amber-200">{t.sourceStatus}</p>
         {canReturnToFocusedReview && (
-          <a href="/?view=program&focus=ref01-wav003" className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-blue-700 bg-blue-950/35 px-4 py-2 text-sm font-semibold text-blue-100 transition hover:border-blue-400 hover:bg-blue-900/50 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:w-auto">
+          <a href="/?view=program&focus=ref01-aut0201" className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-blue-700 bg-blue-950/35 px-4 py-2 text-sm font-semibold text-blue-100 transition hover:border-blue-400 hover:bg-blue-900/50 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:w-auto">
             <ArrowLeft size={17} aria-hidden="true" />{t.returnToFocusedReview}
           </a>
         )}
