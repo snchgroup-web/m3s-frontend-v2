@@ -55,10 +55,10 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });
 
-test('opens the confirmed REF-01 recipient profiles and candidate empty named slots in the lightweight Fast Track view', () => {
+test('opens confirmed REF-01 named slots and candidate empty authorisation files in the lightweight Fast Track view', () => {
   renderDashboardNavigation({}, '/?view=program&focus=ref01-fasttrack');
 
-  expect(screen.getByRole('heading', { name: 'Profils confirmés · cinq emplacements vides à arbitrer' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Emplacements confirmés · cinq autorisations vides à arbitrer' })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'Ouvrir le programme complet' })).toHaveAttribute('href', '/?view=program&returnTo=ref01-fasttrack#institutional-ref01-fast-track-governance');
   expect(screen.getByTestId('institutional-fast-track-cockpit')).toBeInTheDocument();
   expect(screen.getByTestId('ref01-fast-track-governance')).toBeInTheDocument();
@@ -93,10 +93,18 @@ test('opens the confirmed REF-01 recipient profiles and candidate empty named sl
   expect(within(recipientProfiles).getByText(/REF-01-G1-REC-002 V0.1 est confirmé sans amendement/)).toBeInTheDocument();
   const namedSlots = screen.getByTestId('ref01-g1-fast-track-named-recipient-slots');
   expect(within(namedSlots).getAllByTestId('ref01-g1-fast-track-named-recipient-slot')).toHaveLength(5);
+  expect(within(namedSlots).getByText('Emplacements confirmés').closest('article')).toHaveTextContent('5/5');
   expect(within(namedSlots).getByText('Identités inscrites').closest('article')).toHaveTextContent('0');
-  expect(within(namedSlots).getByText('Coordonnées inscrites').closest('article')).toHaveTextContent('0');
   expect(within(namedSlots).getByText('Affectations autorisées').closest('article')).toHaveTextContent('0');
-  expect(within(namedSlots).getByText(/Je confirme REF-01-G1-NAM-002 V0.1 comme cadre des cinq emplacements/)).toBeInTheDocument();
+  expect(within(namedSlots).getByRole('heading', { name: 'REF-01-DEC-071 · V1.0' })).toBeInTheDocument();
+  expect(within(namedSlots).getByText(/REF-01-G1-NAM-002 V0.1 est confirmé sans amendement/)).toBeInTheDocument();
+  const authorisationFiles = screen.getByTestId('ref01-g1-fast-track-authorisation-files');
+  expect(within(authorisationFiles).getAllByTestId('ref01-g1-fast-track-authorisation-file')).toHaveLength(5);
+  expect(within(authorisationFiles).getByText('Dossiers préparés').closest('article')).toHaveTextContent('5/5');
+  expect(within(authorisationFiles).getByText('Identités inscrites').closest('article')).toHaveTextContent('0');
+  expect(within(authorisationFiles).getByText('Autorisations accordées').closest('article')).toHaveTextContent('0');
+  expect(within(authorisationFiles).getByText('Contacts ou envois').closest('article')).toHaveTextContent('0');
+  expect(within(authorisationFiles).getByText(/Je confirme REF-01-G1-AUT-002 V0.1 comme cadre des cinq dossiers/)).toBeInTheDocument();
   expect(screen.getByTestId('institutional-m3s-inbox-frame')).toBeInTheDocument();
   expect(screen.queryByRole('heading', { name: 'MEP-01 · LEGAL' })).not.toBeInTheDocument();
 });
@@ -466,7 +474,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.73 · 30-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.74 · 30-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -973,7 +981,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(waveCandidate).getByText('Autorisations unitaires').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Environnements désignés').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Tests lancés').closest('article')).toHaveTextContent('0');
-  expect(control.getByText(/décisions sur le lot : 67/)).toBeInTheDocument();
+  expect(control.getByText(/décisions sur le lot : 68/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -1679,7 +1687,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Confirm two separate frameworks without opening execution' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(74);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(78);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(9);
@@ -1691,7 +1699,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Zwei getrennte Rahmen bestätigen, ohne ihre Ausführung zu öffnen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(74);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(78);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(9);

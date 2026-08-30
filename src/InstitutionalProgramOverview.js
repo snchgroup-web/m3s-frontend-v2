@@ -24,6 +24,7 @@ import InstitutionalPeopleTeamsFastTrackEvidenceCollection from './Institutional
 import InstitutionalPeopleTeamsFastTrackEvidenceRequest from './InstitutionalPeopleTeamsFastTrackEvidenceRequest';
 import InstitutionalPeopleTeamsFastTrackRecipientProfiles from './InstitutionalPeopleTeamsFastTrackRecipientProfiles';
 import InstitutionalPeopleTeamsFastTrackNamedRecipientSlots from './InstitutionalPeopleTeamsFastTrackNamedRecipientSlots';
+import InstitutionalPeopleTeamsFastTrackAuthorisationFiles from './InstitutionalPeopleTeamsFastTrackAuthorisationFiles';
 import InstitutionalM3SInboxFrame from './InstitutionalM3SInboxFrame';
 
 const translations = {
@@ -62,9 +63,9 @@ const translations = {
     sourceMatrix: 'Matrice de cadrage V0.1 · 29 composantes',
     openResources: 'Voir les ressources',
     openArchitecture: 'Voir l’architecture',
-    focusedEyebrow: 'PILOTAGE GLOBAL · FAST TRACK · REF-01 V1.73',
-    focusedTitle: 'Profils confirmés · cinq emplacements vides à arbitrer',
-    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0 confirmé, les emplacements candidats NAM-002 V0.1 et le cadrage de la Boîte d’entrée M3S.',
+    focusedEyebrow: 'PILOTAGE GLOBAL · FAST TRACK · REF-01 V1.74',
+    focusedTitle: 'Emplacements confirmés · cinq autorisations vides à arbitrer',
+    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0 confirmé, les dossiers candidats AUT-002 V0.1 et le cadrage de la Boîte d’entrée M3S.',
     openFullProgram: 'Ouvrir le programme complet',
     returnToFocusedReview: 'Retour au cockpit Fast Track'
   },
@@ -103,9 +104,9 @@ const translations = {
     sourceMatrix: 'Framing matrix V0.1 · 29 components',
     openResources: 'View resources',
     openArchitecture: 'View architecture',
-    focusedEyebrow: 'GLOBAL STEERING · FAST TRACK · REF-01 V1.73',
-    focusedTitle: 'Profiles confirmed · five empty slots to decide',
-    focusedBody: 'This compact view brings together the Programme cockpit, COL-003 V1.0, REQ-002 V1.0, confirmed REC-002 V1.0, candidate NAM-002 V0.1 slots and the M3S Inbox framework.',
+    focusedEyebrow: 'GLOBAL STEERING · FAST TRACK · REF-01 V1.74',
+    focusedTitle: 'Slots confirmed · five empty authorisations to decide',
+    focusedBody: 'This compact view brings together the Programme cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, confirmed NAM-002 V1.0, candidate AUT-002 V0.1 files and the M3S Inbox framework.',
     openFullProgram: 'Open the full programme',
     returnToFocusedReview: 'Back to the Fast Track cockpit'
   },
@@ -144,9 +145,9 @@ const translations = {
     sourceMatrix: 'Strukturierungsmatrix V0.1 · 29 Komponenten',
     openResources: 'Ressourcen anzeigen',
     openArchitecture: 'Architektur anzeigen',
-    focusedEyebrow: 'GESAMTSTEUERUNG · FAST TRACK · REF-01 V1.73',
-    focusedTitle: 'Profile bestätigt · fünf leere Stellen zu entscheiden',
-    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, COL-003 V1.0, REQ-002 V1.0, bestätigtes REC-002 V1.0, die Kandidatenstellen NAM-002 V0.1 und den M3S-Eingangsrahmen.',
+    focusedEyebrow: 'GESAMTSTEUERUNG · FAST TRACK · REF-01 V1.74',
+    focusedTitle: 'Stellen bestätigt · fünf leere Autorisierungen zu entscheiden',
+    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, bestätigtes NAM-002 V1.0, die Kandidatenakten AUT-002 V0.1 und den M3S-Eingangsrahmen.',
     openFullProgram: 'Vollständiges Programm öffnen',
     returnToFocusedReview: 'Zurück zum Fast-Track-Cockpit'
   }
@@ -189,6 +190,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
         <InstitutionalPeopleTeamsFastTrackEvidenceRequest language={language} />
         <InstitutionalPeopleTeamsFastTrackRecipientProfiles language={language} />
         <InstitutionalPeopleTeamsFastTrackNamedRecipientSlots language={language} />
+        <InstitutionalPeopleTeamsFastTrackAuthorisationFiles language={language} />
         <InstitutionalM3SInboxFrame language={language} />
       </div>
     );
@@ -223,6 +225,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
       <InstitutionalPeopleTeamsFastTrackEvidenceRequest language={language} />
       <InstitutionalPeopleTeamsFastTrackRecipientProfiles language={language} />
       <InstitutionalPeopleTeamsFastTrackNamedRecipientSlots language={language} />
+      <InstitutionalPeopleTeamsFastTrackAuthorisationFiles language={language} />
       <InstitutionalM3SInboxFrame language={language} />
 
       <section className="institutional-program-root m3s-panel p-4 sm:p-5" aria-labelledby="institutional-program-root-title">
