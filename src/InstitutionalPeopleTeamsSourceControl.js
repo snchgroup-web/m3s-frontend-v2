@@ -23,7 +23,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.74 · 30-08-2026',
+    eyebrow: 'CONTROLE DES SUPPORTS CANDIDATS · REF-01 · V1.75 · 30-08-2026',
     title: 'Comparer les supports sans les promouvoir',
     body: 'Ce comparatif distingue le contrat backend RH-001 candidat du lot L1 isolé, les consommations qu il prévoit et les preuves GED. Aucun endpoint ni raccordement de production n est établi par ce contrôle.',
     counters: [
@@ -109,12 +109,12 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Confirmer ou amender REF-01-G1-AUT-003 V0.1 comme cadre des cinq dossiers d’autorisation vides, sans autoriser ni contacter personne. Toute identité, adresse, affectation et tout canal resteront soumis à des validations distinctes.',
-    boundary: 'Statut : REF-01-DEC-071 confirme NAM-002 V1.0 comme cinq emplacements nominatifs vides, sans identité ni contact. Les 22/22 valeurs restent qualifiées ainsi : 9 dans leur seule portée synthétique, 8 partielles et 5 ouvertes tant que les preuves ne sont pas reçues. Aucune valeur de production n’est désignée ; 0/6 condition G1 est clôturable, G1 reste ouverte et L2 fermé. Zéro nouveau droit, fiche active, titulaire réel, mandat nominatif, délégation, accès C3/C4/C5, migration de production, restauration réelle, référence GED créée, worker ou alerte ; décisions sur le lot : 68 ; sources maîtresses désignées : 0 ; changements en production : 0.',
-    source: 'Supports contrôlés : décisions REF-01-DEC-001 à REF-01-DEC-071, PLN-002 V1.0, FTK-001 V1.0, QLF-001 V1.0, ARB-002 V1.0, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V0.1, PGM-CPK-001 V0.1, M3S-INB-001 V0.1, docs/REF-01-L1-DATA-FOUNDATIONS.md, migrations/ref01/README.md, migrations SQL montante et descendante, scripts/validateRef01Migrations.mjs et validation synthétique locale réussie le 30-08-2026 ; sources officielles PFPDT Suisse, CDP Sénégal et OHADA.'
+    nextControl: 'Confirmer ou amender M3S-INB-001 V0.1 comme cadre en lecture seule de la Boîte d’entrée M3S, sans activer import, automatisation ni traitement de données réelles.',
+    boundary: 'Statut : REF-01-DEC-072 confirme AUT-003 V1.0 comme cinq dossiers d’autorisation vides, sans identité, autorisation exécutoire ni contact. Les 22/22 valeurs restent qualifiées ainsi : 9 dans leur seule portée synthétique, 8 partielles et 5 ouvertes tant que les preuves ne sont pas reçues. Aucune valeur de production n’est désignée ; 0/6 condition G1 est clôturable, G1 reste ouverte et L2 fermé. Zéro nouveau droit, fiche active, titulaire réel, mandat nominatif, délégation, accès C3/C4/C5, migration de production, restauration réelle, référence GED créée, worker ou alerte ; décisions sur le lot : 69 ; sources maîtresses désignées : 0 ; changements en production : 0.',
+    source: 'Supports contrôlés : décisions REF-01-DEC-001 à REF-01-DEC-072, PLN-002 V1.0, FTK-001 V1.0, QLF-001 V1.0, ARB-002 V1.0, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0, PGM-CPK-001 V0.1, M3S-INB-001 V0.1, docs/REF-01-L1-DATA-FOUNDATIONS.md, migrations/ref01/README.md, migrations SQL montante et descendante, scripts/validateRef01Migrations.mjs et validation synthétique locale réussie le 30-08-2026 ; sources officielles PFPDT Suisse, CDP Sénégal et OHADA.'
   },
   EN: {
-    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.74 · 30 AUG 2026',
+    eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.75 · 30 AUG 2026',
     title: 'Compare supports without promoting them',
     body: 'This comparison separates the isolated L1 candidate RH-001 backend contract, its planned consumers and DMS evidence. This control establishes neither a production endpoint nor a production connection.',
     counters: [
@@ -200,12 +200,12 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'Confirm or amend REF-01-G1-AUT-003 V0.1 as the framework for the five empty authorisation files, without authorising or contacting anyone. Every identity, address, assignment and channel will remain subject to separate validations.',
-    boundary: 'Status: REF-01-DEC-071 confirms NAM-002 V1.0 as five empty named-recipient slots without identity or contact. All 22/22 values retain their qualification: 9 within synthetic scope only, 8 partial and 5 open until evidence is received. No production value is designated; 0/6 G1 conditions are closable, G1 remains open and L2 closed. Zero new rights, active records, real holders, named mandates, delegations, C3/C4/C5 access, production migrations, real restores, created DMS references, workers or alerts; package decisions: 68; designated master sources: 0; production changes: 0.',
-    source: 'Controlled supports: decisions REF-01-DEC-001 through REF-01-DEC-071, PLN-002 V1.0, FTK-001 V1.0, QLF-001 V1.0, ARB-002 V1.0, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V0.1, PGM-CPK-001 V0.1, M3S-INB-001 V0.1, docs/REF-01-L1-DATA-FOUNDATIONS.md, migrations/ref01/README.md, up and down SQL migrations, scripts/validateRef01Migrations.mjs and successful local synthetic validation on 30 Aug 2026; official Swiss FDPIC, Senegal CDP and OHADA sources.'
+    nextControl: 'Confirm or amend M3S-INB-001 V0.1 as the read-only framework for the M3S Inbox, without enabling import, automation or real-data processing.',
+    boundary: 'Status: REF-01-DEC-072 confirms AUT-003 V1.0 as five empty authorisation files without identity, executable authorisation or contact. All 22/22 values retain their qualification: 9 within synthetic scope only, 8 partial and 5 open until evidence is received. No production value is designated; 0/6 G1 conditions are closable, G1 remains open and L2 closed. Zero new rights, active records, real holders, named mandates, delegations, C3/C4/C5 access, production migrations, real restores, created DMS references, workers or alerts; package decisions: 69; designated master sources: 0; production changes: 0.',
+    source: 'Controlled supports: decisions REF-01-DEC-001 through REF-01-DEC-072, PLN-002 V1.0, FTK-001 V1.0, QLF-001 V1.0, ARB-002 V1.0, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0, PGM-CPK-001 V0.1, M3S-INB-001 V0.1, docs/REF-01-L1-DATA-FOUNDATIONS.md, migrations/ref01/README.md, up and down SQL migrations, scripts/validateRef01Migrations.mjs and successful local synthetic validation on 30 Aug 2026; official Swiss FDPIC, Senegal CDP and OHADA sources.'
   },
   DE: {
-    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.74 · 30.08.2026',
+    eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.75 · 30.08.2026',
     title: 'Träger vergleichen, ohne sie zu fördern',
     body: 'Dieser Vergleich trennt den isolierten RH-001-Backend-Kandidatenvertrag des L1-Loses, seine geplanten Verbraucher und DMS-Nachweise. Diese Kontrolle belegt weder einen Produktionsendpunkt noch eine Produktionsverbindung.',
     counters: [
@@ -291,9 +291,9 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'REF-01-G1-AUT-003 V0.1 als Rahmen der fünf leeren Autorisierungsakten bestätigen oder ändern, ohne jemanden zu autorisieren oder zu kontaktieren. Jede Identität, Adresse, Zuordnung und jeder Kanal bleiben getrennten Bestätigungen vorbehalten.',
-    boundary: 'Stand: REF-01-DEC-071 bestätigt NAM-002 V1.0 als fünf leere Namensstellen ohne Identität oder Kontakt. Alle 22/22 Werte behalten ihre Qualifizierung: 9 nur in synthetischem Umfang, 8 teilweise und 5 offen, bis Nachweise vorliegen. Kein Produktionswert ist bestimmt; 0/6 G1-Bedingungen sind schliessbar, G1 bleibt offen und L2 geschlossen. Null neue Rechte, aktive Einträge, reale Inhaber, Namensmandate, Delegationen, C3/C4/C5-Zugriffe, Produktivmigrationen, reale Wiederherstellungen, erstellte DMS-Referenzen, Worker oder Alarme; Paketentscheide: 68; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
-    source: 'Kontrollierte Träger: REF-01-DEC-001 bis REF-01-DEC-071, PLN-002 V1.0, FTK-001 V1.0, QLF-001 V1.0, ARB-002 V1.0, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V0.1, PGM-CPK-001 V0.1, M3S-INB-001 V0.1, docs/REF-01-L1-DATA-FOUNDATIONS.md, migrations/ref01/README.md, SQL-Up- und Down-Migrationen, scripts/validateRef01Migrations.mjs sowie erfolgreiche lokale synthetische Validierung vom 30.08.2026; amtliche Quellen EDOEB Schweiz, CDP Senegal und OHADA.'
+    nextControl: 'M3S-INB-001 V0.1 als schreibgeschützten Rahmen des M3S-Eingangs bestätigen oder ändern, ohne Import, Automatisierung oder Verarbeitung realer Daten zu aktivieren.',
+    boundary: 'Stand: REF-01-DEC-072 bestätigt AUT-003 V1.0 als fünf leere Autorisierungsakten ohne Identität, ausführbare Autorisierung oder Kontakt. Alle 22/22 Werte behalten ihre Qualifizierung: 9 nur in synthetischem Umfang, 8 teilweise und 5 offen, bis Nachweise vorliegen. Kein Produktionswert ist bestimmt; 0/6 G1-Bedingungen sind schliessbar, G1 bleibt offen und L2 geschlossen. Null neue Rechte, aktive Einträge, reale Inhaber, Namensmandate, Delegationen, C3/C4/C5-Zugriffe, Produktivmigrationen, reale Wiederherstellungen, erstellte DMS-Referenzen, Worker oder Alarme; Paketentscheide: 69; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
+    source: 'Kontrollierte Träger: REF-01-DEC-001 bis REF-01-DEC-072, PLN-002 V1.0, FTK-001 V1.0, QLF-001 V1.0, ARB-002 V1.0, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0, PGM-CPK-001 V0.1, M3S-INB-001 V0.1, docs/REF-01-L1-DATA-FOUNDATIONS.md, migrations/ref01/README.md, SQL-Up- und Down-Migrationen, scripts/validateRef01Migrations.mjs sowie erfolgreiche lokale synthetische Validierung vom 30.08.2026; amtliche Quellen EDOEB Schweiz, CDP Senegal und OHADA.'
   }
 };
 
