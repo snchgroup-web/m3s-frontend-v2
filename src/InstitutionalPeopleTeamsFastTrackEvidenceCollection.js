@@ -71,7 +71,7 @@ const COPY = {
     labels: { owner: 'Fonctions responsables candidates', evidence: 'Pièces attendues' },
     status: 'CONFIRMÉ · COLLECTE NON OUVERTE',
     decisionTitle: 'Résultat de la décision Fast Track',
-    decision: 'COL-003 V1.0 devient le plan documentaire gouverné des cinq dossiers. REQ-002 V0.1, présenté ensuite, prépare un modèle unique de demande sans autoriser son envoi.',
+    decision: 'COL-003 V1.0 reste le plan documentaire gouverné des cinq dossiers. DEC-069 confirme désormais REQ-002 V1.0 comme modèle unique sans envoi.',
     recordLabels: { eyebrow: 'Registre de décision gouverné', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision enregistrée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
     record: { id: 'REF-01-DEC-068', version: 'V1.0', status: 'COL-003 confirmé comme plan documentaire', author: 'Cheikh Ndiaye', date: '30-08-2026', decision: 'REF-01-G1-COL-003 V0.1 est confirmé sans amendement et promu en V1.0 comme plan documentaire des cinq dossiers de preuves COL-EXC-01 à COL-EXC-05.', evidence: 'Confirmation explicite de Cheikh dans la session du 30-08-2026 : « Je confirme REF-01-G1-COL-003 V0.1 comme plan documentaire des cinq dossiers de preuves. »', limit: 'La décision valide uniquement l’organisation documentaire. Elle n’autorise aucun contact, envoi, collecte réelle, transmission sensible, compte, infrastructure, connexion, test, dépense ou action L2 ; G1 reste ouverte.' },
     boundary: 'Les pièces reçues et les tests exécutés restent à zéro. Toute émission, collecte réelle, transmission sensible, création d’infrastructure, connexion ou test exige une autorisation humaine distincte.'
@@ -84,7 +84,7 @@ const COPY = {
     labels: { owner: 'Candidate responsible functions', evidence: 'Expected records' },
     status: 'CONFIRMED · COLLECTION NOT OPEN',
     decisionTitle: 'Fast Track decision outcome',
-    decision: 'COL-003 V1.0 becomes the governed documentary plan for the five files. REQ-002 V0.1, shown next, prepares one request template without authorising release.',
+    decision: 'COL-003 V1.0 remains the governed documentary plan for the five files. DEC-069 now confirms REQ-002 V1.0 as one template without release.',
     recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
     record: { id: 'REF-01-DEC-068', version: 'V1.0', status: 'COL-003 confirmed as documentary plan', author: 'Cheikh Ndiaye', date: '30 Aug 2026', decision: 'REF-01-G1-COL-003 V0.1 is confirmed without amendment and promoted to V1.0 as the documentary plan for the five COL-EXC-01 through COL-EXC-05 evidence files.', evidence: 'Cheikh’s explicit confirmation in the 30 Aug 2026 session: “I confirm REF-01-G1-COL-003 V0.1 as the documentary plan for the five evidence files.”', limit: 'The decision validates documentary organisation only. It authorises no contact, release, real collection, sensitive transmission, account, infrastructure, connection, test, expense or L2 action; G1 remains open.' },
     boundary: 'Records received and tests run remain at zero. Any release, real collection, sensitive transmission, infrastructure creation, connection or test requires a separate human authorisation.'
@@ -97,7 +97,7 @@ const COPY = {
     labels: { owner: 'Kandidatenfunktionen', evidence: 'Erwartete Unterlagen' },
     status: 'BESTÄTIGT · SAMMLUNG NICHT GEÖFFNET',
     decisionTitle: 'Ergebnis des Fast-Track-Entscheids',
-    decision: 'COL-003 V1.0 wird zum gesteuerten Dokumentationsplan der fünf Akten. Das nachfolgende REQ-002 V0.1 bereitet eine einzige Anfragevorlage vor, ohne Versand zu erlauben.',
+    decision: 'COL-003 V1.0 bleibt der gesteuerte Dokumentationsplan der fünf Akten. DEC-069 bestätigt nun REQ-002 V1.0 als einheitliche Vorlage ohne Versand.',
     recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Dokumentierter Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
     record: { id: 'REF-01-DEC-068', version: 'V1.0', status: 'COL-003 als Dokumentationsplan bestätigt', author: 'Cheikh Ndiaye', date: '30.08.2026', decision: 'REF-01-G1-COL-003 V0.1 wird ohne Änderung bestätigt und zu V1.0 als Dokumentationsplan für die fünf Nachweisakten COL-EXC-01 bis COL-EXC-05.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 30.08.2026: „Ich bestätige REF-01-G1-COL-003 V0.1 als Dokumentationsplan der fünf Nachweisakten.“', limit: 'Der Entscheid validiert nur die Dokumentationsorganisation. Er erlaubt keinen Kontakt, Versand, reale Sammlung, sensible Übermittlung, kein Konto, keine Infrastruktur, Verbindung, Prüfung, Ausgabe oder L2-Aktion; G1 bleibt offen.' },
     boundary: 'Erhaltene Unterlagen und ausgeführte Prüfungen bleiben bei null. Jeder Versand, jede reale Sammlung, sensible Übermittlung, Infrastrukturerstellung, Verbindung oder Prüfung benötigt einen getrennten menschlichen Entscheid.'

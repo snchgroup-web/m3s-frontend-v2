@@ -55,10 +55,10 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });
 
-test('opens the confirmed REF-01 evidence plan and candidate request template in the lightweight Fast Track view', () => {
+test('opens the confirmed REF-01 request template and candidate recipient profiles in the lightweight Fast Track view', () => {
   renderDashboardNavigation({}, '/?view=program&focus=ref01-fasttrack');
 
-  expect(screen.getByRole('heading', { name: 'Plan de preuves confirmé · une demande unique à cadrer' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Modèle de demande confirmé · cinq profils à arbitrer' })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'Ouvrir le programme complet' })).toHaveAttribute('href', '/?view=program&returnTo=ref01-fasttrack#institutional-ref01-fast-track-governance');
   expect(screen.getByTestId('institutional-fast-track-cockpit')).toBeInTheDocument();
   expect(screen.getByTestId('ref01-fast-track-governance')).toBeInTheDocument();
@@ -83,7 +83,14 @@ test('opens the confirmed REF-01 evidence plan and candidate request template in
   const request = screen.getByTestId('ref01-g1-fast-track-evidence-request');
   expect(within(request).getByText('Dossiers couverts').closest('article')).toHaveTextContent('5/5');
   expect(within(request).getByText('Demandes envoyées').closest('article')).toHaveTextContent('0');
+  expect(within(request).getByRole('heading', { name: 'REF-01-DEC-069 · V1.0' })).toBeInTheDocument();
   expect(within(request).getByText(/Je confirme REF-01-G1-REQ-002 V0.1 comme modèle unique/)).toBeInTheDocument();
+  const recipientProfiles = screen.getByTestId('ref01-g1-fast-track-recipient-profiles');
+  expect(within(recipientProfiles).getAllByTestId('ref01-g1-fast-track-recipient-profile')).toHaveLength(5);
+  expect(within(recipientProfiles).getByText('Personnes nommées').closest('article')).toHaveTextContent('0');
+  expect(within(recipientProfiles).getByText('Canaux sélectionnés').closest('article')).toHaveTextContent('0');
+  expect(within(recipientProfiles).getByText('Demandes envoyées').closest('article')).toHaveTextContent('0');
+  expect(within(recipientProfiles).getByText(/Je confirme REF-01-G1-REC-002 V0.1 comme profils fonctionnels/)).toBeInTheDocument();
   expect(screen.getByTestId('institutional-m3s-inbox-frame')).toBeInTheDocument();
   expect(screen.queryByRole('heading', { name: 'MEP-01 · LEGAL' })).not.toBeInTheDocument();
 });
@@ -453,7 +460,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.71 · 30-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.72 · 30-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -960,7 +967,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(waveCandidate).getByText('Autorisations unitaires').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Environnements désignés').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Tests lancés').closest('article')).toHaveTextContent('0');
-  expect(control.getByText(/décisions sur le lot : 65/)).toBeInTheDocument();
+  expect(control.getByText(/décisions sur le lot : 66/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
