@@ -1807,3 +1807,59 @@ html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-amber-200,
 html:not(.dark) .m3s-ref01-g1-execution-authorisation-register .text-amber-300 {
   color: #b45309 !important;
 }
+
+html:not(.dark) .m3s-inbox-pilot-spec {
+  border-color: #7dd3fc !important;
+  background: #f0f9ff !important;
+}
+
+html:not(.dark) .m3s-inbox-pilot-spec .text-slate-100 {
+  color: var(--m3s-text-primary) !important;
+}
+
+html:not(.dark) .m3s-inbox-pilot-spec .text-slate-300,
+html:not(.dark) .m3s-inbox-pilot-spec .text-slate-400 {
+  color: var(--m3s-text-secondary) !important;
+}
+
+html:not(.dark) .m3s-inbox-pilot-spec [class*="bg-slate-950/"] {
+  background: #ffffff !important;
+}
+
+html:not(.dark) .m3s-inbox-pilot-spec [class*="bg-sky-950/"] {
+  background: #e0f2fe !important;
+}
+
+html:not(.dark) .m3s-inbox-pilot-spec [class*="bg-amber-950/"] {
+  background: #fffbeb !important;
+}
+
+html:not(.dark) .m3s-inbox-pilot-spec [class*="bg-red-950/"] {
+  background: #fff1f2 !important;
+}
+
+html:not(.dark) .m3s-inbox-pilot-spec .text-sky-100,
+html:not(.dark) .m3s-inbox-pilot-spec .text-sky-200,
+html:not(.dark) .m3s-inbox-pilot-spec .text-sky-300 {
+  color: #0369a1 !important;
+}
+
+html:not(.dark) .m3s-inbox-pilot-spec .text-violet-100,
+html:not(.dark) .m3s-inbox-pilot-spec .text-violet-200,
+html:not(.dark) .m3s-inbox-pilot-spec .text-violet-300 {
+  color: #6d28d9 !important;
+}
+
+html:not(.dark) .m3s-inbox-pilot-spec .text-emerald-300 {
+  color: #047857 !important;
+}
+
+html:not(.dark) .m3s-inbox-pilot-spec .text-amber-100,
+html:not(.dark) .m3s-inbox-pilot-spec .text-amber-300 {
+  color: #92400e !important;
+}
+
+html:not(.dark) .m3s-inbox-pilot-spec .text-red-100,
+html:not(.dark) .m3s-inbox-pilot-spec .text-red-300 {
+  color: #be123c !important;
+}
