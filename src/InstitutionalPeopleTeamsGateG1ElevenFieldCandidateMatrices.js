@@ -29,6 +29,8 @@ import InstitutionalPeopleTeamsGateG1MigrationRollbackAuthorisationConfirmation 
 import InstitutionalPeopleTeamsGateG1OutboxMonitoringAuthorisationCandidate from './InstitutionalPeopleTeamsGateG1OutboxMonitoringAuthorisationCandidate';
 import InstitutionalPeopleTeamsGateG1OutboxMonitoringAuthorisationConfirmation from './InstitutionalPeopleTeamsGateG1OutboxMonitoringAuthorisationConfirmation';
 import InstitutionalPeopleTeamsGateG1TechnicalWaveReassessment from './InstitutionalPeopleTeamsGateG1TechnicalWaveReassessment';
+import InstitutionalPeopleTeamsGateG1TechnicalWaveReassessmentConfirmation from './InstitutionalPeopleTeamsGateG1TechnicalWaveReassessmentConfirmation';
+import InstitutionalPeopleTeamsGateG1TechnicalValueQualificationPlan from './InstitutionalPeopleTeamsGateG1TechnicalValueQualificationPlan';
 
 const STATE_STYLES = {
   sourced: 'border-emerald-700/70 bg-emerald-950/25 text-emerald-100',
@@ -41,9 +43,9 @@ const STATE_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'MATRICES CONFIRMÉES · VAGUE TECHNIQUE STRUCTURÉE · 30-08-2026',
-    title: 'Conserver les chaînes confirmées et réévaluer la vague sans ouvrir de droit',
-    intro: 'Cheikh confirme AUT-02-05-001 en V1.0 comme troisième structure unitaire de WAV-003. REV-005 V0.1 consolide maintenant les trois fiches techniques sans environnement, test, exécution ni ouverture L2.',
+    eyebrow: 'MATRICES CONFIRMÉES · PLAN TECHNIQUE CANDIDAT · 30-08-2026',
+    title: 'Conserver la revue confirmée et ordonner la qualification sans ouvrir de droit',
+    intro: 'Cheikh confirme REV-005 en V1.0 comme lecture gouvernée des trois structures techniques. PLN-002 V0.1 ordonne maintenant la qualification de leurs vingt-deux valeurs ouvertes sans environnement, test, exécution ni ouverture L2.',
     counters: [['Matrices confirmées', '2/2', 'Deux portées toujours séparées'], ['Valeurs non LEGAL relues', '9/9', 'Une sourcée · cinq gouvernées · trois requalifiées'], ['Champs LEGAL validés', '2/2', 'Cadre V1.0 · application contrôlée'], ['Autorisations', '0', 'Aucun droit ni traitement ouvert']],
     badge: 'STRUCTURE CONFIRMÉE · V1.0',
     labels: { basis: 'Cadre et preuve', format: 'Structure retenue', supports: 'Sources rapprochées', value: 'Valeur qualifiée', stop: 'Arrêt obligatoire' },
@@ -95,14 +97,14 @@ const COPY = {
     accessOpeningDecisionRecord: { id: 'REF-01-DEC-057', version: 'V1.0', status: 'Fiche de décision d’ouverture confirmée', author: 'Cheikh Ndiaye', date: '29-08-2026', decision: 'REF-01-G1-AUT-02-02-008 V0.1 est confirmé et promu en V1.0. Ses quatre groupes, seize champs et quatre règles de complétude sont retenus comme fiche documentaire vide.', evidence: 'Confirmation explicite de Cheikh dans la session du 29-08-2026 : « merci codex, je confirme REF-01-G1-AUT-02-02-008 V0.1 » ; fiche candidate publiée avec REF-01 V1.59 par la PR frontend nº 248 au commit ca4aaa3.', limit: 'La décision confirme uniquement la structure vide. Elle ne crée aucune décision active, identité, titulaire, compte, droit, accès C3/C4/C5, signature, instruction IT ni modification de production.' },
     firstExecutionRecord: { id: 'REF-01-DEC-058', version: 'V1.0', status: 'Protocole de première exécution confirmé', author: 'Cheikh Ndiaye', date: '29-08-2026', decision: 'REF-01-G1-AUT-02-02-009 V0.1 est confirmé et promu en V1.0. Ses quatre groupes, six préconditions et quatre issues documentaires sont retenus avant toute future exécution technique.', evidence: 'Confirmation explicite de Cheikh dans la session du 29-08-2026 : « merci de continuer, je confirme REF-01-G1-AUT-02-02-009 V0.1 » ; protocole candidat publié avec REF-01 V1.60 par la PR frontend nº 249 au commit 20259d2.', limit: 'La décision confirme uniquement le protocole documentaire. Elle ne crée aucune autorisation active, identité, titulaire, compte, droit, accès C3/C4/C5, instruction IT ni modification de production.' },
     firstExecutionDecisionRecord: { id: 'REF-01-DEC-059', version: 'V1.0', status: 'Fiche GO/NO-GO de première exécution confirmée', author: 'Cheikh Ndiaye', date: '29-08-2026', decision: 'REF-01-G1-AUT-02-02-010 V0.1 est confirmé et promu en V1.0. Ses quatre groupes et cinq règles sont retenus comme fiche documentaire vide pour une future décision d exécution séparée.', evidence: 'Confirmation explicite de Cheikh dans la session du 29-08-2026 : « je confirme on continue avec REF-01-G1-AUT-02-02-010 V0.1 » ; fiche candidate publiée avec REF-01 V1.61 par la PR frontend nº 250 au commit 78dba2b.', limit: 'La décision confirme uniquement la structure vide. Elle ne constitue aucun GO, ne crée aucun titulaire, compte, droit, accès C3/C4/C5, instruction IT, exécution ou modification de production.' },
-    status: 'DEUX SOUS-LOTS PRÉPARÉS · AUT-02-03 et AUT-02-02 sont confirmés jusqu à leur fiche GO/NO-GO ; zéro décision active ou droit exécuté.',
-    next: 'Prochain arbitrage humain : confirmer ou amender REF-01-G1-REV-005 V0.1, la réévaluation documentaire de la vague technique.',
+    status: 'REVUE TECHNIQUE CONFIRMÉE · REV-005 V1.0 conserve 22 valeurs ouvertes ; PLN-002 V0.1 les ordonne en trois lots sans valeur proposée ni exécution.',
+    next: 'Prochain arbitrage humain : confirmer ou amender REF-01-G1-PLN-002 V0.1, le plan documentaire de qualification des vingt-deux valeurs.',
     boundary: 'La validation porte sur le cadre interne et son applicabilité gouvernée. Elle ne crée aucun droit, aucune conclusion générale de conformité, aucune délégation, aucun accès C3/C4/C5 et aucune opération GED.'
   },
   EN: {
-    eyebrow: 'CONFIRMED MATRICES · TECHNICAL WAVE STRUCTURED · 30 AUG 2026',
-    title: 'Keep the confirmed chains and reassess the wave without opening a right',
-    intro: 'Cheikh confirms AUT-02-05-001 as V1.0, the third individual WAV-003 structure. REV-005 V0.1 now consolidates all three technical sheets without an environment, test, execution or L2 opening.',
+    eyebrow: 'CONFIRMED MATRICES · CANDIDATE TECHNICAL PLAN · 30 AUG 2026',
+    title: 'Keep the confirmed review and order qualification without opening a right',
+    intro: 'Cheikh confirms REV-005 as V1.0, the governed reading of all three technical structures. PLN-002 V0.1 now orders qualification of their twenty-two open values without an environment, test, execution or L2 opening.',
     counters: [['Confirmed matrices', '2/2', 'Two scopes remain separate'], ['Reviewed non-LEGAL values', '9/9', 'One sourced · five governed · three requalified'], ['LEGAL fields validated', '2/2', 'V1.0 framework · controlled application'], ['Authorisations', '0', 'No right or processing opened']],
     badge: 'CONFIRMED STRUCTURE · V1.0',
     labels: { basis: 'Framework and evidence', format: 'Retained structure', supports: 'Reconciled sources', value: 'Qualified value', stop: 'Mandatory stop' },
@@ -154,14 +156,14 @@ const COPY = {
     accessOpeningDecisionRecord: { id: 'REF-01-DEC-057', version: 'V1.0', status: 'Access-opening decision sheet confirmed', author: 'Cheikh Ndiaye', date: '29 Aug 2026', decision: 'REF-01-G1-AUT-02-02-008 V0.1 is confirmed and promoted to V1.0. Its four groups, sixteen fields and four completion rules are retained as an empty documentary sheet.', evidence: 'Explicit confirmation by Cheikh during the 29 Aug 2026 session: “merci codex, je confirme REF-01-G1-AUT-02-02-008 V0.1”; candidate sheet published with REF-01 V1.59 through frontend PR 248 at commit ca4aaa3.', limit: 'The decision confirms the empty structure only. It creates no active decision, identity, holder, account, right, C3/C4/C5 access, signature, IT instruction or production change.' },
     firstExecutionRecord: { id: 'REF-01-DEC-058', version: 'V1.0', status: 'First-execution protocol confirmed', author: 'Cheikh Ndiaye', date: '29 Aug 2026', decision: 'REF-01-G1-AUT-02-02-009 V0.1 is confirmed and promoted to V1.0. Its four groups, six prerequisites and four documentary outcomes are retained before any future technical execution.', evidence: 'Explicit confirmation by Cheikh during the 29 Aug 2026 session: “merci de continuer, je confirme REF-01-G1-AUT-02-02-009 V0.1”; candidate protocol published with REF-01 V1.60 through frontend PR 249 at commit 20259d2.', limit: 'The decision confirms the documentary protocol only. It creates no active authorisation, identity, holder, account, right, C3/C4/C5 access, IT instruction or production change.' },
     firstExecutionDecisionRecord: { id: 'REF-01-DEC-059', version: 'V1.0', status: 'First-execution GO/NO-GO sheet confirmed', author: 'Cheikh Ndiaye', date: '29 Aug 2026', decision: 'REF-01-G1-AUT-02-02-010 V0.1 is confirmed and promoted to V1.0. Its four groups and five rules are retained as an empty documentary sheet for a future separate execution decision.', evidence: 'Explicit confirmation by Cheikh during the 29 Aug 2026 session: “je confirme on continue avec REF-01-G1-AUT-02-02-010 V0.1”; candidate sheet published with REF-01 V1.61 through frontend PR 250 at commit 78dba2b.', limit: 'The decision confirms the empty structure only. It is no GO and creates no holder, account, right, C3/C4/C5 access, IT instruction, execution or production change.' },
-    status: 'BOTH SUB-PACKAGES PREPARED · AUT-02-03 and AUT-02-02 are confirmed through their GO/NO-GO sheets; zero active decisions or executed rights.',
-    next: 'Next human decision: confirm or amend REF-01-G1-REV-005 V0.1, the documentary reassessment of the technical wave.',
+    status: 'TECHNICAL REVIEW CONFIRMED · REV-005 V1.0 keeps 22 open values; PLN-002 V0.1 orders them into three packages with no proposed value or execution.',
+    next: 'Next human decision: confirm or amend REF-01-G1-PLN-002 V0.1, the documentary qualification plan for the twenty-two values.',
     boundary: 'Validation covers the internal framework and its governed applicability. It creates no right, blanket compliance conclusion, delegation, C3/C4/C5 access or DMS operation.'
   },
   DE: {
-    eyebrow: 'BESTÄTIGTE MATRIZEN · TECHNISCHE WELLE STRUKTURIERT · 30.08.2026',
-    title: 'Bestätigte Dokumentketten bewahren und die Welle ohne Rechteöffnung neu bewerten',
-    intro: 'Cheikh bestätigt AUT-02-05-001 als V1.0 und damit die dritte Einzelstruktur von WAV-003. REV-005 V0.1 konsolidiert nun die drei technischen Blätter ohne Umgebung, Prüfung, Ausführung oder L2-Öffnung.',
+    eyebrow: 'BESTÄTIGTE MATRIZEN · TECHNISCHER KANDIDATENPLAN · 30.08.2026',
+    title: 'Bestätigte Prüfung bewahren und Qualifizierung ohne Rechteöffnung ordnen',
+    intro: 'Cheikh bestätigt REV-005 als V1.0 und damit die gesteuerte Lesung der drei technischen Strukturen. PLN-002 V0.1 ordnet nun die Qualifizierung ihrer zweiundzwanzig offenen Werte ohne Umgebung, Prüfung, Ausführung oder L2-Öffnung.',
     counters: [['Bestätigte Matrizen', '2/2', 'Zwei getrennte Umfänge'], ['Geprüfte Nicht-LEGAL-Werte', '9/9', 'Einer belegt · fünf gesteuert · drei neu qualifiziert'], ['Validierte LEGAL-Felder', '2/2', 'Rahmen V1.0 · kontrollierte Anwendung'], ['Autorisierungen', '0', 'Kein Recht oder Vorgang geöffnet']],
     badge: 'STRUKTUR BESTÄTIGT · V1.0',
     labels: { basis: 'Rahmen und Nachweis', format: 'Bestätigte Struktur', supports: 'Abgeglichene Quellen', value: 'Qualifizierter Wert', stop: 'Pflichtstopp' },
@@ -213,8 +215,8 @@ const COPY = {
     accessOpeningDecisionRecord: { id: 'REF-01-DEC-057', version: 'V1.0', status: 'Entscheidblatt zur Berechtigungseröffnung bestätigt', author: 'Cheikh Ndiaye', date: '29.08.2026', decision: 'REF-01-G1-AUT-02-02-008 V0.1 ist bestätigt und zu V1.0 hochgestuft. Seine vier Gruppen, sechzehn Felder und vier Vollständigkeitsregeln gelten als leeres Dokumentationsblatt.', evidence: 'Ausdrückliche Bestätigung durch Cheikh in der Sitzung vom 29.08.2026: « merci codex, je confirme REF-01-G1-AUT-02-02-008 V0.1 »; Kandidatenblatt mit REF-01 V1.59 über Frontend-PR 248 am Commit ca4aaa3 veröffentlicht.', limit: 'Der Entscheid bestätigt nur die leere Struktur. Er erstellt keinen aktiven Entscheid, keine Identität, keinen Inhaber, kein Konto, Recht, keinen C3/C4/C5-Zugriff, keine Unterschrift, IT-Anweisung oder Produktionsänderung.' },
     firstExecutionRecord: { id: 'REF-01-DEC-058', version: 'V1.0', status: 'Protokoll zur ersten Ausführung bestätigt', author: 'Cheikh Ndiaye', date: '29.08.2026', decision: 'REF-01-G1-AUT-02-02-009 V0.1 ist bestätigt und zu V1.0 hochgestuft. Seine vier Gruppen, sechs Voraussetzungen und vier Dokumentationsergebnisse gelten vor jeder künftigen technischen Ausführung.', evidence: 'Ausdrückliche Bestätigung durch Cheikh in der Sitzung vom 29.08.2026: « merci de continuer, je confirme REF-01-G1-AUT-02-02-009 V0.1 »; Kandidatenprotokoll mit REF-01 V1.60 über Frontend-PR 249 am Commit 20259d2 veröffentlicht.', limit: 'Der Entscheid bestätigt nur das Dokumentationsprotokoll. Er erstellt keine aktive Autorisierung, Identität, keinen Inhaber, kein Konto, Recht, keinen C3/C4/C5-Zugriff, keine IT-Anweisung oder Produktionsänderung.' },
     firstExecutionDecisionRecord: { id: 'REF-01-DEC-059', version: 'V1.0', status: 'GO/NO-GO-Blatt zur ersten Ausführung bestätigt', author: 'Cheikh Ndiaye', date: '29.08.2026', decision: 'REF-01-G1-AUT-02-02-010 V0.1 ist bestätigt und zu V1.0 hochgestuft. Seine vier Gruppen und fünf Regeln gelten als leeres Dokumentationsblatt für einen späteren getrennten Ausführungsentscheid.', evidence: 'Ausdrückliche Bestätigung durch Cheikh in der Sitzung vom 29.08.2026: « je confirme on continue avec REF-01-G1-AUT-02-02-010 V0.1 »; Kandidatenblatt mit REF-01 V1.61 über Frontend-PR 250 am Commit 78dba2b veröffentlicht.', limit: 'Der Entscheid bestätigt nur die leere Struktur. Er ist kein GO und erstellt keinen Inhaber, kein Konto, Recht, keinen C3/C4/C5-Zugriff, keine IT-Anweisung, Ausführung oder Produktionsänderung.' },
-    status: 'BEIDE TEILPAKETE VORBEREITET · AUT-02-03 und AUT-02-02 sind bis zu ihren GO/NO-GO-Blättern bestätigt; null aktive Entscheide oder ausgeführte Rechte.',
-    next: 'Nächster menschlicher Entscheid: REF-01-G1-REV-005 V0.1, die dokumentarische Neubewertung der technischen Welle, bestätigen oder ändern.',
+    status: 'TECHNISCHE PRÜFUNG BESTÄTIGT · REV-005 V1.0 behält 22 offene Werte; PLN-002 V0.1 ordnet sie in drei Pakete ohne vorgeschlagenen Wert oder Ausführung.',
+    next: 'Nächster menschlicher Entscheid: REF-01-G1-PLN-002 V0.1, den dokumentarischen Qualifizierungsplan der zweiundzwanzig Werte, bestätigen oder ändern.',
     boundary: 'Die Validierung betrifft den internen Rahmen und seine gesteuerte Anwendbarkeit. Sie schafft kein Recht, keine allgemeine Konformitätsaussage, Delegation, keinen C3/C4/C5-Zugriff und keine DMS-Operation.'
   }
 };
@@ -256,6 +258,8 @@ const InstitutionalPeopleTeamsGateG1ElevenFieldCandidateMatrices = ({ language =
       <InstitutionalPeopleTeamsGateG1OutboxMonitoringAuthorisationCandidate language={language} />
       <InstitutionalPeopleTeamsGateG1OutboxMonitoringAuthorisationConfirmation language={language} />
       <InstitutionalPeopleTeamsGateG1TechnicalWaveReassessment language={language} />
+      <InstitutionalPeopleTeamsGateG1TechnicalWaveReassessmentConfirmation language={language} />
+      <InstitutionalPeopleTeamsGateG1TechnicalValueQualificationPlan language={language} />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.previousRecord} className="mt-4" />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.record} className="mt-4" />
       <GovernedDecisionRecord labels={t.recordLabels} record={t.legalRecord} className="mt-4" />
