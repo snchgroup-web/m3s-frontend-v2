@@ -12,10 +12,10 @@ const COPY = {
       ['Consolidation', '8/8 cadres confirmés', 'REF-01 est le contrôle détaillé courant'],
       ['Dynamisation', '8 composantes cadrées', 'Revue détaillée non démarrée']
     ],
-    current: 'Contrôle courant · REF-01 V1.74 · NAM-002 V1.0 confirmé',
+    current: 'Contrôle courant · REF-01 V1.75 · AUT-003 V1.0 confirmé',
     metrics: [['22/22', 'valeurs examinées'], ['9', 'qualifiées, portée synthétique'], ['5/5', 'familles confirmées documentairement'], ['0/6', 'conditions G1 clôturables']],
     fastTrack: 'Fast Track actif',
-    fastTrackBody: 'DEC-071 confirme NAM-002 V1.0 comme cinq emplacements nominatifs toujours vides. AUT-003 V0.1 prépare cinq dossiers d’autorisation sans identité, canal ni décision exécutoire.',
+    fastTrackBody: 'DEC-072 confirme AUT-003 V1.0 comme cinq dossiers d’autorisation toujours vides. M3S-INB-001 V0.1 devient le prochain cadrage groupé, en lecture seule et sans traitement de données réelles.',
     boundary: 'G1 reste ouverte et L2 fermé. Ce cockpit est une lecture de pilotage, pas une validation de conformité ni une autorisation de déploiement.'
   },
   EN: {
@@ -28,10 +28,10 @@ const COPY = {
       ['Consolidation', '8/8 frameworks confirmed', 'REF-01 is the current detailed control'],
       ['Dynamisation', '8 framed components', 'Detailed review not started']
     ],
-    current: 'Current control · REF-01 V1.74 · NAM-002 V1.0 confirmed',
+    current: 'Current control · REF-01 V1.75 · AUT-003 V1.0 confirmed',
     metrics: [['22/22', 'values reviewed'], ['9', 'qualified, synthetic scope'], ['5/5', 'families documentarily confirmed'], ['0/6', 'closable G1 conditions']],
     fastTrack: 'Fast Track active',
-    fastTrackBody: 'DEC-071 confirms NAM-002 V1.0 as five named-recipient slots that remain empty. AUT-003 V0.1 prepares five authorisation files without identity, channel or executable decision.',
+    fastTrackBody: 'DEC-072 confirms AUT-003 V1.0 as five authorisation files that remain empty. M3S-INB-001 V0.1 becomes the next grouped read-only framework without real-data processing.',
     boundary: 'G1 remains open and L2 closed. This cockpit is a steering view, not a compliance validation or deployment authorisation.'
   },
   DE: {
@@ -44,10 +44,10 @@ const COPY = {
       ['Konsolidierung', '8/8 Rahmen bestätigt', 'REF-01 ist die aktuelle Detailkontrolle'],
       ['Dynamisierung', '8 strukturierte Komponenten', 'Detailprüfung nicht begonnen']
     ],
-    current: 'Aktuelle Kontrolle · REF-01 V1.74 · NAM-002 V1.0 bestätigt',
+    current: 'Aktuelle Kontrolle · REF-01 V1.75 · AUT-003 V1.0 bestätigt',
     metrics: [['22/22', 'Werte geprüft'], ['9', 'qualifiziert, synthetischer Umfang'], ['5/5', 'Familien dokumentarisch bestätigt'], ['0/6', 'schliessbare G1-Bedingungen']],
     fastTrack: 'Fast Track aktiv',
-    fastTrackBody: 'DEC-071 bestätigt NAM-002 V1.0 als fünf weiterhin leere Namensstellen. AUT-003 V0.1 bereitet fünf Autorisierungsakten ohne Identität, Kanal oder ausführbaren Entscheid vor.',
+    fastTrackBody: 'DEC-072 bestätigt AUT-003 V1.0 als fünf weiterhin leere Autorisierungsakten. M3S-INB-001 V0.1 wird zum nächsten gebündelten, schreibgeschützten Rahmen ohne Verarbeitung realer Daten.',
     boundary: 'G1 bleibt offen und L2 geschlossen. Dieses Cockpit ist eine Steuerungsansicht, keine Konformitätsbestätigung oder Bereitstellungsfreigabe.'
   }
 };
