@@ -65,7 +65,7 @@ const translations = {
     openArchitecture: 'Voir l’architecture',
     focusedEyebrow: 'PILOTAGE GLOBAL · FAST TRACK · REF-01 V1.74',
     focusedTitle: 'Emplacements confirmés · cinq autorisations vides à arbitrer',
-    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0 confirmé, les dossiers candidats AUT-002 V0.1 et le cadrage de la Boîte d’entrée M3S.',
+    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0 confirmé, les dossiers candidats AUT-003 V0.1 et le cadrage de la Boîte d’entrée M3S.',
     openFullProgram: 'Ouvrir le programme complet',
     returnToFocusedReview: 'Retour au cockpit Fast Track'
   },
@@ -106,7 +106,7 @@ const translations = {
     openArchitecture: 'View architecture',
     focusedEyebrow: 'GLOBAL STEERING · FAST TRACK · REF-01 V1.74',
     focusedTitle: 'Slots confirmed · five empty authorisations to decide',
-    focusedBody: 'This compact view brings together the Programme cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, confirmed NAM-002 V1.0, candidate AUT-002 V0.1 files and the M3S Inbox framework.',
+    focusedBody: 'This compact view brings together the Programme cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, confirmed NAM-002 V1.0, candidate AUT-003 V0.1 files and the M3S Inbox framework.',
     openFullProgram: 'Open the full programme',
     returnToFocusedReview: 'Back to the Fast Track cockpit'
   },
@@ -147,7 +147,7 @@ const translations = {
     openArchitecture: 'Architektur anzeigen',
     focusedEyebrow: 'GESAMTSTEUERUNG · FAST TRACK · REF-01 V1.74',
     focusedTitle: 'Stellen bestätigt · fünf leere Autorisierungen zu entscheiden',
-    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, bestätigtes NAM-002 V1.0, die Kandidatenakten AUT-002 V0.1 und den M3S-Eingangsrahmen.',
+    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, bestätigtes NAM-002 V1.0, die Kandidatenakten AUT-003 V0.1 und den M3S-Eingangsrahmen.',
     openFullProgram: 'Vollständiges Programm öffnen',
     returnToFocusedReview: 'Zurück zum Fast-Track-Cockpit'
   }

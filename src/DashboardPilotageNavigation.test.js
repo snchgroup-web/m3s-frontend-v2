@@ -104,7 +104,7 @@ test('opens confirmed REF-01 named slots and candidate empty authorisation files
   expect(within(authorisationFiles).getByText('Identités inscrites').closest('article')).toHaveTextContent('0');
   expect(within(authorisationFiles).getByText('Autorisations accordées').closest('article')).toHaveTextContent('0');
   expect(within(authorisationFiles).getByText('Contacts ou envois').closest('article')).toHaveTextContent('0');
-  expect(within(authorisationFiles).getByText(/Je confirme REF-01-G1-AUT-002 V0.1 comme cadre des cinq dossiers/)).toBeInTheDocument();
+  expect(within(authorisationFiles).getByText(/Je confirme REF-01-G1-AUT-003 V0.1 comme cadre des cinq dossiers/)).toBeInTheDocument();
   expect(screen.getByTestId('institutional-m3s-inbox-frame')).toBeInTheDocument();
   expect(screen.queryByRole('heading', { name: 'MEP-01 · LEGAL' })).not.toBeInTheDocument();
 });
