@@ -12,10 +12,10 @@ const COPY = {
       ['Consolidation', '8/8 cadres confirmés', 'REF-01 est le contrôle détaillé courant'],
       ['Dynamisation', '8 composantes cadrées', 'Revue détaillée non démarrée']
     ],
-    current: 'Contrôle courant · REF-01 V1.77 · M3S-INB-002 V1.0 confirmé, non exécuté',
+    current: 'Contrôle courant · REF-01 V1.78 · M3S-INB-003 V1.0 confirmé, fiche vide',
     metrics: [['22/22', 'valeurs examinées'], ['9', 'qualifiées, portée synthétique'], ['5/5', 'familles confirmées documentairement'], ['0/6', 'conditions G1 clôturables']],
     fastTrack: 'Fast Track actif',
-    fastTrackBody: 'DEC-074 confirme M3S-INB-002 V1.0 uniquement comme protocole fictif. M3S-INB-003 V0.1 devient le prochain lot candidat, limité à une fiche GO/NO-GO vide ; 0/6 cas exécuté.',
+    fastTrackBody: 'DEC-075 confirme M3S-INB-003 V1.0 uniquement comme fiche GO/NO-GO vide. Ni GO ni NO-GO n’est sélectionné ; le protocole M3S-INB-002 reste à 0/6 cas exécuté.',
     boundary: 'G1 reste ouverte et L2 fermé. Ce cockpit est une lecture de pilotage, pas une validation de conformité ni une autorisation de déploiement.'
   },
   EN: {
@@ -28,10 +28,10 @@ const COPY = {
       ['Consolidation', '8/8 frameworks confirmed', 'REF-01 is the current detailed control'],
       ['Dynamisation', '8 framed components', 'Detailed review not started']
     ],
-    current: 'Current control · REF-01 V1.77 · M3S-INB-002 V1.0 confirmed, not run',
+    current: 'Current control · REF-01 V1.78 · M3S-INB-003 V1.0 confirmed, empty form',
     metrics: [['22/22', 'values reviewed'], ['9', 'qualified, synthetic scope'], ['5/5', 'families documentarily confirmed'], ['0/6', 'closable G1 conditions']],
     fastTrack: 'Fast Track active',
-    fastTrackBody: 'DEC-074 confirms M3S-INB-002 V1.0 only as a fictional protocol. M3S-INB-003 V0.1 becomes the next candidate package, limited to an empty GO/NO-GO form; 0/6 cases run.',
+    fastTrackBody: 'DEC-075 confirms M3S-INB-003 V1.0 only as an empty GO/NO-GO form. Neither GO nor NO-GO is selected; the M3S-INB-002 protocol remains at 0/6 cases run.',
     boundary: 'G1 remains open and L2 closed. This cockpit is a steering view, not a compliance validation or deployment authorisation.'
   },
   DE: {
@@ -44,10 +44,10 @@ const COPY = {
       ['Konsolidierung', '8/8 Rahmen bestätigt', 'REF-01 ist die aktuelle Detailkontrolle'],
       ['Dynamisierung', '8 strukturierte Komponenten', 'Detailprüfung nicht begonnen']
     ],
-    current: 'Aktuelle Kontrolle · REF-01 V1.77 · M3S-INB-002 V1.0 bestätigt, nicht ausgeführt',
+    current: 'Aktuelle Kontrolle · REF-01 V1.78 · M3S-INB-003 V1.0 bestätigt, leeres Blatt',
     metrics: [['22/22', 'Werte geprüft'], ['9', 'qualifiziert, synthetischer Umfang'], ['5/5', 'Familien dokumentarisch bestätigt'], ['0/6', 'schliessbare G1-Bedingungen']],
     fastTrack: 'Fast Track aktiv',
-    fastTrackBody: 'DEC-074 bestätigt M3S-INB-002 V1.0 nur als fiktives Protokoll. M3S-INB-003 V0.1 wird zum nächsten Kandidatenpaket, begrenzt auf ein leeres GO/NO-GO-Blatt; 0/6 Fälle ausgeführt.',
+    fastTrackBody: 'DEC-075 bestätigt M3S-INB-003 V1.0 nur als leeres GO/NO-GO-Blatt. Weder GO noch NO-GO ist gewählt; das Protokoll M3S-INB-002 bleibt bei 0/6 ausgeführten Fällen.',
     boundary: 'G1 bleibt offen und L2 geschlossen. Dieses Cockpit ist eine Steuerungsansicht, keine Konformitätsbestätigung oder Bereitstellungsfreigabe.'
   }
 };

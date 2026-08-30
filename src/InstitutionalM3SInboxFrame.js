@@ -19,11 +19,11 @@ const COPY = {
     boundariesTitle: 'Frontières avant mise en service',
     boundaries: ['Aucune lecture automatique de WhatsApp.', 'Aucun import automatique des e-mails.', 'Aucune donnée personnelle réelle intégrée au bundle frontend.', 'Backend, RBAC et GED requis avant toute automatisation.', 'Aucun compteur affiché avant disponibilité d’une source fiable.'],
     recordLabels: { eyebrow: 'Registre de décision gouverné', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision enregistrée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
-    record: { id: 'REF-01-DEC-074', version: 'V1.0', status: 'M3S-INB-002 confirmé, non exécuté', author: 'Cheikh Ndiaye', date: '31-08-2026', decision: 'M3S-INB-002 V0.1 est confirmé sans amendement et promu en V1.0 uniquement comme protocole de pilote fictif.', evidence: 'Confirmation explicite de Cheikh dans la session du 31-08-2026 : « Je confirme M3S-INB-002 V0.1 uniquement comme protocole de pilote fictif, sans autoriser encore son exécution. »', limit: 'La décision confirme le protocole, pas son exécution. Elle n’active aucun cas, import, connecteur, automatisme, stockage réel, donnée personnelle, registre opérationnel, accès, dépense ou action L2.' },
+    record: { id: 'REF-01-DEC-075', version: 'V1.0', status: 'M3S-INB-003 confirmé, fiche vide', author: 'Cheikh Ndiaye', date: '31-08-2026', decision: 'M3S-INB-003 V0.1 est confirmé sans amendement et promu en V1.0 uniquement comme fiche GO/NO-GO vide.', evidence: 'Confirmation explicite de Cheikh dans la session du 31-08-2026 : « Je confirme. Le prochain candidat est M3S-INB-003 V0.1. »', limit: 'La décision confirme la structure de la fiche, pas un GO. Elle ne coche aucune option, n’autorise aucun cas, import, connecteur, automatisme, stockage réel, donnée personnelle, registre opérationnel, accès, dépense ou action L2.' },
     decisionTitle: 'Résultat de la décision Fast Track',
-    decision: 'M3S-INB-002 V1.0 est confirmé comme protocole fictif. Le pilote reste non exécuté et non opérationnel.',
-    nextTitle: 'Prochain lot candidat',
-    next: 'Préparer M3S-INB-003 V0.1 comme fiche GO/NO-GO vide pour une éventuelle exécution du pilote fictif, sans lancer aucun cas.',
+    decision: 'M3S-INB-003 V1.0 est confirmé comme fiche GO/NO-GO vide. Le protocole M3S-INB-002 V1.0 reste non exécuté et non opérationnel.',
+    nextTitle: 'Prochain arbitrage distinct',
+    next: 'Conserver M3S-INB-003 V1.0 vide jusqu’à une décision humaine distincte GO ou NO-GO. Aucune option n’est présumée.',
     pilotEyebrow: 'PROTOCOLE CONFIRMÉ · M3S-INB-002 · V1.0 · 31-08-2026',
     pilotTitle: 'Pilote manuel isolé · protocole confirmé, exécution fermée',
     pilotVersion: 'V1.0',
@@ -38,8 +38,16 @@ const COPY = {
     stopTitle: 'Arrêt immédiat',
     stop: 'Toute donnée réelle, identité, pièce sensible, canal connecté ou persistance opérationnelle arrête le pilote et exige une décision séparée.',
     pilotDecisionTitle: 'Décision enregistrée · exécution toujours interdite',
-    pilotDecision: 'REF-01-DEC-074 confirme M3S-INB-002 V1.0 uniquement comme protocole fictif. Une décision GO distincte reste obligatoire avant le premier cas.',
+    pilotDecision: 'REF-01-DEC-075 confirme uniquement la fiche vide M3S-INB-003 V1.0. Une décision GO distincte reste obligatoire avant le premier cas.',
     pilotVerdict: 'STATUT · PROTOCOLE CONFIRMÉ, NON EXÉCUTÉ. 0/6 cas exécuté, zéro donnée réelle et aucune capacité opérationnelle ouverte.',
+    gateEyebrow: 'FICHE CONFIRMÉE · M3S-INB-003 · V1.0 · 31-08-2026',
+    gateTitle: 'Décision GO/NO-GO · structure confirmée, choix non renseigné',
+    gateVersion: 'V1.0 · VIDE',
+    gateIntro: 'Cette fiche sépare la confirmation documentaire de la décision d’exécuter. Elle reste vide afin qu’aucun GO ne puisse être déduit de la validation de sa structure.',
+    gateCounters: [['Options sélectionnées', '0/2', 'Ni GO ni NO-GO'], ['Cas autorisés', '0/6', 'Exécution toujours fermée'], ['Preuves de test', '0', 'Aucun cas exécuté'], ['Actions L2', '0', 'G1 reste ouverte']],
+    gateFieldsTitle: 'Champs de décision volontairement vides',
+    gateFields: [['Décision', 'Non renseignée'], ['Auteur et date', 'Non renseignés'], ['Conditions préalables', 'Non renseignées'], ['Périmètre autorisé', 'Non renseigné'], ['Preuves examinées', 'Non renseignées'], ['Risques et retour arrière', 'Non renseignés']],
+    gateRule: 'RÈGLE · La fiche confirmée ne vaut ni GO ni NO-GO. Seule une décision humaine ultérieure, explicite et tracée peut autoriser le démarrage.',
     verdict: 'STATUT · CADRE CONFIRMÉ EN LECTURE SEULE. Zéro entrée réelle, import, connecteur ou traitement automatique activé.'
   },
   EN: {
@@ -58,11 +66,11 @@ const COPY = {
     boundariesTitle: 'Boundaries before activation',
     boundaries: ['No automated WhatsApp reading.', 'No automated email import.', 'No real personal data in the frontend bundle.', 'Backend, RBAC and DMS required before automation.', 'No counter displayed before a reliable source exists.'],
     recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
-    record: { id: 'REF-01-DEC-074', version: 'V1.0', status: 'M3S-INB-002 confirmed, not run', author: 'Cheikh Ndiaye', date: '31 Aug 2026', decision: 'M3S-INB-002 V0.1 is confirmed without amendment and promoted to V1.0 only as a fictional-pilot protocol.', evidence: 'Cheikh’s explicit confirmation in the 31 Aug 2026 session: “I confirm M3S-INB-002 V0.1 only as a fictional-pilot protocol, without yet authorising its execution.”', limit: 'The decision confirms the protocol, not its execution. It enables no case, import, connector, automation, real storage, personal data, operational register, access, expense or L2 action.' },
+    record: { id: 'REF-01-DEC-075', version: 'V1.0', status: 'M3S-INB-003 confirmed, empty form', author: 'Cheikh Ndiaye', date: '31 Aug 2026', decision: 'M3S-INB-003 V0.1 is confirmed without amendment and promoted to V1.0 only as an empty GO/NO-GO form.', evidence: 'Cheikh’s explicit confirmation in the 31 Aug 2026 session: “I confirm. The next candidate is M3S-INB-003 V0.1.”', limit: 'The decision confirms the form structure, not a GO. It selects no option and enables no case, import, connector, automation, real storage, personal data, operational register, access, expense or L2 action.' },
     decisionTitle: 'Fast Track decision outcome',
-    decision: 'M3S-INB-002 V1.0 is confirmed as a fictional protocol. The pilot remains unexecuted and non-operational.',
-    nextTitle: 'Next candidate package',
-    next: 'Prepare M3S-INB-003 V0.1 as an empty GO/NO-GO form for possible execution of the fictional pilot, without launching any case.',
+    decision: 'M3S-INB-003 V1.0 is confirmed as an empty GO/NO-GO form. The M3S-INB-002 V1.0 protocol remains unexecuted and non-operational.',
+    nextTitle: 'Next separate decision',
+    next: 'Keep M3S-INB-003 V1.0 empty until a separate human GO or NO-GO decision. No option is presumed.',
     pilotEyebrow: 'CONFIRMED PROTOCOL · M3S-INB-002 · V1.0 · 31 AUG 2026',
     pilotTitle: 'Isolated manual pilot · protocol confirmed, execution closed',
     pilotVersion: 'V1.0',
@@ -77,8 +85,16 @@ const COPY = {
     stopTitle: 'Immediate stop',
     stop: 'Any real data, identity, sensitive record, connected channel or operational persistence stops the pilot and requires a separate decision.',
     pilotDecisionTitle: 'Recorded decision · execution still prohibited',
-    pilotDecision: 'REF-01-DEC-074 confirms M3S-INB-002 V1.0 only as a fictional protocol. A separate GO decision remains mandatory before the first case.',
+    pilotDecision: 'REF-01-DEC-075 confirms only the empty M3S-INB-003 V1.0 form. A separate GO decision remains mandatory before the first case.',
     pilotVerdict: 'STATUS · CONFIRMED, UNEXECUTED PROTOCOL. 0/6 cases run, zero real data and no operational capability opened.',
+    gateEyebrow: 'CONFIRMED FORM · M3S-INB-003 · V1.0 · 31 AUG 2026',
+    gateTitle: 'GO/NO-GO decision · structure confirmed, choice left blank',
+    gateVersion: 'V1.0 · EMPTY',
+    gateIntro: 'This form separates documentary confirmation from an execution decision. It remains empty so that no GO can be inferred from approval of its structure.',
+    gateCounters: [['Selected options', '0/2', 'Neither GO nor NO-GO'], ['Authorised cases', '0/6', 'Execution remains closed'], ['Test evidence', '0', 'No case run'], ['L2 actions', '0', 'G1 remains open']],
+    gateFieldsTitle: 'Decision fields deliberately left blank',
+    gateFields: [['Decision', 'Not entered'], ['Author and date', 'Not entered'], ['Prerequisites', 'Not entered'], ['Authorised scope', 'Not entered'], ['Evidence reviewed', 'Not entered'], ['Risks and rollback', 'Not entered']],
+    gateRule: 'RULE · The confirmed form is neither a GO nor a NO-GO. Only a later explicit and recorded human decision can authorise the start.',
     verdict: 'STATUS · CONFIRMED READ-ONLY FRAMEWORK. Zero real entries, imports, connectors or automated processing enabled.'
   },
   DE: {
@@ -97,11 +113,11 @@ const COPY = {
     boundariesTitle: 'Grenzen vor Inbetriebnahme',
     boundaries: ['Kein automatisches Lesen von WhatsApp.', 'Kein automatischer E-Mail-Import.', 'Keine realen Personendaten im Frontend-Bundle.', 'Backend, RBAC und DMS vor jeder Automatisierung erforderlich.', 'Kein Zähler ohne verlässliche Quelle.'],
     recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Erfasster Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
-    record: { id: 'REF-01-DEC-074', version: 'V1.0', status: 'M3S-INB-002 bestätigt, nicht ausgeführt', author: 'Cheikh Ndiaye', date: '31.08.2026', decision: 'M3S-INB-002 V0.1 wird ohne Änderung nur als Protokoll eines fiktiven Piloten bestätigt und zu V1.0.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 31.08.2026: „Ich bestätige M3S-INB-002 V0.1 nur als Protokoll eines fiktiven Piloten, ohne seine Ausführung bereits zu autorisieren.“', limit: 'Der Entscheid bestätigt das Protokoll, nicht seine Ausführung. Er aktiviert keinen Fall, Import, Connector, Automatismus, reale Speicherung, Personendaten, kein operatives Register, keinen Zugriff, keine Ausgabe und keine L2-Aktion.' },
+    record: { id: 'REF-01-DEC-075', version: 'V1.0', status: 'M3S-INB-003 bestätigt, leeres Blatt', author: 'Cheikh Ndiaye', date: '31.08.2026', decision: 'M3S-INB-003 V0.1 wird ohne Änderung nur als leeres GO/NO-GO-Blatt bestätigt und zu V1.0.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 31.08.2026: „Ich bestätige. Der nächste Kandidat ist M3S-INB-003 V0.1.“', limit: 'Der Entscheid bestätigt die Struktur des Blatts, nicht ein GO. Er wählt keine Option und aktiviert keinen Fall, Import, Connector, Automatismus, reale Speicherung, Personendaten, kein operatives Register, keinen Zugriff, keine Ausgabe und keine L2-Aktion.' },
     decisionTitle: 'Ergebnis des Fast-Track-Entscheids',
-    decision: 'M3S-INB-002 V1.0 ist als fiktives Protokoll bestätigt. Der Pilot bleibt unausgeführt und nicht operativ.',
-    nextTitle: 'Nächstes Kandidatenpaket',
-    next: 'M3S-INB-003 V0.1 als leeres GO/NO-GO-Blatt für eine mögliche Ausführung des fiktiven Piloten vorbereiten, ohne einen Fall zu starten.',
+    decision: 'M3S-INB-003 V1.0 ist als leeres GO/NO-GO-Blatt bestätigt. Das Protokoll M3S-INB-002 V1.0 bleibt unausgeführt und nicht operativ.',
+    nextTitle: 'Nächster getrennter Entscheid',
+    next: 'M3S-INB-003 V1.0 bis zu einem getrennten menschlichen GO- oder NO-GO-Entscheid leer halten. Keine Option wird vorausgesetzt.',
     pilotEyebrow: 'BESTÄTIGTES PROTOKOLL · M3S-INB-002 · V1.0 · 31.08.2026',
     pilotTitle: 'Isolierter manueller Pilot · Protokoll bestätigt, Ausführung geschlossen',
     pilotVersion: 'V1.0',
@@ -116,8 +132,16 @@ const COPY = {
     stopTitle: 'Sofortiger Stopp',
     stop: 'Reale Daten, Identitäten, sensible Unterlagen, verbundene Kanäle oder operative Persistenz stoppen den Piloten und erfordern einen getrennten Entscheid.',
     pilotDecisionTitle: 'Erfasster Entscheid · Ausführung weiterhin verboten',
-    pilotDecision: 'REF-01-DEC-074 bestätigt M3S-INB-002 V1.0 nur als fiktives Protokoll. Vor dem ersten Fall bleibt ein getrennter GO-Entscheid zwingend.',
+    pilotDecision: 'REF-01-DEC-075 bestätigt nur das leere Blatt M3S-INB-003 V1.0. Vor dem ersten Fall bleibt ein getrennter GO-Entscheid zwingend.',
     pilotVerdict: 'STATUS · BESTÄTIGTES, UNAUSGEFÜHRTES PROTOKOLL. 0/6 Fälle ausgeführt, null reale Daten und keine operative Fähigkeit geöffnet.',
+    gateEyebrow: 'BESTÄTIGTES BLATT · M3S-INB-003 · V1.0 · 31.08.2026',
+    gateTitle: 'GO/NO-GO-Entscheid · Struktur bestätigt, Auswahl leer',
+    gateVersion: 'V1.0 · LEER',
+    gateIntro: 'Dieses Blatt trennt die dokumentarische Bestätigung vom Ausführungsentscheid. Es bleibt leer, damit aus der Bestätigung seiner Struktur kein GO abgeleitet werden kann.',
+    gateCounters: [['Gewählte Optionen', '0/2', 'Weder GO noch NO-GO'], ['Autorisierte Fälle', '0/6', 'Ausführung bleibt geschlossen'], ['Testnachweise', '0', 'Kein Fall ausgeführt'], ['L2-Aktionen', '0', 'G1 bleibt offen']],
+    gateFieldsTitle: 'Bewusst leere Entscheidfelder',
+    gateFields: [['Entscheid', 'Nicht eingetragen'], ['Autor und Datum', 'Nicht eingetragen'], ['Voraussetzungen', 'Nicht eingetragen'], ['Autorisierter Umfang', 'Nicht eingetragen'], ['Geprüfte Nachweise', 'Nicht eingetragen'], ['Risiken und Rückkehr', 'Nicht eingetragen']],
+    gateRule: 'REGEL · Das bestätigte Blatt ist weder GO noch NO-GO. Nur ein späterer ausdrücklicher und protokollierter menschlicher Entscheid kann den Start autorisieren.',
     verdict: 'STATUS · BESTÄTIGTER SCHREIBGESCHÜTZTER RAHMEN. Null reale Eingänge, Importe, Connectoren oder automatische Bearbeitungen aktiviert.'
   }
 };
@@ -146,6 +170,15 @@ const InstitutionalM3SInboxFrame = ({ language = 'FR' }) => {
         <article className="m3s-raised mt-4 p-3 sm:p-4"><h6 className="text-sm font-semibold text-slate-100">{t.criteriaTitle}</h6><ul className="mt-3 grid grid-cols-1 gap-2 lg:grid-cols-2">{t.criteria.map(item => <li key={item} className="flex items-start gap-2 text-xs leading-5 text-slate-300"><CheckCircle2 className="mt-0.5 shrink-0 text-emerald-300" size={15} aria-hidden="true" />{item}</li>)}</ul></article>
         <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2"><div className="rounded-md border border-red-800/70 bg-red-950/15 p-3"><div className="flex items-center gap-2"><AlertTriangle className="text-red-300" size={17} aria-hidden="true" /><h6 className="text-sm font-semibold text-red-100">{t.stopTitle}</h6></div><p className="mt-2 text-xs leading-5 text-slate-300">{t.stop}</p></div><div className="rounded-md border border-amber-800/70 bg-amber-950/15 p-3"><div className="flex items-center gap-2"><LockKeyhole className="text-amber-300" size={17} aria-hidden="true" /><h6 className="text-sm font-semibold text-amber-100">{t.pilotDecisionTitle}</h6></div><p className="mt-2 text-xs leading-5 text-slate-300">{t.pilotDecision}</p></div></div>
         <p className="mt-4 rounded-md border border-sky-700/70 bg-sky-950/20 p-3 text-sm font-semibold leading-6 text-sky-100">{t.pilotVerdict}</p>
+      </section>
+      <section data-testid="institutional-m3s-inbox-go-no-go" className="mt-4 rounded-md border border-amber-800/70 bg-amber-950/10 p-3 sm:p-4" aria-labelledby="institutional-m3s-inbox-go-no-go-title">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-5xl"><p className="text-xs font-semibold uppercase text-amber-300">{t.gateEyebrow}</p><h5 id="institutional-m3s-inbox-go-no-go-title" className="mt-1 text-base font-semibold text-slate-100 sm:text-lg">{t.gateTitle}</h5><p className="mt-2 text-sm leading-6 text-slate-300">{t.gateIntro}</p></div>
+          <span className="inline-flex min-h-9 shrink-0 items-center gap-2 self-start rounded-md border border-amber-700/70 bg-amber-950/25 px-3 py-2 text-xs font-semibold text-amber-100"><LockKeyhole size={16} aria-hidden="true" />{t.gateVersion}</span>
+        </div>
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">{t.gateCounters.map(([label, value, note]) => <article key={label} className="m3s-raised min-h-28 p-3"><p className="text-xs font-semibold text-slate-300">{label}</p><p className="mt-2 text-2xl font-semibold text-slate-100">{value}</p><p className="mt-2 text-xs leading-5 text-slate-400">{note}</p></article>)}</div>
+        <article className="m3s-raised mt-4 p-3 sm:p-4"><div className="flex items-center gap-2"><ClipboardCheck className="text-amber-300" size={17} aria-hidden="true" /><h6 className="text-sm font-semibold text-slate-100">{t.gateFieldsTitle}</h6></div><dl className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">{t.gateFields.map(([label, value]) => <div key={label} className="rounded-md border border-dashed border-slate-600 bg-slate-950/20 p-3"><dt className="text-xs font-semibold text-slate-300">{label}</dt><dd className="mt-2 text-xs font-semibold text-amber-200">{value}</dd></div>)}</dl></article>
+        <p className="mt-4 flex items-start gap-2 rounded-md border border-red-800/70 bg-red-950/15 p-3 text-sm font-semibold leading-6 text-red-100"><AlertTriangle className="mt-0.5 shrink-0 text-red-300" size={17} aria-hidden="true" />{t.gateRule}</p>
       </section>
       <p className="mt-4 rounded-md border border-violet-700/70 bg-violet-950/20 p-3 text-sm font-semibold leading-6 text-violet-100">{t.verdict}</p>
     </section>
