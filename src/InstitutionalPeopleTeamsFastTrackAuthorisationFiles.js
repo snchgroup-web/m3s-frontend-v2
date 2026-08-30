@@ -25,8 +25,8 @@ const COPY = {
     record: { id: 'REF-01-DEC-072', version: 'V1.0', status: 'AUT-003 confirmé sans autorisation ni contact', author: 'Cheikh Ndiaye', date: '30-08-2026', decision: 'REF-01-G1-AUT-003 V0.1 est confirmé sans amendement et promu en V1.0 comme cadre des cinq dossiers d’autorisation vides.', evidence: 'Confirmation explicite de Cheikh dans la session du 30-08-2026 : « Je confirme REF-01-G1-AUT-003 V0.1 comme cadre des cinq dossiers d’autorisation vides, sans autoriser ni contacter personne. »', limit: 'La décision confirme uniquement le cadre vide. Elle n’autorise aucune identité, entreprise, adresse, affectation, prise de contact, émission, collecte, accès, dépense, connexion ou action L2 ; G1 reste ouverte.' },
     decisionTitle: 'Résultat de la décision Fast Track',
     decision: 'AUT-003 V1.0 gouverne désormais les cinq dossiers vides. Toute future autorisation restera une décision humaine unitaire appuyée par les huit champs obligatoires.',
-    nextTitle: 'Prochain arbitrage groupé',
-    next: 'Confirmer : « Je confirme M3S-INB-001 V0.1 comme cadre en lecture seule de la Boîte d’entrée M3S, sans activer import, automatisation ni traitement de données réelles. »',
+    nextTitle: 'Arbitrage groupé suivant confirmé',
+    next: 'M3S-INB-001 V1.0 est désormais confirmé en lecture seule par REF-01-DEC-073. Aucun import, automatisme ni traitement de données réelles n’est activé.',
     boundary: 'La confirmation du cadre ne remplira aucun dossier et n’autorisera aucune identité, entreprise, adresse, affectation, prise de contact, émission, collecte, accès, dépense, connexion ou action L2.'
   },
   EN: {
@@ -41,8 +41,8 @@ const COPY = {
     record: { id: 'REF-01-DEC-072', version: 'V1.0', status: 'AUT-003 confirmed without authorisation or contact', author: 'Cheikh Ndiaye', date: '30 Aug 2026', decision: 'REF-01-G1-AUT-003 V0.1 is confirmed without amendment and promoted to V1.0 as the framework for five empty authorisation files.', evidence: 'Cheikh’s explicit confirmation in the 30 Aug 2026 session: “I confirm REF-01-G1-AUT-003 V0.1 as the framework for the five empty authorisation files, without authorising or contacting anyone.”', limit: 'The decision confirms only the empty framework. It authorises no identity, company, address, assignment, contact, release, collection, access, expense, connection or L2 action; G1 remains open.' },
     decisionTitle: 'Fast Track decision outcome',
     decision: 'AUT-003 V1.0 now governs the five empty files. Every future authorisation remains an individual human decision supported by the eight mandatory fields.',
-    nextTitle: 'Next grouped decision',
-    next: 'Confirm: “I confirm M3S-INB-001 V0.1 as the read-only framework for the M3S Inbox, without enabling import, automation or real-data processing.”',
+    nextTitle: 'Next grouped decision confirmed',
+    next: 'M3S-INB-001 V1.0 is now confirmed read-only by REF-01-DEC-073. No import, automation or real-data processing is enabled.',
     boundary: 'Confirming the framework will fill no file and authorise no identity, company, address, assignment, contact, release, collection, access, expense, connection or L2 action.'
   },
   DE: {
@@ -57,8 +57,8 @@ const COPY = {
     record: { id: 'REF-01-DEC-072', version: 'V1.0', status: 'AUT-003 ohne Autorisierung oder Kontakt bestätigt', author: 'Cheikh Ndiaye', date: '30.08.2026', decision: 'REF-01-G1-AUT-003 V0.1 wird ohne Änderung bestätigt und zu V1.0 als Rahmen für fünf leere Autorisierungsakten.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 30.08.2026: „Ich bestätige REF-01-G1-AUT-003 V0.1 als Rahmen der fünf leeren Autorisierungsakten, ohne jemanden zu autorisieren oder zu kontaktieren.“', limit: 'Der Entscheid bestätigt nur den leeren Rahmen. Er erlaubt keine Identität, Firma, Adresse, Zuordnung, Kontaktaufnahme, Versand, Sammlung, Zugriff, Ausgabe, Verbindung oder L2-Aktion; G1 bleibt offen.' },
     decisionTitle: 'Ergebnis des Fast-Track-Entscheids',
     decision: 'AUT-003 V1.0 steuert nun die fünf leeren Akten. Jede künftige Autorisierung bleibt ein einzelner menschlicher Entscheid, gestützt auf die acht Pflichtfelder.',
-    nextTitle: 'Nächster gebündelter Entscheid',
-    next: 'Bestätigen: „Ich bestätige M3S-INB-001 V0.1 als schreibgeschützten Rahmen des M3S-Eingangs, ohne Import, Automatisierung oder Verarbeitung realer Daten zu aktivieren.“',
+    nextTitle: 'Nächster gebündelter Entscheid bestätigt',
+    next: 'M3S-INB-001 V1.0 ist nun durch REF-01-DEC-073 schreibgeschützt bestätigt. Kein Import, keine Automatisierung und keine Verarbeitung realer Daten ist aktiviert.',
     boundary: 'Die Bestätigung des Rahmens füllt keine Akte und erlaubt keine Identität, Firma, Adresse, Zuordnung, Kontaktaufnahme, Versand, Sammlung, Zugriff, Ausgabe, Verbindung oder L2-Aktion.'
   }
 };

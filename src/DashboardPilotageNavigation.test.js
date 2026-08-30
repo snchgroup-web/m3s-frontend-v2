@@ -55,10 +55,10 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });
 
-test('opens confirmed empty authorisation files and the candidate read-only Inbox in the lightweight Fast Track view', () => {
+test('opens the confirmed empty authorisation files and confirmed read-only Inbox in the lightweight Fast Track view', () => {
   renderDashboardNavigation({}, '/?view=program&focus=ref01-fasttrack');
 
-  expect(screen.getByRole('heading', { name: 'Autorisations vides confirmées · Boîte d’entrée à arbitrer' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Boîte d’entrée confirmée · pilote fictif à cadrer' })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'Ouvrir le programme complet' })).toHaveAttribute('href', '/?view=program&returnTo=ref01-fasttrack#institutional-ref01-fast-track-governance');
   expect(screen.getByTestId('institutional-fast-track-cockpit')).toBeInTheDocument();
   expect(screen.getByTestId('ref01-fast-track-governance')).toBeInTheDocument();
@@ -106,10 +106,15 @@ test('opens confirmed empty authorisation files and the candidate read-only Inbo
   expect(within(authorisationFiles).getByText('Contacts ou envois').closest('article')).toHaveTextContent('0');
   expect(within(authorisationFiles).getByRole('heading', { name: 'REF-01-DEC-072 · V1.0' })).toBeInTheDocument();
   expect(within(authorisationFiles).getByText(/REF-01-G1-AUT-003 V0.1 est confirmé sans amendement/)).toBeInTheDocument();
-  expect(within(authorisationFiles).getByText(/Je confirme M3S-INB-001 V0.1 comme cadre en lecture seule/)).toBeInTheDocument();
+  expect(within(authorisationFiles).getByText(/M3S-INB-001 V1.0 est désormais confirmé en lecture seule/)).toBeInTheDocument();
   const inbox = screen.getByTestId('institutional-m3s-inbox-frame');
   expect(inbox).toBeInTheDocument();
-  expect(within(inbox).getByText(/Je confirme M3S-INB-001 V0.1 comme cadre en lecture seule/)).toBeInTheDocument();
+  expect(within(inbox).getByRole('heading', { name: 'REF-01-DEC-073 · V1.0' })).toBeInTheDocument();
+  expect(within(inbox).getByText('Entrées réelles').closest('article')).toHaveTextContent('0');
+  expect(within(inbox).getByText('Imports actifs').closest('article')).toHaveTextContent('0');
+  expect(within(inbox).getByText('Automatisations').closest('article')).toHaveTextContent('0');
+  expect(within(inbox).getByText(/M3S-INB-001 V0.1 est confirmé sans amendement/)).toBeInTheDocument();
+  expect(within(inbox).getByText(/M3S-INB-002 V0.1 comme spécification d’un pilote manuel à données fictives/)).toBeInTheDocument();
   expect(screen.queryByRole('heading', { name: 'MEP-01 · LEGAL' })).not.toBeInTheDocument();
 });
 
@@ -478,7 +483,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.75 · 30-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.76 · 30-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -985,7 +990,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(waveCandidate).getByText('Autorisations unitaires').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Environnements désignés').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Tests lancés').closest('article')).toHaveTextContent('0');
-  expect(control.getByText(/décisions sur le lot : 69/)).toBeInTheDocument();
+  expect(control.getByText(/décisions sur le lot : 70/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -1691,7 +1696,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Confirm two separate frameworks without opening execution' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(79);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(80);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(9);
@@ -1703,7 +1708,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Zwei getrennte Rahmen bestätigen, ohne ihre Ausführung zu öffnen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(79);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(80);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(9);
