@@ -63,9 +63,9 @@ const translations = {
     sourceMatrix: 'Matrice de cadrage V0.1 · 29 composantes',
     openResources: 'Voir les ressources',
     openArchitecture: 'Voir l’architecture',
-    focusedEyebrow: 'PILOTAGE GLOBAL · FAST TRACK · REF-01 V1.76',
-    focusedTitle: 'Boîte d’entrée confirmée · pilote fictif à cadrer',
-    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0 et le cadre confirmé M3S-INB-001 V1.0.',
+    focusedEyebrow: 'PILOTAGE GLOBAL · FAST TRACK · REF-01 V1.77',
+    focusedTitle: 'Protocole Inbox confirmé · exécution fermée',
+    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0, M3S-INB-001 V1.0 et le protocole confirmé mais non exécuté M3S-INB-002 V1.0.',
     openFullProgram: 'Ouvrir le programme complet',
     returnToFocusedReview: 'Retour au cockpit Fast Track'
   },
@@ -104,9 +104,9 @@ const translations = {
     sourceMatrix: 'Framing matrix V0.1 · 29 components',
     openResources: 'View resources',
     openArchitecture: 'View architecture',
-    focusedEyebrow: 'GLOBAL STEERING · FAST TRACK · REF-01 V1.76',
-    focusedTitle: 'Inbox confirmed · fictional pilot to frame',
-    focusedBody: 'This compact view brings together the Programme cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0 and the confirmed M3S-INB-001 V1.0 framework.',
+    focusedEyebrow: 'GLOBAL STEERING · FAST TRACK · REF-01 V1.77',
+    focusedTitle: 'Inbox protocol confirmed · execution closed',
+    focusedBody: 'This compact view brings together the Programme cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0, M3S-INB-001 V1.0 and the confirmed but unexecuted M3S-INB-002 V1.0 protocol.',
     openFullProgram: 'Open the full programme',
     returnToFocusedReview: 'Back to the Fast Track cockpit'
   },
@@ -145,9 +145,9 @@ const translations = {
     sourceMatrix: 'Strukturierungsmatrix V0.1 · 29 Komponenten',
     openResources: 'Ressourcen anzeigen',
     openArchitecture: 'Architektur anzeigen',
-    focusedEyebrow: 'GESAMTSTEUERUNG · FAST TRACK · REF-01 V1.76',
-    focusedTitle: 'Eingang bestätigt · fiktiven Piloten einrahmen',
-    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0 und den bestätigten Rahmen M3S-INB-001 V1.0.',
+    focusedEyebrow: 'GESAMTSTEUERUNG · FAST TRACK · REF-01 V1.77',
+    focusedTitle: 'Eingangsprotokoll bestätigt · Ausführung geschlossen',
+    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0, M3S-INB-001 V1.0 und das bestätigte, aber unausgeführte Protokoll M3S-INB-002 V1.0.',
     openFullProgram: 'Vollständiges Programm öffnen',
     returnToFocusedReview: 'Zurück zum Fast-Track-Cockpit'
   }

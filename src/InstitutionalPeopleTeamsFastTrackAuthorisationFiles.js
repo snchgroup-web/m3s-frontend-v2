@@ -26,7 +26,7 @@ const COPY = {
     decisionTitle: 'Résultat de la décision Fast Track',
     decision: 'AUT-003 V1.0 gouverne désormais les cinq dossiers vides. Toute future autorisation restera une décision humaine unitaire appuyée par les huit champs obligatoires.',
     nextTitle: 'Arbitrage groupé suivant confirmé',
-    next: 'M3S-INB-001 V1.0 est désormais confirmé en lecture seule par REF-01-DEC-073. Aucun import, automatisme ni traitement de données réelles n’est activé.',
+    next: 'M3S-INB-002 V1.0 est désormais confirmé comme protocole fictif par REF-01-DEC-074. Aucun cas, import, automatisme ni traitement de données réelles n’est activé.',
     boundary: 'La confirmation du cadre ne remplira aucun dossier et n’autorisera aucune identité, entreprise, adresse, affectation, prise de contact, émission, collecte, accès, dépense, connexion ou action L2.'
   },
   EN: {
@@ -42,7 +42,7 @@ const COPY = {
     decisionTitle: 'Fast Track decision outcome',
     decision: 'AUT-003 V1.0 now governs the five empty files. Every future authorisation remains an individual human decision supported by the eight mandatory fields.',
     nextTitle: 'Next grouped decision confirmed',
-    next: 'M3S-INB-001 V1.0 is now confirmed read-only by REF-01-DEC-073. No import, automation or real-data processing is enabled.',
+    next: 'M3S-INB-002 V1.0 is now confirmed as a fictional protocol by REF-01-DEC-074. No case, import, automation or real-data processing is enabled.',
     boundary: 'Confirming the framework will fill no file and authorise no identity, company, address, assignment, contact, release, collection, access, expense, connection or L2 action.'
   },
   DE: {
@@ -58,7 +58,7 @@ const COPY = {
     decisionTitle: 'Ergebnis des Fast-Track-Entscheids',
     decision: 'AUT-003 V1.0 steuert nun die fünf leeren Akten. Jede künftige Autorisierung bleibt ein einzelner menschlicher Entscheid, gestützt auf die acht Pflichtfelder.',
     nextTitle: 'Nächster gebündelter Entscheid bestätigt',
-    next: 'M3S-INB-001 V1.0 ist nun durch REF-01-DEC-073 schreibgeschützt bestätigt. Kein Import, keine Automatisierung und keine Verarbeitung realer Daten ist aktiviert.',
+    next: 'M3S-INB-002 V1.0 ist nun durch REF-01-DEC-074 als fiktives Protokoll bestätigt. Kein Fall, Import, keine Automatisierung und keine Verarbeitung realer Daten ist aktiviert.',
     boundary: 'Die Bestätigung des Rahmens füllt keine Akte und erlaubt keine Identität, Firma, Adresse, Zuordnung, Kontaktaufnahme, Versand, Sammlung, Zugriff, Ausgabe, Verbindung oder L2-Aktion.'
   }
 };
