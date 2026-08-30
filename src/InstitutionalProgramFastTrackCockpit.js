@@ -15,7 +15,7 @@ const COPY = {
     current: 'Contrôle courant · REF-01 V1.74 · NAM-002 V1.0 confirmé',
     metrics: [['22/22', 'valeurs examinées'], ['9', 'qualifiées, portée synthétique'], ['5/5', 'familles confirmées documentairement'], ['0/6', 'conditions G1 clôturables']],
     fastTrack: 'Fast Track actif',
-    fastTrackBody: 'DEC-071 confirme NAM-002 V1.0 comme cinq emplacements nominatifs toujours vides. AUT-002 V0.1 prépare cinq dossiers d’autorisation sans identité, canal ni décision exécutoire.',
+    fastTrackBody: 'DEC-071 confirme NAM-002 V1.0 comme cinq emplacements nominatifs toujours vides. AUT-003 V0.1 prépare cinq dossiers d’autorisation sans identité, canal ni décision exécutoire.',
     boundary: 'G1 reste ouverte et L2 fermé. Ce cockpit est une lecture de pilotage, pas une validation de conformité ni une autorisation de déploiement.'
   },
   EN: {
@@ -31,7 +31,7 @@ const COPY = {
     current: 'Current control · REF-01 V1.74 · NAM-002 V1.0 confirmed',
     metrics: [['22/22', 'values reviewed'], ['9', 'qualified, synthetic scope'], ['5/5', 'families documentarily confirmed'], ['0/6', 'closable G1 conditions']],
     fastTrack: 'Fast Track active',
-    fastTrackBody: 'DEC-071 confirms NAM-002 V1.0 as five named-recipient slots that remain empty. AUT-002 V0.1 prepares five authorisation files without identity, channel or executable decision.',
+    fastTrackBody: 'DEC-071 confirms NAM-002 V1.0 as five named-recipient slots that remain empty. AUT-003 V0.1 prepares five authorisation files without identity, channel or executable decision.',
     boundary: 'G1 remains open and L2 closed. This cockpit is a steering view, not a compliance validation or deployment authorisation.'
   },
   DE: {
@@ -47,7 +47,7 @@ const COPY = {
     current: 'Aktuelle Kontrolle · REF-01 V1.74 · NAM-002 V1.0 bestätigt',
     metrics: [['22/22', 'Werte geprüft'], ['9', 'qualifiziert, synthetischer Umfang'], ['5/5', 'Familien dokumentarisch bestätigt'], ['0/6', 'schliessbare G1-Bedingungen']],
     fastTrack: 'Fast Track aktiv',
-    fastTrackBody: 'DEC-071 bestätigt NAM-002 V1.0 als fünf weiterhin leere Namensstellen. AUT-002 V0.1 bereitet fünf Autorisierungsakten ohne Identität, Kanal oder ausführbaren Entscheid vor.',
+    fastTrackBody: 'DEC-071 bestätigt NAM-002 V1.0 als fünf weiterhin leere Namensstellen. AUT-003 V0.1 bereitet fünf Autorisierungsakten ohne Identität, Kanal oder ausführbaren Entscheid vor.',
     boundary: 'G1 bleibt offen und L2 geschlossen. Dieses Cockpit ist eine Steuerungsansicht, keine Konformitätsbestätigung oder Bereitstellungsfreigabe.'
   }
 };
