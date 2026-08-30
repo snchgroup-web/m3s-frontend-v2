@@ -16,19 +16,10 @@ import InstitutionalM3SSecurityContinuityConsolidationPilot from './Institutiona
 import InstitutionalQualityLessonsConsolidationPilot from './InstitutionalQualityLessonsConsolidationPilot';
 import InstitutionalReportingConsolidationPilot from './InstitutionalReportingConsolidationPilot';
 import InstitutionalConsolidationIntegratedReview from './InstitutionalConsolidationIntegratedReview';
-import InstitutionalPeopleTeamsGateG1PostAuthorisationReassessment from './InstitutionalPeopleTeamsGateG1PostAuthorisationReassessment';
-import InstitutionalPeopleTeamsGateG1PostAuthorisationReassessmentConfirmation from './InstitutionalPeopleTeamsGateG1PostAuthorisationReassessmentConfirmation';
-import InstitutionalPeopleTeamsGateG1SyntheticWaveCandidate from './InstitutionalPeopleTeamsGateG1SyntheticWaveCandidate';
-import InstitutionalPeopleTeamsGateG1SyntheticWaveConfirmation from './InstitutionalPeopleTeamsGateG1SyntheticWaveConfirmation';
-import InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationCandidate from './InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationCandidate';
-import InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationConfirmation from './InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationConfirmation';
-import InstitutionalPeopleTeamsGateG1MigrationRollbackAuthorisationCandidate from './InstitutionalPeopleTeamsGateG1MigrationRollbackAuthorisationCandidate';
-import InstitutionalPeopleTeamsGateG1MigrationRollbackAuthorisationConfirmation from './InstitutionalPeopleTeamsGateG1MigrationRollbackAuthorisationConfirmation';
-import InstitutionalPeopleTeamsGateG1OutboxMonitoringAuthorisationCandidate from './InstitutionalPeopleTeamsGateG1OutboxMonitoringAuthorisationCandidate';
-import InstitutionalPeopleTeamsGateG1OutboxMonitoringAuthorisationConfirmation from './InstitutionalPeopleTeamsGateG1OutboxMonitoringAuthorisationConfirmation';
-import InstitutionalPeopleTeamsGateG1TechnicalWaveReassessment from './InstitutionalPeopleTeamsGateG1TechnicalWaveReassessment';
-import InstitutionalPeopleTeamsGateG1TechnicalWaveReassessmentConfirmation from './InstitutionalPeopleTeamsGateG1TechnicalWaveReassessmentConfirmation';
-import InstitutionalPeopleTeamsGateG1TechnicalValueQualificationPlan from './InstitutionalPeopleTeamsGateG1TechnicalValueQualificationPlan';
+import InstitutionalProgramFastTrackCockpit from './InstitutionalProgramFastTrackCockpit';
+import InstitutionalFastTrackGovernance from './InstitutionalFastTrackGovernance';
+import InstitutionalPeopleTeamsGateG1FastTrackQualification from './InstitutionalPeopleTeamsGateG1FastTrackQualification';
+import InstitutionalM3SInboxFrame from './InstitutionalM3SInboxFrame';
 
 const translations = {
   FR: {
@@ -66,11 +57,11 @@ const translations = {
     sourceMatrix: 'Matrice de cadrage V0.1 · 29 composantes',
     openResources: 'Voir les ressources',
     openArchitecture: 'Voir l’architecture',
-    focusedEyebrow: 'ARBITRAGE COURANT · REF-01 · PLN-002',
-    focusedTitle: 'REV-005 confirmée · Plan de qualification à arbitrer',
-    focusedBody: 'Cette vue légère présente REV-005 V1.0 comme lecture gouvernée de la vague technique et PLN-002 V0.1 comme plan candidat pour qualifier ses vingt-deux valeurs ouvertes.',
+    focusedEyebrow: 'PILOTAGE GLOBAL · FAST TRACK · REF-01 V1.69',
+    focusedTitle: 'Vue globale retrouvée · 22 valeurs qualifiées en un lot',
+    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, la décision Fast Track, la qualification groupée par preuves et le cadrage de la Boîte d’entrée M3S. Les décisions humaines portent désormais uniquement sur les exceptions.',
     openFullProgram: 'Ouvrir le programme complet',
-    returnToFocusedReview: 'Retour à l’arbitrage PLN-002'
+    returnToFocusedReview: 'Retour au cockpit Fast Track'
   },
   EN: {
     eyebrow: '2SG GLOBAL INSTITUTIONAL PROGRAMME',
@@ -107,11 +98,11 @@ const translations = {
     sourceMatrix: 'Framing matrix V0.1 · 29 components',
     openResources: 'View resources',
     openArchitecture: 'View architecture',
-    focusedEyebrow: 'CURRENT DECISION · REF-01 · PLN-002',
-    focusedTitle: 'REV-005 confirmed · Qualification plan to decide',
-    focusedBody: 'This lightweight view presents REV-005 V1.0 as the governed reading of the technical wave and PLN-002 V0.1 as the candidate plan for qualifying its twenty-two open values.',
+    focusedEyebrow: 'GLOBAL STEERING · FAST TRACK · REF-01 V1.69',
+    focusedTitle: 'Global view restored · 22 values qualified in one package',
+    focusedBody: 'This compact view brings together the Programme cockpit, Fast Track decision, grouped evidence qualification and M3S Inbox framework. Human decisions now concern exceptions only.',
     openFullProgram: 'Open the full programme',
-    returnToFocusedReview: 'Back to the PLN-002 decision'
+    returnToFocusedReview: 'Back to the Fast Track cockpit'
   },
   DE: {
     eyebrow: 'GLOBALES INSTITUTIONELLES 2SG-PROGRAMM',
@@ -148,11 +139,11 @@ const translations = {
     sourceMatrix: 'Strukturierungsmatrix V0.1 · 29 Komponenten',
     openResources: 'Ressourcen anzeigen',
     openArchitecture: 'Architektur anzeigen',
-    focusedEyebrow: 'AKTUELLER ENTSCHEID · REF-01 · PLN-002',
-    focusedTitle: 'REV-005 bestätigt · Qualifizierungsplan zu entscheiden',
-    focusedBody: 'Diese leichte Ansicht zeigt REV-005 V1.0 als gesteuerte Lesung der technischen Welle und PLN-002 V0.1 als Kandidatenplan zur Qualifizierung ihrer zweiundzwanzig offenen Werte.',
+    focusedEyebrow: 'GESAMTSTEUERUNG · FAST TRACK · REF-01 V1.69',
+    focusedTitle: 'Gesamtübersicht wiederhergestellt · 22 Werte in einem Paket qualifiziert',
+    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, Fast-Track-Entscheid, gebündelte Nachweisqualifizierung und M3S-Eingangsrahmen. Menschliche Entscheide betreffen jetzt nur Ausnahmen.',
     openFullProgram: 'Vollständiges Programm öffnen',
-    returnToFocusedReview: 'Zurück zum PLN-002-Entscheid'
+    returnToFocusedReview: 'Zurück zum Fast-Track-Cockpit'
   }
 };
 
@@ -163,8 +154,9 @@ const cyclePresentation = {
 
 const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = '', onSelectView, onNavigate }) => {
   const t = translations[language] || translations.FR;
-  const focusedReview = focus === 'ref01-rev004' || focus === 'ref01-wav003' || focus === 'ref01-aut0201' || focus === 'ref01-aut0204' || focus === 'ref01-aut0205' || focus === 'ref01-rev005';
-  const canReturnToFocusedReview = returnTo === 'ref01-rev004' || returnTo === 'ref01-wav003' || returnTo === 'ref01-aut0201' || returnTo === 'ref01-aut0204' || returnTo === 'ref01-aut0205' || returnTo === 'ref01-rev005';
+  const focusedAliases = ['ref01-rev004', 'ref01-wav003', 'ref01-aut0201', 'ref01-aut0204', 'ref01-aut0205', 'ref01-rev005', 'ref01-fasttrack'];
+  const focusedReview = focusedAliases.includes(focus);
+  const canReturnToFocusedReview = focusedAliases.includes(returnTo);
 
   useEffect(() => {
     const sectionId = decodeURIComponent(window.location.hash.replace(/^#/, ''));
@@ -180,23 +172,14 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
           <p className="text-xs font-semibold uppercase text-blue-300">{t.focusedEyebrow}</p>
           <h3 className="mt-1 text-xl font-semibold text-slate-100 sm:text-2xl">{t.focusedTitle}</h3>
           <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-300">{t.focusedBody}</p>
-          <a href="/?view=program&returnTo=ref01-rev005#institutional-ref01-g1-rev-005-confirmation" className="mt-4 inline-flex min-h-11 items-center justify-center rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-blue-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <a href="/?view=program&returnTo=ref01-fasttrack#institutional-ref01-fast-track-governance" className="mt-4 inline-flex min-h-11 items-center justify-center rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-blue-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
             {t.openFullProgram}
           </a>
         </header>
-        <InstitutionalPeopleTeamsGateG1PostAuthorisationReassessment language={language} />
-        <InstitutionalPeopleTeamsGateG1PostAuthorisationReassessmentConfirmation language={language} />
-        <InstitutionalPeopleTeamsGateG1SyntheticWaveCandidate language={language} />
-        <InstitutionalPeopleTeamsGateG1SyntheticWaveConfirmation language={language} />
-        <InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationCandidate language={language} />
-        <InstitutionalPeopleTeamsGateG1PostgresRestorationAuthorisationConfirmation language={language} />
-        <InstitutionalPeopleTeamsGateG1MigrationRollbackAuthorisationCandidate language={language} />
-        <InstitutionalPeopleTeamsGateG1MigrationRollbackAuthorisationConfirmation language={language} />
-        <InstitutionalPeopleTeamsGateG1OutboxMonitoringAuthorisationCandidate language={language} />
-        <InstitutionalPeopleTeamsGateG1OutboxMonitoringAuthorisationConfirmation language={language} />
-        <InstitutionalPeopleTeamsGateG1TechnicalWaveReassessment language={language} />
-        <InstitutionalPeopleTeamsGateG1TechnicalWaveReassessmentConfirmation language={language} />
-        <InstitutionalPeopleTeamsGateG1TechnicalValueQualificationPlan language={language} />
+        <InstitutionalProgramFastTrackCockpit language={language} />
+        <InstitutionalFastTrackGovernance language={language} />
+        <InstitutionalPeopleTeamsGateG1FastTrackQualification language={language} />
+        <InstitutionalM3SInboxFrame language={language} />
       </div>
     );
   }
@@ -216,11 +199,16 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
         </div>
         <p className="mt-4 rounded-md border border-amber-800/60 bg-amber-950/20 px-3 py-2 text-sm text-amber-200">{t.sourceStatus}</p>
         {canReturnToFocusedReview && (
-          <a href="/?view=program&focus=ref01-rev005" className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-blue-700 bg-blue-950/35 px-4 py-2 text-sm font-semibold text-blue-100 transition hover:border-blue-400 hover:bg-blue-900/50 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:w-auto">
+          <a href="/?view=program&focus=ref01-fasttrack" className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-blue-700 bg-blue-950/35 px-4 py-2 text-sm font-semibold text-blue-100 transition hover:border-blue-400 hover:bg-blue-900/50 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:w-auto">
             <ArrowLeft size={17} aria-hidden="true" />{t.returnToFocusedReview}
           </a>
         )}
       </header>
+
+      <InstitutionalProgramFastTrackCockpit language={language} />
+      <InstitutionalFastTrackGovernance language={language} />
+      <InstitutionalPeopleTeamsGateG1FastTrackQualification language={language} />
+      <InstitutionalM3SInboxFrame language={language} />
 
       <section className="institutional-program-root m3s-panel p-4 sm:p-5" aria-labelledby="institutional-program-root-title">
         <div className="mx-auto flex max-w-xl items-center gap-3 rounded-md border border-blue-700/70 bg-blue-950/25 p-4">
