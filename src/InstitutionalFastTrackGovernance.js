@@ -6,8 +6,8 @@ const COPY = {
   FR: {
     eyebrow: 'MÉTHODE INDUSTRIALISÉE · FAST TRACK · FTK-001 · V1.0 · 30-08-2026',
     title: 'Décider un lot en une fois et ne remonter que les exceptions',
-    intro: 'Cheikh confirme PLN-002 et autorise la qualification groupée des vingt-deux valeurs. La méthode Fast Track devient la pratique courante pour les lots homogènes : Codex prépare et source, la revue humaine porte sur les exceptions, puis une décision consolidée conserve la trace.',
-    counters: [['Lot courant', '22', 'Valeurs traitées ensemble'], ['Confirmables', '9', 'Observations suffisamment sourcées'], ['Exceptions', '13', '8 partielles · 5 ouvertes'], ['Arbitrages requis', '1', 'Une décision consolidée']],
+    intro: 'Cheikh a confirmé PLN-002 et autorisé la qualification groupée des vingt-deux valeurs. La méthode Fast Track est désormais appliquée : Codex prépare et source, la revue humaine porte sur les exceptions, puis une décision consolidée conserve la trace.',
+    counters: [['Lot courant', '22', 'Valeurs traitées ensemble'], ['Confirmables', '9', 'Observations suffisamment sourcées'], ['Exceptions', '13', '8 partielles · 5 ouvertes'], ['Arbitrages consolidés', '1', 'DEC-067 enregistré ci-dessous']],
     steps: [
       ['1 · Préparer', 'Regrouper 10 à 25 éléments homogènes et fixer source, périmètre, responsable, sensibilité et règle d’arrêt.'],
       ['2 · Préqualifier', 'Classer chaque ligne Confirmable, Partielle, Ouverte ou Non applicable sans combler une absence de preuve.'],
@@ -23,33 +23,33 @@ const COPY = {
       evidence: 'Confirmation explicite de Cheikh dans la session du 30-08-2026 ; plan PLN-002 V0.1 ; sources du lot L1 isolé ; validation PostgreSQL synthétique exécutée avec succès le 30-08-2026.',
       limit: 'La décision confirme la méthode et les qualifications documentaires observées. Elle ne désigne aucun service de production, titulaire réel, RPO/RTO, sauvegarde, destinataire, worker, seuil de supervision, référence GED finale ou environnement partagé ; G1 reste ouverte et L2 fermé.'
     },
-    verdict: 'CONFIRMÉ · Le Fast Track est industrialisé pour les lots homogènes. Les 22 lignes sont traitées en un lot ; seules les 13 exceptions restent à résoudre, regroupées en cinq familles.',
+    verdict: 'CONFIRMÉ · Le Fast Track est industrialisé et appliqué. Les 22 lignes ont été traitées en un lot ; les 13 exceptions ont reçu un arbitrage documentaire consolidé, sans devenir des preuves de production.',
     boundary: 'Cette méthode accélère l’arbitrage, pas le niveau de preuve. Tout fait absent, sensible ou contradictoire reste visible comme exception.'
   },
   EN: {
     eyebrow: 'INDUSTRIALISED METHOD · FAST TRACK · FTK-001 · V1.0 · 30 AUG 2026',
     title: 'Decide one package at once and surface exceptions only',
-    intro: 'Cheikh confirms PLN-002 and authorises grouped qualification of the twenty-two values. Fast Track becomes the standard practice for homogeneous packages: Codex prepares and sources, human review focuses on exceptions, then one consolidated decision retains the audit trail.',
-    counters: [['Current package', '22', 'Values handled together'], ['Confirmable', '9', 'Sufficiently sourced observations'], ['Exceptions', '13', '8 partial · 5 open'], ['Required decisions', '1', 'One consolidated decision']],
+    intro: 'Cheikh confirmed PLN-002 and authorised grouped qualification of the twenty-two values. Fast Track is now applied: Codex prepares and sources, human review focuses on exceptions, then one consolidated decision retains the audit trail.',
+    counters: [['Current package', '22', 'Values handled together'], ['Confirmable', '9', 'Sufficiently sourced observations'], ['Exceptions', '13', '8 partial · 5 open'], ['Consolidated decisions', '1', 'DEC-067 recorded below']],
     steps: [['1 · Prepare', 'Group 10 to 25 homogeneous items and set source, scope, owner, sensitivity and stop rule.'], ['2 · Prequalify', 'Classify every line as Confirmable, Partial, Open or Not applicable without filling an evidence gap.'], ['3 · Review exceptions', 'Show contradictions, gaps and human choices first; sufficiently sourced lines remain visible but are not debated individually.'], ['4 · Decide and propagate', 'Record one consolidated decision, then update references, work log, Daily Intelligence and the public view.']],
     rulesTitle: 'Permanent Fast Track rules',
     rules: ['One decision object and one scope per package.', 'A line is confirmable only when value, source and scope agree.', 'Synthetic evidence never becomes production evidence.', 'A sensitive, contradictory or ownerless exception remains open.', 'Grouped confirmation concludes neither legal compliance nor execution authorisation.'],
     recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
     record: { id: 'REF-01-DEC-066', version: 'V1.0', status: 'PLN-002 and Fast Track method confirmed', author: 'Cheikh Ndiaye', date: '30 Aug 2026', decision: 'REF-01-G1-PLN-002 V0.1 is confirmed and promoted to V1.0. FTK-001 V1.0 becomes the grouped evidence qualification and exception-review method. QLF-001 V1.0 qualifies all twenty-two lines through one consolidated decision.', evidence: 'Cheikh’s explicit confirmation in the 30 Aug 2026 session; PLN-002 V0.1; isolated L1 package sources; successful synthetic PostgreSQL validation run on 30 Aug 2026.', limit: 'The decision confirms the method and observed documentary qualifications. It designates no production service, real holder, RPO/RTO, backup, recipient, worker, monitoring threshold, final DMS reference or shared environment; G1 remains open and L2 closed.' },
-    verdict: 'CONFIRMED · Fast Track is industrialised for homogeneous packages. All 22 lines are handled in one package; only 13 exceptions remain, grouped into five families.',
+    verdict: 'CONFIRMED · Fast Track is industrialised and applied. All 22 lines were handled in one package; the 13 exceptions received one consolidated documentary decision without becoming production evidence.',
     boundary: 'This method accelerates decision-making, not the evidence level. Every absent, sensitive or contradictory fact remains visible as an exception.'
   },
   DE: {
     eyebrow: 'INDUSTRIALISIERTE METHODE · FAST TRACK · FTK-001 · V1.0 · 30.08.2026',
     title: 'Ein Paket auf einmal entscheiden und nur Ausnahmen vorlegen',
-    intro: 'Cheikh bestätigt PLN-002 und autorisiert die gebündelte Qualifizierung der zweiundzwanzig Werte. Fast Track wird zur Standardpraxis für homogene Pakete: Codex bereitet vor und belegt, die menschliche Prüfung konzentriert sich auf Ausnahmen, danach erhält ein konsolidierter Entscheid die Spur.',
-    counters: [['Aktuelles Paket', '22', 'Gemeinsam behandelte Werte'], ['Bestätigbar', '9', 'Ausreichend belegte Beobachtungen'], ['Ausnahmen', '13', '8 teilweise · 5 offen'], ['Benötigte Entscheide', '1', 'Ein konsolidierter Entscheid']],
+    intro: 'Cheikh hat PLN-002 bestätigt und die gebündelte Qualifizierung der zweiundzwanzig Werte autorisiert. Fast Track wird nun angewandt: Codex bereitet vor und belegt, die menschliche Prüfung konzentriert sich auf Ausnahmen, danach erhält ein konsolidierter Entscheid die Spur.',
+    counters: [['Aktuelles Paket', '22', 'Gemeinsam behandelte Werte'], ['Bestätigbar', '9', 'Ausreichend belegte Beobachtungen'], ['Ausnahmen', '13', '8 teilweise · 5 offen'], ['Konsolidierte Entscheide', '1', 'DEC-067 nachfolgend erfasst']],
     steps: [['1 · Vorbereiten', '10 bis 25 homogene Elemente bündeln und Quelle, Umfang, Verantwortung, Sensibilität sowie Stoppregel festlegen.'], ['2 · Vorqualifizieren', 'Jede Zeile als Bestätigbar, Teilweise, Offen oder Nicht anwendbar einstufen, ohne Nachweislücken zu füllen.'], ['3 · Ausnahmen prüfen', 'Widersprüche, Lücken und menschliche Wahl zuerst zeigen; ausreichend belegte Zeilen bleiben sichtbar, werden aber nicht einzeln neu entschieden.'], ['4 · Entscheiden und übertragen', 'Einen konsolidierten Entscheid erfassen und Referenzen, Arbeitsjournal, Daily Intelligence sowie öffentliche Ansicht aktualisieren.']],
     rulesTitle: 'Dauerhafte Fast-Track-Regeln',
     rules: ['Ein Entscheidobjekt und ein Umfang pro Paket.', 'Eine Zeile ist nur bestätigbar, wenn Wert, Quelle und Umfang übereinstimmen.', 'Synthetischer Nachweis wird nie zum Produktionsnachweis.', 'Eine sensible, widersprüchliche oder verantwortungslose Ausnahme bleibt offen.', 'Gebündelte Bestätigung bedeutet weder Rechtskonformität noch Ausführungsautorisierung.'],
     recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Erfasster Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
     record: { id: 'REF-01-DEC-066', version: 'V1.0', status: 'PLN-002 und Fast-Track-Methode bestätigt', author: 'Cheikh Ndiaye', date: '30.08.2026', decision: 'REF-01-G1-PLN-002 V0.1 wird bestätigt und zu V1.0. FTK-001 V1.0 wird zur Methode für gebündelte Nachweisqualifizierung und Ausnahmeprüfung. QLF-001 V1.0 qualifiziert alle zweiundzwanzig Zeilen durch einen konsolidierten Entscheid.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 30.08.2026; PLN-002 V0.1; Quellen des isolierten L1-Pakets; erfolgreiche synthetische PostgreSQL-Validierung am 30.08.2026.', limit: 'Der Entscheid bestätigt Methode und beobachtete Dokumentqualifikationen. Er bestimmt keinen Produktionsdienst, realen Träger, RPO/RTO, keine Sicherung, Empfänger, Worker, Überwachungsschwelle, endgültige DMS-Referenz oder geteilte Umgebung; G1 bleibt offen und L2 geschlossen.' },
-    verdict: 'BESTÄTIGT · Fast Track ist für homogene Pakete industrialisiert. Alle 22 Zeilen werden in einem Paket behandelt; nur 13 Ausnahmen in fünf Familien bleiben.',
+    verdict: 'BESTÄTIGT · Fast Track ist industrialisiert und angewandt. Alle 22 Zeilen wurden in einem Paket behandelt; die 13 Ausnahmen erhielten einen konsolidierten Dokumentationsentscheid, ohne zu Produktionsnachweisen zu werden.',
     boundary: 'Diese Methode beschleunigt den Entscheid, nicht das Nachweisniveau. Jeder fehlende, sensible oder widersprüchliche Fakt bleibt als Ausnahme sichtbar.'
   }
 };

@@ -55,10 +55,10 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });
 
-test('opens the current REF-01 Fast Track cockpit in a lightweight programme view', () => {
+test('opens the confirmed REF-01 arbitration and candidate evidence plan in the lightweight Fast Track view', () => {
   renderDashboardNavigation({}, '/?view=program&focus=ref01-fasttrack');
 
-  expect(screen.getByRole('heading', { name: 'Vue globale retrouvée · cinq exceptions à décider en une fois' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Cinq familles confirmées · un seul plan de preuves à arbitrer' })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'Ouvrir le programme complet' })).toHaveAttribute('href', '/?view=program&returnTo=ref01-fasttrack#institutional-ref01-fast-track-governance');
   expect(screen.getByTestId('institutional-fast-track-cockpit')).toBeInTheDocument();
   expect(screen.getByTestId('ref01-fast-track-governance')).toBeInTheDocument();
@@ -71,8 +71,14 @@ test('opens the current REF-01 Fast Track cockpit in a lightweight programme vie
   expect(within(qualification).getByText('Ouvertes').closest('article')).toHaveTextContent('5');
   const arbitration = screen.getByTestId('ref01-g1-fast-track-arbitration');
   expect(within(arbitration).getAllByTestId('ref01-g1-fast-track-exception-family')).toHaveLength(5);
-  expect(within(arbitration).getByText('Réponses attendues').closest('article')).toHaveTextContent('1');
+  expect(within(arbitration).getByRole('heading', { name: 'REF-01-DEC-067 · V1.0' })).toBeInTheDocument();
+  expect(within(arbitration).getByText('Familles confirmées').closest('article')).toHaveTextContent('5');
+  expect(within(arbitration).getByText('Valeurs de production actives').closest('article')).toHaveTextContent('0');
   expect(within(arbitration).getByText(/Je confirme REF-01-G1-ARB-002 V0.1 dans son ensemble/)).toBeInTheDocument();
+  const collection = screen.getByTestId('ref01-g1-fast-track-evidence-plan');
+  expect(within(collection).getAllByTestId('ref01-g1-fast-track-evidence-family')).toHaveLength(5);
+  expect(within(collection).getByText('Pièces reçues').closest('article')).toHaveTextContent('0');
+  expect(within(collection).getByText(/Je confirme REF-01-G1-COL-003 V0.1 comme plan documentaire/)).toBeInTheDocument();
   expect(screen.getByTestId('institutional-m3s-inbox-frame')).toBeInTheDocument();
   expect(screen.queryByRole('heading', { name: 'MEP-01 · LEGAL' })).not.toBeInTheDocument();
 });
@@ -442,7 +448,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.69 · 30-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.70 · 30-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -949,7 +955,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(waveCandidate).getByText('Autorisations unitaires').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Environnements désignés').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Tests lancés').closest('article')).toHaveTextContent('0');
-  expect(control.getByText(/décisions sur le lot : 63/)).toBeInTheDocument();
+  expect(control.getByText(/décisions sur le lot : 64/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -1655,7 +1661,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Confirm two separate frameworks without opening execution' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(73);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(74);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(9);
@@ -1667,7 +1673,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Zwei getrennte Rahmen bestätigen, ohne ihre Ausführung zu öffnen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(73);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(74);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(9);
