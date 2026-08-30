@@ -12,10 +12,10 @@ const COPY = {
       ['Consolidation', '8/8 cadres confirmés', 'REF-01 est le contrôle détaillé courant'],
       ['Dynamisation', '8 composantes cadrées', 'Revue détaillée non démarrée']
     ],
-    current: 'Contrôle courant · REF-01 V1.69',
-    metrics: [['22/22', 'valeurs examinées'], ['9', 'qualifiées, portée synthétique'], ['13', 'exceptions regroupées'], ['0/6', 'conditions G1 clôturables']],
+    current: 'Contrôle courant · REF-01 V1.69 · ARB-002 V0.1 candidat',
+    metrics: [['22/22', 'valeurs examinées'], ['9', 'qualifiées, portée synthétique'], ['5', 'familles · 13 lignes'], ['0/6', 'conditions G1 clôturables']],
     fastTrack: 'Fast Track actif',
-    fastTrackBody: 'Une qualification groupée, une décision consolidée, puis uniquement les exceptions nécessitant une preuve ou un arbitrage humain.',
+    fastTrackBody: 'La qualification groupée est terminée. Les cinq familles restantes disposent maintenant d’un arbitrage prérempli à confirmer en une seule réponse.',
     boundary: 'G1 reste ouverte et L2 fermé. Ce cockpit est une lecture de pilotage, pas une validation de conformité ni une autorisation de déploiement.'
   },
   EN: {
@@ -28,10 +28,10 @@ const COPY = {
       ['Consolidation', '8/8 frameworks confirmed', 'REF-01 is the current detailed control'],
       ['Dynamisation', '8 framed components', 'Detailed review not started']
     ],
-    current: 'Current control · REF-01 V1.69',
-    metrics: [['22/22', 'values reviewed'], ['9', 'qualified, synthetic scope'], ['13', 'grouped exceptions'], ['0/6', 'closable G1 conditions']],
+    current: 'Current control · REF-01 V1.69 · ARB-002 V0.1 candidate',
+    metrics: [['22/22', 'values reviewed'], ['9', 'qualified, synthetic scope'], ['5', 'families · 13 lines'], ['0/6', 'closable G1 conditions']],
     fastTrack: 'Fast Track active',
-    fastTrackBody: 'One grouped qualification, one consolidated decision, then only exceptions requiring evidence or a human decision.',
+    fastTrackBody: 'Grouped qualification is complete. The five remaining families now have a prefilled decision that can be confirmed in one response.',
     boundary: 'G1 remains open and L2 closed. This cockpit is a steering view, not a compliance validation or deployment authorisation.'
   },
   DE: {
@@ -44,10 +44,10 @@ const COPY = {
       ['Konsolidierung', '8/8 Rahmen bestätigt', 'REF-01 ist die aktuelle Detailkontrolle'],
       ['Dynamisierung', '8 strukturierte Komponenten', 'Detailprüfung nicht begonnen']
     ],
-    current: 'Aktuelle Kontrolle · REF-01 V1.69',
-    metrics: [['22/22', 'Werte geprüft'], ['9', 'qualifiziert, synthetischer Umfang'], ['13', 'gebündelte Ausnahmen'], ['0/6', 'schliessbare G1-Bedingungen']],
+    current: 'Aktuelle Kontrolle · REF-01 V1.69 · ARB-002 V0.1 Kandidat',
+    metrics: [['22/22', 'Werte geprüft'], ['9', 'qualifiziert, synthetischer Umfang'], ['5', 'Familien · 13 Zeilen'], ['0/6', 'schliessbare G1-Bedingungen']],
     fastTrack: 'Fast Track aktiv',
-    fastTrackBody: 'Eine gebündelte Qualifizierung, ein konsolidierter Entscheid und danach nur Ausnahmen, die Nachweise oder einen menschlichen Entscheid benötigen.',
+    fastTrackBody: 'Die gebündelte Qualifizierung ist abgeschlossen. Für die fünf verbleibenden Familien liegt nun ein vorausgefüllter Entscheid für eine einzige Antwort vor.',
     boundary: 'G1 bleibt offen und L2 geschlossen. Dieses Cockpit ist eine Steuerungsansicht, keine Konformitätsbestätigung oder Bereitstellungsfreigabe.'
   }
 };

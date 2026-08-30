@@ -19,6 +19,7 @@ import InstitutionalConsolidationIntegratedReview from './InstitutionalConsolida
 import InstitutionalProgramFastTrackCockpit from './InstitutionalProgramFastTrackCockpit';
 import InstitutionalFastTrackGovernance from './InstitutionalFastTrackGovernance';
 import InstitutionalPeopleTeamsGateG1FastTrackQualification from './InstitutionalPeopleTeamsGateG1FastTrackQualification';
+import InstitutionalPeopleTeamsFastTrackExceptionArbitration from './InstitutionalPeopleTeamsFastTrackExceptionArbitration';
 import InstitutionalM3SInboxFrame from './InstitutionalM3SInboxFrame';
 
 const translations = {
@@ -58,8 +59,8 @@ const translations = {
     openResources: 'Voir les ressources',
     openArchitecture: 'Voir l’architecture',
     focusedEyebrow: 'PILOTAGE GLOBAL · FAST TRACK · REF-01 V1.69',
-    focusedTitle: 'Vue globale retrouvée · 22 valeurs qualifiées en un lot',
-    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, la décision Fast Track, la qualification groupée par preuves et le cadrage de la Boîte d’entrée M3S. Les décisions humaines portent désormais uniquement sur les exceptions.',
+    focusedTitle: 'Vue globale retrouvée · cinq exceptions à décider en une fois',
+    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, la décision Fast Track, la qualification groupée, un arbitrage prérempli des cinq familles d’exceptions et le cadrage de la Boîte d’entrée M3S.',
     openFullProgram: 'Ouvrir le programme complet',
     returnToFocusedReview: 'Retour au cockpit Fast Track'
   },
@@ -99,8 +100,8 @@ const translations = {
     openResources: 'View resources',
     openArchitecture: 'View architecture',
     focusedEyebrow: 'GLOBAL STEERING · FAST TRACK · REF-01 V1.69',
-    focusedTitle: 'Global view restored · 22 values qualified in one package',
-    focusedBody: 'This compact view brings together the Programme cockpit, Fast Track decision, grouped evidence qualification and M3S Inbox framework. Human decisions now concern exceptions only.',
+    focusedTitle: 'Global view restored · decide five exceptions at once',
+    focusedBody: 'This compact view brings together the Programme cockpit, Fast Track decision, grouped qualification, a prefilled decision for the five exception families and the M3S Inbox framework.',
     openFullProgram: 'Open the full programme',
     returnToFocusedReview: 'Back to the Fast Track cockpit'
   },
@@ -140,8 +141,8 @@ const translations = {
     openResources: 'Ressourcen anzeigen',
     openArchitecture: 'Architektur anzeigen',
     focusedEyebrow: 'GESAMTSTEUERUNG · FAST TRACK · REF-01 V1.69',
-    focusedTitle: 'Gesamtübersicht wiederhergestellt · 22 Werte in einem Paket qualifiziert',
-    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, Fast-Track-Entscheid, gebündelte Nachweisqualifizierung und M3S-Eingangsrahmen. Menschliche Entscheide betreffen jetzt nur Ausnahmen.',
+    focusedTitle: 'Gesamtübersicht wiederhergestellt · fünf Ausnahmen auf einmal entscheiden',
+    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, Fast-Track-Entscheid, gebündelte Qualifizierung, einen vorausgefüllten Entscheid für fünf Ausnahmefamilien und den M3S-Eingangsrahmen.',
     openFullProgram: 'Vollständiges Programm öffnen',
     returnToFocusedReview: 'Zurück zum Fast-Track-Cockpit'
   }
@@ -179,6 +180,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
         <InstitutionalProgramFastTrackCockpit language={language} />
         <InstitutionalFastTrackGovernance language={language} />
         <InstitutionalPeopleTeamsGateG1FastTrackQualification language={language} />
+        <InstitutionalPeopleTeamsFastTrackExceptionArbitration language={language} />
         <InstitutionalM3SInboxFrame language={language} />
       </div>
     );
@@ -208,6 +210,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
       <InstitutionalProgramFastTrackCockpit language={language} />
       <InstitutionalFastTrackGovernance language={language} />
       <InstitutionalPeopleTeamsGateG1FastTrackQualification language={language} />
+      <InstitutionalPeopleTeamsFastTrackExceptionArbitration language={language} />
       <InstitutionalM3SInboxFrame language={language} />
 
       <section className="institutional-program-root m3s-panel p-4 sm:p-5" aria-labelledby="institutional-program-root-title">
