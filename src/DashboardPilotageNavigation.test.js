@@ -55,10 +55,10 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });
 
-test('opens the confirmed REF-01 request template and candidate recipient profiles in the lightweight Fast Track view', () => {
+test('opens the confirmed REF-01 recipient profiles and candidate empty named slots in the lightweight Fast Track view', () => {
   renderDashboardNavigation({}, '/?view=program&focus=ref01-fasttrack');
 
-  expect(screen.getByRole('heading', { name: 'Modèle de demande confirmé · cinq profils à arbitrer' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Profils confirmés · cinq emplacements vides à arbitrer' })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'Ouvrir le programme complet' })).toHaveAttribute('href', '/?view=program&returnTo=ref01-fasttrack#institutional-ref01-fast-track-governance');
   expect(screen.getByTestId('institutional-fast-track-cockpit')).toBeInTheDocument();
   expect(screen.getByTestId('ref01-fast-track-governance')).toBeInTheDocument();
@@ -88,9 +88,15 @@ test('opens the confirmed REF-01 request template and candidate recipient profil
   const recipientProfiles = screen.getByTestId('ref01-g1-fast-track-recipient-profiles');
   expect(within(recipientProfiles).getAllByTestId('ref01-g1-fast-track-recipient-profile')).toHaveLength(5);
   expect(within(recipientProfiles).getByText('Personnes nommées').closest('article')).toHaveTextContent('0');
-  expect(within(recipientProfiles).getByText('Canaux sélectionnés').closest('article')).toHaveTextContent('0');
   expect(within(recipientProfiles).getByText('Demandes envoyées').closest('article')).toHaveTextContent('0');
-  expect(within(recipientProfiles).getByText(/Je confirme REF-01-G1-REC-002 V0.1 comme profils fonctionnels/)).toBeInTheDocument();
+  expect(within(recipientProfiles).getByRole('heading', { name: 'REF-01-DEC-070 · V1.0' })).toBeInTheDocument();
+  expect(within(recipientProfiles).getByText(/REF-01-G1-REC-002 V0.1 est confirmé sans amendement/)).toBeInTheDocument();
+  const namedSlots = screen.getByTestId('ref01-g1-fast-track-named-recipient-slots');
+  expect(within(namedSlots).getAllByTestId('ref01-g1-fast-track-named-recipient-slot')).toHaveLength(5);
+  expect(within(namedSlots).getByText('Identités inscrites').closest('article')).toHaveTextContent('0');
+  expect(within(namedSlots).getByText('Coordonnées inscrites').closest('article')).toHaveTextContent('0');
+  expect(within(namedSlots).getByText('Affectations autorisées').closest('article')).toHaveTextContent('0');
+  expect(within(namedSlots).getByText(/Je confirme REF-01-G1-NAM-002 V0.1 comme cadre des cinq emplacements/)).toBeInTheDocument();
   expect(screen.getByTestId('institutional-m3s-inbox-frame')).toBeInTheDocument();
   expect(screen.queryByRole('heading', { name: 'MEP-01 · LEGAL' })).not.toBeInTheDocument();
 });
@@ -460,7 +466,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.72 · 30-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.73 · 30-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -967,7 +973,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(waveCandidate).getByText('Autorisations unitaires').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Environnements désignés').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Tests lancés').closest('article')).toHaveTextContent('0');
-  expect(control.getByText(/décisions sur le lot : 66/)).toBeInTheDocument();
+  expect(control.getByText(/décisions sur le lot : 67/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();

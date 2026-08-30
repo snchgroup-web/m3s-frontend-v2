@@ -12,10 +12,10 @@ const COPY = {
       ['Consolidation', '8/8 cadres confirmés', 'REF-01 est le contrôle détaillé courant'],
       ['Dynamisation', '8 composantes cadrées', 'Revue détaillée non démarrée']
     ],
-    current: 'Contrôle courant · REF-01 V1.72 · REQ-002 V1.0 confirmé',
+    current: 'Contrôle courant · REF-01 V1.73 · REC-002 V1.0 confirmé',
     metrics: [['22/22', 'valeurs examinées'], ['9', 'qualifiées, portée synthétique'], ['5/5', 'familles confirmées documentairement'], ['0/6', 'conditions G1 clôturables']],
     fastTrack: 'Fast Track actif',
-    fastTrackBody: 'DEC-069 confirme REQ-002 V1.0 comme modèle unique sans envoi. REC-002 V0.1 prépare maintenant cinq profils fonctionnels, sans identité ni contact.',
+    fastTrackBody: 'DEC-070 confirme REC-002 V1.0 comme cinq profils fonctionnels sans identité ni contact. NAM-002 V0.1 prépare cinq emplacements nominatifs encore vides.',
     boundary: 'G1 reste ouverte et L2 fermé. Ce cockpit est une lecture de pilotage, pas une validation de conformité ni une autorisation de déploiement.'
   },
   EN: {
@@ -28,10 +28,10 @@ const COPY = {
       ['Consolidation', '8/8 frameworks confirmed', 'REF-01 is the current detailed control'],
       ['Dynamisation', '8 framed components', 'Detailed review not started']
     ],
-    current: 'Current control · REF-01 V1.72 · REQ-002 V1.0 confirmed',
+    current: 'Current control · REF-01 V1.73 · REC-002 V1.0 confirmed',
     metrics: [['22/22', 'values reviewed'], ['9', 'qualified, synthetic scope'], ['5/5', 'families documentarily confirmed'], ['0/6', 'closable G1 conditions']],
     fastTrack: 'Fast Track active',
-    fastTrackBody: 'DEC-069 confirms REQ-002 V1.0 as one template without release. REC-002 V0.1 now prepares five functional profiles, with no identity or contact.',
+    fastTrackBody: 'DEC-070 confirms REC-002 V1.0 as five functional profiles without identity or contact. NAM-002 V0.1 prepares five named-recipient slots that remain empty.',
     boundary: 'G1 remains open and L2 closed. This cockpit is a steering view, not a compliance validation or deployment authorisation.'
   },
   DE: {
@@ -44,10 +44,10 @@ const COPY = {
       ['Konsolidierung', '8/8 Rahmen bestätigt', 'REF-01 ist die aktuelle Detailkontrolle'],
       ['Dynamisierung', '8 strukturierte Komponenten', 'Detailprüfung nicht begonnen']
     ],
-    current: 'Aktuelle Kontrolle · REF-01 V1.72 · REQ-002 V1.0 bestätigt',
+    current: 'Aktuelle Kontrolle · REF-01 V1.73 · REC-002 V1.0 bestätigt',
     metrics: [['22/22', 'Werte geprüft'], ['9', 'qualifiziert, synthetischer Umfang'], ['5/5', 'Familien dokumentarisch bestätigt'], ['0/6', 'schliessbare G1-Bedingungen']],
     fastTrack: 'Fast Track aktiv',
-    fastTrackBody: 'DEC-069 bestätigt REQ-002 V1.0 als einheitliche Vorlage ohne Versand. REC-002 V0.1 bereitet nun fünf Funktionsprofile ohne Identität oder Kontakt vor.',
+    fastTrackBody: 'DEC-070 bestätigt REC-002 V1.0 als fünf Funktionsprofile ohne Identität oder Kontakt. NAM-002 V0.1 bereitet fünf weiterhin leere Namensstellen vor.',
     boundary: 'G1 bleibt offen und L2 geschlossen. Dieses Cockpit ist eine Steuerungsansicht, keine Konformitätsbestätigung oder Bereitstellungsfreigabe.'
   }
 };
