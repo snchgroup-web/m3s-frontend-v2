@@ -55,10 +55,10 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });
 
-test('opens the confirmed empty authorisation files and confirmed read-only Inbox in the lightweight Fast Track view', () => {
+test('opens the confirmed empty authorisation files and confirmed unexecuted Inbox protocol in the lightweight Fast Track view', () => {
   renderDashboardNavigation({}, '/?view=program&focus=ref01-fasttrack');
 
-  expect(screen.getByRole('heading', { name: 'Boîte d’entrée confirmée · pilote fictif à cadrer' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Protocole Inbox confirmé · exécution fermée' })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'Ouvrir le programme complet' })).toHaveAttribute('href', '/?view=program&returnTo=ref01-fasttrack#institutional-ref01-fast-track-governance');
   expect(screen.getByTestId('institutional-fast-track-cockpit')).toBeInTheDocument();
   expect(screen.getByTestId('ref01-fast-track-governance')).toBeInTheDocument();
@@ -106,22 +106,22 @@ test('opens the confirmed empty authorisation files and confirmed read-only Inbo
   expect(within(authorisationFiles).getByText('Contacts ou envois').closest('article')).toHaveTextContent('0');
   expect(within(authorisationFiles).getByRole('heading', { name: 'REF-01-DEC-072 · V1.0' })).toBeInTheDocument();
   expect(within(authorisationFiles).getByText(/REF-01-G1-AUT-003 V0.1 est confirmé sans amendement/)).toBeInTheDocument();
-  expect(within(authorisationFiles).getByText(/M3S-INB-001 V1.0 est désormais confirmé en lecture seule/)).toBeInTheDocument();
+  expect(within(authorisationFiles).getByText(/M3S-INB-002 V1.0 est désormais confirmé comme protocole fictif/)).toBeInTheDocument();
   const inbox = screen.getByTestId('institutional-m3s-inbox-frame');
   expect(inbox).toBeInTheDocument();
-  expect(within(inbox).getByRole('heading', { name: 'REF-01-DEC-073 · V1.0' })).toBeInTheDocument();
+  expect(within(inbox).getByRole('heading', { name: 'REF-01-DEC-074 · V1.0' })).toBeInTheDocument();
   expect(within(inbox).getByText('Entrées réelles').closest('article')).toHaveTextContent('0');
   expect(within(inbox).getByText('Imports actifs').closest('article')).toHaveTextContent('0');
   expect(within(inbox).getByText('Automatisations').closest('article')).toHaveTextContent('0');
-  expect(within(inbox).getByText(/M3S-INB-001 V0.1 est confirmé sans amendement/)).toBeInTheDocument();
-  expect(within(inbox).getByText(/M3S-INB-002 V0.1 comme spécification d’un pilote manuel à données fictives/)).toBeInTheDocument();
+  expect(within(inbox).getByText(/M3S-INB-002 V0.1 est confirmé sans amendement/)).toBeInTheDocument();
+  expect(within(inbox).getByText(/M3S-INB-003 V0.1 comme fiche GO\/NO-GO vide/)).toBeInTheDocument();
   const pilotSpec = within(inbox).getByTestId('institutional-m3s-inbox-pilot-spec');
-  expect(within(pilotSpec).getByText(/SPÉCIFICATION CANDIDATE · M3S-INB-002 · V0.1/)).toBeInTheDocument();
+  expect(within(pilotSpec).getByText(/PROTOCOLE CONFIRMÉ · M3S-INB-002 · V1.0/)).toBeInTheDocument();
   expect(within(pilotSpec).getByText('Cas fictifs prévus').closest('article')).toHaveTextContent('6');
   expect(within(pilotSpec).getByText('Personnes réelles').closest('article')).toHaveTextContent('0');
   expect(within(pilotSpec).getByText('Sources connectées').closest('article')).toHaveTextContent('0');
   expect(within(pilotSpec).getByText('Automatismes').closest('article')).toHaveTextContent('0');
-  expect(within(pilotSpec).getByText(/Cette spécification n’autorise pas encore le lancement du pilote/)).toBeInTheDocument();
+  expect(within(pilotSpec).getByText(/Une décision GO distincte reste obligatoire avant le premier cas/)).toBeInTheDocument();
   expect(within(pilotSpec).getByText(/0\/6 cas exécuté, zéro donnée réelle/)).toBeInTheDocument();
   expect(screen.queryByRole('heading', { name: 'MEP-01 · LEGAL' })).not.toBeInTheDocument();
 });
@@ -491,7 +491,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.76 · 30-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.77 · 31-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -998,7 +998,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(waveCandidate).getByText('Autorisations unitaires').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Environnements désignés').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Tests lancés').closest('article')).toHaveTextContent('0');
-  expect(control.getByText(/décisions sur le lot : 70/)).toBeInTheDocument();
+  expect(control.getByText(/décisions sur le lot : 71/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();

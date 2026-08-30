@@ -19,13 +19,14 @@ const COPY = {
     boundariesTitle: 'Frontières avant mise en service',
     boundaries: ['Aucune lecture automatique de WhatsApp.', 'Aucun import automatique des e-mails.', 'Aucune donnée personnelle réelle intégrée au bundle frontend.', 'Backend, RBAC et GED requis avant toute automatisation.', 'Aucun compteur affiché avant disponibilité d’une source fiable.'],
     recordLabels: { eyebrow: 'Registre de décision gouverné', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision enregistrée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
-    record: { id: 'REF-01-DEC-073', version: 'V1.0', status: 'M3S-INB-001 confirmé en lecture seule', author: 'Cheikh Ndiaye', date: '30-08-2026', decision: 'M3S-INB-001 V0.1 est confirmé sans amendement et promu en V1.0 comme cadre en lecture seule de la Boîte d’entrée M3S.', evidence: 'Confirmation anticipée explicite de Cheikh dans la session du 30-08-2026 : « tu peux continuer direct sur le prochain que je confirme en avance » ; le prochain arbitrage affiché était M3S-INB-001 V0.1.', limit: 'La décision confirme uniquement le cadre documentaire. Elle n’active aucun import, connecteur, automatisme, traitement de données réelles, registre opérationnel, accès, dépense ou action L2.' },
+    record: { id: 'REF-01-DEC-074', version: 'V1.0', status: 'M3S-INB-002 confirmé, non exécuté', author: 'Cheikh Ndiaye', date: '31-08-2026', decision: 'M3S-INB-002 V0.1 est confirmé sans amendement et promu en V1.0 uniquement comme protocole de pilote fictif.', evidence: 'Confirmation explicite de Cheikh dans la session du 31-08-2026 : « Je confirme M3S-INB-002 V0.1 uniquement comme protocole de pilote fictif, sans autoriser encore son exécution. »', limit: 'La décision confirme le protocole, pas son exécution. Elle n’active aucun cas, import, connecteur, automatisme, stockage réel, donnée personnelle, registre opérationnel, accès, dépense ou action L2.' },
     decisionTitle: 'Résultat de la décision Fast Track',
-    decision: 'M3S-INB-001 V1.0 est confirmé en lecture seule. Le cadre reste vide et non opérationnel.',
+    decision: 'M3S-INB-002 V1.0 est confirmé comme protocole fictif. Le pilote reste non exécuté et non opérationnel.',
     nextTitle: 'Prochain lot candidat',
-    next: 'Préparer M3S-INB-002 V0.1 comme spécification d’un pilote manuel à données fictives, sans import, connexion, automatisation ni mise en production.',
-    pilotEyebrow: 'SPÉCIFICATION CANDIDATE · M3S-INB-002 · V0.1 · 31-08-2026',
-    pilotTitle: 'Pilote manuel isolé · six cas fictifs à contrôler',
+    next: 'Préparer M3S-INB-003 V0.1 comme fiche GO/NO-GO vide pour une éventuelle exécution du pilote fictif, sans lancer aucun cas.',
+    pilotEyebrow: 'PROTOCOLE CONFIRMÉ · M3S-INB-002 · V1.0 · 31-08-2026',
+    pilotTitle: 'Pilote manuel isolé · protocole confirmé, exécution fermée',
+    pilotVersion: 'V1.0',
     pilotIntro: 'Le pilote proposé vérifie le modèle de qualification sans utiliser une seule donnée réelle. Il reste local, réinitialisable, sans persistance opérationnelle et sans connexion à un canal externe.',
     pilotCounters: [['Cas fictifs prévus', '6', 'Aucun cas encore exécuté'], ['Personnes réelles', '0', 'Noms et coordonnées interdits'], ['Sources connectées', '0', 'Saisie fictive uniquement'], ['Automatismes', '0', 'Traitement humain simulé']],
     scenariosTitle: 'Jeu de contrôle fictif',
@@ -36,9 +37,9 @@ const COPY = {
     criteria: ['6/6 cas fictifs traités sans donnée réelle', 'Champs obligatoires contrôlés avant changement de statut', 'Doublon détecté sans créer un second élément', 'Cas restreint bloqué et orienté vers un dépôt sécurisé simulé', 'Aucun appel réseau, import, connecteur, automatisme ou stockage réel', 'Résultats relus humainement et consignés comme preuve de test'],
     stopTitle: 'Arrêt immédiat',
     stop: 'Toute donnée réelle, identité, pièce sensible, canal connecté ou persistance opérationnelle arrête le pilote et exige une décision séparée.',
-    pilotDecisionTitle: 'Arbitrage humain requis avant exécution',
-    pilotDecision: 'Confirmer ou amender M3S-INB-002 V0.1 uniquement comme protocole de pilote fictif. Cette spécification n’autorise pas encore le lancement du pilote.',
-    pilotVerdict: 'STATUT · SPÉCIFICATION CANDIDATE. 0/6 cas exécuté, zéro donnée réelle et aucune capacité opérationnelle ouverte.',
+    pilotDecisionTitle: 'Décision enregistrée · exécution toujours interdite',
+    pilotDecision: 'REF-01-DEC-074 confirme M3S-INB-002 V1.0 uniquement comme protocole fictif. Une décision GO distincte reste obligatoire avant le premier cas.',
+    pilotVerdict: 'STATUT · PROTOCOLE CONFIRMÉ, NON EXÉCUTÉ. 0/6 cas exécuté, zéro donnée réelle et aucune capacité opérationnelle ouverte.',
     verdict: 'STATUT · CADRE CONFIRMÉ EN LECTURE SEULE. Zéro entrée réelle, import, connecteur ou traitement automatique activé.'
   },
   EN: {
@@ -57,13 +58,14 @@ const COPY = {
     boundariesTitle: 'Boundaries before activation',
     boundaries: ['No automated WhatsApp reading.', 'No automated email import.', 'No real personal data in the frontend bundle.', 'Backend, RBAC and DMS required before automation.', 'No counter displayed before a reliable source exists.'],
     recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
-    record: { id: 'REF-01-DEC-073', version: 'V1.0', status: 'M3S-INB-001 confirmed read-only', author: 'Cheikh Ndiaye', date: '30 Aug 2026', decision: 'M3S-INB-001 V0.1 is confirmed without amendment and promoted to V1.0 as the read-only framework for the M3S Inbox.', evidence: 'Cheikh’s explicit advance confirmation in the 30 Aug 2026 session: “you can continue directly with the next one, which I confirm in advance”; the displayed next decision was M3S-INB-001 V0.1.', limit: 'The decision confirms only the documentary framework. It enables no import, connector, automation, real-data processing, operational register, access, expense or L2 action.' },
+    record: { id: 'REF-01-DEC-074', version: 'V1.0', status: 'M3S-INB-002 confirmed, not run', author: 'Cheikh Ndiaye', date: '31 Aug 2026', decision: 'M3S-INB-002 V0.1 is confirmed without amendment and promoted to V1.0 only as a fictional-pilot protocol.', evidence: 'Cheikh’s explicit confirmation in the 31 Aug 2026 session: “I confirm M3S-INB-002 V0.1 only as a fictional-pilot protocol, without yet authorising its execution.”', limit: 'The decision confirms the protocol, not its execution. It enables no case, import, connector, automation, real storage, personal data, operational register, access, expense or L2 action.' },
     decisionTitle: 'Fast Track decision outcome',
-    decision: 'M3S-INB-001 V1.0 is confirmed read-only. The framework remains empty and non-operational.',
+    decision: 'M3S-INB-002 V1.0 is confirmed as a fictional protocol. The pilot remains unexecuted and non-operational.',
     nextTitle: 'Next candidate package',
-    next: 'Prepare M3S-INB-002 V0.1 as the specification for a manual fictional-data pilot, without import, connection, automation or production release.',
-    pilotEyebrow: 'CANDIDATE SPECIFICATION · M3S-INB-002 · V0.1 · 31 AUG 2026',
-    pilotTitle: 'Isolated manual pilot · six fictional cases to check',
+    next: 'Prepare M3S-INB-003 V0.1 as an empty GO/NO-GO form for possible execution of the fictional pilot, without launching any case.',
+    pilotEyebrow: 'CONFIRMED PROTOCOL · M3S-INB-002 · V1.0 · 31 AUG 2026',
+    pilotTitle: 'Isolated manual pilot · protocol confirmed, execution closed',
+    pilotVersion: 'V1.0',
     pilotIntro: 'The proposed pilot checks the qualification model without using any real data. It remains local, resettable, without operational persistence and without connection to an external channel.',
     pilotCounters: [['Planned fictional cases', '6', 'No case run yet'], ['Real people', '0', 'Names and contact details prohibited'], ['Connected sources', '0', 'Fictional manual entry only'], ['Automations', '0', 'Simulated human processing']],
     scenariosTitle: 'Fictional control dataset',
@@ -74,9 +76,9 @@ const COPY = {
     criteria: ['6/6 fictional cases processed without real data', 'Mandatory fields checked before status changes', 'Duplicate detected without creating a second item', 'Restricted case blocked and routed to a simulated secure deposit', 'No network call, import, connector, automation or real storage', 'Results reviewed by a human and recorded as test evidence'],
     stopTitle: 'Immediate stop',
     stop: 'Any real data, identity, sensitive record, connected channel or operational persistence stops the pilot and requires a separate decision.',
-    pilotDecisionTitle: 'Human decision required before execution',
-    pilotDecision: 'Confirm or amend M3S-INB-002 V0.1 only as a fictional-pilot protocol. This specification does not yet authorise running the pilot.',
-    pilotVerdict: 'STATUS · CANDIDATE SPECIFICATION. 0/6 cases run, zero real data and no operational capability opened.',
+    pilotDecisionTitle: 'Recorded decision · execution still prohibited',
+    pilotDecision: 'REF-01-DEC-074 confirms M3S-INB-002 V1.0 only as a fictional protocol. A separate GO decision remains mandatory before the first case.',
+    pilotVerdict: 'STATUS · CONFIRMED, UNEXECUTED PROTOCOL. 0/6 cases run, zero real data and no operational capability opened.',
     verdict: 'STATUS · CONFIRMED READ-ONLY FRAMEWORK. Zero real entries, imports, connectors or automated processing enabled.'
   },
   DE: {
@@ -95,13 +97,14 @@ const COPY = {
     boundariesTitle: 'Grenzen vor Inbetriebnahme',
     boundaries: ['Kein automatisches Lesen von WhatsApp.', 'Kein automatischer E-Mail-Import.', 'Keine realen Personendaten im Frontend-Bundle.', 'Backend, RBAC und DMS vor jeder Automatisierung erforderlich.', 'Kein Zähler ohne verlässliche Quelle.'],
     recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Erfasster Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
-    record: { id: 'REF-01-DEC-073', version: 'V1.0', status: 'M3S-INB-001 schreibgeschützt bestätigt', author: 'Cheikh Ndiaye', date: '30.08.2026', decision: 'M3S-INB-001 V0.1 wird ohne Änderung bestätigt und zu V1.0 als schreibgeschützter Rahmen des M3S-Eingangs.', evidence: 'Ausdrückliche Vorabbestätigung von Cheikh in der Sitzung vom 30.08.2026: „du kannst direkt mit dem nächsten weitermachen, den ich im Voraus bestätige“; der angezeigte nächste Entscheid war M3S-INB-001 V0.1.', limit: 'Der Entscheid bestätigt nur den dokumentarischen Rahmen. Er aktiviert keinen Import, Connector, Automatismus, keine Verarbeitung realer Daten, kein operatives Register, keinen Zugriff, keine Ausgabe und keine L2-Aktion.' },
+    record: { id: 'REF-01-DEC-074', version: 'V1.0', status: 'M3S-INB-002 bestätigt, nicht ausgeführt', author: 'Cheikh Ndiaye', date: '31.08.2026', decision: 'M3S-INB-002 V0.1 wird ohne Änderung nur als Protokoll eines fiktiven Piloten bestätigt und zu V1.0.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 31.08.2026: „Ich bestätige M3S-INB-002 V0.1 nur als Protokoll eines fiktiven Piloten, ohne seine Ausführung bereits zu autorisieren.“', limit: 'Der Entscheid bestätigt das Protokoll, nicht seine Ausführung. Er aktiviert keinen Fall, Import, Connector, Automatismus, reale Speicherung, Personendaten, kein operatives Register, keinen Zugriff, keine Ausgabe und keine L2-Aktion.' },
     decisionTitle: 'Ergebnis des Fast-Track-Entscheids',
-    decision: 'M3S-INB-001 V1.0 ist schreibgeschützt bestätigt. Der Rahmen bleibt leer und nicht operativ.',
+    decision: 'M3S-INB-002 V1.0 ist als fiktives Protokoll bestätigt. Der Pilot bleibt unausgeführt und nicht operativ.',
     nextTitle: 'Nächstes Kandidatenpaket',
-    next: 'M3S-INB-002 V0.1 als Spezifikation eines manuellen Piloten mit fiktiven Daten vorbereiten, ohne Import, Verbindung, Automatisierung oder Produktivsetzung.',
-    pilotEyebrow: 'KANDIDATENSPEZIFIKATION · M3S-INB-002 · V0.1 · 31.08.2026',
-    pilotTitle: 'Isolierter manueller Pilot · sechs fiktive Fälle zu prüfen',
+    next: 'M3S-INB-003 V0.1 als leeres GO/NO-GO-Blatt für eine mögliche Ausführung des fiktiven Piloten vorbereiten, ohne einen Fall zu starten.',
+    pilotEyebrow: 'BESTÄTIGTES PROTOKOLL · M3S-INB-002 · V1.0 · 31.08.2026',
+    pilotTitle: 'Isolierter manueller Pilot · Protokoll bestätigt, Ausführung geschlossen',
+    pilotVersion: 'V1.0',
     pilotIntro: 'Der vorgeschlagene Pilot prüft das Qualifikationsmodell ohne reale Daten. Er bleibt lokal, rücksetzbar, ohne operative Persistenz und ohne Verbindung zu einem externen Kanal.',
     pilotCounters: [['Geplante fiktive Fälle', '6', 'Noch kein Fall ausgeführt'], ['Reale Personen', '0', 'Namen und Kontaktdaten verboten'], ['Verbundene Quellen', '0', 'Nur fiktive manuelle Eingabe'], ['Automatismen', '0', 'Simulierte menschliche Bearbeitung']],
     scenariosTitle: 'Fiktiver Kontrolldatensatz',
@@ -112,9 +115,9 @@ const COPY = {
     criteria: ['6/6 fiktive Fälle ohne reale Daten bearbeitet', 'Pflichtfelder vor Statusänderung geprüft', 'Duplikat erkannt, ohne ein zweites Element zu erstellen', 'Eingeschränkter Fall gesperrt und zu einer simulierten sicheren Ablage geführt', 'Kein Netzwerkaufruf, Import, Connector, Automatismus oder reale Speicherung', 'Ergebnisse menschlich geprüft und als Testnachweis protokolliert'],
     stopTitle: 'Sofortiger Stopp',
     stop: 'Reale Daten, Identitäten, sensible Unterlagen, verbundene Kanäle oder operative Persistenz stoppen den Piloten und erfordern einen getrennten Entscheid.',
-    pilotDecisionTitle: 'Menschlicher Entscheid vor Ausführung erforderlich',
-    pilotDecision: 'M3S-INB-002 V0.1 nur als Protokoll eines fiktiven Piloten bestätigen oder ändern. Diese Spezifikation erlaubt die Durchführung noch nicht.',
-    pilotVerdict: 'STATUS · KANDIDATENSPEZIFIKATION. 0/6 Fälle ausgeführt, null reale Daten und keine operative Fähigkeit geöffnet.',
+    pilotDecisionTitle: 'Erfasster Entscheid · Ausführung weiterhin verboten',
+    pilotDecision: 'REF-01-DEC-074 bestätigt M3S-INB-002 V1.0 nur als fiktives Protokoll. Vor dem ersten Fall bleibt ein getrennter GO-Entscheid zwingend.',
+    pilotVerdict: 'STATUS · BESTÄTIGTES, UNAUSGEFÜHRTES PROTOKOLL. 0/6 Fälle ausgeführt, null reale Daten und keine operative Fähigkeit geöffnet.',
     verdict: 'STATUS · BESTÄTIGTER SCHREIBGESCHÜTZTER RAHMEN. Null reale Eingänge, Importe, Connectoren oder automatische Bearbeitungen aktiviert.'
   }
 };
@@ -134,7 +137,7 @@ const InstitutionalM3SInboxFrame = ({ language = 'FR' }) => {
       <div className="mt-4 rounded-md border border-violet-700/70 bg-violet-950/20 p-3"><div className="flex items-center gap-2"><SendHorizontal className="text-violet-300" size={17} aria-hidden="true" /><h5 className="text-sm font-semibold text-violet-100">{t.decisionTitle}</h5></div><p className="mt-2 text-sm font-semibold leading-6 text-violet-100">{t.decision}</p></div>
       <div className="mt-4 rounded-md border border-sky-700/70 bg-sky-950/20 p-3"><div className="flex items-center gap-2"><SendHorizontal className="text-sky-300" size={17} aria-hidden="true" /><h5 className="text-sm font-semibold text-sky-100">{t.nextTitle}</h5></div><p className="mt-2 text-sm font-semibold leading-6 text-sky-100">{t.next}</p></div>
       <section data-testid="institutional-m3s-inbox-pilot-spec" className="m3s-inbox-pilot-spec mt-4 rounded-md border border-sky-800/70 bg-sky-950/10 p-3 sm:p-4" aria-labelledby="institutional-m3s-inbox-pilot-title">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between"><div className="max-w-5xl"><p className="text-xs font-semibold uppercase text-sky-300">{t.pilotEyebrow}</p><h5 id="institutional-m3s-inbox-pilot-title" className="mt-1 text-base font-semibold text-slate-100 sm:text-lg">{t.pilotTitle}</h5><p className="mt-2 text-sm leading-6 text-slate-300">{t.pilotIntro}</p></div><span className="inline-flex min-h-9 shrink-0 items-center gap-2 self-start rounded-md border border-amber-700/70 bg-amber-950/25 px-3 py-2 text-xs font-semibold text-amber-100"><ClipboardCheck size={16} aria-hidden="true" />V0.1</span></div>
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between"><div className="max-w-5xl"><p className="text-xs font-semibold uppercase text-sky-300">{t.pilotEyebrow}</p><h5 id="institutional-m3s-inbox-pilot-title" className="mt-1 text-base font-semibold text-slate-100 sm:text-lg">{t.pilotTitle}</h5><p className="mt-2 text-sm leading-6 text-slate-300">{t.pilotIntro}</p></div><span className="inline-flex min-h-9 shrink-0 items-center gap-2 self-start rounded-md border border-amber-700/70 bg-amber-950/25 px-3 py-2 text-xs font-semibold text-amber-100"><ClipboardCheck size={16} aria-hidden="true" />{t.pilotVersion}</span></div>
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">{t.pilotCounters.map(([label, value, note]) => <article key={label} className="m3s-raised min-h-28 p-3"><p className="text-xs font-semibold text-slate-300">{label}</p><p className="mt-2 text-2xl font-semibold text-slate-100">{value}</p><p className="mt-2 text-xs leading-5 text-slate-400">{note}</p></article>)}</div>
         <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-2">
           <article className="m3s-raised p-3 sm:p-4"><div className="flex items-center gap-2"><Inbox className="text-sky-300" size={17} aria-hidden="true" /><h6 className="text-sm font-semibold text-slate-100">{t.scenariosTitle}</h6></div><ol className="mt-3 space-y-2">{t.scenarios.map((scenario, index) => <li key={scenario} className="flex min-h-10 items-center gap-3 rounded-md border border-slate-700 bg-slate-950/20 px-3 py-2 text-xs text-slate-300"><span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-sky-950/60 font-semibold text-sky-200">{index + 1}</span>{scenario}</li>)}</ol></article>
