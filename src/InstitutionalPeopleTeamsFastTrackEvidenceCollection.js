@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertTriangle, CheckCircle2, ClipboardList, FileCheck2, LockKeyhole, ShieldCheck } from 'lucide-react';
+import GovernedDecisionRecord from './GovernedDecisionRecord';
 
 const text = (FR, EN, DE) => ({ FR, EN, DE });
 
@@ -63,37 +64,43 @@ const PACKAGES = [
 
 const COPY = {
   FR: {
-    eyebrow: 'PLAN DE PREUVES CANDIDAT · REF-01-G1-COL-003 · V0.1 · 30-08-2026',
-    title: 'Préparer cinq dossiers de preuves sans lancer la collecte',
-    intro: 'Ce plan traduit ARB-002 V1.0 en cinq dossiers contrôlables. Il précise les pièces attendues et les fonctions responsables candidates, mais ne contacte personne, ne crée aucun compte et ne collecte aucune donnée sensible.',
-    counters: [['Dossiers préparés', '5/5', 'Un par famille confirmée'], ['Pièces reçues', '0', 'Aucune collecte lancée'], ['Tests exécutés', '0', 'Aucun environnement ouvert'], ['Autorisations L2', '0', 'G1 reste ouverte']],
+    eyebrow: 'PLAN DE PREUVES CONFIRMÉ · REF-01-G1-COL-003 · V1.0 · 30-08-2026',
+    title: 'Cinq dossiers de preuves organisés, collecte toujours fermée',
+    intro: 'DEC-068 confirme l’organisation documentaire issue d’ARB-002 V1.0. Les pièces attendues et les fonctions responsables candidates sont cadrées, sans contact, compte, donnée sensible, connexion ni test.',
+    counters: [['Dossiers confirmés', '5/5', 'Un par famille confirmée'], ['Décisions enregistrées', '1', 'REF-01-DEC-068'], ['Pièces reçues', '0', 'Aucune collecte lancée'], ['Autorisations L2', '0', 'G1 reste ouverte']],
     labels: { owner: 'Fonctions responsables candidates', evidence: 'Pièces attendues' },
-    status: 'CANDIDAT · COLLECTE NON OUVERTE',
-    decisionTitle: 'Arbitrage Fast Track suivant',
-    decision: 'Confirmer : « Je confirme REF-01-G1-COL-003 V0.1 comme plan documentaire des cinq dossiers de preuves. » Amender : indiquer uniquement le dossier COL-EXC concerné.',
-    boundary: 'Une confirmation de ce plan validera seulement l’organisation documentaire. Toute collecte réelle, transmission sensible, création d’infrastructure, connexion ou test exigera encore une autorisation distincte.'
+    status: 'CONFIRMÉ · COLLECTE NON OUVERTE',
+    decisionTitle: 'Résultat de la décision Fast Track',
+    decision: 'COL-003 V1.0 devient le plan documentaire gouverné des cinq dossiers. REQ-002 V0.1, présenté ensuite, prépare un modèle unique de demande sans autoriser son envoi.',
+    recordLabels: { eyebrow: 'Registre de décision gouverné', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision enregistrée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
+    record: { id: 'REF-01-DEC-068', version: 'V1.0', status: 'COL-003 confirmé comme plan documentaire', author: 'Cheikh Ndiaye', date: '30-08-2026', decision: 'REF-01-G1-COL-003 V0.1 est confirmé sans amendement et promu en V1.0 comme plan documentaire des cinq dossiers de preuves COL-EXC-01 à COL-EXC-05.', evidence: 'Confirmation explicite de Cheikh dans la session du 30-08-2026 : « Je confirme REF-01-G1-COL-003 V0.1 comme plan documentaire des cinq dossiers de preuves. »', limit: 'La décision valide uniquement l’organisation documentaire. Elle n’autorise aucun contact, envoi, collecte réelle, transmission sensible, compte, infrastructure, connexion, test, dépense ou action L2 ; G1 reste ouverte.' },
+    boundary: 'Les pièces reçues et les tests exécutés restent à zéro. Toute émission, collecte réelle, transmission sensible, création d’infrastructure, connexion ou test exige une autorisation humaine distincte.'
   },
   EN: {
-    eyebrow: 'CANDIDATE EVIDENCE PLAN · REF-01-G1-COL-003 · V0.1 · 30 AUG 2026',
-    title: 'Prepare five evidence files without starting collection',
-    intro: 'This plan translates ARB-002 V1.0 into five controllable files. It identifies expected records and candidate responsible functions but contacts no one, creates no account and collects no sensitive data.',
-    counters: [['Prepared files', '5/5', 'One per confirmed family'], ['Records received', '0', 'No collection started'], ['Tests run', '0', 'No environment opened'], ['L2 authorisations', '0', 'G1 remains open']],
+    eyebrow: 'CONFIRMED EVIDENCE PLAN · REF-01-G1-COL-003 · V1.0 · 30 AUG 2026',
+    title: 'Five evidence files organised, collection still closed',
+    intro: 'DEC-068 confirms the documentary organisation derived from ARB-002 V1.0. Expected records and candidate responsible functions are framed, with no contact, account, sensitive data, connection or test.',
+    counters: [['Confirmed files', '5/5', 'One per confirmed family'], ['Recorded decisions', '1', 'REF-01-DEC-068'], ['Records received', '0', 'No collection started'], ['L2 authorisations', '0', 'G1 remains open']],
     labels: { owner: 'Candidate responsible functions', evidence: 'Expected records' },
-    status: 'CANDIDATE · COLLECTION NOT OPEN',
-    decisionTitle: 'Next Fast Track decision',
-    decision: 'Confirm: “I confirm REF-01-G1-COL-003 V0.1 as the documentary plan for the five evidence files.” Amend: identify only the affected COL-EXC file.',
-    boundary: 'Confirming this plan will validate documentary organisation only. Any real collection, sensitive transmission, infrastructure creation, connection or test will still require a separate authorisation.'
+    status: 'CONFIRMED · COLLECTION NOT OPEN',
+    decisionTitle: 'Fast Track decision outcome',
+    decision: 'COL-003 V1.0 becomes the governed documentary plan for the five files. REQ-002 V0.1, shown next, prepares one request template without authorising release.',
+    recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
+    record: { id: 'REF-01-DEC-068', version: 'V1.0', status: 'COL-003 confirmed as documentary plan', author: 'Cheikh Ndiaye', date: '30 Aug 2026', decision: 'REF-01-G1-COL-003 V0.1 is confirmed without amendment and promoted to V1.0 as the documentary plan for the five COL-EXC-01 through COL-EXC-05 evidence files.', evidence: 'Cheikh’s explicit confirmation in the 30 Aug 2026 session: “I confirm REF-01-G1-COL-003 V0.1 as the documentary plan for the five evidence files.”', limit: 'The decision validates documentary organisation only. It authorises no contact, release, real collection, sensitive transmission, account, infrastructure, connection, test, expense or L2 action; G1 remains open.' },
+    boundary: 'Records received and tests run remain at zero. Any release, real collection, sensitive transmission, infrastructure creation, connection or test requires a separate human authorisation.'
   },
   DE: {
-    eyebrow: 'KANDIDAT FÜR NACHWEISPLAN · REF-01-G1-COL-003 · V0.1 · 30.08.2026',
-    title: 'Fünf Nachweisakten vorbereiten, ohne Sammlung zu starten',
-    intro: 'Dieser Plan überführt ARB-002 V1.0 in fünf kontrollierbare Akten. Er nennt erwartete Unterlagen und Kandidatenfunktionen, kontaktiert aber niemanden, erstellt kein Konto und sammelt keine sensiblen Daten.',
-    counters: [['Vorbereitete Akten', '5/5', 'Eine je bestätigter Familie'], ['Erhaltene Unterlagen', '0', 'Keine Sammlung gestartet'], ['Ausgeführte Tests', '0', 'Keine Umgebung geöffnet'], ['L2-Autorisierungen', '0', 'G1 bleibt offen']],
+    eyebrow: 'BESTÄTIGTER NACHWEISPLAN · REF-01-G1-COL-003 · V1.0 · 30.08.2026',
+    title: 'Fünf Nachweisakten organisiert, Sammlung weiter geschlossen',
+    intro: 'DEC-068 bestätigt die aus ARB-002 V1.0 abgeleitete Dokumentationsorganisation. Erwartete Unterlagen und Kandidatenfunktionen sind strukturiert, ohne Kontakt, Konto, sensible Daten, Verbindung oder Prüfung.',
+    counters: [['Bestätigte Akten', '5/5', 'Eine je bestätigter Familie'], ['Erfasste Entscheide', '1', 'REF-01-DEC-068'], ['Erhaltene Unterlagen', '0', 'Keine Sammlung gestartet'], ['L2-Autorisierungen', '0', 'G1 bleibt offen']],
     labels: { owner: 'Kandidatenfunktionen', evidence: 'Erwartete Unterlagen' },
-    status: 'KANDIDAT · SAMMLUNG NICHT GEÖFFNET',
-    decisionTitle: 'Nächster Fast-Track-Entscheid',
-    decision: 'Bestätigen: „Ich bestätige REF-01-G1-COL-003 V0.1 als Dokumentationsplan der fünf Nachweisakten.“ Ändern: Nur die betroffene COL-EXC-Akte nennen.',
-    boundary: 'Die Bestätigung dieses Plans validiert nur die Dokumentationsorganisation. Jede reale Sammlung, sensible Übermittlung, Infrastrukturerstellung, Verbindung oder Prüfung benötigt weiterhin eine getrennte Freigabe.'
+    status: 'BESTÄTIGT · SAMMLUNG NICHT GEÖFFNET',
+    decisionTitle: 'Ergebnis des Fast-Track-Entscheids',
+    decision: 'COL-003 V1.0 wird zum gesteuerten Dokumentationsplan der fünf Akten. Das nachfolgende REQ-002 V0.1 bereitet eine einzige Anfragevorlage vor, ohne Versand zu erlauben.',
+    recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Dokumentierter Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
+    record: { id: 'REF-01-DEC-068', version: 'V1.0', status: 'COL-003 als Dokumentationsplan bestätigt', author: 'Cheikh Ndiaye', date: '30.08.2026', decision: 'REF-01-G1-COL-003 V0.1 wird ohne Änderung bestätigt und zu V1.0 als Dokumentationsplan für die fünf Nachweisakten COL-EXC-01 bis COL-EXC-05.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 30.08.2026: „Ich bestätige REF-01-G1-COL-003 V0.1 als Dokumentationsplan der fünf Nachweisakten.“', limit: 'Der Entscheid validiert nur die Dokumentationsorganisation. Er erlaubt keinen Kontakt, Versand, reale Sammlung, sensible Übermittlung, kein Konto, keine Infrastruktur, Verbindung, Prüfung, Ausgabe oder L2-Aktion; G1 bleibt offen.' },
+    boundary: 'Erhaltene Unterlagen und ausgeführte Prüfungen bleiben bei null. Jeder Versand, jede reale Sammlung, sensible Übermittlung, Infrastrukturerstellung, Verbindung oder Prüfung benötigt einen getrennten menschlichen Entscheid.'
   }
 };
 
@@ -113,7 +120,7 @@ const InstitutionalPeopleTeamsFastTrackEvidenceCollection = ({ language = 'FR' }
       <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">
         {PACKAGES.map(item => (
           <article key={item.id} data-testid="ref01-g1-fast-track-evidence-family" className="m3s-raised p-3 sm:p-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"><div><p className="text-xs font-semibold text-cyan-300">{item.id} · {item.family}</p><h5 className="mt-1 text-sm font-semibold text-slate-100">{item.title[language] || item.title.FR}</h5></div><span className="inline-flex self-start rounded-md border border-amber-700/70 bg-amber-950/25 px-2 py-1 text-[10px] font-semibold text-amber-100">{t.status}</span></div>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"><div><p className="text-xs font-semibold text-cyan-300">{item.id} · {item.family}</p><h5 className="mt-1 text-sm font-semibold text-slate-100">{item.title[language] || item.title.FR}</h5></div><span className="inline-flex self-start rounded-md border border-emerald-700/70 bg-emerald-950/25 px-2 py-1 text-[10px] font-semibold text-emerald-100">{t.status}</span></div>
             <p className="mt-3 text-xs font-semibold text-slate-400">{t.labels.owner}</p>
             <p className="mt-1 text-sm text-slate-200">{item.owner[language] || item.owner.FR}</p>
             <p className="mt-3 text-xs font-semibold text-cyan-300">{t.labels.evidence}</p>
@@ -122,6 +129,7 @@ const InstitutionalPeopleTeamsFastTrackEvidenceCollection = ({ language = 'FR' }
         ))}
       </div>
 
+      <GovernedDecisionRecord labels={t.recordLabels} record={t.record} />
       <div className="mt-4 rounded-md border border-cyan-700/70 bg-cyan-950/20 p-4"><div className="flex items-center gap-2"><ShieldCheck className="text-cyan-300" size={18} aria-hidden="true" /><h5 className="text-sm font-semibold text-cyan-100">{t.decisionTitle}</h5></div><p className="mt-2 text-sm font-semibold leading-6 text-cyan-100">{t.decision}</p></div>
       <p className="mt-3 flex items-start gap-2 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.boundary}</p>
     </section>
