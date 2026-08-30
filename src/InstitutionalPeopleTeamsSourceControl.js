@@ -109,9 +109,9 @@ const COPY = {
       evidence: 'Validation explicite de Cheikh dans la session du 25-08-2026 ; comparatif préparatoire REF-01 V0.5 publié par la PR frontend #185 ; commit de fusion 6be6a4a.',
       limit: 'Cette décision ne désigne ni ne valide aucun support candidat ou source maîtresse. Elle ne valide aucune qualité, complétude, identité civile ou donnée personnelle, n’ouvre aucun accès, ne modifie aucun schéma, ne déclenche aucune automatisation et ne calcule aucune progression.'
     },
-    nextControl: 'Collecter uniquement les cinq familles d’exceptions de QLF-001 V1.0 puis présenter un seul arbitrage consolidé ; PGM-CPK-001 et M3S-INB-001 restent des cadrages candidats.',
+    nextControl: 'Confirmer REF-01-G1-ARB-002 V0.1 dans son ensemble ou amender uniquement les identifiants EXC concernés ; après confirmation seulement, préparer une décision unique REF-01-DEC-067.',
     boundary: 'Statut : REF-01-DEC-066 confirme PLN-002 V1.0, FTK-001 V1.0 et QLF-001 V1.0. Les 22/22 valeurs ont été contrôlées : 9 sont qualifiées dans leur seule portée synthétique, 8 restent partielles et 5 ouvertes. Aucune valeur de production n’est désignée ; 0/6 condition G1 est clôturable, G1 reste ouverte et L2 fermé. Zéro nouveau droit, fiche active, titulaire réel, mandat nominatif, délégation, accès C3/C4/C5, migration de production, restauration réelle, worker ou alerte ; décisions sur le lot : 63 ; sources maîtresses désignées : 0 ; changements en production : 0.',
-    source: 'Supports contrôlés : décisions REF-01-DEC-001 à REF-01-DEC-066, PLN-002 V1.0, FTK-001 V1.0, QLF-001 V1.0, PGM-CPK-001 V0.1, M3S-INB-001 V0.1, docs/REF-01-L1-DATA-FOUNDATIONS.md, migrations/ref01/README.md, migrations SQL montante et descendante, scripts/validateRef01Migrations.mjs et validation synthétique locale réussie le 30-08-2026 ; sources officielles PFPDT Suisse, CDP Sénégal et OHADA.'
+    source: 'Supports contrôlés : décisions REF-01-DEC-001 à REF-01-DEC-066, PLN-002 V1.0, FTK-001 V1.0, QLF-001 V1.0, ARB-002 V0.1, PGM-CPK-001 V0.1, M3S-INB-001 V0.1, docs/REF-01-L1-DATA-FOUNDATIONS.md, migrations/ref01/README.md, migrations SQL montante et descendante, scripts/validateRef01Migrations.mjs et validation synthétique locale réussie le 30-08-2026 ; sources officielles PFPDT Suisse, CDP Sénégal et OHADA.'
   },
   EN: {
     eyebrow: 'CANDIDATE-SUPPORT CONTROL · REF-01 · V1.69 · 30 AUG 2026',
@@ -200,9 +200,9 @@ const COPY = {
       evidence: 'Explicit validation by Cheikh during the 25 Aug 2026 session; REF-01 V0.5 preparatory comparison published through frontend PR #185; merge commit 6be6a4a.',
       limit: 'This decision neither designates nor validates any candidate support or master source. It validates no quality, completeness, civil identity or personal data, opens no access, changes no schema, triggers no automation and calculates no progress.'
     },
-    nextControl: 'Collect only the five QLF-001 V1.0 exception families and then present one consolidated decision; PGM-CPK-001 and M3S-INB-001 remain candidate frameworks.',
+    nextControl: 'Confirm REF-01-G1-ARB-002 V0.1 as a whole or amend only the affected EXC identifiers; only after confirmation, prepare one REF-01-DEC-067 decision.',
     boundary: 'Status: REF-01-DEC-066 confirms PLN-002 V1.0, FTK-001 V1.0 and QLF-001 V1.0. All 22/22 values were checked: 9 are qualified within synthetic scope only, 8 remain partial and 5 open. No production value is designated; 0/6 G1 conditions are closable, G1 remains open and L2 closed. Zero new rights, active records, real holders, named mandates, delegations, C3/C4/C5 access, production migrations, real restores, workers or alerts; package decisions: 63; designated master sources: 0; production changes: 0.',
-    source: 'Controlled supports: decisions REF-01-DEC-001 through REF-01-DEC-066, PLN-002 V1.0, FTK-001 V1.0, QLF-001 V1.0, PGM-CPK-001 V0.1, M3S-INB-001 V0.1, docs/REF-01-L1-DATA-FOUNDATIONS.md, migrations/ref01/README.md, up and down SQL migrations, scripts/validateRef01Migrations.mjs and successful local synthetic validation on 30 Aug 2026; official Swiss FDPIC, Senegal CDP and OHADA sources.'
+    source: 'Controlled supports: decisions REF-01-DEC-001 through REF-01-DEC-066, PLN-002 V1.0, FTK-001 V1.0, QLF-001 V1.0, ARB-002 V0.1, PGM-CPK-001 V0.1, M3S-INB-001 V0.1, docs/REF-01-L1-DATA-FOUNDATIONS.md, migrations/ref01/README.md, up and down SQL migrations, scripts/validateRef01Migrations.mjs and successful local synthetic validation on 30 Aug 2026; official Swiss FDPIC, Senegal CDP and OHADA sources.'
   },
   DE: {
     eyebrow: 'KONTROLLE DER QUELLKANDIDATEN · REF-01 · V1.69 · 30.08.2026',
@@ -291,9 +291,9 @@ const COPY = {
       evidence: 'Ausdrückliche Validierung durch Cheikh in der Sitzung vom 25.08.2026; vorbereitender REF-01-Vergleich V0.5 mit Frontend-PR #185 veröffentlicht; Merge-Commit 6be6a4a.',
       limit: 'Dieser Entscheid bestimmt oder validiert keinen Kandidaten und keine Masterquelle. Er validiert weder Qualität, Vollständigkeit, Zivilidentität noch Personendaten, öffnet keinen Zugriff, ändert kein Schema, löst keine Automatisierung aus und berechnet keinen Fortschritt.'
     },
-    nextControl: 'Nur die fünf Ausnahmefamilien von QLF-001 V1.0 sammeln und danach einen konsolidierten Entscheid vorlegen; PGM-CPK-001 und M3S-INB-001 bleiben Kandidatenrahmen.',
+    nextControl: 'REF-01-G1-ARB-002 V0.1 als Ganzes bestätigen oder nur die betroffenen EXC-Kennungen ändern; erst danach einen einzigen Entscheid REF-01-DEC-067 vorbereiten.',
     boundary: 'Stand: REF-01-DEC-066 bestätigt PLN-002 V1.0, FTK-001 V1.0 und QLF-001 V1.0. Alle 22/22 Werte wurden geprüft: 9 sind nur in ihrem synthetischen Umfang qualifiziert, 8 bleiben teilweise und 5 offen. Kein Produktionswert ist bestimmt; 0/6 G1-Bedingungen sind schliessbar, G1 bleibt offen und L2 geschlossen. Null neue Rechte, aktive Einträge, reale Inhaber, Namensmandate, Delegationen, C3/C4/C5-Zugriffe, Produktivmigrationen, reale Wiederherstellungen, Worker oder Alarme; Paketentscheide: 63; bestimmte Masterquellen: 0; produktive Änderungen: 0.',
-    source: 'Kontrollierte Träger: REF-01-DEC-001 bis REF-01-DEC-066, PLN-002 V1.0, FTK-001 V1.0, QLF-001 V1.0, PGM-CPK-001 V0.1, M3S-INB-001 V0.1, docs/REF-01-L1-DATA-FOUNDATIONS.md, migrations/ref01/README.md, SQL-Up- und Down-Migrationen, scripts/validateRef01Migrations.mjs sowie erfolgreiche lokale synthetische Validierung vom 30.08.2026; amtliche Quellen EDOEB Schweiz, CDP Senegal und OHADA.'
+    source: 'Kontrollierte Träger: REF-01-DEC-001 bis REF-01-DEC-066, PLN-002 V1.0, FTK-001 V1.0, QLF-001 V1.0, ARB-002 V0.1, PGM-CPK-001 V0.1, M3S-INB-001 V0.1, docs/REF-01-L1-DATA-FOUNDATIONS.md, migrations/ref01/README.md, SQL-Up- und Down-Migrationen, scripts/validateRef01Migrations.mjs sowie erfolgreiche lokale synthetische Validierung vom 30.08.2026; amtliche Quellen EDOEB Schweiz, CDP Senegal und OHADA.'
   }
 };
 

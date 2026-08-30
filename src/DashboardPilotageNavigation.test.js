@@ -58,7 +58,7 @@ test('shows the governed institutional programme without inventing progress', ()
 test('opens the current REF-01 Fast Track cockpit in a lightweight programme view', () => {
   renderDashboardNavigation({}, '/?view=program&focus=ref01-fasttrack');
 
-  expect(screen.getByRole('heading', { name: 'Vue globale retrouvée · 22 valeurs qualifiées en un lot' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Vue globale retrouvée · cinq exceptions à décider en une fois' })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'Ouvrir le programme complet' })).toHaveAttribute('href', '/?view=program&returnTo=ref01-fasttrack#institutional-ref01-fast-track-governance');
   expect(screen.getByTestId('institutional-fast-track-cockpit')).toBeInTheDocument();
   expect(screen.getByTestId('ref01-fast-track-governance')).toBeInTheDocument();
@@ -69,6 +69,10 @@ test('opens the current REF-01 Fast Track cockpit in a lightweight programme vie
   expect(within(qualification).getByText('Qualifiées').closest('article')).toHaveTextContent('9');
   expect(within(qualification).getByText('Partielles').closest('article')).toHaveTextContent('8');
   expect(within(qualification).getByText('Ouvertes').closest('article')).toHaveTextContent('5');
+  const arbitration = screen.getByTestId('ref01-g1-fast-track-arbitration');
+  expect(within(arbitration).getAllByTestId('ref01-g1-fast-track-exception-family')).toHaveLength(5);
+  expect(within(arbitration).getByText('Réponses attendues').closest('article')).toHaveTextContent('1');
+  expect(within(arbitration).getByText(/Je confirme REF-01-G1-ARB-002 V0.1 dans son ensemble/)).toBeInTheDocument();
   expect(screen.getByTestId('institutional-m3s-inbox-frame')).toBeInTheDocument();
   expect(screen.queryByRole('heading', { name: 'MEP-01 · LEGAL' })).not.toBeInTheDocument();
 });
