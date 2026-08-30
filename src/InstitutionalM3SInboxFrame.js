@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, CheckCircle2, Inbox, LockKeyhole, SendHorizontal, ShieldCheck } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, ClipboardCheck, Inbox, ListChecks, LockKeyhole, SendHorizontal, ShieldCheck } from 'lucide-react';
 import GovernedDecisionRecord from './GovernedDecisionRecord';
 
 const COPY = {
@@ -24,6 +24,21 @@ const COPY = {
     decision: 'M3S-INB-001 V1.0 est confirmé en lecture seule. Le cadre reste vide et non opérationnel.',
     nextTitle: 'Prochain lot candidat',
     next: 'Préparer M3S-INB-002 V0.1 comme spécification d’un pilote manuel à données fictives, sans import, connexion, automatisation ni mise en production.',
+    pilotEyebrow: 'SPÉCIFICATION CANDIDATE · M3S-INB-002 · V0.1 · 31-08-2026',
+    pilotTitle: 'Pilote manuel isolé · six cas fictifs à contrôler',
+    pilotIntro: 'Le pilote proposé vérifie le modèle de qualification sans utiliser une seule donnée réelle. Il reste local, réinitialisable, sans persistance opérationnelle et sans connexion à un canal externe.',
+    pilotCounters: [['Cas fictifs prévus', '6', 'Aucun cas encore exécuté'], ['Personnes réelles', '0', 'Noms et coordonnées interdits'], ['Sources connectées', '0', 'Saisie fictive uniquement'], ['Automatismes', '0', 'Traitement humain simulé']],
+    scenariosTitle: 'Jeu de contrôle fictif',
+    scenarios: ['E-mail interne fictif à qualifier', 'Document fictif à rattacher', 'Média de chantier fictif à classer', 'Demande fictive avec échéance', 'Doublon fictif à signaler', 'Entrée fictive restreinte à bloquer'],
+    stepsTitle: 'Parcours manuel proposé',
+    steps: ['Créer le cas fictif dans un espace isolé', 'Contrôler les dix champs obligatoires', 'Qualifier catégorie et sensibilité', 'Rattacher à une hiérarchie entièrement fictive', 'Faire progresser le cas dans les six statuts', 'Contrôler la trace puis réinitialiser le jeu'],
+    criteriaTitle: 'Critères de réussite avant tout autre lot',
+    criteria: ['6/6 cas fictifs traités sans donnée réelle', 'Champs obligatoires contrôlés avant changement de statut', 'Doublon détecté sans créer un second élément', 'Cas restreint bloqué et orienté vers un dépôt sécurisé simulé', 'Aucun appel réseau, import, connecteur, automatisme ou stockage réel', 'Résultats relus humainement et consignés comme preuve de test'],
+    stopTitle: 'Arrêt immédiat',
+    stop: 'Toute donnée réelle, identité, pièce sensible, canal connecté ou persistance opérationnelle arrête le pilote et exige une décision séparée.',
+    pilotDecisionTitle: 'Arbitrage humain requis avant exécution',
+    pilotDecision: 'Confirmer ou amender M3S-INB-002 V0.1 uniquement comme protocole de pilote fictif. Cette spécification n’autorise pas encore le lancement du pilote.',
+    pilotVerdict: 'STATUT · SPÉCIFICATION CANDIDATE. 0/6 cas exécuté, zéro donnée réelle et aucune capacité opérationnelle ouverte.',
     verdict: 'STATUT · CADRE CONFIRMÉ EN LECTURE SEULE. Zéro entrée réelle, import, connecteur ou traitement automatique activé.'
   },
   EN: {
@@ -47,6 +62,21 @@ const COPY = {
     decision: 'M3S-INB-001 V1.0 is confirmed read-only. The framework remains empty and non-operational.',
     nextTitle: 'Next candidate package',
     next: 'Prepare M3S-INB-002 V0.1 as the specification for a manual fictional-data pilot, without import, connection, automation or production release.',
+    pilotEyebrow: 'CANDIDATE SPECIFICATION · M3S-INB-002 · V0.1 · 31 AUG 2026',
+    pilotTitle: 'Isolated manual pilot · six fictional cases to check',
+    pilotIntro: 'The proposed pilot checks the qualification model without using any real data. It remains local, resettable, without operational persistence and without connection to an external channel.',
+    pilotCounters: [['Planned fictional cases', '6', 'No case run yet'], ['Real people', '0', 'Names and contact details prohibited'], ['Connected sources', '0', 'Fictional manual entry only'], ['Automations', '0', 'Simulated human processing']],
+    scenariosTitle: 'Fictional control dataset',
+    scenarios: ['Fictional internal email to qualify', 'Fictional document to attach', 'Fictional worksite media to classify', 'Fictional request with a due date', 'Fictional duplicate to flag', 'Restricted fictional entry to block'],
+    stepsTitle: 'Proposed manual path',
+    steps: ['Create the fictional case in an isolated space', 'Check the ten mandatory fields', 'Qualify category and sensitivity', 'Attach to a fully fictional hierarchy', 'Move the case through all six statuses', 'Check the trace, then reset the dataset'],
+    criteriaTitle: 'Success criteria before any further package',
+    criteria: ['6/6 fictional cases processed without real data', 'Mandatory fields checked before status changes', 'Duplicate detected without creating a second item', 'Restricted case blocked and routed to a simulated secure deposit', 'No network call, import, connector, automation or real storage', 'Results reviewed by a human and recorded as test evidence'],
+    stopTitle: 'Immediate stop',
+    stop: 'Any real data, identity, sensitive record, connected channel or operational persistence stops the pilot and requires a separate decision.',
+    pilotDecisionTitle: 'Human decision required before execution',
+    pilotDecision: 'Confirm or amend M3S-INB-002 V0.1 only as a fictional-pilot protocol. This specification does not yet authorise running the pilot.',
+    pilotVerdict: 'STATUS · CANDIDATE SPECIFICATION. 0/6 cases run, zero real data and no operational capability opened.',
     verdict: 'STATUS · CONFIRMED READ-ONLY FRAMEWORK. Zero real entries, imports, connectors or automated processing enabled.'
   },
   DE: {
@@ -70,6 +100,21 @@ const COPY = {
     decision: 'M3S-INB-001 V1.0 ist schreibgeschützt bestätigt. Der Rahmen bleibt leer und nicht operativ.',
     nextTitle: 'Nächstes Kandidatenpaket',
     next: 'M3S-INB-002 V0.1 als Spezifikation eines manuellen Piloten mit fiktiven Daten vorbereiten, ohne Import, Verbindung, Automatisierung oder Produktivsetzung.',
+    pilotEyebrow: 'KANDIDATENSPEZIFIKATION · M3S-INB-002 · V0.1 · 31.08.2026',
+    pilotTitle: 'Isolierter manueller Pilot · sechs fiktive Fälle zu prüfen',
+    pilotIntro: 'Der vorgeschlagene Pilot prüft das Qualifikationsmodell ohne reale Daten. Er bleibt lokal, rücksetzbar, ohne operative Persistenz und ohne Verbindung zu einem externen Kanal.',
+    pilotCounters: [['Geplante fiktive Fälle', '6', 'Noch kein Fall ausgeführt'], ['Reale Personen', '0', 'Namen und Kontaktdaten verboten'], ['Verbundene Quellen', '0', 'Nur fiktive manuelle Eingabe'], ['Automatismen', '0', 'Simulierte menschliche Bearbeitung']],
+    scenariosTitle: 'Fiktiver Kontrolldatensatz',
+    scenarios: ['Fiktive interne E-Mail zur Qualifizierung', 'Fiktives Dokument zur Zuordnung', 'Fiktives Baustellenmedium zur Klassierung', 'Fiktive Anfrage mit Fälligkeit', 'Fiktives Duplikat zur Markierung', 'Eingeschränkter fiktiver Eintrag zur Sperrung'],
+    stepsTitle: 'Vorgeschlagener manueller Ablauf',
+    steps: ['Fiktiven Fall in einem isolierten Bereich erstellen', 'Die zehn Pflichtfelder prüfen', 'Kategorie und Sensibilität qualifizieren', 'Einer vollständig fiktiven Hierarchie zuordnen', 'Den Fall durch alle sechs Status führen', 'Spur prüfen und Datensatz zurücksetzen'],
+    criteriaTitle: 'Erfolgskriterien vor jedem weiteren Paket',
+    criteria: ['6/6 fiktive Fälle ohne reale Daten bearbeitet', 'Pflichtfelder vor Statusänderung geprüft', 'Duplikat erkannt, ohne ein zweites Element zu erstellen', 'Eingeschränkter Fall gesperrt und zu einer simulierten sicheren Ablage geführt', 'Kein Netzwerkaufruf, Import, Connector, Automatismus oder reale Speicherung', 'Ergebnisse menschlich geprüft und als Testnachweis protokolliert'],
+    stopTitle: 'Sofortiger Stopp',
+    stop: 'Reale Daten, Identitäten, sensible Unterlagen, verbundene Kanäle oder operative Persistenz stoppen den Piloten und erfordern einen getrennten Entscheid.',
+    pilotDecisionTitle: 'Menschlicher Entscheid vor Ausführung erforderlich',
+    pilotDecision: 'M3S-INB-002 V0.1 nur als Protokoll eines fiktiven Piloten bestätigen oder ändern. Diese Spezifikation erlaubt die Durchführung noch nicht.',
+    pilotVerdict: 'STATUS · KANDIDATENSPEZIFIKATION. 0/6 Fälle ausgeführt, null reale Daten und keine operative Fähigkeit geöffnet.',
     verdict: 'STATUS · BESTÄTIGTER SCHREIBGESCHÜTZTER RAHMEN. Null reale Eingänge, Importe, Connectoren oder automatische Bearbeitungen aktiviert.'
   }
 };
@@ -88,6 +133,17 @@ const InstitutionalM3SInboxFrame = ({ language = 'FR' }) => {
       <GovernedDecisionRecord labels={t.recordLabels} record={t.record} />
       <div className="mt-4 rounded-md border border-violet-700/70 bg-violet-950/20 p-3"><div className="flex items-center gap-2"><SendHorizontal className="text-violet-300" size={17} aria-hidden="true" /><h5 className="text-sm font-semibold text-violet-100">{t.decisionTitle}</h5></div><p className="mt-2 text-sm font-semibold leading-6 text-violet-100">{t.decision}</p></div>
       <div className="mt-4 rounded-md border border-sky-700/70 bg-sky-950/20 p-3"><div className="flex items-center gap-2"><SendHorizontal className="text-sky-300" size={17} aria-hidden="true" /><h5 className="text-sm font-semibold text-sky-100">{t.nextTitle}</h5></div><p className="mt-2 text-sm font-semibold leading-6 text-sky-100">{t.next}</p></div>
+      <section data-testid="institutional-m3s-inbox-pilot-spec" className="m3s-inbox-pilot-spec mt-4 rounded-md border border-sky-800/70 bg-sky-950/10 p-3 sm:p-4" aria-labelledby="institutional-m3s-inbox-pilot-title">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between"><div className="max-w-5xl"><p className="text-xs font-semibold uppercase text-sky-300">{t.pilotEyebrow}</p><h5 id="institutional-m3s-inbox-pilot-title" className="mt-1 text-base font-semibold text-slate-100 sm:text-lg">{t.pilotTitle}</h5><p className="mt-2 text-sm leading-6 text-slate-300">{t.pilotIntro}</p></div><span className="inline-flex min-h-9 shrink-0 items-center gap-2 self-start rounded-md border border-amber-700/70 bg-amber-950/25 px-3 py-2 text-xs font-semibold text-amber-100"><ClipboardCheck size={16} aria-hidden="true" />V0.1</span></div>
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">{t.pilotCounters.map(([label, value, note]) => <article key={label} className="m3s-raised min-h-28 p-3"><p className="text-xs font-semibold text-slate-300">{label}</p><p className="mt-2 text-2xl font-semibold text-slate-100">{value}</p><p className="mt-2 text-xs leading-5 text-slate-400">{note}</p></article>)}</div>
+        <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <article className="m3s-raised p-3 sm:p-4"><div className="flex items-center gap-2"><Inbox className="text-sky-300" size={17} aria-hidden="true" /><h6 className="text-sm font-semibold text-slate-100">{t.scenariosTitle}</h6></div><ol className="mt-3 space-y-2">{t.scenarios.map((scenario, index) => <li key={scenario} className="flex min-h-10 items-center gap-3 rounded-md border border-slate-700 bg-slate-950/20 px-3 py-2 text-xs text-slate-300"><span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-sky-950/60 font-semibold text-sky-200">{index + 1}</span>{scenario}</li>)}</ol></article>
+          <article className="m3s-raised p-3 sm:p-4"><div className="flex items-center gap-2"><ListChecks className="text-violet-300" size={17} aria-hidden="true" /><h6 className="text-sm font-semibold text-slate-100">{t.stepsTitle}</h6></div><ol className="mt-3 space-y-2">{t.steps.map((step, index) => <li key={step} className="flex min-h-10 items-center gap-3 rounded-md border border-slate-700 bg-slate-950/20 px-3 py-2 text-xs text-slate-300"><span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-violet-950/60 font-semibold text-violet-200">{index + 1}</span>{step}</li>)}</ol></article>
+        </div>
+        <article className="m3s-raised mt-4 p-3 sm:p-4"><h6 className="text-sm font-semibold text-slate-100">{t.criteriaTitle}</h6><ul className="mt-3 grid grid-cols-1 gap-2 lg:grid-cols-2">{t.criteria.map(item => <li key={item} className="flex items-start gap-2 text-xs leading-5 text-slate-300"><CheckCircle2 className="mt-0.5 shrink-0 text-emerald-300" size={15} aria-hidden="true" />{item}</li>)}</ul></article>
+        <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2"><div className="rounded-md border border-red-800/70 bg-red-950/15 p-3"><div className="flex items-center gap-2"><AlertTriangle className="text-red-300" size={17} aria-hidden="true" /><h6 className="text-sm font-semibold text-red-100">{t.stopTitle}</h6></div><p className="mt-2 text-xs leading-5 text-slate-300">{t.stop}</p></div><div className="rounded-md border border-amber-800/70 bg-amber-950/15 p-3"><div className="flex items-center gap-2"><LockKeyhole className="text-amber-300" size={17} aria-hidden="true" /><h6 className="text-sm font-semibold text-amber-100">{t.pilotDecisionTitle}</h6></div><p className="mt-2 text-xs leading-5 text-slate-300">{t.pilotDecision}</p></div></div>
+        <p className="mt-4 rounded-md border border-sky-700/70 bg-sky-950/20 p-3 text-sm font-semibold leading-6 text-sky-100">{t.pilotVerdict}</p>
+      </section>
       <p className="mt-4 rounded-md border border-violet-700/70 bg-violet-950/20 p-3 text-sm font-semibold leading-6 text-violet-100">{t.verdict}</p>
     </section>
   );

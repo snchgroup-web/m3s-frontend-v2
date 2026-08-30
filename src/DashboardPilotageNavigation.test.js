@@ -115,6 +115,14 @@ test('opens the confirmed empty authorisation files and confirmed read-only Inbo
   expect(within(inbox).getByText('Automatisations').closest('article')).toHaveTextContent('0');
   expect(within(inbox).getByText(/M3S-INB-001 V0.1 est confirmé sans amendement/)).toBeInTheDocument();
   expect(within(inbox).getByText(/M3S-INB-002 V0.1 comme spécification d’un pilote manuel à données fictives/)).toBeInTheDocument();
+  const pilotSpec = within(inbox).getByTestId('institutional-m3s-inbox-pilot-spec');
+  expect(within(pilotSpec).getByText(/SPÉCIFICATION CANDIDATE · M3S-INB-002 · V0.1/)).toBeInTheDocument();
+  expect(within(pilotSpec).getByText('Cas fictifs prévus').closest('article')).toHaveTextContent('6');
+  expect(within(pilotSpec).getByText('Personnes réelles').closest('article')).toHaveTextContent('0');
+  expect(within(pilotSpec).getByText('Sources connectées').closest('article')).toHaveTextContent('0');
+  expect(within(pilotSpec).getByText('Automatismes').closest('article')).toHaveTextContent('0');
+  expect(within(pilotSpec).getByText(/Cette spécification n’autorise pas encore le lancement du pilote/)).toBeInTheDocument();
+  expect(within(pilotSpec).getByText(/0\/6 cas exécuté, zéro donnée réelle/)).toBeInTheDocument();
   expect(screen.queryByRole('heading', { name: 'MEP-01 · LEGAL' })).not.toBeInTheDocument();
 });
 
