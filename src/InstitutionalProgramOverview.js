@@ -63,9 +63,9 @@ const translations = {
     sourceMatrix: 'Matrice de cadrage V0.1 · 29 composantes',
     openResources: 'Voir les ressources',
     openArchitecture: 'Voir l’architecture',
-    focusedEyebrow: 'PILOTAGE GLOBAL · FAST TRACK · REF-01 V1.75',
-    focusedTitle: 'Autorisations vides confirmées · Boîte d’entrée à arbitrer',
-    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0 confirmé et le cadrage candidat M3S-INB-001 V0.1.',
+    focusedEyebrow: 'PILOTAGE GLOBAL · FAST TRACK · REF-01 V1.76',
+    focusedTitle: 'Boîte d’entrée confirmée · pilote fictif à cadrer',
+    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0 et le cadre confirmé M3S-INB-001 V1.0.',
     openFullProgram: 'Ouvrir le programme complet',
     returnToFocusedReview: 'Retour au cockpit Fast Track'
   },
@@ -104,9 +104,9 @@ const translations = {
     sourceMatrix: 'Framing matrix V0.1 · 29 components',
     openResources: 'View resources',
     openArchitecture: 'View architecture',
-    focusedEyebrow: 'GLOBAL STEERING · FAST TRACK · REF-01 V1.75',
-    focusedTitle: 'Empty authorisations confirmed · Inbox to decide',
-    focusedBody: 'This compact view brings together the Programme cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, confirmed AUT-003 V1.0 and candidate M3S-INB-001 V0.1.',
+    focusedEyebrow: 'GLOBAL STEERING · FAST TRACK · REF-01 V1.76',
+    focusedTitle: 'Inbox confirmed · fictional pilot to frame',
+    focusedBody: 'This compact view brings together the Programme cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0 and the confirmed M3S-INB-001 V1.0 framework.',
     openFullProgram: 'Open the full programme',
     returnToFocusedReview: 'Back to the Fast Track cockpit'
   },
@@ -145,9 +145,9 @@ const translations = {
     sourceMatrix: 'Strukturierungsmatrix V0.1 · 29 Komponenten',
     openResources: 'Ressourcen anzeigen',
     openArchitecture: 'Architektur anzeigen',
-    focusedEyebrow: 'GESAMTSTEUERUNG · FAST TRACK · REF-01 V1.75',
-    focusedTitle: 'Leere Autorisierungen bestätigt · Eingang zu entscheiden',
-    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, bestätigtes AUT-003 V1.0 und den Kandidatenrahmen M3S-INB-001 V0.1.',
+    focusedEyebrow: 'GESAMTSTEUERUNG · FAST TRACK · REF-01 V1.76',
+    focusedTitle: 'Eingang bestätigt · fiktiven Piloten einrahmen',
+    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0 und den bestätigten Rahmen M3S-INB-001 V1.0.',
     openFullProgram: 'Vollständiges Programm öffnen',
     returnToFocusedReview: 'Zurück zum Fast-Track-Cockpit'
   }
