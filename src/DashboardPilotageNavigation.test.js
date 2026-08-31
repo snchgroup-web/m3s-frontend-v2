@@ -95,6 +95,16 @@ test('opens the authorised bounded collection and keeps operational boundaries i
   expect(within(boundedScope).getByRole('heading', { name: 'Arrêt obligatoire et arbitrage distinct' })).toBeInTheDocument();
   expect(within(collection).getByRole('heading', { name: 'REF-01-DEC-078 · V1.0' })).toBeInTheDocument();
   expect(within(collection).getByText(/autorisé la collecte, continue/)).toBeInTheDocument();
+  const evidenceInventory = screen.getByTestId('ref01-g1-evidence-inventory');
+  expect(within(evidenceInventory).getByRole('heading', { name: 'Inventaire interne des sources probatoires' })).toBeInTheDocument();
+  expect(within(evidenceInventory).getAllByTestId('ref01-g1-evidence-inventory-record')).toHaveLength(13);
+  expect(within(evidenceInventory).getByText('Sources figées').closest('article')).toHaveTextContent('10/10');
+  expect(within(evidenceInventory).getByText('Écarts rapprochés').closest('article')).toHaveTextContent('13/13');
+  expect(within(evidenceInventory).getByText('Preuves acceptées').closest('article')).toHaveTextContent('0/13');
+  expect(within(evidenceInventory).getByText(/COL-INV-001 V0.1 est un inventaire candidat/)).toBeInTheDocument();
+  ['PG-03', 'PG-04', 'PG-05', 'PG-06', 'MIG-03', 'MIG-05', 'MIG-07', 'OUT-02', 'OUT-03', 'OUT-04', 'OUT-05', 'OUT-06', 'OUT-07'].forEach(id => {
+    expect(within(evidenceInventory).getByText(id)).toBeInTheDocument();
+  });
   const request = screen.getByTestId('ref01-g1-fast-track-evidence-request');
   expect(within(request).getByText('Dossiers couverts').closest('article')).toHaveTextContent('5/5');
   expect(within(request).getByText('Demandes envoyées').closest('article')).toHaveTextContent('0');
@@ -172,6 +182,7 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText(/HUMAN REVIEW ACCEPTED · The six synthetic results/)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Register of thirteen evidence gaps' })).toBeInTheDocument();
   expect(screen.getByText('COLLECTION AUTHORISED')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Internal evidence-source inventory' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-078 · V1.0' })).toBeInTheDocument();
   expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(16);
   expect(screen.getAllByText('Calculation not authorised')).toHaveLength(16);
@@ -185,6 +196,7 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText(/MENSCHLICHE PRÜFUNG ANGENOMMEN · Die sechs synthetischen Ergebnisse/)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Register der dreizehn Nachweislücken' })).toBeInTheDocument();
   expect(screen.getByText('SAMMLUNG AUTORISIERT')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Internes Inventar der Nachweisquellen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-078 · V1.0' })).toBeInTheDocument();
   expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(16);
   expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(16);
