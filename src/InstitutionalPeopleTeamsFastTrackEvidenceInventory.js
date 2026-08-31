@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertTriangle, Database, FileCheck2, FileSearch, Fingerprint, GitCommitHorizontal } from 'lucide-react';
+import GovernedDecisionRecord from './GovernedDecisionRecord';
 
 const text = (FR, EN, DE) => ({ FR, EN, DE });
 
@@ -34,37 +35,55 @@ const RECORDS = [
 
 const COPY = {
   FR: {
-    eyebrow: 'EXÉCUTION DEC-078 · COL-INV-001 · V0.1 · 31-08-2026',
+    eyebrow: 'INVENTAIRE CONFIRMÉ · DEC-079 · COL-INV-001 · V1.0 · 31-08-2026',
     title: 'Inventaire interne des sources probatoires',
-    intro: 'Les sources déjà accessibles sont figées et rapprochées des treize écarts. Cet inventaire prouve la provenance du constat actuel ; il ne remplace aucune des preuves attendues et ne requalifie aucune valeur.',
+    intro: 'Les sources déjà accessibles sont figées et rapprochées des treize écarts. DEC-079 confirme cet inventaire comme registre interne gouverné ; il prouve la provenance du constat actuel, sans remplacer les preuves attendues ni requalifier une valeur.',
     counters: [['Sources figées', '10/10', 'Frontend et backend'], ['Écarts rapprochés', '13/13', 'Une fiche par écart'], ['Statuts préservés', '8 + 5', 'Partiels + ouverts'], ['Preuves acceptées', '0/13', 'Contrôle distinct requis']],
     sourceTitle: 'Catalogue des sources figées',
     sourceIntro: 'Références opaques, chemins relatifs et empreintes courtes. Les commits complets restent dans Git.',
     repo: 'Dépôt', commit: 'Commit', hash: 'SHA-256', recordsTitle: 'Rapprochement par écart', sources: 'Sources indexées', finding: 'Constat borné',
     statuses: { partial: 'PARTIEL PRÉSERVÉ', open: 'OUVERT PRÉSERVÉ' },
-    boundary: 'COL-INV-001 V0.1 est un inventaire candidat produit sous DEC-078. Aucune preuve attendue n’est acceptée, aucune valeur n’est modifiée, G1 reste ouverte et L2 fermé.'
+    recordLabels: { eyebrow: 'Registre de décision gouverné', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision enregistrée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
+    record: { id: 'REF-01-DEC-079', version: 'V1.0', status: 'Inventaire interne candidat confirmé', author: 'Cheikh Ndiaye', date: '31-08-2026', decision: 'COL-INV-001 V0.1 est confirmé et promu en V1.0 comme inventaire interne gouverné des sources G1. Les dix sources restent rapprochées des treize écarts avec leurs statuts existants.', evidence: 'Confirmation explicite de Cheikh dans la session du 31-08-2026 : « Je confirme COL-INV-001 V0.1 comme inventaire interne candidat des sources G1 ». Le candidat avait été publié par la PR frontend nº 278.', limit: 'La décision confirme l’inventaire et sa traçabilité uniquement. Elle n’accepte aucune preuve attendue, ne désigne aucune source maîtresse de production, ne requalifie aucune valeur, ne ferme aucune condition G1 et n’ouvre ni L2 ni contact externe.' },
+    reviewTitle: 'Revue groupée de recevabilité candidate · REF-01-G1-REV-006 V0.1',
+    reviewIntro: 'REV signifie « revue ». Les dix sources sont recevables comme contexte interne traçable, mais aucune ne remplit encore la preuve de production attendue pour les treize écarts.',
+    reviewCounters: [['Sources examinées', '10/10'], ['Écarts examinés', '13/13'], ['Preuves attendues recevables', '0/13'], ['Requalifications proposées', '0']],
+    reviewVerdict: 'VERDICT CANDIDAT · Conserver 8 valeurs partielles et 5 ouvertes. Soumettre la revue en un seul arbitrage humain ; aucune ligne ne doit être rediscutée séparément sauf contradiction nouvelle.',
+    boundary: 'COL-INV-001 V1.0 est confirmé sous DEC-079. REF-01-G1-REV-006 V0.1 reste une revue candidate : aucune preuve attendue n’est acceptée, aucune valeur n’est modifiée, G1 reste ouverte et L2 fermé.'
   },
   EN: {
-    eyebrow: 'DEC-078 EXECUTION · COL-INV-001 · V0.1 · 31 AUG 2026',
+    eyebrow: 'CONFIRMED INVENTORY · DEC-079 · COL-INV-001 · V1.0 · 31 AUG 2026',
     title: 'Internal evidence-source inventory',
-    intro: 'Already accessible sources are pinned and mapped to the thirteen gaps. This inventory evidences provenance of the current finding; it replaces none of the expected proofs and requalifies no value.',
+    intro: 'Already accessible sources are pinned and mapped to the thirteen gaps. DEC-079 confirms this inventory as a governed internal register; it evidences provenance of the current finding without replacing expected proofs or requalifying any value.',
     counters: [['Pinned sources', '10/10', 'Frontend and backend'], ['Mapped gaps', '13/13', 'One record per gap'], ['Preserved statuses', '8 + 5', 'Partial + open'], ['Accepted proofs', '0/13', 'Separate control required']],
     sourceTitle: 'Pinned source catalogue',
     sourceIntro: 'Opaque references, relative paths and short fingerprints. Full commits remain in Git.',
     repo: 'Repository', commit: 'Commit', hash: 'SHA-256', recordsTitle: 'Gap-by-gap mapping', sources: 'Indexed sources', finding: 'Bounded finding',
     statuses: { partial: 'PARTIAL PRESERVED', open: 'OPEN PRESERVED' },
-    boundary: 'COL-INV-001 V0.1 is a candidate inventory produced under DEC-078. No expected proof is accepted, no value is changed, G1 remains open and L2 closed.'
+    recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
+    record: { id: 'REF-01-DEC-079', version: 'V1.0', status: 'Candidate internal inventory confirmed', author: 'Cheikh Ndiaye', date: '31 Aug 2026', decision: 'COL-INV-001 V0.1 is confirmed and promoted to V1.0 as the governed internal inventory of G1 sources. The ten sources remain mapped to the thirteen gaps with their existing statuses.', evidence: 'Cheikh’s explicit confirmation in the 31 Aug 2026 session, retained in French: “Je confirme COL-INV-001 V0.1 comme inventaire interne candidat des sources G1”. The candidate had been published through frontend PR 278.', limit: 'The decision confirms only the inventory and its traceability. It accepts no expected proof, designates no production master source, requalifies no value, closes no G1 condition and opens neither L2 nor external contact.' },
+    reviewTitle: 'Candidate grouped admissibility review · REF-01-G1-REV-006 V0.1',
+    reviewIntro: 'REV means “review”. The ten sources are admissible as traceable internal context, but none yet fulfils the expected production evidence for the thirteen gaps.',
+    reviewCounters: [['Sources reviewed', '10/10'], ['Gaps reviewed', '13/13'], ['Admissible expected proofs', '0/13'], ['Proposed requalifications', '0']],
+    reviewVerdict: 'CANDIDATE VERDICT · Preserve 8 partial and 5 open values. Submit the review through one human decision; no line needs separate debate unless new contradictory evidence appears.',
+    boundary: 'COL-INV-001 V1.0 is confirmed under DEC-079. REF-01-G1-REV-006 V0.1 remains a candidate review: no expected proof is accepted, no value is changed, G1 remains open and L2 closed.'
   },
   DE: {
-    eyebrow: 'AUSFÜHRUNG DEC-078 · COL-INV-001 · V0.1 · 31.08.2026',
+    eyebrow: 'BESTÄTIGTES INVENTAR · DEC-079 · COL-INV-001 · V1.0 · 31.08.2026',
     title: 'Internes Inventar der Nachweisquellen',
-    intro: 'Bereits zugängliche Quellen werden fixiert und den dreizehn Lücken zugeordnet. Dieses Inventar belegt die Herkunft des aktuellen Befunds; es ersetzt keinen erwarteten Nachweis und stuft keinen Wert neu ein.',
+    intro: 'Bereits zugängliche Quellen werden fixiert und den dreizehn Lücken zugeordnet. DEC-079 bestätigt dieses Inventar als gesteuertes internes Register; es belegt die Herkunft des aktuellen Befunds, ohne erwartete Nachweise zu ersetzen oder Werte neu einzustufen.',
     counters: [['Fixierte Quellen', '10/10', 'Frontend und Backend'], ['Zugeordnete Lücken', '13/13', 'Ein Datensatz je Lücke'], ['Bewahrte Status', '8 + 5', 'Teilweise + offen'], ['Akzeptierte Nachweise', '0/13', 'Getrennte Kontrolle nötig']],
     sourceTitle: 'Katalog der fixierten Quellen',
     sourceIntro: 'Opake Referenzen, relative Pfade und kurze Fingerabdrücke. Vollständige Commits bleiben in Git.',
     repo: 'Repository', commit: 'Commit', hash: 'SHA-256', recordsTitle: 'Zuordnung je Lücke', sources: 'Indexierte Quellen', finding: 'Begrenzter Befund',
     statuses: { partial: 'TEILWEISE BEWAHRT', open: 'OFFEN BEWAHRT' },
-    boundary: 'COL-INV-001 V0.1 ist ein unter DEC-078 erstelltes Kandidateninventar. Kein erwarteter Nachweis ist akzeptiert, kein Wert geändert, G1 bleibt offen und L2 geschlossen.'
+    recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Erfasster Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
+    record: { id: 'REF-01-DEC-079', version: 'V1.0', status: 'Kandidateninventar intern bestätigt', author: 'Cheikh Ndiaye', date: '31.08.2026', decision: 'COL-INV-001 V0.1 ist bestätigt und wird als gesteuertes internes Inventar der G1-Quellen zu V1.0. Die zehn Quellen bleiben den dreizehn Lücken mit ihren bestehenden Status zugeordnet.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 31.08.2026, im französischen Originalwortlaut: „Je confirme COL-INV-001 V0.1 comme inventaire interne candidat des sources G1“. Der Kandidat wurde zuvor mit Frontend-PR Nr. 278 veröffentlicht.', limit: 'Der Entscheid bestätigt nur Inventar und Rückverfolgbarkeit. Er nimmt keinen erwarteten Nachweis an, bestimmt keine produktive Masterquelle, stuft keinen Wert neu ein, schliesst keine G1-Bedingung und öffnet weder L2 noch externen Kontakt.' },
+    reviewTitle: 'Kandidat für gebündelte Zulässigkeitsprüfung · REF-01-G1-REV-006 V0.1',
+    reviewIntro: 'REV bedeutet „Review/Prüfung“. Die zehn Quellen sind als nachvollziehbarer interner Kontext zulässig, erfüllen aber noch keinen erwarteten Produktivnachweis für die dreizehn Lücken.',
+    reviewCounters: [['Geprüfte Quellen', '10/10'], ['Geprüfte Lücken', '13/13'], ['Zulässige erwartete Nachweise', '0/13'], ['Vorgeschlagene Neueinstufungen', '0']],
+    reviewVerdict: 'KANDIDATENVERDIKT · 8 teilweise und 5 offene Werte beibehalten. Die Prüfung in einem einzigen menschlichen Entscheid vorlegen; keine Zeile wird ohne neuen Widerspruch getrennt neu diskutiert.',
+    boundary: 'COL-INV-001 V1.0 ist unter DEC-079 bestätigt. REF-01-G1-REV-006 V0.1 bleibt ein Prüfungskandidat: Kein erwarteter Nachweis ist akzeptiert, kein Wert geändert, G1 bleibt offen und L2 geschlossen.'
   }
 };
 
@@ -98,6 +117,17 @@ const InstitutionalPeopleTeamsFastTrackEvidenceInventory = ({ language = 'FR' })
       <div className="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-2 2xl:grid-cols-3">
         {RECORDS.map(record => <article key={record.id} data-testid="ref01-g1-evidence-inventory-record" className="m3s-raised min-w-0 p-3 sm:p-4"><div className="flex flex-wrap items-start justify-between gap-2"><div><p className="text-xs font-semibold text-sky-300">{record.id}</p><p className="mt-1 text-xs font-semibold text-slate-300">{record.family}</p></div><span className={`inline-flex rounded-md border px-2 py-1 text-[10px] font-semibold ${statusStyle[record.status]}`}>{t.statuses[record.status]}</span></div><p className="mt-3 text-xs font-semibold text-slate-400">{t.sources}</p><div className="mt-2 flex flex-wrap gap-1.5">{record.sources.map(source => <span key={source} className="rounded border border-slate-700 bg-slate-950/30 px-2 py-1 font-mono text-[10px] text-slate-300">{source}</span>)}</div><p className="mt-3 text-xs font-semibold text-slate-400">{t.finding}</p><p className="mt-1 text-xs leading-5 text-slate-300">{record.finding[language] || record.finding.FR}</p></article>)}
       </div>
+
+      <GovernedDecisionRecord labels={t.recordLabels} record={t.record} />
+
+      <section className="mt-4 rounded-md border border-violet-800/70 bg-violet-950/10 p-3 sm:p-4" aria-labelledby="institutional-ref01-g1-rev-006-title">
+        <h5 id="institutional-ref01-g1-rev-006-title" className="text-sm font-semibold text-violet-200">{t.reviewTitle}</h5>
+        <p className="mt-2 text-xs leading-5 text-slate-300">{t.reviewIntro}</p>
+        <dl className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-4">
+          {t.reviewCounters.map(([label, value]) => <div key={label} className="m3s-raised p-3"><dt className="text-[11px] font-semibold text-slate-400">{label}</dt><dd className="mt-1 text-lg font-semibold text-slate-100">{value}</dd></div>)}
+        </dl>
+        <p className="mt-3 rounded-md border border-violet-700/70 bg-violet-950/20 p-3 text-xs font-semibold leading-5 text-violet-100">{t.reviewVerdict}</p>
+      </section>
 
       <p className="mt-4 flex items-start gap-2 rounded-md border border-amber-800/70 bg-amber-950/15 p-3 text-xs font-semibold leading-5 text-amber-100"><Fingerprint className="mt-0.5 shrink-0 text-amber-300" size={16} aria-hidden="true" />{t.boundary}</p>
     </section>
