@@ -21,6 +21,7 @@ import InstitutionalFastTrackGovernance from './InstitutionalFastTrackGovernance
 import InstitutionalPeopleTeamsGateG1FastTrackQualification from './InstitutionalPeopleTeamsGateG1FastTrackQualification';
 import InstitutionalPeopleTeamsFastTrackExceptionArbitration from './InstitutionalPeopleTeamsFastTrackExceptionArbitration';
 import InstitutionalPeopleTeamsFastTrackEvidenceCollection from './InstitutionalPeopleTeamsFastTrackEvidenceCollection';
+import InstitutionalPeopleTeamsFastTrackEvidenceInventory from './InstitutionalPeopleTeamsFastTrackEvidenceInventory';
 import InstitutionalPeopleTeamsFastTrackEvidenceRequest from './InstitutionalPeopleTeamsFastTrackEvidenceRequest';
 import InstitutionalPeopleTeamsFastTrackRecipientProfiles from './InstitutionalPeopleTeamsFastTrackRecipientProfiles';
 import InstitutionalPeopleTeamsFastTrackNamedRecipientSlots from './InstitutionalPeopleTeamsFastTrackNamedRecipientSlots';
@@ -187,6 +188,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
         <InstitutionalPeopleTeamsGateG1FastTrackQualification language={language} />
         <InstitutionalPeopleTeamsFastTrackExceptionArbitration language={language} />
         <InstitutionalPeopleTeamsFastTrackEvidenceCollection language={language} />
+        <InstitutionalPeopleTeamsFastTrackEvidenceInventory language={language} />
         <InstitutionalPeopleTeamsFastTrackEvidenceRequest language={language} />
         <InstitutionalPeopleTeamsFastTrackRecipientProfiles language={language} />
         <InstitutionalPeopleTeamsFastTrackNamedRecipientSlots language={language} />
@@ -222,6 +224,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
       <InstitutionalPeopleTeamsGateG1FastTrackQualification language={language} />
       <InstitutionalPeopleTeamsFastTrackExceptionArbitration language={language} />
       <InstitutionalPeopleTeamsFastTrackEvidenceCollection language={language} />
+      <InstitutionalPeopleTeamsFastTrackEvidenceInventory language={language} />
       <InstitutionalPeopleTeamsFastTrackEvidenceRequest language={language} />
       <InstitutionalPeopleTeamsFastTrackRecipientProfiles language={language} />
       <InstitutionalPeopleTeamsFastTrackNamedRecipientSlots language={language} />
