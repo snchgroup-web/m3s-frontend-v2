@@ -55,10 +55,10 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });
 
-test('opens the confirmed empty authorisation files and confirmed empty Inbox GO NO-GO form in the lightweight Fast Track view', () => {
+test('opens the accepted synthetic Inbox pilot and keeps operational boundaries in the lightweight Fast Track view', () => {
   renderDashboardNavigation({}, '/?view=program&focus=ref01-fasttrack');
 
-  expect(screen.getByRole('heading', { name: 'GO limité exécuté · relecture humaine ouverte' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Pilote fictif accepté · lot clos' })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'Ouvrir le programme complet' })).toHaveAttribute('href', '/?view=program&returnTo=ref01-fasttrack#institutional-ref01-fast-track-governance');
   expect(screen.getByTestId('institutional-fast-track-cockpit')).toBeInTheDocument();
   expect(screen.getByTestId('ref01-fast-track-governance')).toBeInTheDocument();
@@ -106,23 +106,25 @@ test('opens the confirmed empty authorisation files and confirmed empty Inbox GO
   expect(within(authorisationFiles).getByText('Contacts ou envois').closest('article')).toHaveTextContent('0');
   expect(within(authorisationFiles).getByRole('heading', { name: 'REF-01-DEC-072 · V1.0' })).toBeInTheDocument();
   expect(within(authorisationFiles).getByText(/REF-01-G1-AUT-003 V0.1 est confirmé sans amendement/)).toBeInTheDocument();
-  expect(within(authorisationFiles).getByText(/REF-01-DEC-076 enregistre dans M3S-INB-003 V1.1 le GO limité/)).toBeInTheDocument();
+  expect(within(authorisationFiles).getByText(/REF-01-DEC-077 accepte les 6\/6 résultats synthétiques/)).toBeInTheDocument();
   const inbox = screen.getByTestId('institutional-m3s-inbox-frame');
   expect(inbox).toBeInTheDocument();
-  expect(within(inbox).getByRole('heading', { name: 'REF-01-DEC-076 · V1.0' })).toBeInTheDocument();
+  expect(within(inbox).getByRole('heading', { name: 'REF-01-DEC-077 · V1.0' })).toBeInTheDocument();
   expect(within(inbox).getByText('Entrées réelles').closest('article')).toHaveTextContent('0');
   expect(within(inbox).getByText('Imports actifs').closest('article')).toHaveTextContent('0');
   expect(within(inbox).getByText('Automatisations').closest('article')).toHaveTextContent('0');
   expect(within(inbox).getByText(/M3S-INB-003 V1.1 enregistre le GO limité/)).toBeInTheDocument();
-  expect(within(inbox).getByText(/Le GO limité au pilote fictif M3S-INB-002 V1.0 est confirmé/)).toBeInTheDocument();
+  expect(within(inbox).getByText(/Les résultats des six cas fictifs de M3S-INB-002 V1.0 sont acceptés/)).toBeInTheDocument();
   const pilotSpec = within(inbox).getByTestId('institutional-m3s-inbox-pilot-spec');
   expect(within(pilotSpec).getByText(/PROTOCOLE CONFIRMÉ · M3S-INB-002 · V1.0/)).toBeInTheDocument();
   expect(within(pilotSpec).getByText('Cas fictifs exécutés').closest('article')).toHaveTextContent('6/6');
   expect(within(pilotSpec).getByText('Personnes réelles').closest('article')).toHaveTextContent('0');
   expect(within(pilotSpec).getByText('Sources connectées').closest('article')).toHaveTextContent('0');
   expect(within(pilotSpec).getByText('Automatismes').closest('article')).toHaveTextContent('0');
-  expect(within(pilotSpec).getByText(/REF-01-DEC-076 autorise uniquement l’exécution des six cas fictifs/)).toBeInTheDocument();
+  expect(within(pilotSpec).getByText(/REF-01-DEC-076 autorise l’exécution fictive ; REF-01-DEC-077 accepte séparément/)).toBeInTheDocument();
   expect(within(pilotSpec).getByText(/6\/6 cas réussis, 5\/5 critères techniques vérifiés/)).toBeInTheDocument();
+  expect(within(pilotSpec).getByText(/RELECTURE HUMAINE ACCEPTÉE/)).toBeInTheDocument();
+  expect(within(pilotSpec).getByText('Accepté')).toBeInTheDocument();
   const pilotResults = within(inbox).getByTestId('institutional-m3s-inbox-pilot-results');
   expect(within(pilotResults).getAllByTestId('institutional-m3s-inbox-pilot-result')).toHaveLength(6);
   expect(within(pilotResults).getByText('Cas exécutés').closest('article')).toHaveTextContent('6/6');
@@ -133,8 +135,8 @@ test('opens the confirmed empty authorisation files and confirmed empty Inbox GO
   expect(within(goNoGo).getByText(/FICHE DÉCIDÉE · M3S-INB-003 · V1.1/)).toBeInTheDocument();
   expect(within(goNoGo).getByText('Options sélectionnées').closest('article')).toHaveTextContent('1/2');
   expect(within(goNoGo).getByText('Cas autorisés').closest('article')).toHaveTextContent('6/6');
-  expect(within(goNoGo).getByText('Cas exécutés').closest('article')).toHaveTextContent('6/6');
-  expect(within(goNoGo).getByText(/Ce GO ne vaut ni mise en service ni ouverture L2/)).toBeInTheDocument();
+  expect(within(goNoGo).getByText('Cas acceptés').closest('article')).toHaveTextContent('6/6');
+  expect(within(goNoGo).getByText(/L’acceptation du lot fictif ne vaut ni mise en service ni ouverture L2/)).toBeInTheDocument();
   expect(screen.queryByRole('heading', { name: 'MEP-01 · LEGAL' })).not.toBeInTheDocument();
 });
 
@@ -152,6 +154,7 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Access, environments and continuity to consolidate')).toBeInTheDocument();
   expect(screen.getByText('Scope, contributions and allocations to reconcile')).toBeInTheDocument();
   expect(screen.getByText('Institutional scope and minimum inventory to define')).toBeInTheDocument();
+  expect(screen.getByText(/HUMAN REVIEW ACCEPTED · The six synthetic results/)).toBeInTheDocument();
   expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(16);
   expect(screen.getAllByText('Calculation not authorised')).toHaveLength(16);
 
@@ -161,6 +164,7 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Zugriffe, Umgebungen und Kontinuität zu konsolidieren')).toBeInTheDocument();
   expect(screen.getByText('Umfang, Beiträge und Zuordnungen abzustimmen')).toBeInTheDocument();
   expect(screen.getByText('Institutionellen Umfang und Mindestinventar definieren')).toBeInTheDocument();
+  expect(screen.getByText(/MENSCHLICHE PRÜFUNG ANGENOMMEN · Die sechs synthetischen Ergebnisse/)).toBeInTheDocument();
   expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(16);
   expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(16);
 });
@@ -503,7 +507,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.79 · 31-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.80 · 31-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -1010,7 +1014,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(waveCandidate).getByText('Autorisations unitaires').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Environnements désignés').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Tests lancés').closest('article')).toHaveTextContent('0');
-  expect(control.getByText(/décisions sur le lot : 73/)).toBeInTheDocument();
+  expect(control.getByText(/décisions sur le lot : 74/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
