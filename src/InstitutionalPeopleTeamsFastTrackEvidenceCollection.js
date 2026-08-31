@@ -150,64 +150,79 @@ const EVIDENCE_GAPS = [
 
 const COPY = {
   FR: {
-    eyebrow: 'PLAN DE PREUVES CONFIRMÉ · REF-01-G1-COL-003 · V1.0 · 30-08-2026',
-    title: 'Cinq dossiers de preuves organisés, collecte toujours fermée',
-    intro: 'DEC-068 confirme l’organisation documentaire issue d’ARB-002 V1.0. Les pièces attendues et les fonctions responsables candidates sont cadrées, sans contact, compte, donnée sensible, connexion ni test.',
-    counters: [['Dossiers confirmés', '5/5', 'Un par famille confirmée'], ['Décisions enregistrées', '1', 'REF-01-DEC-068'], ['Pièces reçues', '0', 'Aucune collecte lancée'], ['Autorisations L2', '0', 'G1 reste ouverte']],
+    eyebrow: 'COLLECTE BORNÉE AUTORISÉE · REF-01-G1-COL-003 · V1.1 · 31-08-2026',
+    title: 'Cinq dossiers de preuves ouverts à la collecte contrôlée',
+    intro: 'DEC-078 autorise la collecte documentaire interne des treize preuves manquantes déjà cadrées par COL-003 V1.0. Le périmètre reste limité à la lecture, l’indexation, le contrôle et la traçabilité ; aucun contact externe, accès réel, test ou L2 n’est ouvert.',
+    counters: [['Dossiers autorisés', '5/5', 'COL-EXC-01 à COL-EXC-05'], ['Décisions enregistrées', '2', 'DEC-068 et DEC-078'], ['Pièces reçues', '0/13', 'Contrôle non encore effectué'], ['Autorisations L2', '0', 'G1 reste ouverte']],
     labels: { owner: 'Fonctions responsables candidates', evidence: 'Pièces attendues' },
     gapEyebrow: 'COL-003 · 5 OUVERTES + 8 PARTIELLES',
     gapTitle: 'Registre des treize écarts probatoires',
-    gapIntro: 'Les cinq valeurs ouvertes et huit valeurs partielles sont reliées aux dossiers COL-003 sans modifier leur qualification. Cette vue prépare le contrôle ; elle ne lance aucune collecte.',
-    gapCounters: [['Écarts suivis', '13', 'Cinq familles'], ['Valeurs partielles', '8', 'Preuve incomplète'], ['Valeurs ouvertes', '5', 'Preuve absente'], ['Pièces reçues', '0/13', 'Collecte fermée']],
+    gapIntro: 'Les cinq valeurs ouvertes et huit valeurs partielles sont reliées aux dossiers COL-003 sans modifier leur qualification. DEC-078 ouvre leur collecte bornée ; chaque valeur restera inchangée jusqu’au contrôle effectif d’une preuve recevable.',
+    gapCounters: [['Écarts suivis', '13', 'Cinq familles'], ['Valeurs partielles', '8', 'Preuve incomplète'], ['Valeurs ouvertes', '5', 'Preuve absente'], ['Pièces reçues', '0/13', 'Collecte autorisée']],
     gapLabels: { family: 'Dossier', current: 'État contrôlé', expected: 'Preuve manquante', owner: 'Fonctions candidates' },
     gapStatuses: { partial: 'PARTIEL', open: 'OUVERT' },
-    gapStatus: 'COLLECTE FERMÉE',
-    status: 'CONFIRMÉ · COLLECTE NON OUVERTE',
+    gapStatus: 'COLLECTE AUTORISÉE',
+    status: 'AUTORISÉ · À COLLECTER',
+    collectionTitle: 'Périmètre exécutoire de la collecte bornée',
+    collectionAllowed: ['Lire les sources internes déjà accessibles dans M3S, Git et les journaux gouvernés.', 'Indexer les pièces par référence opaque, provenance, date et version sans publier leur contenu sensible.', 'Consulter les sources publiques officielles utiles à la qualification, sans compte ni prise de contact.', 'Contrôler séparément recevabilité, portée et fraîcheur avant toute modification d’une valeur.'],
+    stopTitle: 'Arrêt obligatoire et arbitrage distinct',
+    collectionStops: ['Identité, mandat, coordonnée ou document personnel non déjà autorisé.', 'Envoi de REQ-002, contact d’un destinataire, ouverture de compte ou achat.', 'Secret, identifiant, accès C3/C4/C5, connexion ou opération sur un système réel.', 'Sauvegarde, restauration, migration, worker, alerte ou test hors bac à sable.', 'Publication de preuve sensible, décision de conformité, fermeture G1 ou ouverture L2.'],
     decisionTitle: 'Résultat de la décision Fast Track',
-    decision: 'COL-003 V1.0 reste le plan documentaire gouverné des cinq dossiers. DEC-069 confirme désormais REQ-002 V1.0 comme modèle unique sans envoi.',
+    decision: 'COL-003 V1.1 ouvre la collecte interne et documentaire des treize écarts. REQ-002 V1.0 reste sans envoi et les profils, noms, canaux, accès, tests réels et L2 restent fermés.',
     recordLabels: { eyebrow: 'Registre de décision gouverné', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision enregistrée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
     record: { id: 'REF-01-DEC-068', version: 'V1.0', status: 'COL-003 confirmé comme plan documentaire', author: 'Cheikh Ndiaye', date: '30-08-2026', decision: 'REF-01-G1-COL-003 V0.1 est confirmé sans amendement et promu en V1.0 comme plan documentaire des cinq dossiers de preuves COL-EXC-01 à COL-EXC-05.', evidence: 'Confirmation explicite de Cheikh dans la session du 30-08-2026 : « Je confirme REF-01-G1-COL-003 V0.1 comme plan documentaire des cinq dossiers de preuves. »', limit: 'La décision valide uniquement l’organisation documentaire. Elle n’autorise aucun contact, envoi, collecte réelle, transmission sensible, compte, infrastructure, connexion, test, dépense ou action L2 ; G1 reste ouverte.' },
-    boundary: 'Les pièces reçues et les tests exécutés restent à zéro. Toute émission, collecte réelle, transmission sensible, création d’infrastructure, connexion ou test exige une autorisation humaine distincte.'
+    authorisationRecord: { id: 'REF-01-DEC-078', version: 'V1.0', status: 'Collecte probatoire interne et bornée autorisée', author: 'Cheikh Ndiaye', date: '31-08-2026', decision: 'REF-01-G1-COL-003 V1.0 est amendé et promu en V1.1. La collecte contrôlée des treize preuves manquantes est autorisée dans les cinq dossiers COL-EXC-01 à COL-EXC-05, uniquement dans le périmètre exécutoire affiché.', evidence: 'Autorisation explicite de Cheikh dans la session du 31-08-2026 : « autorisé la collecte, continue » ; registre trilingue des treize écarts publié par la PR frontend nº 276.', limit: 'La décision autorise l’inventaire documentaire interne et la consultation de sources publiques officielles. Elle n’autorise aucun envoi, contact, identité nouvelle, donnée sensible non autorisée, compte, achat, accès réel, connexion, test réel, changement de valeur sans contrôle, fermeture G1 ou ouverture L2.' },
+    boundary: 'La collecte est ouverte, mais aucune preuve n’est reçue ou acceptée par défaut. Chaque pièce doit être sourcée, contrôlée et reliée à un seul écart avant toute requalification.'
   },
   EN: {
-    eyebrow: 'CONFIRMED EVIDENCE PLAN · REF-01-G1-COL-003 · V1.0 · 30 AUG 2026',
-    title: 'Five evidence files organised, collection still closed',
-    intro: 'DEC-068 confirms the documentary organisation derived from ARB-002 V1.0. Expected records and candidate responsible functions are framed, with no contact, account, sensitive data, connection or test.',
-    counters: [['Confirmed files', '5/5', 'One per confirmed family'], ['Recorded decisions', '1', 'REF-01-DEC-068'], ['Records received', '0', 'No collection started'], ['L2 authorisations', '0', 'G1 remains open']],
+    eyebrow: 'BOUNDED COLLECTION AUTHORISED · REF-01-G1-COL-003 · V1.1 · 31 AUG 2026',
+    title: 'Five evidence files open for controlled collection',
+    intro: 'DEC-078 authorises internal documentary collection of the thirteen missing evidence items already framed by COL-003 V1.0. Scope remains limited to reading, indexing, control and traceability; no external contact, real access, test or L2 is opened.',
+    counters: [['Authorised files', '5/5', 'COL-EXC-01 through COL-EXC-05'], ['Recorded decisions', '2', 'DEC-068 and DEC-078'], ['Records received', '0/13', 'Control not yet performed'], ['L2 authorisations', '0', 'G1 remains open']],
     labels: { owner: 'Candidate responsible functions', evidence: 'Expected records' },
     gapEyebrow: 'COL-003 · 5 OPEN + 8 PARTIAL',
     gapTitle: 'Register of thirteen evidence gaps',
-    gapIntro: 'The five open and eight partial values are linked to the COL-003 files without changing their qualification. This view prepares control; it starts no collection.',
-    gapCounters: [['Tracked gaps', '13', 'Five families'], ['Partial values', '8', 'Incomplete evidence'], ['Open values', '5', 'Missing evidence'], ['Records received', '0/13', 'Collection closed']],
+    gapIntro: 'The five open and eight partial values are linked to the COL-003 files without changing their qualification. DEC-078 opens their bounded collection; each value remains unchanged until admissible evidence is actually controlled.',
+    gapCounters: [['Tracked gaps', '13', 'Five families'], ['Partial values', '8', 'Incomplete evidence'], ['Open values', '5', 'Missing evidence'], ['Records received', '0/13', 'Collection authorised']],
     gapLabels: { family: 'File', current: 'Controlled state', expected: 'Missing evidence', owner: 'Candidate functions' },
     gapStatuses: { partial: 'PARTIAL', open: 'OPEN' },
-    gapStatus: 'COLLECTION CLOSED',
-    status: 'CONFIRMED · COLLECTION NOT OPEN',
+    gapStatus: 'COLLECTION AUTHORISED',
+    status: 'AUTHORISED · TO COLLECT',
+    collectionTitle: 'Executable scope of the bounded collection',
+    collectionAllowed: ['Read internal sources already accessible in M3S, Git and governed logs.', 'Index records by opaque reference, provenance, date and version without publishing sensitive content.', 'Consult official public sources needed for qualification, with no account or contact.', 'Control admissibility, scope and freshness separately before changing any value.'],
+    stopTitle: 'Mandatory stop and separate decision',
+    collectionStops: ['Identity, mandate, contact detail or personal record not already authorised.', 'Release of REQ-002, recipient contact, account opening or purchase.', 'Secret, credential, C3/C4/C5 access, connection or operation on a real system.', 'Backup, restore, migration, worker, alert or test outside the sandbox.', 'Publication of sensitive evidence, compliance decision, G1 closure or L2 opening.'],
     decisionTitle: 'Fast Track decision outcome',
-    decision: 'COL-003 V1.0 remains the governed documentary plan for the five files. DEC-069 now confirms REQ-002 V1.0 as one template without release.',
+    decision: 'COL-003 V1.1 opens internal documentary collection for the thirteen gaps. REQ-002 V1.0 remains unreleased and profiles, names, channels, access, real tests and L2 remain closed.',
     recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
     record: { id: 'REF-01-DEC-068', version: 'V1.0', status: 'COL-003 confirmed as documentary plan', author: 'Cheikh Ndiaye', date: '30 Aug 2026', decision: 'REF-01-G1-COL-003 V0.1 is confirmed without amendment and promoted to V1.0 as the documentary plan for the five COL-EXC-01 through COL-EXC-05 evidence files.', evidence: 'Cheikh’s explicit confirmation in the 30 Aug 2026 session: “I confirm REF-01-G1-COL-003 V0.1 as the documentary plan for the five evidence files.”', limit: 'The decision validates documentary organisation only. It authorises no contact, release, real collection, sensitive transmission, account, infrastructure, connection, test, expense or L2 action; G1 remains open.' },
-    boundary: 'Records received and tests run remain at zero. Any release, real collection, sensitive transmission, infrastructure creation, connection or test requires a separate human authorisation.'
+    authorisationRecord: { id: 'REF-01-DEC-078', version: 'V1.0', status: 'Internal bounded evidence collection authorised', author: 'Cheikh Ndiaye', date: '31 Aug 2026', decision: 'REF-01-G1-COL-003 V1.0 is amended and promoted to V1.1. Controlled collection of the thirteen missing evidence items is authorised across COL-EXC-01 through COL-EXC-05, only within the displayed executable scope.', evidence: 'Cheikh’s explicit authorisation in the 31 Aug 2026 session, retained in French: “autorisé la collecte, continue”; trilingual register of thirteen gaps published through frontend PR 276.', limit: 'The decision authorises internal documentary inventory and consultation of official public sources. It authorises no release, contact, new identity, unauthorised sensitive data, account, purchase, real access, connection, real test, value change without control, G1 closure or L2 opening.' },
+    boundary: 'Collection is open, but no evidence is received or accepted by default. Every record must be sourced, controlled and linked to one gap before any requalification.'
   },
   DE: {
-    eyebrow: 'BESTÄTIGTER NACHWEISPLAN · REF-01-G1-COL-003 · V1.0 · 30.08.2026',
-    title: 'Fünf Nachweisakten organisiert, Sammlung weiter geschlossen',
-    intro: 'DEC-068 bestätigt die aus ARB-002 V1.0 abgeleitete Dokumentationsorganisation. Erwartete Unterlagen und Kandidatenfunktionen sind strukturiert, ohne Kontakt, Konto, sensible Daten, Verbindung oder Prüfung.',
-    counters: [['Bestätigte Akten', '5/5', 'Eine je bestätigter Familie'], ['Erfasste Entscheide', '1', 'REF-01-DEC-068'], ['Erhaltene Unterlagen', '0', 'Keine Sammlung gestartet'], ['L2-Autorisierungen', '0', 'G1 bleibt offen']],
+    eyebrow: 'BEGRENZTE SAMMLUNG AUTORISIERT · REF-01-G1-COL-003 · V1.1 · 31.08.2026',
+    title: 'Fünf Nachweisakten für kontrollierte Sammlung geöffnet',
+    intro: 'DEC-078 autorisiert die interne dokumentarische Sammlung der dreizehn fehlenden Nachweise, die bereits durch COL-003 V1.0 strukturiert sind. Der Umfang bleibt auf Lesen, Indexierung, Kontrolle und Rückverfolgbarkeit beschränkt; kein externer Kontakt, realer Zugriff, Test oder L2 wird geöffnet.',
+    counters: [['Autorisierte Akten', '5/5', 'COL-EXC-01 bis COL-EXC-05'], ['Erfasste Entscheide', '2', 'DEC-068 und DEC-078'], ['Erhaltene Unterlagen', '0/13', 'Kontrolle noch nicht durchgeführt'], ['L2-Autorisierungen', '0', 'G1 bleibt offen']],
     labels: { owner: 'Kandidatenfunktionen', evidence: 'Erwartete Unterlagen' },
     gapEyebrow: 'COL-003 · 5 OFFEN + 8 TEILWEISE',
     gapTitle: 'Register der dreizehn Nachweislücken',
-    gapIntro: 'Die fünf offenen und acht teilweisen Werte sind mit den COL-003-Akten verknüpft, ohne ihre Qualifizierung zu ändern. Diese Ansicht bereitet die Kontrolle vor; sie startet keine Sammlung.',
-    gapCounters: [['Verfolgte Lücken', '13', 'Fünf Familien'], ['Teilweise Werte', '8', 'Unvollständiger Nachweis'], ['Offene Werte', '5', 'Fehlender Nachweis'], ['Erhaltene Unterlagen', '0/13', 'Sammlung geschlossen']],
+    gapIntro: 'Die fünf offenen und acht teilweisen Werte sind mit den COL-003-Akten verknüpft, ohne ihre Qualifizierung zu ändern. DEC-078 öffnet ihre begrenzte Sammlung; jeder Wert bleibt unverändert, bis ein zulässiger Nachweis tatsächlich kontrolliert ist.',
+    gapCounters: [['Verfolgte Lücken', '13', 'Fünf Familien'], ['Teilweise Werte', '8', 'Unvollständiger Nachweis'], ['Offene Werte', '5', 'Fehlender Nachweis'], ['Erhaltene Unterlagen', '0/13', 'Sammlung autorisiert']],
     gapLabels: { family: 'Akte', current: 'Kontrollierter Stand', expected: 'Fehlender Nachweis', owner: 'Kandidatenfunktionen' },
     gapStatuses: { partial: 'TEILWEISE', open: 'OFFEN' },
-    gapStatus: 'SAMMLUNG GESCHLOSSEN',
-    status: 'BESTÄTIGT · SAMMLUNG NICHT GEÖFFNET',
+    gapStatus: 'SAMMLUNG AUTORISIERT',
+    status: 'AUTORISIERT · ZU SAMMELN',
+    collectionTitle: 'Ausführbarer Umfang der begrenzten Sammlung',
+    collectionAllowed: ['Bereits zugängliche interne Quellen in M3S, Git und gesteuerten Protokollen lesen.', 'Unterlagen mit opaker Referenz, Herkunft, Datum und Version indexieren, ohne sensible Inhalte zu veröffentlichen.', 'Für die Qualifizierung nötige amtliche öffentliche Quellen ohne Konto oder Kontakt konsultieren.', 'Zulässigkeit, Umfang und Aktualität getrennt kontrollieren, bevor ein Wert geändert wird.'],
+    stopTitle: 'Obligatorischer Stopp und getrennter Entscheid',
+    collectionStops: ['Nicht bereits autorisierte Identität, Mandat, Kontaktdaten oder Personaldokumente.', 'Versand von REQ-002, Kontakt mit Empfängern, Kontoeröffnung oder Kauf.', 'Geheimnis, Kennung, C3/C4/C5-Zugriff, Verbindung oder Operation auf einem realen System.', 'Sicherung, Wiederherstellung, Migration, Worker, Alarm oder Test ausserhalb der Sandbox.', 'Veröffentlichung sensibler Nachweise, Konformitätsentscheid, G1-Schliessung oder L2-Öffnung.'],
     decisionTitle: 'Ergebnis des Fast-Track-Entscheids',
-    decision: 'COL-003 V1.0 bleibt der gesteuerte Dokumentationsplan der fünf Akten. DEC-069 bestätigt nun REQ-002 V1.0 als einheitliche Vorlage ohne Versand.',
+    decision: 'COL-003 V1.1 öffnet die interne dokumentarische Sammlung für die dreizehn Lücken. REQ-002 V1.0 bleibt ohne Versand; Profile, Namen, Kanäle, Zugriffe, reale Tests und L2 bleiben geschlossen.',
     recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Dokumentierter Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
     record: { id: 'REF-01-DEC-068', version: 'V1.0', status: 'COL-003 als Dokumentationsplan bestätigt', author: 'Cheikh Ndiaye', date: '30.08.2026', decision: 'REF-01-G1-COL-003 V0.1 wird ohne Änderung bestätigt und zu V1.0 als Dokumentationsplan für die fünf Nachweisakten COL-EXC-01 bis COL-EXC-05.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 30.08.2026: „Ich bestätige REF-01-G1-COL-003 V0.1 als Dokumentationsplan der fünf Nachweisakten.“', limit: 'Der Entscheid validiert nur die Dokumentationsorganisation. Er erlaubt keinen Kontakt, Versand, reale Sammlung, sensible Übermittlung, kein Konto, keine Infrastruktur, Verbindung, Prüfung, Ausgabe oder L2-Aktion; G1 bleibt offen.' },
-    boundary: 'Erhaltene Unterlagen und ausgeführte Prüfungen bleiben bei null. Jeder Versand, jede reale Sammlung, sensible Übermittlung, Infrastrukturerstellung, Verbindung oder Prüfung benötigt einen getrennten menschlichen Entscheid.'
+    authorisationRecord: { id: 'REF-01-DEC-078', version: 'V1.0', status: 'Interne begrenzte Nachweissammlung autorisiert', author: 'Cheikh Ndiaye', date: '31.08.2026', decision: 'REF-01-G1-COL-003 V1.0 wird geändert und zu V1.1. Die kontrollierte Sammlung der dreizehn fehlenden Nachweise in COL-EXC-01 bis COL-EXC-05 wird nur im angezeigten ausführbaren Umfang autorisiert.', evidence: 'Ausdrückliche Autorisierung von Cheikh in der Sitzung vom 31.08.2026, im französischen Originalwortlaut: „autorisé la collecte, continue“; dreisprachiges Register der dreizehn Lücken mit Frontend-PR Nr. 276 veröffentlicht.', limit: 'Der Entscheid erlaubt interne Dokumentinventur und die Konsultation amtlicher öffentlicher Quellen. Er erlaubt keinen Versand, Kontakt, neue Identität, nicht autorisierte sensible Daten, Konto, Kauf, realen Zugriff, Verbindung, realen Test, Wertänderung ohne Kontrolle, G1-Schliessung oder L2-Öffnung.' },
+    boundary: 'Die Sammlung ist geöffnet, aber kein Nachweis wird standardmässig als erhalten oder angenommen betrachtet. Jede Unterlage muss belegt, kontrolliert und einer einzigen Lücke zugeordnet werden, bevor eine Neueinstufung erfolgt.'
   }
 };
 
@@ -237,12 +252,18 @@ const InstitutionalPeopleTeamsFastTrackEvidenceCollection = ({ language = 'FR' }
       </div>
 
       <section data-testid="ref01-g1-evidence-gap-register" className="mt-4 rounded-md border border-amber-800/70 bg-amber-950/10 p-3 sm:p-4" aria-labelledby="ref01-g1-evidence-gap-register-title">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between"><div className="max-w-5xl"><p className="text-xs font-semibold uppercase text-amber-300">{t.gapEyebrow}</p><h5 id="ref01-g1-evidence-gap-register-title" className="mt-1 text-base font-semibold text-slate-100">{t.gapTitle}</h5><p className="mt-2 text-sm leading-6 text-slate-300">{t.gapIntro}</p></div><span className="inline-flex min-h-9 shrink-0 items-center self-start rounded-md border border-rose-700/70 bg-rose-950/25 px-3 py-2 text-xs font-semibold text-rose-100">{t.gapStatus}</span></div>
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between"><div className="max-w-5xl"><p className="text-xs font-semibold uppercase text-amber-300">{t.gapEyebrow}</p><h5 id="ref01-g1-evidence-gap-register-title" className="mt-1 text-base font-semibold text-slate-100">{t.gapTitle}</h5><p className="mt-2 text-sm leading-6 text-slate-300">{t.gapIntro}</p></div><span className="inline-flex min-h-9 shrink-0 items-center self-start rounded-md border border-emerald-700/70 bg-emerald-950/25 px-3 py-2 text-xs font-semibold text-emerald-100">{t.gapStatus}</span></div>
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">{t.gapCounters.map(([label, value, note]) => <article key={label} className="m3s-raised min-h-24 p-3"><p className="text-xs font-semibold text-slate-300">{label}</p><p className="mt-2 text-2xl font-semibold text-slate-100">{value}</p><p className="mt-2 text-xs leading-5 text-slate-400">{note}</p></article>)}</div>
         <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2 2xl:grid-cols-3">{EVIDENCE_GAPS.map(gap => { const family = PACKAGES.find(item => item.id === gap.family); return <article key={gap.id} data-testid="ref01-g1-evidence-gap" className="m3s-raised min-w-0 p-3 sm:p-4"><div className="flex flex-wrap items-start justify-between gap-2"><div><p className="text-xs font-semibold text-sky-300">{gap.id}</p><h6 className="mt-1 text-sm font-semibold text-slate-100">{gap.field[language] || gap.field.FR}</h6></div><span className={`inline-flex rounded-md border px-2 py-1 text-[10px] font-semibold ${GAP_STATUS_STYLES[gap.status]}`}>{t.gapStatuses[gap.status]}</span></div><dl className="mt-3 space-y-3 text-xs leading-5"><div><dt className="font-semibold text-slate-400">{t.gapLabels.family}</dt><dd className="mt-1 font-semibold text-slate-200">{gap.family}</dd></div><div><dt className="font-semibold text-slate-400">{t.gapLabels.current}</dt><dd className="mt-1 text-slate-300">{gap.current[language] || gap.current.FR}</dd></div><div><dt className="font-semibold text-amber-300">{t.gapLabels.expected}</dt><dd className="mt-1 text-slate-300">{gap.expected[language] || gap.expected.FR}</dd></div><div><dt className="font-semibold text-slate-400">{t.gapLabels.owner}</dt><dd className="mt-1 text-slate-300">{family.owner[language] || family.owner.FR}</dd></div></dl></article>; })}</div>
       </section>
 
+      <section data-testid="ref01-g1-bounded-collection-scope" className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">
+        <article className="rounded-md border border-emerald-800/70 bg-emerald-950/15 p-3 sm:p-4"><h5 className="text-sm font-semibold text-emerald-100">{t.collectionTitle}</h5><ul className="mt-3 space-y-2">{t.collectionAllowed.map(rule => <li key={rule} className="flex items-start gap-2 text-xs leading-5 text-slate-300"><CheckCircle2 className="mt-0.5 shrink-0 text-emerald-300" size={15} aria-hidden="true" />{rule}</li>)}</ul></article>
+        <article className="rounded-md border border-rose-800/70 bg-rose-950/15 p-3 sm:p-4"><h5 className="text-sm font-semibold text-rose-100">{t.stopTitle}</h5><ul className="mt-3 space-y-2">{t.collectionStops.map(rule => <li key={rule} className="flex items-start gap-2 text-xs leading-5 text-slate-300"><AlertTriangle className="mt-0.5 shrink-0 text-rose-300" size={15} aria-hidden="true" />{rule}</li>)}</ul></article>
+      </section>
+
       <GovernedDecisionRecord labels={t.recordLabels} record={t.record} />
+      <GovernedDecisionRecord labels={t.recordLabels} record={t.authorisationRecord} />
       <div className="mt-4 rounded-md border border-cyan-700/70 bg-cyan-950/20 p-4"><div className="flex items-center gap-2"><ShieldCheck className="text-cyan-300" size={18} aria-hidden="true" /><h5 className="text-sm font-semibold text-cyan-100">{t.decisionTitle}</h5></div><p className="mt-2 text-sm font-semibold leading-6 text-cyan-100">{t.decision}</p></div>
       <p className="mt-3 flex items-start gap-2 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.boundary}</p>
     </section>

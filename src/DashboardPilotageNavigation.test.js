@@ -55,10 +55,10 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });
 
-test('opens the accepted synthetic Inbox pilot and keeps operational boundaries in the lightweight Fast Track view', () => {
+test('opens the authorised bounded collection and keeps operational boundaries in the lightweight Fast Track view', () => {
   renderDashboardNavigation({}, '/?view=program&focus=ref01-fasttrack');
 
-  expect(screen.getByRole('heading', { name: 'Pilote fictif accepté · lot clos' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Collecte probatoire bornée autorisée' })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'Ouvrir le programme complet' })).toHaveAttribute('href', '/?view=program&returnTo=ref01-fasttrack#institutional-ref01-fast-track-governance');
   expect(screen.getByTestId('institutional-fast-track-cockpit')).toBeInTheDocument();
   expect(screen.getByTestId('ref01-fast-track-governance')).toBeInTheDocument();
@@ -77,18 +77,24 @@ test('opens the accepted synthetic Inbox pilot and keeps operational boundaries 
   expect(within(arbitration).getByText(/Je confirme REF-01-G1-ARB-002 V0.1 dans son ensemble/)).toBeInTheDocument();
   const collection = screen.getByTestId('ref01-g1-fast-track-evidence-plan');
   expect(within(collection).getAllByTestId('ref01-g1-fast-track-evidence-family')).toHaveLength(5);
-  expect(within(collection).getByText('Aucune collecte lancée').closest('article')).toHaveTextContent('0');
+  expect(within(collection).getByText('Dossiers autorisés').closest('article')).toHaveTextContent('5/5');
+  expect(within(collection).getByText('Décisions enregistrées').closest('article')).toHaveTextContent('2');
   const gapRegister = within(collection).getByTestId('ref01-g1-evidence-gap-register');
   expect(within(gapRegister).getAllByTestId('ref01-g1-evidence-gap')).toHaveLength(13);
   expect(within(gapRegister).getByText('Valeurs partielles').closest('article')).toHaveTextContent('8');
   expect(within(gapRegister).getByText('Valeurs ouvertes').closest('article')).toHaveTextContent('5');
   expect(within(gapRegister).getByText('Pièces reçues').closest('article')).toHaveTextContent('0/13');
-  expect(within(gapRegister).getByText('COLLECTE FERMÉE')).toBeInTheDocument();
+  expect(within(gapRegister).getByText('COLLECTE AUTORISÉE')).toBeInTheDocument();
   ['PG-03', 'PG-04', 'PG-05', 'PG-06', 'MIG-03', 'MIG-05', 'MIG-07', 'OUT-02', 'OUT-03', 'OUT-04', 'OUT-05', 'OUT-06', 'OUT-07'].forEach(id => {
     expect(within(gapRegister).getByText(id)).toBeInTheDocument();
   });
   expect(within(collection).getByRole('heading', { name: 'REF-01-DEC-068 · V1.0' })).toBeInTheDocument();
   expect(within(collection).getByText(/Je confirme REF-01-G1-COL-003 V0.1 comme plan documentaire/)).toBeInTheDocument();
+  const boundedScope = within(collection).getByTestId('ref01-g1-bounded-collection-scope');
+  expect(within(boundedScope).getByRole('heading', { name: 'Périmètre exécutoire de la collecte bornée' })).toBeInTheDocument();
+  expect(within(boundedScope).getByRole('heading', { name: 'Arrêt obligatoire et arbitrage distinct' })).toBeInTheDocument();
+  expect(within(collection).getByRole('heading', { name: 'REF-01-DEC-078 · V1.0' })).toBeInTheDocument();
+  expect(within(collection).getByText(/autorisé la collecte, continue/)).toBeInTheDocument();
   const request = screen.getByTestId('ref01-g1-fast-track-evidence-request');
   expect(within(request).getByText('Dossiers couverts').closest('article')).toHaveTextContent('5/5');
   expect(within(request).getByText('Demandes envoyées').closest('article')).toHaveTextContent('0');
@@ -115,7 +121,7 @@ test('opens the accepted synthetic Inbox pilot and keeps operational boundaries 
   expect(within(authorisationFiles).getByText('Contacts ou envois').closest('article')).toHaveTextContent('0');
   expect(within(authorisationFiles).getByRole('heading', { name: 'REF-01-DEC-072 · V1.0' })).toBeInTheDocument();
   expect(within(authorisationFiles).getByText(/REF-01-G1-AUT-003 V0.1 est confirmé sans amendement/)).toBeInTheDocument();
-  expect(within(authorisationFiles).getByText(/REF-01-DEC-077 accepte les 6\/6 résultats synthétiques/)).toBeInTheDocument();
+  expect(within(authorisationFiles).getByText(/REF-01-DEC-078 autorise COL-003 V1.1 à collecter en interne/)).toBeInTheDocument();
   const inbox = screen.getByTestId('institutional-m3s-inbox-frame');
   expect(inbox).toBeInTheDocument();
   expect(within(inbox).getByRole('heading', { name: 'REF-01-DEC-077 · V1.0' })).toBeInTheDocument();
@@ -165,7 +171,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Institutional scope and minimum inventory to define')).toBeInTheDocument();
   expect(screen.getByText(/HUMAN REVIEW ACCEPTED · The six synthetic results/)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Register of thirteen evidence gaps' })).toBeInTheDocument();
-  expect(screen.getByText('COLLECTION CLOSED')).toBeInTheDocument();
+  expect(screen.getByText('COLLECTION AUTHORISED')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-078 · V1.0' })).toBeInTheDocument();
   expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(16);
   expect(screen.getAllByText('Calculation not authorised')).toHaveLength(16);
 
@@ -177,7 +184,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Institutionellen Umfang und Mindestinventar definieren')).toBeInTheDocument();
   expect(screen.getByText(/MENSCHLICHE PRÜFUNG ANGENOMMEN · Die sechs synthetischen Ergebnisse/)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Register der dreizehn Nachweislücken' })).toBeInTheDocument();
-  expect(screen.getByText('SAMMLUNG GESCHLOSSEN')).toBeInTheDocument();
+  expect(screen.getByText('SAMMLUNG AUTORISIERT')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'REF-01-DEC-078 · V1.0' })).toBeInTheDocument();
   expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(16);
   expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(16);
 });
@@ -520,7 +528,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
     .getByRole('heading', { name: 'REF-01 · Personnes et équipes' })
     .closest('section');
   const control = within(section);
-  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.80 · 31-08-2026')).toBeInTheDocument();
+  expect(control.getByText('CONTROLE DETAILLE 1/11 · REF-01 · V1.81 · 31-08-2026')).toBeInTheDocument();
   expect(control.getByText('Axes contrôlés')).toBeInTheDocument();
   expect(control.getByText('Événements de cycle validés')).toBeInTheDocument();
   expect(control.getByText('Données personnelles publiées')).toBeInTheDocument();
@@ -1027,7 +1035,7 @@ test('frames REF-01 people and teams without exposing RH-001 records or promotin
   expect(within(waveCandidate).getByText('Autorisations unitaires').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Environnements désignés').closest('article')).toHaveTextContent('0/3');
   expect(within(waveCandidate).getByText('Tests lancés').closest('article')).toHaveTextContent('0');
-  expect(control.getByText(/décisions sur le lot : 74/)).toBeInTheDocument();
+  expect(control.getByText(/décisions sur le lot : 75/)).toBeInTheDocument();
   expect(control.getByText(/sources maîtresses désignées : 0/)).toBeInTheDocument();
   expect(control.getAllByText('Responsabilité collective').length).toBeGreaterThan(0);
   expect(control.getByText(/ce lot ne valide ni identité civile/)).toBeInTheDocument();
@@ -1733,7 +1741,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Confirm two separate frameworks without opening execution' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(80);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(81);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(9);
@@ -1745,7 +1753,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Zwei getrennte Rahmen bestätigen, ohne ihre Ausführung zu öffnen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(80);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(81);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(9);
