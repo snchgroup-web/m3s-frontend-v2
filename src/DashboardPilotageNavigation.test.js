@@ -77,7 +77,16 @@ test('opens the accepted synthetic Inbox pilot and keeps operational boundaries 
   expect(within(arbitration).getByText(/Je confirme REF-01-G1-ARB-002 V0.1 dans son ensemble/)).toBeInTheDocument();
   const collection = screen.getByTestId('ref01-g1-fast-track-evidence-plan');
   expect(within(collection).getAllByTestId('ref01-g1-fast-track-evidence-family')).toHaveLength(5);
-  expect(within(collection).getByText('Pièces reçues').closest('article')).toHaveTextContent('0');
+  expect(within(collection).getByText('Aucune collecte lancée').closest('article')).toHaveTextContent('0');
+  const gapRegister = within(collection).getByTestId('ref01-g1-evidence-gap-register');
+  expect(within(gapRegister).getAllByTestId('ref01-g1-evidence-gap')).toHaveLength(13);
+  expect(within(gapRegister).getByText('Valeurs partielles').closest('article')).toHaveTextContent('8');
+  expect(within(gapRegister).getByText('Valeurs ouvertes').closest('article')).toHaveTextContent('5');
+  expect(within(gapRegister).getByText('Pièces reçues').closest('article')).toHaveTextContent('0/13');
+  expect(within(gapRegister).getByText('COLLECTE FERMÉE')).toBeInTheDocument();
+  ['PG-03', 'PG-04', 'PG-05', 'PG-06', 'MIG-03', 'MIG-05', 'MIG-07', 'OUT-02', 'OUT-03', 'OUT-04', 'OUT-05', 'OUT-06', 'OUT-07'].forEach(id => {
+    expect(within(gapRegister).getByText(id)).toBeInTheDocument();
+  });
   expect(within(collection).getByRole('heading', { name: 'REF-01-DEC-068 · V1.0' })).toBeInTheDocument();
   expect(within(collection).getByText(/Je confirme REF-01-G1-COL-003 V0.1 comme plan documentaire/)).toBeInTheDocument();
   const request = screen.getByTestId('ref01-g1-fast-track-evidence-request');
@@ -155,6 +164,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Scope, contributions and allocations to reconcile')).toBeInTheDocument();
   expect(screen.getByText('Institutional scope and minimum inventory to define')).toBeInTheDocument();
   expect(screen.getByText(/HUMAN REVIEW ACCEPTED · The six synthetic results/)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Register of thirteen evidence gaps' })).toBeInTheDocument();
+  expect(screen.getByText('COLLECTION CLOSED')).toBeInTheDocument();
   expect(screen.getAllByRole('region', { name: 'Shared measurement method' })).toHaveLength(16);
   expect(screen.getAllByText('Calculation not authorised')).toHaveLength(16);
 
@@ -165,6 +176,8 @@ test('opens the institutional programme in all three interface languages', () =>
   expect(screen.getByText('Umfang, Beiträge und Zuordnungen abzustimmen')).toBeInTheDocument();
   expect(screen.getByText('Institutionellen Umfang und Mindestinventar definieren')).toBeInTheDocument();
   expect(screen.getByText(/MENSCHLICHE PRÜFUNG ANGENOMMEN · Die sechs synthetischen Ergebnisse/)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Register der dreizehn Nachweislücken' })).toBeInTheDocument();
+  expect(screen.getByText('SAMMLUNG GESCHLOSSEN')).toBeInTheDocument();
   expect(screen.getAllByRole('region', { name: 'Gemeinsame Messmethode' })).toHaveLength(16);
   expect(screen.getAllByText('Berechnung nicht autorisiert')).toHaveLength(16);
 });
