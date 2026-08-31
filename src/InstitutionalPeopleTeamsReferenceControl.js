@@ -24,7 +24,7 @@ const STATUS_STYLES = {
 
 const COPY = {
   FR: {
-    eyebrow: 'CONTROLE DETAILLE 1/11 · REF-01 · V1.78 · 31-08-2026',
+    eyebrow: 'CONTROLE DETAILLE 1/11 · REF-01 · V1.79 · 31-08-2026',
     title: 'REF-01 · Personnes et équipes',
     body: 'Ce contrôle rapproche le contrat candidat RH-001 du lot L1 isolé, sa fixture synthétique, les sélecteurs Team/Agent et les règles publiées pour les responsabilités collectives. Il ne prouve aucun annuaire, compte, droit ou raccordement de production.',
     counters: [
@@ -122,7 +122,7 @@ const COPY = {
     openArchitecture: 'Examiner l’architecture RH de REF-01'
   },
   EN: {
-    eyebrow: 'DETAILED CONTROL 1/11 · REF-01 · V1.78 · 31 AUG 2026',
+    eyebrow: 'DETAILED CONTROL 1/11 · REF-01 · V1.79 · 31 AUG 2026',
     title: 'REF-01 · People and teams',
     body: 'This control reconciles the isolated L1 candidate RH-001 contract, its synthetic fixture, Team/Agent selectors and published collective-responsibility rules. It proves no production directory, account, right or connection.',
     counters: [
@@ -220,7 +220,7 @@ const COPY = {
     openArchitecture: 'Review the REF-01 HR architecture'
   },
   DE: {
-    eyebrow: 'DETAILKONTROLLE 1/11 · REF-01 · V1.78 · 31.08.2026',
+    eyebrow: 'DETAILKONTROLLE 1/11 · REF-01 · V1.79 · 31.08.2026',
     title: 'REF-01 · Personen und Teams',
     body: 'Diese Kontrolle gleicht den isolierten RH-001-Kandidatenvertrag des L1-Loses, seine synthetische Fixture, die Team-/Agent-Auswahl und veröffentlichte Regeln für kollektive Verantwortungen ab. Sie belegt kein Produktionsverzeichnis, Konto, Recht oder Anschluss.',
     counters: [

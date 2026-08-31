@@ -1,6 +1,7 @@
 import React from 'react';
 import { AlertTriangle, CheckCircle2, ClipboardCheck, Inbox, ListChecks, LockKeyhole, SendHorizontal, ShieldCheck } from 'lucide-react';
 import GovernedDecisionRecord from './GovernedDecisionRecord';
+import { INBOX_PILOT_EXECUTION } from './institutionalM3SInboxPilot';
 
 const COPY = {
   FR: {
@@ -19,16 +20,16 @@ const COPY = {
     boundariesTitle: 'Frontières avant mise en service',
     boundaries: ['Aucune lecture automatique de WhatsApp.', 'Aucun import automatique des e-mails.', 'Aucune donnée personnelle réelle intégrée au bundle frontend.', 'Backend, RBAC et GED requis avant toute automatisation.', 'Aucun compteur affiché avant disponibilité d’une source fiable.'],
     recordLabels: { eyebrow: 'Registre de décision gouverné', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision enregistrée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
-    record: { id: 'REF-01-DEC-075', version: 'V1.0', status: 'M3S-INB-003 confirmé, fiche vide', author: 'Cheikh Ndiaye', date: '31-08-2026', decision: 'M3S-INB-003 V0.1 est confirmé sans amendement et promu en V1.0 uniquement comme fiche GO/NO-GO vide.', evidence: 'Confirmation explicite de Cheikh dans la session du 31-08-2026 : « Je confirme. Le prochain candidat est M3S-INB-003 V0.1. »', limit: 'La décision confirme la structure de la fiche, pas un GO. Elle ne coche aucune option, n’autorise aucun cas, import, connecteur, automatisme, stockage réel, donnée personnelle, registre opérationnel, accès, dépense ou action L2.' },
+    record: { id: 'REF-01-DEC-076', version: 'V1.0', status: 'GO limité confirmé · pilote fictif', author: 'Cheikh Ndiaye', date: '31-08-2026', decision: 'Le GO limité au pilote fictif M3S-INB-002 V1.0 est confirmé pour les six cas prévus, selon les garde-fous établis, sans ouverture opérationnelle ni L2.', evidence: 'Confirmation explicite de Cheikh dans la session du 31-08-2026 : « Je confirme le GO limité au pilote fictif M3S-INB-002 V1.0 pour les six cas prévus, selon les garde-fous établis, sans ouverture opérationnelle ni L2. »', limit: 'Le GO autorise uniquement six cas synthétiques en mémoire. Il n’autorise aucune donnée réelle, connexion, import, automatisme, persistance opérationnelle, accès, dépense, production ou action L2.' },
     decisionTitle: 'Résultat de la décision Fast Track',
-    decision: 'M3S-INB-003 V1.0 est confirmé comme fiche GO/NO-GO vide. Le protocole M3S-INB-002 V1.0 reste non exécuté et non opérationnel.',
-    nextTitle: 'Prochain arbitrage distinct',
-    next: 'Conserver M3S-INB-003 V1.0 vide jusqu’à une décision humaine distincte GO ou NO-GO. Aucune option n’est présumée.',
+    decision: 'M3S-INB-003 V1.1 enregistre le GO limité. Les six cas de M3S-INB-002 V1.0 sont autorisés dans le seul bac à sable synthétique.',
+    nextTitle: 'Prochaine revue humaine',
+    next: 'Relire les six résultats synthétiques et décider séparément de leur acceptation. Aucun lot réel ou L2 n’est ouvert par cette exécution.',
     pilotEyebrow: 'PROTOCOLE CONFIRMÉ · M3S-INB-002 · V1.0 · 31-08-2026',
-    pilotTitle: 'Pilote manuel isolé · protocole confirmé, exécution fermée',
-    pilotVersion: 'V1.0',
-    pilotIntro: 'Le pilote proposé vérifie le modèle de qualification sans utiliser une seule donnée réelle. Il reste local, réinitialisable, sans persistance opérationnelle et sans connexion à un canal externe.',
-    pilotCounters: [['Cas fictifs prévus', '6', 'Aucun cas encore exécuté'], ['Personnes réelles', '0', 'Noms et coordonnées interdits'], ['Sources connectées', '0', 'Saisie fictive uniquement'], ['Automatismes', '0', 'Traitement humain simulé']],
+    pilotTitle: 'Pilote synthétique isolé · six cas exécutés, relecture ouverte',
+    pilotVersion: 'V1.0 · 6/6',
+    pilotIntro: 'Le pilote vérifie le modèle de qualification avec six cas entièrement fictifs. L’exécution est déterministe, locale, réinitialisée après contrôle, sans persistance opérationnelle ni canal externe.',
+    pilotCounters: [['Cas fictifs exécutés', '6/6', 'Tous réussis techniquement'], ['Personnes réelles', '0', 'Noms et coordonnées interdits'], ['Sources connectées', '0', 'Entrées synthétiques uniquement'], ['Automatismes', '0', 'Aucun traitement externe']],
     scenariosTitle: 'Jeu de contrôle fictif',
     scenarios: ['E-mail interne fictif à qualifier', 'Document fictif à rattacher', 'Média de chantier fictif à classer', 'Demande fictive avec échéance', 'Doublon fictif à signaler', 'Entrée fictive restreinte à bloquer'],
     stepsTitle: 'Parcours manuel proposé',
@@ -37,18 +38,26 @@ const COPY = {
     criteria: ['6/6 cas fictifs traités sans donnée réelle', 'Champs obligatoires contrôlés avant changement de statut', 'Doublon détecté sans créer un second élément', 'Cas restreint bloqué et orienté vers un dépôt sécurisé simulé', 'Aucun appel réseau, import, connecteur, automatisme ou stockage réel', 'Résultats relus humainement et consignés comme preuve de test'],
     stopTitle: 'Arrêt immédiat',
     stop: 'Toute donnée réelle, identité, pièce sensible, canal connecté ou persistance opérationnelle arrête le pilote et exige une décision séparée.',
-    pilotDecisionTitle: 'Décision enregistrée · exécution toujours interdite',
-    pilotDecision: 'REF-01-DEC-075 confirme uniquement la fiche vide M3S-INB-003 V1.0. Une décision GO distincte reste obligatoire avant le premier cas.',
-    pilotVerdict: 'STATUT · PROTOCOLE CONFIRMÉ, NON EXÉCUTÉ. 0/6 cas exécuté, zéro donnée réelle et aucune capacité opérationnelle ouverte.',
-    gateEyebrow: 'FICHE CONFIRMÉE · M3S-INB-003 · V1.0 · 31-08-2026',
-    gateTitle: 'Décision GO/NO-GO · structure confirmée, choix non renseigné',
-    gateVersion: 'V1.0 · VIDE',
-    gateIntro: 'Cette fiche sépare la confirmation documentaire de la décision d’exécuter. Elle reste vide afin qu’aucun GO ne puisse être déduit de la validation de sa structure.',
-    gateCounters: [['Options sélectionnées', '0/2', 'Ni GO ni NO-GO'], ['Cas autorisés', '0/6', 'Exécution toujours fermée'], ['Preuves de test', '0', 'Aucun cas exécuté'], ['Actions L2', '0', 'G1 reste ouverte']],
-    gateFieldsTitle: 'Champs de décision volontairement vides',
-    gateFields: [['Décision', 'Non renseignée'], ['Auteur et date', 'Non renseignés'], ['Conditions préalables', 'Non renseignées'], ['Périmètre autorisé', 'Non renseigné'], ['Preuves examinées', 'Non renseignées'], ['Risques et retour arrière', 'Non renseignés']],
-    gateRule: 'RÈGLE · La fiche confirmée ne vaut ni GO ni NO-GO. Seule une décision humaine ultérieure, explicite et tracée peut autoriser le démarrage.',
-    verdict: 'STATUT · CADRE CONFIRMÉ EN LECTURE SEULE. Zéro entrée réelle, import, connecteur ou traitement automatique activé.'
+    pilotDecisionTitle: 'Décision enregistrée · GO limité',
+    pilotDecision: 'REF-01-DEC-076 autorise uniquement l’exécution des six cas fictifs de M3S-INB-002 V1.0. Toute donnée réelle ou capacité opérationnelle reste interdite.',
+    pilotVerdict: 'STATUT · EXÉCUTION SYNTHÉTIQUE TERMINÉE. 6/6 cas réussis, 5/5 critères techniques vérifiés, zéro donnée réelle et relecture humaine ouverte.',
+    criteriaLabels: { passed: 'Vérifié', pending: 'Relecture ouverte' },
+    resultsEyebrow: 'PREUVE TECHNIQUE SYNTHÉTIQUE · M3S-INB-002 · 31-08-2026',
+    resultsTitle: 'Six cas exécutés puis mémoire réinitialisée',
+    resultsIntro: 'Les résultats ci-dessous proviennent du moteur local en mémoire. Ils constituent une preuve de test candidate, pas un registre opérationnel.',
+    resultCounterLabels: [['Cas exécutés', 'Périmètre autorisé'], ['Cas réussis', 'Contrôles techniques'], ['Données réelles', 'Frontière respectée'], ['Éléments persistés', 'Après réinitialisation']],
+    resultLabels: { passed: 'Réussi', fields: 'Champs contrôlés', outcome: 'Résultat' },
+    resultOutcomes: { 'cycle-completed': 'Cycle complet et archivé', 'duplicate-blocked': 'Doublon bloqué sans seconde création', 'restricted-blocked': 'Entrée bloquée vers le dépôt simulé' },
+    reviewPending: 'RELECTURE HUMAINE · Les résultats techniques sont disponibles, mais leur acceptation reste à confirmer avant tout autre lot.',
+    gateEyebrow: 'FICHE DÉCIDÉE · M3S-INB-003 · V1.1 · 31-08-2026',
+    gateTitle: 'Décision GO/NO-GO · GO limité enregistré',
+    gateVersion: 'V1.1 · GO LIMITÉ',
+    gateIntro: 'La fiche enregistre le seul GO autorisé : tester six cas fictifs en mémoire, sans aucune ouverture opérationnelle.',
+    gateCounters: [['Options sélectionnées', '1/2', 'GO limité'], ['Cas autorisés', '6/6', 'Périmètre fictif uniquement'], ['Cas exécutés', '6/6', 'Relecture humaine ouverte'], ['Actions L2', '0', 'G1 reste ouverte']],
+    gateFieldsTitle: 'Champs de décision renseignés',
+    gateFields: [['Décision', 'GO limité'], ['Auteur et date', 'Cheikh Ndiaye · 31-08-2026'], ['Conditions préalables', 'INB-001, INB-002 et INB-003 confirmés'], ['Périmètre autorisé', 'Six cas fictifs en mémoire uniquement'], ['Preuves examinées', 'Protocole, garde-fous et cinq tests techniques'], ['Risques et retour arrière', 'Arrêt immédiat et remise à zéro']],
+    gateRule: 'RÈGLE · Ce GO ne vaut ni mise en service ni ouverture L2. La relecture humaine des résultats reste obligatoire avant tout lot suivant.',
+    verdict: 'STATUT · GO LIMITÉ EXÉCUTÉ EN BAC À SABLE. Zéro entrée réelle, import, connecteur, persistance ou action L2.'
   },
   EN: {
     eyebrow: 'CONFIRMED FRAMEWORK · M3S-INB-001 · V1.0 · 30 AUG 2026',
@@ -66,16 +75,16 @@ const COPY = {
     boundariesTitle: 'Boundaries before activation',
     boundaries: ['No automated WhatsApp reading.', 'No automated email import.', 'No real personal data in the frontend bundle.', 'Backend, RBAC and DMS required before automation.', 'No counter displayed before a reliable source exists.'],
     recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
-    record: { id: 'REF-01-DEC-075', version: 'V1.0', status: 'M3S-INB-003 confirmed, empty form', author: 'Cheikh Ndiaye', date: '31 Aug 2026', decision: 'M3S-INB-003 V0.1 is confirmed without amendment and promoted to V1.0 only as an empty GO/NO-GO form.', evidence: 'Cheikh’s explicit confirmation in the 31 Aug 2026 session: “I confirm. The next candidate is M3S-INB-003 V0.1.”', limit: 'The decision confirms the form structure, not a GO. It selects no option and enables no case, import, connector, automation, real storage, personal data, operational register, access, expense or L2 action.' },
+    record: { id: 'REF-01-DEC-076', version: 'V1.0', status: 'Limited GO confirmed · fictional pilot', author: 'Cheikh Ndiaye', date: '31 Aug 2026', decision: 'The limited GO for the M3S-INB-002 V1.0 fictional pilot is confirmed for the six planned cases under the established safeguards, without operational or L2 opening.', evidence: 'Cheikh’s explicit confirmation in the 31 Aug 2026 session: “I confirm the limited GO for the M3S-INB-002 V1.0 fictional pilot for the six planned cases, under the established safeguards, without operational or L2 opening.”', limit: 'The GO authorises only six synthetic in-memory cases. It authorises no real data, connection, import, automation, operational persistence, access, expense, production or L2 action.' },
     decisionTitle: 'Fast Track decision outcome',
-    decision: 'M3S-INB-003 V1.0 is confirmed as an empty GO/NO-GO form. The M3S-INB-002 V1.0 protocol remains unexecuted and non-operational.',
-    nextTitle: 'Next separate decision',
-    next: 'Keep M3S-INB-003 V1.0 empty until a separate human GO or NO-GO decision. No option is presumed.',
+    decision: 'M3S-INB-003 V1.1 records the limited GO. The six M3S-INB-002 V1.0 cases are authorised only in the synthetic sandbox.',
+    nextTitle: 'Next human review',
+    next: 'Review the six synthetic results and decide separately whether to accept them. This execution opens no real or L2 package.',
     pilotEyebrow: 'CONFIRMED PROTOCOL · M3S-INB-002 · V1.0 · 31 AUG 2026',
-    pilotTitle: 'Isolated manual pilot · protocol confirmed, execution closed',
-    pilotVersion: 'V1.0',
-    pilotIntro: 'The proposed pilot checks the qualification model without using any real data. It remains local, resettable, without operational persistence and without connection to an external channel.',
-    pilotCounters: [['Planned fictional cases', '6', 'No case run yet'], ['Real people', '0', 'Names and contact details prohibited'], ['Connected sources', '0', 'Fictional manual entry only'], ['Automations', '0', 'Simulated human processing']],
+    pilotTitle: 'Isolated synthetic pilot · six cases run, review open',
+    pilotVersion: 'V1.0 · 6/6',
+    pilotIntro: 'The pilot checks the qualification model with six entirely fictional cases. Execution is deterministic, local and reset after control, with no operational persistence or external channel.',
+    pilotCounters: [['Fictional cases run', '6/6', 'All technically successful'], ['Real people', '0', 'Names and contact details prohibited'], ['Connected sources', '0', 'Synthetic entries only'], ['Automations', '0', 'No external processing']],
     scenariosTitle: 'Fictional control dataset',
     scenarios: ['Fictional internal email to qualify', 'Fictional document to attach', 'Fictional worksite media to classify', 'Fictional request with a due date', 'Fictional duplicate to flag', 'Restricted fictional entry to block'],
     stepsTitle: 'Proposed manual path',
@@ -84,18 +93,26 @@ const COPY = {
     criteria: ['6/6 fictional cases processed without real data', 'Mandatory fields checked before status changes', 'Duplicate detected without creating a second item', 'Restricted case blocked and routed to a simulated secure deposit', 'No network call, import, connector, automation or real storage', 'Results reviewed by a human and recorded as test evidence'],
     stopTitle: 'Immediate stop',
     stop: 'Any real data, identity, sensitive record, connected channel or operational persistence stops the pilot and requires a separate decision.',
-    pilotDecisionTitle: 'Recorded decision · execution still prohibited',
-    pilotDecision: 'REF-01-DEC-075 confirms only the empty M3S-INB-003 V1.0 form. A separate GO decision remains mandatory before the first case.',
-    pilotVerdict: 'STATUS · CONFIRMED, UNEXECUTED PROTOCOL. 0/6 cases run, zero real data and no operational capability opened.',
-    gateEyebrow: 'CONFIRMED FORM · M3S-INB-003 · V1.0 · 31 AUG 2026',
-    gateTitle: 'GO/NO-GO decision · structure confirmed, choice left blank',
-    gateVersion: 'V1.0 · EMPTY',
-    gateIntro: 'This form separates documentary confirmation from an execution decision. It remains empty so that no GO can be inferred from approval of its structure.',
-    gateCounters: [['Selected options', '0/2', 'Neither GO nor NO-GO'], ['Authorised cases', '0/6', 'Execution remains closed'], ['Test evidence', '0', 'No case run'], ['L2 actions', '0', 'G1 remains open']],
-    gateFieldsTitle: 'Decision fields deliberately left blank',
-    gateFields: [['Decision', 'Not entered'], ['Author and date', 'Not entered'], ['Prerequisites', 'Not entered'], ['Authorised scope', 'Not entered'], ['Evidence reviewed', 'Not entered'], ['Risks and rollback', 'Not entered']],
-    gateRule: 'RULE · The confirmed form is neither a GO nor a NO-GO. Only a later explicit and recorded human decision can authorise the start.',
-    verdict: 'STATUS · CONFIRMED READ-ONLY FRAMEWORK. Zero real entries, imports, connectors or automated processing enabled.'
+    pilotDecisionTitle: 'Recorded decision · limited GO',
+    pilotDecision: 'REF-01-DEC-076 authorises only the six fictional M3S-INB-002 V1.0 cases. Any real data or operational capability remains prohibited.',
+    pilotVerdict: 'STATUS · SYNTHETIC EXECUTION COMPLETE. 6/6 cases passed, 5/5 technical criteria verified, zero real data and human review open.',
+    criteriaLabels: { passed: 'Verified', pending: 'Review open' },
+    resultsEyebrow: 'SYNTHETIC TECHNICAL EVIDENCE · M3S-INB-002 · 31 AUG 2026',
+    resultsTitle: 'Six cases run and memory reset',
+    resultsIntro: 'The results below come from the local in-memory engine. They are candidate test evidence, not an operational register.',
+    resultCounterLabels: [['Cases run', 'Authorised scope'], ['Cases passed', 'Technical checks'], ['Real data', 'Boundary respected'], ['Persisted items', 'After reset']],
+    resultLabels: { passed: 'Passed', fields: 'Fields checked', outcome: 'Outcome' },
+    resultOutcomes: { 'cycle-completed': 'Full cycle completed and archived', 'duplicate-blocked': 'Duplicate blocked without second creation', 'restricted-blocked': 'Entry blocked to simulated secure hold' },
+    reviewPending: 'HUMAN REVIEW · Technical results are available, but their acceptance remains to be confirmed before any further package.',
+    gateEyebrow: 'DECIDED FORM · M3S-INB-003 · V1.1 · 31 AUG 2026',
+    gateTitle: 'GO/NO-GO decision · limited GO recorded',
+    gateVersion: 'V1.1 · LIMITED GO',
+    gateIntro: 'The form records the only authorised GO: test six fictional in-memory cases with no operational opening.',
+    gateCounters: [['Selected options', '1/2', 'Limited GO'], ['Authorised cases', '6/6', 'Fictional scope only'], ['Cases run', '6/6', 'Human review open'], ['L2 actions', '0', 'G1 remains open']],
+    gateFieldsTitle: 'Completed decision fields',
+    gateFields: [['Decision', 'Limited GO'], ['Author and date', 'Cheikh Ndiaye · 31 Aug 2026'], ['Prerequisites', 'INB-001, INB-002 and INB-003 confirmed'], ['Authorised scope', 'Six fictional in-memory cases only'], ['Evidence reviewed', 'Protocol, safeguards and five technical tests'], ['Risks and rollback', 'Immediate stop and full reset']],
+    gateRule: 'RULE · This GO is neither activation nor L2 opening. Human review of the results remains mandatory before any further package.',
+    verdict: 'STATUS · LIMITED GO RUN IN THE SANDBOX. Zero real entries, imports, connectors, persistence or L2 actions.'
   },
   DE: {
     eyebrow: 'BESTÄTIGTER RAHMEN · M3S-INB-001 · V1.0 · 30.08.2026',
@@ -113,16 +130,16 @@ const COPY = {
     boundariesTitle: 'Grenzen vor Inbetriebnahme',
     boundaries: ['Kein automatisches Lesen von WhatsApp.', 'Kein automatischer E-Mail-Import.', 'Keine realen Personendaten im Frontend-Bundle.', 'Backend, RBAC und DMS vor jeder Automatisierung erforderlich.', 'Kein Zähler ohne verlässliche Quelle.'],
     recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Erfasster Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
-    record: { id: 'REF-01-DEC-075', version: 'V1.0', status: 'M3S-INB-003 bestätigt, leeres Blatt', author: 'Cheikh Ndiaye', date: '31.08.2026', decision: 'M3S-INB-003 V0.1 wird ohne Änderung nur als leeres GO/NO-GO-Blatt bestätigt und zu V1.0.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 31.08.2026: „Ich bestätige. Der nächste Kandidat ist M3S-INB-003 V0.1.“', limit: 'Der Entscheid bestätigt die Struktur des Blatts, nicht ein GO. Er wählt keine Option und aktiviert keinen Fall, Import, Connector, Automatismus, reale Speicherung, Personendaten, kein operatives Register, keinen Zugriff, keine Ausgabe und keine L2-Aktion.' },
+    record: { id: 'REF-01-DEC-076', version: 'V1.0', status: 'Begrenztes GO bestätigt · fiktiver Pilot', author: 'Cheikh Ndiaye', date: '31.08.2026', decision: 'Das begrenzte GO für den fiktiven Piloten M3S-INB-002 V1.0 wird für die sechs vorgesehenen Fälle unter den festgelegten Schutzregeln ohne operative oder L2-Öffnung bestätigt.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 31.08.2026: „Ich bestätige das begrenzte GO für den fiktiven Piloten M3S-INB-002 V1.0 für die sechs vorgesehenen Fälle, nach den festgelegten Schutzregeln, ohne operative oder L2-Öffnung.“', limit: 'Das GO autorisiert nur sechs synthetische Fälle im Arbeitsspeicher. Es erlaubt keine realen Daten, Verbindung, Importe, Automatismen, operative Speicherung, Zugriffe, Ausgaben, Produktion oder L2-Aktion.' },
     decisionTitle: 'Ergebnis des Fast-Track-Entscheids',
-    decision: 'M3S-INB-003 V1.0 ist als leeres GO/NO-GO-Blatt bestätigt. Das Protokoll M3S-INB-002 V1.0 bleibt unausgeführt und nicht operativ.',
-    nextTitle: 'Nächster getrennter Entscheid',
-    next: 'M3S-INB-003 V1.0 bis zu einem getrennten menschlichen GO- oder NO-GO-Entscheid leer halten. Keine Option wird vorausgesetzt.',
+    decision: 'M3S-INB-003 V1.1 erfasst das begrenzte GO. Die sechs Fälle von M3S-INB-002 V1.0 sind nur im synthetischen Sandkasten autorisiert.',
+    nextTitle: 'Nächste menschliche Prüfung',
+    next: 'Die sechs synthetischen Ergebnisse prüfen und getrennt über ihre Annahme entscheiden. Diese Ausführung öffnet kein reales oder L2-Los.',
     pilotEyebrow: 'BESTÄTIGTES PROTOKOLL · M3S-INB-002 · V1.0 · 31.08.2026',
-    pilotTitle: 'Isolierter manueller Pilot · Protokoll bestätigt, Ausführung geschlossen',
-    pilotVersion: 'V1.0',
-    pilotIntro: 'Der vorgeschlagene Pilot prüft das Qualifikationsmodell ohne reale Daten. Er bleibt lokal, rücksetzbar, ohne operative Persistenz und ohne Verbindung zu einem externen Kanal.',
-    pilotCounters: [['Geplante fiktive Fälle', '6', 'Noch kein Fall ausgeführt'], ['Reale Personen', '0', 'Namen und Kontaktdaten verboten'], ['Verbundene Quellen', '0', 'Nur fiktive manuelle Eingabe'], ['Automatismen', '0', 'Simulierte menschliche Bearbeitung']],
+    pilotTitle: 'Isolierter synthetischer Pilot · sechs Fälle ausgeführt, Prüfung offen',
+    pilotVersion: 'V1.0 · 6/6',
+    pilotIntro: 'Der Pilot prüft das Qualifikationsmodell mit sechs vollständig fiktiven Fällen. Die Ausführung ist deterministisch, lokal und nach der Kontrolle zurückgesetzt, ohne operative Speicherung oder externen Kanal.',
+    pilotCounters: [['Fiktive Fälle ausgeführt', '6/6', 'Alle technisch erfolgreich'], ['Reale Personen', '0', 'Namen und Kontaktdaten verboten'], ['Verbundene Quellen', '0', 'Nur synthetische Eingänge'], ['Automatismen', '0', 'Keine externe Verarbeitung']],
     scenariosTitle: 'Fiktiver Kontrolldatensatz',
     scenarios: ['Fiktive interne E-Mail zur Qualifizierung', 'Fiktives Dokument zur Zuordnung', 'Fiktives Baustellenmedium zur Klassierung', 'Fiktive Anfrage mit Fälligkeit', 'Fiktives Duplikat zur Markierung', 'Eingeschränkter fiktiver Eintrag zur Sperrung'],
     stepsTitle: 'Vorgeschlagener manueller Ablauf',
@@ -131,23 +148,38 @@ const COPY = {
     criteria: ['6/6 fiktive Fälle ohne reale Daten bearbeitet', 'Pflichtfelder vor Statusänderung geprüft', 'Duplikat erkannt, ohne ein zweites Element zu erstellen', 'Eingeschränkter Fall gesperrt und zu einer simulierten sicheren Ablage geführt', 'Kein Netzwerkaufruf, Import, Connector, Automatismus oder reale Speicherung', 'Ergebnisse menschlich geprüft und als Testnachweis protokolliert'],
     stopTitle: 'Sofortiger Stopp',
     stop: 'Reale Daten, Identitäten, sensible Unterlagen, verbundene Kanäle oder operative Persistenz stoppen den Piloten und erfordern einen getrennten Entscheid.',
-    pilotDecisionTitle: 'Erfasster Entscheid · Ausführung weiterhin verboten',
-    pilotDecision: 'REF-01-DEC-075 bestätigt nur das leere Blatt M3S-INB-003 V1.0. Vor dem ersten Fall bleibt ein getrennter GO-Entscheid zwingend.',
-    pilotVerdict: 'STATUS · BESTÄTIGTES, UNAUSGEFÜHRTES PROTOKOLL. 0/6 Fälle ausgeführt, null reale Daten und keine operative Fähigkeit geöffnet.',
-    gateEyebrow: 'BESTÄTIGTES BLATT · M3S-INB-003 · V1.0 · 31.08.2026',
-    gateTitle: 'GO/NO-GO-Entscheid · Struktur bestätigt, Auswahl leer',
-    gateVersion: 'V1.0 · LEER',
-    gateIntro: 'Dieses Blatt trennt die dokumentarische Bestätigung vom Ausführungsentscheid. Es bleibt leer, damit aus der Bestätigung seiner Struktur kein GO abgeleitet werden kann.',
-    gateCounters: [['Gewählte Optionen', '0/2', 'Weder GO noch NO-GO'], ['Autorisierte Fälle', '0/6', 'Ausführung bleibt geschlossen'], ['Testnachweise', '0', 'Kein Fall ausgeführt'], ['L2-Aktionen', '0', 'G1 bleibt offen']],
-    gateFieldsTitle: 'Bewusst leere Entscheidfelder',
-    gateFields: [['Entscheid', 'Nicht eingetragen'], ['Autor und Datum', 'Nicht eingetragen'], ['Voraussetzungen', 'Nicht eingetragen'], ['Autorisierter Umfang', 'Nicht eingetragen'], ['Geprüfte Nachweise', 'Nicht eingetragen'], ['Risiken und Rückkehr', 'Nicht eingetragen']],
-    gateRule: 'REGEL · Das bestätigte Blatt ist weder GO noch NO-GO. Nur ein späterer ausdrücklicher und protokollierter menschlicher Entscheid kann den Start autorisieren.',
-    verdict: 'STATUS · BESTÄTIGTER SCHREIBGESCHÜTZTER RAHMEN. Null reale Eingänge, Importe, Connectoren oder automatische Bearbeitungen aktiviert.'
+    pilotDecisionTitle: 'Erfasster Entscheid · begrenztes GO',
+    pilotDecision: 'REF-01-DEC-076 autorisiert nur die sechs fiktiven Fälle von M3S-INB-002 V1.0. Reale Daten oder operative Fähigkeiten bleiben verboten.',
+    pilotVerdict: 'STATUS · SYNTHETISCHE AUSFÜHRUNG BEENDET. 6/6 Fälle erfolgreich, 5/5 technische Kriterien geprüft, null reale Daten und menschliche Prüfung offen.',
+    criteriaLabels: { passed: 'Geprüft', pending: 'Prüfung offen' },
+    resultsEyebrow: 'SYNTHETISCHER TECHNISCHER NACHWEIS · M3S-INB-002 · 31.08.2026',
+    resultsTitle: 'Sechs Fälle ausgeführt und Speicher zurückgesetzt',
+    resultsIntro: 'Die folgenden Ergebnisse stammen aus dem lokalen In-Memory-Modul. Sie sind Kandidaten-Testnachweise, kein operatives Register.',
+    resultCounterLabels: [['Ausgeführte Fälle', 'Autorisierter Umfang'], ['Erfolgreiche Fälle', 'Technische Kontrollen'], ['Reale Daten', 'Grenze eingehalten'], ['Persistierte Elemente', 'Nach Rücksetzung']],
+    resultLabels: { passed: 'Erfolgreich', fields: 'Geprüfte Felder', outcome: 'Ergebnis' },
+    resultOutcomes: { 'cycle-completed': 'Vollständiger Zyklus und archiviert', 'duplicate-blocked': 'Duplikat ohne zweite Erstellung gesperrt', 'restricted-blocked': 'Eintrag zur simulierten sicheren Ablage gesperrt' },
+    reviewPending: 'MENSCHLICHE PRÜFUNG · Die technischen Ergebnisse liegen vor, ihre Annahme bleibt jedoch vor jedem weiteren Los zu bestätigen.',
+    gateEyebrow: 'ENTSCHIEDENES BLATT · M3S-INB-003 · V1.1 · 31.08.2026',
+    gateTitle: 'GO/NO-GO-Entscheid · begrenztes GO erfasst',
+    gateVersion: 'V1.1 · BEGRENZTES GO',
+    gateIntro: 'Das Blatt erfasst das einzige autorisierte GO: sechs fiktive Fälle im Arbeitsspeicher ohne operative Öffnung testen.',
+    gateCounters: [['Gewählte Optionen', '1/2', 'Begrenztes GO'], ['Autorisierte Fälle', '6/6', 'Nur fiktiver Umfang'], ['Ausgeführte Fälle', '6/6', 'Menschliche Prüfung offen'], ['L2-Aktionen', '0', 'G1 bleibt offen']],
+    gateFieldsTitle: 'Ausgefüllte Entscheidfelder',
+    gateFields: [['Entscheid', 'Begrenztes GO'], ['Autor und Datum', 'Cheikh Ndiaye · 31.08.2026'], ['Voraussetzungen', 'INB-001, INB-002 und INB-003 bestätigt'], ['Autorisierter Umfang', 'Nur sechs fiktive In-Memory-Fälle'], ['Geprüfte Nachweise', 'Protokoll, Schutzregeln und fünf technische Tests'], ['Risiken und Rückkehr', 'Sofortiger Stopp und vollständige Rücksetzung']],
+    gateRule: 'REGEL · Dieses GO ist weder Inbetriebnahme noch L2-Öffnung. Die menschliche Prüfung der Ergebnisse bleibt vor jedem weiteren Los zwingend.',
+    verdict: 'STATUS · BEGRENZTES GO IM SANDKASTEN AUSGEFÜHRT. Null reale Eingänge, Importe, Connectoren, Speicherung oder L2-Aktionen.'
   }
 };
 
 const InstitutionalM3SInboxFrame = ({ language = 'FR' }) => {
   const t = COPY[language] || COPY.FR;
+  const execution = INBOX_PILOT_EXECUTION;
+  const resultValues = [
+    `${execution.summary.executed}/${execution.summary.authorised}`,
+    `${execution.summary.passed}/${execution.summary.executed}`,
+    String(execution.summary.realDataItems),
+    String(execution.summary.storeSizeAfterReset)
+  ];
   return (
     <section id="institutional-m3s-inbox-frame" data-testid="institutional-m3s-inbox-frame" className="scroll-mt-24 rounded-md border border-violet-800/70 bg-violet-950/10 p-3 sm:p-4">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between"><div className="max-w-5xl"><p className="text-xs font-semibold uppercase text-violet-300">{t.eyebrow}</p><h4 className="mt-1 text-lg font-semibold text-slate-100 sm:text-xl">{t.title}</h4><p className="mt-2 text-sm leading-6 text-slate-300">{t.intro}</p></div><span className="inline-flex min-h-9 shrink-0 items-center gap-2 self-start rounded-md border border-violet-700/70 bg-violet-950/30 px-3 py-2 text-xs font-semibold text-violet-200"><Inbox size={16} aria-hidden="true" />{t.states[0]}</span></div>
@@ -167,7 +199,13 @@ const InstitutionalM3SInboxFrame = ({ language = 'FR' }) => {
           <article className="m3s-raised p-3 sm:p-4"><div className="flex items-center gap-2"><Inbox className="text-sky-300" size={17} aria-hidden="true" /><h6 className="text-sm font-semibold text-slate-100">{t.scenariosTitle}</h6></div><ol className="mt-3 space-y-2">{t.scenarios.map((scenario, index) => <li key={scenario} className="flex min-h-10 items-center gap-3 rounded-md border border-slate-700 bg-slate-950/20 px-3 py-2 text-xs text-slate-300"><span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-sky-950/60 font-semibold text-sky-200">{index + 1}</span>{scenario}</li>)}</ol></article>
           <article className="m3s-raised p-3 sm:p-4"><div className="flex items-center gap-2"><ListChecks className="text-violet-300" size={17} aria-hidden="true" /><h6 className="text-sm font-semibold text-slate-100">{t.stepsTitle}</h6></div><ol className="mt-3 space-y-2">{t.steps.map((step, index) => <li key={step} className="flex min-h-10 items-center gap-3 rounded-md border border-slate-700 bg-slate-950/20 px-3 py-2 text-xs text-slate-300"><span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-violet-950/60 font-semibold text-violet-200">{index + 1}</span>{step}</li>)}</ol></article>
         </div>
-        <article className="m3s-raised mt-4 p-3 sm:p-4"><h6 className="text-sm font-semibold text-slate-100">{t.criteriaTitle}</h6><ul className="mt-3 grid grid-cols-1 gap-2 lg:grid-cols-2">{t.criteria.map(item => <li key={item} className="flex items-start gap-2 text-xs leading-5 text-slate-300"><CheckCircle2 className="mt-0.5 shrink-0 text-emerald-300" size={15} aria-hidden="true" />{item}</li>)}</ul></article>
+        <article className="m3s-raised mt-4 p-3 sm:p-4"><h6 className="text-sm font-semibold text-slate-100">{t.criteriaTitle}</h6><ul className="mt-3 grid grid-cols-1 gap-2 lg:grid-cols-2">{t.criteria.map((item, index) => { const passed = index < execution.summary.technicalCriteriaPassed; return <li key={item} className="flex items-start gap-2 rounded-md border border-slate-700 bg-slate-950/20 p-3 text-xs leading-5 text-slate-300"><span className={`mt-0.5 inline-flex min-h-6 shrink-0 items-center gap-1 rounded-md border px-2 py-0.5 text-[11px] font-semibold ${passed ? 'border-emerald-700/70 bg-emerald-950/25 text-emerald-200' : 'border-amber-700/70 bg-amber-950/25 text-amber-100'}`}>{passed ? <CheckCircle2 size={13} aria-hidden="true" /> : <AlertTriangle size={13} aria-hidden="true" />}{passed ? t.criteriaLabels.passed : t.criteriaLabels.pending}</span><span>{item}</span></li>; })}</ul></article>
+        <section data-testid="institutional-m3s-inbox-pilot-results" className="mt-4 rounded-md border border-emerald-800/70 bg-emerald-950/10 p-3 sm:p-4" aria-labelledby="institutional-m3s-inbox-pilot-results-title">
+          <div className="max-w-5xl"><p className="text-xs font-semibold uppercase text-emerald-300">{t.resultsEyebrow}</p><h6 id="institutional-m3s-inbox-pilot-results-title" className="mt-1 text-base font-semibold text-slate-100 sm:text-lg">{t.resultsTitle}</h6><p className="mt-2 text-sm leading-6 text-slate-300">{t.resultsIntro}</p></div>
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">{t.resultCounterLabels.map(([label, note], index) => <article key={label} className="m3s-raised min-h-28 p-3"><p className="text-xs font-semibold text-slate-300">{label}</p><p className="mt-2 text-2xl font-semibold text-emerald-200">{resultValues[index]}</p><p className="mt-2 text-xs leading-5 text-slate-400">{note}</p></article>)}</div>
+          <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">{execution.cases.map((result, index) => <article key={result.id} className="m3s-raised p-3" data-testid="institutional-m3s-inbox-pilot-result"><div className="flex flex-wrap items-start justify-between gap-2"><div><p className="text-[11px] font-semibold text-sky-300">{result.id}</p><h6 className="mt-1 text-sm font-semibold text-slate-100">{t.scenarios[index]}</h6></div><span className="inline-flex min-h-7 items-center gap-1 rounded-md border border-emerald-700/70 bg-emerald-950/25 px-2 py-1 text-[11px] font-semibold text-emerald-200"><CheckCircle2 size={13} aria-hidden="true" />{t.resultLabels.passed}</span></div><dl className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2"><div><dt className="text-xs font-semibold text-slate-400">{t.resultLabels.fields}</dt><dd className="mt-1 text-xs font-semibold text-slate-200">{result.requiredFieldsChecked}/10</dd></div><div><dt className="text-xs font-semibold text-slate-400">{t.resultLabels.outcome}</dt><dd className="mt-1 text-xs font-semibold text-slate-200">{t.resultOutcomes[result.outcome]}</dd></div></dl></article>)}</div>
+          <p className="mt-4 flex items-start gap-2 rounded-md border border-amber-800/70 bg-amber-950/15 p-3 text-sm font-semibold leading-6 text-amber-100"><AlertTriangle className="mt-0.5 shrink-0 text-amber-300" size={17} aria-hidden="true" />{t.reviewPending}</p>
+        </section>
         <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2"><div className="rounded-md border border-red-800/70 bg-red-950/15 p-3"><div className="flex items-center gap-2"><AlertTriangle className="text-red-300" size={17} aria-hidden="true" /><h6 className="text-sm font-semibold text-red-100">{t.stopTitle}</h6></div><p className="mt-2 text-xs leading-5 text-slate-300">{t.stop}</p></div><div className="rounded-md border border-amber-800/70 bg-amber-950/15 p-3"><div className="flex items-center gap-2"><LockKeyhole className="text-amber-300" size={17} aria-hidden="true" /><h6 className="text-sm font-semibold text-amber-100">{t.pilotDecisionTitle}</h6></div><p className="mt-2 text-xs leading-5 text-slate-300">{t.pilotDecision}</p></div></div>
         <p className="mt-4 rounded-md border border-sky-700/70 bg-sky-950/20 p-3 text-sm font-semibold leading-6 text-sky-100">{t.pilotVerdict}</p>
       </section>

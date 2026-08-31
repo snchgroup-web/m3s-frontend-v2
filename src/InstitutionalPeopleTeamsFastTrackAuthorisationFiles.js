@@ -26,7 +26,7 @@ const COPY = {
     decisionTitle: 'Résultat de la décision Fast Track',
     decision: 'AUT-003 V1.0 gouverne désormais les cinq dossiers vides. Toute future autorisation restera une décision humaine unitaire appuyée par les huit champs obligatoires.',
     nextTitle: 'Arbitrage groupé suivant confirmé',
-    next: 'M3S-INB-003 V1.0 est désormais confirmé comme fiche GO/NO-GO vide par REF-01-DEC-075. Aucune option, aucun cas, import, automatisme ni traitement de données réelles n’est activé.',
+    next: 'REF-01-DEC-076 enregistre dans M3S-INB-003 V1.1 le GO limité aux six cas synthétiques de M3S-INB-002 V1.0. Les 6/6 cas sont exécutés techniquement ; aucun traitement réel ni L2 n’est ouvert.',
     boundary: 'La confirmation du cadre ne remplira aucun dossier et n’autorisera aucune identité, entreprise, adresse, affectation, prise de contact, émission, collecte, accès, dépense, connexion ou action L2.'
   },
   EN: {
@@ -42,7 +42,7 @@ const COPY = {
     decisionTitle: 'Fast Track decision outcome',
     decision: 'AUT-003 V1.0 now governs the five empty files. Every future authorisation remains an individual human decision supported by the eight mandatory fields.',
     nextTitle: 'Next grouped decision confirmed',
-    next: 'M3S-INB-003 V1.0 is now confirmed as an empty GO/NO-GO form by REF-01-DEC-075. No option, case, import, automation or real-data processing is enabled.',
+    next: 'REF-01-DEC-076 records in M3S-INB-003 V1.1 the limited GO for the six M3S-INB-002 V1.0 synthetic cases. All 6/6 cases were run technically; no real-data processing or L2 is open.',
     boundary: 'Confirming the framework will fill no file and authorise no identity, company, address, assignment, contact, release, collection, access, expense, connection or L2 action.'
   },
   DE: {
@@ -58,7 +58,7 @@ const COPY = {
     decisionTitle: 'Ergebnis des Fast-Track-Entscheids',
     decision: 'AUT-003 V1.0 steuert nun die fünf leeren Akten. Jede künftige Autorisierung bleibt ein einzelner menschlicher Entscheid, gestützt auf die acht Pflichtfelder.',
     nextTitle: 'Nächster gebündelter Entscheid bestätigt',
-    next: 'M3S-INB-003 V1.0 ist nun durch REF-01-DEC-075 als leeres GO/NO-GO-Blatt bestätigt. Keine Option, kein Fall, Import, keine Automatisierung und keine Verarbeitung realer Daten ist aktiviert.',
+    next: 'REF-01-DEC-076 erfasst in M3S-INB-003 V1.1 das begrenzte GO für die sechs synthetischen Fälle von M3S-INB-002 V1.0. Alle 6/6 Fälle wurden technisch ausgeführt; keine reale Verarbeitung und kein L2 sind geöffnet.',
     boundary: 'Die Bestätigung des Rahmens füllt keine Akte und erlaubt keine Identität, Firma, Adresse, Zuordnung, Kontaktaufnahme, Versand, Sammlung, Zugriff, Ausgabe, Verbindung oder L2-Aktion.'
   }
 };
