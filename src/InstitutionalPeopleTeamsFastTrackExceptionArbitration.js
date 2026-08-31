@@ -114,7 +114,7 @@ const COPY = {
     record: { id: 'REF-01-DEC-067', version: 'V1.0', status: 'ARB-002 confirmé dans son ensemble', author: 'Cheikh Ndiaye', date: '30-08-2026', decision: 'REF-01-G1-ARB-002 V0.1 est confirmé sans amendement et promu en V1.0. Les cinq familles et leurs paramètres documentaires deviennent le cadre gouverné de préparation des preuves manquantes.', evidence: 'Confirmation explicite de Cheikh dans la session du 30-08-2026 : « Je confirme REF-01-G1-ARB-002 V0.1 dans son ensemble. »', limit: 'Cette décision ne sélectionne aucun fournisseur, compte, personne, secret ou environnement de production. Elle ne crée aucune sauvegarde, identité, référence GED, file, worker, alerte, donnée réelle ou dépense ; G1 reste ouverte et L2 fermé.' },
     bulkTitle: 'Résultat du Fast Track',
     bulk: 'Une seule confirmation humaine couvre les cinq familles. Les treize exceptions disposent maintenant de paramètres documentaires retenus, mais conservent leur besoin de preuve avant toute exécution.',
-    next: 'DEC-068 à DEC-076 confirment les cadres et le GO limité ; DEC-077 accepte les 6/6 résultats synthétiques M3S-INB-002 et clôt le lot fictif. Aucun traitement réel, contact, infrastructure ni L2 n’est ouvert.',
+    next: 'DEC-068 à DEC-077 confirment les cadres et clôturent le lot fictif ; DEC-078 autorise la collecte documentaire interne des treize écarts dans COL-003 V1.1. Aucun contact externe, accès réel, test de production ni L2 n’est ouvert.',
     boundary: 'Aucune infrastructure, sauvegarde, identité, dossier GED, file, worker, alerte, donnée réelle ou dépense n’est créée. Les qualifications restent 9 synthétiques, 8 partielles et 5 ouvertes jusqu’au contrôle des preuves.'
   },
   EN: {
@@ -128,7 +128,7 @@ const COPY = {
     record: { id: 'REF-01-DEC-067', version: 'V1.0', status: 'ARB-002 confirmed as a whole', author: 'Cheikh Ndiaye', date: '30 Aug 2026', decision: 'REF-01-G1-ARB-002 V0.1 is confirmed without amendment and promoted to V1.0. Its five families and documentary parameters become the governed framework for preparing missing evidence.', evidence: 'Cheikh’s explicit confirmation in the 30 Aug 2026 session: “I confirm REF-01-G1-ARB-002 V0.1 as a whole.”', limit: 'This decision selects no provider, account, person, secret or production environment. It creates no backup, identity, DMS reference, queue, worker, alert, real data or expense; G1 remains open and L2 closed.' },
     bulkTitle: 'Fast Track result',
     bulk: 'One human confirmation covers all five families. The thirteen exceptions now have retained documentary parameters but still require evidence before any execution.',
-    next: 'DEC-068 through DEC-076 confirm the frameworks and limited GO; DEC-077 accepts all 6/6 M3S-INB-002 synthetic results and closes the fictional package. No real-data processing, contact, infrastructure or L2 is open.',
+    next: 'DEC-068 through DEC-077 confirm the frameworks and close the fictional package; DEC-078 authorises internal documentary collection for the thirteen gaps in COL-003 V1.1. No external contact, real access, production test or L2 is open.',
     boundary: 'No infrastructure, backup, identity, DMS folder, queue, worker, alert, real data or expense is created. Qualifications remain 9 synthetic, 8 partial and 5 open until evidence is checked.'
   },
   DE: {
@@ -142,7 +142,7 @@ const COPY = {
     record: { id: 'REF-01-DEC-067', version: 'V1.0', status: 'ARB-002 als Ganzes bestätigt', author: 'Cheikh Ndiaye', date: '30.08.2026', decision: 'REF-01-G1-ARB-002 V0.1 wird ohne Änderung bestätigt und zu V1.0. Die fünf Familien und ihre Dokumentationsparameter bilden den gesteuerten Rahmen zur Vorbereitung fehlender Nachweise.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 30.08.2026: „Ich bestätige REF-01-G1-ARB-002 V0.1 als Ganzes.“', limit: 'Dieser Entscheid wählt keinen Anbieter, Account, keine Person, kein Geheimnis und keine Produktionsumgebung. Er schafft keine Sicherung, Identität, DMS-Referenz, Queue, Worker, Warnung, Realdaten oder Ausgabe; G1 bleibt offen und L2 geschlossen.' },
     bulkTitle: 'Fast-Track-Ergebnis',
     bulk: 'Eine menschliche Bestätigung deckt alle fünf Familien ab. Die dreizehn Ausnahmen besitzen nun festgehaltene Dokumentationsparameter, benötigen aber weiterhin Nachweise vor jeder Ausführung.',
-    next: 'DEC-068 bis DEC-076 bestätigen die Rahmen und das begrenzte GO; DEC-077 nimmt alle 6/6 synthetischen M3S-INB-002-Ergebnisse an und schliesst das fiktive Los. Keine reale Verarbeitung, kein Kontakt, keine Infrastruktur und kein L2 sind geöffnet.',
+    next: 'DEC-068 bis DEC-077 bestätigen die Rahmen und schliessen das fiktive Los; DEC-078 autorisiert die interne dokumentarische Sammlung der dreizehn Lücken in COL-003 V1.1. Kein externer Kontakt, realer Zugriff, Produktionstest oder L2 ist geöffnet.',
     boundary: 'Es werden keine Infrastruktur, Sicherung, Identität, DMS-Ablage, Queue, Worker, Warnung, Realdaten oder Ausgabe geschaffen. Die Qualifizierungen bleiben 9 synthetisch, 8 teilweise und 5 offen, bis die Nachweise geprüft sind.'
   }
 };

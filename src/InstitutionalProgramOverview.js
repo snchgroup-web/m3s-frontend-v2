@@ -63,9 +63,9 @@ const translations = {
     sourceMatrix: 'Matrice de cadrage V0.1 · 29 composantes',
     openResources: 'Voir les ressources',
     openArchitecture: 'Voir l’architecture',
-    focusedEyebrow: 'PILOTAGE GLOBAL · FAST TRACK · REF-01 V1.80',
-    focusedTitle: 'Pilote fictif accepté · lot clos',
-    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, les cadres COL-003 à AUT-003, M3S-INB-001 V1.0, les 6/6 résultats synthétiques de M3S-INB-002 V1.0, le GO limité M3S-INB-003 V1.1 et leur acceptation par DEC-077. Aucun lot réel ni L2 n’est ouvert.',
+    focusedEyebrow: 'PILOTAGE GLOBAL · FAST TRACK · REF-01 V1.81',
+    focusedTitle: 'Collecte probatoire bornée autorisée',
+    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, COL-003 V1.1, les treize écarts G1 et DEC-078. La collecte documentaire interne est ouverte à 0/13 pièce reçue ; aucun contact externe, accès réel, test de production ni L2 n’est ouvert.',
     openFullProgram: 'Ouvrir le programme complet',
     returnToFocusedReview: 'Retour au cockpit Fast Track'
   },
@@ -104,9 +104,9 @@ const translations = {
     sourceMatrix: 'Framing matrix V0.1 · 29 components',
     openResources: 'View resources',
     openArchitecture: 'View architecture',
-    focusedEyebrow: 'GLOBAL STEERING · FAST TRACK · REF-01 V1.80',
-    focusedTitle: 'Fictional pilot accepted · package closed',
-    focusedBody: 'This compact view brings together the Programme cockpit, the COL-003 to AUT-003 frameworks, M3S-INB-001 V1.0, the 6/6 synthetic M3S-INB-002 V1.0 results, the limited M3S-INB-003 V1.1 GO and their acceptance through DEC-077. No real or L2 package is open.',
+    focusedEyebrow: 'GLOBAL STEERING · FAST TRACK · REF-01 V1.81',
+    focusedTitle: 'Bounded evidence collection authorised',
+    focusedBody: 'This compact view brings together the Programme cockpit, COL-003 V1.1, the thirteen G1 gaps and DEC-078. Internal documentary collection is open with 0/13 records received; no external contact, real access, production test or L2 is opened.',
     openFullProgram: 'Open the full programme',
     returnToFocusedReview: 'Back to the Fast Track cockpit'
   },
@@ -145,9 +145,9 @@ const translations = {
     sourceMatrix: 'Strukturierungsmatrix V0.1 · 29 Komponenten',
     openResources: 'Ressourcen anzeigen',
     openArchitecture: 'Architektur anzeigen',
-    focusedEyebrow: 'GESAMTSTEUERUNG · FAST TRACK · REF-01 V1.80',
-    focusedTitle: 'Fiktiver Pilot angenommen · Los geschlossen',
-    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, die Rahmen COL-003 bis AUT-003, M3S-INB-001 V1.0, die 6/6 synthetischen Ergebnisse von M3S-INB-002 V1.0, das begrenzte GO M3S-INB-003 V1.1 und ihre Annahme durch DEC-077. Kein reales oder L2-Los ist geöffnet.',
+    focusedEyebrow: 'GESAMTSTEUERUNG · FAST TRACK · REF-01 V1.81',
+    focusedTitle: 'Begrenzte Nachweissammlung autorisiert',
+    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, COL-003 V1.1, die dreizehn G1-Lücken und DEC-078. Die interne dokumentarische Sammlung ist mit 0/13 erhaltenen Unterlagen geöffnet; kein externer Kontakt, realer Zugriff, Produktionstest oder L2 wird geöffnet.',
     openFullProgram: 'Vollständiges Programm öffnen',
     returnToFocusedReview: 'Zurück zum Fast-Track-Cockpit'
   }
