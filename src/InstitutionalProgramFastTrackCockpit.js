@@ -12,10 +12,10 @@ const COPY = {
       ['Consolidation', '8/8 cadres confirmés', 'REF-01 est le contrôle détaillé courant'],
       ['Dynamisation', '8 composantes cadrées', 'Revue détaillée non démarrée']
     ],
-    current: 'Contrôle courant · REF-01 V1.82 · REF-01-DEC-079 V1.0 · inventaire confirmé',
+    current: 'Contrôle courant · REF-01 V1.83 · REF-01-DEC-080 V1.0 · revue confirmée',
     metrics: [['22/22', 'valeurs examinées'], ['9', 'qualifiées, portée synthétique'], ['5/5', 'familles ouvertes à la collecte'], ['0/6', 'conditions G1 clôturables']],
     fastTrack: 'Fast Track actif',
-    fastTrackBody: 'DEC-078 autorise la collecte documentaire interne ; DEC-079 confirme COL-INV-001 V1.0. REV-006 prépare en un lot la recevabilité des treize écarts, avec 0/13 preuve attendue recevable.',
+    fastTrackBody: 'DEC-080 confirme REV-006 V1.0 en un seul arbitrage. COL-004 V0.1 consigne maintenant la recherche interne bornée : 13/13 écarts recherchés, 0/13 preuve recevable et aucune requalification.',
     boundary: 'G1 reste ouverte et L2 fermé. La collecte autorisée ne vaut ni preuve acceptée, ni conformité, ni déploiement.'
   },
   EN: {
@@ -28,10 +28,10 @@ const COPY = {
       ['Consolidation', '8/8 frameworks confirmed', 'REF-01 is the current detailed control'],
       ['Dynamisation', '8 framed components', 'Detailed review not started']
     ],
-    current: 'Current control · REF-01 V1.82 · REF-01-DEC-079 V1.0 · inventory confirmed',
+    current: 'Current control · REF-01 V1.83 · REF-01-DEC-080 V1.0 · review confirmed',
     metrics: [['22/22', 'values reviewed'], ['9', 'qualified, synthetic scope'], ['5/5', 'families open for collection'], ['0/6', 'closable G1 conditions']],
     fastTrack: 'Fast Track active',
-    fastTrackBody: 'DEC-078 authorises internal documentary collection; DEC-079 confirms COL-INV-001 V1.0. REV-006 prepares admissibility of all thirteen gaps in one package, with 0/13 admissible expected proofs.',
+    fastTrackBody: 'DEC-080 confirms REV-006 V1.0 through one decision. COL-004 V0.1 now records the bounded internal search: 13/13 gaps searched, 0/13 admissible evidence items and no requalification.',
     boundary: 'G1 remains open and L2 closed. Authorised collection is neither accepted evidence, compliance nor deployment.'
   },
   DE: {
@@ -44,10 +44,10 @@ const COPY = {
       ['Konsolidierung', '8/8 Rahmen bestätigt', 'REF-01 ist die aktuelle Detailkontrolle'],
       ['Dynamisierung', '8 strukturierte Komponenten', 'Detailprüfung nicht begonnen']
     ],
-    current: 'Aktuelle Kontrolle · REF-01 V1.82 · REF-01-DEC-079 V1.0 · Inventar bestätigt',
+    current: 'Aktuelle Kontrolle · REF-01 V1.83 · REF-01-DEC-080 V1.0 · Prüfung bestätigt',
     metrics: [['22/22', 'Werte geprüft'], ['9', 'qualifiziert, synthetischer Umfang'], ['5/5', 'Familien für Sammlung geöffnet'], ['0/6', 'schliessbare G1-Bedingungen']],
     fastTrack: 'Fast Track aktiv',
-    fastTrackBody: 'DEC-078 autorisiert die interne Dokumentensammlung; DEC-079 bestätigt COL-INV-001 V1.0. REV-006 bereitet die Zulässigkeit aller dreizehn Lücken in einem Paket vor, mit 0/13 zulässigen erwarteten Nachweisen.',
+    fastTrackBody: 'DEC-080 bestätigt REV-006 V1.0 in einem Entscheid. COL-004 V0.1 dokumentiert nun die begrenzte interne Suche: 13/13 Lücken gesucht, 0/13 zulässige Nachweise und keine Neueinstufung.',
     boundary: 'G1 bleibt offen und L2 geschlossen. Die autorisierte Sammlung bedeutet weder angenommenen Nachweis, Konformität noch Bereitstellung.'
   }
 };
