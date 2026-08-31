@@ -26,7 +26,7 @@ const COPY = {
     decisionTitle: 'Résultat de la décision Fast Track',
     decision: 'AUT-003 V1.0 gouverne désormais les cinq dossiers vides. Toute future autorisation restera une décision humaine unitaire appuyée par les huit champs obligatoires.',
     nextTitle: 'Arbitrage groupé suivant confirmé',
-    next: 'REF-01-DEC-076 enregistre dans M3S-INB-003 V1.1 le GO limité aux six cas synthétiques de M3S-INB-002 V1.0. Les 6/6 cas sont exécutés techniquement ; aucun traitement réel ni L2 n’est ouvert.',
+    next: 'REF-01-DEC-077 accepte les 6/6 résultats synthétiques de M3S-INB-002 V1.0 et clôt le lot fictif. Le focus revient aux preuves G1 manquantes ; aucun traitement réel ni L2 n’est ouvert.',
     boundary: 'La confirmation du cadre ne remplira aucun dossier et n’autorisera aucune identité, entreprise, adresse, affectation, prise de contact, émission, collecte, accès, dépense, connexion ou action L2.'
   },
   EN: {
@@ -42,7 +42,7 @@ const COPY = {
     decisionTitle: 'Fast Track decision outcome',
     decision: 'AUT-003 V1.0 now governs the five empty files. Every future authorisation remains an individual human decision supported by the eight mandatory fields.',
     nextTitle: 'Next grouped decision confirmed',
-    next: 'REF-01-DEC-076 records in M3S-INB-003 V1.1 the limited GO for the six M3S-INB-002 V1.0 synthetic cases. All 6/6 cases were run technically; no real-data processing or L2 is open.',
+    next: 'REF-01-DEC-077 accepts all 6/6 M3S-INB-002 V1.0 synthetic results and closes the fictional package. Focus returns to missing G1 evidence; no real-data processing or L2 is open.',
     boundary: 'Confirming the framework will fill no file and authorise no identity, company, address, assignment, contact, release, collection, access, expense, connection or L2 action.'
   },
   DE: {
@@ -58,7 +58,7 @@ const COPY = {
     decisionTitle: 'Ergebnis des Fast-Track-Entscheids',
     decision: 'AUT-003 V1.0 steuert nun die fünf leeren Akten. Jede künftige Autorisierung bleibt ein einzelner menschlicher Entscheid, gestützt auf die acht Pflichtfelder.',
     nextTitle: 'Nächster gebündelter Entscheid bestätigt',
-    next: 'REF-01-DEC-076 erfasst in M3S-INB-003 V1.1 das begrenzte GO für die sechs synthetischen Fälle von M3S-INB-002 V1.0. Alle 6/6 Fälle wurden technisch ausgeführt; keine reale Verarbeitung und kein L2 sind geöffnet.',
+    next: 'REF-01-DEC-077 nimmt alle 6/6 synthetischen Ergebnisse von M3S-INB-002 V1.0 an und schliesst das fiktive Los. Der Fokus kehrt zu fehlenden G1-Nachweisen zurück; keine reale Verarbeitung und kein L2 sind geöffnet.',
     boundary: 'Die Bestätigung des Rahmens füllt keine Akte und erlaubt keine Identität, Firma, Adresse, Zuordnung, Kontaktaufnahme, Versand, Sammlung, Zugriff, Ausgabe, Verbindung oder L2-Aktion.'
   }
 };
