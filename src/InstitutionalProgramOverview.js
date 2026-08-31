@@ -64,9 +64,9 @@ const translations = {
     sourceMatrix: 'Matrice de cadrage V0.1 · 29 composantes',
     openResources: 'Voir les ressources',
     openArchitecture: 'Voir l’architecture',
-    focusedEyebrow: 'PILOTAGE GLOBAL · FAST TRACK · REF-01 V1.83',
+    focusedEyebrow: 'PILOTAGE GLOBAL · FAST TRACK · REF-01 V1.84',
     focusedTitle: 'Collecte probatoire bornée autorisée',
-    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, COL-003 V1.1, les treize écarts G1 et DEC-080. REV-006 V1.0 est confirmé ; COL-004 V0.1 consigne la recherche interne bornée avec 0/13 preuve recevable, sans contact externe, accès réel, test de production ni L2.',
+    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, les treize écarts G1 et DEC-081. COL-004 V1.0 est confirmé ; ATT-001 V0.1 propose une attente probatoire gouvernée avec deux déclencheurs de reprise, sans fermer G1 ni ouvrir L2.',
     openFullProgram: 'Ouvrir le programme complet',
     returnToFocusedReview: 'Retour au cockpit Fast Track'
   },
@@ -105,9 +105,9 @@ const translations = {
     sourceMatrix: 'Framing matrix V0.1 · 29 components',
     openResources: 'View resources',
     openArchitecture: 'View architecture',
-    focusedEyebrow: 'GLOBAL STEERING · FAST TRACK · REF-01 V1.83',
+    focusedEyebrow: 'GLOBAL STEERING · FAST TRACK · REF-01 V1.84',
     focusedTitle: 'Bounded evidence collection authorised',
-    focusedBody: 'This compact view brings together the Programme cockpit, COL-003 V1.1, the thirteen G1 gaps and DEC-080. REV-006 V1.0 is confirmed; COL-004 V0.1 records the bounded internal search with 0/13 admissible evidence items and no external contact, real access, production test or L2.',
+    focusedBody: 'This compact view brings together the Programme cockpit, the thirteen G1 gaps and DEC-081. COL-004 V1.0 is confirmed; ATT-001 V0.1 proposes a governed evidence wait with two resume triggers, without closing G1 or opening L2.',
     openFullProgram: 'Open the full programme',
     returnToFocusedReview: 'Back to the Fast Track cockpit'
   },
@@ -146,9 +146,9 @@ const translations = {
     sourceMatrix: 'Strukturierungsmatrix V0.1 · 29 Komponenten',
     openResources: 'Ressourcen anzeigen',
     openArchitecture: 'Architektur anzeigen',
-    focusedEyebrow: 'GESAMTSTEUERUNG · FAST TRACK · REF-01 V1.83',
+    focusedEyebrow: 'GESAMTSTEUERUNG · FAST TRACK · REF-01 V1.84',
     focusedTitle: 'Begrenzte Nachweissammlung autorisiert',
-    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, COL-003 V1.1, die dreizehn G1-Lücken und DEC-080. REV-006 V1.0 ist bestätigt; COL-004 V0.1 dokumentiert die begrenzte interne Suche mit 0/13 zulässigen Nachweisen, ohne externen Kontakt, realen Zugriff, Produktionstest oder L2.',
+    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, die dreizehn G1-Lücken und DEC-081. COL-004 V1.0 ist bestätigt; ATT-001 V0.1 schlägt gesteuertes Nachweiswarten mit zwei Wiederaufnahmeauslösern vor, ohne G1 zu schliessen oder L2 zu öffnen.',
     openFullProgram: 'Vollständiges Programm öffnen',
     returnToFocusedReview: 'Zurück zum Fast-Track-Cockpit'
   }
