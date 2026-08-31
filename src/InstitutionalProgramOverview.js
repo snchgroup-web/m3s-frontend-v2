@@ -63,9 +63,9 @@ const translations = {
     sourceMatrix: 'Matrice de cadrage V0.1 · 29 composantes',
     openResources: 'Voir les ressources',
     openArchitecture: 'Voir l’architecture',
-    focusedEyebrow: 'PILOTAGE GLOBAL · FAST TRACK · REF-01 V1.78',
-    focusedTitle: 'Fiche GO/NO-GO confirmée · choix vide',
-    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0, M3S-INB-001 V1.0, le protocole non exécuté M3S-INB-002 V1.0 et la fiche vide M3S-INB-003 V1.0.',
+    focusedEyebrow: 'PILOTAGE GLOBAL · FAST TRACK · REF-01 V1.79',
+    focusedTitle: 'GO limité exécuté · relecture humaine ouverte',
+    focusedBody: 'Cette vue compacte réunit le cockpit du Programme, les cadres COL-003 à AUT-003, M3S-INB-001 V1.0, les 6/6 résultats synthétiques de M3S-INB-002 V1.0 et la décision limitée M3S-INB-003 V1.1. Aucun lot réel ni L2 n’est ouvert.',
     openFullProgram: 'Ouvrir le programme complet',
     returnToFocusedReview: 'Retour au cockpit Fast Track'
   },
@@ -104,9 +104,9 @@ const translations = {
     sourceMatrix: 'Framing matrix V0.1 · 29 components',
     openResources: 'View resources',
     openArchitecture: 'View architecture',
-    focusedEyebrow: 'GLOBAL STEERING · FAST TRACK · REF-01 V1.78',
-    focusedTitle: 'GO/NO-GO form confirmed · choice left blank',
-    focusedBody: 'This compact view brings together the Programme cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0, M3S-INB-001 V1.0, the unexecuted M3S-INB-002 V1.0 protocol and the empty M3S-INB-003 V1.0 form.',
+    focusedEyebrow: 'GLOBAL STEERING · FAST TRACK · REF-01 V1.79',
+    focusedTitle: 'Limited GO executed · human review open',
+    focusedBody: 'This compact view brings together the Programme cockpit, the COL-003 to AUT-003 frameworks, M3S-INB-001 V1.0, the 6/6 synthetic M3S-INB-002 V1.0 results and the limited M3S-INB-003 V1.1 decision. No real or L2 package is open.',
     openFullProgram: 'Open the full programme',
     returnToFocusedReview: 'Back to the Fast Track cockpit'
   },
@@ -145,9 +145,9 @@ const translations = {
     sourceMatrix: 'Strukturierungsmatrix V0.1 · 29 Komponenten',
     openResources: 'Ressourcen anzeigen',
     openArchitecture: 'Architektur anzeigen',
-    focusedEyebrow: 'GESAMTSTEUERUNG · FAST TRACK · REF-01 V1.78',
-    focusedTitle: 'GO/NO-GO-Blatt bestätigt · Auswahl leer',
-    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, COL-003 V1.0, REQ-002 V1.0, REC-002 V1.0, NAM-002 V1.0, AUT-003 V1.0, M3S-INB-001 V1.0, das unausgeführte Protokoll M3S-INB-002 V1.0 und das leere Blatt M3S-INB-003 V1.0.',
+    focusedEyebrow: 'GESAMTSTEUERUNG · FAST TRACK · REF-01 V1.79',
+    focusedTitle: 'Begrenztes GO ausgeführt · menschliche Prüfung offen',
+    focusedBody: 'Diese kompakte Ansicht vereint Programm-Cockpit, die Rahmen COL-003 bis AUT-003, M3S-INB-001 V1.0, die 6/6 synthetischen Ergebnisse von M3S-INB-002 V1.0 und den begrenzten Entscheid M3S-INB-003 V1.1. Kein reales oder L2-Los ist geöffnet.',
     openFullProgram: 'Vollständiges Programm öffnen',
     returnToFocusedReview: 'Zurück zum Fast-Track-Cockpit'
   }
