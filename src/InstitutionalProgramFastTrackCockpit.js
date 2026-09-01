@@ -3,52 +3,52 @@ import { AlertTriangle, CheckCircle2, Gauge, Layers3, LockKeyhole, Route } from 
 
 const COPY = {
   FR: {
-    eyebrow: 'COCKPIT GLOBAL CANDIDAT · PGM-CPK-001 · V0.2 · 01-09-2026',
+    eyebrow: 'COCKPIT GLOBAL CANDIDAT · PGM-CPK-001 · V0.3 · 01-09-2026',
     title: 'Voir le Programme dans son ensemble sans masquer les preuves manquantes',
     intro: 'Cette vue compacte sépare la structure institutionnelle, l’avancement documentaire observé et la décision technique courante. Elle ne calcule aucun pourcentage sans périmètre cible et preuves gouvernées.',
     stages: [
-      ['Conception', '8 références ouvertes', 'Revue candidate · 0 preuve acceptée'],
+      ['Conception', 'Revue confirmée', 'Plan correctif candidat · 0 correction'],
       ['Mise en place', '7/7 composantes publiées', 'Mesure opérationnelle indisponible'],
       ['Consolidation', '8/8 cadres confirmés', 'REF-01 sous veille probatoire'],
       ['Dynamisation', '8 composantes cadrées', 'Revue détaillée non démarrée']
     ],
-    current: 'Conception · ouverture contrôlée · PGM-DEC-009 V1.0',
+    current: 'Conception · revue confirmée · PGM-DEC-010 V1.0',
     metrics: [['8/8', 'références ouvertes'], ['7', 'apports directs candidats'], ['2', 'écarts isolés'], ['0', 'preuves acceptées']],
     fastTrack: 'Fast Track actif',
-    fastTrackBody: 'PGM-DEC-009 consigne l’ouverture et la lecture des huit références uniques autorisées. PGM-CON-REV-002 V0.1 qualifie 7 apports directs et 1 apport méthodologique, sans calculer de progression.',
-    boundary: 'CON-01 et CON-05 restent non ouverts ; REF-02 et L2 restent fermés. La revue ne vaut ni acceptation de preuve, ni requalification, ni progression.'
+    fastTrackBody: 'PGM-DEC-010 confirme PGM-CON-REV-002 V1.0 : 7 apports directs, 1 méthodologique et 2 écarts. PGM-CON-COR-001 V0.1 cadre deux corrections séparées, encore non exécutées.',
+    boundary: 'CON-01 et CON-05 restent non ouverts ; REF-02 et L2 restent fermés. Zéro preuve acceptée, correction exécutée, requalification ou progression.'
   },
   EN: {
-    eyebrow: 'CANDIDATE GLOBAL COCKPIT · PGM-CPK-001 · V0.2 · 1 SEP 2026',
+    eyebrow: 'CANDIDATE GLOBAL COCKPIT · PGM-CPK-001 · V0.3 · 1 SEP 2026',
     title: 'See the Programme as a whole without hiding missing evidence',
     intro: 'This compact view separates the institutional structure, observed documentary progress and the current technical decision. It calculates no percentage without a target scope and governed evidence.',
     stages: [
-      ['Design', '8 references opened', 'Candidate review · 0 evidence accepted'],
+      ['Design', 'Review confirmed', 'Candidate correction plan · 0 corrections'],
       ['Implementation', '7/7 components published', 'Operational measurement unavailable'],
       ['Consolidation', '8/8 frameworks confirmed', 'REF-01 under evidentiary watch'],
       ['Dynamisation', '8 framed components', 'Detailed review not started']
     ],
-    current: 'Design · controlled opening · PGM-DEC-009 V1.0',
+    current: 'Design · review confirmed · PGM-DEC-010 V1.0',
     metrics: [['8/8', 'references opened'], ['7', 'candidate direct contributions'], ['2', 'isolated gaps'], ['0', 'evidence accepted']],
     fastTrack: 'Fast Track active',
-    fastTrackBody: 'PGM-DEC-009 records the opening and reading of the eight authorised unique references. PGM-CON-REV-002 V0.1 qualifies 7 direct contributions and 1 method contribution without calculating progress.',
-    boundary: 'CON-01 and CON-05 remain unopened; REF-02 and L2 remain closed. The review is neither evidence acceptance, requalification nor progress.'
+    fastTrackBody: 'PGM-DEC-010 confirms PGM-CON-REV-002 V1.0: 7 direct contributions, 1 method contribution and 2 gaps. PGM-CON-COR-001 V0.1 frames two separate corrections, still unexecuted.',
+    boundary: 'CON-01 and CON-05 remain unopened; REF-02 and L2 remain closed. Zero evidence accepted, corrections executed, requalification or progress.'
   },
   DE: {
-    eyebrow: 'KANDIDAT FÜR DAS GESAMTCOCKPIT · PGM-CPK-001 · V0.2 · 01.09.2026',
+    eyebrow: 'KANDIDAT FÜR DAS GESAMTCOCKPIT · PGM-CPK-001 · V0.3 · 01.09.2026',
     title: 'Das Programm als Ganzes sehen, ohne fehlende Nachweise zu verbergen',
     intro: 'Diese kompakte Ansicht trennt institutionelle Struktur, beobachteten Dokumentationsstand und aktuellen technischen Entscheid. Ohne Zielumfang und gesteuerte Nachweise wird kein Prozentsatz berechnet.',
     stages: [
-      ['Konzeption', '8 Referenzen geöffnet', 'Kandidatenprüfung · 0 Nachweise angenommen'],
+      ['Konzeption', 'Prüfung bestätigt', 'Kandidat für Korrekturplan · 0 Korrekturen'],
       ['Umsetzung', '7/7 Komponenten veröffentlicht', 'Operative Messung nicht verfügbar'],
       ['Konsolidierung', '8/8 Rahmen bestätigt', 'REF-01 unter beweisbezogener Beobachtung'],
       ['Dynamisierung', '8 strukturierte Komponenten', 'Detailprüfung nicht begonnen']
     ],
-    current: 'Konzeption · kontrollierte Öffnung · PGM-DEC-009 V1.0',
+    current: 'Konzeption · Prüfung bestätigt · PGM-DEC-010 V1.0',
     metrics: [['8/8', 'Referenzen geöffnet'], ['7', 'direkte Kandidatenbeiträge'], ['2', 'isolierte Lücken'], ['0', 'Nachweise angenommen']],
     fastTrack: 'Fast Track aktiv',
-    fastTrackBody: 'PGM-DEC-009 dokumentiert Öffnung und Lektüre der acht autorisierten eindeutigen Referenzen. PGM-CON-REV-002 V0.1 qualifiziert 7 direkte Beiträge und 1 Methodenbeitrag, ohne Fortschritt zu berechnen.',
-    boundary: 'CON-01 und CON-05 bleiben ungeöffnet; REF-02 und L2 bleiben geschlossen. Die Prüfung bedeutet weder Nachweisannahme, Neueinstufung noch Fortschritt.'
+    fastTrackBody: 'PGM-DEC-010 bestätigt PGM-CON-REV-002 V1.0: 7 direkte Beiträge, 1 Methodenbeitrag und 2 Lücken. PGM-CON-COR-001 V0.1 strukturiert zwei getrennte, noch nicht ausgeführte Korrekturen.',
+    boundary: 'CON-01 und CON-05 bleiben ungeöffnet; REF-02 und L2 bleiben geschlossen. Null angenommene Nachweise, ausgeführte Korrekturen, Neueinstufung oder Fortschritt.'
   }
 };
 
