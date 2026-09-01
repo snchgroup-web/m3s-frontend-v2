@@ -24,6 +24,7 @@ import InstitutionalProgramDesignEvidenceSearchPlan from './InstitutionalProgram
 import InstitutionalProgramDesignEvidenceSearchResults from './InstitutionalProgramDesignEvidenceSearchResults';
 import InstitutionalProgramDesignEvidenceControlledReview from './InstitutionalProgramDesignEvidenceControlledReview';
 import InstitutionalProgramDesignGapCorrectionPlan from './InstitutionalProgramDesignGapCorrectionPlan';
+import InstitutionalProgramDesignGapCorrectionResult from './InstitutionalProgramDesignGapCorrectionResult';
 import InstitutionalFastTrackGovernance from './InstitutionalFastTrackGovernance';
 import InstitutionalPeopleTeamsGateG1FastTrackQualification from './InstitutionalPeopleTeamsGateG1FastTrackQualification';
 import InstitutionalPeopleTeamsFastTrackExceptionArbitration from './InstitutionalPeopleTeamsFastTrackExceptionArbitration';
@@ -234,6 +235,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
       <InstitutionalProgramDesignEvidenceSearchResults language={language} />
       <InstitutionalProgramDesignEvidenceControlledReview language={language} />
       <InstitutionalProgramDesignGapCorrectionPlan language={language} />
+      <InstitutionalProgramDesignGapCorrectionResult language={language} />
       <InstitutionalFastTrackGovernance language={language} />
       <InstitutionalPeopleTeamsGateG1FastTrackQualification language={language} />
       <InstitutionalPeopleTeamsFastTrackExceptionArbitration language={language} />
