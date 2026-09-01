@@ -56,7 +56,10 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(screen.getAllByTestId('institutional-program-design-evidence-row')).toHaveLength(6);
   expect(screen.getByTestId('institutional-program-design-evidence-search-plan')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'PGM-DEC-006 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'PGM-DEC-007 · V1.0' })).toBeInTheDocument();
   expect(screen.getAllByTestId('institutional-program-design-search-scope')).toHaveLength(6);
+  expect(screen.getByTestId('institutional-program-design-evidence-search-results')).toBeInTheDocument();
+  expect(screen.getAllByTestId('institutional-program-design-search-result')).toHaveLength(6);
   expect(screen.getByText(/Aucun pourcentage n’est affiché/)).toBeInTheDocument();
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });
@@ -64,7 +67,7 @@ test('shows the governed institutional programme without inventing progress', ()
 test('opens the authorised bounded collection and keeps operational boundaries in the lightweight Fast Track view', () => {
   renderDashboardNavigation({}, '/?view=program&focus=ref01-fasttrack');
 
-  expect(screen.getByRole('heading', { name: 'Collecte probatoire bornée autorisée' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'G1 en attente gouvernée · trajectoire globale reprise' })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'Ouvrir le programme complet' })).toHaveAttribute('href', '/?view=program&returnTo=ref01-fasttrack#institutional-ref01-fast-track-governance');
   expect(screen.getByTestId('institutional-fast-track-cockpit')).toBeInTheDocument();
   expect(screen.getByTestId('ref01-fast-track-governance')).toBeInTheDocument();
@@ -1774,7 +1777,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Confirm two separate frameworks without opening execution' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(85);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(90);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(9);
@@ -1786,7 +1789,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Zwei getrennte Rahmen bestätigen, ohne ihre Ausführung zu öffnen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(85);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(90);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(9);

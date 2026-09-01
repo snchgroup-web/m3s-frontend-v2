@@ -53,65 +53,68 @@ const COPY = {
   FR: {
     eyebrow: 'PLAN DE RECHERCHE CONFIRMÉ · PGM-CON-COL-001 · V1.0 · 01-09-2026',
     title: 'Borner la recherche documentaire avant toute exécution',
-    intro: 'PGM-DEC-006 confirme ce plan pour les six composantes de Conception. Les périmètres, séquences, responsabilités candidates et règles d’arrêt sont retenus ; aucune recherche, ouverture de pièce ou appréciation probatoire n’est lancée.',
-    counters: [['6/6', 'périmètres planifiés'], ['18', 'familles à rechercher après autorisation'], ['0', 'recherches lancées'], ['0', 'pièces ouvertes']],
+    intro: 'PGM-DEC-006 confirme ce plan pour les six composantes de Conception. PGM-DEC-007 autorise son lancement dans les seules limites métadonnées ; les règles d’arrêt restent pleinement applicables.',
+    counters: [['6/6', 'périmètres planifiés'], ['4/6', 'périmètres internes indexés'], ['2', 'arrêts restreints appliqués'], ['0', 'pièces ouvertes']],
     labels: { location: 'Périmètre candidat', sequence: 'Séquence prévue', owner: 'Responsable candidat', sensitivity: 'Sensibilité candidate', stop: 'Règle d’arrêt' },
     sequence: ['Borner le dossier et les mots-clés', 'Relever uniquement références, dates et versions', 'Produire un index pour contrôle humain séparé'],
     sensitivity: { internal: 'Interne', restricted: 'Restreinte' },
     stop: { internal: 'Arrêt avant toute copie de contenu, requalification ou acceptation de preuve.', restricted: 'Arrêt avant ouverture : autorisation nominative et portée d’accès distinctes requises.' },
-    planned: 'CONFIRMÉ · NON LANCÉ',
-    allowedTitle: 'Ce que le plan prépare',
-    allowed: ['Recherche interne bornée par composante et famille documentaire.', 'Index minimal : référence, titre, date, version, provenance et emplacement.', 'Contrôle humain ultérieur de présence, complétude, fraîcheur et recevabilité.'],
+    status: { internal: 'EXÉCUTÉ · MÉTADONNÉES', restricted: 'STOP · NON PARCOURU' },
+    allowedTitle: 'Ce que l’autorisation permet',
+    allowed: ['Recherche interne bornée par composante et famille documentaire.', 'Index minimal : référence, titre, date, version apparente, provenance et emplacement.', 'Production d’un relevé candidat pour contrôle humain séparé.'],
     blockedTitle: 'Ce qui reste fermé',
-    blocked: ['Recherche effective, ouverture ou lecture de pièce.', 'Accès restreint, secret, identifiant, donnée personnelle ou transmission.', 'Acceptation de preuve, requalification, mandat, exécution, progression, REF-02 ou L2.'],
+    blocked: ['Ouverture, lecture ou copie du contenu d’une pièce.', 'Accès restreint, secret, identifiant, donnée personnelle ou transmission.', 'Acceptation de preuve, requalification, mandat, exécution, progression, REF-02 ou L2.'],
     recordLabels: { eyebrow: 'Trace de décision gouvernée', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision consignée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
     record: { id: 'PGM-DEC-006', version: 'V1.0', status: 'Plan de recherche confirmé', author: 'Cheikh Ndiaye', date: '01-09-2026', decision: 'PGM-CON-COL-001 V0.1 est confirmé et promu en V1.0 comme plan de recherche documentaire interne bornée pour les six composantes de Conception.', evidence: 'Confirmation explicite de Cheikh dans la session du 01-09-2026 : « Je confirme PGM-CON-COL-001 V0.1 comme plan candidat, sans autoriser encore le lancement de la recherche ni l’ouverture des pièces. »', limit: 'La décision confirme le plan documentaire uniquement. Elle n’autorise aucune recherche, ouverture ou lecture de pièce, aucun accès restreint ou réel, aucune acceptation de preuve, requalification, tâche d’exécution, progression, REF-02 ou L2.' },
-    source: 'Base confirmée : PGM-CON-EVD-001 V1.0, PGM-DEC-005 V1.0 et PGM-DEC-006 V1.0. Les emplacements, responsables et sensibilités restent soumis aux règles d’arrêt avant toute recherche effective.',
-    boundary: 'Plan confirmé uniquement : six périmètres, dix-huit familles attendues, zéro recherche lancée, zéro pièce ouverte et zéro preuve acceptée.',
-    next: 'Prochaine autorisation distincte',
-    confirmation: 'Autoriser ou non le lancement de la recherche interne bornée selon PGM-CON-COL-001 V1.0. Sans cette décision séparée, aucune recherche ni ouverture de pièce n’est permise.'
+    launchRecord: { id: 'PGM-DEC-007', version: 'V1.0', status: 'Lancement borné autorisé', author: 'Cheikh Ndiaye', date: '01-09-2026', decision: 'Le lancement de la recherche interne bornée selon PGM-CON-COL-001 V1.0 est autorisé dans les limites métadonnées confirmées.', evidence: 'Autorisation explicite de Cheikh dans la session du 01-09-2026 : « super, merci de continuer lancement autorisé ».', limit: 'L’autorisation permet uniquement le parcours des métadonnées internes non restreintes. Elle n’autorise aucune ouverture ou lecture de contenu, aucun parcours des périmètres restreints CON-01 et CON-05, aucune acceptation de preuve, requalification, progression, REF-02 ou L2.' },
+    source: 'Base confirmée : PGM-CON-EVD-001 V1.0, PGM-DEC-005 V1.0, PGM-DEC-006 V1.0 et PGM-DEC-007 V1.0. Les règles d’arrêt restent applicables pendant toute la recherche.',
+    boundary: 'Exécution bornée : quatre périmètres internes indexés par métadonnées, deux arrêts restreints appliqués, zéro pièce ouverte et zéro preuve acceptée.',
+    next: 'Relevé candidat produit · PGM-CON-COL-002 V0.1',
+    confirmation: 'Le relevé groupé est présenté ci-dessous pour confirmation ou correction. Aucune pièce ne peut être ouverte et aucune preuve ne peut être acceptée à ce stade.'
   },
   EN: {
     eyebrow: 'CONFIRMED SEARCH PLAN · PGM-CON-COL-001 · V1.0 · 1 SEP 2026',
     title: 'Bound documentary search before any execution',
-    intro: 'PGM-DEC-006 confirms this plan for the six Design components. The scopes, sequences, candidate responsibilities and stop rules are retained; no search, record opening or evidentiary assessment is started.',
-    counters: [['6/6', 'scopes planned'], ['18', 'families to search after authorisation'], ['0', 'searches started'], ['0', 'records opened']],
+    intro: 'PGM-DEC-006 confirms this plan for the six Design components. PGM-DEC-007 authorises launch within metadata-only limits; all stop rules remain fully applicable.',
+    counters: [['6/6', 'scopes planned'], ['4/6', 'internal scopes indexed'], ['2', 'restricted stops applied'], ['0', 'records opened']],
     labels: { location: 'Candidate scope', sequence: 'Planned sequence', owner: 'Candidate owner', sensitivity: 'Candidate sensitivity', stop: 'Stop rule' },
     sequence: ['Bound the file and keywords', 'Record references, dates and versions only', 'Produce an index for separate human review'],
     sensitivity: { internal: 'Internal', restricted: 'Restricted' },
     stop: { internal: 'Stop before copying content, requalification or evidence acceptance.', restricted: 'Stop before opening: separate named authorisation and access scope required.' },
-    planned: 'CONFIRMED · NOT STARTED',
-    allowedTitle: 'What the plan prepares',
-    allowed: ['Internal search bounded by component and documentary family.', 'Minimal index: reference, title, date, version, provenance and location.', 'Later human review of presence, completeness, freshness and admissibility.'],
+    status: { internal: 'EXECUTED · METADATA', restricted: 'STOP · NOT TRAVERSED' },
+    allowedTitle: 'What the authorisation permits',
+    allowed: ['Internal search bounded by component and documentary family.', 'Minimal index: reference, title, date, apparent version, provenance and location.', 'Production of a candidate record for separate human review.'],
     blockedTitle: 'What remains closed',
-    blocked: ['Effective search, record opening or reading.', 'Restricted access, secret, credential, personal data or transmission.', 'Evidence acceptance, requalification, mandate, execution, progress, REF-02 or L2.'],
+    blocked: ['Opening, reading or copying a record’s content.', 'Restricted access, secret, credential, personal data or transmission.', 'Evidence acceptance, requalification, mandate, execution, progress, REF-02 or L2.'],
     recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
     record: { id: 'PGM-DEC-006', version: 'V1.0', status: 'Search plan confirmed', author: 'Cheikh Ndiaye', date: '1 Sep 2026', decision: 'PGM-CON-COL-001 V0.1 is confirmed and promoted to V1.0 as the bounded internal documentary search plan for the six Design components.', evidence: 'Cheikh’s explicit confirmation in the 1 Sep 2026 session, retained in French: “Je confirme PGM-CON-COL-001 V0.1 comme plan candidat, sans autoriser encore le lancement de la recherche ni l’ouverture des pièces.”', limit: 'The decision confirms the documentary plan only. It authorises no search, record opening or reading, restricted or real access, evidence acceptance, requalification, execution task, progress, REF-02 or L2.' },
-    source: 'Confirmed basis: PGM-CON-EVD-001 V1.0, PGM-DEC-005 V1.0 and PGM-DEC-006 V1.0. Locations, owners and sensitivities remain subject to the stop rules before any effective search.',
-    boundary: 'Confirmed plan only: six scopes, eighteen expected families, zero searches started, zero records opened and zero evidence accepted.',
-    next: 'Next separate authorisation',
-    confirmation: 'Authorise or decline starting the bounded internal search under PGM-CON-COL-001 V1.0. Without that separate decision, no search or record opening is permitted.'
+    launchRecord: { id: 'PGM-DEC-007', version: 'V1.0', status: 'Bounded launch authorised', author: 'Cheikh Ndiaye', date: '1 Sep 2026', decision: 'Starting the bounded internal search under PGM-CON-COL-001 V1.0 is authorised within the confirmed metadata-only limits.', evidence: 'Cheikh’s explicit authorisation in the 1 Sep 2026 session, retained in French: “super, merci de continuer lancement autorisé”.', limit: 'The authorisation permits only traversal of non-restricted internal metadata. It authorises no content opening or reading, traversal of restricted CON-01 and CON-05 scopes, evidence acceptance, requalification, progress, REF-02 or L2.' },
+    source: 'Confirmed basis: PGM-CON-EVD-001 V1.0, PGM-DEC-005 V1.0, PGM-DEC-006 V1.0 and PGM-DEC-007 V1.0. Stop rules remain applicable throughout the search.',
+    boundary: 'Bounded execution: four internal scopes indexed from metadata, two restricted stops applied, zero records opened and zero evidence accepted.',
+    next: 'Candidate record produced · PGM-CON-COL-002 V0.1',
+    confirmation: 'The grouped record is shown below for confirmation or correction. No record may be opened and no evidence may be accepted at this stage.'
   },
   DE: {
     eyebrow: 'BESTÄTIGTER SUCHPLAN · PGM-CON-COL-001 · V1.0 · 01.09.2026',
     title: 'Dokumentensuche vor jeder Ausführung begrenzen',
-    intro: 'PGM-DEC-006 bestätigt diesen Plan für die sechs Konzeptionskomponenten. Bereiche, Abläufe, Kandidatenverantwortungen und Stoppregeln sind festgehalten; keine Suche, Unterlagenöffnung oder Nachweisbewertung wird gestartet.',
-    counters: [['6/6', 'Bereiche geplant'], ['18', 'Familien nach Autorisierung zu suchen'], ['0', 'Suchen gestartet'], ['0', 'Unterlagen geöffnet']],
+    intro: 'PGM-DEC-006 bestätigt diesen Plan für die sechs Konzeptionskomponenten. PGM-DEC-007 autorisiert den Start innerhalb der reinen Metadatengrenzen; alle Stoppregeln bleiben vollständig anwendbar.',
+    counters: [['6/6', 'Bereiche geplant'], ['4/6', 'interne Bereiche indexiert'], ['2', 'eingeschränkte Stopps angewendet'], ['0', 'Unterlagen geöffnet']],
     labels: { location: 'Kandidatenbereich', sequence: 'Geplanter Ablauf', owner: 'Kandidatenverantwortung', sensitivity: 'Kandidatensensibilität', stop: 'Stoppregel' },
     sequence: ['Akte und Suchbegriffe abgrenzen', 'Nur Referenzen, Daten und Versionen erfassen', 'Index für getrennte menschliche Prüfung erstellen'],
     sensitivity: { internal: 'Intern', restricted: 'Eingeschränkt' },
     stop: { internal: 'Stopp vor Inhaltskopie, Neueinstufung oder Nachweisannahme.', restricted: 'Stopp vor Öffnung: separate namentliche Autorisierung und Zugriffsbereich erforderlich.' },
-    planned: 'BESTÄTIGT · NICHT GESTARTET',
-    allowedTitle: 'Was der Plan vorbereitet',
-    allowed: ['Interne Suche, begrenzt nach Komponente und Dokumentenfamilie.', 'Minimalindex: Referenz, Titel, Datum, Version, Herkunft und Ablage.', 'Spätere menschliche Prüfung von Vorhandensein, Vollständigkeit, Aktualität und Zulässigkeit.'],
+    status: { internal: 'AUSGEFÜHRT · METADATEN', restricted: 'STOPP · NICHT DURCHSUCHT' },
+    allowedTitle: 'Was die Autorisierung erlaubt',
+    allowed: ['Interne Suche, begrenzt nach Komponente und Dokumentenfamilie.', 'Minimalindex: Referenz, Titel, Datum, erkennbare Version, Herkunft und Ablage.', 'Erstellung eines Kandidatenprotokolls für eine getrennte menschliche Prüfung.'],
     blockedTitle: 'Was geschlossen bleibt',
-    blocked: ['Effektive Suche, Öffnung oder Lesen von Unterlagen.', 'Eingeschränkter Zugriff, Geheimnis, Kennung, Personendaten oder Übermittlung.', 'Nachweisannahme, Neueinstufung, Mandat, Ausführung, Fortschritt, REF-02 oder L2.'],
+    blocked: ['Öffnung, Lesen oder Kopieren des Inhalts einer Unterlage.', 'Eingeschränkter Zugriff, Geheimnis, Kennung, Personendaten oder Übermittlung.', 'Nachweisannahme, Neueinstufung, Mandat, Ausführung, Fortschritt, REF-02 oder L2.'],
     recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Erfasster Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
     record: { id: 'PGM-DEC-006', version: 'V1.0', status: 'Suchplan bestätigt', author: 'Cheikh Ndiaye', date: '01.09.2026', decision: 'PGM-CON-COL-001 V0.1 wird als begrenzter interner Dokumentensuchplan für die sechs Konzeptionskomponenten bestätigt und zu V1.0 befördert.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 01.09.2026, im französischen Originalwortlaut: „Je confirme PGM-CON-COL-001 V0.1 comme plan candidat, sans autoriser encore le lancement de la recherche ni l’ouverture des pièces.“', limit: 'Der Entscheid bestätigt nur den Dokumentationsplan. Er erlaubt keine Suche, Öffnung oder Lektüre von Unterlagen, keinen eingeschränkten oder realen Zugriff, keine Nachweisannahme, Neueinstufung, Ausführungsaufgabe, Fortschritt, REF-02 oder L2.' },
-    source: 'Bestätigte Basis: PGM-CON-EVD-001 V1.0, PGM-DEC-005 V1.0 und PGM-DEC-006 V1.0. Ablagen, Verantwortungen und Sensibilitäten unterliegen vor jeder effektiven Suche weiterhin den Stoppregeln.',
-    boundary: 'Nur bestätigter Plan: sechs Bereiche, achtzehn erwartete Familien, null gestartete Suchen, null geöffnete Unterlagen und null angenommene Nachweise.',
-    next: 'Nächste getrennte Autorisierung',
-    confirmation: 'Den Start der begrenzten internen Suche nach PGM-CON-COL-001 V1.0 erlauben oder ablehnen. Ohne diesen getrennten Entscheid sind weder Suche noch Unterlagenöffnung zulässig.'
+    launchRecord: { id: 'PGM-DEC-007', version: 'V1.0', status: 'Begrenzter Start autorisiert', author: 'Cheikh Ndiaye', date: '01.09.2026', decision: 'Der Start der begrenzten internen Suche nach PGM-CON-COL-001 V1.0 ist innerhalb der bestätigten reinen Metadatengrenzen autorisiert.', evidence: 'Ausdrückliche Autorisierung von Cheikh in der Sitzung vom 01.09.2026, im französischen Originalwortlaut: „super, merci de continuer lancement autorisé“.', limit: 'Die Autorisierung erlaubt nur das Durchlaufen nicht eingeschränkter interner Metadaten. Sie erlaubt keine Öffnung oder Lektüre von Inhalten, keine Durchsicht der eingeschränkten Bereiche CON-01 und CON-05, keine Nachweisannahme, Neueinstufung, Fortschrittsmessung, REF-02 oder L2.' },
+    source: 'Bestätigte Basis: PGM-CON-EVD-001 V1.0, PGM-DEC-005 V1.0, PGM-DEC-006 V1.0 und PGM-DEC-007 V1.0. Die Stoppregeln bleiben während der gesamten Suche anwendbar.',
+    boundary: 'Begrenzte Ausführung: vier interne Bereiche anhand von Metadaten indexiert, zwei eingeschränkte Stopps angewendet, null Unterlagen geöffnet und null Nachweise angenommen.',
+    next: 'Kandidatenprotokoll erstellt · PGM-CON-COL-002 V0.1',
+    confirmation: 'Das gebündelte Protokoll wird unten zur Bestätigung oder Korrektur angezeigt. In dieser Phase darf keine Unterlage geöffnet und kein Nachweis angenommen werden.'
   }
 };
 
@@ -135,7 +138,7 @@ const InstitutionalProgramDesignEvidenceSearchPlan = ({ language = 'FR' }) => {
           <article key={scope.id} data-testid="institutional-program-design-search-scope" className="m3s-raised min-w-0 p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex min-w-0 items-start gap-3"><span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-cyan-950/45 text-cyan-300"><FileSearch size={19} aria-hidden="true" /></span><div><p className="text-xs font-semibold text-cyan-300">{scope.id}</p><h5 className="mt-1 text-sm font-semibold text-slate-100 sm:text-base">{local(scope.name)}</h5></div></div>
-              <span className="inline-flex shrink-0 self-start rounded-md border border-amber-800/70 bg-amber-950/20 px-2.5 py-1.5 text-xs font-semibold text-amber-200">{t.planned}</span>
+              <span className={`inline-flex shrink-0 self-start rounded-md border px-2.5 py-1.5 text-xs font-semibold ${scope.sensitivity === 'restricted' ? 'border-rose-800/70 bg-rose-950/20 text-rose-200' : 'border-emerald-800/70 bg-emerald-950/20 text-emerald-200'}`}>{t.status[scope.sensitivity]}</span>
             </div>
             <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
               <div><p className="text-xs font-semibold uppercase text-slate-400">{t.labels.location}</p><p className="mt-2 text-sm leading-6 text-slate-300">{local(scope.location)}</p><p className="mt-3 text-xs font-semibold uppercase text-slate-400">{t.labels.owner}</p><p className="mt-2 text-sm leading-6 text-slate-300">{local(scope.owner)}</p></div>
@@ -152,6 +155,7 @@ const InstitutionalProgramDesignEvidenceSearchPlan = ({ language = 'FR' }) => {
       </div>
 
       <GovernedDecisionRecord labels={t.recordLabels} record={t.record} />
+      <GovernedDecisionRecord labels={t.recordLabels} record={t.launchRecord} />
       <p className="mt-4 flex items-start gap-2 border-t border-slate-700 pt-4 text-xs leading-5 text-slate-400"><Archive className="mt-0.5 shrink-0 text-cyan-300" size={16} aria-hidden="true" />{t.source}</p>
       <p className="mt-3 flex items-start gap-2 rounded-md border border-amber-800/70 bg-amber-950/15 p-3 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.boundary}</p>
       <div className="mt-3 rounded-md border border-cyan-800/70 bg-cyan-950/15 p-3"><p className="flex items-center gap-2 text-xs font-semibold uppercase text-cyan-300"><ShieldCheck size={16} aria-hidden="true" />{t.next}</p><p className="mt-2 text-sm font-semibold leading-6 text-slate-100">{t.confirmation}</p></div>
