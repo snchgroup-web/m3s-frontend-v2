@@ -9,7 +9,7 @@ const COPY = {
     stages: [
       ['Conception', '6 composantes cadrées', 'Contrôle détaillé à faire remonter'],
       ['Mise en place', '7/7 composantes publiées', 'Mesure opérationnelle indisponible'],
-      ['Consolidation', '8/8 cadres confirmés', 'REF-01 est le contrôle détaillé courant'],
+      ['Consolidation', '8/8 cadres confirmés', 'REF-01 sous veille probatoire'],
       ['Dynamisation', '8 composantes cadrées', 'Revue détaillée non démarrée']
     ],
     current: 'Contrôle en veille · REF-01 V1.85 · REF-01-DEC-082 V1.0 · attente gouvernée',
@@ -25,7 +25,7 @@ const COPY = {
     stages: [
       ['Design', '6 framed components', 'Detailed control to surface'],
       ['Implementation', '7/7 components published', 'Operational measurement unavailable'],
-      ['Consolidation', '8/8 frameworks confirmed', 'REF-01 is the current detailed control'],
+      ['Consolidation', '8/8 frameworks confirmed', 'REF-01 under evidentiary watch'],
       ['Dynamisation', '8 framed components', 'Detailed review not started']
     ],
     current: 'Control on watch · REF-01 V1.85 · REF-01-DEC-082 V1.0 · governed waiting',
@@ -41,7 +41,7 @@ const COPY = {
     stages: [
       ['Konzeption', '6 strukturierte Komponenten', 'Detailkontrolle sichtbar zu machen'],
       ['Umsetzung', '7/7 Komponenten veröffentlicht', 'Operative Messung nicht verfügbar'],
-      ['Konsolidierung', '8/8 Rahmen bestätigt', 'REF-01 ist die aktuelle Detailkontrolle'],
+      ['Konsolidierung', '8/8 Rahmen bestätigt', 'REF-01 unter beweisbezogener Beobachtung'],
       ['Dynamisierung', '8 strukturierte Komponenten', 'Detailprüfung nicht begonnen']
     ],
     current: 'Kontrolle in Beobachtung · REF-01 V1.85 · REF-01-DEC-082 V1.0 · gesteuertes Warten',
