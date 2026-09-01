@@ -50,7 +50,7 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(screen.getByRole('heading', { name: 'De l’idée à une institution durable' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: '2SG · Institution porteuse' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'M3S · Système interne transversal de management' })).toBeInTheDocument();
-  expect(screen.getByText('29 composantes', { exact: false })).toBeInTheDocument();
+  expect(screen.getByText('Matrice de cadrage V0.1 · 29 composantes')).toBeInTheDocument();
   expect(screen.getByTestId('institutional-program-design-evidence-inventory')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'PGM-DEC-004 · V1.0' })).toBeInTheDocument();
   expect(screen.getAllByTestId('institutional-program-design-evidence-row')).toHaveLength(6);
@@ -61,6 +61,9 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(screen.getByTestId('institutional-program-design-evidence-search-results')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'PGM-DEC-008 · V1.0' })).toBeInTheDocument();
   expect(screen.getAllByTestId('institutional-program-design-search-result')).toHaveLength(6);
+  expect(screen.getByTestId('institutional-program-design-controlled-review')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'PGM-DEC-009 · V1.0' })).toBeInTheDocument();
+  expect(screen.getAllByTestId('institutional-program-design-controlled-reference')).toHaveLength(8);
   expect(screen.getByText(/Aucun pourcentage n’est affiché/)).toBeInTheDocument();
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });
@@ -1778,7 +1781,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Confirm two separate frameworks without opening execution' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(91);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(92);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(9);
@@ -1790,7 +1793,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Zwei getrennte Rahmen bestätigen, ohne ihre Ausführung zu öffnen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(91);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(92);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(9);
