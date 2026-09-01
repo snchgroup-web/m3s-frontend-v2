@@ -17,6 +17,7 @@ import InstitutionalQualityLessonsConsolidationPilot from './InstitutionalQualit
 import InstitutionalReportingConsolidationPilot from './InstitutionalReportingConsolidationPilot';
 import InstitutionalConsolidationIntegratedReview from './InstitutionalConsolidationIntegratedReview';
 import InstitutionalProgramFastTrackCockpit from './InstitutionalProgramFastTrackCockpit';
+import InstitutionalProgramPriorityArbitration from './InstitutionalProgramPriorityArbitration';
 import InstitutionalFastTrackGovernance from './InstitutionalFastTrackGovernance';
 import InstitutionalPeopleTeamsGateG1FastTrackQualification from './InstitutionalPeopleTeamsGateG1FastTrackQualification';
 import InstitutionalPeopleTeamsFastTrackExceptionArbitration from './InstitutionalPeopleTeamsFastTrackExceptionArbitration';
@@ -220,6 +221,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
       </header>
 
       <InstitutionalProgramFastTrackCockpit language={language} />
+      <InstitutionalProgramPriorityArbitration language={language} />
       <InstitutionalFastTrackGovernance language={language} />
       <InstitutionalPeopleTeamsGateG1FastTrackQualification language={language} />
       <InstitutionalPeopleTeamsFastTrackExceptionArbitration language={language} />
