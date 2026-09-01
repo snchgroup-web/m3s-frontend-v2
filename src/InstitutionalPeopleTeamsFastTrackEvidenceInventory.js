@@ -55,12 +55,13 @@ const COPY = {
     collectionCounters: [['Périmètres contrôlés', '4/4'], ['Écarts recherchés', '13/13'], ['Nouvelles preuves recevables', '0'], ['Exclusion documentée', '1']],
     collectionResult: 'RÉSULTAT CONFIRMÉ · GED-SYNTHETIC-REF-001 reste une fixture synthétique et ne constitue pas une référence GED réelle. Conserver 8 partiels, 5 ouverts et 0/13 preuve recevable.',
     collectionRecord: { id: 'REF-01-DEC-081', version: 'V1.0', status: 'Recherche interne bornée confirmée', author: 'Cheikh Ndiaye', date: '01-09-2026', decision: 'REF-01-G1-COL-004 V0.1 est confirmé sans amendement et promu en V1.0 comme relevé gouverné de la recherche interne bornée des treize écarts G1.', evidence: 'Confirmation explicite de Cheikh dans la session du 01-09-2026 : « Je confirme REF-01-G1-COL-004 V0.1 comme relevé groupé de la recherche interne bornée. » Le candidat avait été publié par la PR frontend nº 280.', limit: 'La décision confirme le périmètre et le résultat négatif de la recherche. Elle n’accepte aucune preuve de production, ne requalifie aucune valeur, ne ferme aucune condition G1 et n’ouvre ni contact externe, accès réel, action technique ou L2.' },
-    waitingTitle: 'Attente probatoire gouvernée candidate · REF-01-G1-ATT-001 V0.1',
+    waitingTitle: 'Attente probatoire gouvernée confirmée · REF-01-G1-ATT-001 V1.0',
     waitingIntro: 'Le dossier G1 peut quitter la boucle d’arbitrage répétitive. Les treize écarts restent surveillés sans nouvelle revue ligne par ligne tant qu’aucun déclencheur recevable n’apparaît.',
     waitingCounters: [['Écarts gelés', '13/13'], ['Statuts conservés', '8 + 5'], ['Déclencheurs de reprise', '2'], ['Autorisations opérationnelles', '0']],
     waitingRules: ['Reprendre uniquement à réception d’une nouvelle preuve de production recevable.', 'Reprendre en cas de contradiction documentée affectant un statut existant.', 'Sinon, conserver G1 ouverte, L2 fermé et revenir à la trajectoire institutionnelle globale.'],
-    waitingResult: 'PROPOSITION CANDIDATE · Mettre G1 en attente probatoire gouvernée, sans le clôturer. Aucun nouvel arbitrage périodique n’est requis sans déclencheur.',
-    boundary: 'DEC-081 confirme COL-004 V1.0. ATT-001 V0.1 propose uniquement une règle d’attente et de reprise : aucune preuve attendue n’est acceptée, aucune valeur n’est modifiée, G1 reste ouverte et L2 fermé.'
+    waitingResult: 'RÈGLE CONFIRMÉE · G1 est placée en attente probatoire gouvernée, sans être clôturée. Aucun nouvel arbitrage périodique n’est requis sans déclencheur.',
+    waitingRecord: { id: 'REF-01-DEC-082', version: 'V1.0', status: 'Attente probatoire gouvernée confirmée', author: 'Cheikh Ndiaye', date: '01-09-2026', decision: 'REF-01-G1-ATT-001 V0.1 est confirmé sans amendement et promu en V1.0 comme règle gouvernée d’attente et de reprise de G1.', evidence: 'Confirmation explicite de Cheikh dans la session du 01-09-2026 : « Je confirme REF-01-G1-ATT-001 V0.1 comme règle d’attente probatoire gouvernée, avec reprise uniquement sur nouvelle preuve recevable ou contradiction documentée. »', limit: 'La décision suspend les revues répétitives sans fermer G1. Elle n’accepte aucune preuve, ne requalifie aucune valeur, n’autorise aucun contact, accès, lot réel, action technique ou L2. La reprise exige une nouvelle preuve de production recevable ou une contradiction documentée affectant un statut existant.' },
+    boundary: 'DEC-082 confirme ATT-001 V1.0. Les treize écarts et leurs statuts restent figés ; G1 demeure ouverte, L2 fermé et la trajectoire institutionnelle globale redevient active jusqu’à un déclencheur recevable.'
   },
   EN: {
     eyebrow: 'CONFIRMED INVENTORY · DEC-079 · COL-INV-001 · V1.0 · 31 AUG 2026',
@@ -83,12 +84,13 @@ const COPY = {
     collectionCounters: [['Reviewed scopes', '4/4'], ['Searched gaps', '13/13'], ['New admissible proofs', '0'], ['Documented exclusion', '1']],
     collectionResult: 'CONFIRMED RESULT · GED-SYNTHETIC-REF-001 remains a synthetic fixture and is not a real DMS reference. Preserve 8 partial, 5 open and 0/13 admissible evidence items.',
     collectionRecord: { id: 'REF-01-DEC-081', version: 'V1.0', status: 'Bounded internal search confirmed', author: 'Cheikh Ndiaye', date: '1 Sep 2026', decision: 'REF-01-G1-COL-004 V0.1 is confirmed without amendment and promoted to V1.0 as the governed report of the bounded internal search across thirteen G1 gaps.', evidence: 'Cheikh’s explicit confirmation in the 1 Sep 2026 session, retained in French: “Je confirme REF-01-G1-COL-004 V0.1 comme relevé groupé de la recherche interne bornée.” The candidate had been published through frontend PR 280.', limit: 'The decision confirms the scope and negative search result. It accepts no production evidence, requalifies no value, closes no G1 condition and opens no external contact, real access, technical action or L2.' },
-    waitingTitle: 'Candidate governed evidence wait · REF-01-G1-ATT-001 V0.1',
+    waitingTitle: 'Confirmed governed evidence wait · REF-01-G1-ATT-001 V1.0',
     waitingIntro: 'The G1 file can leave the repetitive decision loop. Its thirteen gaps remain monitored without another line-by-line review until an admissible trigger appears.',
     waitingCounters: [['Frozen gaps', '13/13'], ['Preserved statuses', '8 + 5'], ['Resume triggers', '2'], ['Operational authorisations', '0']],
     waitingRules: ['Resume only when new admissible production evidence is received.', 'Resume when a documented contradiction affects an existing status.', 'Otherwise keep G1 open, L2 closed and return to the global institutional trajectory.'],
-    waitingResult: 'CANDIDATE PROPOSAL · Put G1 into a governed evidence wait without closing it. No recurring decision is required without a trigger.',
-    boundary: 'DEC-081 confirms COL-004 V1.0. ATT-001 V0.1 proposes only a wait-and-resume rule: no expected proof is accepted, no value is changed, G1 remains open and L2 closed.'
+    waitingResult: 'CONFIRMED RULE · G1 is placed into a governed evidence wait without being closed. No recurring decision is required without a trigger.',
+    waitingRecord: { id: 'REF-01-DEC-082', version: 'V1.0', status: 'Governed evidence wait confirmed', author: 'Cheikh Ndiaye', date: '1 Sep 2026', decision: 'REF-01-G1-ATT-001 V0.1 is confirmed without amendment and promoted to V1.0 as the governed G1 wait-and-resume rule.', evidence: 'Cheikh’s explicit confirmation in the 1 Sep 2026 session, retained in French: “Je confirme REF-01-G1-ATT-001 V0.1 comme règle d’attente probatoire gouvernée, avec reprise uniquement sur nouvelle preuve recevable ou contradiction documentée.”', limit: 'The decision suspends repeated reviews without closing G1. It accepts no evidence, requalifies no value and authorises no contact, access, real package, technical action or L2. Resumption requires new admissible production evidence or a documented contradiction affecting an existing status.' },
+    boundary: 'DEC-082 confirms ATT-001 V1.0. The thirteen gaps and their statuses remain frozen; G1 stays open, L2 closed and the global institutional trajectory becomes active again until an admissible trigger appears.'
   },
   DE: {
     eyebrow: 'BESTÄTIGTES INVENTAR · DEC-079 · COL-INV-001 · V1.0 · 31.08.2026',
@@ -111,12 +113,13 @@ const COPY = {
     collectionCounters: [['Geprüfte Bereiche', '4/4'], ['Gesuchte Lücken', '13/13'], ['Neue zulässige Nachweise', '0'], ['Dokumentierter Ausschluss', '1']],
     collectionResult: 'BESTÄTIGTES ERGEBNIS · GED-SYNTHETIC-REF-001 bleibt eine synthetische Fixture und ist keine reale DMS-Referenz. 8 teilweise, 5 offene Werte und 0/13 zulässige Nachweise beibehalten.',
     collectionRecord: { id: 'REF-01-DEC-081', version: 'V1.0', status: 'Begrenzte interne Suche bestätigt', author: 'Cheikh Ndiaye', date: '01.09.2026', decision: 'REF-01-G1-COL-004 V0.1 wird ohne Änderung bestätigt und als gesteuertes Protokoll der begrenzten internen Suche über dreizehn G1-Lücken zu V1.0.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 01.09.2026, im französischen Originalwortlaut: „Je confirme REF-01-G1-COL-004 V0.1 comme relevé groupé de la recherche interne bornée.“ Der Kandidat war mit Frontend-PR Nr. 280 veröffentlicht worden.', limit: 'Der Entscheid bestätigt Umfang und negatives Suchergebnis. Er nimmt keinen Produktivnachweis an, stuft keinen Wert neu ein, schliesst keine G1-Bedingung und öffnet weder externen Kontakt, realen Zugriff, technische Aktion noch L2.' },
-    waitingTitle: 'Kandidat für gesteuertes Nachweiswarten · REF-01-G1-ATT-001 V0.1',
+    waitingTitle: 'Bestätigtes gesteuertes Nachweiswarten · REF-01-G1-ATT-001 V1.0',
     waitingIntro: 'Die G1-Akte kann die wiederholte Entscheidungsschleife verlassen. Ihre dreizehn Lücken bleiben überwacht, ohne erneute Einzelprüfung, bis ein zulässiger Auslöser vorliegt.',
     waitingCounters: [['Eingefrorene Lücken', '13/13'], ['Bewahrte Status', '8 + 5'], ['Wiederaufnahmeauslöser', '2'], ['Operative Autorisierungen', '0']],
     waitingRules: ['Nur bei Eingang eines neuen zulässigen Produktivnachweises wiederaufnehmen.', 'Bei dokumentiertem Widerspruch mit Auswirkung auf einen bestehenden Status wiederaufnehmen.', 'Andernfalls G1 offen und L2 geschlossen halten und zur institutionellen Gesamttrajektorie zurückkehren.'],
-    waitingResult: 'KANDIDATENVORSCHLAG · G1 in gesteuertes Nachweiswarten versetzen, ohne es zu schliessen. Ohne Auslöser ist kein wiederkehrender Entscheid nötig.',
-    boundary: 'DEC-081 bestätigt COL-004 V1.0. ATT-001 V0.1 schlägt nur eine Warte- und Wiederaufnahmeregel vor: Kein erwarteter Nachweis ist akzeptiert, kein Wert geändert, G1 bleibt offen und L2 geschlossen.'
+    waitingResult: 'BESTÄTIGTE REGEL · G1 wird in gesteuertes Nachweiswarten versetzt, ohne geschlossen zu werden. Ohne Auslöser ist kein wiederkehrender Entscheid nötig.',
+    waitingRecord: { id: 'REF-01-DEC-082', version: 'V1.0', status: 'Gesteuertes Nachweiswarten bestätigt', author: 'Cheikh Ndiaye', date: '01.09.2026', decision: 'REF-01-G1-ATT-001 V0.1 wird ohne Änderung bestätigt und als gesteuerte Warte- und Wiederaufnahmeregel für G1 zu V1.0.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 01.09.2026, im französischen Originalwortlaut: „Je confirme REF-01-G1-ATT-001 V0.1 comme règle d’attente probatoire gouvernée, avec reprise uniquement sur nouvelle preuve recevable ou contradiction documentée.“', limit: 'Der Entscheid setzt wiederholte Prüfungen aus, ohne G1 zu schliessen. Er nimmt keinen Nachweis an, stuft keinen Wert neu ein und autorisiert weder Kontakt, Zugriff, reales Los, technische Aktion noch L2. Die Wiederaufnahme erfordert einen neuen zulässigen Produktivnachweis oder einen dokumentierten Widerspruch mit Auswirkung auf einen bestehenden Status.' },
+    boundary: 'DEC-082 bestätigt ATT-001 V1.0. Die dreizehn Lücken und ihre Status bleiben eingefroren; G1 bleibt offen, L2 geschlossen und die globale institutionelle Trajektorie wird bis zu einem zulässigen Auslöser wieder aktiv.'
   }
 };
 
@@ -186,6 +189,8 @@ const InstitutionalPeopleTeamsFastTrackEvidenceInventory = ({ language = 'FR' })
         </ul>
         <p className="mt-3 rounded-md border border-amber-700/70 bg-amber-950/20 p-3 text-xs font-semibold leading-5 text-amber-100">{t.waitingResult}</p>
       </section>
+
+      <GovernedDecisionRecord labels={t.recordLabels} record={t.waitingRecord} />
 
       <p className="mt-4 flex items-start gap-2 rounded-md border border-amber-800/70 bg-amber-950/15 p-3 text-xs font-semibold leading-5 text-amber-100"><Fingerprint className="mt-0.5 shrink-0 text-amber-300" size={16} aria-hidden="true" />{t.boundary}</p>
     </section>
