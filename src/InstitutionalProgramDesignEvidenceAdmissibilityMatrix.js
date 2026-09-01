@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertTriangle, FileCheck2, LockKeyhole, Scale, ShieldCheck } from 'lucide-react';
+import GovernedDecisionRecord from './GovernedDecisionRecord';
 
 const text = (FR, EN, DE) => ({ FR, EN, DE });
 
@@ -24,39 +25,45 @@ const REFERENCES = [
 
 const COPY = {
   FR: {
-    eyebrow: 'MATRICE D’ADMISSIBILITÉ CANDIDATE · PGM-CON-EVD-002 · V0.1 · 02-09-2026',
-    title: 'Préparer huit décisions sans accepter une preuve',
-    intro: 'Cette matrice transforme les réserves déjà documentées en cinq portes communes et huit orientations candidates. Toutes les références restent à arbitrer.',
+    eyebrow: 'MATRICE D’ADMISSIBILITÉ CONFIRMÉE · PGM-CON-EVD-002 · V1.0 · 02-09-2026',
+    title: 'Huit décisions encadrées, aucune admissibilité prononcée',
+    intro: 'PGM-DEC-014 confirme les cinq portes et les huit orientations comme cadre de décision. Toutes les références restent à arbitrer.',
     counters: [['8/8', 'références reprises'], ['5', 'portes documentaires'], ['8', 'orientations candidates'], ['0/8', 'décision d’admissibilité']],
     gates: 'Portes communes obligatoires',
     labels: { scope: 'Périmètre candidat', orientation: 'Orientation candidate', status: 'Statut' },
     pending: 'À ARBITRER',
-    next: 'Prochaine confirmation groupée',
-    confirmation: 'Je confirme PGM-CON-EVD-002 V0.1 comme matrice candidate d’admissibilité des huit références et ses cinq portes, sans accepter de preuve ni autoriser leur promotion, CON-01, CON-05, REF-02 ou L2.',
+    recordLabels: { eyebrow: 'Trace de décision gouvernée', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision consignée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
+    record: { id: 'PGM-DEC-014', version: 'V1.0', status: 'Matrice d’admissibilité confirmée', author: 'Cheikh Ndiaye', date: '02-09-2026', decision: 'PGM-CON-EVD-002 V0.1 est confirmé et promu en V1.0 comme matrice d’admissibilité des huit références et de ses cinq portes.', evidence: 'Confirmation explicite de Cheikh dans la session du 02-09-2026 : « Je confirme PGM-CON-EVD-002 V0.1 comme matrice candidate d’admissibilité des huit références et ses cinq portes, sans accepter de preuve ni autoriser leur promotion, CON-01, CON-05, REF-02 ou L2. »', limit: 'La décision confirme uniquement la matrice. Elle prononce 0/8 admissibilité, n’accepte aucune preuve et n’autorise aucune promotion, CON-01, CON-05, REF-02 ou L2.' },
+    next: 'Proposition groupée de classement',
+    confirmation: 'PGM-CON-ARB-001 V0.1 répartit les huit références dans quatre voies candidates, sans prononcer leur admissibilité ni accepter une preuve.',
     boundary: 'Une orientation candidate n’est ni une décision d’admissibilité, ni une preuve acceptée, ni une validation du résultat métier.'
   },
   EN: {
-    eyebrow: 'CANDIDATE ADMISSIBILITY MATRIX · PGM-CON-EVD-002 · V0.1 · 2 SEP 2026',
-    title: 'Prepare eight decisions without accepting evidence',
-    intro: 'This matrix turns already documented reservations into five common gates and eight candidate orientations. Every reference remains pending decision.',
+    eyebrow: 'CONFIRMED ADMISSIBILITY MATRIX · PGM-CON-EVD-002 · V1.0 · 2 SEP 2026',
+    title: 'Eight decisions governed, no admissibility pronounced',
+    intro: 'PGM-DEC-014 confirms the five gates and eight orientations as a decision framework. Every reference remains pending decision.',
     counters: [['8/8', 'references included'], ['5', 'documentary gates'], ['8', 'candidate orientations'], ['0/8', 'admissibility decisions']],
     gates: 'Mandatory common gates',
     labels: { scope: 'Candidate scope', orientation: 'Candidate orientation', status: 'Status' },
     pending: 'TO DECIDE',
-    next: 'Next grouped confirmation',
-    confirmation: 'I confirm PGM-CON-EVD-002 V0.1 as the candidate admissibility matrix for the eight references and its five gates, without accepting evidence or authorising their promotion, CON-01, CON-05, REF-02 or L2.',
+    recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
+    record: { id: 'PGM-DEC-014', version: 'V1.0', status: 'Admissibility matrix confirmed', author: 'Cheikh Ndiaye', date: '2 Sep 2026', decision: 'PGM-CON-EVD-002 V0.1 is confirmed and promoted to V1.0 as the admissibility matrix for the eight references and its five gates.', evidence: 'Cheikh’s explicit confirmation in the 2 Sep 2026 session, retained in French: “Je confirme PGM-CON-EVD-002 V0.1 comme matrice candidate d’admissibilité des huit références et ses cinq portes, sans accepter de preuve ni autoriser leur promotion, CON-01, CON-05, REF-02 ou L2.”', limit: 'The decision confirms only the matrix. It pronounces 0/8 admissibility decisions, accepts no evidence and authorises no promotion, CON-01, CON-05, REF-02 or L2.' },
+    next: 'Grouped classification proposal',
+    confirmation: 'PGM-CON-ARB-001 V0.1 places the eight references into four candidate lanes, without pronouncing admissibility or accepting evidence.',
     boundary: 'A candidate orientation is neither an admissibility decision, accepted evidence nor validation of a business outcome.'
   },
   DE: {
-    eyebrow: 'KANDIDAT FÜR ZULÄSSIGKEITSMATRIX · PGM-CON-EVD-002 · V0.1 · 02.09.2026',
-    title: 'Acht Entscheide vorbereiten, ohne Nachweise anzunehmen',
-    intro: 'Diese Matrix überführt bereits dokumentierte Vorbehalte in fünf gemeinsame Tore und acht Kandidatenorientierungen. Jede Referenz bleibt zu entscheiden.',
+    eyebrow: 'BESTÄTIGTE ZULÄSSIGKEITSMATRIX · PGM-CON-EVD-002 · V1.0 · 02.09.2026',
+    title: 'Acht Entscheide gesteuert, keine Zulässigkeit ausgesprochen',
+    intro: 'PGM-DEC-014 bestätigt die fünf Tore und acht Orientierungen als Entscheidungsrahmen. Jede Referenz bleibt zu entscheiden.',
     counters: [['8/8', 'Referenzen übernommen'], ['5', 'Dokumenten-Tore'], ['8', 'Kandidatenorientierungen'], ['0/8', 'Zulässigkeitsentscheide']],
     gates: 'Verbindliche gemeinsame Tore',
     labels: { scope: 'Kandidatenumfang', orientation: 'Kandidatenorientierung', status: 'Status' },
     pending: 'ZU ENTSCHEIDEN',
-    next: 'Nächste gebündelte Bestätigung',
-    confirmation: 'Ich bestätige PGM-CON-EVD-002 V0.1 als Kandidatenmatrix zur Zulässigkeit der acht Referenzen und ihre fünf Tore, ohne Nachweise anzunehmen oder deren Beförderung, CON-01, CON-05, REF-02 oder L2 zu erlauben.',
+    recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Erfasster Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
+    record: { id: 'PGM-DEC-014', version: 'V1.0', status: 'Zulässigkeitsmatrix bestätigt', author: 'Cheikh Ndiaye', date: '02.09.2026', decision: 'PGM-CON-EVD-002 V0.1 wird als Zulässigkeitsmatrix der acht Referenzen und ihrer fünf Tore bestätigt und zu V1.0 befördert.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 02.09.2026, im französischen Originalwortlaut: „Je confirme PGM-CON-EVD-002 V0.1 comme matrice candidate d’admissibilité des huit références et ses cinq portes, sans accepter de preuve ni autoriser leur promotion, CON-01, CON-05, REF-02 ou L2.“', limit: 'Der Entscheid bestätigt nur die Matrix. Er spricht 0/8 Zulässigkeitsentscheide aus, nimmt keine Nachweise an und erlaubt keine Beförderung, CON-01, CON-05, REF-02 oder L2.' },
+    next: 'Gebündelter Klassifizierungsvorschlag',
+    confirmation: 'PGM-CON-ARB-001 V0.1 ordnet die acht Referenzen vier Kandidatenwegen zu, ohne Zulässigkeit auszusprechen oder Nachweise anzunehmen.',
     boundary: 'Eine Kandidatenorientierung ist weder ein Zulässigkeitsentscheid noch ein angenommener Nachweis oder eine Validierung eines Geschäftsergebnisses.'
   }
 };
@@ -75,6 +82,7 @@ const InstitutionalProgramDesignEvidenceAdmissibilityMatrix = ({ language = 'FR'
 
       <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">{REFERENCES.map(([id, name, scope, orientation]) => <article key={id} data-testid="institutional-program-design-evidence-admissibility-row" className="m3s-raised p-4"><div className="flex items-start justify-between gap-3"><div className="min-w-0"><p className="text-xs font-semibold text-violet-300">{id}</p><h5 className="mt-1 break-words text-sm font-semibold text-slate-100">{name}</h5></div><span className="shrink-0 rounded-md border border-amber-800 bg-amber-950/30 px-2 py-1 text-xs font-semibold text-amber-200">{t.pending}</span></div><div className="mt-3"><p className="text-xs font-semibold uppercase text-slate-400">{t.labels.scope}</p><p className="mt-1 text-xs text-sky-200">{scope}</p></div><div className="mt-3"><p className="text-xs font-semibold uppercase text-slate-400">{t.labels.orientation}</p><p className="mt-1 flex items-start gap-2 text-xs leading-5 text-slate-300"><FileCheck2 className="mt-0.5 shrink-0 text-violet-300" size={15} aria-hidden="true" />{local(orientation)}</p></div></article>)}</div>
 
+      <GovernedDecisionRecord labels={t.recordLabels} record={t.record} />
       <div className="mt-4 rounded-md border border-cyan-800/70 bg-cyan-950/15 p-3"><p className="flex items-center gap-2 text-xs font-semibold uppercase text-cyan-300"><ShieldCheck size={16} aria-hidden="true" />{t.next}<LockKeyhole size={15} aria-hidden="true" /></p><p className="mt-2 text-sm font-semibold leading-6 text-slate-100">{t.confirmation}</p></div>
       <p className="mt-3 flex items-start gap-2 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.boundary}</p>
     </section>
