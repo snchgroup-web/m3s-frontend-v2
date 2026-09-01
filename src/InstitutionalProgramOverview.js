@@ -20,6 +20,7 @@ import InstitutionalProgramFastTrackCockpit from './InstitutionalProgramFastTrac
 import InstitutionalProgramPriorityArbitration from './InstitutionalProgramPriorityArbitration';
 import InstitutionalProgramDesignReviewMatrix from './InstitutionalProgramDesignReviewMatrix';
 import InstitutionalProgramDesignEvidenceInventory from './InstitutionalProgramDesignEvidenceInventory';
+import InstitutionalProgramDesignEvidenceSearchPlan from './InstitutionalProgramDesignEvidenceSearchPlan';
 import InstitutionalFastTrackGovernance from './InstitutionalFastTrackGovernance';
 import InstitutionalPeopleTeamsGateG1FastTrackQualification from './InstitutionalPeopleTeamsGateG1FastTrackQualification';
 import InstitutionalPeopleTeamsFastTrackExceptionArbitration from './InstitutionalPeopleTeamsFastTrackExceptionArbitration';
@@ -226,6 +227,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
       <InstitutionalProgramPriorityArbitration language={language} />
       <InstitutionalProgramDesignReviewMatrix language={language} />
       <InstitutionalProgramDesignEvidenceInventory language={language} />
+      <InstitutionalProgramDesignEvidenceSearchPlan language={language} />
       <InstitutionalFastTrackGovernance language={language} />
       <InstitutionalPeopleTeamsGateG1FastTrackQualification language={language} />
       <InstitutionalPeopleTeamsFastTrackExceptionArbitration language={language} />

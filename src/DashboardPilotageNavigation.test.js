@@ -54,6 +54,9 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(screen.getByTestId('institutional-program-design-evidence-inventory')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'PGM-DEC-004 · V1.0' })).toBeInTheDocument();
   expect(screen.getAllByTestId('institutional-program-design-evidence-row')).toHaveLength(6);
+  expect(screen.getByTestId('institutional-program-design-evidence-search-plan')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'PGM-DEC-005 · V1.0' })).toBeInTheDocument();
+  expect(screen.getAllByTestId('institutional-program-design-search-scope')).toHaveLength(6);
   expect(screen.getByText(/Aucun pourcentage n’est affiché/)).toBeInTheDocument();
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });

@@ -20,7 +20,7 @@ describe('InstitutionalProgramDesignEvidenceInventory', () => {
     expect(screen.getAllByText('Candidate source or location')).toHaveLength(6);
     expect(screen.getAllByText('Candidate owner')).toHaveLength(6);
     expect(screen.getByText(/authorises no external collection/i)).toBeInTheDocument();
-    expect(screen.getByText(/without starting the search/i)).toBeInTheDocument();
+    expect(screen.getByText(/PGM-DEC-005 V1.0/i)).toBeInTheDocument();
   });
 
   test('renders the bounded German inventory', () => {
@@ -28,6 +28,6 @@ describe('InstitutionalProgramDesignEvidenceInventory', () => {
 
     expect(screen.getByText('Gebündeltes Inventar der erwarteten Nachweise für Konzeption')).toBeInTheDocument();
     expect(screen.getAllByText('Bestätigt · Unterlagen nicht geprüft')).toHaveLength(6);
-    expect(screen.getByText(/ohne die Suche zu starten/i)).toBeInTheDocument();
+    expect(screen.getByText(/PGM-DEC-005 V1.0/i)).toBeInTheDocument();
   });
 });

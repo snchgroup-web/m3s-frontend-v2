@@ -93,8 +93,8 @@ const COPY = {
     record: { id: 'PGM-DEC-004', version: 'V1.0', status: 'Inventaire probatoire confirmé', author: 'Cheikh Ndiaye', date: '01-09-2026', decision: 'PGM-CON-EVD-001 V0.1 est confirmé et promu en V1.0 comme inventaire probatoire groupé des six composantes de Conception.', evidence: 'Confirmation explicite de Cheikh dans la continuité de la session du 01-09-2026 : « Alors je le confirme deja, merci de continuer ».', limit: 'Cette décision confirme l’inventaire documentaire uniquement. Elle n’autorise aucune collecte externe, recherche interne de pièces, ouverture de fichier restreint, accès réel, acceptation de preuve, mandat, tâche d’exécution, progression, REF-02 ou L2.' },
     source: 'Base confirmée : PGM-CON-REV-001 V1.0, PGM-DEC-003 V1.0 et PGM-DEC-004 V1.0. Les emplacements indiquent des familles candidates ; ils ne prouvent ni présence, ni complétude, ni recevabilité.',
     boundary: 'Inventaire candidat uniquement : 18 familles attendues, zéro preuve acceptée, zéro collecte ouverte, zéro responsable mandaté et zéro progression calculée.',
-    next: 'Prochaine porte candidate',
-    confirmation: 'Autoriser ou non la préparation de PGM-CON-COL-001 V0.1 comme plan de recherche documentaire interne bornée, sans lancer la recherche, ouvrir une pièce ni accepter une preuve.'
+    next: 'Porte franchie · PGM-DEC-005 V1.0',
+    confirmation: 'La préparation de PGM-CON-COL-001 V0.1 est autorisée dans ses limites documentaires. Le plan candidat est présenté ci-dessous, sans recherche lancée, pièce ouverte ni preuve acceptée.'
   },
   EN: {
     eyebrow: 'CONFIRMED EVIDENCE INVENTORY · PGM-CON-EVD-001 · V1.0 · 1 SEP 2026',
@@ -109,8 +109,8 @@ const COPY = {
     record: { id: 'PGM-DEC-004', version: 'V1.0', status: 'Evidence inventory confirmed', author: 'Cheikh Ndiaye', date: '1 Sep 2026', decision: 'PGM-CON-EVD-001 V0.1 is confirmed and promoted to V1.0 as the grouped evidence inventory for the six Design components.', evidence: 'Cheikh’s explicit confirmation in the continuation of the 1 Sep 2026 session, retained in French: “Alors je le confirme deja, merci de continuer”.', limit: 'This decision confirms the documentary inventory only. It authorises no external collection, internal record search, restricted-file opening, real access, evidence acceptance, mandate, execution task, progress, REF-02 or L2.' },
     source: 'Confirmed basis: PGM-CON-REV-001 V1.0, PGM-DEC-003 V1.0 and PGM-DEC-004 V1.0. Locations identify candidate families; they prove neither presence, completeness nor admissibility.',
     boundary: 'Candidate inventory only: 18 expected families, zero evidence accepted, zero collection opened, zero owners mandated and no progress calculated.',
-    next: 'Next candidate gate',
-    confirmation: 'Authorise or decline preparation of PGM-CON-COL-001 V0.1 as a bounded internal documentary search plan, without starting the search, opening a record or accepting evidence.'
+    next: 'Gate passed · PGM-DEC-005 V1.0',
+    confirmation: 'Preparation of PGM-CON-COL-001 V0.1 is authorised within its documentary limits. The candidate plan is shown below, with no search started, record opened or evidence accepted.'
   },
   DE: {
     eyebrow: 'BESTÄTIGTES NACHWEISINVENTAR · PGM-CON-EVD-001 · V1.0 · 01.09.2026',
@@ -125,8 +125,8 @@ const COPY = {
     record: { id: 'PGM-DEC-004', version: 'V1.0', status: 'Nachweisinventar bestätigt', author: 'Cheikh Ndiaye', date: '01.09.2026', decision: 'PGM-CON-EVD-001 V0.1 wird als gebündeltes Nachweisinventar der sechs Konzeptionskomponenten bestätigt und zu V1.0 befördert.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Fortsetzung der Sitzung vom 01.09.2026, im französischen Originalwortlaut: „Alors je le confirme deja, merci de continuer“.', limit: 'Der Entscheid bestätigt nur das dokumentarische Inventar. Er erlaubt keine externe Sammlung, interne Unterlagensuche, Öffnung eingeschränkter Dateien, realen Zugriff, Nachweisannahme, Mandatierung, Ausführungsaufgabe, Fortschrittsmessung, REF-02 oder L2.' },
     source: 'Bestätigte Basis: PGM-CON-REV-001 V1.0, PGM-DEC-003 V1.0 und PGM-DEC-004 V1.0. Die Ablagen bezeichnen Kandidatenfamilien; sie belegen weder Vorhandensein, Vollständigkeit noch Zulässigkeit.',
     boundary: 'Nur Kandidateninventar: 18 erwartete Familien, null angenommene Nachweise, null geöffnete Sammlung, null mandatierte Verantwortungen und kein berechneter Fortschritt.',
-    next: 'Nächstes Kandidatentor',
-    confirmation: 'Die Vorbereitung von PGM-CON-COL-001 V0.1 als begrenzten internen Dokumentensuchplan erlauben oder ablehnen, ohne die Suche zu starten, Unterlagen zu öffnen oder Nachweise anzunehmen.'
+    next: 'Tor passiert · PGM-DEC-005 V1.0',
+    confirmation: 'Die Vorbereitung von PGM-CON-COL-001 V0.1 ist innerhalb ihrer dokumentarischen Grenzen erlaubt. Der Kandidatenplan folgt unten, ohne gestartete Suche, geöffnete Unterlagen oder angenommene Nachweise.'
   }
 };
 
