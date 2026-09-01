@@ -89,9 +89,9 @@ const REFERENCES = [
 
 const COPY = {
   FR: {
-    eyebrow: 'REVUE CONTRÔLÉE CANDIDATE · PGM-CON-REV-002 · V0.1 · 01-09-2026',
-    title: 'Contrôle groupé des huit références ouvertes',
-    intro: 'PGM-DEC-009 autorise uniquement l’ouverture et la lecture contrôlées des huit références non restreintes confirmées. Le contrôle qualifie leur apport documentaire sans accepter une preuve.',
+    eyebrow: 'REVUE CONTRÔLÉE CONFIRMÉE · PGM-CON-REV-002 · V1.0 · 01-09-2026',
+    title: 'Contrôle confirmé des huit références ouvertes',
+    intro: 'PGM-DEC-009 a autorisé l’ouverture contrôlée des huit références et PGM-DEC-010 confirme le relevé obtenu. Le contrôle qualifie leur apport documentaire sans accepter une preuve.',
     counters: [['8/8', 'références ouvertes et lisibles'], ['7', 'apports directs candidats'], ['1', 'apport méthodologique'], ['0', 'preuves acceptées']],
     labels: { scope: 'Composante(s)', contribution: 'Apport candidat', fingerprint: 'Empreinte à l’ouverture', finding: 'Constat de lecture', reserve: 'Réserve de contrôle' },
     contribution: { direct: 'DIRECT', method: 'MÉTHODE' },
@@ -99,15 +99,16 @@ const COPY = {
     synthesis: 'Lecture candidate : les mécanismes documentaires de CON-02, CON-03, CON-04 et CON-06 existent et sont reliables. Cette lecture ne démontre ni complétude, ni adoption, ni recevabilité probatoire, ni progression.',
     gaps: 'Deux écarts sont isolés : cohérence des statuts du lot Glossaire et contenu statique de repli du Daily. Ils doivent être corrigés dans des micro-lots séparés avant toute acceptation probatoire.',
     recordLabels: { eyebrow: 'Trace de décision gouvernée', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision consignée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
-    record: { id: 'PGM-DEC-009', version: 'V1.0', status: 'Ouverture contrôlée autorisée', author: 'Cheikh Ndiaye', date: '01-09-2026', decision: 'L’ouverture contrôlée des huit références candidates uniques non restreintes de CON-02, CON-03, CON-04 et CON-06 est autorisée et exécutée.', evidence: 'Autorisation explicite de Cheikh dans la session du 01-09-2026 : « J’autorise l’ouverture contrôlée des huit références candidates uniques non restreintes de CON-02, CON-03, CON-04 et CON-06, sans acceptation automatique de preuve, sans CON-01, CON-05, REF-02 ni L2. »', limit: 'L’autorisation couvre uniquement ces huit références. Elle exclut CON-01, CON-05, toute collecte externe, acceptation de preuve, requalification institutionnelle, progression, REF-02 et L2.' },
-    next: 'Prochain arbitrage groupé',
-    confirmation: 'Confirmer ou amender PGM-CON-REV-002 V0.1 comme relevé candidat, notamment la qualification 7 directes / 1 méthodologique et les deux écarts. Cette confirmation n’acceptera encore aucune preuve.',
+    authorisationRecord: { id: 'PGM-DEC-009', version: 'V1.0', status: 'Ouverture contrôlée autorisée', author: 'Cheikh Ndiaye', date: '01-09-2026', decision: 'L’ouverture contrôlée des huit références candidates uniques non restreintes de CON-02, CON-03, CON-04 et CON-06 est autorisée et exécutée.', evidence: 'Autorisation explicite de Cheikh dans la session du 01-09-2026 : « J’autorise l’ouverture contrôlée des huit références candidates uniques non restreintes de CON-02, CON-03, CON-04 et CON-06, sans acceptation automatique de preuve, sans CON-01, CON-05, REF-02 ni L2. »', limit: 'L’autorisation couvre uniquement ces huit références. Elle exclut CON-01, CON-05, toute collecte externe, acceptation de preuve, requalification institutionnelle, progression, REF-02 et L2.' },
+    confirmationRecord: { id: 'PGM-DEC-010', version: 'V1.0', status: 'Relevé contrôlé confirmé', author: 'Cheikh Ndiaye', date: '01-09-2026', decision: 'PGM-CON-REV-002 V0.1 est confirmé et promu en V1.0 avec 7 apports directs, 1 apport méthodologique et 2 écarts isolés.', evidence: 'Instruction de poursuite puis confirmation explicite de Cheikh dans la session du 01-09-2026 : « confirme confirmer ou amender PGM-CON-REV-002 V0.1, notamment la qualification 7 directes / 1 méthodologique et les deux écarts. »', limit: 'La confirmation porte sur le relevé et ses qualifications. Elle n’accepte aucune référence comme preuve et n’autorise encore aucune correction, requalification, progression, ouverture de CON-01, CON-05, REF-02 ou L2.' },
+    next: 'Suite gouvernée',
+    confirmation: 'Les deux écarts confirmés sont cadrés séparément dans PGM-CON-COR-001 V0.1. Leur correction technique reste soumise à un GO groupé distinct.',
     boundary: '0/8 preuve acceptée · CON-01 et CON-05 non ouverts · REF-02 et L2 fermés.'
   },
   EN: {
-    eyebrow: 'CANDIDATE CONTROLLED REVIEW · PGM-CON-REV-002 · V0.1 · 1 SEP 2026',
-    title: 'Grouped control of the eight opened references',
-    intro: 'PGM-DEC-009 authorises only controlled opening and reading of the eight confirmed non-restricted references. The review qualifies their documentary contribution without accepting evidence.',
+    eyebrow: 'CONFIRMED CONTROLLED REVIEW · PGM-CON-REV-002 · V1.0 · 1 SEP 2026',
+    title: 'Confirmed review of the eight opened references',
+    intro: 'PGM-DEC-009 authorised controlled opening of the eight references and PGM-DEC-010 confirms the resulting record. The review qualifies their documentary contribution without accepting evidence.',
     counters: [['8/8', 'references opened and readable'], ['7', 'candidate direct contributions'], ['1', 'method contribution'], ['0', 'evidence accepted']],
     labels: { scope: 'Component(s)', contribution: 'Candidate contribution', fingerprint: 'Opening fingerprint', finding: 'Reading finding', reserve: 'Control reservation' },
     contribution: { direct: 'DIRECT', method: 'METHOD' },
@@ -115,15 +116,16 @@ const COPY = {
     synthesis: 'Candidate reading: documentary mechanisms for CON-02, CON-03, CON-04 and CON-06 exist and can be linked. This reading demonstrates neither completeness, adoption, evidentiary admissibility nor progress.',
     gaps: 'Two gaps are isolated: Glossary package status consistency and the Daily static fallback content. They require separate micro-packages before any evidentiary acceptance.',
     recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
-    record: { id: 'PGM-DEC-009', version: 'V1.0', status: 'Controlled opening authorised', author: 'Cheikh Ndiaye', date: '1 Sep 2026', decision: 'Controlled opening of the eight unique non-restricted candidate references for CON-02, CON-03, CON-04 and CON-06 is authorised and completed.', evidence: 'Cheikh’s explicit authorisation in the 1 Sep 2026 session, retained in French: “J’autorise l’ouverture contrôlée des huit références candidates uniques non restreintes de CON-02, CON-03, CON-04 et CON-06, sans acceptation automatique de preuve, sans CON-01, CON-05, REF-02 ni L2.”', limit: 'The authorisation covers only these eight references. It excludes CON-01, CON-05, external collection, evidence acceptance, institutional requalification, progress, REF-02 and L2.' },
-    next: 'Next grouped decision',
-    confirmation: 'Confirm or amend PGM-CON-REV-002 V0.1 as the candidate record, especially the 7 direct / 1 method classification and two gaps. This confirmation will still accept no evidence.',
+    authorisationRecord: { id: 'PGM-DEC-009', version: 'V1.0', status: 'Controlled opening authorised', author: 'Cheikh Ndiaye', date: '1 Sep 2026', decision: 'Controlled opening of the eight unique non-restricted candidate references for CON-02, CON-03, CON-04 and CON-06 is authorised and completed.', evidence: 'Cheikh’s explicit authorisation in the 1 Sep 2026 session, retained in French: “J’autorise l’ouverture contrôlée des huit références candidates uniques non restreintes de CON-02, CON-03, CON-04 et CON-06, sans acceptation automatique de preuve, sans CON-01, CON-05, REF-02 ni L2.”', limit: 'The authorisation covers only these eight references. It excludes CON-01, CON-05, external collection, evidence acceptance, institutional requalification, progress, REF-02 and L2.' },
+    confirmationRecord: { id: 'PGM-DEC-010', version: 'V1.0', status: 'Controlled record confirmed', author: 'Cheikh Ndiaye', date: '1 Sep 2026', decision: 'PGM-CON-REV-002 V0.1 is confirmed and promoted to V1.0 with 7 direct contributions, 1 method contribution and 2 isolated gaps.', evidence: 'Cheikh’s continuation instruction and explicit confirmation in the 1 Sep 2026 session, retained in French: “confirme confirmer ou amender PGM-CON-REV-002 V0.1, notamment la qualification 7 directes / 1 méthodologique et les deux écarts.”', limit: 'Confirmation covers the record and its classifications. It accepts no reference as evidence and authorises no correction, requalification, progress or opening of CON-01, CON-05, REF-02 or L2.' },
+    next: 'Governed continuation',
+    confirmation: 'The two confirmed gaps are framed separately in PGM-CON-COR-001 V0.1. Their technical correction still requires a separate grouped GO.',
     boundary: '0/8 evidence accepted · CON-01 and CON-05 not opened · REF-02 and L2 closed.'
   },
   DE: {
-    eyebrow: 'KANDIDAT FÜR KONTROLLIERTE PRÜFUNG · PGM-CON-REV-002 · V0.1 · 01.09.2026',
-    title: 'Gebündelte Kontrolle der acht geöffneten Referenzen',
-    intro: 'PGM-DEC-009 erlaubt nur die kontrollierte Öffnung und Lektüre der acht bestätigten nicht eingeschränkten Referenzen. Die Prüfung qualifiziert ihren dokumentarischen Beitrag, ohne Nachweise anzunehmen.',
+    eyebrow: 'BESTÄTIGTE KONTROLLIERTE PRÜFUNG · PGM-CON-REV-002 · V1.0 · 01.09.2026',
+    title: 'Bestätigte Prüfung der acht geöffneten Referenzen',
+    intro: 'PGM-DEC-009 autorisierte die kontrollierte Öffnung der acht Referenzen und PGM-DEC-010 bestätigt das Ergebnisprotokoll. Die Prüfung qualifiziert ihren dokumentarischen Beitrag, ohne Nachweise anzunehmen.',
     counters: [['8/8', 'Referenzen geöffnet und lesbar'], ['7', 'direkte Kandidatenbeiträge'], ['1', 'Methodenbeitrag'], ['0', 'Nachweise angenommen']],
     labels: { scope: 'Komponente(n)', contribution: 'Kandidatenbeitrag', fingerprint: 'Fingerabdruck bei Öffnung', finding: 'Lesebefund', reserve: 'Kontrollvorbehalt' },
     contribution: { direct: 'DIREKT', method: 'METHODE' },
@@ -131,9 +133,10 @@ const COPY = {
     synthesis: 'Kandidatenlektüre: Dokumentationsmechanismen für CON-02, CON-03, CON-04 und CON-06 bestehen und sind verknüpfbar. Diese Lektüre belegt weder Vollständigkeit, Annahme, beweisbezogene Zulässigkeit noch Fortschritt.',
     gaps: 'Zwei Lücken sind isoliert: Statuskonsistenz des Glossar-Loses und statischer Rückfallinhalt des Daily. Vor jeder Nachweisannahme sind getrennte Mikrolosen erforderlich.',
     recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Erfasster Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
-    record: { id: 'PGM-DEC-009', version: 'V1.0', status: 'Kontrollierte Öffnung autorisiert', author: 'Cheikh Ndiaye', date: '01.09.2026', decision: 'Die kontrollierte Öffnung der acht eindeutigen nicht eingeschränkten Kandidatenreferenzen für CON-02, CON-03, CON-04 und CON-06 ist autorisiert und ausgeführt.', evidence: 'Ausdrückliche Autorisierung von Cheikh in der Sitzung vom 01.09.2026, im französischen Originalwortlaut: „J’autorise l’ouverture contrôlée des huit références candidates uniques non restreintes de CON-02, CON-03, CON-04 et CON-06, sans acceptation automatique de preuve, sans CON-01, CON-05, REF-02 ni L2.“', limit: 'Die Autorisierung umfasst nur diese acht Referenzen. Ausgeschlossen sind CON-01, CON-05, externe Sammlung, Nachweisannahme, institutionelle Neueinstufung, Fortschritt, REF-02 und L2.' },
-    next: 'Nächster gebündelter Entscheid',
-    confirmation: 'PGM-CON-REV-002 V0.1 als Kandidatenprotokoll bestätigen oder ändern, insbesondere die Einstufung 7 direkt / 1 Methode und die zwei Lücken. Auch diese Bestätigung nimmt noch keinen Nachweis an.',
+    authorisationRecord: { id: 'PGM-DEC-009', version: 'V1.0', status: 'Kontrollierte Öffnung autorisiert', author: 'Cheikh Ndiaye', date: '01.09.2026', decision: 'Die kontrollierte Öffnung der acht eindeutigen nicht eingeschränkten Kandidatenreferenzen für CON-02, CON-03, CON-04 und CON-06 ist autorisiert und ausgeführt.', evidence: 'Ausdrückliche Autorisierung von Cheikh in der Sitzung vom 01.09.2026, im französischen Originalwortlaut: „J’autorise l’ouverture contrôlée des huit références candidates uniques non restreintes de CON-02, CON-03, CON-04 et CON-06, sans acceptation automatique de preuve, sans CON-01, CON-05, REF-02 ni L2.“', limit: 'Die Autorisierung umfasst nur diese acht Referenzen. Ausgeschlossen sind CON-01, CON-05, externe Sammlung, Nachweisannahme, institutionelle Neueinstufung, Fortschritt, REF-02 und L2.' },
+    confirmationRecord: { id: 'PGM-DEC-010', version: 'V1.0', status: 'Kontrolliertes Protokoll bestätigt', author: 'Cheikh Ndiaye', date: '01.09.2026', decision: 'PGM-CON-REV-002 V0.1 wird mit 7 direkten Beiträgen, 1 Methodenbeitrag und 2 isolierten Lücken bestätigt und zu V1.0 befördert.', evidence: 'Fortsetzungsanweisung und ausdrückliche Bestätigung von Cheikh in der Sitzung vom 01.09.2026, im französischen Originalwortlaut: „confirme confirmer ou amender PGM-CON-REV-002 V0.1, notamment la qualification 7 directes / 1 méthodologique et les deux écarts.“', limit: 'Die Bestätigung betrifft das Protokoll und seine Einstufungen. Sie nimmt keine Referenz als Nachweis an und erlaubt keine Korrektur, Neueinstufung, Fortschrittsangabe oder Öffnung von CON-01, CON-05, REF-02 oder L2.' },
+    next: 'Gesteuerte Fortsetzung',
+    confirmation: 'Die zwei bestätigten Lücken werden getrennt in PGM-CON-COR-001 V0.1 strukturiert. Ihre technische Korrektur erfordert weiterhin ein separates gebündeltes GO.',
     boundary: '0/8 Nachweise angenommen · CON-01 und CON-05 nicht geöffnet · REF-02 und L2 geschlossen.'
   }
 };
@@ -177,7 +180,8 @@ const InstitutionalProgramDesignEvidenceControlledReview = ({ language = 'FR' })
 
       <p className="mt-4 flex items-start gap-2 rounded-md border border-sky-800/70 bg-sky-950/15 p-3 text-sm leading-6 text-slate-200"><CheckCircle2 className="mt-0.5 shrink-0 text-sky-300" size={18} aria-hidden="true" />{t.synthesis}</p>
       <p className="mt-3 flex items-start gap-2 rounded-md border border-rose-800/70 bg-rose-950/15 p-3 text-xs font-semibold leading-5 text-rose-200"><FileWarning className="mt-0.5 shrink-0" size={17} aria-hidden="true" />{t.gaps}</p>
-      <GovernedDecisionRecord labels={t.recordLabels} record={t.record} />
+      <GovernedDecisionRecord labels={t.recordLabels} record={t.authorisationRecord} />
+      <GovernedDecisionRecord labels={t.recordLabels} record={t.confirmationRecord} className="mt-3" />
       <div className="mt-3 rounded-md border border-cyan-800/70 bg-cyan-950/15 p-3"><p className="flex items-center gap-2 text-xs font-semibold uppercase text-cyan-300"><ShieldCheck size={16} aria-hidden="true" />{t.next}<LockKeyhole size={15} aria-hidden="true" /></p><p className="mt-2 text-sm font-semibold leading-6 text-slate-100">{t.confirmation}</p></div>
       <p className="mt-3 flex items-start gap-2 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.boundary}</p>
     </section>
