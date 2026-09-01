@@ -60,34 +60,34 @@ const PACKAGES = [
 
 const COPY = {
   FR: {
-    eyebrow: 'PLAN CORRECTIF CANDIDAT · PGM-CON-COR-001 · V0.1 · 01-09-2026',
+    eyebrow: 'PLAN CORRECTIF CONFIRMÉ · PGM-CON-COR-001 · V1.0 · 01-09-2026',
     title: 'Traiter les deux écarts sans élargir le périmètre',
-    intro: 'PGM-DEC-010 confirme le relevé contrôlé et autorise uniquement la préparation de ce plan. Les deux corrections restent séparées, réversibles et soumises à un GO groupé avant exécution.',
-    counters: [['2/2', 'écarts cadrés'], ['2', 'micro-lots séparés'], ['0', 'correction exécutée'], ['0', 'preuve acceptée']],
-    labels: { gap: 'Écart confirmé', actions: 'Séquence candidate', exit: 'Critère de sortie', stop: 'Règle d’arrêt', source: 'Source déjà ouverte' },
-    next: 'Prochain GO groupé',
-    confirmation: 'Je confirme PGM-CON-COR-001 V0.1 comme plan correctif des deux écarts et j’autorise l’exécution technique de COR-01 puis COR-02, sans validation rétroactive, sans acceptation de preuve, sans envoi Telegram et sans CON-01, CON-05, REF-02 ni L2.',
-    boundary: 'Plan uniquement : aucune donnée source, statut de validation, livraison Telegram, qualification institutionnelle ou progression n’est modifié.'
+    intro: 'PGM-DEC-011 confirme le plan et autorise son exécution technique dans l’ordre COR-01 puis COR-02. Les deux corrections ont été exécutées séparément, de manière réversible, sans accepter de preuve.',
+    counters: [['2/2', 'écarts cadrés'], ['2', 'micro-lots séparés'], ['2', 'corrections exécutées'], ['0', 'preuve acceptée']],
+    labels: { gap: 'Écart confirmé', actions: 'Séquence exécutée et contrôlée', exit: 'Critère de sortie', stop: 'Règle d’arrêt conservée', source: 'Source déjà ouverte' },
+    next: 'Relevé d’exécution candidat',
+    confirmation: 'Les résultats de COR-01 et COR-02 sont restitués dans PGM-CON-COR-002 V0.1 pour confirmation humaine, sans acceptation de preuve.',
+    boundary: 'Exécution technique uniquement : aucune validation rétroactive, livraison Telegram, qualification institutionnelle ou progression n’est déclarée.'
   },
   EN: {
-    eyebrow: 'CANDIDATE CORRECTION PLAN · PGM-CON-COR-001 · V0.1 · 1 SEP 2026',
+    eyebrow: 'CONFIRMED CORRECTION PLAN · PGM-CON-COR-001 · V1.0 · 1 SEP 2026',
     title: 'Address both gaps without expanding scope',
-    intro: 'PGM-DEC-010 confirms the controlled record and authorises preparation of this plan only. Both corrections remain separate, reversible and subject to a grouped GO before execution.',
-    counters: [['2/2', 'gaps framed'], ['2', 'separate micro-packages'], ['0', 'corrections executed'], ['0', 'evidence accepted']],
-    labels: { gap: 'Confirmed gap', actions: 'Candidate sequence', exit: 'Exit criterion', stop: 'Stop rule', source: 'Already opened source' },
-    next: 'Next grouped GO',
-    confirmation: 'I confirm PGM-CON-COR-001 V0.1 as the correction plan for both gaps and authorise technical execution of COR-01 then COR-02, with no retroactive validation, evidence acceptance, Telegram delivery, CON-01, CON-05, REF-02 or L2.',
-    boundary: 'Plan only: no source data, validation status, Telegram delivery, institutional qualification or progress is changed.'
+    intro: 'PGM-DEC-011 confirms the plan and authorises technical execution in the order COR-01 then COR-02. Both corrections were executed separately and reversibly, without accepting evidence.',
+    counters: [['2/2', 'gaps framed'], ['2', 'separate micro-packages'], ['2', 'corrections executed'], ['0', 'evidence accepted']],
+    labels: { gap: 'Confirmed gap', actions: 'Executed and controlled sequence', exit: 'Exit criterion', stop: 'Preserved stop rule', source: 'Already opened source' },
+    next: 'Candidate execution record',
+    confirmation: 'COR-01 and COR-02 results are recorded in PGM-CON-COR-002 V0.1 for human confirmation, without evidence acceptance.',
+    boundary: 'Technical execution only: no retrospective validation, Telegram delivery, institutional qualification or progress is declared.'
   },
   DE: {
-    eyebrow: 'KANDIDAT FÜR KORREKTURPLAN · PGM-CON-COR-001 · V0.1 · 01.09.2026',
+    eyebrow: 'BESTÄTIGTER KORREKTURPLAN · PGM-CON-COR-001 · V1.0 · 01.09.2026',
     title: 'Beide Lücken ohne Erweiterung des Umfangs behandeln',
-    intro: 'PGM-DEC-010 bestätigt das kontrollierte Protokoll und autorisiert nur die Vorbereitung dieses Plans. Beide Korrekturen bleiben getrennt, reversibel und benötigen vor Ausführung ein gebündeltes GO.',
-    counters: [['2/2', 'Lücken strukturiert'], ['2', 'getrennte Mikrolosen'], ['0', 'Korrekturen ausgeführt'], ['0', 'Nachweise angenommen']],
-    labels: { gap: 'Bestätigte Lücke', actions: 'Kandidatensequenz', exit: 'Austrittskriterium', stop: 'Stoppregel', source: 'Bereits geöffnete Quelle' },
-    next: 'Nächstes gebündeltes GO',
-    confirmation: 'Ich bestätige PGM-CON-COR-001 V0.1 als Korrekturplan für beide Lücken und autorisiere die technische Ausführung von COR-01 und danach COR-02, ohne rückwirkende Validierung, Nachweisannahme, Telegram-Sendung, CON-01, CON-05, REF-02 oder L2.',
-    boundary: 'Nur Plan: Quelldaten, Validierungsstatus, Telegram-Lieferung, institutionelle Einstufung und Fortschritt bleiben unverändert.'
+    intro: 'PGM-DEC-011 bestätigt den Plan und autorisiert die technische Ausführung in der Reihenfolge COR-01 und danach COR-02. Beide Korrekturen wurden getrennt und reversibel ausgeführt, ohne Nachweise anzunehmen.',
+    counters: [['2/2', 'Lücken strukturiert'], ['2', 'getrennte Mikrolosen'], ['2', 'Korrekturen ausgeführt'], ['0', 'Nachweise angenommen']],
+    labels: { gap: 'Bestätigte Lücke', actions: 'Ausgeführte und kontrollierte Sequenz', exit: 'Austrittskriterium', stop: 'Beibehaltene Stoppregel', source: 'Bereits geöffnete Quelle' },
+    next: 'Kandidat für Ausführungsprotokoll',
+    confirmation: 'Die Ergebnisse von COR-01 und COR-02 sind in PGM-CON-COR-002 V0.1 zur menschlichen Bestätigung dokumentiert, ohne Nachweisannahme.',
+    boundary: 'Nur technische Ausführung: Keine rückwirkende Validierung, Telegram-Sendung, institutionelle Einstufung oder Fortschrittsangabe wird erklärt.'
   }
 };
 
