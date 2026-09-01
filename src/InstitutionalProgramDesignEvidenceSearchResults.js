@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertTriangle, Archive, CheckCircle2, FileSearch, FolderLock, SearchCheck, ShieldCheck } from 'lucide-react';
+import GovernedDecisionRecord from './GovernedDecisionRecord';
 
 const text = (FR, EN, DE) => ({ FR, EN, DE });
 
@@ -78,46 +79,52 @@ const RESULTS = [
 
 const COPY = {
   FR: {
-    eyebrow: 'RELEVÉ CANDIDAT · PGM-CON-COL-002 · V0.1 · 01-09-2026',
-    title: 'Résultats groupés de la recherche interne bornée',
-    intro: 'La recherche autorisée par PGM-DEC-007 a parcouru uniquement les métadonnées des emplacements internes bornés : nom, chemin, date et version apparente. Aucun contenu n’a été ouvert ou lu.',
+    eyebrow: 'INDEX CONFIRMÉ · PGM-CON-COL-002 · V1.0 · 01-09-2026',
+    title: 'Index confirmé de la recherche interne bornée',
+    intro: 'PGM-DEC-008 confirme le relevé produit après la recherche autorisée par PGM-DEC-007. Seules les métadonnées des emplacements internes bornés ont été parcourues : nom, chemin, date et version apparente. Aucun contenu n’a été ouvert ou lu.',
     counters: [['870', 'références de fichiers parcourues'], ['4/6', 'périmètres internes indexés'], ['10/12', 'filtres internes avec candidats'], ['0', 'pièces ouvertes ou preuves acceptées']],
     labels: { families: 'Filtres avec candidats', occurrences: 'Correspondances lexicales', references: 'Références candidates récentes', none: 'Aucune référence exposée', method: 'Méthode et périmètre' },
     status: { indexed: 'INDEXÉ · MÉTADONNÉES', partial: 'PARTIEL · LACUNES', stopped: 'STOP · RESTREINT' },
     method: 'Corpus : dossiers docs et codex_outputs du projet, puis répertoires stratégiques non restreints 00 à 03 et 05 à 08. Exclusions : contenu des fichiers, dossiers restreints identifiés, dépôts Git, worktrees et archives.',
     source: 'Instantané de métadonnées du 01-09-2026. Les dates affichées sont les dates de modification des fichiers et non des dates de validation métier.',
-    boundary: 'Les 507 correspondances lexicales peuvent se chevaucher et contenir des faux positifs. Elles ne représentent ni 507 documents uniques, ni des preuves recevables, ni une progression du Programme.',
+    boundary: 'Index confirmé uniquement : les 507 correspondances lexicales peuvent se chevaucher et contenir des faux positifs. Elles ne représentent ni 507 documents uniques, ni des preuves recevables, ni une progression du Programme.',
     missing: 'Lacunes explicites : CON-01 et CON-05 restent fermés par sensibilité ; CON-06 ne possède pas encore de candidat identifiable par nom pour la feuille de route versionnée et le registre des dépendances et jalons.',
-    next: 'Prochain arbitrage groupé',
-    confirmation: 'Confirmer ou amender PGM-CON-COL-002 V0.1 comme index candidat. Cette décision n’autorisera toujours ni l’ouverture d’une pièce, ni l’acceptation d’une preuve, ni REF-02, ni L2.'
+    recordLabels: { eyebrow: 'Trace de décision gouvernée', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision consignée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
+    record: { id: 'PGM-DEC-008', version: 'V1.0', status: 'Index de recherche confirmé', author: 'Cheikh Ndiaye', date: '01-09-2026', decision: 'PGM-CON-COL-002 V0.1 est confirmé et promu en V1.0 comme index de la recherche interne bornée des six composantes de Conception.', evidence: 'Confirmation explicite de Cheikh dans la session du 01-09-2026 : « Je confirme PGM-CON-COL-002 V0.1 comme index candidat de la recherche interne bornée, sans autoriser l’ouverture d’une pièce ni l’acceptation d’une preuve. »', limit: 'La décision confirme uniquement l’index de métadonnées. Elle n’autorise aucune ouverture ou lecture de pièce, aucun parcours de CON-01 ou CON-05, aucune acceptation de preuve, requalification, progression, collecte externe, REF-02 ou L2.' },
+    next: 'Prochaine porte Fast Track',
+    confirmation: 'Autoriser ou non l’ouverture contrôlée des huit références candidates uniques non restreintes de CON-02, CON-03, CON-04 et CON-06. Cette autorisation resterait sans acceptation automatique de preuve, sans CON-01, CON-05, REF-02 ni L2.'
   },
   EN: {
-    eyebrow: 'CANDIDATE RECORD · PGM-CON-COL-002 · V0.1 · 1 SEP 2026',
-    title: 'Grouped results of the bounded internal search',
-    intro: 'The search authorised by PGM-DEC-007 traversed only metadata in the bounded internal locations: name, path, date and apparent version. No content was opened or read.',
+    eyebrow: 'CONFIRMED INDEX · PGM-CON-COL-002 · V1.0 · 1 SEP 2026',
+    title: 'Confirmed index of the bounded internal search',
+    intro: 'PGM-DEC-008 confirms the record produced after the search authorised by PGM-DEC-007. Only metadata in the bounded internal locations was traversed: name, path, date and apparent version. No content was opened or read.',
     counters: [['870', 'file references traversed'], ['4/6', 'internal scopes indexed'], ['10/12', 'internal filters with candidates'], ['0', 'records opened or evidence accepted']],
     labels: { families: 'Filters with candidates', occurrences: 'Lexical matches', references: 'Recent candidate references', none: 'No reference exposed', method: 'Method and scope' },
     status: { indexed: 'INDEXED · METADATA', partial: 'PARTIAL · GAPS', stopped: 'STOP · RESTRICTED' },
     method: 'Corpus: project docs and codex_outputs folders, then non-restricted strategic directories 00 to 03 and 05 to 08. Exclusions: file content, identified restricted folders, Git repositories, worktrees and archives.',
     source: 'Metadata snapshot dated 1 Sep 2026. Displayed dates are file modification dates, not business-validation dates.',
-    boundary: 'The 507 lexical matches can overlap and contain false positives. They represent neither 507 unique records, admissible evidence nor Programme progress.',
+    boundary: 'Confirmed index only: the 507 lexical matches can overlap and contain false positives. They represent neither 507 unique records, admissible evidence nor Programme progress.',
     missing: 'Explicit gaps: CON-01 and CON-05 remain closed by sensitivity; CON-06 still has no filename candidate for the versioned roadmap or dependency and milestone register.',
-    next: 'Next grouped decision',
-    confirmation: 'Confirm or amend PGM-CON-COL-002 V0.1 as the candidate index. That decision will still authorise neither opening a record, accepting evidence, REF-02 nor L2.'
+    recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
+    record: { id: 'PGM-DEC-008', version: 'V1.0', status: 'Search index confirmed', author: 'Cheikh Ndiaye', date: '1 Sep 2026', decision: 'PGM-CON-COL-002 V0.1 is confirmed and promoted to V1.0 as the bounded internal search index for the six Design components.', evidence: 'Cheikh’s explicit confirmation in the 1 Sep 2026 session, retained in French: “Je confirme PGM-CON-COL-002 V0.1 comme index candidat de la recherche interne bornée, sans autoriser l’ouverture d’une pièce ni l’acceptation d’une preuve.”', limit: 'The decision confirms the metadata index only. It authorises no record opening or reading, traversal of CON-01 or CON-05, evidence acceptance, requalification, progress, external collection, REF-02 or L2.' },
+    next: 'Next Fast Track gate',
+    confirmation: 'Authorise or decline controlled opening of the eight unique non-restricted candidate references for CON-02, CON-03, CON-04 and CON-06. Any authorisation would still grant no automatic evidence acceptance and exclude CON-01, CON-05, REF-02 and L2.'
   },
   DE: {
-    eyebrow: 'KANDIDATENPROTOKOLL · PGM-CON-COL-002 · V0.1 · 01.09.2026',
-    title: 'Gebündelte Ergebnisse der begrenzten internen Suche',
-    intro: 'Die durch PGM-DEC-007 autorisierte Suche durchlief nur Metadaten der begrenzten internen Ablagen: Name, Pfad, Datum und erkennbare Version. Kein Inhalt wurde geöffnet oder gelesen.',
+    eyebrow: 'BESTÄTIGTER INDEX · PGM-CON-COL-002 · V1.0 · 01.09.2026',
+    title: 'Bestätigter Index der begrenzten internen Suche',
+    intro: 'PGM-DEC-008 bestätigt das nach der durch PGM-DEC-007 autorisierten Suche erstellte Protokoll. Durchlaufen wurden nur Metadaten der begrenzten internen Ablagen: Name, Pfad, Datum und erkennbare Version. Kein Inhalt wurde geöffnet oder gelesen.',
     counters: [['870', 'Dateireferenzen durchlaufen'], ['4/6', 'interne Bereiche indexiert'], ['10/12', 'interne Filter mit Kandidaten'], ['0', 'Unterlagen geöffnet oder Nachweise angenommen']],
     labels: { families: 'Filter mit Kandidaten', occurrences: 'Lexikalische Treffer', references: 'Aktuelle Kandidatenreferenzen', none: 'Keine Referenz offengelegt', method: 'Methode und Umfang' },
     status: { indexed: 'INDEXIERT · METADATEN', partial: 'TEILWEISE · LÜCKEN', stopped: 'STOPP · EINGESCHRÄNKT' },
     method: 'Korpus: Projektordner docs und codex_outputs sowie nicht eingeschränkte strategische Verzeichnisse 00 bis 03 und 05 bis 08. Ausgeschlossen: Dateiinhalte, identifizierte eingeschränkte Ordner, Git-Repositories, Worktrees und Archive.',
     source: 'Metadaten-Snapshot vom 01.09.2026. Angezeigte Daten sind Änderungsdaten der Dateien und keine fachlichen Validierungsdaten.',
-    boundary: 'Die 507 lexikalischen Treffer können sich überschneiden und Fehlzuordnungen enthalten. Sie sind weder 507 eindeutige Unterlagen noch zulässige Nachweise oder Programmfortschritt.',
+    boundary: 'Nur bestätigter Index: Die 507 lexikalischen Treffer können sich überschneiden und Fehlzuordnungen enthalten. Sie sind weder 507 eindeutige Unterlagen noch zulässige Nachweise oder Programmfortschritt.',
     missing: 'Explizite Lücken: CON-01 und CON-05 bleiben aufgrund ihrer Sensibilität geschlossen; für CON-06 fehlt weiterhin ein Dateinamenskandidat zum versionierten Fahrplan und zum Abhängigkeits- und Meilensteinregister.',
-    next: 'Nächster gebündelter Entscheid',
-    confirmation: 'PGM-CON-COL-002 V0.1 als Kandidatenindex bestätigen oder ändern. Auch dieser Entscheid erlaubt weder das Öffnen einer Unterlage, die Annahme von Nachweisen, REF-02 noch L2.'
+    recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Erfasster Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
+    record: { id: 'PGM-DEC-008', version: 'V1.0', status: 'Suchindex bestätigt', author: 'Cheikh Ndiaye', date: '01.09.2026', decision: 'PGM-CON-COL-002 V0.1 wird als Index der begrenzten internen Suche für die sechs Konzeptionskomponenten bestätigt und zu V1.0 befördert.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 01.09.2026, im französischen Originalwortlaut: „Je confirme PGM-CON-COL-002 V0.1 comme index candidat de la recherche interne bornée, sans autoriser l’ouverture d’une pièce ni l’acceptation d’une preuve.“', limit: 'Der Entscheid bestätigt nur den Metadatenindex. Er erlaubt keine Öffnung oder Lektüre von Unterlagen, keine Durchsicht von CON-01 oder CON-05, keine Nachweisannahme, Neueinstufung, Fortschrittsmessung, externe Sammlung, REF-02 oder L2.' },
+    next: 'Nächstes Fast-Track-Tor',
+    confirmation: 'Die kontrollierte Öffnung der acht eindeutigen nicht eingeschränkten Kandidatenreferenzen für CON-02, CON-03, CON-04 und CON-06 genehmigen oder ablehnen. Eine Genehmigung würde weiterhin keine automatische Nachweisannahme erlauben und CON-01, CON-05, REF-02 sowie L2 ausschließen.'
   }
 };
 
@@ -162,6 +169,7 @@ const InstitutionalProgramDesignEvidenceSearchResults = ({ language = 'FR' }) =>
       <section className="mt-4 rounded-md border border-cyan-800/70 bg-cyan-950/15 p-4"><h5 className="flex items-center gap-2 text-sm font-semibold text-cyan-200"><Archive size={18} aria-hidden="true" />{t.labels.method}</h5><p className="mt-2 text-sm leading-6 text-slate-300">{t.method}</p><p className="mt-2 text-xs leading-5 text-slate-400">{t.source}</p></section>
       <p className="mt-3 flex items-start gap-2 rounded-md border border-amber-800/70 bg-amber-950/15 p-3 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.boundary}</p>
       <p className="mt-3 flex items-start gap-2 rounded-md border border-rose-800/70 bg-rose-950/15 p-3 text-xs font-semibold leading-5 text-rose-200"><FolderLock className="mt-0.5 shrink-0" size={16} aria-hidden="true" />{t.missing}</p>
+      <GovernedDecisionRecord labels={t.recordLabels} record={t.record} />
       <div className="mt-3 rounded-md border border-cyan-800/70 bg-cyan-950/15 p-3"><p className="flex items-center gap-2 text-xs font-semibold uppercase text-cyan-300"><ShieldCheck size={16} aria-hidden="true" />{t.next}</p><p className="mt-2 text-sm font-semibold leading-6 text-slate-100">{t.confirmation}</p></div>
     </section>
   );
