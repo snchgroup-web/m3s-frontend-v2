@@ -12,11 +12,11 @@ const COPY = {
       ['Consolidation', '8/8 cadres confirmés', 'REF-01 est le contrôle détaillé courant'],
       ['Dynamisation', '8 composantes cadrées', 'Revue détaillée non démarrée']
     ],
-    current: 'Contrôle courant · REF-01 V1.84 · REF-01-DEC-081 V1.0 · collecte confirmée',
+    current: 'Contrôle en veille · REF-01 V1.85 · REF-01-DEC-082 V1.0 · attente gouvernée',
     metrics: [['22/22', 'valeurs examinées'], ['9', 'qualifiées, portée synthétique'], ['5/5', 'familles ouvertes à la collecte'], ['0/6', 'conditions G1 clôturables']],
     fastTrack: 'Fast Track actif',
-    fastTrackBody: 'DEC-081 confirme COL-004 V1.0 en un seul arbitrage. ATT-001 V0.1 propose maintenant de suspendre les revues répétitives jusqu’à une nouvelle preuve recevable ou une contradiction documentée.',
-    boundary: 'G1 reste ouverte et L2 fermé. La collecte autorisée ne vaut ni preuve acceptée, ni conformité, ni déploiement.'
+    fastTrackBody: 'DEC-082 confirme ATT-001 V1.0. REF-01 quitte la boucle d’arbitrage répétitive et ne reprend que sur nouvelle preuve recevable ou contradiction documentée ; le pilotage revient au Programme global.',
+    boundary: 'G1 reste ouverte et L2 fermé. L’attente gouvernée ne vaut ni clôture, ni preuve acceptée, ni conformité, ni déploiement.'
   },
   EN: {
     eyebrow: 'CANDIDATE GLOBAL COCKPIT · PGM-CPK-001 · V0.1 · 30 AUG 2026',
@@ -28,11 +28,11 @@ const COPY = {
       ['Consolidation', '8/8 frameworks confirmed', 'REF-01 is the current detailed control'],
       ['Dynamisation', '8 framed components', 'Detailed review not started']
     ],
-    current: 'Current control · REF-01 V1.84 · REF-01-DEC-081 V1.0 · collection confirmed',
+    current: 'Control on watch · REF-01 V1.85 · REF-01-DEC-082 V1.0 · governed waiting',
     metrics: [['22/22', 'values reviewed'], ['9', 'qualified, synthetic scope'], ['5/5', 'families open for collection'], ['0/6', 'closable G1 conditions']],
     fastTrack: 'Fast Track active',
-    fastTrackBody: 'DEC-081 confirms COL-004 V1.0 through one decision. ATT-001 V0.1 now proposes suspending repeated reviews until new admissible evidence or a documented contradiction appears.',
-    boundary: 'G1 remains open and L2 closed. Authorised collection is neither accepted evidence, compliance nor deployment.'
+    fastTrackBody: 'DEC-082 confirms ATT-001 V1.0. REF-01 leaves the repetitive decision loop and resumes only upon new admissible evidence or a documented contradiction; steering returns to the global Programme.',
+    boundary: 'G1 remains open and L2 closed. Governed waiting is neither closure, accepted evidence, compliance nor deployment.'
   },
   DE: {
     eyebrow: 'KANDIDAT FÜR DAS GESAMTCOCKPIT · PGM-CPK-001 · V0.1 · 30.08.2026',
@@ -44,11 +44,11 @@ const COPY = {
       ['Konsolidierung', '8/8 Rahmen bestätigt', 'REF-01 ist die aktuelle Detailkontrolle'],
       ['Dynamisierung', '8 strukturierte Komponenten', 'Detailprüfung nicht begonnen']
     ],
-    current: 'Aktuelle Kontrolle · REF-01 V1.84 · REF-01-DEC-081 V1.0 · Sammlung bestätigt',
+    current: 'Kontrolle in Beobachtung · REF-01 V1.85 · REF-01-DEC-082 V1.0 · gesteuertes Warten',
     metrics: [['22/22', 'Werte geprüft'], ['9', 'qualifiziert, synthetischer Umfang'], ['5/5', 'Familien für Sammlung geöffnet'], ['0/6', 'schliessbare G1-Bedingungen']],
     fastTrack: 'Fast Track aktiv',
-    fastTrackBody: 'DEC-081 bestätigt COL-004 V1.0 in einem Entscheid. ATT-001 V0.1 schlägt vor, wiederholte Prüfungen bis zu einem neuen zulässigen Nachweis oder dokumentierten Widerspruch auszusetzen.',
-    boundary: 'G1 bleibt offen und L2 geschlossen. Die autorisierte Sammlung bedeutet weder angenommenen Nachweis, Konformität noch Bereitstellung.'
+    fastTrackBody: 'DEC-082 bestätigt ATT-001 V1.0. REF-01 verlässt die wiederholte Entscheidungsschleife und wird nur bei neuem zulässigem Nachweis oder dokumentiertem Widerspruch wiederaufgenommen; die Steuerung kehrt zum Gesamtprogramm zurück.',
+    boundary: 'G1 bleibt offen und L2 geschlossen. Gesteuertes Warten bedeutet weder Abschluss, angenommenen Nachweis, Konformität noch Bereitstellung.'
   }
 };
 
