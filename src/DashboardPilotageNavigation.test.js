@@ -51,6 +51,9 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(screen.getByRole('heading', { name: '2SG · Institution porteuse' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'M3S · Système interne transversal de management' })).toBeInTheDocument();
   expect(screen.getByText('29 composantes', { exact: false })).toBeInTheDocument();
+  expect(screen.getByTestId('institutional-program-design-evidence-inventory')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'PGM-DEC-003 · V1.0' })).toBeInTheDocument();
+  expect(screen.getAllByTestId('institutional-program-design-evidence-row')).toHaveLength(6);
   expect(screen.getByText(/Aucun pourcentage n’est affiché/)).toBeInTheDocument();
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });
