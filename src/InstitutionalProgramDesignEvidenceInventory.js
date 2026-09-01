@@ -81,52 +81,52 @@ const INVENTORY = [
 
 const COPY = {
   FR: {
-    eyebrow: 'INVENTAIRE PROBATOIRE CANDIDAT · PGM-CON-EVD-001 · V0.1 · 01-09-2026',
+    eyebrow: 'INVENTAIRE PROBATOIRE CONFIRMÉ · PGM-CON-EVD-001 · V1.0 · 01-09-2026',
     title: 'Inventaire groupé des preuves attendues pour Conception',
-    intro: 'PGM-DEC-003 autorise uniquement la préparation documentaire de cet inventaire. Il regroupe les familles de preuves, leurs emplacements candidats, leur sensibilité et les fonctions responsables candidates, sans rechercher, ouvrir ni accepter une pièce.',
+    intro: 'PGM-DEC-004 confirme cet inventaire groupé. Il fixe les familles de preuves attendues, leurs emplacements candidats, leur sensibilité et les fonctions responsables candidates, sans rechercher, ouvrir ni accepter une pièce.',
     counters: [['6/6', 'composantes couvertes'], ['18', 'familles de preuves candidates'], ['0', 'preuves acceptées'], ['0', 'collectes ou accès ouverts']],
-    status: 'À contrôler · non accepté',
+    status: 'Confirmé · pièces non contrôlées',
     labels: { expected: 'Preuves attendues candidates', source: 'Source ou emplacement candidat', owner: 'Responsable candidat', sensitivity: 'Sensibilité candidate', control: 'Contrôle suivant' },
     sensitivity: { internal: 'Interne', restricted: 'Restreinte' },
     control: 'Confirmer ou corriger les familles, l’emplacement, la sensibilité et le responsable candidat. Aucun contrôle de pièce n’est encore autorisé.',
     recordLabels: { eyebrow: 'Trace de décision gouvernée', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision consignée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
-    record: { id: 'PGM-DEC-003', version: 'V1.0', status: 'Préparation de l’inventaire autorisée', author: 'Cheikh Ndiaye', date: '01-09-2026', decision: 'La préparation de PGM-CON-EVD-001 V0.1 est autorisée comme inventaire probatoire groupé des six composantes de Conception.', evidence: 'Confirmation explicite de Cheikh dans la session du 01-09-2026 : « Je confirme et autorise la préparation de PGM-CON-EVD-001 V0.1 comme inventaire probatoire groupé des six composantes de Conception, sans collecte externe, accès réel ni exécution. »', limit: 'Cette décision autorise la structuration documentaire uniquement. Elle n’autorise aucune collecte externe, recherche interne de pièces, ouverture de fichier restreint, accès réel, acceptation de preuve, mandat, tâche d’exécution, progression, REF-02 ou L2.' },
-    source: 'Base de préparation : PGM-CON-REV-001 V1.0 et PGM-DEC-003 V1.0. Les emplacements indiquent des familles candidates ; ils ne prouvent ni présence, ni complétude, ni recevabilité.',
+    record: { id: 'PGM-DEC-004', version: 'V1.0', status: 'Inventaire probatoire confirmé', author: 'Cheikh Ndiaye', date: '01-09-2026', decision: 'PGM-CON-EVD-001 V0.1 est confirmé et promu en V1.0 comme inventaire probatoire groupé des six composantes de Conception.', evidence: 'Confirmation explicite de Cheikh dans la continuité de la session du 01-09-2026 : « Alors je le confirme deja, merci de continuer ».', limit: 'Cette décision confirme l’inventaire documentaire uniquement. Elle n’autorise aucune collecte externe, recherche interne de pièces, ouverture de fichier restreint, accès réel, acceptation de preuve, mandat, tâche d’exécution, progression, REF-02 ou L2.' },
+    source: 'Base confirmée : PGM-CON-REV-001 V1.0, PGM-DEC-003 V1.0 et PGM-DEC-004 V1.0. Les emplacements indiquent des familles candidates ; ils ne prouvent ni présence, ni complétude, ni recevabilité.',
     boundary: 'Inventaire candidat uniquement : 18 familles attendues, zéro preuve acceptée, zéro collecte ouverte, zéro responsable mandaté et zéro progression calculée.',
-    next: 'Prochain arbitrage groupé',
-    confirmation: 'Confirmer ou amender PGM-CON-EVD-001 V0.1 comme inventaire candidat. Cette confirmation n’autorisera encore ni recherche, ni accès aux pièces, ni exécution.'
+    next: 'Prochaine porte candidate',
+    confirmation: 'Autoriser ou non la préparation de PGM-CON-COL-001 V0.1 comme plan de recherche documentaire interne bornée, sans lancer la recherche, ouvrir une pièce ni accepter une preuve.'
   },
   EN: {
-    eyebrow: 'CANDIDATE EVIDENCE INVENTORY · PGM-CON-EVD-001 · V0.1 · 1 SEP 2026',
+    eyebrow: 'CONFIRMED EVIDENCE INVENTORY · PGM-CON-EVD-001 · V1.0 · 1 SEP 2026',
     title: 'Grouped inventory of expected evidence for Design',
-    intro: 'PGM-DEC-003 authorises only documentary preparation of this inventory. It groups evidence families, candidate locations, sensitivity and candidate responsible functions without searching for, opening or accepting any record.',
+    intro: 'PGM-DEC-004 confirms this grouped inventory. It fixes the expected evidence families, candidate locations, sensitivity and candidate responsible functions without searching for, opening or accepting any record.',
     counters: [['6/6', 'components covered'], ['18', 'candidate evidence families'], ['0', 'evidence items accepted'], ['0', 'collections or accesses opened']],
-    status: 'To review · not accepted',
+    status: 'Confirmed · records not reviewed',
     labels: { expected: 'Candidate expected evidence', source: 'Candidate source or location', owner: 'Candidate owner', sensitivity: 'Candidate sensitivity', control: 'Next control' },
     sensitivity: { internal: 'Internal', restricted: 'Restricted' },
     control: 'Confirm or correct the families, location, sensitivity and candidate owner. No record review is authorised yet.',
     recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
-    record: { id: 'PGM-DEC-003', version: 'V1.0', status: 'Inventory preparation authorised', author: 'Cheikh Ndiaye', date: '1 Sep 2026', decision: 'Preparation of PGM-CON-EVD-001 V0.1 is authorised as the grouped evidence inventory for the six Design components.', evidence: 'Cheikh’s explicit confirmation in the 1 Sep 2026 session, retained in French: “Je confirme et autorise la préparation de PGM-CON-EVD-001 V0.1 comme inventaire probatoire groupé des six composantes de Conception, sans collecte externe, accès réel ni exécution.”', limit: 'This decision authorises documentary structuring only. It authorises no external collection, internal record search, restricted-file opening, real access, evidence acceptance, mandate, execution task, progress, REF-02 or L2.' },
-    source: 'Preparation basis: PGM-CON-REV-001 V1.0 and PGM-DEC-003 V1.0. Locations identify candidate families; they prove neither presence, completeness nor admissibility.',
+    record: { id: 'PGM-DEC-004', version: 'V1.0', status: 'Evidence inventory confirmed', author: 'Cheikh Ndiaye', date: '1 Sep 2026', decision: 'PGM-CON-EVD-001 V0.1 is confirmed and promoted to V1.0 as the grouped evidence inventory for the six Design components.', evidence: 'Cheikh’s explicit confirmation in the continuation of the 1 Sep 2026 session, retained in French: “Alors je le confirme deja, merci de continuer”.', limit: 'This decision confirms the documentary inventory only. It authorises no external collection, internal record search, restricted-file opening, real access, evidence acceptance, mandate, execution task, progress, REF-02 or L2.' },
+    source: 'Confirmed basis: PGM-CON-REV-001 V1.0, PGM-DEC-003 V1.0 and PGM-DEC-004 V1.0. Locations identify candidate families; they prove neither presence, completeness nor admissibility.',
     boundary: 'Candidate inventory only: 18 expected families, zero evidence accepted, zero collection opened, zero owners mandated and no progress calculated.',
-    next: 'Next grouped decision',
-    confirmation: 'Confirm or amend PGM-CON-EVD-001 V0.1 as the candidate inventory. Confirmation will still authorise no search, record access or execution.'
+    next: 'Next candidate gate',
+    confirmation: 'Authorise or decline preparation of PGM-CON-COL-001 V0.1 as a bounded internal documentary search plan, without starting the search, opening a record or accepting evidence.'
   },
   DE: {
-    eyebrow: 'KANDIDATEN-NACHWEISINVENTAR · PGM-CON-EVD-001 · V0.1 · 01.09.2026',
+    eyebrow: 'BESTÄTIGTES NACHWEISINVENTAR · PGM-CON-EVD-001 · V1.0 · 01.09.2026',
     title: 'Gebündeltes Inventar der erwarteten Nachweise für Konzeption',
-    intro: 'PGM-DEC-003 erlaubt nur die dokumentarische Vorbereitung dieses Inventars. Es bündelt Nachweisfamilien, Kandidatenablagen, Sensibilität und Kandidatenfunktionen, ohne Unterlagen zu suchen, zu öffnen oder anzunehmen.',
+    intro: 'PGM-DEC-004 bestätigt dieses gebündelte Inventar. Es legt erwartete Nachweisfamilien, Kandidatenablagen, Sensibilität und Kandidatenfunktionen fest, ohne Unterlagen zu suchen, zu öffnen oder anzunehmen.',
     counters: [['6/6', 'Komponenten abgedeckt'], ['18', 'Kandidatennachweisfamilien'], ['0', 'Nachweise angenommen'], ['0', 'Sammlungen oder Zugriffe geöffnet']],
-    status: 'Zu prüfen · nicht angenommen',
+    status: 'Bestätigt · Unterlagen nicht geprüft',
     labels: { expected: 'Erwartete Kandidatennachweise', source: 'Kandidatenquelle oder Ablage', owner: 'Kandidatenverantwortung', sensitivity: 'Kandidatensensibilität', control: 'Nächste Kontrolle' },
     sensitivity: { internal: 'Intern', restricted: 'Eingeschränkt' },
     control: 'Familien, Ablage, Sensibilität und Kandidatenverantwortung bestätigen oder korrigieren. Eine Unterlagenprüfung ist noch nicht erlaubt.',
     recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Erfasster Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
-    record: { id: 'PGM-DEC-003', version: 'V1.0', status: 'Inventarvorbereitung erlaubt', author: 'Cheikh Ndiaye', date: '01.09.2026', decision: 'Die Vorbereitung von PGM-CON-EVD-001 V0.1 als gebündeltes Nachweisinventar der sechs Konzeptionskomponenten ist erlaubt.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 01.09.2026, im französischen Originalwortlaut: „Je confirme et autorise la préparation de PGM-CON-EVD-001 V0.1 comme inventaire probatoire groupé des six composantes de Conception, sans collecte externe, accès réel ni exécution.“', limit: 'Der Entscheid erlaubt nur die dokumentarische Strukturierung. Er erlaubt keine externe Sammlung, interne Unterlagensuche, Öffnung eingeschränkter Dateien, realen Zugriff, Nachweisannahme, Mandatierung, Ausführungsaufgabe, Fortschrittsmessung, REF-02 oder L2.' },
-    source: 'Vorbereitungsbasis: PGM-CON-REV-001 V1.0 und PGM-DEC-003 V1.0. Die Ablagen bezeichnen Kandidatenfamilien; sie belegen weder Vorhandensein, Vollständigkeit noch Zulässigkeit.',
+    record: { id: 'PGM-DEC-004', version: 'V1.0', status: 'Nachweisinventar bestätigt', author: 'Cheikh Ndiaye', date: '01.09.2026', decision: 'PGM-CON-EVD-001 V0.1 wird als gebündeltes Nachweisinventar der sechs Konzeptionskomponenten bestätigt und zu V1.0 befördert.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Fortsetzung der Sitzung vom 01.09.2026, im französischen Originalwortlaut: „Alors je le confirme deja, merci de continuer“.', limit: 'Der Entscheid bestätigt nur das dokumentarische Inventar. Er erlaubt keine externe Sammlung, interne Unterlagensuche, Öffnung eingeschränkter Dateien, realen Zugriff, Nachweisannahme, Mandatierung, Ausführungsaufgabe, Fortschrittsmessung, REF-02 oder L2.' },
+    source: 'Bestätigte Basis: PGM-CON-REV-001 V1.0, PGM-DEC-003 V1.0 und PGM-DEC-004 V1.0. Die Ablagen bezeichnen Kandidatenfamilien; sie belegen weder Vorhandensein, Vollständigkeit noch Zulässigkeit.',
     boundary: 'Nur Kandidateninventar: 18 erwartete Familien, null angenommene Nachweise, null geöffnete Sammlung, null mandatierte Verantwortungen und kein berechneter Fortschritt.',
-    next: 'Nächster gebündelter Entscheid',
-    confirmation: 'PGM-CON-EVD-001 V0.1 als Kandidateninventar bestätigen oder ändern. Auch eine Bestätigung erlaubt noch keine Suche, keinen Unterlagenzugriff und keine Ausführung.'
+    next: 'Nächstes Kandidatentor',
+    confirmation: 'Die Vorbereitung von PGM-CON-COL-001 V0.1 als begrenzten internen Dokumentensuchplan erlauben oder ablehnen, ohne die Suche zu starten, Unterlagen zu öffnen oder Nachweise anzunehmen.'
   }
 };
 
