@@ -22,8 +22,8 @@ const COPY = {
     recordLabels: { eyebrow: 'Trace de décision gouvernée', author: 'Auteur de la décision', date: 'Date de décision', decision: 'Décision consignée', evidence: 'Preuve de traçabilité', limit: 'Portée et réserve' },
     record: { id: 'PGM-DEC-002', version: 'V1.0', status: 'Matrice Conception confirmée', author: 'Cheikh Ndiaye', date: '01-09-2026', decision: 'PGM-CON-REV-001 V0.1 est confirmé sans exception, correction de preuve ni changement de responsable et promu en V1.0 comme cadre de revue des six composantes de Conception.', evidence: 'Confirmation explicite de Cheikh dans la session du 01-09-2026 : « merci, je confirme PGM-CON-REV-001 V0.1, en signalant uniquement les exceptions, corrections de preuve ou changements de responsable. »', limit: 'La décision confirme le cadrage documentaire. Elle n’accepte aucune preuve candidate, ne mandate aucun responsable candidat, n’ouvre aucune tâche d’exécution, ne déclare aucune composante achevée et ne calcule aucune progression.' },
     boundary: 'Cadrage confirmé uniquement. Aucune preuve n’est acceptée, aucun responsable n’est mandaté, aucune tâche d’exécution n’est ouverte, aucune composante n’est déclarée achevée et aucun pourcentage n’est calculé.',
-    next: 'Prochaine porte candidate',
-    confirmation: 'Autoriser ou non la préparation de PGM-CON-EVD-001 V0.1 comme inventaire probatoire groupé des six composantes, sans collecte externe, accès réel ni exécution.'
+    next: 'Porte franchie · PGM-DEC-003 V1.0',
+    confirmation: 'La préparation de PGM-CON-EVD-001 V0.1 est autorisée dans ses limites documentaires. L’inventaire candidat est présenté ci-dessous, sans collecte externe, accès réel ni exécution.'
   },
   EN: {
     eyebrow: 'CONFIRMED GROUPED MATRIX · PGM-CON-REV-001 · V1.0 · 1 SEP 2026',
@@ -44,8 +44,8 @@ const COPY = {
     recordLabels: { eyebrow: 'Governed decision record', author: 'Decision author', date: 'Decision date', decision: 'Recorded decision', evidence: 'Traceability evidence', limit: 'Scope and reservation' },
     record: { id: 'PGM-DEC-002', version: 'V1.0', status: 'Design matrix confirmed', author: 'Cheikh Ndiaye', date: '1 Sep 2026', decision: 'PGM-CON-REV-001 V0.1 is confirmed with no exception, evidence correction or owner change and promoted to V1.0 as the review framework for the six Design components.', evidence: 'Cheikh’s explicit confirmation in the 1 Sep 2026 session, retained in French: “merci, je confirme PGM-CON-REV-001 V0.1, en signalant uniquement les exceptions, corrections de preuve ou changements de responsable.”', limit: 'The decision confirms the documentary framing. It accepts no candidate evidence, mandates no candidate owner, opens no execution task, declares no component complete and calculates no progress.' },
     boundary: 'Confirmed framing only. No evidence is accepted, no owner mandated, no execution task opened, no component declared complete and no percentage calculated.',
-    next: 'Next candidate gate',
-    confirmation: 'Authorise or decline preparation of PGM-CON-EVD-001 V0.1 as the grouped evidence inventory for all six components, without external collection, real access or execution.'
+    next: 'Gate passed · PGM-DEC-003 V1.0',
+    confirmation: 'Preparation of PGM-CON-EVD-001 V0.1 is authorised within its documentary limits. The candidate inventory is shown below, without external collection, real access or execution.'
   },
   DE: {
     eyebrow: 'BESTÄTIGTE GEBÜNDELTE MATRIX · PGM-CON-REV-001 · V1.0 · 01.09.2026',
@@ -66,8 +66,8 @@ const COPY = {
     recordLabels: { eyebrow: 'Governance-konformer Entscheidnachweis', author: 'Entscheidautor', date: 'Entscheiddatum', decision: 'Erfasster Entscheid', evidence: 'Nachweis der Rückverfolgbarkeit', limit: 'Umfang und Vorbehalt' },
     record: { id: 'PGM-DEC-002', version: 'V1.0', status: 'Konzeptionsmatrix bestätigt', author: 'Cheikh Ndiaye', date: '01.09.2026', decision: 'PGM-CON-REV-001 V0.1 wird ohne Ausnahme, Nachweiskorrektur oder Verantwortungsänderung bestätigt und als Prüfrahmen der sechs Konzeptionskomponenten zu V1.0 befördert.', evidence: 'Ausdrückliche Bestätigung von Cheikh in der Sitzung vom 01.09.2026, im französischen Originalwortlaut: „merci, je confirme PGM-CON-REV-001 V0.1, en signalant uniquement les exceptions, corrections de preuve ou changements de responsable.“', limit: 'Der Entscheid bestätigt den dokumentarischen Rahmen. Er nimmt keinen Kandidatennachweis an, mandatiert keine Kandidatenverantwortung, öffnet keine Ausführungsaufgabe, erklärt keine Komponente als abgeschlossen und berechnet keinen Fortschritt.' },
     boundary: 'Nur der Rahmen ist bestätigt. Kein Nachweis ist angenommen, keine Verantwortung mandatiert, keine Ausführungsaufgabe geöffnet, keine Komponente als abgeschlossen erklärt und kein Prozentsatz berechnet.',
-    next: 'Nächstes Kandidatentor',
-    confirmation: 'Die Vorbereitung von PGM-CON-EVD-001 V0.1 als gebündeltes Nachweisinventar der sechs Komponenten erlauben oder ablehnen, ohne externe Sammlung, realen Zugriff oder Ausführung.'
+    next: 'Tor passiert · PGM-DEC-003 V1.0',
+    confirmation: 'Die Vorbereitung von PGM-CON-EVD-001 V0.1 ist innerhalb ihrer dokumentarischen Grenzen erlaubt. Das Kandidateninventar folgt unten, ohne externe Sammlung, realen Zugriff oder Ausführung.'
   }
 };
 
