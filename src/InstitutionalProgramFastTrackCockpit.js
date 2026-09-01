@@ -3,51 +3,51 @@ import { AlertTriangle, CheckCircle2, Gauge, Layers3, LockKeyhole, Route } from 
 
 const COPY = {
   FR: {
-    eyebrow: 'COCKPIT GLOBAL CANDIDAT · PGM-CPK-001 · V0.5 · 02-09-2026',
+    eyebrow: 'COCKPIT GLOBAL CANDIDAT · PGM-CPK-001 · V0.6 · 02-09-2026',
     title: 'Voir le Programme dans son ensemble sans masquer les preuves manquantes',
     intro: 'Cette vue compacte sépare la structure institutionnelle, l’avancement documentaire observé et la décision technique courante. Elle ne calcule aucun pourcentage sans périmètre cible et preuves gouvernées.',
     stages: [
-      ['Conception', 'Relevé confirmé', 'Contrôle post-correction candidat · 0 preuve'],
+      ['Conception', 'Contrôle post-correction confirmé', 'Matrice d’admissibilité candidate · 0 preuve'],
       ['Mise en place', '7/7 composantes publiées', 'Mesure opérationnelle indisponible'],
       ['Consolidation', '8/8 cadres confirmés', 'REF-01 sous veille probatoire'],
       ['Dynamisation', '8 composantes cadrées', 'Revue détaillée non démarrée']
     ],
-    current: 'Conception · relevé confirmé · PGM-DEC-012 V1.0',
-    metrics: [['2/2', 'corrections confirmées'], ['2/2', 'écarts techniques levés'], ['0/8', 'référence acceptée comme preuve'], ['0', 'progression calculée']],
+    current: 'Conception · contrôle post-correction confirmé · PGM-DEC-013 V1.0',
+    metrics: [['8/8', 'références reprises'], ['5', 'portes documentaires'], ['0/8', 'décision d’admissibilité'], ['0', 'progression calculée']],
     fastTrack: 'Fast Track actif',
-    fastTrackBody: 'PGM-DEC-012 confirme PGM-CON-COR-002 V1.0. Le contrôle post-correction PGM-CON-REV-003 V0.1 qualifie les deux écarts comme techniquement levés, tout en maintenant 0/8 référence acceptée comme preuve.',
+    fastTrackBody: 'PGM-DEC-013 confirme PGM-CON-REV-003 V1.0. PGM-CON-EVD-002 V0.1 prépare huit arbitrages au moyen de cinq portes documentaires, tout en maintenant 0/8 décision d’admissibilité et zéro preuve acceptée.',
     boundary: 'CON-01 et CON-05 restent non ouverts ; REF-02 et L2 restent fermés. Zéro preuve acceptée, requalification ou progression.'
   },
   EN: {
-    eyebrow: 'CANDIDATE GLOBAL COCKPIT · PGM-CPK-001 · V0.5 · 2 SEP 2026',
+    eyebrow: 'CANDIDATE GLOBAL COCKPIT · PGM-CPK-001 · V0.6 · 2 SEP 2026',
     title: 'See the Programme as a whole without hiding missing evidence',
     intro: 'This compact view separates the institutional structure, observed documentary progress and the current technical decision. It calculates no percentage without a target scope and governed evidence.',
     stages: [
-      ['Design', 'Execution record confirmed', 'Candidate post-correction review · zero evidence'],
+      ['Design', 'Post-correction review confirmed', 'Candidate admissibility matrix · zero evidence'],
       ['Implementation', '7/7 components published', 'Operational measurement unavailable'],
       ['Consolidation', '8/8 frameworks confirmed', 'REF-01 under evidentiary watch'],
       ['Dynamisation', '8 framed components', 'Detailed review not started']
     ],
-    current: 'Design · execution record confirmed · PGM-DEC-012 V1.0',
-    metrics: [['2/2', 'corrections confirmed'], ['2/2', 'technical gaps resolved'], ['0/8', 'references accepted as evidence'], ['0', 'calculated progress']],
+    current: 'Design · post-correction review confirmed · PGM-DEC-013 V1.0',
+    metrics: [['8/8', 'references included'], ['5', 'documentary gates'], ['0/8', 'admissibility decisions'], ['0', 'calculated progress']],
     fastTrack: 'Fast Track active',
-    fastTrackBody: 'PGM-DEC-012 confirms PGM-CON-COR-002 V1.0. Candidate post-correction review PGM-CON-REV-003 V0.1 qualifies both gaps as technically resolved while keeping 0/8 references accepted as evidence.',
+    fastTrackBody: 'PGM-DEC-013 confirms PGM-CON-REV-003 V1.0. PGM-CON-EVD-002 V0.1 prepares eight decisions through five documentary gates while keeping 0/8 admissibility decisions and zero evidence accepted.',
     boundary: 'CON-01 and CON-05 remain unopened; REF-02 and L2 remain closed. Zero evidence accepted, requalification or progress.'
   },
   DE: {
-    eyebrow: 'KANDIDAT FÜR DAS GESAMTCOCKPIT · PGM-CPK-001 · V0.5 · 02.09.2026',
+    eyebrow: 'KANDIDAT FÜR DAS GESAMTCOCKPIT · PGM-CPK-001 · V0.6 · 02.09.2026',
     title: 'Das Programm als Ganzes sehen, ohne fehlende Nachweise zu verbergen',
     intro: 'Diese kompakte Ansicht trennt institutionelle Struktur, beobachteten Dokumentationsstand und aktuellen technischen Entscheid. Ohne Zielumfang und gesteuerte Nachweise wird kein Prozentsatz berechnet.',
     stages: [
-      ['Konzeption', 'Ausführungsprotokoll bestätigt', 'Kandidat für Nachkorrekturprüfung · null Nachweise'],
+      ['Konzeption', 'Nachkorrekturprüfung bestätigt', 'Kandidat für Zulässigkeitsmatrix · null Nachweise'],
       ['Umsetzung', '7/7 Komponenten veröffentlicht', 'Operative Messung nicht verfügbar'],
       ['Konsolidierung', '8/8 Rahmen bestätigt', 'REF-01 unter beweisbezogener Beobachtung'],
       ['Dynamisierung', '8 strukturierte Komponenten', 'Detailprüfung nicht begonnen']
     ],
-    current: 'Konzeption · Ausführungsprotokoll bestätigt · PGM-DEC-012 V1.0',
-    metrics: [['2/2', 'Korrekturen bestätigt'], ['2/2', 'technische Lücken behoben'], ['0/8', 'Referenzen als Nachweis angenommen'], ['0', 'berechneter Fortschritt']],
+    current: 'Konzeption · Nachkorrekturprüfung bestätigt · PGM-DEC-013 V1.0',
+    metrics: [['8/8', 'Referenzen übernommen'], ['5', 'Dokumenten-Tore'], ['0/8', 'Zulässigkeitsentscheide'], ['0', 'berechneter Fortschritt']],
     fastTrack: 'Fast Track aktiv',
-    fastTrackBody: 'PGM-DEC-012 bestätigt PGM-CON-COR-002 V1.0. Der Kandidat PGM-CON-REV-003 V0.1 qualifiziert beide Lücken als technisch behoben und behält 0/8 als Nachweise angenommene Referenzen bei.',
+    fastTrackBody: 'PGM-DEC-013 bestätigt PGM-CON-REV-003 V1.0. PGM-CON-EVD-002 V0.1 bereitet acht Entscheide mit fünf Dokumenten-Toren vor und behält 0/8 Zulässigkeitsentscheide sowie null angenommene Nachweise bei.',
     boundary: 'CON-01 und CON-05 bleiben ungeöffnet; REF-02 und L2 bleiben geschlossen. Null angenommene Nachweise, Neueinstufung oder Fortschritt.'
   }
 };
