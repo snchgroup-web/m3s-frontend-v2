@@ -3,51 +3,51 @@ import { AlertTriangle, CheckCircle2, Gauge, Layers3, LockKeyhole, Route } from 
 
 const COPY = {
   FR: {
-    eyebrow: 'COCKPIT GLOBAL CANDIDAT · PGM-CPK-001 · V0.7 · 02-09-2026',
+    eyebrow: 'COCKPIT GLOBAL CANDIDAT · PGM-CPK-001 · V0.8 · 02-09-2026',
     title: 'Voir le Programme dans son ensemble sans masquer les preuves manquantes',
     intro: 'Cette vue compacte sépare la structure institutionnelle, l’avancement documentaire observé et la décision technique courante. Elle ne calcule aucun pourcentage sans périmètre cible et preuves gouvernées.',
     stages: [
-      ['Conception', 'Matrice d’admissibilité confirmée', 'Arbitrage groupé candidat · 0 preuve'],
+      ['Conception', 'Arbitrage groupé confirmé', 'Paquet décisionnel individuel candidat · 0 preuve'],
       ['Mise en place', '7/7 composantes publiées', 'Mesure opérationnelle indisponible'],
       ['Consolidation', '8/8 cadres confirmés', 'REF-01 sous veille probatoire'],
       ['Dynamisation', '8 composantes cadrées', 'Revue détaillée non démarrée']
     ],
-    current: 'Conception · matrice d’admissibilité confirmée · PGM-DEC-014 V1.0',
-    metrics: [['8/8', 'références positionnées'], ['4', 'voies candidates'], ['0/8', 'admissibilité prononcée'], ['0', 'progression calculée']],
+    current: 'Conception · arbitrage groupé confirmé · PGM-DEC-015 V1.0',
+    metrics: [['8', 'décisions candidates'], ['3', 'admissions limitées proposées'], ['5', 'ajournements proposés'], ['0/8', 'décision prononcée']],
     fastTrack: 'Fast Track actif',
-    fastTrackBody: 'PGM-DEC-014 confirme PGM-CON-EVD-002 V1.0 et ses cinq portes. PGM-CON-ARB-001 V0.1 positionne les huit références dans quatre voies candidates, sans prononcer leur admissibilité ni accepter une preuve.',
+    fastTrackBody: 'PGM-DEC-015 confirme PGM-CON-ARB-001 V1.0 et ses quatre voies. PGM-CON-DEC-001 V0.1 prépare huit propositions individuelles, soit trois admissions limitées et cinq ajournements, sans décision prononcée ni preuve acceptée.',
     boundary: 'CON-01 et CON-05 restent non ouverts ; REF-02 et L2 restent fermés. Zéro preuve acceptée, requalification ou progression.'
   },
   EN: {
-    eyebrow: 'CANDIDATE GLOBAL COCKPIT · PGM-CPK-001 · V0.7 · 2 SEP 2026',
+    eyebrow: 'CANDIDATE GLOBAL COCKPIT · PGM-CPK-001 · V0.8 · 2 SEP 2026',
     title: 'See the Programme as a whole without hiding missing evidence',
     intro: 'This compact view separates the institutional structure, observed documentary progress and the current technical decision. It calculates no percentage without a target scope and governed evidence.',
     stages: [
-      ['Design', 'Admissibility matrix confirmed', 'Candidate grouped arbitration · zero evidence'],
+      ['Design', 'Grouped arbitration confirmed', 'Candidate individual decision package · zero evidence'],
       ['Implementation', '7/7 components published', 'Operational measurement unavailable'],
       ['Consolidation', '8/8 frameworks confirmed', 'REF-01 under evidentiary watch'],
       ['Dynamisation', '8 framed components', 'Detailed review not started']
     ],
-    current: 'Design · admissibility matrix confirmed · PGM-DEC-014 V1.0',
-    metrics: [['8/8', 'references positioned'], ['4', 'candidate lanes'], ['0/8', 'admissibility pronounced'], ['0', 'calculated progress']],
+    current: 'Design · grouped arbitration confirmed · PGM-DEC-015 V1.0',
+    metrics: [['8', 'candidate decisions'], ['3', 'limited admissions proposed'], ['5', 'deferrals proposed'], ['0/8', 'decisions pronounced']],
     fastTrack: 'Fast Track active',
-    fastTrackBody: 'PGM-DEC-014 confirms PGM-CON-EVD-002 V1.0 and its five gates. PGM-CON-ARB-001 V0.1 positions the eight references in four candidate lanes without pronouncing admissibility or accepting evidence.',
+    fastTrackBody: 'PGM-DEC-015 confirms PGM-CON-ARB-001 V1.0 and its four lanes. PGM-CON-DEC-001 V0.1 prepares eight individual proposals, comprising three limited admissions and five deferrals, without a pronounced decision or accepted evidence.',
     boundary: 'CON-01 and CON-05 remain unopened; REF-02 and L2 remain closed. Zero evidence accepted, requalification or progress.'
   },
   DE: {
-    eyebrow: 'KANDIDAT FÜR DAS GESAMTCOCKPIT · PGM-CPK-001 · V0.7 · 02.09.2026',
+    eyebrow: 'KANDIDAT FÜR DAS GESAMTCOCKPIT · PGM-CPK-001 · V0.8 · 02.09.2026',
     title: 'Das Programm als Ganzes sehen, ohne fehlende Nachweise zu verbergen',
     intro: 'Diese kompakte Ansicht trennt institutionelle Struktur, beobachteten Dokumentationsstand und aktuellen technischen Entscheid. Ohne Zielumfang und gesteuerte Nachweise wird kein Prozentsatz berechnet.',
     stages: [
-      ['Konzeption', 'Zulässigkeitsmatrix bestätigt', 'Kandidat für gebündelte Arbitrierung · null Nachweise'],
+      ['Konzeption', 'Gebündelte Arbitrierung bestätigt', 'Kandidat für individuelles Entscheidungspaket · null Nachweise'],
       ['Umsetzung', '7/7 Komponenten veröffentlicht', 'Operative Messung nicht verfügbar'],
       ['Konsolidierung', '8/8 Rahmen bestätigt', 'REF-01 unter beweisbezogener Beobachtung'],
       ['Dynamisierung', '8 strukturierte Komponenten', 'Detailprüfung nicht begonnen']
     ],
-    current: 'Konzeption · Zulässigkeitsmatrix bestätigt · PGM-DEC-014 V1.0',
-    metrics: [['8/8', 'Referenzen eingeordnet'], ['4', 'Kandidatenwege'], ['0/8', 'Zulässigkeit ausgesprochen'], ['0', 'berechneter Fortschritt']],
+    current: 'Konzeption · gebündelte Arbitrierung bestätigt · PGM-DEC-015 V1.0',
+    metrics: [['8', 'Entscheidungskandidaten'], ['3', 'begrenzte Zulassungen vorgeschlagen'], ['5', 'Vertagungen vorgeschlagen'], ['0/8', 'Entscheide ausgesprochen']],
     fastTrack: 'Fast Track aktiv',
-    fastTrackBody: 'PGM-DEC-014 bestätigt PGM-CON-EVD-002 V1.0 und seine fünf Tore. PGM-CON-ARB-001 V0.1 ordnet die acht Referenzen vier Kandidatenwegen zu, ohne Zulässigkeit auszusprechen oder Nachweise anzunehmen.',
+    fastTrackBody: 'PGM-DEC-015 bestätigt PGM-CON-ARB-001 V1.0 und seine vier Wege. PGM-CON-DEC-001 V0.1 bereitet acht Einzelvorschläge vor, bestehend aus drei begrenzten Zulassungen und fünf Vertagungen, ohne ausgesprochenen Entscheid oder angenommenen Nachweis.',
     boundary: 'CON-01 und CON-05 bleiben ungeöffnet; REF-02 und L2 bleiben geschlossen. Null angenommene Nachweise, Neueinstufung oder Fortschritt.'
   }
 };

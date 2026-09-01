@@ -28,6 +28,7 @@ import InstitutionalProgramDesignGapCorrectionResult from './InstitutionalProgra
 import InstitutionalProgramDesignPostCorrectionReview from './InstitutionalProgramDesignPostCorrectionReview';
 import InstitutionalProgramDesignEvidenceAdmissibilityMatrix from './InstitutionalProgramDesignEvidenceAdmissibilityMatrix';
 import InstitutionalProgramDesignEvidenceAdmissibilityArbitration from './InstitutionalProgramDesignEvidenceAdmissibilityArbitration';
+import InstitutionalProgramDesignEvidenceDecisionPackage from './InstitutionalProgramDesignEvidenceDecisionPackage';
 import InstitutionalFastTrackGovernance from './InstitutionalFastTrackGovernance';
 import InstitutionalPeopleTeamsGateG1FastTrackQualification from './InstitutionalPeopleTeamsGateG1FastTrackQualification';
 import InstitutionalPeopleTeamsFastTrackExceptionArbitration from './InstitutionalPeopleTeamsFastTrackExceptionArbitration';
@@ -242,6 +243,7 @@ const InstitutionalProgramOverview = ({ language = 'FR', focus = '', returnTo = 
       <InstitutionalProgramDesignPostCorrectionReview language={language} />
       <InstitutionalProgramDesignEvidenceAdmissibilityMatrix language={language} />
       <InstitutionalProgramDesignEvidenceAdmissibilityArbitration language={language} />
+      <InstitutionalProgramDesignEvidenceDecisionPackage language={language} />
       <InstitutionalFastTrackGovernance language={language} />
       <InstitutionalPeopleTeamsGateG1FastTrackQualification language={language} />
       <InstitutionalPeopleTeamsFastTrackExceptionArbitration language={language} />
