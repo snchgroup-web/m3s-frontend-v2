@@ -3,51 +3,51 @@ import { AlertTriangle, CheckCircle2, Gauge, Layers3, LockKeyhole, Route } from 
 
 const COPY = {
   FR: {
-    eyebrow: 'COCKPIT GLOBAL CANDIDAT · PGM-CPK-001 · V0.8 · 02-09-2026',
+    eyebrow: 'COCKPIT GLOBAL CANDIDAT · PGM-CPK-001 · V0.9 · 02-09-2026',
     title: 'Voir le Programme dans son ensemble sans masquer les preuves manquantes',
     intro: 'Cette vue compacte sépare la structure institutionnelle, l’avancement documentaire observé et la décision technique courante. Elle ne calcule aucun pourcentage sans périmètre cible et preuves gouvernées.',
     stages: [
-      ['Conception', 'Arbitrage groupé confirmé', 'Paquet décisionnel individuel candidat · 0 preuve'],
+      ['Conception', '8/8 décisions documentaires prononcées', '3 usages limités · 5 ajournements · 0 preuve de réalisation'],
       ['Mise en place', '7/7 composantes publiées', 'Mesure opérationnelle indisponible'],
       ['Consolidation', '8/8 cadres confirmés', 'REF-01 sous veille probatoire'],
       ['Dynamisation', '8 composantes cadrées', 'Revue détaillée non démarrée']
     ],
-    current: 'Conception · arbitrage groupé confirmé · PGM-DEC-015 V1.0',
-    metrics: [['8', 'décisions candidates'], ['3', 'admissions limitées proposées'], ['5', 'ajournements proposés'], ['0/8', 'décision prononcée']],
+    current: 'Conception · décisions prononcées · PGM-DEC-017 V1.0',
+    metrics: [['8/8', 'décisions documentaires prononcées'], ['3', 'admissions à usage limité'], ['5', 'références ajournées'], ['0', 'preuves de réalisation acceptées']],
     fastTrack: 'Fast Track actif',
-    fastTrackBody: 'PGM-DEC-015 confirme PGM-CON-ARB-001 V1.0 et ses quatre voies. PGM-CON-DEC-001 V0.1 prépare huit propositions individuelles, soit trois admissions limitées et cinq ajournements, sans décision prononcée ni preuve acceptée.',
+    fastTrackBody: 'PGM-DEC-016 confirme le paquet PGM-CON-DEC-001 V1.0 ; PGM-DEC-017 prononce les huit décisions. SRC-02 est limitée au cadrage, SRC-04 à la méthode et SRC-07 au support visuel. Les cinq autres références restent ajournées selon leurs conditions. Aucune reconfirmation de ce lot n’est attendue.',
     boundary: 'CON-01 et CON-05 restent non ouverts ; REF-02 et L2 restent fermés. Zéro preuve acceptée, requalification ou progression.'
   },
   EN: {
-    eyebrow: 'CANDIDATE GLOBAL COCKPIT · PGM-CPK-001 · V0.8 · 2 SEP 2026',
+    eyebrow: 'CANDIDATE GLOBAL COCKPIT · PGM-CPK-001 · V0.9 · 2 SEP 2026',
     title: 'See the Programme as a whole without hiding missing evidence',
     intro: 'This compact view separates the institutional structure, observed documentary progress and the current technical decision. It calculates no percentage without a target scope and governed evidence.',
     stages: [
-      ['Design', 'Grouped arbitration confirmed', 'Candidate individual decision package · zero evidence'],
+      ['Design', '8/8 documentary decisions pronounced', '3 limited uses · 5 deferrals · zero achievement evidence'],
       ['Implementation', '7/7 components published', 'Operational measurement unavailable'],
       ['Consolidation', '8/8 frameworks confirmed', 'REF-01 under evidentiary watch'],
       ['Dynamisation', '8 framed components', 'Detailed review not started']
     ],
-    current: 'Design · grouped arbitration confirmed · PGM-DEC-015 V1.0',
-    metrics: [['8', 'candidate decisions'], ['3', 'limited admissions proposed'], ['5', 'deferrals proposed'], ['0/8', 'decisions pronounced']],
+    current: 'Design · decisions pronounced · PGM-DEC-017 V1.0',
+    metrics: [['8/8', 'documentary decisions pronounced'], ['3', 'limited-use admissions'], ['5', 'references deferred'], ['0', 'achievement evidence accepted']],
     fastTrack: 'Fast Track active',
-    fastTrackBody: 'PGM-DEC-015 confirms PGM-CON-ARB-001 V1.0 and its four lanes. PGM-CON-DEC-001 V0.1 prepares eight individual proposals, comprising three limited admissions and five deferrals, without a pronounced decision or accepted evidence.',
+    fastTrackBody: 'PGM-DEC-016 confirms package PGM-CON-DEC-001 V1.0; PGM-DEC-017 pronounces all eight decisions. SRC-02 is limited to framing, SRC-04 to method and SRC-07 to visual support. The other five references remain deferred under their conditions. No reconfirmation of this batch is expected.',
     boundary: 'CON-01 and CON-05 remain unopened; REF-02 and L2 remain closed. Zero evidence accepted, requalification or progress.'
   },
   DE: {
-    eyebrow: 'KANDIDAT FÜR DAS GESAMTCOCKPIT · PGM-CPK-001 · V0.8 · 02.09.2026',
+    eyebrow: 'KANDIDAT FÜR DAS GESAMTCOCKPIT · PGM-CPK-001 · V0.9 · 02.09.2026',
     title: 'Das Programm als Ganzes sehen, ohne fehlende Nachweise zu verbergen',
     intro: 'Diese kompakte Ansicht trennt institutionelle Struktur, beobachteten Dokumentationsstand und aktuellen technischen Entscheid. Ohne Zielumfang und gesteuerte Nachweise wird kein Prozentsatz berechnet.',
     stages: [
-      ['Konzeption', 'Gebündelte Arbitrierung bestätigt', 'Kandidat für individuelles Entscheidungspaket · null Nachweise'],
+      ['Konzeption', '8/8 Dokumentenentscheide ausgesprochen', '3 begrenzte Nutzungen · 5 Vertagungen · null Umsetzungsnachweise'],
       ['Umsetzung', '7/7 Komponenten veröffentlicht', 'Operative Messung nicht verfügbar'],
       ['Konsolidierung', '8/8 Rahmen bestätigt', 'REF-01 unter beweisbezogener Beobachtung'],
       ['Dynamisierung', '8 strukturierte Komponenten', 'Detailprüfung nicht begonnen']
     ],
-    current: 'Konzeption · gebündelte Arbitrierung bestätigt · PGM-DEC-015 V1.0',
-    metrics: [['8', 'Entscheidungskandidaten'], ['3', 'begrenzte Zulassungen vorgeschlagen'], ['5', 'Vertagungen vorgeschlagen'], ['0/8', 'Entscheide ausgesprochen']],
+    current: 'Konzeption · Entscheide ausgesprochen · PGM-DEC-017 V1.0',
+    metrics: [['8/8', 'Dokumentenentscheide ausgesprochen'], ['3', 'begrenzte Zulassungen'], ['5', 'Referenzen vertagt'], ['0', 'Umsetzungsnachweise angenommen']],
     fastTrack: 'Fast Track aktiv',
-    fastTrackBody: 'PGM-DEC-015 bestätigt PGM-CON-ARB-001 V1.0 und seine vier Wege. PGM-CON-DEC-001 V0.1 bereitet acht Einzelvorschläge vor, bestehend aus drei begrenzten Zulassungen und fünf Vertagungen, ohne ausgesprochenen Entscheid oder angenommenen Nachweis.',
+    fastTrackBody: 'PGM-DEC-016 bestätigt das Paket PGM-CON-DEC-001 V1.0; PGM-DEC-017 spricht alle acht Entscheide aus. SRC-02 bleibt auf den Rahmen, SRC-04 auf die Methode und SRC-07 auf visuelle Unterstützung begrenzt. Die anderen fünf Referenzen bleiben unter ihren Bedingungen vertagt. Keine erneute Bestätigung dieses Satzes ist vorgesehen.',
     boundary: 'CON-01 und CON-05 bleiben ungeöffnet; REF-02 und L2 bleiben geschlossen. Null angenommene Nachweise, Neueinstufung oder Fortschritt.'
   }
 };

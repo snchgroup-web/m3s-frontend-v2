@@ -69,6 +69,8 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(screen.getByRole('heading', { name: 'PGM-DEC-013 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'PGM-DEC-014 · V1.0' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'PGM-DEC-015 · V1.0' })).toBeInTheDocument();
+  expect(screen.getByText('PGM-DEC-016 · V1.0')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'PGM-DEC-017 · V1.0' })).toBeInTheDocument();
   expect(screen.getAllByTestId('institutional-program-design-controlled-reference')).toHaveLength(8);
   expect(screen.getByTestId('institutional-program-design-gap-correction-plan')).toBeInTheDocument();
   expect(screen.getAllByTestId('institutional-program-design-gap-package')).toHaveLength(2);
@@ -84,6 +86,10 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(screen.getAllByTestId('institutional-program-design-evidence-arbitration-reference')).toHaveLength(8);
   expect(screen.getByTestId('institutional-program-design-evidence-decision-package')).toBeInTheDocument();
   expect(screen.getAllByTestId('institutional-program-design-evidence-decision-row')).toHaveLength(8);
+  const decisions = screen.getByTestId('institutional-program-design-evidence-decision-package');
+  expect(within(decisions).getByText('8/8')).toBeInTheDocument();
+  expect(within(decisions).getAllByText('PRONONCÉE')).toHaveLength(8);
+  expect(within(screen.getByTestId('institutional-fast-track-cockpit')).getByText('8/8')).toBeInTheDocument();
   expect(screen.getByText(/Aucun pourcentage n’est affiché/)).toBeInTheDocument();
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });
