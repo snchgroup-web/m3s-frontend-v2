@@ -12,6 +12,7 @@ test('frames the French reporting cycle and identifies the provisional pilot rev
   expect(screen.getByText('Rapport d’activité')).toBeInTheDocument();
   expect(screen.getByText(/REVUE PILOTE DISPONIBLE/)).toBeInTheDocument();
   expect(screen.getByText(/ne devient une source institutionnelle qu’après validation/i)).toBeInTheDocument();
+  fireEvent.change(screen.getByRole('combobox', { name: 'Période de la revue' }), { target: { value: '2026-W33' } });
   expect(screen.getByRole('heading', { name: 'Revue hebdomadaire du 10 au 15 août 2026' })).toBeInTheDocument();
   expect(screen.getByText('3 journaux disponibles · 3 journées sans journal')).toBeInTheDocument();
   expect(screen.getByText(/n’est pas assimilée à une absence de travail/i)).toBeInTheDocument();
@@ -33,9 +34,9 @@ test('renders the German responsibilities and documentary caution', () => {
   expect(screen.getByRole('heading', { name: 'Gesteuerter Tätigkeitsberichtszyklus' })).toBeInTheDocument();
   expect(screen.getByText('Wer macht was?')).toBeInTheDocument();
   expect(screen.getByText(/Keine Kennzahl, keinen Fortschrittsgrad/i)).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Wochenrückblick vom 10. bis 15. August 2026' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Wochenrückblick vom 24. bis 30. August 2026' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Vorgeschlagener Dokumentenprozess' })).toBeInTheDocument();
-  expect(screen.getByText('Ablage nach Genehmigung anzulegen')).toBeInTheDocument();
+  expect(screen.getByText('Nicht angelegt · nach Genehmigung')).toBeInTheDocument();
   expect(screen.getByText(/keine institutionelle Ablage behauptet/i)).toBeInTheDocument();
 });
 
@@ -43,6 +44,6 @@ test('keeps the pilot review provisional after assigning the process owner and D
   render(<AdministrationReportingCycle language="FR" />);
 
   expect(screen.getByText('Synthèse de travail provisoire', { selector: 'dd' })).toBeInTheDocument();
-  expect(screen.getByText(/Administration est responsable du processus/i)).toBeInTheDocument();
+  expect(screen.getByText(/Administration conserve le pilotage du processus/i)).toBeInTheDocument();
   expect(screen.getByText(/Elle n’est ni signée, ni adoptée, ni archivée/i)).toBeInTheDocument();
 });
