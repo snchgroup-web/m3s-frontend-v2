@@ -46,9 +46,14 @@ jest.mock('./api', () => ({
   }
 }));
 
+const summaryResponse = (overrides = {}) => ({
+  success: true,
+  data: { total_income_count: 3, total_expense_count: 1, total_income: 600, total_income_cfa: 360000, total_expenses: 50, total_expenses_cfa: 30000, ...overrides }
+});
+
 beforeEach(() => {
   jest.clearAllMocks();
-  api.getFinanceDashboard.mockResolvedValue({ data: {} });
+  api.getFinanceDashboard.mockResolvedValue(summaryResponse());
   api.getDocumentsCount.mockResolvedValue({ total: 12 });
   api.getInventoryCount.mockResolvedValue({ total: 8 });
   api.getSuppliersCount.mockResolvedValue({ total: 79 });
@@ -94,7 +99,7 @@ beforeEach(() => {
 });
 
 test('uses summary counts, labels loaded subsets and applies the shared CFA color', async () => {
-  api.getFinanceDashboard.mockResolvedValue({ data: { total_income_count: 120, total_expense_count: 80 } });
+  api.getFinanceDashboard.mockResolvedValue(summaryResponse({ total_income_count: 120, total_expense_count: 80 }));
   render(<Dashboard />);
   await screen.findByText('Transactions : 120');
   const card = id => document.getElementById(`dashboard-kpi-${id}`);
@@ -118,6 +123,82 @@ test('does not replace missing aggregate counts with page sizes or expose reject
   expect(document.getElementById('dashboard-kpi-balance')).toHaveTextContent('Transactions : —');
   expect(document.getElementById('dashboard-kpi-social-flows')).toHaveTextContent('Loaded transactions : —');
   expect(document.getElementById('dashboard-kpi-real-estate-funding')).toHaveTextContent('Register: loaded transactions : —');
+});
+
+test.each([null, { data: {} }, { success: false, data: { total_income_count: 1, total_expense_count: 1, total_income: 900, total_expenses: 50 } }])('never substitutes a loaded page for a missing or rejected global summary: %p', async response => {
+  api.getFinanceDashboard.mockResolvedValue(response);
+  render(<Dashboard />);
+  await screen.findByText(/Some live data is temporarily unavailable/);
+  for (const id of ['revenue', 'expenses', 'balance']) {
+    const card = document.getElementById(`dashboard-kpi-${id}`);
+    expect(card).toHaveTextContent('— CHF');
+    expect(card).toHaveTextContent('Unavailable');
+    expect(card).toHaveTextContent('Transactions : —');
+  }
+  expect(document.getElementById('dashboard-kpi-donations')).toHaveTextContent('100 CHF');
+  expect(document.getElementById('dashboard-kpi-donations')).toHaveTextContent('Loaded transactions : 1');
+});
+
+test('does not display rejected immobilier payloads and keeps unrelated income data', async () => {
+  api.getFinanceDashboard.mockResolvedValue({ data: { total_income_count: 1, total_expense_count: 1, total_income: 600, total_income_cfa: 360000, total_expenses: 50, total_expenses_cfa: 30000 } });
+  api.getRealEstateFinance.mockResolvedValue({ success: false, data: [], summary: { investissements_realises_chf: 99000, remboursements_total_chf: 5000 } });
+  render(<Dashboard />);
+  await screen.findByText(/Some live data is temporarily unavailable/);
+  const card = document.getElementById('dashboard-kpi-real-estate-funding');
+  expect(card).toHaveTextContent('— CHF');
+  expect(card).toHaveTextContent('Unavailable');
+  expect(document.getElementById('dashboard-kpi-revenue')).toHaveTextContent('600 CHF');
+});
+
+test('keeps authoritative totals when only the income excerpt fails', async () => {
+  api.getIncome.mockRejectedValue(new Error('Excerpt unavailable'));
+  render(<Dashboard />);
+  await screen.findByText(/Some live data is temporarily unavailable/);
+  const revenue = document.getElementById('dashboard-kpi-revenue');
+  expect(revenue).toHaveTextContent('600 CHF');
+  expect(revenue).toHaveTextContent('Available');
+  expect(revenue).toHaveTextContent('Transactions : 3');
+  expect(document.getElementById('dashboard-kpi-donations')).toHaveTextContent('— CHF');
+});
+
+test('keeps a known CHF balance when CFA is missing without reconverting it', async () => {
+  api.getFinanceDashboard.mockResolvedValue(summaryResponse({ total_income_cfa: null }));
+  render(<Dashboard />);
+  await screen.findByText(/Some live data is temporarily unavailable/);
+  const balance = document.getElementById('dashboard-kpi-balance');
+  expect(balance).toHaveTextContent('550 CHF');
+  expect(balance).toHaveTextContent('≈ — CFA');
+});
+
+test.each([
+  ['getDocumentsCount', { total: 900 }, 'documents'],
+  ['getSuppliersCount', { total: 900 }, 'suppliers'],
+  ['getSocialFinance', { data: [], summary: { total_chf: 900, total_cfa_historique: 540000 } }, 'social-flows']
+])('rejects explicit failure from %s without masking independent sources', async (method, payload, id) => {
+  api[method].mockResolvedValue({ success: false, ...payload });
+  render(<Dashboard />);
+  await screen.findByText(/Some live data is temporarily unavailable/);
+  const card = document.getElementById(`dashboard-kpi-${id}`);
+  expect(card).toHaveTextContent('Unavailable');
+  expect(card).not.toHaveTextContent('900');
+  expect(document.getElementById('dashboard-kpi-revenue')).toHaveTextContent('600 CHF');
+});
+
+test('preserves restricted status for an explicit forbidden source result', async () => {
+  api.getRealEstateFinance.mockResolvedValue({ success: false, status: 403, data: [], summary: {} });
+  render(<Dashboard />);
+  const card = await screen.findByRole('button', { name: 'Open module: Total real estate funding' });
+  expect(card).toHaveTextContent('Restricted');
+  expect(card).toHaveTextContent('— CHF');
+});
+
+test('preserves zero-valued global totals backed by authoritative zero counts', async () => {
+  api.getFinanceDashboard.mockResolvedValue(summaryResponse({ total_income_count: 0, total_expense_count: 0, total_income: null, total_income_cfa: null, total_expenses: null, total_expenses_cfa: null }));
+  render(<Dashboard />);
+  const card = await screen.findByRole('button', { name: 'Open module: Revenue' });
+  expect(card).toHaveTextContent('0 CHF');
+  expect(card).toHaveTextContent('Transactions : 0');
+  expect(card).toHaveTextContent('Available');
 });
 
 test('shows connected KPI values and labels missing sources explicitly', async () => {
@@ -200,6 +281,7 @@ test('shows connected KPI values and labels missing sources explicitly', async (
 });
 
 test('does not turn unavailable sources into real zeroes', async () => {
+  api.getFinanceDashboard.mockResolvedValue(null);
   api.getDocumentsCount.mockResolvedValue(null);
   api.getInventoryCount.mockResolvedValue(null);
   api.getTasksCount.mockResolvedValue(null);

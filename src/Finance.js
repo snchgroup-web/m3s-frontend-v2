@@ -12,7 +12,8 @@ import FinanceGlossary from './FinanceGlossary';
 import { StandardCreateButton } from './StandardUI';
 import FinanceFunctionFrame from './FinanceFunctionFrame';
 import FinanceOverviewIndicators from './FinanceOverviewIndicators';
-import FinanceTransactionCount, { parseTransactionCount } from './FinanceTransactionCount';
+import FinanceTransactionCount from './FinanceTransactionCount';
+import { normalizeFinanceSummary } from './financeSummary';
 import FinanceArchitecture from './FinanceArchitecture';
 import FinanceProcessControls from './FinanceProcessControls';
 import ActionConfirmationDialog from './ActionConfirmationDialog';
@@ -45,34 +46,6 @@ const parseFiniteNumber = (value) => {
   return Number.isFinite(parsed) ? parsed : null;
 };
 
-const normalizeFinanceSummary = (response) => {
-  if (response?.success === false || !response?.data) return null;
-
-  const incomeCount = parseTransactionCount(response.data.total_income_count);
-  const expenseCount = parseTransactionCount(response.data.total_expense_count);
-  const rawIncome = parseFiniteNumber(response.data.total_income);
-  const rawIncomeCfa = parseFiniteNumber(response.data.total_income_cfa);
-  const rawExpenses = parseFiniteNumber(response.data.total_expenses);
-  const rawExpensesCfa = parseFiniteNumber(response.data.total_expenses_cfa);
-
-  if (incomeCount === null || expenseCount === null || incomeCount < 0 || expenseCount < 0) return null;
-
-  const totalIncome = incomeCount === 0 ? 0 : rawIncome;
-  const totalIncomeCfa = incomeCount === 0 ? 0 : rawIncomeCfa;
-  const totalExpenses = expenseCount === 0 ? 0 : rawExpenses;
-  const totalExpensesCfa = expenseCount === 0 ? 0 : rawExpensesCfa;
-  if (totalIncome === null || totalExpenses === null) return null;
-
-  return {
-    totalIncome,
-    totalIncomeCfa,
-    totalExpenses,
-    totalExpensesCfa,
-    incomeCount,
-    expenseCount,
-    timestamp: response.timestamp || null
-  };
-};
 
 const createEmptyFinanceForm = () => ({
   description: '',
