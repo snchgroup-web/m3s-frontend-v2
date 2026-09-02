@@ -36,7 +36,7 @@ jest.mock('recharts', () => ({
   YAxis: () => null
 }));
 
-jest.mock('./MembersDirectory', () => () => <div>Internal directory</div>);
+jest.mock('./MembersDirectory', () => ({ initialMemberType }) => <div data-member-type={initialMemberType || ''}>Internal directory</div>);
 
 beforeEach(() => {
   mockLocationSearch = '?tab=glossary';
@@ -44,6 +44,19 @@ beforeEach(() => {
   mockNavigate.mockReset();
   api.getMembersDirectory.mockReset();
   api.getMembersDirectory.mockResolvedValue({ data: [], total: 0 });
+});
+
+test('passes the URL member type to the directory and follows route changes', async () => {
+  mockLocationSearch = '?tab=directory&memberType=fondateur&returnTo=dashboard&dashboardKpi=founders';
+  const view = render(<RH />);
+  expect(await screen.findByText('Internal directory')).toHaveAttribute('data-member-type', 'fondateur');
+  mockLocationSearch = '?tab=directory&memberType=associe&returnTo=dashboard&dashboardKpi=associates';
+  view.rerender(<RH />);
+  expect(screen.getByText('Internal directory')).toHaveAttribute('data-member-type', 'associe');
+  mockLocationSearch = '?tab=directory';
+  view.rerender(<RH />);
+  expect(screen.getByText('Internal directory')).toHaveAttribute('data-member-type', '');
+  await waitFor(() => expect(screen.getByText('Members (0)')).toBeInTheDocument());
 });
 
 test('keeps the URL and header context aligned when selecting the RH overview', async () => {

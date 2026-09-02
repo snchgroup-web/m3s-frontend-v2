@@ -147,6 +147,10 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   expect(mockNavigate).toHaveBeenCalledWith('/administration?tab=users&returnTo=dashboard&dashboardKpi=users#administration-users-register');
   fireEvent.click(screen.getByRole('button', { name: 'Open module: Donors' }));
   expect(mockNavigate).toHaveBeenCalledWith('/crm?tab=dons&returnTo=dashboard&dashboardKpi=donors#crm-donations-register');
+  fireEvent.click(screen.getByRole('button', { name: 'Open module: Founding members' }));
+  expect(mockNavigate).toHaveBeenLastCalledWith('/rh?tab=directory&memberType=fondateur&returnTo=dashboard&dashboardKpi=founders#members-directory-register');
+  fireEvent.click(screen.getByRole('button', { name: 'Open module: Associate members' }));
+  expect(mockNavigate).toHaveBeenLastCalledWith('/rh?tab=directory&memberType=associe&returnTo=dashboard&dashboardKpi=associates#members-directory-register');
     fireEvent.click(screen.getByRole('button', { name: 'Understand this indicator: M3S users' }));
     expect(mockNavigate).toHaveBeenCalledWith('/?view=glossary&kpi=users#dashboard-kpi-definition-users');
     fireEvent.click(screen.getByRole('button', { name: 'Understand this indicator: Real estate reimbursements' }));

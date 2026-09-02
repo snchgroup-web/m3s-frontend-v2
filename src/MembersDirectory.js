@@ -105,7 +105,8 @@ const normalize = (value) => String(value || '')
   .replace(/[\u0300-\u036f]/g, '')
   .toLowerCase();
 
-const MembersDirectory = ({ onLoaded }) => {
+const MembersDirectory = ({ onLoaded, initialMemberType = '' }) => {
+  const requestedMemberType = ['fondateur', 'associe'].includes(initialMemberType) ? initialMemberType : '';
   const { language } = useLanguage();
   const t = copy[language] || copy.FR;
   const [members, setMembers] = useState([]);
@@ -114,8 +115,14 @@ const MembersDirectory = ({ onLoaded }) => {
   const [error, setError] = useState(null);
   const [query, setQuery] = useState('');
   const [team, setTeam] = useState('');
-  const [memberType, setMemberType] = useState('');
+  const [memberType, setMemberType] = useState(requestedMemberType);
   const [reloadKey, setReloadKey] = useState(0);
+
+  useEffect(() => {
+    setMemberType(requestedMemberType);
+    setQuery('');
+    setTeam('');
+  }, [requestedMemberType]);
 
   useEffect(() => {
     let cancelled = false;
@@ -196,7 +203,7 @@ const MembersDirectory = ({ onLoaded }) => {
   };
 
   return (
-    <section className="overflow-hidden rounded-lg border border-slate-700 bg-slate-800" aria-labelledby="members-directory-title">
+    <section id="members-directory-register" tabIndex="-1" className="scroll-mt-24 overflow-hidden rounded-lg border border-slate-700 bg-slate-800" aria-labelledby="members-directory-title">
       <div className="border-b border-slate-700 px-5 py-5 sm:px-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex min-w-0 gap-3">
@@ -233,6 +240,7 @@ const MembersDirectory = ({ onLoaded }) => {
               <Search className="absolute left-3 top-2.5 text-slate-400" size={18} aria-hidden="true" />
               <input
                 type="search"
+                aria-label={t.search}
                 value={query}
                 onChange={event => setQuery(event.target.value)}
                 placeholder={t.search}
@@ -244,11 +252,11 @@ const MembersDirectory = ({ onLoaded }) => {
                 </button>
               )}
             </div>
-            <select value={team} onChange={event => setTeam(event.target.value)} className="h-10 rounded-md border border-slate-600 bg-slate-900 px-3 text-sm text-white">
+            <select aria-label={t.team} value={team} onChange={event => setTeam(event.target.value)} className="h-10 rounded-md border border-slate-600 bg-slate-900 px-3 text-sm text-white">
               <option value="">{t.allTeams}</option>
               {teams.map(value => <option key={value} value={value}>{value}</option>)}
             </select>
-            <select value={memberType} onChange={event => setMemberType(event.target.value)} className="h-10 rounded-md border border-slate-600 bg-slate-900 px-3 text-sm text-white">
+            <select aria-label={t.type} value={memberType} onChange={event => setMemberType(event.target.value)} className="h-10 rounded-md border border-slate-600 bg-slate-900 px-3 text-sm text-white">
               <option value="">{t.allTypes}</option>
               <option value="fondateur">{t.founder}</option>
               <option value="associe">{t.associate}</option>
@@ -266,7 +274,7 @@ const MembersDirectory = ({ onLoaded }) => {
             <div className="border-t border-slate-700 px-6 py-12 text-center text-slate-400">{t.empty}</div>
           ) : (
             <div className="divide-y divide-slate-700 border-t border-slate-700">
-              <div className="hidden grid-cols-[minmax(13rem,1.05fr)_minmax(16rem,1.5fr)_11rem_12rem_7rem] gap-4 bg-slate-900/50 px-6 py-3 text-xs font-bold uppercase text-slate-400 lg:grid">
+              <div style={{ backgroundColor: 'var(--m3s-surface-panel)' }} className="hidden grid-cols-[minmax(13rem,1.05fr)_minmax(16rem,1.5fr)_11rem_12rem_7rem] gap-4 px-6 py-3 text-xs font-bold uppercase text-slate-400 lg:grid">
                 <span>{t.name}</span><span>{t.position}</span><span>{t.team}</span><span>{t.type}</span><span>{t.status}</span>
               </div>
               <ul className="divide-y divide-slate-700">
