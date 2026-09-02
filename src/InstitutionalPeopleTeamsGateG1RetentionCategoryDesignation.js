@@ -1,4 +1,5 @@
 import React from 'react';
+import InstitutionalPeopleTeamsHistoricalFollowUp from './InstitutionalPeopleTeamsHistoricalFollowUp';
 import { AlertTriangle, CheckCircle2, Link2, LockKeyhole, Tags } from 'lucide-react';
 
 const STATUS_STYLES = {
@@ -24,7 +25,7 @@ const COPY = {
       ['Mandats, délégations, décisions et journaux d accès', 'Utilisée directement comme preuve de gouvernance et de contrôle de REF-01. Aucune durée forfaitaire commune n est retenue.', 'Gouvernance · Administration · IT · GED', 'Séparer mandat, décision et journal technique ; fixer durée et sort final par sous-catégorie.', 'direct']
     ],
     status: 'DÉSIGNATION CONFIRMÉE · Cinq catégories retenues en V1.0. Zéro règle automatisée, suppression, archive ou opération GED.',
-    next: 'Prochain arbitrage humain : confirmer ou amender REF-01-G1-AUT-02-03-005 V0.1, qui attribue les fonctions responsables et les déclencheurs documentaires candidats.',
+    next: 'REF-01-G1-AUT-02-03-005 V1.0 est confirmé par REF-01-DEC-045 : fonctions responsables et déclencheurs documentaires retenus, sans mandat nominatif ni exécution.',
     boundary: 'Cette fiche ne contient aucune identité, pièce, référence C3/C4 réelle ni donnée salariale. Elle ne lance aucune durée et ne remplace pas la vérification d un cas particulier.'
   },
   EN: {
@@ -43,7 +44,7 @@ const COPY = {
       ['Mandates, delegations, decisions and access logs', 'Used directly as REF-01 governance and control evidence. No shared blanket period is retained.', 'Governance · Administration · IT · DMS', 'Separate mandates, decisions and technical logs; set period and final treatment by subcategory.', 'direct']
     ],
     status: 'DESIGNATION CONFIRMED · Five categories retained in V1.0. Zero automated rule, deletion, archive or DMS operation.',
-    next: 'Next human decision: confirm or amend REF-01-G1-AUT-02-03-005 V0.1, which assigns candidate responsible functions and documentary triggers.',
+    next: 'REF-01-G1-AUT-02-03-005 V1.0 is confirmed by REF-01-DEC-045: responsible functions and documentary triggers retained, without a named mandate or execution.',
     boundary: 'This file contains no identity, record, real C3/C4 reference or salary data. It starts no period and does not replace review of an individual case.'
   },
   DE: {
@@ -62,7 +63,7 @@ const COPY = {
       ['Mandate, Delegationen, Entscheide und Zugriffsprotokolle', 'Direkt als Governance- und Kontrollnachweis von REF-01 genutzt. Keine gemeinsame Pauschalfrist wird festgehalten.', 'Governance · Verwaltung · IT · DMS', 'Mandat, Entscheid und technisches Protokoll trennen; Frist und Endbehandlung je Unterkategorie festlegen.', 'direct']
     ],
     status: 'ZUORDNUNG BESTÄTIGT · Fünf Kategorien in V1.0 festgehalten. Null automatisierte Regel, Löschung, Archivierung oder DMS-Operation.',
-    next: 'Nächster menschlicher Entscheid: REF-01-G1-AUT-02-03-005 V0.1 bestätigen oder ändern; die Akte weist verantwortliche Funktionen und dokumentarische Kandidatenauslöser zu.',
+    next: 'REF-01-G1-AUT-02-03-005 V1.0 ist durch REF-01-DEC-045 bestätigt: verantwortliche Funktionen und dokumentarische Auslöser festgehalten, ohne namentliches Mandat oder Ausführung.',
     boundary: 'Diese Akte enthält keine Identität, Unterlage, reale C3/C4-Referenz oder Lohndaten. Sie startet keine Frist und ersetzt keine Prüfung des Einzelfalls.'
   }
 };
@@ -77,7 +78,7 @@ const InstitutionalPeopleTeamsGateG1RetentionCategoryDesignation = ({ language =
         <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">{t.rows.map(([category, designation, owner, trigger, status]) => <section key={category} data-testid="ref01-g1-retention-category-row" className="rounded-md border border-slate-700 bg-slate-950/20 p-3"><div className="flex flex-wrap items-start justify-between gap-2"><h6 className="text-xs font-semibold text-slate-100">{category}</h6><span className={`rounded-md border px-2 py-1 text-[10px] font-semibold ${STATUS_STYLES[status]}`}>{t.statuses[status]}</span></div><dl className="mt-3 space-y-2 text-xs leading-5"><div><dt className="font-semibold text-emerald-200">{t.labels.designation}</dt><dd className="mt-0.5 text-slate-300">{designation}</dd></div><div><dt className="font-semibold text-sky-200">{t.labels.owner}</dt><dd className="mt-0.5 text-slate-300">{owner}</dd></div><div><dt className="font-semibold text-violet-200">{t.labels.trigger}</dt><dd className="mt-0.5 text-slate-300">{trigger}</dd></div></dl></section>)}</div>
       </article>
       <p className="mt-4 rounded-md border border-emerald-700/70 bg-emerald-950/20 p-3 text-xs font-semibold leading-5 text-emerald-100">{t.status}</p>
-      <p className="mt-3 text-xs font-semibold leading-5 text-violet-200">{t.next}</p>
+      <InstitutionalPeopleTeamsHistoricalFollowUp language={language}>{t.next}</InstitutionalPeopleTeamsHistoricalFollowUp>
       <p className="mt-3 flex items-start gap-2 text-xs font-semibold leading-5 text-amber-200"><LockKeyhole className="mt-0.5 shrink-0" size={15} aria-hidden="true" />{t.boundary}</p>
     </section>
   );

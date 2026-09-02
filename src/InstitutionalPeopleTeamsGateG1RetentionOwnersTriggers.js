@@ -1,4 +1,5 @@
 import React from 'react';
+import InstitutionalPeopleTeamsHistoricalFollowUp from './InstitutionalPeopleTeamsHistoricalFollowUp';
 import { AlertTriangle, CalendarClock, LockKeyhole, ShieldCheck, UserCog } from 'lucide-react';
 
 const COPY = {
@@ -70,7 +71,7 @@ const InstitutionalPeopleTeamsGateG1RetentionOwnersTriggers = ({ language = 'FR'
         <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">{t.rows.map(([category, accountable, stewards, triggers, gate]) => <section key={category} data-testid="ref01-g1-retention-owner-trigger-row" className="min-w-0 rounded-md border border-slate-700 bg-slate-950/20 p-3"><h6 className="break-words text-xs font-semibold text-slate-100">{category}</h6><dl className="mt-3 space-y-2 text-xs leading-5"><div><dt className="font-semibold text-violet-200">{t.labels.accountable}</dt><dd className="mt-0.5 text-slate-200">{accountable}</dd></div><div><dt className="font-semibold text-sky-200">{t.labels.stewards}</dt><dd className="mt-0.5 text-slate-300">{stewards}</dd></div><div><dt className="font-semibold text-emerald-200">{t.labels.triggers}</dt><dd className="mt-0.5 text-slate-300">{triggers}</dd></div><div><dt className="font-semibold text-amber-200">{t.labels.gate}</dt><dd className="mt-0.5 text-slate-300">{gate}</dd></div></dl></section>)}</div>
       </article>
       <p className="mt-4 rounded-md border border-emerald-700/70 bg-emerald-950/20 p-3 text-xs font-semibold leading-5 text-emerald-100">{t.status}</p>
-      <p className="mt-3 text-xs font-semibold leading-5 text-violet-200">{t.next}</p>
+      <InstitutionalPeopleTeamsHistoricalFollowUp language={language}>{t.next}</InstitutionalPeopleTeamsHistoricalFollowUp>
       <p className="mt-3 flex items-start gap-2 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={15} aria-hidden="true" />{t.boundary}</p>
     </section>
   );
