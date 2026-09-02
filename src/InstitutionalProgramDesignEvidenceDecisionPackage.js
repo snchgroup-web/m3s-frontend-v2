@@ -1,5 +1,5 @@
-import React from 'react';
-import { AlertTriangle, FileCheck2, LockKeyhole, PauseCircle, Scale, ShieldCheck } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { AlertTriangle, ArrowLeft, FileCheck2, LockKeyhole, PauseCircle, Scale, ShieldCheck } from 'lucide-react';
 import GovernedDecisionRecord from './GovernedDecisionRecord';
 
 const text = (FR, EN, DE) => ({ FR, EN, DE });
@@ -29,6 +29,10 @@ const COPY = {
     record: { id: 'PGM-DEC-016', version: 'V1.0', status: 'Paquet de propositions confirmé', author: 'Cheikh Ndiaye', date: '02-09-2026', decision: 'PGM-CON-DEC-001 V0.1 est confirmé et promu en V1.0 comme paquet des huit propositions : trois admissions limitées et cinq ajournements.', evidence: 'Message de Cheikh du 02-09-2026 : « alors je confirme PGM-CON-DEC-001 V0.1 ». Portée reprise de la proposition présentée, sans extension des autorisations.', limit: '0/8 décision documentaire prononcée, zéro preuve acceptée. Aucune promotion de référence, progression, ouverture de CON-01, CON-05, REF-02 ou L2.' },
     appliedRecord: { id: 'PGM-DEC-017', version: 'V1.0', status: 'Huit décisions documentaires prononcées', author: 'Cheikh Ndiaye', date: '02-09-2026', decision: 'SRC-02 admise au cadrage ; SRC-04 à la méthode ; SRC-07 au support visuel. SRC-01, SRC-03, SRC-05, SRC-06 et SRC-08 ajournées selon leurs conditions.', evidence: `Décision explicite de Cheikh : « ${PRONOUNCEMENT} »`, limit: 'Usages documentaires limités uniquement. Zéro preuve de réalisation acceptée, aucune progression calculée, aucun accès ou collecte supplémentaire, aucune ouverture de CON-01, CON-05, REF-02 ou L2.' },
     history: 'Historique : confirmation préalable du paquet',
+    filtersLabel: 'Filtrer les décisions documentaires',
+    filters: { all: 'Toutes', deferred: 'En attente', limited: 'Usages limités' },
+    filteredCount: (count, total) => `${count} références affichées sur ${total}`,
+    backToCockpit: 'Retour au cockpit global',
     next: 'Suivi des réserves, sans nouvelle boucle de confirmation',
     confirmation: 'Les cinq références ajournées restent en attente de leurs conditions documentaires. Une révision ne se justifie qu’en présence d’un élément nouveau pertinent ou d’une correction explicite ; aucun accès, aucune collecte ni ouverture de périmètre supplémentaire ne découle de ces décisions.',
     boundary: 'Une admission documentaire limitée ne prouve pas une réalisation institutionnelle. Aucun taux de progression ne change ; CON-01, CON-05, REF-02 et L2 restent fermés.'
@@ -45,6 +49,10 @@ const COPY = {
     record: { id: 'PGM-DEC-016', version: 'V1.0', status: 'Proposal package confirmed', author: 'Cheikh Ndiaye', date: '2 Sep 2026', decision: 'PGM-CON-DEC-001 V0.1 is confirmed and promoted to V1.0 as the package of eight proposals: three limited admissions and five deferrals.', evidence: 'Cheikh’s message of 2 Sep 2026, retained in French: “alors je confirme PGM-CON-DEC-001 V0.1”. Scope follows the presented proposal without extending authorisations.', limit: '0/8 documentary decisions pronounced, zero evidence accepted. No reference promotion, progress, opening of CON-01, CON-05, REF-02 or L2.' },
     appliedRecord: { id: 'PGM-DEC-017', version: 'V1.0', status: 'Eight documentary decisions pronounced', author: 'Cheikh Ndiaye', date: '2 Sep 2026', decision: 'SRC-02 admitted for framing; SRC-04 for method; SRC-07 for visual support. SRC-01, SRC-03, SRC-05, SRC-06 and SRC-08 deferred under their conditions.', evidence: `Cheikh’s explicit decision, retained in French: “${PRONOUNCEMENT}”`, limit: 'Limited documentary uses only. Zero achievement evidence accepted, no progress calculated, no additional access or collection, no opening of CON-01, CON-05, REF-02 or L2.' },
     history: 'History: prior package confirmation',
+    filtersLabel: 'Filter documentary decisions',
+    filters: { all: 'All', deferred: 'Waiting', limited: 'Limited uses' },
+    filteredCount: (count, total) => `${count} of ${total} references shown`,
+    backToCockpit: 'Back to global cockpit',
     next: 'Track reservations without another confirmation loop',
     confirmation: 'The five deferred references await their documentary conditions. Review is warranted only for relevant new information or an explicit correction; these decisions grant no additional access, collection or scope opening.',
     boundary: 'Limited documentary admission does not prove institutional achievement. Progress remains unchanged; CON-01, CON-05, REF-02 and L2 remain closed.'
@@ -61,23 +69,65 @@ const COPY = {
     record: { id: 'PGM-DEC-016', version: 'V1.0', status: 'Vorschlagspaket bestätigt', author: 'Cheikh Ndiaye', date: '02.09.2026', decision: 'PGM-CON-DEC-001 V0.1 wird als Paket der acht Vorschläge bestätigt und zu V1.0 befördert: drei begrenzte Zulassungen und fünf Vertagungen.', evidence: 'Nachricht von Cheikh vom 02.09.2026 im französischen Original: „alors je confirme PGM-CON-DEC-001 V0.1“. Der Umfang folgt dem vorgelegten Vorschlag, ohne Genehmigungen auszuweiten.', limit: '0/8 Dokumentenentscheide ausgesprochen, null Nachweise angenommen. Keine Beförderung von Referenzen, kein Fortschritt, keine Öffnung von CON-01, CON-05, REF-02 oder L2.' },
     appliedRecord: { id: 'PGM-DEC-017', version: 'V1.0', status: 'Acht Dokumentenentscheide ausgesprochen', author: 'Cheikh Ndiaye', date: '02.09.2026', decision: 'SRC-02 für den Rahmen zugelassen; SRC-04 für die Methode; SRC-07 zur visuellen Unterstützung. SRC-01, SRC-03, SRC-05, SRC-06 und SRC-08 unter ihren Bedingungen vertagt.', evidence: `Ausdrücklicher Entscheid von Cheikh im französischen Original: „${PRONOUNCEMENT}“`, limit: 'Nur begrenzte Dokumentennutzung. Null angenommene Umsetzungsnachweise, kein berechneter Fortschritt, kein zusätzlicher Zugriff oder zusätzliche Sammlung, keine Öffnung von CON-01, CON-05, REF-02 oder L2.' },
     history: 'Historie: vorherige Paketbestätigung',
+    filtersLabel: 'Dokumentenentscheide filtern',
+    filters: { all: 'Alle', deferred: 'Wartend', limited: 'Begrenzte Nutzung' },
+    filteredCount: (count, total) => `${count} von ${total} Referenzen angezeigt`,
+    backToCockpit: 'Zurück zum Gesamtcockpit',
     next: 'Vorbehalte verfolgen, ohne erneute Bestätigungsschleife',
     confirmation: 'Die fünf vertagten Referenzen warten auf ihre Dokumentenbedingungen. Eine erneute Prüfung ist nur bei relevanten neuen Informationen oder ausdrücklicher Korrektur begründet; diese Entscheide gewähren keinen zusätzlichen Zugriff, keine Sammlung und keine Erweiterung des Umfangs.',
     boundary: 'Begrenzte Dokumentenzulassung beweist keine institutionelle Umsetzung. Der Fortschritt bleibt unverändert; CON-01, CON-05, REF-02 und L2 bleiben geschlossen.'
   }
 };
 
+const FILTER_TYPES = { all: null, deferred: 'DEFER', limited: 'LIMITED' };
+const readFilter = () => {
+  const value = new URLSearchParams(window.location.search).get('decisionFilter');
+  return Object.prototype.hasOwnProperty.call(FILTER_TYPES, value) ? value : 'all';
+};
+
 const InstitutionalProgramDesignEvidenceDecisionPackage = ({ language = 'FR' }) => {
   const t = COPY[language] || COPY.FR;
   const local = value => value[language] || value.FR;
+  const [filter, setFilter] = useState(readFilter);
+  const visibleDecisions = DECISIONS.filter(row => !FILTER_TYPES[filter] || row[2] === FILTER_TYPES[filter]);
+
+  useEffect(() => {
+    const syncFilter = () => setFilter(readFilter());
+    window.addEventListener('popstate', syncFilter);
+    return () => window.removeEventListener('popstate', syncFilter);
+  }, []);
+
+  const selectFilter = value => {
+    const url = new URL(window.location.href);
+    if (value === 'all') url.searchParams.delete('decisionFilter');
+    else url.searchParams.set('decisionFilter', value);
+    url.hash = 'institutional-program-design-evidence-decision-package';
+    window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`);
+    setFilter(value);
+  };
 
   return (
     <section id="institutional-program-design-evidence-decision-package" data-testid="institutional-program-design-evidence-decision-package" className="scroll-mt-24 m3s-panel p-4 sm:p-5">
+      <a href="/?view=program#institutional-fast-track-cockpit" className="mb-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-blue-300 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <ArrowLeft size={17} aria-hidden="true" />{t.backToCockpit}
+      </a>
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between"><div className="max-w-5xl"><p className="text-xs font-semibold uppercase text-cyan-300">{t.eyebrow}</p><h4 className="mt-1 text-lg font-semibold text-slate-100 sm:text-xl">{t.title}</h4><p className="mt-2 text-sm leading-6 text-slate-300">{t.intro}</p></div><Scale className="shrink-0 text-cyan-300" size={28} aria-hidden="true" /></div>
 
       <div className="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-4">{t.counters.map(([value, label], index) => <article key={label} className="m3s-raised min-h-24 p-3"><p className={`text-xl font-semibold ${index === 3 ? 'text-slate-200' : index === 1 ? 'text-emerald-300' : index === 2 ? 'text-amber-300' : 'text-cyan-300'}`}>{value}</p><p className="mt-2 text-xs leading-5 text-slate-300">{label}</p></article>)}</div>
 
-      <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">{DECISIONS.map(([id, lane, type, outcome, condition]) => { const Icon = type === 'LIMITED' ? FileCheck2 : PauseCircle; const accent = type === 'LIMITED' ? 'text-emerald-300' : 'text-amber-300'; return <article key={id} data-testid="institutional-program-design-evidence-decision-row" className="m3s-raised p-4"><div className="flex flex-wrap items-start justify-between gap-3"><div className="flex min-w-0 items-start gap-3"><span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-slate-950/30 ${accent}`}><Icon size={20} aria-hidden="true" /></span><div><p className="text-xs font-semibold text-cyan-300">{id}</p><p className="mt-1 text-xs text-slate-400">{t.labels.lane} · {lane}</p></div></div><span className="shrink-0 rounded-md border border-amber-800 bg-amber-950/30 px-2 py-1 text-xs font-semibold text-amber-200">{t.labels.status}</span></div><div className="mt-4"><p className="text-xs font-semibold uppercase text-slate-400">{t.labels.outcome}</p><p data-testid={`institutional-program-design-evidence-decision-${type.toLowerCase()}`} className={`mt-1 text-sm font-semibold ${accent}`}>{local(outcome)}</p></div><div className="mt-3"><p className="text-xs font-semibold uppercase text-slate-400">{t.labels.condition}</p><p className="mt-1 text-xs leading-5 text-slate-300">{local(condition)}</p></div></article>; })}</div>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+        <div role="group" aria-label={t.filtersLabel} className="inline-flex max-w-full flex-wrap gap-1 rounded-md border border-slate-600 p-1">
+          {Object.entries(FILTER_TYPES).map(([value, type]) => (
+            <button key={value} type="button" aria-pressed={filter === value} onClick={() => selectFilter(value)}
+              className={`min-h-11 rounded px-3 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-blue-500 ${filter === value ? 'bg-blue-700 text-white' : 'text-slate-300 hover:bg-slate-700'}`}>
+              {t.filters[value]} ({DECISIONS.filter(row => !type || row[2] === type).length})
+            </button>
+          ))}
+        </div>
+        <p role="status" aria-live="polite" className="text-xs text-slate-300">{t.filteredCount(visibleDecisions.length, DECISIONS.length)}</p>
+      </div>
+
+      <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">{visibleDecisions.map(([id, lane, type, outcome, condition]) => { const Icon = type === 'LIMITED' ? FileCheck2 : PauseCircle; const accent = type === 'LIMITED' ? 'text-emerald-300' : 'text-amber-300'; return <article key={id} data-testid="institutional-program-design-evidence-decision-row" className="m3s-raised p-4"><div className="flex flex-wrap items-start justify-between gap-3"><div className="flex min-w-0 items-start gap-3"><span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-slate-950/30 ${accent}`}><Icon size={20} aria-hidden="true" /></span><div><p className="text-xs font-semibold text-cyan-300">{id}</p><p className="mt-1 text-xs text-slate-400">{t.labels.lane} · {lane}</p></div></div><span className="shrink-0 rounded-md border border-amber-800 bg-amber-950/30 px-2 py-1 text-xs font-semibold text-amber-200">{t.labels.status}</span></div><div className="mt-4"><p className="text-xs font-semibold uppercase text-slate-400">{t.labels.outcome}</p><p data-testid={`institutional-program-design-evidence-decision-${type.toLowerCase()}`} className={`mt-1 text-sm font-semibold ${accent}`}>{local(outcome)}</p></div><div className="mt-3"><p className="text-xs font-semibold uppercase text-slate-400">{t.labels.condition}</p><p className="mt-1 text-xs leading-5 text-slate-300">{local(condition)}</p></div></article>; })}</div>
 
       <div className="mt-4 rounded-md border border-cyan-900/70 bg-cyan-950/15 p-3"><p className="flex items-center gap-2 text-xs font-semibold uppercase text-cyan-300"><ShieldCheck size={16} aria-hidden="true" />{t.guardrails}</p><ul className="mt-3 grid grid-cols-1 gap-2 lg:grid-cols-2">{t.rules.map(rule => <li key={rule} className="flex items-start gap-2 text-xs leading-5 text-slate-300"><LockKeyhole className="mt-0.5 shrink-0 text-cyan-300" size={15} aria-hidden="true" />{rule}</li>)}</ul></div>
       <GovernedDecisionRecord labels={t.recordLabels} record={t.appliedRecord} />

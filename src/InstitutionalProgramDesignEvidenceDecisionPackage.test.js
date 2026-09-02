@@ -1,8 +1,12 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import InstitutionalProgramDesignEvidenceDecisionPackage from './InstitutionalProgramDesignEvidenceDecisionPackage';
+import InstitutionalProgramFastTrackCockpit from './InstitutionalProgramFastTrackCockpit';
 
 describe('InstitutionalProgramDesignEvidenceDecisionPackage', () => {
+  beforeEach(() => window.history.replaceState(null, '', '/?view=program'));
+  afterEach(() => window.history.replaceState(null, '', '/'));
+
   test('records eight pronounced decisions without accepting achievement evidence', () => {
     render(<InstitutionalProgramDesignEvidenceDecisionPackage language="FR" />);
 
@@ -52,5 +56,55 @@ describe('InstitutionalProgramDesignEvidenceDecisionPackage', () => {
       expect(row).toHaveTextContent(limited.includes(id) ? 'ADMISSION LIMITÉE' : 'AJOURNER');
       expect(row).toHaveTextContent('PRONONCÉE');
     });
+  });
+
+  test('filters the five deferrals without changing global decisions', () => {
+    render(<InstitutionalProgramDesignEvidenceDecisionPackage />);
+    fireEvent.click(screen.getByRole('button', { name: 'En attente (5)' }));
+    expect(screen.getAllByTestId('institutional-program-design-evidence-decision-row')).toHaveLength(5);
+    expect(screen.queryAllByTestId('institutional-program-design-evidence-decision-limited')).toHaveLength(0);
+    expect(screen.getByRole('status')).toHaveTextContent('5 références affichées sur 8');
+    expect(screen.getByRole('button', { name: 'En attente (5)' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByText('8/8')).toBeInTheDocument();
+    expect(screen.getByText('0')).toBeInTheDocument();
+    expect(window.location.search).toBe('?view=program&decisionFilter=deferred');
+    expect(window.location.hash).toBe('#institutional-program-design-evidence-decision-package');
+    fireEvent.click(screen.getByRole('button', { name: 'Usages limités (3)' }));
+    expect(screen.getAllByTestId('institutional-program-design-evidence-decision-row')).toHaveLength(3);
+    fireEvent.click(screen.getByRole('button', { name: 'Toutes (8)' }));
+    expect(screen.getAllByTestId('institutional-program-design-evidence-decision-row')).toHaveLength(8);
+    expect(window.location.search).toBe('?view=program');
+  });
+
+  test('deep link and language changes keep the selected subset and return route', () => {
+    window.history.replaceState({ key: 'route' }, '', '/?view=program&decisionFilter=deferred&returnTo=ref01-fasttrack');
+    const view = render(<InstitutionalProgramDesignEvidenceDecisionPackage language="FR" />);
+    expect(screen.getAllByTestId('institutional-program-design-evidence-decision-row')).toHaveLength(5);
+    view.rerender(<InstitutionalProgramDesignEvidenceDecisionPackage language="EN" />);
+    expect(screen.getByRole('button', { name: 'Waiting (5)' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('link', { name: 'Back to global cockpit' })).toHaveAttribute('href', '/?view=program#institutional-fast-track-cockpit');
+    view.rerender(<InstitutionalProgramDesignEvidenceDecisionPackage language="DE" />);
+    expect(screen.getByRole('button', { name: 'Wartend (5)' })).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.click(screen.getByRole('button', { name: 'Begrenzte Nutzung (3)' }));
+    expect(window.history.state).toEqual({ key: 'route' });
+    expect(new URLSearchParams(window.location.search).get('returnTo')).toBe('ref01-fasttrack');
+  });
+
+  test('invalid filter falls back to all; browser navigation synchronises the subset', () => {
+    window.history.replaceState(null, '', '/?view=program&decisionFilter=__proto__');
+    render(<InstitutionalProgramDesignEvidenceDecisionPackage />);
+    expect(screen.getAllByTestId('institutional-program-design-evidence-decision-row')).toHaveLength(8);
+    window.history.replaceState(null, '', '/?view=program&decisionFilter=limited');
+    fireEvent.popState(window);
+    expect(screen.getAllByTestId('institutional-program-design-evidence-decision-row')).toHaveLength(3);
+  });
+
+  test.each([
+    ['FR', 'Suivre les 5 références en attente'],
+    ['EN', 'Follow the 5 waiting references'],
+    ['DE', 'Die 5 wartenden Referenzen verfolgen'],
+  ])('cockpit links directly to the five waiting references in %s', (language, label) => {
+    render(<InstitutionalProgramFastTrackCockpit language={language} />);
+    expect(screen.getByRole('link', { name: label })).toHaveAttribute('href', '/?view=program&decisionFilter=deferred#institutional-program-design-evidence-decision-package');
   });
 });

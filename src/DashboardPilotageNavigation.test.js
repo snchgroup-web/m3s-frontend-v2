@@ -94,6 +94,18 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
 });
 
+test('opens deferred documentary decisions directly and returns to the global cockpit', () => {
+  const route = '/?view=program&decisionFilter=deferred#institutional-program-design-evidence-decision-package';
+  window.history.replaceState({}, '', route);
+  renderDashboardNavigation({}, route);
+  const section = within(screen.getByTestId('institutional-program-design-evidence-decision-package'));
+  expect(section.getAllByTestId('institutional-program-design-evidence-decision-row')).toHaveLength(5);
+  expect(section.getByRole('status')).toHaveTextContent('5 références affichées sur 8');
+  expect(section.getByRole('link', { name: 'Retour au cockpit global' })).toHaveAttribute('href', '/?view=program#institutional-fast-track-cockpit');
+  expect(screen.getByRole('link', { name: 'Suivre les 5 références en attente' })).toHaveAttribute('href', route);
+  expect(section.getByRole('heading', { name: 'PGM-DEC-017 · V1.0' })).toBeInTheDocument();
+});
+
 test('opens the authorised bounded collection and keeps operational boundaries in the lightweight Fast Track view', () => {
   renderDashboardNavigation({}, '/?view=program&focus=ref01-fasttrack');
 
