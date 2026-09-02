@@ -75,7 +75,10 @@ beforeEach(() => {
   api.getSocialFinance.mockResolvedValue({ data: [], summary: {} });
   api.getRealEstateFinance.mockResolvedValue({ data: [], summary: {} });
   api.createIncome.mockResolvedValue({ success: true });
+  jest.spyOn(window, 'alert').mockImplementation(() => {});
 });
+
+afterEach(() => jest.restoreAllMocks());
 
 test('requires confirmation before creating a revenue entry and then reports success', async () => {
   renderFinance();
@@ -399,4 +402,98 @@ test.each([
   await waitFor(() => expect(api.updateRealEstateFinance).toHaveBeenCalledWith('QA-IMM-001', expect.objectContaining({
     remboursement_cheikh_chf: 123.45, montant_chf: 100, montant_cfa: 70000, taux_fx: 695,
   })));
+});
+
+const immoFormCopy = [
+  ['FR', 'Nouvelle opération Immo', 'Désignation', 'Enregistrer', 'Oui, ajouter', 'Annuler', 'Renseignez une désignation et une date.', 'Enregistrement non confirmé.'],
+  ['EN', 'New real estate operation', 'Description', 'Save', 'Yes, add', 'Cancel', 'Enter a description and a date.', 'Save not confirmed.'],
+  ['DE', 'Neuer Immobilienvorgang', 'Bezeichnung', 'Speichern', 'Ja, hinzufügen', 'Abbrechen', 'Geben Sie eine Bezeichnung und ein Datum ein.', 'Speicherung nicht bestätigt.'],
+];
+
+test.each(immoFormCopy)('keeps required-field and failed-save feedback in the form in %s', async (language, add, designation, save, confirm, cancel, requiredMessage, saveMessage) => {
+  mockSearch = '?tab=immobilier';
+  localStorage.setItem('language', language);
+  api.createRealEstateFinance.mockRejectedValueOnce(new Error('QA transport failure'));
+  renderFinance();
+  fireEvent.click(await screen.findByRole('button', { name: add }));
+  const input = screen.getByLabelText(designation);
+  fireEvent.change(input, { target: { value: '   ' } });
+  fireEvent.click(screen.getByRole('button', { name: save }));
+  expect(screen.getByRole('alert')).toHaveTextContent(requiredMessage);
+  expect(screen.getByRole('alert')).toHaveFocus();
+  expect(input).toHaveAttribute('aria-invalid', 'true');
+  expect(api.createRealEstateFinance).not.toHaveBeenCalled();
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  fireEvent.change(input, { target: { value: 'Creation fictive QA' } });
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  expect(input).toHaveAttribute('aria-invalid', 'false');
+  fireEvent.click(screen.getByRole('button', { name: save }));
+  fireEvent.click(screen.getByRole('button', { name: confirm }));
+  const error = await screen.findByRole('alert');
+  expect(error).toHaveTextContent(saveMessage);
+  expect(error).toHaveFocus();
+  expect(input).toHaveValue('Creation fictive QA');
+  expect(screen.getByRole('button', { name: save })).toBeEnabled();
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  expect(api.createRealEstateFinance).toHaveBeenCalledTimes(1);
+  expect(window.alert).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: cancel }));
+  fireEvent.click(screen.getByRole('button', { name: add }));
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  expect(screen.getByLabelText(designation)).toHaveValue('');
+});
+
+test.each(['create', 'update'])('does not announce a successful %s when the server reports failure', async action => {
+  if (action === 'update') await openImmoHistory();
+  else {
+    mockSearch = '?tab=immobilier';
+    renderFinance();
+    fireEvent.click(await screen.findByRole('button', { name: 'Nouvelle opération Immo' }));
+    fireEvent.change(screen.getByLabelText('Désignation'), { target: { value: 'Creation fictive QA' } });
+  }
+  const method = action === 'update' ? api.updateRealEstateFinance : api.createRealEstateFinance;
+  method.mockResolvedValueOnce({ success: false });
+  const reads = api.getRealEstateFinance.mock.calls.length;
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  fireEvent.click(screen.getByRole('button', { name: action === 'update' ? 'Oui, modifier' : 'Oui, ajouter' }));
+  expect(await screen.findByRole('alert')).toHaveTextContent('Enregistrement non confirmé.');
+  expect(screen.getByLabelText('Désignation')).toBeInTheDocument();
+  expect(screen.queryByText(/avec succès/)).not.toBeInTheDocument();
+  expect(api.getRealEstateFinance).toHaveBeenCalledTimes(reads);
+  expect(method).toHaveBeenCalledTimes(1);
+});
+
+test('preserves historical edits after rejection and requires a fresh confirmation for another attempt', async () => {
+  await openImmoHistory();
+  api.updateRealEstateFinance.mockRejectedValueOnce(new Error('QA rejected'));
+  fireEvent.change(screen.getByLabelText('Montant CHF'), { target: { value: '120' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
+  expect(await screen.findByRole('alert')).toHaveTextContent('Enregistrement non confirmé.');
+  expect(screen.getByLabelText('Montant CHF')).toHaveValue(120);
+  expect(screen.getByLabelText('Montant CFA')).toHaveValue(70000);
+  expect(screen.getByLabelText('Taux appliqué')).toHaveValue(695);
+  expect(api.updateRealEstateFinance).toHaveBeenCalledTimes(1);
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  expect(api.updateRealEstateFinance).toHaveBeenCalledTimes(1);
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
+  await waitFor(() => expect(screen.queryByLabelText('Désignation')).not.toBeInTheDocument());
+  expect(api.updateRealEstateFinance).toHaveBeenCalledTimes(2);
+  expect(api.updateRealEstateFinance.mock.calls[1]).toEqual(api.updateRealEstateFinance.mock.calls[0]);
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+});
+
+test('blocks a second request while the first confirmed save is pending', async () => {
+  await openImmoHistory();
+  let resolveSave;
+  api.updateRealEstateFinance.mockReturnValueOnce(new Promise(resolve => { resolveSave = resolve; }));
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
+  expect(screen.getByRole('button', { name: 'Oui, modifier' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Non' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Enregistrer' })).toBeDisabled();
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
+  expect(api.updateRealEstateFinance).toHaveBeenCalledTimes(1);
+  await act(async () => resolveSave({ success: true }));
+  expect(screen.queryByLabelText('Désignation')).not.toBeInTheDocument();
 });
