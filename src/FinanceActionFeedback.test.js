@@ -344,9 +344,9 @@ test('does not derive a cleared real-estate rate from two recorded amounts', asy
   })));
 });
 
-test('retains the existing new real-estate entry calculation', async () => {
+test.each([{ rows: [] }, { rows: [immoHistory()] }])('creates an operation with the existing calculation from register $rows', async ({ rows }) => {
   mockSearch = '?tab=immobilier';
-  api.getRealEstateFinance.mockResolvedValue({ data: [immoHistory()], summary: {} });
+  api.getRealEstateFinance.mockResolvedValue({ data: rows, summary: {} });
   api.createRealEstateFinance.mockResolvedValue({ success: true });
   renderFinance();
   await act(async () => {});
@@ -355,6 +355,10 @@ test('retains the existing new real-estate entry calculation', async () => {
   fireEvent.change(screen.getByLabelText('Montant CHF'), { target: { value: '100' } });
   fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
   expect(api.createRealEstateFinance).not.toHaveBeenCalled();
+  fireEvent.click(within(screen.getByRole('dialog', { name: 'Confirmer l’ajout' })).getByRole('button', { name: 'Non' }));
+  expect(api.createRealEstateFinance).not.toHaveBeenCalled();
+  expect(screen.getByLabelText('Désignation')).toHaveValue('Création fictive QA');
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
   fireEvent.click(screen.getByRole('button', { name: 'Oui, ajouter' }));
   await waitFor(() => expect(api.createRealEstateFinance).toHaveBeenCalledWith(expect.objectContaining({
     montant_chf: 100, montant_cfa: 71000, taux_fx: 710,

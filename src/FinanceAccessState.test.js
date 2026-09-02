@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { LanguageProvider } from './LanguageContext';
 import Finance from './Finance';
 import api from './api';
@@ -87,6 +87,50 @@ test('distinguishes forbidden real-estate data from an empty register', async ()
 
   expect(await screen.findByText('Accès Finance restreint')).toBeInTheDocument();
   expect(screen.getByText(/financement immobilier nécessitent une permission Finance dédiée/i)).toBeInTheDocument();
-  expect(screen.queryByText(/disponibles après l’import BigQuery/i)).not.toBeInTheDocument();
+  expect(screen.queryByText('Aucune opération immobilière enregistrée.')).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Nouvelle opération Immo' })).not.toBeInTheDocument();
+});
+
+test.each([
+  ['fr', 'Aucune opération immobilière enregistrée.', 'Nouvelle opération Immo', 'Désignation', 'Annuler'],
+  ['en', 'No real estate operations recorded.', 'New real estate operation', 'Description', 'Cancel'],
+  ['de', 'Keine Immobilienvorgänge erfasst.', 'Neuer Immobilienvorgang', 'Bezeichnung', 'Abbrechen'],
+])('opens and cancels the first operation on a confirmed empty register in %s', async (language, empty, add, designation, cancel) => {
+  mockSearch = '?tab=immobilier';
+  localStorage.setItem('language', language.toUpperCase());
+  api.getSocialFinance.mockResolvedValue({ data: [], summary: {} });
+  api.getRealEstateFinance.mockResolvedValue({ data: [], summary: {} });
+  renderFinance();
+  expect(await screen.findByText(empty)).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: add }));
+  expect(screen.getByLabelText(designation)).toHaveValue('');
+  fireEvent.click(screen.getByRole('button', { name: cancel }));
+  expect(screen.queryByLabelText(designation)).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: add })).toBeEnabled();
+});
+
+test('does not offer creation while the real-estate register is loading', () => {
+  mockSearch = '?tab=immobilier';
+  api.getSocialFinance.mockResolvedValue({ data: [], summary: {} });
+  api.getRealEstateFinance.mockReturnValue(new Promise(() => {}));
+  renderFinance();
+  expect(screen.queryByRole('button', { name: 'Nouvelle opération Immo' })).not.toBeInTheDocument();
+  expect(screen.queryByText('Aucune opération immobilière enregistrée.')).not.toBeInTheDocument();
+});
+
+test.each([
+  ['network failure', () => Promise.reject(new Error('Network unavailable'))],
+  ['missing response', () => Promise.resolve(undefined)],
+  ['missing data', () => Promise.resolve({ summary: {} })],
+  ['invalid data', () => Promise.resolve({ data: {} })],
+  ['reported failure', () => Promise.resolve({ success: false, data: [] })],
+])('does not unlock an empty register after %s', async (_, response) => {
+  mockSearch = '?tab=immobilier';
+  api.getSocialFinance.mockResolvedValue({ data: [], summary: {} });
+  api.getRealEstateFinance.mockImplementation(response);
+  renderFinance();
+  const register = within(document.getElementById('finance-real-estate'));
+  expect(await register.findByText(/Aucune valeur manquante/)).toBeInTheDocument();
+  expect(screen.queryByText('Aucune opération immobilière enregistrée.')).not.toBeInTheDocument();
   expect(screen.queryByRole('button', { name: 'Nouvelle opération Immo' })).not.toBeInTheDocument();
 });
