@@ -290,7 +290,7 @@ const Finance = () => {
       perimetre: 'Périmètre',
       projet: 'Projet',
       statut: 'Statut',
-      aucuneDonneeImmo: 'Les données Fin Immo seront disponibles après l’import BigQuery.',
+      aucuneDonneeImmo: 'Aucune opération immobilière enregistrée.',
       nouvelleOperationImmo: 'Nouvelle opération Immo',
       modifierOperationImmo: 'Modifier l’opération Immo',
       immoAmountsError: 'Montants manquants ou invalides : {fields}. Modification bloquée pour éviter leur remplacement par zéro.',
@@ -446,7 +446,7 @@ const Finance = () => {
       perimetre: 'Scope',
       projet: 'Project',
       statut: 'Status',
-      aucuneDonneeImmo: 'Real Estate Finance data will be available after the BigQuery import.',
+      aucuneDonneeImmo: 'No real estate operations recorded.',
       nouvelleOperationImmo: 'New real estate operation',
       modifierOperationImmo: 'Edit real estate operation',
       immoAmountsError: 'Missing or invalid amounts: {fields}. Update blocked to prevent replacing them with zero.',
@@ -602,7 +602,7 @@ const Finance = () => {
       perimetre: 'Bereich',
       projet: 'Projekt',
       statut: 'Status',
-      aucuneDonneeImmo: 'Die Daten zur Immobilienfinanzierung sind nach dem BigQuery-Import verfügbar.',
+      aucuneDonneeImmo: 'Keine Immobilienvorgänge erfasst.',
       nouvelleOperationImmo: 'Neuer Immobilienvorgang',
       modifierOperationImmo: 'Immobilienvorgang bearbeiten',
       immoAmountsError: 'Fehlende oder ungültige Beträge: {fields}. Änderung gesperrt, damit sie nicht durch null ersetzt werden.',
@@ -1290,7 +1290,10 @@ const Finance = () => {
     setImmoAccessState('loading');
     try {
       const response = await api.getRealEstateFinance(200, 0);
-      const rows = Array.isArray(response?.data) ? response.data : [];
+      if (response?.success === false || !Array.isArray(response?.data)) {
+        throw Object.assign(new Error('Invalid real-estate register response'), { code: 'INVALID_IMMO_RESPONSE' });
+      }
+      const rows = response.data;
       setImmoTransactions(rows.map((item) => ({
         ...item,
         id: item.source_id,
@@ -1309,7 +1312,7 @@ const Finance = () => {
       console.error('Real Estate Finance error:', error);
       setImmoTransactions([]);
       setImmoSummary({});
-      setImmoError(error.status === 403 ? '' : error.message);
+      setImmoError(error.status === 403 || error.code === 'INVALID_IMMO_RESPONSE' ? '' : error.message);
       setImmoAccessState(error.status === 403 ? 'forbidden' : 'unavailable');
     }
   // cleanDate and toNumber are stable helpers within this component.
@@ -2489,6 +2492,9 @@ const Finance = () => {
               <div className="bg-slate-800 border border-slate-700 rounded-lg p-8 text-center">
                 <Building2 size={36} className="mx-auto mb-3 text-orange-400" />
                 <p className="text-white font-semibold">{t.aucuneDonneeImmo}</p>
+                <div className="mt-4 flex justify-center">
+                  <StandardCreateButton onClick={openNewImmoModal}>{t.nouvelleOperationImmo}</StandardCreateButton>
+                </div>
                 {immoError && <p className="mt-2 text-sm text-slate-400">{immoError}</p>}
               </div>
             ) : (
