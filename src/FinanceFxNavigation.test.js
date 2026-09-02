@@ -116,3 +116,64 @@ test('a retained fxView never changes the requested Finance parent tab', async (
   await screen.findByRole('button', { name: 'Nouvelle opération Immo' });
   expect(screen.queryByRole('navigation', { name: 'Historique FX' })).not.toBeInTheDocument();
 });
+
+const converter = () => within(document.getElementById('finance-fx-converter'));
+const output = () => screen.getByRole('status', { name: 'Résultat de la conversion' });
+const readyConverter = async (rate = 700) => {
+  api.getFxHistory.mockResolvedValue({ data: [{ source_id: 'QA-CONVERT-FX', devise_base: 'CHF', devise_cible: 'CFA', taux: rate, date_taux: new Date().toISOString().slice(0, 10) }] });
+  render(<Finance />);
+  await screen.findByText('Totaux globaux disponibles');
+};
+
+test.each(['', '-5', '1e308', 'Infinity', 'NaN'])('invalid converter amount %s never becomes a zero result or a recent conversion', async value => {
+  await readyConverter();
+  fireEvent.change(converter().getByLabelText('Montant', { exact: true }), { target: { value } });
+  expect(converter().getByLabelText('Montant', { exact: true })).toHaveAttribute('aria-invalid', 'true');
+  expect(converter().getByRole('alert')).toHaveTextContent('Montant vide, négatif ou résultat hors limites');
+  expect(converter().getByRole('button', { name: 'Calculer' })).toBeDisabled();
+  expect(output()).toHaveTextContent('— CFA');
+  fireEvent.click(converter().getByRole('button', { name: 'Calculer' }));
+  expect(converter().queryByRole('table')).not.toBeInTheDocument();
+});
+
+test.each(['CHF_CFA', 'CFA_CHF'])('an explicit zero remains calculable in %s', async direction => {
+  await readyConverter();
+  fireEvent.change(converter().getByLabelText('Direction'), { target: { value: direction } });
+  fireEvent.change(converter().getByLabelText('Montant', { exact: true }), { target: { value: '0' } });
+  expect(converter().getByRole('button', { name: 'Calculer' })).toBeEnabled();
+  expect(output().textContent.replace(/\s/g, '')).toBe(direction === 'CHF_CFA' ? '0,00CHF≈0CFA' : '0CFA≈0,00CHF');
+  fireEvent.click(converter().getByRole('button', { name: 'Calculer' }));
+  expect(converter().getByRole('table').querySelectorAll('tbody tr')).toHaveLength(1);
+});
+
+test.each([0, -1, Infinity, null])('invalid reference rate %s cannot produce a conversion', async rate => {
+  await readyConverter(rate);
+  expect(converter().getByRole('button', { name: 'Calculer' })).toBeDisabled();
+  expect(output()).toHaveTextContent('— CFA');
+});
+
+test('a changed FX reference refreshes the preview while preserving the saved conversion snapshot', async () => {
+  await readyConverter();
+  fireEvent.change(converter().getByLabelText('Montant', { exact: true }), { target: { value: '10' } });
+  fireEvent.click(converter().getByRole('button', { name: 'Calculer' }));
+  expect(output().textContent.replace(/\s/g, '')).toContain('7000CFA');
+  fireEvent.click(within(nav()).getByRole('button', { name: 'Taux & Historique' }));
+  const row = screen.getByText('QA-CONVERT-FX').closest('tr');
+  fireEvent.click(within(row).getAllByRole('button')[0]);
+  const form = screen.getByRole('dialog', { name: 'Modifier Taux' });
+  fireEvent.change(within(form).getByLabelText('Taux *'), { target: { value: '710' } });
+  fireEvent.click(within(form).getByRole('button', { name: 'Enregistrer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
+  fireEvent.click(within(nav()).getByRole('button', { name: 'Convertisseur' }));
+  expect(output().textContent.replace(/\s/g, '')).toContain('7100CFA');
+  expect(converter().getByRole('table').querySelector('tbody').textContent.replace(/\s/g, '')).toContain('7000CFA700');
+  expect(api.getFxHistory).toHaveBeenCalledTimes(1);
+});
+
+test.each([['FR', 'Montant', 'Montant vide'], ['EN', 'Amount', 'Missing or negative'], ['DE', 'Betrag', 'Betrag fehlt']])('converter validation is localized in %s', async (language, label, message) => {
+  mockLanguage = language;
+  api.getFxHistory.mockResolvedValue({ data: [], taux_du_jour: { CHF_CFA: 700 } });
+  render(<Finance />);
+  fireEvent.change(await screen.findByLabelText(label, { exact: true }), { target: { value: '' } });
+  expect(converter().getByRole('alert')).toHaveTextContent(message);
+});

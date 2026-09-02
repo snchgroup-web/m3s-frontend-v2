@@ -124,7 +124,6 @@ const Finance = () => {
   const [converterAmount, setConverterAmount] = useState('1000');
   const [converterDirection, setConverterDirection] = useState('CHF_CFA');
   const [converterDate, setConverterDate] = useState('');
-  const [conversionResult, setConversionResult] = useState(null);
   const [recentConversions, setRecentConversions] = useState([]);
   const [transferComparison, setTransferComparison] = useState(createTransferComparison);
   const [showFxModal, setShowFxModal] = useState(false);
@@ -268,6 +267,7 @@ const Finance = () => {
       calculer: 'Calculer',
       conversionsRapides: 'Conversions rapides',
       conversionResultat: 'Résultat de la conversion',
+      converterAmountError: 'Montant vide, négatif ou résultat hors limites. Un zéro saisi reste valable.',
       conversionsRecentes: 'Conversions récentes',
       heure: 'Heure',
       resultat: 'Résultat',
@@ -439,6 +439,7 @@ const Finance = () => {
       calculer: 'Calculate',
       conversionsRapides: 'Quick conversions',
       conversionResultat: 'Conversion result',
+      converterAmountError: 'Missing or negative amount, or result out of range. An entered zero remains valid.',
       conversionsRecentes: 'Recent conversions',
       heure: 'Time',
       resultat: 'Result',
@@ -610,6 +611,7 @@ const Finance = () => {
       calculer: 'Berechnen',
       conversionsRapides: 'Schnellumrechnungen',
       conversionResultat: 'Umrechnungsergebnis',
+      converterAmountError: 'Betrag fehlt, ist negativ oder Ergebnis außerhalb des Wertebereichs. Eine eingegebene Null bleibt gültig.',
       conversionsRecentes: 'Letzte Umrechnungen',
       heure: 'Zeit',
       resultat: 'Ergebnis',
@@ -1554,25 +1556,27 @@ const Finance = () => {
     };
   }, [fxHistory]);
 
-  const converterRate = converterDate
+  const converterReferenceRate = converterDate
     ? getHistoricalCfaPerChf(converterDate)?.cfaPerChf || null
     : tauxChfCfa;
+  const converterRate = Number.isFinite(Number(converterReferenceRate)) && Number(converterReferenceRate) > 0 ? Number(converterReferenceRate) : null;
   const converterInputCurrency = converterDirection === 'CHF_CFA' ? 'CHF' : 'CFA';
   const converterOutputCurrency = converterDirection === 'CHF_CFA' ? 'CFA' : 'CHF';
-  const converterInputValue = toNumber(converterAmount);
-  const converterOutputValue = converterRate
-    ? (converterDirection === 'CHF_CFA' ? converterInputValue * converterRate : converterInputValue / converterRate)
+  const converterAmounts = convertFinanceAmount(converterAmount, converterInputCurrency, converterRate);
+  const converterInputValue = converterAmounts[converterInputCurrency === 'CHF' ? 'chf' : 'cfa'];
+  const converterOutputValue = converterInputValue !== null && converterInputValue >= 0
+    ? converterAmounts[converterOutputCurrency === 'CHF' ? 'chf' : 'cfa']
     : null;
-  const displayedConverterOutput = conversionResult?.output ?? converterOutputValue;
+  const converterAmountInvalid = converterInputValue === null || converterInputValue < 0 || (Number(converterRate) > 0 && converterOutputValue === null);
   const formatConvertedValue = (value, currency) => {
-    if (value === null || value === undefined) return '-';
+    if (!Number.isFinite(value)) return '—';
     return Number(value).toLocaleString(undefined, {
       minimumFractionDigits: currency === 'CHF' ? 2 : 0,
       maximumFractionDigits: currency === 'CHF' ? 2 : 0
     });
   };
   const calculateConversion = () => {
-    if (!converterRate || converterOutputValue === null) return;
+    if (converterAmountInvalid || converterOutputValue === null) return;
     const entry = {
       id: Date.now(),
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -1583,7 +1587,6 @@ const Finance = () => {
       rate: converterRate,
       direction: converterDirection
     };
-    setConversionResult(entry);
     setRecentConversions((current) => [entry, ...current].slice(0, 5));
   };
 
@@ -2346,11 +2349,11 @@ const Finance = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <label className="text-sm text-slate-300">
                       <span className="block mb-1">{t.montant}</span>
-                      <input type="number" min="0" step="any" value={converterAmount} onChange={(event) => { setConverterAmount(event.target.value); setConversionResult(null); }} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                      <input type="number" min="0" step="any" value={converterAmount} aria-invalid={converterAmountInvalid} aria-describedby={converterAmountInvalid ? 'finance-converter-amount-error' : undefined} onChange={(event) => setConverterAmount(event.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
                     </label>
                     <label className="text-sm text-slate-300">
                       <span className="block mb-1">{t.direction}</span>
-                      <select value={converterDirection} onChange={(event) => { setConverterDirection(event.target.value); setConversionResult(null); }} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white">
+                      <select aria-label={t.direction} value={converterDirection} onChange={(event) => setConverterDirection(event.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white">
                         <option value="CHF_CFA">CHF → CFA</option>
                         <option value="CFA_CHF">CFA → CHF</option>
                       </select>
@@ -2358,25 +2361,27 @@ const Finance = () => {
                   </div>
                   <label className="block text-sm text-slate-300 mt-4">
                     <span className="block mb-1">{t.dateReference}</span>
-                    <LocalizedDateInput value={converterDate} onChange={(date) => { setConverterDate(date); setConversionResult(null); }} className="w-full" />
+                    <LocalizedDateInput value={converterDate} onChange={setConverterDate} className="w-full" />
                   </label>
                   <div className="m3s-fx-reference mt-4 px-4 py-3 border border-slate-600 rounded">
                     <p className="text-xs text-slate-400">{t.tauxApplique}</p>
                     <p className="font-semibold m3s-currency-cfa">{converterRate ? `1 CHF = ${Number(converterRate).toLocaleString(undefined, { maximumFractionDigits: 4 })} CFA` : t.aucunTauxDate}</p>
                   </div>
-                  <button onClick={calculateConversion} disabled={!converterRate || converterInputValue < 0} className="w-full mt-4 flex min-h-11 items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded disabled:opacity-50">
+                  {converterAmountInvalid && <p id="finance-converter-amount-error" role="alert" className="mt-3 text-sm" style={{ color: 'var(--m3s-status-danger)' }}>{t.converterAmountError}</p>}
+                  <button onClick={calculateConversion} disabled={converterAmountInvalid || converterOutputValue === null} className="w-full mt-4 flex min-h-11 items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded disabled:opacity-50">
                     <Calculator size={18} /> {t.calculer}
                   </button>
                   <details className="mt-6 border-t border-slate-700 pt-5">
                     <summary className="text-white font-semibold mb-3 cursor-pointer">{t.conversionsRapides}</summary>
                     <div className="space-y-2">
                       {(converterDirection === 'CHF_CFA' ? [100, 500, 1000, 5000, 10000] : [100000, 500000, 1000000, 5000000]).map((amount) => {
-                        const output = converterRate ? (converterDirection === 'CHF_CFA' ? amount * converterRate : amount / converterRate) : null;
+                        const pair = convertFinanceAmount(amount, converterInputCurrency, converterRate);
+                        const output = pair[converterOutputCurrency === 'CHF' ? 'chf' : 'cfa'];
                         return (
-                          <button key={amount} onClick={() => { setConverterAmount(String(amount)); setConversionResult(null); }} className="w-full grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-sm py-1.5 hover:bg-slate-700/50 rounded px-2">
-                            <span className="text-left text-white font-medium">{formatConvertedValue(amount, converterInputCurrency)} {converterInputCurrency}</span>
+                          <button key={amount} onClick={() => setConverterAmount(String(amount))} className="w-full grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-sm py-1.5 hover:bg-slate-700/50 rounded px-2">
+                            <span className="text-left font-medium" style={{ color: converterInputCurrency === 'CFA' ? 'var(--m3s-currency-cfa)' : 'var(--m3s-status-info)' }}>{formatConvertedValue(amount, converterInputCurrency)} {converterInputCurrency}</span>
                             <span className="text-slate-500">→</span>
-                            <span className="text-right text-orange-300 font-medium">{formatConvertedValue(output, converterOutputCurrency)} {converterOutputCurrency}</span>
+                            <span className="text-right font-medium" style={{ color: converterOutputCurrency === 'CFA' ? 'var(--m3s-currency-cfa)' : 'var(--m3s-status-info)' }}>{formatConvertedValue(output, converterOutputCurrency)} {converterOutputCurrency}</span>
                           </button>
                         );
                       })}
@@ -2387,11 +2392,11 @@ const Finance = () => {
                 <div className="space-y-5">
                   <section className="m3s-fx-result">
                     <p className="text-sm text-slate-400">{t.conversionResultat}</p>
-                    <div className="m3s-fx-amounts">
+                    <output aria-label={t.conversionResultat} aria-live="polite" className="m3s-fx-amounts">
                       <span style={{ color: converterInputCurrency === 'CFA' ? 'var(--m3s-currency-cfa)' : 'var(--m3s-status-info)' }}>{formatConvertedValue(converterInputValue, converterInputCurrency)} {converterInputCurrency}</span>
                       <span aria-hidden="true">≈</span>
-                      <span style={{ color: converterOutputCurrency === 'CFA' ? 'var(--m3s-currency-cfa)' : 'var(--m3s-status-info)' }}>{formatConvertedValue(displayedConverterOutput, converterOutputCurrency)} {converterOutputCurrency}</span>
-                    </div>
+                      <span style={{ color: converterOutputCurrency === 'CFA' ? 'var(--m3s-currency-cfa)' : 'var(--m3s-status-info)' }}>{formatConvertedValue(converterOutputValue, converterOutputCurrency)} {converterOutputCurrency}</span>
+                    </output>
                     <p className="text-xs text-slate-400 mt-2">1 CHF = {converterRate ? Number(converterRate).toLocaleString(undefined, { maximumFractionDigits: 4 }) : '-'} CFA</p>
                   </section>
                   <section className="border-t border-slate-700 pt-5">
