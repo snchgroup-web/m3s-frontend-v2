@@ -13,6 +13,7 @@ import { StandardCreateButton } from './StandardUI';
 import FinanceFunctionFrame from './FinanceFunctionFrame';
 import FinanceOverviewIndicators from './FinanceOverviewIndicators';
 import FinanceTransactionCount from './FinanceTransactionCount';
+import FinanceAmountPair, { convertFinanceAmount } from './FinanceAmountPair';
 import { normalizeFinanceSummary } from './financeSummary';
 import { matchesIncomeScope, normalizeIncomeScope } from './financeIncomeScope';
 import FinanceArchitecture from './FinanceArchitecture';
@@ -201,6 +202,8 @@ const Finance = () => {
       montantCFA: 'Montant CFA',
       tauxFXCol: 'Taux appliqué',
       devise: 'Devise',
+      amountPreview: 'Équivalent au taux appliqué',
+      enteredAmounts: 'Montants saisis',
       categorie: 'Catégorie',
       choisirCategorie: 'Sélectionner une catégorie',
       ref: 'Ref.',
@@ -368,6 +371,8 @@ const Finance = () => {
       montantCFA: 'Amount CFA',
       tauxFXCol: 'Applied rate',
       devise: 'Currency',
+      amountPreview: 'Equivalent at the applied rate',
+      enteredAmounts: 'Entered amounts',
       categorie: 'Category',
       choisirCategorie: 'Select a category',
       ref: 'Ref.',
@@ -535,6 +540,8 @@ const Finance = () => {
       montantCFA: 'Betrag CFA',
       tauxFXCol: 'Angewandter Kurs',
       devise: 'Währung',
+      amountPreview: 'Gegenwert zum angewandten Kurs',
+      enteredAmounts: 'Erfasste Beträge',
       categorie: 'Kategorie',
       choisirCategorie: 'Kategorie auswählen',
       ref: 'Ref.',
@@ -651,6 +658,7 @@ const Finance = () => {
   const financeDescriptionInvalid = !String(formData.description ?? '').trim();
   const financeAmount = String(formData.montant ?? '').trim() === '' ? null : parseFiniteNumber(formData.montant);
   const financeAmountInvalid = financeAmount === null;
+  const financeAmountPair = convertFinanceAmount(formData.montant, formData.devise, appliedFormRate);
   const editingImmo = editingImmoId !== null;
   const immoAmountFields = [
     ['montantChf', t.montantCHF], ['montantCfa', t.montantCFA],
@@ -661,6 +669,16 @@ const Finance = () => {
     ? immoAmountFields.filter(([field]) => parseFiniteNumber(immoFormData[field]) === null)
     : [];
   const immoRate = parseFiniteNumber(immoFormData.tauxFx);
+  // Match new-operation rate inference without changing recorded amount fields.
+  const immoPreviewRate = !editingImmo && Number(immoFormData.montantChf) > 0 && Number(immoFormData.montantCfa) > 0
+    ? Number(immoFormData.montantCfa) / Number(immoFormData.montantChf)
+    : immoRate;
+  const immoChfInput = parseFiniteNumber(immoFormData.montantChf);
+  const immoCfaInput = parseFiniteNumber(immoFormData.montantCfa);
+  const immoPairCalculated = !editingImmo && (immoChfInput === null || immoCfaInput === null);
+  const immoAmountPair = immoPairCalculated
+    ? convertFinanceAmount(immoChfInput ?? immoCfaInput, immoChfInput !== null ? 'CHF' : 'CFA', immoPreviewRate)
+    : { chf: immoChfInput, cfa: immoCfaInput };
   const immoRateInvalid = immoFormData.tauxFx !== '' && (immoRate === null || immoRate <= 0);
   const immoSaveInvalid = invalidImmoAmounts.length > 0 || immoRateInvalid;
   const immoAmountValidation = (field) => {
@@ -2800,6 +2818,11 @@ const Finance = () => {
                   <span className="block mb-1">{t.remboursementCheikh}</span>
                   <input type="number" step="any" {...immoAmountValidation('remboursementCheikhChf')} value={immoFormData.remboursementCheikhChf} onChange={(event) => handleImmoFormChange('remboursementCheikhChf', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
                 </label>
+                <div className="md:col-span-2 lg:col-span-3 grid grid-cols-1 gap-4 lg:grid-cols-3">
+                  <FinanceAmountPair {...immoAmountPair} label={immoPairCalculated ? t.amountPreview : t.enteredAmounts} language={language} approximate={immoPairCalculated} testId="immo-form-amount-pair" />
+                  <FinanceAmountPair {...convertFinanceAmount(immoFormData.partCheikhChf, 'CHF', immoPreviewRate)} label={`${t.partCheikh} · ${t.amountPreview}`} language={language} testId="immo-form-share-pair" />
+                  <FinanceAmountPair {...convertFinanceAmount(immoFormData.remboursementCheikhChf, 'CHF', immoPreviewRate)} label={`${t.remboursementCheikh} · ${t.amountPreview}`} language={language} testId="immo-form-repayment-pair" />
+                </div>
                 <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.categorie}</span>
                   <select value={immoFormData.categorie} onChange={(event) => handleImmoFormChange('categorie', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white">
@@ -2919,10 +2942,11 @@ const Finance = () => {
                   onChange={(e) => handleFormChange('montant', e.target.value)}
                   className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
                 />
-                <select value={formData.devise} onChange={(e) => handleFormChange('devise', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                <select aria-label={t.devise} value={formData.devise} onChange={(e) => handleFormChange('devise', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
                   <option>CHF</option>
                   <option>CFA</option>
                 </select>
+                <FinanceAmountPair {...financeAmountPair} label={t.amountPreview} language={language} testId="finance-form-amount-pair" />
                 <select
                   value={formData.categorie}
                   onChange={(e) => handleFormChange('categorie', e.target.value)}
