@@ -221,6 +221,7 @@ const Finance = () => {
       creerDepense: 'Nouvelle dépense',
       creer: 'Créer',
       modifier: 'Modifier',
+      supprimer: 'Supprimer',
       annuler: 'Annuler',
       deviseBase: 'Devise Source',
       deviseCible: 'Devise Cible',
@@ -386,6 +387,7 @@ const Finance = () => {
       creerDepense: 'New expense',
       creer: 'Create',
       modifier: 'Edit',
+      supprimer: 'Delete',
       annuler: 'Cancel',
       deviseBase: 'Base Currency',
       deviseCible: 'Target Currency',
@@ -551,6 +553,7 @@ const Finance = () => {
       creerDepense: 'Neue Ausgabe',
       creer: 'Erstellen',
       modifier: 'Bearbeiten',
+      supprimer: 'Löschen',
       annuler: 'Abbrechen',
       deviseBase: 'Basiswährung',
       deviseCible: 'Zielwährung',
@@ -2137,7 +2140,7 @@ const Finance = () => {
                       <tr
                         key={r.id}
                         onClick={() => handleEdit('recette', r)}
-                        onKeyDown={(event) => event.key === 'Enter' && handleEdit('recette', r)}
+                        onKeyDown={(event) => event.target === event.currentTarget && event.key === 'Enter' && handleEdit('recette', r)}
                         tabIndex={0}
                         className="border-t border-slate-700 hover:bg-slate-700/50 cursor-pointer focus:outline-none focus:bg-slate-700/70"
                       >
@@ -2155,10 +2158,10 @@ const Finance = () => {
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(r.departement)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(r.phaseProjet)}</td>
                         <td className="px-6 py-3 flex gap-2">
-                          <button onClick={(event) => { event.stopPropagation(); handleEdit('recette', r); }} className="p-1 hover:bg-slate-600 rounded">
+                          <button type="button" title={t.modifier} aria-label={`${t.modifier} : ${r.ref}`} onClick={(event) => { event.stopPropagation(); handleEdit('recette', r); }} className="m3s-icon-button hover:bg-slate-600">
                             <Edit2 size={18} className="text-blue-400" />
                           </button>
-                          <button onClick={(event) => { event.stopPropagation(); handleDelete('recette', r.id, r.description); }} className="p-1 hover:bg-slate-600 rounded">
+                          <button type="button" title={t.supprimer} aria-label={`${t.supprimer} : ${r.ref}`} onClick={(event) => { event.stopPropagation(); handleDelete('recette', r.id, r.description); }} className="m3s-icon-button hover:bg-slate-600">
                             <Trash2 size={18} className="text-red-400" />
                           </button>
                         </td>
@@ -2203,7 +2206,7 @@ const Finance = () => {
                       <tr
                         key={d.id}
                         onClick={() => handleEdit('depense', d)}
-                        onKeyDown={(event) => event.key === 'Enter' && handleEdit('depense', d)}
+                        onKeyDown={(event) => event.target === event.currentTarget && event.key === 'Enter' && handleEdit('depense', d)}
                         tabIndex={0}
                         className="border-t border-slate-700 hover:bg-slate-700/50 cursor-pointer focus:outline-none focus:bg-slate-700/70"
                       >
@@ -2221,10 +2224,10 @@ const Finance = () => {
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.departement)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.phaseProjet)}</td>
                         <td className="px-6 py-3 flex gap-2">
-                          <button onClick={(event) => { event.stopPropagation(); handleEdit('depense', d); }} className="p-1 hover:bg-slate-600 rounded">
+                          <button type="button" title={t.modifier} aria-label={`${t.modifier} : ${d.ref}`} onClick={(event) => { event.stopPropagation(); handleEdit('depense', d); }} className="m3s-icon-button hover:bg-slate-600">
                             <Edit2 size={18} className="text-blue-400" />
                           </button>
-                          <button onClick={(event) => { event.stopPropagation(); handleDelete('depense', d.id, d.description); }} className="p-1 hover:bg-slate-600 rounded">
+                          <button type="button" title={t.supprimer} aria-label={`${t.supprimer} : ${d.ref}`} onClick={(event) => { event.stopPropagation(); handleDelete('depense', d.id, d.description); }} className="m3s-icon-button hover:bg-slate-600">
                             <Trash2 size={18} className="text-red-400" />
                           </button>
                         </td>
@@ -2495,7 +2498,7 @@ const Finance = () => {
                     </thead>
                     <tbody>
                       {visibleRows.map((row) => (
-                        <tr key={row.id} onClick={() => handleEdit('recette', row)} onKeyDown={(event) => event.key === 'Enter' && handleEdit('recette', row)} tabIndex={0} className="cursor-pointer border-t border-slate-700 hover:bg-slate-700/50 focus:bg-slate-700/70 focus:outline-none">
+                        <tr key={row.id} onClick={() => handleEdit('recette', row)} onKeyDown={(event) => event.target === event.currentTarget && event.key === 'Enter' && handleEdit('recette', row)} tabIndex={0} className="cursor-pointer border-t border-slate-700 hover:bg-slate-700/50 focus:bg-slate-700/70 focus:outline-none">
                           <td className="px-4 py-3 text-slate-400">{formatCell(row.ref)}</td>
                           <td className="whitespace-nowrap px-4 py-3 text-slate-300">{formatDateForDisplay(row.date)}</td>
                           <td className="max-w-[380px] px-5 py-3 font-medium text-white">{translateDescription(row.description)}</td>
@@ -2514,8 +2517,8 @@ const Finance = () => {
                           <td className="px-4 py-3 text-slate-300">{formatCell(row.pays)}</td>
                           <td className="px-4 py-3">
                             <div className="flex gap-2">
-                              <button onClick={(event) => { event.stopPropagation(); handleEdit('recette', row); }} className="rounded p-1 hover:bg-slate-600" title={t.modifier}><Edit2 size={17} className="text-blue-400" /></button>
-                              <button onClick={(event) => { event.stopPropagation(); handleDelete('recette', row.id, row.description); }} className="rounded p-1 hover:bg-slate-600" title={t.actions}><Trash2 size={17} className="text-red-400" /></button>
+                              <button type="button" title={t.modifier} aria-label={`${t.modifier} : ${row.ref}`} onClick={(event) => { event.stopPropagation(); handleEdit('recette', row); }} className="m3s-icon-button hover:bg-slate-600"><Edit2 size={17} className="text-blue-400" /></button>
+                              <button type="button" title={t.supprimer} aria-label={`${t.supprimer} : ${row.ref}`} onClick={(event) => { event.stopPropagation(); handleDelete('recette', row.id, row.description); }} className="m3s-icon-button hover:bg-slate-600"><Trash2 size={17} className="text-red-400" /></button>
                             </div>
                           </td>
                         </tr>
@@ -2680,7 +2683,7 @@ const Finance = () => {
                               <tr
                                 key={item.id}
                                 onClick={() => handleImmoEdit(item)}
-                                onKeyDown={(event) => event.key === 'Enter' && handleImmoEdit(item)}
+                                onKeyDown={(event) => event.target === event.currentTarget && event.key === 'Enter' && handleImmoEdit(item)}
                                 tabIndex={0}
                                 className="border-t border-slate-700 hover:bg-slate-700/50 cursor-pointer focus:outline-none focus:bg-slate-700/70"
                               >
@@ -2706,10 +2709,10 @@ const Finance = () => {
                                 </td>
                                 <td className="px-4 py-3">
                                   <div className="flex gap-2">
-                                    <button onClick={(event) => { event.stopPropagation(); handleImmoEdit(item); }} className="p-1 hover:bg-slate-600 rounded" title={t.modifier}>
+                                    <button type="button" title={t.modifier} aria-label={`${t.modifier} : ${item.id}`} onClick={(event) => { event.stopPropagation(); handleImmoEdit(item); }} className="m3s-icon-button hover:bg-slate-600">
                                       <Edit2 size={17} className="text-blue-400" />
                                     </button>
-                                    <button onClick={(event) => { event.stopPropagation(); handleImmoDelete(item.id, item.designation); }} className="p-1 hover:bg-slate-600 rounded" title={t.actions}>
+                                    <button type="button" title={t.supprimer} aria-label={`${t.supprimer} : ${item.id}`} onClick={(event) => { event.stopPropagation(); handleImmoDelete(item.id, item.designation); }} className="m3s-icon-button hover:bg-slate-600">
                                       <Trash2 size={17} className="text-red-400" />
                                     </button>
                                   </div>

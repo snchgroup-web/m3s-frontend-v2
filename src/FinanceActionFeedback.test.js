@@ -506,6 +506,39 @@ const financeActions = [
   ['social', 'delete', 'deleteIncome'], ['immobilier', 'delete', 'deleteRealEstateFinance'],
 ];
 
+test.each(['recettes', 'depenses', 'social', 'immobilier'])('keeps keyboard delete separate from opening the %s row', async tab => {
+  mockSearch = '?tab=' + tab;
+  const row = { ...historicalRow(700), source_id: 'QA-KEY-001' };
+  api.getIncome.mockResolvedValue({ data: [row] });
+  api.getExpenses.mockResolvedValue({ data: [row] });
+  api.getSocialFinance.mockResolvedValue({ data: [row], summary: {} });
+  api.getRealEstateFinance.mockResolvedValue({ data: [immoHistory({ source_id: 'QA-KEY-001' })], summary: {} });
+  renderFinance();
+  const sourceRow = (await screen.findByText('QA-KEY-001')).closest('tr');
+  const remove = sourceRow.querySelector('svg.lucide-trash-2').closest('button');
+  expect(remove).toHaveAccessibleName('Supprimer : QA-KEY-001');
+  expect(remove).toHaveAttribute('title', 'Supprimer');
+  expect(remove).toHaveAttribute('type', 'button');
+  const edit = within(sourceRow).getByRole('button', { name: 'Modifier : QA-KEY-001' });
+  expect(edit).toHaveAttribute('title', 'Modifier');
+  const hasEditor = () => tab === 'immobilier'
+    ? screen.queryByLabelText('Désignation')
+    : screen.queryByPlaceholderText('Description');
+  fireEvent.keyDown(remove, { key: 'Enter', code: 'Enter' });
+  expect(hasEditor()).not.toBeInTheDocument();
+  fireEvent.click(remove);
+  expect(screen.getByRole('dialog', { name: 'Confirmer la suppression' })).toBeInTheDocument();
+  expect(hasEditor()).not.toBeInTheDocument();
+  expect(api.deleteIncome).not.toHaveBeenCalled();
+  expect(api.deleteExpense).not.toHaveBeenCalled();
+  expect(api.deleteRealEstateFinance).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: 'Non' }));
+  expect(sourceRow).toBeInTheDocument();
+  expect(hasEditor()).not.toBeInTheDocument();
+  fireEvent.keyDown(sourceRow, { key: 'Enter', code: 'Enter' });
+  expect(hasEditor()).toBeInTheDocument();
+});
+
 test.each(financeActions.flatMap(([tab, action, method]) => ['network', 'explicit'].map(failure => ({ tab, action, method, failure }))))(
   'preserves $tab after $action $failure failure and requires a fresh confirmation',
   async ({ tab, action, method, failure }) => {
