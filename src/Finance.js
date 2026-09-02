@@ -238,6 +238,8 @@ const Finance = () => {
       filtreDevise: 'Filtrer par devise',
       id: 'ID',
       remplirChamps: 'Veuillez remplir les champs obligatoires',
+      fxFormRule: 'Choisissez deux devises différentes, un taux strictement positif et une date.',
+      fxSessionOnly: 'Modification temporaire dans cette vue, non enregistrée dans la source.',
       financeRequiredError: 'Renseignez une description, une date et un montant numérique. Un zéro explicite est distinct d’un champ vide.',
       convertisseur: 'Convertisseur',
       tableauBordFx: 'Tableau de bord',
@@ -407,6 +409,8 @@ const Finance = () => {
       filtreDevise: 'Filter by currency',
       id: 'ID',
       remplirChamps: 'Please fill in all required fields',
+      fxFormRule: 'Choose two different currencies, a strictly positive rate and a date.',
+      fxSessionOnly: 'Temporary change in this view, not saved to the source.',
       financeRequiredError: 'Enter a description, a date and a numeric amount. An explicit zero is different from an empty field.',
       convertisseur: 'Converter',
       tableauBordFx: 'Dashboard',
@@ -576,6 +580,8 @@ const Finance = () => {
       filtreDevise: 'Nach Währung filtern',
       id: 'ID',
       remplirChamps: 'Bitte füllen Sie alle erforderlichen Felder aus',
+      fxFormRule: 'Wählen Sie zwei unterschiedliche Währungen, einen positiven Kurs und ein Datum.',
+      fxSessionOnly: 'Vorübergehende Änderung in dieser Ansicht, nicht in der Quelle gespeichert.',
       financeRequiredError: 'Geben Sie eine Beschreibung, ein Datum und einen numerischen Betrag ein. Eine ausdrückliche Null ist kein leeres Feld.',
       convertisseur: 'Umrechner',
       tableauBordFx: 'Dashboard',
@@ -654,6 +660,10 @@ const Finance = () => {
 
   const t = translations[language];
   const appliedFormRate = parseFiniteNumber(formData.tauxFxApplique);
+  const fxFormRate = parseFiniteNumber(fxFormData.rate);
+  const fxRateInvalid = fxFormRate === null || fxFormRate <= 0;
+  const fxPairInvalid = !fxFormData.devise_from || !fxFormData.devise_to || fxFormData.devise_from === fxFormData.devise_to;
+  const fxFormInvalid = fxRateInvalid || fxPairInvalid || !fxFormData.date;
   const appliedRateInvalid = appliedFormRate === null || appliedFormRate <= 0;
   const financeDescriptionInvalid = !String(formData.description ?? '').trim();
   const financeAmount = String(formData.montant ?? '').trim() === '' ? null : parseFiniteNumber(formData.montant);
@@ -1302,7 +1312,7 @@ const Finance = () => {
           if (dataArray.length > 0) {
             const mappedData = dataArray.map(item => ({
               id: item.source_id || item.id,
-              date: cleanDate(item.date_taux || item.date_updated || item.date),
+              date: item.date_taux || item.date_updated || item.date ? cleanDate(item.date_taux || item.date_updated || item.date) : '',
               rate: parseFloat(item.taux || item.rate || 0),
               devise_from: item.devise_base || item.source_currency || item.devise_from,
               devise_to: item.devise_cible || item.target_currency || item.devise_to,
@@ -1473,6 +1483,7 @@ const Finance = () => {
     const yearlyMap = Object.fromEntries(years.map((year) => [year, { direct: [], inverse: [] }]));
 
     fxHistory.forEach(item => {
+      if (!item.date) return;
       const year = cleanDate(item.date).slice(0, 4);
       if (!yearlyMap[year]) return;
       const rawRate = toNumber(item.rate);
@@ -1866,17 +1877,14 @@ const Finance = () => {
   };
 
   const handleFxSave = () => {
-    if (!fxFormData.devise_from || !fxFormData.devise_to || !fxFormData.rate) {
-      alert(t.remplirChamps);
-      return;
-    }
+    if (fxFormInvalid) return;
     setFeedback(null);
     setPendingAction({
       scope: 'fx',
       action: editingFxId !== null ? 'update' : 'create',
       itemId: editingFxId,
       label: `${fxFormData.devise_from} → ${fxFormData.devise_to}`,
-      payload: { ...fxFormData, rate: parseFloat(fxFormData.rate) }
+      payload: { ...fxFormData, rate: fxFormRate }
     });
   };
 
@@ -2402,7 +2410,7 @@ const Finance = () => {
                 <TableControls rows={filteredFxHistory} renderTable={(visibleRows) => (
                   <table className="min-w-full text-sm">
                     <thead className="sticky top-0 z-10 bg-slate-700"><tr><th className="px-4 py-3 text-left text-white font-bold">{t.id}</th><th className="px-4 py-3 text-left text-white font-bold">{t.date}</th><th className="px-4 py-3 text-left text-white font-bold">{t.deviseBase}</th><th className="px-4 py-3 text-left text-white font-bold">{t.deviseCible}</th><th className="px-4 py-3 text-left text-white font-bold">{t.taux}</th><th className="px-4 py-3 text-left text-white font-bold">{t.source}</th><th className="px-4 py-3 text-left text-white font-bold">{t.actions}</th></tr></thead>
-                    <tbody>{visibleRows.map(fx => <tr key={fx.id} className="border-t border-slate-700 hover:bg-slate-700/50"><td className="px-4 py-3 text-slate-300 text-xs">{fx.id}</td><td className="px-4 py-3 text-slate-300 whitespace-nowrap">{formatDateForDisplay(fx.date)}</td><td className="px-4 py-3 text-blue-400 font-bold">{fx.devise_from}</td><td className="px-4 py-3 text-green-400 font-bold">{fx.devise_to}</td><td className="px-4 py-3 text-purple-400 font-bold">{parseFloat(fx.rate).toLocaleString(undefined, { maximumFractionDigits: fx.rate < 1 ? 6 : 2 })}</td><td className="px-4 py-3 text-slate-400">{fx.source}</td><td className="px-4 py-3 flex gap-2"><button onClick={() => handleFxEdit(fx)} className="p-1 hover:bg-slate-600 rounded"><Edit2 size={16} className="text-blue-400" /></button><button onClick={() => handleFxDelete(fx.id, `${fx.devise_from} → ${fx.devise_to}`)} className="p-1 hover:bg-slate-600 rounded"><Trash2 size={16} className="text-red-400" /></button></td></tr>)}</tbody>
+                    <tbody>{visibleRows.map(fx => <tr key={fx.id} className="border-t border-slate-700 hover:bg-slate-700/50"><td className="px-4 py-3 text-slate-300 text-xs">{fx.id}</td><td className="px-4 py-3 text-slate-300 whitespace-nowrap">{fx.date ? formatDateForDisplay(fx.date) : '—'}</td><td className="px-4 py-3 text-blue-400 font-bold">{fx.devise_from}</td><td className="px-4 py-3 text-green-400 font-bold">{fx.devise_to}</td><td className="px-4 py-3 text-purple-400 font-bold">{parseFloat(fx.rate).toLocaleString(undefined, { maximumFractionDigits: fx.rate < 1 ? 6 : 2 })}</td><td className="px-4 py-3 text-slate-400">{fx.source}</td><td className="px-4 py-3 flex gap-2"><button onClick={() => handleFxEdit(fx)} className="p-1 hover:bg-slate-600 rounded"><Edit2 size={16} className="text-blue-400" /></button><button onClick={() => handleFxDelete(fx.id, `${fx.devise_from} → ${fx.devise_to}`)} className="p-1 hover:bg-slate-600 rounded"><Trash2 size={16} className="text-red-400" /></button></td></tr>)}</tbody>
                   </table>
                 )} />
               </div>
@@ -3047,35 +3055,53 @@ const Finance = () => {
         )}
 
         {showFxModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-slate-800 rounded-lg p-6 max-w-md w-full border border-slate-700">
-              <h2 className="text-white font-bold mb-4">{editingFxId ? t.modifierTaux : t.nouveauTaux}</h2>
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-3" aria-hidden={pendingAction ? 'true' : undefined}>
+            <div role="dialog" aria-modal="true" aria-labelledby="finance-fx-form-title" className="bg-slate-800 rounded-lg p-5 max-w-md w-full max-h-[calc(100dvh-1.5rem)] overflow-y-auto border border-slate-700">
+              <h2 id="finance-fx-form-title" className="text-white font-bold mb-2">{editingFxId ? t.modifierTaux : t.nouveauTaux}</h2>
+              <p className="mb-4 text-sm text-slate-300">{t.fxSessionOnly}</p>
               <div className="space-y-4">
-                <select value={fxFormData.devise_from} onChange={(e) => handleFxFormChange('devise_from', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                <label className="block text-sm text-slate-300">
+                <span className="mb-1 block">{t.deviseBase} *</span>
+                <select aria-label={`${t.deviseBase} *`} aria-required="true" aria-invalid={fxPairInvalid} aria-describedby={fxPairInvalid ? 'finance-fx-form-rule' : undefined} value={fxFormData.devise_from} onChange={(e) => handleFxFormChange('devise_from', e.target.value)} className="w-full min-h-11 px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
                   <option>CHF</option>
                   <option>CFA</option>
                   <option>USD</option>
                   <option>EUR</option>
                 </select>
-                <select value={fxFormData.devise_to} onChange={(e) => handleFxFormChange('devise_to', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                </label>
+                <label className="block text-sm text-slate-300">
+                <span className="mb-1 block">{t.deviseCible} *</span>
+                <select aria-label={`${t.deviseCible} *`} aria-required="true" aria-invalid={fxPairInvalid} aria-describedby={fxPairInvalid ? 'finance-fx-form-rule' : undefined} value={fxFormData.devise_to} onChange={(e) => handleFxFormChange('devise_to', e.target.value)} className="w-full min-h-11 px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
                   <option>CFA</option>
                   <option>CHF</option>
                   <option>USD</option>
                   <option>EUR</option>
                 </select>
+                </label>
+                <label className="block text-sm text-slate-300">
+                <span className="mb-1 block">{t.taux} *</span>
                 <input
                   type="number"
-                  step="0.01"
+                  step="any"
+                  aria-required="true"
+                  aria-invalid={fxRateInvalid}
+                  aria-describedby={fxRateInvalid ? 'finance-fx-form-rule' : undefined}
                   placeholder={t.taux}
                   value={fxFormData.rate}
                   onChange={(e) => handleFxFormChange('rate', e.target.value)}
                   className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
                 />
+                </label>
+                <div>
+                <p className="mb-1 text-sm text-slate-300">{t.date} *</p>
                 <LocalizedDateInput
                   value={fxFormData.date}
                   onChange={(date) => handleFxFormChange('date', date)}
                   className="w-full"
                 />
+                </div>
+                <label className="block text-sm text-slate-300">
+                <span className="mb-1 block">{t.source}</span>
                 <input
                   type="text"
                   placeholder={t.source}
@@ -3083,9 +3109,13 @@ const Finance = () => {
                   onChange={(e) => handleFxFormChange('source', e.target.value)}
                   className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
                 />
-                <div className="flex gap-4 justify-end">
-                  <button onClick={() => setShowFxModal(false)} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg">{t.annuler}</button>
-                  <button onClick={handleFxSave} className={`${editingFxId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 px-4`}>{editingFxId ? t.enregistrer : t.creer}</button>
+                </label>
+                <div aria-live="polite">
+                  {fxFormInvalid && <p id="finance-fx-form-rule" data-testid="finance-fx-form-rule" className="text-sm" style={{ color: 'var(--m3s-status-warning)' }}>{t.fxFormRule}</p>}
+                </div>
+                <div className="flex flex-wrap gap-3 justify-end">
+                  <button onClick={() => setShowFxModal(false)} className="min-h-11 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg">{t.annuler}</button>
+                  <button onClick={handleFxSave} disabled={fxFormInvalid} className={`${editingFxId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 px-4 disabled:opacity-50 disabled:cursor-not-allowed`}>{editingFxId ? t.enregistrer : t.creer}</button>
                 </div>
               </div>
             </div>

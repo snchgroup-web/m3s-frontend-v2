@@ -166,6 +166,128 @@ test('keeps a local FX rate until deletion is confirmed', async () => {
   expect(screen.getByText('Le taux « CHF → CFA » a été supprimé localement avec succès.')).toBeInTheDocument();
 });
 
+const fxFormCopy = [
+  ['FR', 'Taux & Historique', 'Ajouter Taux', 'Devise Source *', 'Devise Cible *', 'Taux *', 'Créer', 'Non', 'Oui, ajouter', 'Annuler'],
+  ['EN', 'Rates & History', 'Add Exchange Rate', 'Base Currency *', 'Target Currency *', 'Rate *', 'Create', 'No', 'Yes, add', 'Cancel'],
+  ['DE', 'Kurse & Verlauf', 'Wechselkurs hinzufügen', 'Basiswährung *', 'Zielwährung *', 'Wechselkurs *', 'Erstellen', 'Nein', 'Ja, hinzufügen', 'Abbrechen'],
+];
+
+test.each(fxFormCopy)('validates FX inputs inline and retains the inverse rate after declining in %s', async (language, history, add, base, target, rateLabel, create, decline, confirm, cancel) => {
+  mockSearch = '?tab=fx';
+  localStorage.setItem('language', language);
+  renderFinance();
+  fireEvent.click(await screen.findByRole('button', { name: history }));
+  fireEvent.click(screen.getByRole('button', { name: add }));
+  const form = screen.getByRole('dialog', { name: add });
+  const rate = within(form).getByLabelText(rateLabel);
+  const save = within(form).getByRole('button', { name: create });
+  expect(save).toBeDisabled();
+  expect(rate).toHaveAttribute('aria-invalid', 'true');
+  expect(rate).toHaveAttribute('aria-describedby', 'finance-fx-form-rule');
+  for (const value of ['0', '-10', '']) {
+    fireEvent.change(rate, { target: { value } });
+    expect(save).toBeDisabled();
+    fireEvent.click(save);
+    expect(screen.getAllByRole('dialog')).toHaveLength(1);
+  }
+  fireEvent.change(rate, { target: { value: '0.0014084507' } });
+  fireEvent.change(within(form).getByLabelText(base), { target: { value: 'CFA' } });
+  expect(save).toBeDisabled();
+  expect(within(form).getByLabelText(target)).toHaveAttribute('aria-invalid', 'true');
+  fireEvent.change(within(form).getByLabelText(target), { target: { value: 'CHF' } });
+  expect(save).toBeEnabled();
+  expect(rate).toHaveAttribute('step', 'any');
+  expect(rate.checkValidity()).toBe(true);
+  expect(screen.queryByTestId('finance-fx-form-rule')).not.toBeInTheDocument();
+  fireEvent.click(save);
+  expect(screen.getAllByRole('dialog')).toHaveLength(1);
+  fireEvent.click(screen.getByRole('button', { name: decline }));
+  expect(rate).toHaveValue(0.0014084507);
+  expect(within(form).getByLabelText(base)).toHaveValue('CFA');
+  fireEvent.click(save);
+  fireEvent.click(screen.getByRole('button', { name: confirm }));
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  const row = screen.getByText('Manual').closest('tr');
+  expect(row).toHaveTextContent('CFA');
+  expect(row).toHaveTextContent('CHF');
+  expect(screen.getByText('FX-TODAY')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: add }));
+  expect(screen.getByLabelText(rateLabel)).toHaveValue(null);
+  expect(screen.getByRole('button', { name: create })).toBeDisabled();
+  fireEvent.click(screen.getByRole('button', { name: cancel }));
+  expect(window.alert).not.toHaveBeenCalled();
+  for (const [name, method] of Object.entries(api)) if (/^(create|update|delete)/.test(name)) expect(method).not.toHaveBeenCalled();
+});
+
+test.each([0, -10, Infinity, null])('keeps the original invalid FX rate %s untouched until explicitly corrected', async rateValue => {
+  mockSearch = '?tab=fx';
+  api.getFxHistory.mockResolvedValue({ data: [{ source_id: 'FX-INVALID', taux: rateValue, devise_base: 'CHF', devise_cible: 'CFA', date_taux: '2026-09-01', source_taux: 'QA source' }] });
+  renderFinance();
+  fireEvent.click(await screen.findByRole('button', { name: 'Taux & Historique' }));
+  const row = screen.getByText('FX-INVALID').closest('tr');
+  fireEvent.click(within(row).getAllByRole('button')[0]);
+  const form = screen.getByRole('dialog', { name: 'Modifier Taux' });
+  expect(within(form).getByRole('button', { name: 'Enregistrer' })).toBeDisabled();
+  expect(within(form).getByLabelText('Taux *')).toHaveAttribute('aria-invalid', 'true');
+  fireEvent.click(within(form).getByRole('button', { name: 'Annuler' }));
+  expect(row).toBeInTheDocument();
+  expect(api.getFxHistory).toHaveBeenCalledTimes(1);
+  expect(window.alert).not.toHaveBeenCalled();
+});
+
+test('blocks an undated FX edit until a date is chosen', async () => {
+  mockSearch = '?tab=fx';
+  api.getFxHistory.mockResolvedValue({ data: [{ source_id: 'FX-UNDATED', taux: 695, devise_base: 'CHF', devise_cible: 'CFA', source_taux: 'QA source' }] });
+  renderFinance();
+  fireEvent.click(await screen.findByRole('button', { name: 'Taux & Historique' }));
+  fireEvent.click(within(screen.getByText('FX-UNDATED').closest('tr')).getAllByRole('button')[0]);
+  const form = screen.getByRole('dialog', { name: 'Modifier Taux' });
+  expect(within(screen.getByText('FX-UNDATED').closest('tr')).getAllByRole('cell')[1]).toHaveTextContent('—');
+  expect(within(form).getByRole('button', { name: 'Enregistrer' })).toBeDisabled();
+  fireEvent.click(within(form).getByRole('button', { name: 'Sélectionner une date' }));
+  fireEvent.click(screen.getByRole('button', { name: "Aujourd'hui" }));
+  expect(within(form).getByRole('button', { name: 'Enregistrer' })).toBeEnabled();
+  expect(within(form).getByLabelText('Taux *')).toHaveValue(695);
+  fireEvent.click(within(form).getByRole('button', { name: 'Annuler' }));
+  expect(window.alert).not.toHaveBeenCalled();
+});
+
+test('never uses an undated historical FX row as today\'s applied rate', async () => {
+  api.getFxHistory.mockResolvedValue({ data: [{ source_id: 'FX-UNDATED', taux: 695, devise_base: 'CHF', devise_cible: 'CFA', source_taux: 'QA source' }] });
+  renderFinance();
+  await act(async () => {});
+  fireEvent.click(await screen.findByRole('button', { name: 'Nouvelle Recette' }));
+  expect(screen.getByLabelText('Taux appliqué *')).toHaveValue(null);
+  expect(screen.getByText('Non disponible pour cette date')).toBeInTheDocument();
+  expect(screen.getByTestId('finance-form-amount-pair')).not.toHaveTextContent('695');
+});
+
+test('keeps a dated FX edit and source unchanged until confirmation, without API writes', async () => {
+  mockSearch = '?tab=fx';
+  api.getFxHistory.mockResolvedValue({ data: [{ source_id: 'FX-HISTORY', taux: 695.123456, devise_base: 'CHF', devise_cible: 'CFA', date_taux: '2026-09-01', source_taux: 'QA source' }] });
+  renderFinance();
+  fireEvent.click(await screen.findByRole('button', { name: 'Taux & Historique' }));
+  const row = screen.getByText('FX-HISTORY').closest('tr');
+  fireEvent.click(within(row).getAllByRole('button')[0]);
+  const form = screen.getByRole('dialog', { name: 'Modifier Taux' });
+  const rate = within(form).getByLabelText('Taux *');
+  expect(rate).toHaveValue(695.123456);
+  expect(within(form).getByRole('button', { name: /01 septembre 2026/ })).toBeInTheDocument();
+  fireEvent.change(rate, { target: { value: '696.23456789' } });
+  fireEvent.click(within(form).getByRole('button', { name: 'Enregistrer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Non' }));
+  expect(rate).toHaveValue(696.23456789);
+  expect(row).not.toHaveTextContent('696,23');
+  expect(within(form).getByLabelText('Source')).toHaveValue('QA source');
+  fireEvent.click(within(form).getByRole('button', { name: 'Enregistrer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
+  fireEvent.click(within(row).getAllByRole('button')[0]);
+  expect(screen.getByLabelText('Taux *')).toHaveValue(696.23456789);
+  expect(screen.getByLabelText('Source')).toHaveValue('QA source');
+  expect(api.getFxHistory).toHaveBeenCalledTimes(1);
+  for (const [name, method] of Object.entries(api)) if (/^(create|update|delete)/.test(name)) expect(method).not.toHaveBeenCalled();
+});
+
 const historicalRow = rate => ({
   source_id: 'QA-FX-001', description: 'Transaction fictive QA',
   date_document: '2026-09-01', devise_origine: 'CFA', montant_origine: 100000,
