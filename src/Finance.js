@@ -14,6 +14,8 @@ import FinanceFunctionFrame from './FinanceFunctionFrame';
 import FinanceOverviewIndicators from './FinanceOverviewIndicators';
 import FinanceTransactionCount from './FinanceTransactionCount';
 import FinanceAmountPair, { convertFinanceAmount } from './FinanceAmountPair';
+import FinanceTransferComparison from './FinanceTransferComparison';
+import { createTransferComparison } from './financeTransferQuotes';
 import { normalizeFinanceSummary } from './financeSummary';
 import { matchesIncomeScope, normalizeIncomeScope } from './financeIncomeScope';
 import FinanceArchitecture from './FinanceArchitecture';
@@ -124,6 +126,7 @@ const Finance = () => {
   const [converterDate, setConverterDate] = useState('');
   const [conversionResult, setConversionResult] = useState(null);
   const [recentConversions, setRecentConversions] = useState([]);
+  const [transferComparison, setTransferComparison] = useState(createTransferComparison);
   const [showFxModal, setShowFxModal] = useState(false);
   const [editingFxId, setEditingFxId] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -2335,9 +2338,11 @@ const Finance = () => {
             </div>
 
             {fxView === 'converter' && (
-              <div id="finance-fx-converter" className="min-h-[calc(100dvh-12rem)] grid grid-cols-1 xl:grid-cols-[1.1fr_0.9fr] gap-5 items-start">
-                <section className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-                  <h3 className="text-white font-bold mb-5 flex items-center gap-2"><SlidersHorizontal size={18} className="text-orange-400" /> {t.parametresConversion}</h3>
+              <div id="finance-fx-converter" className="m3s-fx-workspace min-h-[calc(100dvh-12rem)]">
+                <div className="m3s-fx-calculator">
+                <a className="m3s-fx-comparison-link" href={`${location.pathname}${location.search}#finance-transfer-comparison`}>{language === 'DE' ? 'Überweisungen vergleichen' : language === 'EN' ? 'Compare transfers' : 'Comparer les transferts'} →</a>
+                <section>
+                  <h3 className="text-white font-bold mb-5 flex items-center gap-2"><SlidersHorizontal size={18} className="text-blue-400" /> {t.parametresConversion}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <label className="text-sm text-slate-300">
                       <span className="block mb-1">{t.montant}</span>
@@ -2355,15 +2360,15 @@ const Finance = () => {
                     <span className="block mb-1">{t.dateReference}</span>
                     <LocalizedDateInput value={converterDate} onChange={(date) => { setConverterDate(date); setConversionResult(null); }} className="w-full" />
                   </label>
-                  <div className="mt-4 px-4 py-3 border border-slate-600 rounded bg-slate-900/60">
+                  <div className="m3s-fx-reference mt-4 px-4 py-3 border border-slate-600 rounded">
                     <p className="text-xs text-slate-400">{t.tauxApplique}</p>
-                    <p className="font-semibold text-orange-300">{converterRate ? `1 CHF = ${Number(converterRate).toLocaleString(undefined, { maximumFractionDigits: 4 })} CFA` : t.aucunTauxDate}</p>
+                    <p className="font-semibold m3s-currency-cfa">{converterRate ? `1 CHF = ${Number(converterRate).toLocaleString(undefined, { maximumFractionDigits: 4 })} CFA` : t.aucunTauxDate}</p>
                   </div>
-                  <button onClick={calculateConversion} disabled={!converterRate || converterInputValue < 0} className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded disabled:opacity-50">
+                  <button onClick={calculateConversion} disabled={!converterRate || converterInputValue < 0} className="w-full mt-4 flex min-h-11 items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded disabled:opacity-50">
                     <Calculator size={18} /> {t.calculer}
                   </button>
-                  <div className="mt-6 border-t border-slate-700 pt-5">
-                    <h4 className="text-white font-semibold mb-3">{t.conversionsRapides}</h4>
+                  <details className="mt-6 border-t border-slate-700 pt-5">
+                    <summary className="text-white font-semibold mb-3 cursor-pointer">{t.conversionsRapides}</summary>
                     <div className="space-y-2">
                       {(converterDirection === 'CHF_CFA' ? [100, 500, 1000, 5000, 10000] : [100000, 500000, 1000000, 5000000]).map((amount) => {
                         const output = converterRate ? (converterDirection === 'CHF_CFA' ? amount * converterRate : amount / converterRate) : null;
@@ -2376,17 +2381,20 @@ const Finance = () => {
                         );
                       })}
                     </div>
-                  </div>
+                  </details>
                 </section>
 
                 <div className="space-y-5">
-                  <section className="bg-slate-800 border border-slate-700 rounded-lg p-6 text-center">
+                  <section className="m3s-fx-result">
                     <p className="text-sm text-slate-400">{t.conversionResultat}</p>
-                    <p className="text-sm text-slate-300 mt-3">{formatConvertedValue(converterInputValue, converterInputCurrency)} {converterInputCurrency} =</p>
-                    <p className="text-3xl font-bold text-orange-300 mt-1 break-words">{formatConvertedValue(displayedConverterOutput, converterOutputCurrency)} {converterOutputCurrency}</p>
+                    <div className="m3s-fx-amounts">
+                      <span style={{ color: converterInputCurrency === 'CFA' ? 'var(--m3s-currency-cfa)' : 'var(--m3s-status-info)' }}>{formatConvertedValue(converterInputValue, converterInputCurrency)} {converterInputCurrency}</span>
+                      <span aria-hidden="true">≈</span>
+                      <span style={{ color: converterOutputCurrency === 'CFA' ? 'var(--m3s-currency-cfa)' : 'var(--m3s-status-info)' }}>{formatConvertedValue(displayedConverterOutput, converterOutputCurrency)} {converterOutputCurrency}</span>
+                    </div>
                     <p className="text-xs text-slate-400 mt-2">1 CHF = {converterRate ? Number(converterRate).toLocaleString(undefined, { maximumFractionDigits: 4 }) : '-'} CFA</p>
                   </section>
-                  <section className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+                  <section className="border-t border-slate-700 pt-5">
                     <h3 className="text-white font-bold mb-4 flex items-center gap-2"><History size={18} className="text-orange-400" /> {t.conversionsRecentes}</h3>
                     {recentConversions.length === 0 ? (
                       <p className="text-sm text-slate-400">-</p>
@@ -2400,6 +2408,8 @@ const Finance = () => {
                     )}
                   </section>
                 </div>
+                </div>
+                <FinanceTransferComparison language={language} value={transferComparison} onChange={setTransferComparison} />
               </div>
             )}
 
