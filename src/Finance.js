@@ -4,7 +4,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Edit2, Trash2, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound, Database, AlertTriangle, CheckCircle2, LoaderCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
-import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
+import { ModulePageTabs, ChildTabPlaceholder, centerTabHorizontally } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
 import { isLegacyBuCode, translateDas } from './strategicMapping';
@@ -41,6 +41,10 @@ const DEPARTMENT_OPTIONS = [
 ];
 const PROJECT_PHASE_OPTIONS = ['Conception', 'Mise en Place', 'Consolidation', 'Dynamisation'];
 const COUNTRY_OPTIONS = ['CH', 'SN', 'FR', 'ISR'];
+const getFxView = (search) => {
+  const view = new URLSearchParams(search).get('fxView');
+  return ['converter', 'dashboard', 'history'].includes(view) ? view : 'converter';
+};
 
 const parseFiniteNumber = (value) => {
   if (value === null || value === undefined || value === '') return null;
@@ -112,7 +116,9 @@ const Finance = () => {
   const immoFormErrorRef = useRef(null);
   const [tauxDuJour, setTauxDuJour] = useState({});
   const [filterDevise, setFilterDevise] = useState('');
-  const [fxView, setFxView] = useState('converter');
+  const [fxView, setFxView] = useState(() => getFxView(location.search));
+  const fxNavigationRef = useRef(null);
+  const activeFxButtonRef = useRef(null);
   const [converterAmount, setConverterAmount] = useState('1000');
   const [converterDirection, setConverterDirection] = useState('CHF_CFA');
   const [converterDate, setConverterDate] = useState('');
@@ -723,12 +729,25 @@ const Finance = () => {
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get('tab');
+    setFxView(getFxView(location.search));
     if (['overview', 'architecture', 'processes', 'recettes', 'depenses', 'fx', 'budget', 'social', 'immobilier', 'assistant', 'resources', 'glossary'].includes(tab)) {
       setActiveTab(tab);
     } else {
       setActiveTab('overview');
     }
   }, [location.search]);
+
+  useEffect(() => {
+    if (activeTab === 'fx') centerTabHorizontally(fxNavigationRef.current, activeFxButtonRef.current);
+  }, [activeTab, fxView, language]);
+
+  const selectFxView = (view) => {
+    setFxView(view);
+    const params = new URLSearchParams(location.search);
+    params.set('tab', 'fx');
+    params.set('fxView', view);
+    navigate({ pathname: location.pathname, search: `?${params.toString()}`, hash: '#finance-fx-navigation' });
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -2303,20 +2322,20 @@ const Finance = () => {
               ))}
             </div>
 
-            <div className="flex gap-2 border-b border-slate-700 overflow-x-auto">
+            <div id="finance-fx-navigation" ref={fxNavigationRef} tabIndex={-1} role="navigation" aria-label={t.fx} className="scroll-mt-24 flex gap-2 border-b border-slate-700 overflow-x-auto">
               {[
                 { id: 'converter', label: t.convertisseur, icon: Calculator },
                 { id: 'dashboard', label: t.tableauBordFx, icon: BarChart3 },
                 { id: 'history', label: t.tauxHistorique, icon: History }
               ].map(({ id, label, icon: Icon }) => (
-                <button key={id} onClick={() => setFxView(id)} className={`flex items-center gap-2 px-4 py-3 whitespace-nowrap font-medium ${fxView === id ? 'text-orange-300 border-b-2 border-orange-400' : 'text-slate-400 hover:text-white'}`}>
+                <button key={id} ref={fxView === id ? activeFxButtonRef : null} aria-pressed={fxView === id} aria-controls={`finance-fx-${id}`} onClick={() => selectFxView(id)} className={`flex min-h-11 items-center gap-2 px-4 py-3 whitespace-nowrap font-medium ${fxView === id ? 'text-orange-300 border-b-2 border-orange-400' : 'text-slate-400 hover:text-white'}`}>
                   <Icon size={17} /> {label}
                 </button>
               ))}
             </div>
 
             {fxView === 'converter' && (
-              <div className="grid grid-cols-1 xl:grid-cols-[1.1fr_0.9fr] gap-5 items-start">
+              <div id="finance-fx-converter" className="min-h-[calc(100dvh-12rem)] grid grid-cols-1 xl:grid-cols-[1.1fr_0.9fr] gap-5 items-start">
                 <section className="bg-slate-800 border border-slate-700 rounded-lg p-6">
                   <h3 className="text-white font-bold mb-5 flex items-center gap-2"><SlidersHorizontal size={18} className="text-orange-400" /> {t.parametresConversion}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -2385,7 +2404,7 @@ const Finance = () => {
             )}
 
             {fxView === 'dashboard' && (
-              <section className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+              <section id="finance-fx-dashboard" className="min-h-[calc(100dvh-12rem)] bg-slate-800 rounded-lg p-6 border border-slate-700">
                 <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
                 <ResponsiveContainer width="100%" height={380}>
                   <LineChart data={fxYearlyData}>
@@ -2400,7 +2419,7 @@ const Finance = () => {
             )}
 
             {fxView === 'history' && (
-              <div>
+              <div id="finance-fx-history" className="min-h-[calc(100dvh-12rem)]">
                 <div className="mb-4 flex flex-wrap justify-end gap-4">
                   <select value={filterDevise} onChange={(e) => setFilterDevise(e.target.value)} className="px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
                     <option value="">{t.filtreDevise}</option><option value="CHF">CHF</option><option value="CFA">CFA</option><option value="USD">USD</option><option value="EUR">EUR</option>
