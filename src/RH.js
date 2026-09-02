@@ -599,7 +599,7 @@ const RH = () => {
 
         {/* Annuaire interne RH-001 */}
         {activeTab === 'directory' && (
-          <MembersDirectory onLoaded={handleDirectoryLoaded} />
+          <MembersDirectory onLoaded={handleDirectoryLoaded} initialMemberType={new URLSearchParams(location.search).get('memberType')} />
         )}
 
         {activeTab === 'resources' && (
