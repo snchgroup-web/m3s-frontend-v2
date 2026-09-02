@@ -259,6 +259,7 @@ const Finance = () => {
       tauxReference: 'Taux de référence',
       tauxReferenceIndisponible: 'Non disponible pour cette date',
       separationTauxInfo: 'Le taux appliqué provient de la transaction ou du fournisseur. Le taux de référence reste un repère distinct.',
+      appliedRateError: 'Renseignez un taux appliqué strictement positif, vérifié sur la transaction. Le taux de référence ne le remplace pas.',
       fxQualityTitle: 'Qualité FX à contrôler',
       fxQualityRateWarning: '{count} écriture(s) affichée(s) ont un taux appliqué absent ou nul. Elles restent visibles sans conversion automatique et doivent être qualifiées à partir de la preuve de transaction.',
       fxQualityAmountWarning: '{count} écriture(s) affichée(s) ont un montant CHF ou CFA indisponible. La valeur manquante n’est pas remplacée par zéro.',
@@ -412,6 +413,7 @@ const Finance = () => {
       tauxReference: 'Reference rate',
       tauxReferenceIndisponible: 'Unavailable for this date',
       separationTauxInfo: 'The applied rate comes from the transaction or provider. The reference rate remains a separate benchmark.',
+      appliedRateError: 'Enter a strictly positive applied rate verified against the transaction. The reference rate does not replace it.',
       fxQualityTitle: 'FX quality check required',
       fxQualityRateWarning: '{count} displayed transaction(s) have a missing or zero applied rate. They remain visible without automatic conversion and must be qualified from the transaction evidence.',
       fxQualityAmountWarning: '{count} displayed transaction(s) have an unavailable CHF or CFA amount. The missing value is not replaced with zero.',
@@ -565,6 +567,7 @@ const Finance = () => {
       tauxReference: 'Referenzkurs',
       tauxReferenceIndisponible: 'Für dieses Datum nicht verfügbar',
       separationTauxInfo: 'Der angewandte Kurs stammt aus der Transaktion oder vom Anbieter. Der Referenzkurs bleibt ein separater Vergleichswert.',
+      appliedRateError: 'Geben Sie einen anhand der Transaktion geprüften, strikt positiven angewandten Kurs ein. Der Referenzkurs ersetzt ihn nicht.',
       fxQualityTitle: 'FX-Datenqualität prüfen',
       fxQualityRateWarning: '{count} angezeigte Buchung(en) haben keinen oder einen null gesetzten angewandten Kurs. Sie bleiben ohne automatische Umrechnung sichtbar und müssen anhand des Transaktionsnachweises qualifiziert werden.',
       fxQualityAmountWarning: 'Bei {count} angezeigten Buchung(en) ist der CHF- oder CFA-Betrag nicht verfügbar. Der fehlende Wert wird nicht durch null ersetzt.',
@@ -623,6 +626,8 @@ const Finance = () => {
   };
 
   const t = translations[language];
+  const appliedFormRate = parseFiniteNumber(formData.tauxFxApplique);
+  const appliedRateInvalid = appliedFormRate === null || appliedFormRate <= 0;
   const withLabel = (template, label) => template.replace('{label}', label || t.operationLabel);
   const agentsByTeam = useMemo(() => buildTeamAgentDirectory(directoryMembers, {
     [TEAM_CODES.ZURICH]: t.teamZhCollective,
@@ -1620,8 +1625,9 @@ const Finance = () => {
     const nextReference = getHistoricalCfaPerChf(date)?.cfaPerChf || '';
     setFormData((previous) => {
       const previousReference = getHistoricalCfaPerChf(previous.date)?.cfaPerChf || '';
-      const appliedWasDefault = !previous.tauxFxApplique
-        || Number(previous.tauxFxApplique) === Number(previousReference);
+      const appliedWasDefault = editingId === null
+        && Number(previous.tauxFxApplique) > 0
+        && Number(previous.tauxFxApplique) === Number(previousReference);
       return {
         ...previous,
         date,
@@ -1636,9 +1642,9 @@ const Finance = () => {
       return;
     }
     const tauxFxReference = getHistoricalCfaPerChf(formData.date)?.cfaPerChf || 0;
-    const tauxFxApplique = toNumber(formData.tauxFxApplique || tauxFxReference);
-    if (tauxFxApplique <= 0) {
-      alert(t.remplirChamps);
+    const tauxFxApplique = appliedFormRate;
+    if (appliedRateInvalid) {
+      alert(t.appliedRateError);
       return;
     }
 
@@ -2791,7 +2797,7 @@ const Finance = () => {
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <label className="text-sm text-slate-300">
                     <span className="mb-1 block">{t.tauxReference}</span>
-                    <output className="block min-h-11 w-full rounded-lg border border-slate-600 bg-slate-900/50 px-4 py-2 text-slate-200">
+                    <output className="block min-h-11 w-full rounded-lg border border-slate-600 bg-slate-900 px-4 py-2 text-slate-200">
                       {getHistoricalCfaPerChf(formData.date)?.cfaPerChf
                         ? `${formatAmount(getHistoricalCfaPerChf(formData.date).cfaPerChf)} CFA / CHF`
                         : t.tauxReferenceIndisponible}
@@ -2804,13 +2810,18 @@ const Finance = () => {
                       min="0"
                       step="any"
                       required
-                      value={formData.tauxFxApplique || getHistoricalCfaPerChf(formData.date)?.cfaPerChf || ''}
+                      value={formData.tauxFxApplique}
+                      aria-invalid={appliedRateInvalid}
+                      aria-describedby={appliedRateInvalid ? 'finance-applied-rate-error' : undefined}
                       onChange={(event) => handleFormChange('tauxFxApplique', event.target.value)}
                       className="min-h-11 w-full rounded-lg border border-slate-600 bg-slate-700 px-4 py-2 text-white"
                     />
                   </label>
                 </div>
                 <p className="text-sm text-slate-300">{t.separationTauxInfo}</p>
+                {appliedRateInvalid && (
+                  <p id="finance-applied-rate-error" role="alert" className="text-sm text-amber-300">{t.appliedRateError}</p>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <label className="text-sm text-slate-300">
                     <span className="block mb-1">{t.team}</span>
@@ -2860,7 +2871,7 @@ const Finance = () => {
                 </div>
                 <div className="flex gap-4 justify-end">
                   <button onClick={() => { setShowModal(false); setSocialModal(false); }} disabled={savingFinance} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg disabled:opacity-50">{t.annuler}</button>
-                  <button onClick={handleSave} disabled={savingFinance} className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 px-4`}>{editingId ? t.enregistrer : t.creer}</button>
+                  <button onClick={handleSave} disabled={savingFinance || appliedRateInvalid} className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 px-4`}>{editingId ? t.enregistrer : t.creer}</button>
                 </div>
               </div>
             </div>

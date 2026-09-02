@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { LanguageProvider } from './LanguageContext';
 import Finance from './Finance';
 import api from './api';
@@ -79,6 +79,7 @@ beforeEach(() => {
 
 test('requires confirmation before creating a revenue entry and then reports success', async () => {
   renderFinance();
+  await act(async () => {});
 
   fireEvent.click(await screen.findByRole('button', { name: 'Nouvelle Recette' }));
   fireEvent.change(screen.getByPlaceholderText('Description'), { target: { value: 'Cotisation pilote' } });
@@ -160,4 +161,112 @@ test('keeps a local FX rate until deletion is confirmed', async () => {
 
   expect(screen.queryByText('FX-TODAY')).not.toBeInTheDocument();
   expect(screen.getByText('Le taux « CHF → CFA » a été supprimé localement avec succès.')).toBeInTheDocument();
+});
+
+const historicalRow = rate => ({
+  source_id: 'QA-FX-001', description: 'Transaction fictive QA',
+  date_document: '2026-09-01', devise_origine: 'CFA', montant_origine: 100000,
+  montant_chf: 0, montant_cfa: 100000, taux_fx_applique: rate,
+});
+
+const useHistoricalRates = () => api.getFxHistory.mockResolvedValue({ data: [
+  { source_id: 'QA-FX-A', date_taux: '2026-09-01', taux: 700, devise_base: 'CHF', devise_cible: 'CFA' },
+  { source_id: 'QA-FX-B', date_taux: '2026-09-02', taux: 710, devise_base: 'CHF', devise_cible: 'CFA' },
+] });
+
+const changeToSeptemberSecond = () => {
+  fireEvent.click(screen.getByRole('button', { name: /Sélectionner une date/ }));
+  fireEvent.click(within(screen.getByRole('dialog', { name: 'Sélecteur de date' })).getAllByRole('button', { name: '2', exact: true })[0]);
+};
+
+test.each([
+  ['recettes', 0], ['recettes', null], ['recettes', -2], ['depenses', 0], ['depenses', null],
+])('does not replace an unknown applied rate when editing %s (%s)', async (tab, rate) => {
+  mockSearch = '?tab=' + tab;
+  useHistoricalRates();
+  (tab === 'recettes' ? api.getIncome : api.getExpenses).mockResolvedValue({ data: [historicalRow(rate)] });
+  renderFinance();
+  fireEvent.click(await screen.findByText('QA-FX-001'));
+  const input = screen.getByLabelText('Taux appliqué *');
+  expect(input).toHaveValue(null);
+  expect(input).toHaveAttribute('aria-invalid', 'true');
+  expect(screen.getByRole('button', { name: 'Enregistrer' })).toBeDisabled();
+  expect(screen.getByRole('alert')).toHaveTextContent('taux appliqué strictement positif');
+  changeToSeptemberSecond();
+  expect(input).toHaveValue(null);
+  expect(api.updateIncome).not.toHaveBeenCalled();
+  expect(api.updateExpense).not.toHaveBeenCalled();
+});
+
+test('keeps a recorded rate even when it equals the old date reference', async () => {
+  useHistoricalRates();
+  api.getIncome.mockResolvedValue({ data: [historicalRow(700)] });
+  renderFinance();
+  fireEvent.click(await screen.findByText('QA-FX-001'));
+  changeToSeptemberSecond();
+  expect(screen.getByLabelText('Taux appliqué *')).toHaveValue(700);
+  expect(screen.getAllByText('710 CFA / CHF').length).toBeGreaterThan(0);
+});
+
+test('requires an explicit valid rate then confirms the historical update', async () => {
+  useHistoricalRates();
+  api.getIncome.mockResolvedValue({ data: [historicalRow(0)] });
+  api.updateIncome.mockResolvedValue({ success: true });
+  renderFinance();
+  fireEvent.click(await screen.findByText('QA-FX-001'));
+  const input = screen.getByLabelText('Taux appliqué *');
+  for (const rate of ['', '0', '-1']) {
+    fireEvent.change(input, { target: { value: rate } });
+    expect(screen.getByRole('button', { name: 'Enregistrer' })).toBeDisabled();
+  }
+  fireEvent.change(input, { target: { value: '705' } });
+  expect(input).toHaveAttribute('aria-invalid', 'false');
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  expect(api.updateIncome).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
+  await waitFor(() => expect(api.updateIncome).toHaveBeenCalledWith('QA-FX-001', expect.objectContaining({
+    taux_fx_applique: 705, taux_fx: 705, taux_fx_reference: 700,
+    montant_origine: 100000, montant_chf: 100000 / 705, montant_cfa: 100000,
+  })));
+});
+
+test('does not reinsert the suggested rate after clearing it in a new entry', async () => {
+  renderFinance();
+  await act(async () => {});
+  fireEvent.click(await screen.findByRole('button', { name: 'Nouvelle Recette' }));
+  const input = screen.getByLabelText('Taux appliqué *');
+  expect(input).toHaveValue(710);
+  fireEvent.change(input, { target: { value: '' } });
+  expect(input).toHaveValue(null);
+  expect(screen.getByRole('button', { name: 'Créer' })).toBeDisabled();
+  expect(api.createIncome).not.toHaveBeenCalled();
+});
+
+test.each([
+  ['EN', 'Applied rate *', 'Save', 'strictly positive applied rate'],
+  ['DE', 'Angewandter Kurs *', 'Speichern', 'strikt positiven angewandten Kurs'],
+])('explains the invalid rate in %s', async (language, label, save, message) => {
+  localStorage.setItem('language', language);
+  api.getIncome.mockResolvedValue({ data: [historicalRow(null)] });
+  renderFinance();
+  fireEvent.click(await screen.findByText('QA-FX-001'));
+  expect(screen.getByLabelText(label)).toHaveValue(null);
+  expect(screen.getByRole('alert')).toHaveTextContent(message);
+  expect(screen.getByRole('button', { name: save })).toBeDisabled();
+});
+
+test('does not backfill a historical rate when reference data arrives after opening', async () => {
+  let resolveRates;
+  api.getFxHistory.mockReturnValue(new Promise(resolve => { resolveRates = resolve; }));
+  api.getIncome.mockResolvedValue({ data: [historicalRow(null)] });
+  renderFinance();
+  fireEvent.click(await screen.findByText('QA-FX-001'));
+  expect(screen.getByLabelText('Taux appliqué *')).toHaveValue(null);
+  await act(async () => resolveRates({ data: [{
+    source_id: 'QA-FX-A', date_taux: '2026-09-01', taux: 700, devise_base: 'CHF', devise_cible: 'CFA',
+  }] }));
+  expect(screen.getAllByText('700 CFA / CHF').length).toBeGreaterThan(0);
+  expect(screen.getByLabelText('Taux appliqué *')).toHaveValue(null);
+  expect(screen.getByRole('button', { name: 'Enregistrer' })).toBeDisabled();
 });
