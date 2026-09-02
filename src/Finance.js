@@ -14,6 +14,7 @@ import FinanceFunctionFrame from './FinanceFunctionFrame';
 import FinanceOverviewIndicators from './FinanceOverviewIndicators';
 import FinanceTransactionCount from './FinanceTransactionCount';
 import { normalizeFinanceSummary } from './financeSummary';
+import { matchesIncomeScope, normalizeIncomeScope } from './financeIncomeScope';
 import FinanceArchitecture from './FinanceArchitecture';
 import FinanceProcessControls from './FinanceProcessControls';
 import ActionConfirmationDialog from './ActionConfirmationDialog';
@@ -91,6 +92,8 @@ const Finance = () => {
   const [financeSummary, setFinanceSummary] = useState(null);
   const [financeSummaryStatus, setFinanceSummaryStatus] = useState('loading');
   const [financeExtractStatus, setFinanceExtractStatus] = useState('loading');
+  const [incomeExtractStatus, setIncomeExtractStatus] = useState('loading');
+  const incomeScope = normalizeIncomeScope(new URLSearchParams(location.search).get('incomeScope'));
   const [socialRows, setSocialRows] = useState([]);
   const [socialSummary, setSocialSummary] = useState({});
   const [socialError, setSocialError] = useState('');
@@ -161,6 +164,10 @@ const Finance = () => {
       architecture: 'Architecture & relations',
       processes: 'Processus & procédures',
       recettes: 'Recettes',
+      incomeScope: 'Périmètre des recettes',
+      allIncome: 'Toutes les recettes',
+      incomeDonations: 'Dons',
+      incomeFinancing: 'Financements',
       depenses: 'Dépenses',
       fx: 'Historique FX',
       social: 'Social',
@@ -322,6 +329,10 @@ const Finance = () => {
       architecture: 'Architecture & relations',
       processes: 'Processes & procedures',
       recettes: 'Revenue',
+      incomeScope: 'Income scope',
+      allIncome: 'All income',
+      incomeDonations: 'Donations',
+      incomeFinancing: 'Financing',
       depenses: 'Expenses',
       fx: 'FX History',
       social: 'Social',
@@ -483,6 +494,10 @@ const Finance = () => {
       architecture: 'Architektur & Beziehungen',
       processes: 'Prozesse & Verfahren',
       recettes: 'Einnahmen',
+      incomeScope: 'Einnahmenbereich',
+      allIncome: 'Alle Einnahmen',
+      incomeDonations: 'Spenden',
+      incomeFinancing: 'Finanzierungen',
       depenses: 'Ausgaben',
       fx: 'Wechselkurshistorie',
       social: 'Soziales',
@@ -764,6 +779,7 @@ const Finance = () => {
       hasExplicitTauxFx,
       dateTauxFx: cleanDate(item.date_taux_fx || item.date_taux || item.date_updated || item.created_at),
       sourceTauxFx: item.source_taux_fx || item.source_taux || item.source || 'Standard',
+      category: item.category,
       categorie: item.category || item.categorie || fallbackCategory,
       date: cleanDate(item.date_document || item.date_created || item.created_at || item.date),
       agent: item.agent || item.agent_name || item.responsable || item.owner || item.created_by || 'Non renseigne',
@@ -820,6 +836,7 @@ const Finance = () => {
     setFinanceSummary(null);
     setFinanceSummaryStatus('loading');
     setFinanceExtractStatus('loading');
+    setIncomeExtractStatus('loading');
 
     const [dashboardResult, expensesResult, incomeResult] = await Promise.allSettled([
       api.getFinanceDashboard(),
@@ -833,10 +850,10 @@ const Finance = () => {
     setFinanceSummary(summary);
     setFinanceSummaryStatus(summary ? 'available' : 'unavailable');
 
-    const expensesData = expensesResult.status === 'fulfilled' && Array.isArray(expensesResult.value?.data)
+    const expensesData = expensesResult.status === 'fulfilled' && expensesResult.value?.success !== false && Array.isArray(expensesResult.value?.data)
       ? expensesResult.value.data
       : null;
-    const incomeData = incomeResult.status === 'fulfilled' && Array.isArray(incomeResult.value?.data)
+    const incomeData = incomeResult.status === 'fulfilled' && incomeResult.value?.success !== false && Array.isArray(incomeResult.value?.data)
       ? incomeResult.value.data
       : null;
 
@@ -849,6 +866,7 @@ const Finance = () => {
 
     setDepenses(normalizedExpenses);
     setRecettes(normalizedIncome);
+    setIncomeExtractStatus(incomeData ? 'available' : 'unavailable');
     setFinanceExtractStatus(
       expensesData && incomeData ? 'available' : (expensesData || incomeData ? 'partial' : 'unavailable')
     );
@@ -1318,6 +1336,18 @@ const Finance = () => {
   }, [loadRealEstateFinance]);
 
   const recettesAffichees = recettes;
+  const incomeRegisterRows = useMemo(
+    () => recettes.filter(row => matchesIncomeScope(row, incomeScope)),
+    [recettes, incomeScope]
+  );
+  const selectIncomeScope = (value) => {
+    const params = new URLSearchParams(location.search);
+    const scope = normalizeIncomeScope(value);
+    if (scope === 'all') params.delete('incomeScope');
+    else params.set('incomeScope', scope);
+    params.set('tab', 'recettes');
+    navigate({ pathname: location.pathname, search: `?${params.toString()}`, hash: '#finance-revenue-register' });
+  };
   const depensesAffichees = depenses;
   const renderFxQualityNotice = (rows) => {
     const missingRateCount = rows.filter((row) => !row.hasExplicitTauxFx).length;
@@ -2063,13 +2093,27 @@ const Finance = () => {
         {activeTab === 'processes' && <FinanceProcessControls language={language} />}
 
         {activeTab === 'recettes' && (
-          <div id="finance-revenue-register" className="scroll-mt-24" tabIndex="-1">
-            <div className="flex justify-end mb-4">
+          <div id="finance-revenue-register" className="min-h-[calc(100dvh-12rem)] scroll-mt-24" tabIndex="-1">
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <label className="flex min-w-0 flex-col gap-1 text-sm text-slate-300">
+                <span>{t.incomeScope}</span>
+                <select value={incomeScope} onChange={event => selectIncomeScope(event.target.value)} className="m3s-field min-h-11 w-full px-3 py-2 sm:w-64">
+                  <option value="all">{t.allIncome}</option>
+                  <option value="donations">{t.incomeDonations}</option>
+                  <option value="financing">{t.incomeFinancing}</option>
+                </select>
+              </label>
               <StandardCreateButton onClick={() => openNewModal('recette')}>{t.nouvelleRecette}</StandardCreateButton>
             </div>
-            {renderFxQualityNotice(recettesAffichees)}
+            <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1" role="status">
+              <FinanceTransactionCount count={incomeRegisterRows.length} state={incomeExtractStatus} scope="extract" language={language} />
+              <span className="text-xs text-slate-400">{t.loadedExtract} · {t.maxPerRegister}</span>
+            </div>
+            {incomeExtractStatus === 'available' ? <>
+            {renderFxQualityNotice(incomeRegisterRows)}
             <TableControls
-              rows={recettesAffichees}
+              key={incomeScope}
+              rows={incomeRegisterRows}
               renderTable={(visibleRows) => (
                 <table className="min-w-[1900px] text-sm">
                   <thead className="sticky top-0 z-10 bg-slate-700">
@@ -2124,6 +2168,7 @@ const Finance = () => {
                 </table>
               )}
             />
+            </> : <p className="py-6 text-sm text-slate-300" role="status">{incomeExtractStatus === 'loading' ? t.sourceLoading : t.extractUnavailable}</p>}
           </div>
         )}
 
