@@ -506,6 +506,57 @@ const financeActions = [
   ['social', 'delete', 'deleteIncome'], ['immobilier', 'delete', 'deleteRealEstateFinance'],
 ];
 
+test.each(['recettes', 'depenses', 'social'])('shows both currencies for the %s draft without changing the original input', async tab => {
+  mockSearch = '?tab=' + tab;
+  api.getSocialFinance.mockResolvedValue({ data: [], summary: { total_chf: 0, total_cfa_historique: 0 } });
+  renderFinance();
+  await act(async () => {});
+  const add = { recettes: 'Nouvelle Recette', depenses: 'Nouvelle Dépense', social: 'Nouveau flux social' }[tab];
+  fireEvent.click(screen.getByRole('button', { name: add }));
+  const pair = screen.getByTestId('finance-form-amount-pair');
+  const text = () => pair.textContent.replace(/\s/g, '');
+  fireEvent.change(screen.getByPlaceholderText('Montant'), { target: { value: '100' } });
+  fireEvent.change(screen.getByLabelText('Taux appliqué *'), { target: { value: '705' } });
+  expect(text()).toBe('100CHF≈70500CFA');
+  fireEvent.change(screen.getByLabelText('Devise'), { target: { value: 'CFA' } });
+  fireEvent.change(screen.getByPlaceholderText('Montant'), { target: { value: '70500' } });
+  expect(text()).toBe('100CHF≈70500CFA');
+  fireEvent.change(screen.getByLabelText('Taux appliqué *'), { target: { value: '' } });
+  expect(text()).toBe('—CHF≈70500CFA');
+  expect(screen.getByPlaceholderText('Montant')).toHaveValue(70500);
+  expect(api.createIncome).not.toHaveBeenCalled();
+  expect(api.createExpense).not.toHaveBeenCalled();
+});
+
+test('keeps recorded immo currencies distinct while translating the repayment at its historical rate', async () => {
+  await openImmoHistory({ montant_chf: 100, montant_cfa: 70000, taux_fx: 695, part_cheikh_chf: 10, remboursement_cheikh_chf: 20 });
+  expect(screen.getByTestId('immo-form-amount-pair').textContent.replace(/\s/g, '')).toBe('100CHF70000CFA');
+  expect(screen.getByTestId('immo-form-share-pair').textContent.replace(/\s/g, '')).toBe('10CHF≈6950CFA');
+  expect(screen.getByTestId('immo-form-repayment-pair').textContent.replace(/\s/g, '')).toBe('20CHF≈13900CFA');
+  changeToSeptemberSecond();
+  expect(screen.getByTestId('immo-form-repayment-pair').textContent.replace(/\s/g, '')).toBe('20CHF≈13900CFA');
+  expect(screen.getByLabelText('Taux appliqué')).toHaveValue(695);
+  expect(api.updateRealEstateFinance).not.toHaveBeenCalled();
+});
+
+test('does not fill a missing recorded immo currency from its rate', async () => {
+  await openImmoHistory({ montant_cfa: null, taux_fx: 700 });
+  expect(screen.getByTestId('immo-form-amount-pair').textContent.replace(/\s/g, '')).toBe('100CHF—CFA');
+  expect(screen.getByLabelText('Montant CFA')).toHaveValue(null);
+  expect(api.updateRealEstateFinance).not.toHaveBeenCalled();
+});
+
+test('previews a new immo counterpart without writing into the amount fields', async () => {
+  mockSearch = '?tab=immobilier';
+  renderFinance();
+  fireEvent.click(await screen.findByRole('button', { name: 'Nouvelle opération Immo' }));
+  fireEvent.change(screen.getByLabelText('Montant CHF'), { target: { value: '100' } });
+  fireEvent.change(screen.getByLabelText('Taux appliqué'), { target: { value: '705' } });
+  expect(screen.getByTestId('immo-form-amount-pair').textContent.replace(/\s/g, '')).toBe('100CHF≈70500CFA');
+  expect(screen.getByLabelText('Montant CFA')).toHaveValue(null);
+  expect(api.createRealEstateFinance).not.toHaveBeenCalled();
+});
+
 test.each(['recettes', 'depenses', 'social'])('keeps %s required-field feedback in the form and preserves the draft on decline', async tab => {
   mockSearch = '?tab=' + tab;
   renderFinance();
