@@ -13,7 +13,7 @@ test('renders the cautious French process, procedure and archive model', () => {
   expect(screen.getByRole('heading', { name: 'Modèle de registre des dossiers et archives' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Cycle gouverné des rapports d’activité' })).toBeInTheDocument();
   expect(screen.getByText('CYCLE CADRÉ · REVUE PILOTE DISPONIBLE')).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Revue hebdomadaire du 10 au 15 août 2026' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Revue hebdomadaire du 24 au 30 août 2026' })).toBeInTheDocument();
   expect(screen.getByText(/ne représentent ni dossiers ouverts ni statuts officiels/i)).toBeInTheDocument();
 });
 

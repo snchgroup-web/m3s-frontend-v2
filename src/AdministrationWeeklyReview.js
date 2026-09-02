@@ -12,6 +12,13 @@ import {
   ShieldCheck,
   UsersRound
 } from 'lucide-react';
+import { WEEKLY_REVIEW_W35 } from './administrationWeeklyReviewW35';
+
+const PERIOD_COPY = {
+  FR: { label: 'Période de la revue', recent: '24–30 août 2026 · W35', pilot: '10–15 août 2026 · pilote W33', snapshot: 'Lecture rétrospective : les statuts appartiennent à la période sélectionnée.' },
+  EN: { label: 'Review period', recent: '24–30 August 2026 · W35', pilot: '10–15 August 2026 · W33 pilot', snapshot: 'Retrospective view: statuses belong to the selected period.' },
+  DE: { label: 'Zeitraum des Rückblicks', recent: '24.–30. August 2026 · W35', pilot: '10.–15. August 2026 · Pilot W33', snapshot: 'Rückblick: Die Statusangaben gehören zum gewählten Zeitraum.' }
+};
 
 const COPY = {
   FR: {
@@ -212,16 +219,29 @@ const GOVERNANCE_ICONS = [ClipboardCheck, UsersRound, ShieldCheck, Archive];
 
 const AdministrationWeeklyReview = ({ language = 'FR' }) => {
   const [sourcesOpen, setSourcesOpen] = useState(false);
-  const t = COPY[language] || COPY.FR;
+  const [period, setPeriod] = useState('2026-W35');
+  const locale = COPY[language] ? language : 'FR';
+  const periodCopy = PERIOD_COPY[locale];
+  const t = { ...COPY[locale], ...(period === '2026-W35' ? WEEKLY_REVIEW_W35[locale] : {}) };
 
   return (
-    <section className="mt-6 border-t border-slate-700 pt-6" aria-labelledby="weekly-review-title">
+    <section id="weekly-review-title" tabIndex="-1" className="mt-6 scroll-mt-24 border-t border-slate-700 pt-6" aria-labelledby="weekly-review-heading">
+      <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-slate-300">{periodCopy.snapshot}</p>
+        <label className="flex min-w-0 flex-col gap-1 text-sm text-slate-200">
+          {periodCopy.label}
+          <select value={period} onChange={event => { setPeriod(event.target.value); setSourcesOpen(false); }} className="min-h-11 max-w-full rounded-md border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100">
+            <option value="2026-W35">{periodCopy.recent}</option>
+            <option value="2026-W33">{periodCopy.pilot}</option>
+          </select>
+        </label>
+      </div>
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="flex items-start gap-3">
           <CalendarRange className="mt-0.5 shrink-0 text-violet-700 dark:text-violet-300" size={22} aria-hidden="true" />
           <div>
             <p className="text-xs font-bold uppercase text-violet-700 dark:text-violet-300">{t.eyebrow}</p>
-            <h4 id="weekly-review-title" className="mt-1 text-lg font-semibold text-slate-100">{t.title}</h4>
+            <h4 id="weekly-review-heading" className="mt-1 text-lg font-semibold text-slate-100">{t.title}</h4>
             <p className="mt-2 max-w-5xl text-sm leading-6 text-slate-300">{t.intro}</p>
           </div>
         </div>
@@ -254,10 +274,10 @@ const AdministrationWeeklyReview = ({ language = 'FR' }) => {
             <h5 className="font-semibold text-slate-100">{t.resultsTitle}</h5>
           </div>
           <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-            {t.results.map(result => (
+            {t.results.map((result, index) => (
               <li key={result} className="flex items-start gap-2 border-b border-slate-700/80 py-2 text-sm leading-5 text-slate-300">
                 <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-300" size={15} aria-hidden="true" />
-                <span>{result}</span>
+                <span>{result}{t.resultReferences?.[index] && <span className="mt-2 block text-xs text-slate-400">{t.resultReferences[index]}</span>}</span>
               </li>
             ))}
           </ul>
@@ -360,7 +380,7 @@ const AdministrationWeeklyReview = ({ language = 'FR' }) => {
           <div className="mt-3" aria-label={t.sourcesTitle}>
             <h5 className="text-sm font-semibold text-slate-100">{t.sourcesTitle}</h5>
             <ul className="mt-2 space-y-1 text-xs leading-5 text-slate-400">
-              {t.sources.map(source => <li key={source} className="break-all font-mono">{source}</li>)}
+              {t.sources.map(source => <li key={source} className="py-1"><span className="break-all font-mono">{source}</span>{t.sourceSections?.[source] && <ul className="mt-1 space-y-1 pl-3">{t.sourceSections[source].map(section => <li key={section}>{section}</li>)}</ul>}</li>)}
             </ul>
           </div>
         )}
