@@ -70,6 +70,17 @@ test('distinguishes historical CFA values from current-rate equivalents', () => 
   expect(getFinanceKpiDefinition('unknown', 'FR')).toBeNull();
 });
 
+test.each([
+  ['FR', 'par Cheikh'], ['EN', 'from Cheikh'], ['DE', 'durch Cheikh'],
+])('defines repayments and the outstanding balance with Cheikh as payer in %s', (language, payer) => {
+  const repayments = getFinanceKpiDefinition('real-estate-reimbursements', language);
+  const balance = getFinanceKpiDefinition('outstanding-balance', language);
+  expect(repayments.definition).toContain(payer);
+  expect(balance.definition).toContain(payer);
+  expect(repayments.source).toContain('remboursements_total_chf');
+  expect(balance.source).toContain('solde_ouvert_cheikh_chf');
+});
+
 test.each(['FR', 'EN', 'DE'])('provides the six governed Operations KPIs in %s', (language) => {
   const definitions = getOperationsKpiDefinitions(language);
 

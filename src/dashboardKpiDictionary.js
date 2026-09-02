@@ -159,7 +159,7 @@ const financeDictionary = {
     },
     {
       id: 'real-estate-reimbursements', label: 'Remboursements immobiliers',
-      definition: 'Somme CHF des remboursements immobiliers réalisés ; l’équivalent CFA affiché est une conversion au taux de référence courant.',
+      definition: 'Somme CHF des remboursements immobiliers réalisés par Cheikh, et non vers Cheikh ; l’équivalent CFA affiché est une conversion au taux de référence courant.',
       scope: 'Le CFA est indicatif et ne constitue pas un total historique des montants CFA effectivement remboursés.',
       source: 'API Finance immobilière · remboursements_total_chf, converti avec taux_du_jour.CHF_CFA.',
       freshness: 'Le CHF suit la synthèse immobilière ; l’équivalent CFA varie avec le taux de référence disponible.',
@@ -167,7 +167,7 @@ const financeDictionary = {
     },
     {
       id: 'outstanding-balance', label: 'Solde restant ouvert',
-      definition: 'Différence CHF entre la part attribuée à Cheikh et les remboursements réalisés ; l’équivalent CFA utilise le taux de référence courant.',
+      definition: 'Différence CHF entre la part attribuée à Cheikh et les remboursements réalisés par Cheikh ; l’équivalent CFA utilise le taux de référence courant.',
       scope: 'Indicateur de suivi interne. Il ne constitue ni une reconnaissance de dette, ni une créance juridiquement ou comptablement certifiée.',
       source: 'API Finance immobilière · solde_ouvert_cheikh_chf, converti avec taux_du_jour.CHF_CFA.',
       freshness: 'Le CHF suit la synthèse immobilière ; l’équivalent CFA varie avec le taux de référence disponible.',
@@ -219,12 +219,12 @@ const financeDictionary = {
       freshness: 'Refreshed on load from the available real estate summary.', action: 'Opens Real estate finance in Finance.'
     },
     {
-      id: 'real-estate-reimbursements', label: 'Real estate reimbursements', definition: 'Sum in CHF of realised real estate reimbursements; the displayed CFA equivalent is converted at the current reference rate.',
+      id: 'real-estate-reimbursements', label: 'Real estate reimbursements', definition: 'Sum in CHF of realised real estate repayments from Cheikh, not to Cheikh; the displayed CFA equivalent is converted at the current reference rate.',
       scope: 'The CFA amount is indicative and is not a historical total of CFA amounts actually reimbursed.', source: 'Real estate Finance API · remboursements_total_chf, converted with taux_du_jour.CHF_CFA.',
       freshness: 'CHF follows the real estate summary; the CFA equivalent changes with the available reference rate.', action: 'Opens Real estate finance in Finance.'
     },
     {
-      id: 'outstanding-balance', label: 'Outstanding balance', definition: 'CHF difference between Cheikh’s attributed share and realised reimbursements; the CFA equivalent uses the current reference rate.',
+      id: 'outstanding-balance', label: 'Outstanding balance', definition: 'CHF difference between Cheikh’s attributed share and realised repayments from Cheikh; the CFA equivalent uses the current reference rate.',
       scope: 'Internal tracking indicator. It is neither an acknowledgment of debt nor a legally or accounting-certified receivable.', source: 'Real estate Finance API · solde_ouvert_cheikh_chf, converted with taux_du_jour.CHF_CFA.',
       freshness: 'CHF follows the real estate summary; the CFA equivalent changes with the available reference rate.', action: 'Opens Real estate finance in Finance.'
     },
@@ -271,12 +271,12 @@ const financeDictionary = {
       freshness: 'Beim Laden aus der verfügbaren Immobilienübersicht aktualisiert.', action: 'Öffnet die Immobilienfinanzierung in Finanzen.'
     },
     {
-      id: 'real-estate-reimbursements', label: 'Immobilienrückzahlungen', definition: 'CHF-Summe der realisierten Immobilienrückzahlungen; der angezeigte CFA-Gegenwert wird zum aktuellen Referenzkurs umgerechnet.',
+      id: 'real-estate-reimbursements', label: 'Immobilienrückzahlungen', definition: 'CHF-Summe der durch Cheikh geleisteten Immobilienrückzahlungen, nicht der Zahlungen an Cheikh; der angezeigte CFA-Gegenwert wird zum aktuellen Referenzkurs umgerechnet.',
       scope: 'Der CFA-Betrag ist indikativ und kein historischer Gesamtbetrag der tatsächlich in CFA geleisteten Rückzahlungen.', source: 'Immobilienfinanz-API · remboursements_total_chf, umgerechnet mit taux_du_jour.CHF_CFA.',
       freshness: 'CHF folgt der Immobilienübersicht; der CFA-Gegenwert ändert sich mit dem verfügbaren Referenzkurs.', action: 'Öffnet die Immobilienfinanzierung in Finanzen.'
     },
     {
-      id: 'outstanding-balance', label: 'Offener Restsaldo', definition: 'CHF-Differenz zwischen Cheikh zugeordnetem Anteil und realisierten Rückzahlungen; der CFA-Gegenwert nutzt den aktuellen Referenzkurs.',
+      id: 'outstanding-balance', label: 'Offener Restsaldo', definition: 'CHF-Differenz zwischen Cheikh zugeordnetem Anteil und durch Cheikh geleisteten Rückzahlungen; der CFA-Gegenwert nutzt den aktuellen Referenzkurs.',
       scope: 'Interne Steuerungskennzahl. Sie ist weder Schuldanerkenntnis noch rechtlich oder buchhalterisch bestätigte Forderung.', source: 'Immobilienfinanz-API · solde_ouvert_cheikh_chf, umgerechnet mit taux_du_jour.CHF_CFA.',
       freshness: 'CHF folgt der Immobilienübersicht; der CFA-Gegenwert ändert sich mit dem verfügbaren Referenzkurs.', action: 'Öffnet die Immobilienfinanzierung in Finanzen.'
     },
