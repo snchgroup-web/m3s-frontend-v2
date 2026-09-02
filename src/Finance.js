@@ -313,6 +313,9 @@ const Finance = () => {
       confirmUpdate: 'Oui, modifier',
       confirmDelete: 'Oui, supprimer',
       decline: 'Non',
+      actionUnconfirmed: 'Action non confirmée',
+      actionUnconfirmedDetails: 'Vérifiez le registre avant toute nouvelle tentative pour éviter un doublon ou une suppression répétée.',
+      closeFeedback: 'Fermer',
       operationLabel: 'Opération financière',
       savedSuccess: '« {label} » a été enregistrée avec succès.',
       updatedSuccess: '« {label} » a été modifiée avec succès.',
@@ -471,6 +474,9 @@ const Finance = () => {
       confirmUpdate: 'Yes, update',
       confirmDelete: 'Yes, delete',
       decline: 'No',
+      actionUnconfirmed: 'Action not confirmed',
+      actionUnconfirmedDetails: 'Check the register before trying again to avoid a duplicate or repeated deletion.',
+      closeFeedback: 'Close',
       operationLabel: 'Financial operation',
       savedSuccess: '“{label}” was saved successfully.',
       updatedSuccess: '“{label}” was updated successfully.',
@@ -629,6 +635,9 @@ const Finance = () => {
       confirmUpdate: 'Ja, ändern',
       confirmDelete: 'Ja, löschen',
       decline: 'Nein',
+      actionUnconfirmed: 'Aktion nicht bestätigt',
+      actionUnconfirmedDetails: 'Prüfen Sie das Register vor einem erneuten Versuch, um einen doppelten Eintrag oder wiederholtes Löschen zu vermeiden.',
+      closeFeedback: 'Schliessen',
       operationLabel: 'Finanzvorgang',
       savedSuccess: '„{label}“ wurde erfolgreich gespeichert.',
       updatedSuccess: '„{label}“ wurde erfolgreich geändert.',
@@ -1651,7 +1660,8 @@ const Finance = () => {
   };
 
   const executeImmoDelete = async (action) => {
-    await api.deleteRealEstateFinance(action.itemId);
+    const response = await api.deleteRealEstateFinance(action.itemId);
+    if (response?.success === false) throw new Error('Real-estate deletion not confirmed');
     await loadRealEstateFinance();
     setFeedback({ tone: 'success', message: withLabel(t.deletedSuccess, action.label) });
   };
@@ -1735,11 +1745,13 @@ const Finance = () => {
   const executeFinanceSave = async (action) => {
     setSavingFinance(true);
     try {
+      let response;
       if (action.type === 'recette') {
-        if (action.itemId !== null) await api.updateIncome(action.itemId, action.payload);
-        else await api.createIncome(action.payload);
-      } else if (action.itemId !== null) await api.updateExpense(action.itemId, action.payload);
-      else await api.createExpense(action.payload);
+        if (action.itemId !== null) response = await api.updateIncome(action.itemId, action.payload);
+        else response = await api.createIncome(action.payload);
+      } else if (action.itemId !== null) response = await api.updateExpense(action.itemId, action.payload);
+      else response = await api.createExpense(action.payload);
+      if (response?.success === false) throw new Error('Finance save not confirmed');
       await loadFinanceData();
       if (action.socialModal) await loadSocialData();
       setShowModal(false);
@@ -1772,8 +1784,10 @@ const Finance = () => {
   };
 
   const executeFinanceDelete = async (action) => {
-    if (action.type === 'recette') await api.deleteIncome(action.itemId);
-    else await api.deleteExpense(action.itemId);
+    const response = action.type === 'recette'
+      ? await api.deleteIncome(action.itemId)
+      : await api.deleteExpense(action.itemId);
+    if (response?.success === false) throw new Error('Finance deletion not confirmed');
     await loadFinanceData();
     if (action.socialModal) await loadSocialData();
     setFeedback({ tone: 'success', message: withLabel(t.deletedSuccess, action.label) });
@@ -1855,7 +1869,7 @@ const Finance = () => {
   };
 
   const confirmPendingAction = async () => {
-    if (!pendingAction) return;
+    if (!pendingAction || pendingAction.error || confirmingAction) return;
     const action = pendingAction;
     setConfirmingAction(true);
     try {
@@ -1865,12 +1879,14 @@ const Finance = () => {
       else if (action.scope === 'finance') await executeFinanceSave(action);
       else if (action.scope === 'fx' && action.action === 'delete') executeFxDelete(action);
       else if (action.scope === 'fx') executeFxSave(action);
+      setPendingAction(null);
     } catch (error) {
-      if (action.scope === 'immo' && action.action !== 'delete') setImmoFormError('save');
-      else alert(error.message);
+      if (action.scope === 'immo' && action.action !== 'delete') {
+        setImmoFormError('save');
+        setPendingAction(null);
+      } else setPendingAction({ ...action, error: true });
     } finally {
       setConfirmingAction(false);
-      setPendingAction(null);
     }
   };
 
@@ -2995,8 +3011,10 @@ const Finance = () => {
         {pendingAction && confirmation && (
           <ActionConfirmationDialog
             id="finance-action-confirmation"
-            title={confirmation.title}
-            body={withLabel(confirmation.body, pendingAction.label)}
+            title={pendingAction.error ? t.actionUnconfirmed : confirmation.title}
+            body={pendingAction.error ? pendingAction.label : withLabel(confirmation.body, pendingAction.label)}
+            error={pendingAction.error ? t.actionUnconfirmedDetails : undefined}
+            closeLabel={t.closeFeedback}
             cancelLabel={t.decline}
             confirmLabel={confirmation.confirm}
             action={pendingAction.action}

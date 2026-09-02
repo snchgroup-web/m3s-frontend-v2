@@ -15,19 +15,23 @@ const ActionConfirmationDialog = ({
   confirmLabel,
   action = 'update',
   busy = false,
+  error,
+  closeLabel,
   onCancel,
   onConfirm
 }) => {
   const cancelButtonRef = useRef(null);
+  const errorRef = useRef(null);
 
   useEffect(() => {
-    cancelButtonRef.current?.focus();
+    if (error) errorRef.current?.focus();
+    else cancelButtonRef.current?.focus();
     const handleKeyDown = event => {
       if (event.key === 'Escape' && !busy) onCancel();
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [busy, onCancel]);
+  }, [busy, onCancel, error]);
 
   const titleId = `${id}-title`;
   const descriptionId = `${id}-description`;
@@ -44,12 +48,13 @@ const ActionConfirmationDialog = ({
       >
         <h3 id={titleId} className="m3s-section-title">{title}</h3>
         <p id={descriptionId} className="mt-3 text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{body}</p>
+        {error && <p ref={errorRef} tabIndex={-1} role="alert" className="mt-3 text-sm leading-6 text-amber-300">{error}</p>}
         <div className="mt-5 flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end" style={{ borderColor: 'var(--m3s-border)' }}>
-          <button ref={cancelButtonRef} type="button" className="m3s-secondary-button min-h-11 px-4" onClick={onCancel} disabled={busy}>{cancelLabel}</button>
-          <button type="button" className={`${confirmClass} min-h-11 gap-2 px-4`} onClick={onConfirm} disabled={busy}>
+          <button ref={cancelButtonRef} type="button" className="m3s-secondary-button min-h-11 px-4" onClick={onCancel} disabled={busy}>{error ? closeLabel || cancelLabel : cancelLabel}</button>
+          {!error && <button type="button" className={`${confirmClass} min-h-11 gap-2 px-4`} onClick={onConfirm} disabled={busy}>
             {busy && <Loader2 className="animate-spin" size={17} aria-hidden="true" />}
             {confirmLabel}
-          </button>
+          </button>}
         </div>
       </section>
     </div>

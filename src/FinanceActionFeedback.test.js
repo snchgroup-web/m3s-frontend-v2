@@ -497,3 +497,61 @@ test('blocks a second request while the first confirmed save is pending', async 
   await act(async () => resolveSave({ success: true }));
   expect(screen.queryByLabelText('Désignation')).not.toBeInTheDocument();
 });
+
+const financeActions = [
+  ['recettes', 'create', 'createIncome'], ['depenses', 'create', 'createExpense'],
+  ['social', 'create', 'createIncome'], ['recettes', 'update', 'updateIncome'],
+  ['depenses', 'update', 'updateExpense'], ['social', 'update', 'updateIncome'],
+  ['recettes', 'delete', 'deleteIncome'], ['depenses', 'delete', 'deleteExpense'],
+  ['social', 'delete', 'deleteIncome'], ['immobilier', 'delete', 'deleteRealEstateFinance'],
+];
+
+test.each(financeActions.flatMap(([tab, action, method]) => ['network', 'explicit'].map(failure => ({ tab, action, method, failure }))))(
+  'preserves $tab after $action $failure failure and requires a fresh confirmation',
+  async ({ tab, action, method, failure }) => {
+    mockSearch = '?tab=' + tab;
+    useHistoricalRates();
+    const row = { ...historicalRow(700), source_id: 'QA-ACTION-001' };
+    api.getIncome.mockResolvedValue({ data: [row] });
+    api.getExpenses.mockResolvedValue({ data: [row] });
+    api.getSocialFinance.mockResolvedValue({ data: [row], summary: {} });
+    api.getRealEstateFinance.mockResolvedValue({ data: [immoHistory({ source_id: 'QA-ACTION-001' })], summary: {} });
+    api[method].mockResolvedValue({ success: true });
+    if (failure === 'network') api[method].mockRejectedValueOnce(new Error('Private server detail QA'));
+    else api[method].mockResolvedValueOnce({ success: false });
+    renderFinance();
+    const sourceRow = (await screen.findByText('QA-ACTION-001')).closest('tr');
+    const deleteButton = action === 'delete' ? sourceRow.querySelector('svg.lucide-trash-2').closest('button') : null;
+    if (action === 'create') {
+      const add = { recettes: 'Nouvelle Recette', depenses: 'Nouvelle Dépense', social: 'Nouveau flux social' }[tab];
+      fireEvent.click(screen.getByRole('button', { name: add }));
+      fireEvent.change(screen.getByPlaceholderText('Description'), { target: { value: 'Action fictive QA' } });
+      fireEvent.change(screen.getByPlaceholderText('Montant'), { target: { value: '100' } });
+    } else if (action === 'update') fireEvent.click(screen.getByText('QA-ACTION-001'));
+    const trigger = () => fireEvent.click(action === 'delete' ? deleteButton : screen.getByRole('button', { name: action === 'create' ? 'Créer' : 'Enregistrer' }));
+    const confirmLabel = { create: 'Oui, ajouter', update: 'Oui, modifier', delete: 'Oui, supprimer' }[action];
+    const reads = [api.getIncome, api.getExpenses, api.getSocialFinance, api.getRealEstateFinance].map(fn => fn.mock.calls.length);
+    trigger();
+    expect(api[method]).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: confirmLabel }));
+    const errorDialog = await screen.findByRole('dialog', { name: 'Action non confirmée' });
+    expect(within(errorDialog).getByRole('alert')).toHaveFocus();
+    expect(within(errorDialog).getAllByRole('button')).toHaveLength(1);
+    expect(within(errorDialog).queryByRole('button', { name: confirmLabel })).not.toBeInTheDocument();
+    expect(errorDialog).not.toHaveTextContent('Private server detail QA');
+    expect(screen.queryByText(/avec succès/)).not.toBeInTheDocument();
+    expect(sourceRow).toBeInTheDocument();
+    expect([api.getIncome, api.getExpenses, api.getSocialFinance, api.getRealEstateFinance].map(fn => fn.mock.calls.length)).toEqual(reads);
+    expect(api[method]).toHaveBeenCalledTimes(1);
+    expect(window.alert).not.toHaveBeenCalled();
+    fireEvent.click(within(errorDialog).getByRole('button', { name: 'Fermer' }));
+    if (action !== 'delete') expect(screen.getByPlaceholderText('Description')).toHaveValue(action === 'create' ? 'Action fictive QA' : row.description);
+    trigger();
+    expect(api[method]).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole('button', { name: confirmLabel }));
+    await screen.findByText(/avec succès/);
+    expect(api[method]).toHaveBeenCalledTimes(2);
+    expect(api[method].mock.calls[1]).toEqual(api[method].mock.calls[0]);
+    expect(screen.queryByRole('dialog', { name: 'Action non confirmée' })).not.toBeInTheDocument();
+  }
+);
