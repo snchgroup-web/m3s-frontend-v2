@@ -506,6 +506,89 @@ const financeActions = [
   ['social', 'delete', 'deleteIncome'], ['immobilier', 'delete', 'deleteRealEstateFinance'],
 ];
 
+test.each(['recettes', 'depenses', 'social'])('keeps %s required-field feedback in the form and preserves the draft on decline', async tab => {
+  mockSearch = '?tab=' + tab;
+  renderFinance();
+  await act(async () => {});
+  const add = { recettes: 'Nouvelle Recette', depenses: 'Nouvelle Dépense', social: 'Nouveau flux social' }[tab];
+  fireEvent.click(screen.getByRole('button', { name: add }));
+  fireEvent.change(screen.getByPlaceholderText('Description'), { target: { value: '   ' } });
+  fireEvent.change(screen.getByPlaceholderText('Montant'), { target: { value: '125.5' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Créer' }));
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  expect(screen.getByRole('alert')).toHaveTextContent('Renseignez une description, une date et un montant numérique');
+  expect(screen.getByRole('alert')).toHaveFocus();
+  expect(screen.getByPlaceholderText('Description')).toHaveAttribute('aria-invalid', 'true');
+  expect(screen.getByPlaceholderText('Montant')).toHaveValue(125.5);
+  fireEvent.change(screen.getByPlaceholderText('Description'), { target: { value: 'Brouillon fictif QA' } });
+  fireEvent.change(screen.getByPlaceholderText('Montant'), { target: { value: '' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Créer' }));
+  expect(screen.getByRole('alert')).toHaveFocus();
+  expect(screen.getByPlaceholderText('Montant')).toHaveAttribute('aria-invalid', 'true');
+  expect(window.alert).not.toHaveBeenCalled();
+  expect(api.createIncome).not.toHaveBeenCalled();
+  expect(api.createExpense).not.toHaveBeenCalled();
+  fireEvent.change(screen.getByPlaceholderText('Montant'), { target: { value: '125.5' } });
+  fireEvent.change(screen.getByLabelText('Taux appliqué *'), { target: { value: '705' } });
+  fireEvent.change(screen.getByLabelText('Team'), { target: { value: 'Team_ZH' } });
+  fireEvent.change(screen.getByLabelText('Agent'), { target: { value: 'Team_ZH' } });
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Créer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Non' }));
+  expect(screen.getByPlaceholderText('Description')).toHaveValue('Brouillon fictif QA');
+  expect(screen.getByPlaceholderText('Montant')).toHaveValue(125.5);
+  expect(screen.getByLabelText('Taux appliqué *')).toHaveValue(705);
+  expect(screen.getByLabelText('Agent')).toHaveValue('Team_ZH');
+  expect(api.createIncome).not.toHaveBeenCalled();
+  expect(api.createExpense).not.toHaveBeenCalled();
+  fireEvent.change(screen.getByPlaceholderText('Montant'), { target: { value: '' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Créer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Annuler' }));
+  fireEvent.click(screen.getByRole('button', { name: add }));
+  expect(screen.queryByText(/Renseignez une description, une date/)).not.toBeInTheDocument();
+  expect(screen.getByPlaceholderText('Description')).toHaveValue('');
+});
+
+test.each([
+  ['FR', 'Nouvelle Recette', 'Créer', 'Renseignez une description, une date et un montant numérique'],
+  ['EN', 'New Revenue', 'Create', 'Enter a description, a date and a numeric amount'],
+  ['DE', 'Neue Einnahme', 'Erstellen', 'Geben Sie eine Beschreibung, ein Datum und einen numerischen Betrag ein'],
+])('translates required-field feedback in %s without a browser alert', async (language, add, create, message) => {
+  localStorage.setItem('language', language);
+  renderFinance();
+  await act(async () => {});
+  fireEvent.click(screen.getByRole('button', { name: add }));
+  fireEvent.click(screen.getByRole('button', { name: create }));
+  expect(screen.getByRole('alert')).toHaveTextContent(message);
+  expect(screen.getByRole('alert')).toHaveFocus();
+  expect(window.alert).not.toHaveBeenCalled();
+});
+
+test.each([0, -25.5])('does not mistake the recorded amount %s for a missing entry', async amount => {
+  api.getIncome.mockResolvedValue({ data: [{ ...historicalRow(700), montant_origine: amount, devise_origine: 'CHF' }] });
+  renderFinance();
+  fireEvent.click(await screen.findByText('QA-FX-001'));
+  expect(screen.getByPlaceholderText('Montant')).toHaveValue(amount);
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  expect(screen.getByRole('dialog', { name: 'Confirmer la modification' })).toBeInTheDocument();
+  expect(window.alert).not.toHaveBeenCalled();
+  expect(api.updateIncome).not.toHaveBeenCalled();
+});
+
+test.each([false, true])('keeps an empty social register usable with explicit totals=%s', async hasTotals => {
+  mockSearch = '?tab=social';
+  api.getSocialFinance.mockResolvedValue({ data: [], summary: hasTotals ? { total_chf: 0, total_cfa_historique: 0 } : {} });
+  renderFinance();
+  expect(await screen.findByRole('button', { name: 'Nouveau flux social' })).toBeInTheDocument();
+  await act(async () => {});
+  const cardFor = label => screen.getAllByText(label, { exact: true }).find(node => node.tagName === 'P').parentElement;
+  expect(cardFor('SOCIAL - Flux reclassés')).toHaveTextContent(hasTotals ? /0[.,]00 CHF/ : '— CHF');
+  expect(cardFor('CFA historiques enregistrés')).toHaveTextContent(hasTotals ? '0 CFA' : '— CFA');
+  fireEvent.click(screen.getByRole('button', { name: 'Nouveau flux social' }));
+  expect(screen.getByPlaceholderText('Description')).toBeInTheDocument();
+  expect(api.createIncome).not.toHaveBeenCalled();
+});
+
 test.each(['recettes', 'depenses', 'social', 'immobilier'])('keeps keyboard delete separate from opening the %s row', async tab => {
   mockSearch = '?tab=' + tab;
   const row = { ...historicalRow(700), source_id: 'QA-KEY-001' };
@@ -564,6 +647,13 @@ test.each(financeActions.flatMap(([tab, action, method]) => ['network', 'explici
     const trigger = () => fireEvent.click(action === 'delete' ? deleteButton : screen.getByRole('button', { name: action === 'create' ? 'Créer' : 'Enregistrer' }));
     const confirmLabel = { create: 'Oui, ajouter', update: 'Oui, modifier', delete: 'Oui, supprimer' }[action];
     const reads = [api.getIncome, api.getExpenses, api.getSocialFinance, api.getRealEstateFinance].map(fn => fn.mock.calls.length);
+    const draftValues = () => action === 'delete' ? null : [
+      screen.getByPlaceholderText('Montant').value,
+      screen.getByLabelText('Taux appliqué *').value,
+      screen.getByLabelText('Team').value,
+      screen.getByLabelText('Agent').value,
+    ];
+    const draft = draftValues();
     trigger();
     expect(api[method]).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: confirmLabel }));
@@ -578,6 +668,7 @@ test.each(financeActions.flatMap(([tab, action, method]) => ['network', 'explici
     expect(api[method]).toHaveBeenCalledTimes(1);
     expect(window.alert).not.toHaveBeenCalled();
     fireEvent.click(within(errorDialog).getByRole('button', { name: 'Fermer' }));
+    expect(draftValues()).toEqual(draft);
     if (action !== 'delete') expect(screen.getByPlaceholderText('Description')).toHaveValue(action === 'create' ? 'Action fictive QA' : row.description);
     trigger();
     expect(api[method]).toHaveBeenCalledTimes(1);

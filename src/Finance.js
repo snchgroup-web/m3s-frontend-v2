@@ -124,6 +124,8 @@ const Finance = () => {
   const [socialModal, setSocialModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [savingFinance, setSavingFinance] = useState(false);
+  const [financeFormError, setFinanceFormError] = useState(false);
+  const financeFormErrorRef = useRef(null);
   const [pendingAction, setPendingAction] = useState(null);
   const [confirmingAction, setConfirmingAction] = useState(false);
   const [feedback, setFeedback] = useState(null);
@@ -233,6 +235,7 @@ const Finance = () => {
       filtreDevise: 'Filtrer par devise',
       id: 'ID',
       remplirChamps: 'Veuillez remplir les champs obligatoires',
+      financeRequiredError: 'Renseignez une description, une date et un montant numérique. Un zéro explicite est distinct d’un champ vide.',
       convertisseur: 'Convertisseur',
       tableauBordFx: 'Tableau de bord',
       tauxHistorique: 'Taux & Historique',
@@ -399,6 +402,7 @@ const Finance = () => {
       filtreDevise: 'Filter by currency',
       id: 'ID',
       remplirChamps: 'Please fill in all required fields',
+      financeRequiredError: 'Enter a description, a date and a numeric amount. An explicit zero is different from an empty field.',
       convertisseur: 'Converter',
       tableauBordFx: 'Dashboard',
       tauxHistorique: 'Rates & History',
@@ -565,6 +569,7 @@ const Finance = () => {
       filtreDevise: 'Nach Währung filtern',
       id: 'ID',
       remplirChamps: 'Bitte füllen Sie alle erforderlichen Felder aus',
+      financeRequiredError: 'Geben Sie eine Beschreibung, ein Datum und einen numerischen Betrag ein. Eine ausdrückliche Null ist kein leeres Feld.',
       convertisseur: 'Umrechner',
       tableauBordFx: 'Dashboard',
       tauxHistorique: 'Kurse & Verlauf',
@@ -643,6 +648,9 @@ const Finance = () => {
   const t = translations[language];
   const appliedFormRate = parseFiniteNumber(formData.tauxFxApplique);
   const appliedRateInvalid = appliedFormRate === null || appliedFormRate <= 0;
+  const financeDescriptionInvalid = !String(formData.description ?? '').trim();
+  const financeAmount = String(formData.montant ?? '').trim() === '' ? null : parseFiniteNumber(formData.montant);
+  const financeAmountInvalid = financeAmount === null;
   const editingImmo = editingImmoId !== null;
   const immoAmountFields = [
     ['montantChf', t.montantCHF], ['montantCfa', t.montantCFA],
@@ -1677,6 +1685,7 @@ const Finance = () => {
   };
 
   const handleFormChange = (field, value) => {
+    setFinanceFormError(false);
     setFormData((previous) => {
       const next = { ...previous, [field]: value };
       if (field === 'team') {
@@ -1689,6 +1698,7 @@ const Finance = () => {
   };
 
   const handleFinanceDateChange = (date) => {
+    setFinanceFormError(false);
     const nextReference = getHistoricalCfaPerChf(date)?.cfaPerChf || '';
     setFormData((previous) => {
       const previousReference = getHistoricalCfaPerChf(previous.date)?.cfaPerChf || '';
@@ -1704,18 +1714,17 @@ const Finance = () => {
   };
 
   const handleSave = () => {
-    if (!formData.description || !formData.montant) {
-      alert(t.remplirChamps);
+    if (financeDescriptionInvalid || financeAmountInvalid || !formData.date) {
+      setFinanceFormError(true);
+      financeFormErrorRef.current?.focus();
       return;
     }
     const tauxFxReference = getHistoricalCfaPerChf(formData.date)?.cfaPerChf || 0;
     const tauxFxApplique = appliedFormRate;
-    if (appliedRateInvalid) {
-      alert(t.appliedRateError);
-      return;
-    }
+    if (appliedRateInvalid) return;
+    setFinanceFormError(false);
 
-    const montantOrigine = toNumber(formData.montant);
+    const montantOrigine = financeAmount;
     const deviseOrigine = String(formData.devise || 'CHF').toUpperCase();
     const montantChf = deviseOrigine === 'CHF' ? montantOrigine : montantOrigine / tauxFxApplique;
     const montantCfa = deviseOrigine === 'CFA' ? montantOrigine : montantOrigine * tauxFxApplique;
@@ -1775,6 +1784,7 @@ const Finance = () => {
   };
 
   const handleEdit = (type, item) => {
+    setFinanceFormError(false);
     setModalType(type);
     setSocialModal(type === 'recette' && activeTab === 'social');
     setEditingId(item.id);
@@ -1804,6 +1814,7 @@ const Finance = () => {
   };
 
   const openNewModal = (type) => {
+    setFinanceFormError(false);
     const next = createEmptyFinanceForm();
     next.tauxFxApplique = getHistoricalCfaPerChf(next.date)?.cfaPerChf || '';
     setModalType(type);
@@ -1814,6 +1825,7 @@ const Finance = () => {
   };
 
   const openNewSocialModal = () => {
+    setFinanceFormError(false);
     const next = createEmptyFinanceForm();
     next.tauxFxApplique = getHistoricalCfaPerChf(next.date)?.cfaPerChf || '';
     setModalType('recette');
@@ -1936,6 +1948,10 @@ const Finance = () => {
   useEffect(() => {
     if (showImmoModal && immoFormError && !pendingAction) immoFormErrorRef.current?.focus();
   }, [showImmoModal, immoFormError, pendingAction]);
+
+  useEffect(() => {
+    if (showModal && financeFormError && !pendingAction) financeFormErrorRef.current?.focus();
+  }, [showModal, financeFormError, pendingAction]);
 
   return (
     <>
@@ -2416,11 +2432,11 @@ const Finance = () => {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-emerald-500/60">
                 <p className="text-sm font-medium text-emerald-400">{t.socialTitle}</p>
-                <p className="mt-2 text-2xl font-bold text-white">{socialTotalChf.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} CHF</p>
+                <p className="mt-2 text-2xl font-bold text-white">{Number.isFinite(socialTotalChf) ? socialTotalChf.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'} CHF</p>
               </div>
               <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-cyan-500/60">
                 <p className="text-sm font-medium text-cyan-400">{t.socialHistoricalCfa}</p>
-                <p className="mt-2 text-2xl font-bold text-white">{Math.round(socialTotalCfaHistorique).toLocaleString()} CFA</p>
+                <p className="mt-2 text-2xl font-bold text-white">{Number.isFinite(socialTotalCfaHistorique) ? Math.round(socialTotalCfaHistorique).toLocaleString() : '—'} CFA</p>
               </div>
               <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-blue-500/60">
                 <p className="text-sm font-medium text-blue-400">{t.socialCurrentCfa}</p>
@@ -2874,17 +2890,31 @@ const Finance = () => {
                   ? (editingId ? t.modifierFluxSocial : t.nouveauFluxSocial)
                   : (editingId ? (modalType === 'recette' ? t.modifierRecette : t.modifierDepense) : (modalType === 'recette' ? t.creerRecette : t.creerDepense))}
               </h2>
+              {financeFormError && (
+                <p id="finance-form-error" ref={financeFormErrorRef} tabIndex={-1} role="alert" className="mb-4 text-sm" style={{ color: 'var(--m3s-status-warning)' }}>
+                  {t.financeRequiredError}
+                </p>
+              )}
               <div className="space-y-4">
                 <input
                   type="text"
                   placeholder={t.description}
+                  aria-label={t.description}
+                  aria-required="true"
+                  aria-invalid={financeFormError && financeDescriptionInvalid}
+                  aria-describedby={financeFormError && financeDescriptionInvalid ? 'finance-form-error' : undefined}
                   value={formData.description}
                   onChange={(e) => handleFormChange('description', e.target.value)}
                   className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
                 />
                 <input
                   type="number"
+                  step="any"
                   placeholder={t.montant}
+                  aria-label={t.montant}
+                  aria-required="true"
+                  aria-invalid={financeFormError && financeAmountInvalid}
+                  aria-describedby={financeFormError && financeAmountInvalid ? 'finance-form-error' : undefined}
                   value={formData.montant}
                   onChange={(e) => handleFormChange('montant', e.target.value)}
                   className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
