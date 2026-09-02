@@ -1,4 +1,5 @@
 import React from 'react';
+import InstitutionalPeopleTeamsHistoricalFollowUp from './InstitutionalPeopleTeamsHistoricalFollowUp';
 import { AlertTriangle, CheckSquare2, FileLock2, ShieldCheck } from 'lucide-react';
 
 const COPY = {
@@ -19,7 +20,7 @@ const COPY = {
     outcomesTitle: 'Quatre issues documentaires proposées',
     outcomes: ['Prêt pour décision séparée', 'À compléter', 'Suspendu', 'Refusé'],
     status: 'CONFIRMÉ · Protocole documentaire V1.0. Zéro autorisation active, cas réel, donnée C3/C4, accès ou opération GED.',
-    next: 'Étape suivante : préparer REF-01-G1-AUT-02-03-011 V0.1, la fiche candidate de décision GO/NO-GO.',
+    next: 'La fiche GO/NO-GO REF-01-G1-AUT-02-03-011 V1.0 est confirmée par REF-01-DEC-051. Cette confirmation documentaire ne constitue pas un GO.',
     boundary: 'La confirmation n autorise aucune première utilisation. Un cas précis exige une décision GO/NO-GO séparée, nominative et traçable dans l espace autorisé.'
   },
   EN: {
@@ -39,7 +40,7 @@ const COPY = {
     outcomesTitle: 'Four proposed documentary outcomes',
     outcomes: ['Ready for separate decision', 'To complete', 'On hold', 'Rejected'],
     status: 'CONFIRMED · V1.0 documentary protocol. Zero active authorisations, real cases, C3/C4 data, access or DMS operations.',
-    next: 'Next step: prepare REF-01-G1-AUT-02-03-011 V0.1, the candidate GO/NO-GO decision sheet.',
+    next: 'GO/NO-GO sheet REF-01-G1-AUT-02-03-011 V1.0 is confirmed by REF-01-DEC-051. This documentary confirmation is not a GO.',
     boundary: 'Confirmation authorises no first use. A specific case requires a separate, named and traceable GO/NO-GO decision in the authorised space.'
   },
   DE: {
@@ -59,7 +60,7 @@ const COPY = {
     outcomesTitle: 'Vier vorgeschlagene Dokumentationsergebnisse',
     outcomes: ['Bereit für getrennten Entscheid', 'Zu ergänzen', 'Ausgesetzt', 'Abgelehnt'],
     status: 'BESTÄTIGT · Dokumentationsprotokoll V1.0. Null aktive Autorisierungen, reale Fälle, C3/C4-Daten, Zugriffe oder DMS-Operationen.',
-    next: 'Nächster Schritt: REF-01-G1-AUT-02-03-011 V0.1, das Kandidatenblatt zum GO/NO-GO-Entscheid, vorbereiten.',
+    next: 'GO/NO-GO-Blatt REF-01-G1-AUT-02-03-011 V1.0 ist durch REF-01-DEC-051 bestätigt. Diese Dokumentenbestätigung ist kein GO.',
     boundary: 'Die Bestätigung autorisiert keine Erstnutzung. Ein bestimmter Fall erfordert einen getrennten, namentlichen und nachvollziehbaren GO/NO-GO-Entscheid im autorisierten Raum.'
   }
 };
@@ -72,7 +73,7 @@ const InstitutionalPeopleTeamsGateG1RetentionFirstUseAuthorisationProtocol = ({ 
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">{t.counters.map(([label, value, note], index) => { const Icon = index < 2 ? CheckSquare2 : FileLock2; return <article key={label} className="m3s-raised p-3"><div className="flex items-start justify-between gap-2"><div><p className="text-xs font-semibold text-slate-300">{label}</p><p className="mt-2 text-xl font-semibold text-slate-100 sm:text-2xl">{value}</p></div><Icon className={index < 2 ? 'shrink-0 text-cyan-300' : 'shrink-0 text-amber-300'} size={19} aria-hidden="true" /></div><p className="mt-2 text-xs leading-5 text-slate-400">{note}</p></article>; })}</div>
       <article className="mt-4 m3s-raised p-3 sm:p-4"><div className="flex flex-wrap items-start justify-between gap-2"><h6 className="break-words text-sm font-semibold text-slate-100">REF-01-G1-AUT-02-03-010 · V1.0</h6><span className="rounded-md border border-emerald-700/70 bg-emerald-950/25 px-2 py-1 text-[10px] font-semibold text-emerald-100">{t.badge}</span></div><div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">{t.groups.map(([title, fields]) => <section key={title} data-testid="ref01-g1-retention-first-use-authorisation-group" className="min-w-0 rounded-md border border-slate-700 bg-slate-950/20 p-3"><h6 className="break-words text-xs font-semibold text-cyan-200">{title}</h6><ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">{fields.map(field => <li key={field} className="rounded-md border border-slate-700 px-3 py-2 text-xs leading-5 text-slate-300">{field}</li>)}</ul></section>)}</div><div className="mt-4"><p className="text-xs font-semibold text-cyan-200">{t.prerequisitesTitle}</p><div className="mt-2 flex flex-wrap gap-2">{t.prerequisites.map(item => <span key={item} className="rounded-md border border-cyan-800/70 bg-cyan-950/20 px-2 py-1 text-[11px] font-semibold text-cyan-100">{item}</span>)}</div></div><div className="mt-4"><p className="text-xs font-semibold text-violet-200">{t.outcomesTitle}</p><div className="mt-2 flex flex-wrap gap-2">{t.outcomes.map(item => <span key={item} className="rounded-md border border-violet-700/60 bg-violet-950/20 px-2 py-1 text-[11px] font-semibold text-violet-100">{item}</span>)}</div></div></article>
       <p className="mt-4 rounded-md border border-amber-700/70 bg-amber-950/20 p-3 text-xs font-semibold leading-5 text-amber-100">{t.status}</p>
-      <p className="mt-3 text-xs font-semibold leading-5 text-cyan-200">{t.next}</p>
+      <InstitutionalPeopleTeamsHistoricalFollowUp language={language}>{t.next}</InstitutionalPeopleTeamsHistoricalFollowUp>
       <p className="mt-3 flex items-start gap-2 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={15} aria-hidden="true" />{t.boundary}</p>
     </section>
   );

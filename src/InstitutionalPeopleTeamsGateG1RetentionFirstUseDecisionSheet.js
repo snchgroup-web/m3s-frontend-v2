@@ -1,4 +1,5 @@
 import React from 'react';
+import InstitutionalPeopleTeamsHistoricalFollowUp from './InstitutionalPeopleTeamsHistoricalFollowUp';
 import { AlertTriangle, CheckSquare2, FileLock2, Gavel } from 'lucide-react';
 
 const COPY = {
@@ -17,7 +18,7 @@ const COPY = {
     rulesTitle: 'Cinq règles de décision proposées',
     rules: ['Six préconditions conclues', 'Un seul verdict', 'Mandat vérifié hors bundle', 'Aucune donnée C3/C4 dans REF-01', 'GO limité au périmètre décidé'],
     status: 'CONFIRMÉ · Fiche documentaire V1.0. Zéro décision active, cas réel, identité, accès, espace protégé ou opération GED.',
-    next: 'Sous-lot Conservation et GED préparé. Reprise du dossier séparé AUT-02-02 · Rôles et moindre privilège.',
+    next: 'REF-01-DEC-051 confirme la fiche V1.0 et achève la préparation documentaire Conservation & GED. La reprise ultérieure du dossier séparé AUT-02-02 appartient à l’historique, pas à une nouvelle demande d’exécution.',
     boundary: 'Même confirmée, cette fiche ne vaudra pas GO. Une décision réelle devra être renseignée, nominative, datée et conservée dans l espace autorisé après contrôle des six préconditions.'
   },
   EN: {
@@ -35,7 +36,7 @@ const COPY = {
     rulesTitle: 'Five proposed decision rules',
     rules: ['Six prerequisites concluded', 'One outcome only', 'Mandate checked outside the bundle', 'No C3/C4 data in REF-01', 'GO limited to the decided scope'],
     status: 'CONFIRMED · V1.0 documentary sheet. Zero active decisions, real cases, identities, access, protected workspaces or DMS operations.',
-    next: 'Retention and DMS sub-package prepared. Resume the separate AUT-02-02 Roles and least privilege file.',
+    next: 'REF-01-DEC-051 confirms sheet V1.0 and completes Retention & DMS documentary preparation. The subsequent separate AUT-02-02 work is historical, not a new execution request.',
     boundary: 'Even if confirmed, this sheet will not constitute a GO. A real decision must be completed, named, dated and retained in the authorised space after all six prerequisites are reviewed.'
   },
   DE: {
@@ -53,7 +54,7 @@ const COPY = {
     rulesTitle: 'Fünf vorgeschlagene Entscheidregeln',
     rules: ['Sechs Voraussetzungen abgeschlossen', 'Nur ein Ergebnis', 'Mandat ausserhalb des Bundles geprüft', 'Keine C3/C4-Daten in REF-01', 'GO auf entschiedenen Umfang begrenzt'],
     status: 'BESTÄTIGT · Dokumentationsblatt V1.0. Null aktive Entscheide, reale Fälle, Identitäten, Zugriffe, geschützte Räume oder DMS-Operationen.',
-    next: 'Teilpaket Aufbewahrung und DMS vorbereitet. Getrennte Akte AUT-02-02 Rollen und geringste Berechtigung wieder aufnehmen.',
+    next: 'REF-01-DEC-051 bestätigt Blatt V1.0 und schließt die Dokumentenvorbereitung Aufbewahrung & DMS ab. Die spätere getrennte AUT-02-02-Arbeit gehört zur Historie, nicht zu einem neuen Ausführungsauftrag.',
     boundary: 'Auch nach Bestätigung ist dieses Blatt kein GO. Ein realer Entscheid muss nach Prüfung aller sechs Voraussetzungen ausgefüllt, namentlich, datiert und im autorisierten Raum aufbewahrt werden.'
   }
 };
@@ -66,7 +67,7 @@ const InstitutionalPeopleTeamsGateG1RetentionFirstUseDecisionSheet = ({ language
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">{t.counters.map(([label, value, note], index) => { const Icon = index < 2 ? CheckSquare2 : FileLock2; return <article key={label} className="m3s-raised p-3"><div className="flex items-start justify-between gap-2"><div><p className="text-xs font-semibold text-slate-300">{label}</p><p className="mt-2 text-xl font-semibold text-slate-100 sm:text-2xl">{value}</p></div><Icon className={index < 2 ? 'shrink-0 text-violet-300' : 'shrink-0 text-amber-300'} size={19} aria-hidden="true" /></div><p className="mt-2 text-xs leading-5 text-slate-400">{note}</p></article>; })}</div>
       <article className="mt-4 m3s-raised p-3 sm:p-4"><div className="flex flex-wrap items-start justify-between gap-2"><h6 className="break-words text-sm font-semibold text-slate-100">REF-01-G1-AUT-02-03-011 · V1.0</h6><span className="rounded-md border border-emerald-700/70 bg-emerald-950/25 px-2 py-1 text-[10px] font-semibold text-emerald-100">{t.badge}</span></div><div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">{t.groups.map(([title, fields]) => <section key={title} data-testid="ref01-g1-retention-first-use-decision-group" className="min-w-0 rounded-md border border-slate-700 bg-slate-950/20 p-3"><h6 className="break-words text-xs font-semibold text-violet-200">{title}</h6><ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">{fields.map(field => <li key={field} className="rounded-md border border-slate-700 px-3 py-2 text-xs leading-5 text-slate-300">{field}</li>)}</ul></section>)}</div><div className="mt-4"><p className="text-xs font-semibold text-cyan-200">{t.rulesTitle}</p><div className="mt-2 flex flex-wrap gap-2">{t.rules.map(rule => <span key={rule} className="rounded-md border border-cyan-800/70 bg-cyan-950/20 px-2 py-1 text-[11px] font-semibold text-cyan-100">{rule}</span>)}</div></div></article>
       <p className="mt-4 rounded-md border border-amber-700/70 bg-amber-950/20 p-3 text-xs font-semibold leading-5 text-amber-100">{t.status}</p>
-      <p className="mt-3 text-xs font-semibold leading-5 text-violet-200">{t.next}</p>
+      <InstitutionalPeopleTeamsHistoricalFollowUp language={language}>{t.next}</InstitutionalPeopleTeamsHistoricalFollowUp>
       <p className="mt-3 flex items-start gap-2 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={15} aria-hidden="true" />{t.boundary}</p>
     </section>
   );

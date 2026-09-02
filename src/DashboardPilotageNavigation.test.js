@@ -92,6 +92,15 @@ test('shows the governed institutional programme without inventing progress', ()
   expect(within(screen.getByTestId('institutional-fast-track-cockpit')).getByText('8/8')).toBeInTheDocument();
   expect(screen.getByText(/Aucun pourcentage n’est affiché/)).toBeInTheDocument();
   expect(document.body.textContent).not.toMatch(/\d+\s*%/);
+  const historicalFollowUps = screen.getAllByTestId('ref01-historical-follow-up');
+  expect(historicalFollowUps).toHaveLength(8);
+  const currentStatus = document.getElementById('institutional-ref01-g1-att-001');
+  expect(currentStatus).toHaveTextContent('REF-01-G1-ATT-001 V1.0');
+  expect(currentStatus).toHaveTextContent('RÈGLE CONFIRMÉE');
+  expect(currentStatus).toHaveTextContent('Autorisations opérationnelles0');
+  historicalFollowUps.forEach(footer => {
+    expect(within(footer).getByRole('link', { name: 'Voir l’état courant de REF-01' })).toHaveAttribute('href', `#${currentStatus.id}`);
+  });
 });
 
 test('opens deferred documentary decisions directly and returns to the global cockpit', () => {

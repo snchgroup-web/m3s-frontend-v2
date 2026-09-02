@@ -1,4 +1,5 @@
 import React from 'react';
+import InstitutionalPeopleTeamsHistoricalFollowUp from './InstitutionalPeopleTeamsHistoricalFollowUp';
 import { AlertTriangle, ClipboardCheck, FileSearch, LockKeyhole, UserRoundX } from 'lucide-react';
 
 const COPY = {
@@ -70,7 +71,7 @@ const InstitutionalPeopleTeamsGateG1RetentionReviewCases = ({ language = 'FR' })
         <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">{t.rows.map(([category, event, evidence, decisions, stop]) => <section key={category} data-testid="ref01-g1-retention-review-case-row" className="min-w-0 rounded-md border border-slate-700 bg-slate-950/20 p-3"><h6 className="break-words text-xs font-semibold text-slate-100">{category}</h6><dl className="mt-3 space-y-2 text-xs leading-5"><div><dt className="font-semibold text-cyan-200">{t.labels.event}</dt><dd className="mt-0.5 text-slate-300">{event}</dd></div><div><dt className="font-semibold text-sky-200">{t.labels.evidence}</dt><dd className="mt-0.5 text-slate-300">{evidence}</dd></div><div><dt className="font-semibold text-emerald-200">{t.labels.decisions}</dt><dd className="mt-0.5 text-slate-300">{decisions}</dd></div><div><dt className="font-semibold text-amber-200">{t.labels.stop}</dt><dd className="mt-0.5 text-slate-300">{stop}</dd></div></dl></section>)}</div>
       </article>
       <p className="mt-4 rounded-md border border-emerald-700/70 bg-emerald-950/20 p-3 text-xs font-semibold leading-5 text-emerald-100">{t.status}</p>
-      <p className="mt-3 text-xs font-semibold leading-5 text-cyan-200">{t.next}</p>
+      <InstitutionalPeopleTeamsHistoricalFollowUp language={language}>{t.next}</InstitutionalPeopleTeamsHistoricalFollowUp>
       <p className="mt-3 flex items-start gap-2 text-xs font-semibold leading-5 text-amber-200"><AlertTriangle className="mt-0.5 shrink-0" size={15} aria-hidden="true" />{t.boundary}</p>
     </section>
   );
