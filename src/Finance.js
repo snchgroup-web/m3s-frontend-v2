@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, LabelList } from 'recharts';
 import { Edit2, Trash2, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound, Database, AlertTriangle, CheckCircle2, LoaderCircle } from 'lucide-react';
@@ -130,6 +130,8 @@ const Finance = () => {
   const [editingImmoId, setEditingImmoId] = useState(null);
   const [immoFormData, setImmoFormData] = useState(createEmptyImmoForm);
   const [savingImmo, setSavingImmo] = useState(false);
+  const [immoFormError, setImmoFormError] = useState(null);
+  const immoFormErrorRef = useRef(null);
   const [tauxDuJour, setTauxDuJour] = useState({});
   const [filterDevise, setFilterDevise] = useState('');
   const [fxView, setFxView] = useState('converter');
@@ -295,6 +297,8 @@ const Finance = () => {
       modifierOperationImmo: 'Modifier l’opération Immo',
       immoAmountsError: 'Montants manquants ou invalides : {fields}. Modification bloquée pour éviter leur remplacement par zéro.',
       immoRateError: 'Le taux saisi doit être strictement positif. Un taux historique inconnu peut rester vide, sans conversion automatique.',
+      immoRequiredError: 'Renseignez une désignation et une date.',
+      immoSaveError: 'Enregistrement non confirmé. Vos saisies sont conservées. Vérifiez le registre avant de réessayer pour éviter un doublon.',
       designation: 'Désignation',
       documentRef: 'Document / Référence',
       remboursementCheikh: 'Remboursement par Cheikh',
@@ -451,6 +455,8 @@ const Finance = () => {
       modifierOperationImmo: 'Edit real estate operation',
       immoAmountsError: 'Missing or invalid amounts: {fields}. Update blocked to prevent replacing them with zero.',
       immoRateError: 'The entered rate must be strictly positive. An unknown historical rate can remain empty, without automatic conversion.',
+      immoRequiredError: 'Enter a description and a date.',
+      immoSaveError: 'Save not confirmed. Your entries are preserved. Check the register before trying again to avoid a duplicate.',
       designation: 'Description',
       documentRef: 'Document / Reference',
       remboursementCheikh: 'Repayment from Cheikh',
@@ -607,6 +613,8 @@ const Finance = () => {
       modifierOperationImmo: 'Immobilienvorgang bearbeiten',
       immoAmountsError: 'Fehlende oder ungültige Beträge: {fields}. Änderung gesperrt, damit sie nicht durch null ersetzt werden.',
       immoRateError: 'Der eingegebene Kurs muss strikt positiv sein. Ein unbekannter historischer Kurs kann ohne automatische Umrechnung leer bleiben.',
+      immoRequiredError: 'Geben Sie eine Bezeichnung und ein Datum ein.',
+      immoSaveError: 'Speicherung nicht bestätigt. Ihre Eingaben bleiben erhalten. Prüfen Sie das Register vor einem erneuten Versuch, um einen doppelten Eintrag zu vermeiden.',
       designation: 'Bezeichnung',
       documentRef: 'Dokument / Referenz',
       remboursementCheikh: 'Rückzahlung durch Cheikh',
@@ -1516,6 +1524,7 @@ const Finance = () => {
   }, [immoTransactions]);
 
   const handleImmoFormChange = (field, value) => {
+    if (immoFormError === 'required') setImmoFormError(null);
     setImmoFormData((previous) => {
       const next = { ...previous, [field]: value };
       if (field === 'team') {
@@ -1535,6 +1544,7 @@ const Finance = () => {
   };
 
   const openNewImmoModal = () => {
+    setImmoFormError(null);
     const next = createEmptyImmoForm();
     const historicalRate = getHistoricalCfaPerChf(next.date)?.cfaPerChf;
     if (historicalRate) next.tauxFx = historicalRate;
@@ -1544,6 +1554,7 @@ const Finance = () => {
   };
 
   const handleImmoEdit = (item) => {
+    setImmoFormError(null);
     setEditingImmoId(item.id);
     setImmoFormData({
       date: item.date,
@@ -1572,9 +1583,11 @@ const Finance = () => {
   const handleImmoSave = () => {
     if (immoSaveInvalid) return;
     if (!immoFormData.date || !immoFormData.designation.trim()) {
-      alert(t.remplirChamps);
+      setImmoFormError('required');
+      immoFormErrorRef.current?.focus();
       return;
     }
+    setImmoFormError(null);
     let montantChf = toNumber(immoFormData.montantChf);
     let montantCfa = toNumber(immoFormData.montantCfa);
     let tauxFx = immoRate;
@@ -1619,8 +1632,10 @@ const Finance = () => {
   const executeImmoSave = async (action) => {
     setSavingImmo(true);
     try {
-      if (action.itemId !== null) await api.updateRealEstateFinance(action.itemId, action.payload);
-      else await api.createRealEstateFinance(action.payload);
+      const response = action.itemId !== null
+        ? await api.updateRealEstateFinance(action.itemId, action.payload)
+        : await api.createRealEstateFinance(action.payload);
+      if (response?.success === false) throw new Error('Real-estate save not confirmed');
       await loadRealEstateFinance();
       setShowImmoModal(false);
       setEditingImmoId(null);
@@ -1851,7 +1866,8 @@ const Finance = () => {
       else if (action.scope === 'fx' && action.action === 'delete') executeFxDelete(action);
       else if (action.scope === 'fx') executeFxSave(action);
     } catch (error) {
-      alert(error.message);
+      if (action.scope === 'immo' && action.action !== 'delete') setImmoFormError('save');
+      else alert(error.message);
     } finally {
       setConfirmingAction(false);
       setPendingAction(null);
@@ -1890,6 +1906,10 @@ const Finance = () => {
     update: { title: t.confirmUpdateTitle, body: t.confirmUpdateBody, confirm: t.confirmUpdate },
     delete: { title: t.confirmDeleteTitle, body: t.confirmDeleteBody, confirm: t.confirmDelete }
   }[pendingAction.action] : null;
+
+  useEffect(() => {
+    if (showImmoModal && immoFormError && !pendingAction) immoFormErrorRef.current?.focus();
+  }, [showImmoModal, immoFormError, pendingAction]);
 
   return (
     <>
@@ -2675,6 +2695,11 @@ const Finance = () => {
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
             <div className="bg-slate-800 rounded-lg p-6 w-full max-w-5xl max-h-[90vh] overflow-y-auto border border-slate-700">
               <h2 className="text-white text-xl font-bold mb-5">{editingImmoId ? t.modifierOperationImmo : t.nouvelleOperationImmo}</h2>
+              {immoFormError && (
+                <p id="immo-form-error" ref={immoFormErrorRef} tabIndex={-1} role="alert" className="text-sm text-amber-300 mb-4">
+                  {immoFormError === 'required' ? t.immoRequiredError : t.immoSaveError}
+                </p>
+              )}
               {invalidImmoAmounts.length > 0 && (
                 <p id="immo-amounts-error" role="alert" className="text-sm text-amber-300 mb-4">
                   {t.immoAmountsError.replace('{fields}', invalidImmoAmounts.map(([, label]) => label).join(', '))}
@@ -2686,7 +2711,7 @@ const Finance = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <label className="lg:col-span-2 text-sm text-slate-300">
                   <span className="block mb-1">{t.designation}</span>
-                  <input type="text" value={immoFormData.designation} onChange={(event) => handleImmoFormChange('designation', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                  <input type="text" aria-required="true" aria-invalid={immoFormError === 'required' && !immoFormData.designation.trim()} aria-describedby={immoFormError === 'required' ? 'immo-form-error' : undefined} value={immoFormData.designation} onChange={(event) => handleImmoFormChange('designation', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
                 </label>
                 <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.date}</span>
