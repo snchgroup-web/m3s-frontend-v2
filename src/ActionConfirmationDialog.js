@@ -20,18 +20,50 @@ const ActionConfirmationDialog = ({
   onCancel,
   onConfirm
 }) => {
+  const dialogRef = useRef(null);
   const cancelButtonRef = useRef(null);
   const errorRef = useRef(null);
 
   useEffect(() => {
-    if (error) errorRef.current?.focus();
+    const opener = document.activeElement;
+    const dialog = dialogRef.current;
+    const keepFocusInside = event => {
+      if (!dialog.contains(event.target)) {
+        (dialog.querySelector('button:not(:disabled)') || dialog).focus();
+      }
+    };
+    document.addEventListener('focusin', keepFocusInside);
+    return () => {
+      document.removeEventListener('focusin', keepFocusInside);
+      if (opener?.isConnected) opener.focus();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (busy) dialogRef.current?.focus();
+    else if (error) errorRef.current?.focus();
     else cancelButtonRef.current?.focus();
+  }, [busy, error]);
+
+  useEffect(() => {
     const handleKeyDown = event => {
-      if (event.key === 'Escape' && !busy) onCancel();
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!busy) onCancel();
+      }
+      if (event.key !== 'Tab') return;
+      const dialog = dialogRef.current;
+      const buttons = Array.from(dialog.querySelectorAll('button:not(:disabled)'));
+      const index = buttons.indexOf(document.activeElement);
+      if (!buttons.length || index === -1 || (event.shiftKey ? index === 0 : index === buttons.length - 1)) {
+        event.preventDefault();
+        (buttons[event.shiftKey ? buttons.length - 1 : 0] || dialog).focus();
+      }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [busy, onCancel, error]);
+  }, [busy, onCancel]);
 
   const titleId = `${id}-title`;
   const descriptionId = `${id}-description`;
@@ -40,9 +72,12 @@ const ActionConfirmationDialog = ({
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/70 p-4" role="presentation">
       <section
+        ref={dialogRef}
+        tabIndex={-1}
         className="m3s-panel w-full max-w-md p-5 shadow-2xl sm:p-6"
         role="dialog"
         aria-modal="true"
+        aria-busy={busy}
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
       >
