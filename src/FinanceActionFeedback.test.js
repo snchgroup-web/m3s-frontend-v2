@@ -316,7 +316,7 @@ test('keeps a real zero and a missing real-estate rate instead of computing them
 
 test.each([
   ['montant_chf', 'Montant CHF'], ['montant_cfa', 'Montant CFA'],
-  ['part_cheikh_chf', 'Part Cheikh'], ['remboursement_cheikh_chf', 'Remboursement Cheikh'],
+  ['part_cheikh_chf', 'Part Cheikh'], ['remboursement_cheikh_chf', 'Remboursement par Cheikh'],
 ])('blocks an incomplete historical amount: %s', async (field, label) => {
   await openImmoHistory({ [field]: null });
   const input = screen.getByLabelText(label);
@@ -377,4 +377,22 @@ test('keeps an invalid historical zero rate visible and blocks saving', async ()
   expect(screen.getByLabelText('Taux appliqué')).toHaveAttribute('aria-invalid', 'true');
   expect(screen.getByRole('button', { name: 'Enregistrer' })).toBeDisabled();
   expect(api.updateRealEstateFinance).not.toHaveBeenCalled();
+});
+
+test.each([
+  ['FR', 'Remboursement par Cheikh', 'Total remboursé par Cheikh', 'Enregistrer', 'Oui, modifier'],
+  ['EN', 'Repayment from Cheikh', 'Total repayments from Cheikh', 'Save', 'Yes, update'],
+  ['DE', 'Rückzahlung durch Cheikh', 'Gesamtrückzahlungen durch Cheikh', 'Speichern', 'Ja, ändern'],
+])('identifies Cheikh as the payer without changing the repayment value in %s', async (language, label, total, save, confirm) => {
+  localStorage.setItem('language', language);
+  await openImmoHistory({ remboursement_cheikh_chf: 123.45 });
+  expect(screen.getByText(total, { exact: true })).toBeInTheDocument();
+  expect(screen.getByRole('columnheader', { name: label })).toBeInTheDocument();
+  expect(screen.getByLabelText(label)).toHaveValue(123.45);
+  expect(screen.queryByText(/^(Reimbursement to Cheikh|Total reimbursed to Cheikh|Rückzahlung an Cheikh)$/)).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: save }));
+  fireEvent.click(screen.getByRole('button', { name: confirm }));
+  await waitFor(() => expect(api.updateRealEstateFinance).toHaveBeenCalledWith('QA-IMM-001', expect.objectContaining({
+    remboursement_cheikh_chf: 123.45, montant_chf: 100, montant_cfa: 70000, taux_fx: 695,
+  })));
 });
