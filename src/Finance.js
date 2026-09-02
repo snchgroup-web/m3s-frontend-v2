@@ -293,6 +293,8 @@ const Finance = () => {
       aucuneDonneeImmo: 'Les données Fin Immo seront disponibles après l’import BigQuery.',
       nouvelleOperationImmo: 'Nouvelle opération Immo',
       modifierOperationImmo: 'Modifier l’opération Immo',
+      immoAmountsError: 'Montants manquants ou invalides : {fields}. Modification bloquée pour éviter leur remplacement par zéro.',
+      immoRateError: 'Le taux saisi doit être strictement positif. Un taux historique inconnu peut rester vide, sans conversion automatique.',
       designation: 'Désignation',
       documentRef: 'Document / Référence',
       remboursementCheikh: 'Remboursement Cheikh',
@@ -447,6 +449,8 @@ const Finance = () => {
       aucuneDonneeImmo: 'Real Estate Finance data will be available after the BigQuery import.',
       nouvelleOperationImmo: 'New real estate operation',
       modifierOperationImmo: 'Edit real estate operation',
+      immoAmountsError: 'Missing or invalid amounts: {fields}. Update blocked to prevent replacing them with zero.',
+      immoRateError: 'The entered rate must be strictly positive. An unknown historical rate can remain empty, without automatic conversion.',
       designation: 'Description',
       documentRef: 'Document / Reference',
       remboursementCheikh: 'Reimbursement to Cheikh',
@@ -601,6 +605,8 @@ const Finance = () => {
       aucuneDonneeImmo: 'Die Daten zur Immobilienfinanzierung sind nach dem BigQuery-Import verfügbar.',
       nouvelleOperationImmo: 'Neuer Immobilienvorgang',
       modifierOperationImmo: 'Immobilienvorgang bearbeiten',
+      immoAmountsError: 'Fehlende oder ungültige Beträge: {fields}. Änderung gesperrt, damit sie nicht durch null ersetzt werden.',
+      immoRateError: 'Der eingegebene Kurs muss strikt positiv sein. Ein unbekannter historischer Kurs kann ohne automatische Umrechnung leer bleiben.',
       designation: 'Bezeichnung',
       documentRef: 'Dokument / Referenz',
       remboursementCheikh: 'Rückzahlung an Cheikh',
@@ -628,6 +634,22 @@ const Finance = () => {
   const t = translations[language];
   const appliedFormRate = parseFiniteNumber(formData.tauxFxApplique);
   const appliedRateInvalid = appliedFormRate === null || appliedFormRate <= 0;
+  const editingImmo = editingImmoId !== null;
+  const immoAmountFields = [
+    ['montantChf', t.montantCHF], ['montantCfa', t.montantCFA],
+    ['partCheikhChf', t.partCheikh], ['remboursementCheikhChf', t.remboursementCheikh],
+  ];
+  // The current PUT replaces the whole row and coerces missing amounts to zero.
+  const invalidImmoAmounts = editingImmo
+    ? immoAmountFields.filter(([field]) => parseFiniteNumber(immoFormData[field]) === null)
+    : [];
+  const immoRate = parseFiniteNumber(immoFormData.tauxFx);
+  const immoRateInvalid = immoFormData.tauxFx !== '' && (immoRate === null || immoRate <= 0);
+  const immoSaveInvalid = invalidImmoAmounts.length > 0 || immoRateInvalid;
+  const immoAmountValidation = (field) => {
+    const invalid = invalidImmoAmounts.some(([key]) => key === field);
+    return { 'aria-invalid': invalid, 'aria-describedby': invalid ? 'immo-amounts-error' : undefined };
+  };
   const withLabel = (template, label) => template.replace('{label}', label || t.operationLabel);
   const agentsByTeam = useMemo(() => buildTeamAgentDirectory(directoryMembers, {
     [TEAM_CODES.ZURICH]: t.teamZhCollective,
@@ -1273,11 +1295,11 @@ const Finance = () => {
         ...item,
         id: item.source_id,
         date: cleanDate(item.date_operation),
-        montantChf: toNumber(item.montant_chf),
-        montantCfa: toNumber(item.montant_cfa),
-        tauxFx: item.taux_fx === null ? null : toNumber(item.taux_fx),
-        partCheikhChf: toNumber(item.part_cheikh_chf),
-        remboursementCheikhChf: toNumber(item.remboursement_cheikh_chf),
+        montantChf: parseFiniteNumber(item.montant_chf),
+        montantCfa: parseFiniteNumber(item.montant_cfa),
+        tauxFx: parseFiniteNumber(item.taux_fx),
+        partCheikhChf: parseFiniteNumber(item.part_cheikh_chf),
+        remboursementCheikhChf: parseFiniteNumber(item.remboursement_cheikh_chf),
         estPlanifie: Boolean(item.est_planifie)
       })));
       setImmoSummary(response?.summary || {});
@@ -1498,9 +1520,12 @@ const Finance = () => {
         const currentAgentTeam = findAgentTeam(previous.agent, agentsByTeam);
         if (!currentAgentTeam || currentAgentTeam !== next.team) next.agent = '';
       }
-      if (field === 'date') {
+      if (field === 'date' && !editingImmo) {
         const historicalRate = getHistoricalCfaPerChf(value)?.cfaPerChf;
-        if (historicalRate) next.tauxFx = historicalRate;
+        const previousReference = getHistoricalCfaPerChf(previous.date)?.cfaPerChf;
+        if (Number(previous.tauxFx) > 0 && Number(previous.tauxFx) === previousReference) {
+          next.tauxFx = historicalRate || '';
+        }
       }
       return next;
     });
@@ -1520,11 +1545,13 @@ const Finance = () => {
     setImmoFormData({
       date: item.date,
       designation: item.designation || '',
-      montantChf: item.montantChf || '',
-      montantCfa: item.montantCfa || '',
-      tauxFx: item.tauxFx || '',
-      partCheikhChf: item.partCheikhChf || '',
-      remboursementCheikhChf: item.remboursementCheikhChf || '',
+      montantChf: item.montantChf ?? '',
+      montantCfa: item.montantCfa ?? '',
+      tauxFx: item.tauxFx ?? '',
+      partCheikhChf: item.partCheikhChf ?? '',
+      remboursementCheikhChf: item.remboursementCheikhChf ?? '',
+      sourceFile: item.source_file,
+      enrichiGenspark: item.enrichi_genspark,
       typeOperation: item.type_operation || 'Avance',
       perimetre: item.perimetre || 'Immobilier',
       categorie: item.categorie || 'Autre',
@@ -1540,18 +1567,20 @@ const Finance = () => {
   };
 
   const handleImmoSave = () => {
+    if (immoSaveInvalid) return;
     if (!immoFormData.date || !immoFormData.designation.trim()) {
       alert(t.remplirChamps);
       return;
     }
     let montantChf = toNumber(immoFormData.montantChf);
     let montantCfa = toNumber(immoFormData.montantCfa);
-    let tauxFx = montantChf > 0 && montantCfa > 0
-      ? montantCfa / montantChf
-      : toNumber(immoFormData.tauxFx);
-    if (!tauxFx) tauxFx = getHistoricalCfaPerChf(immoFormData.date)?.cfaPerChf || 0;
-    if (montantChf > 0 && !montantCfa && tauxFx) montantCfa = montantChf * tauxFx;
-    if (montantCfa > 0 && !montantChf && tauxFx) montantChf = montantCfa / tauxFx;
+    let tauxFx = immoRate;
+    if (!editingImmo) {
+      tauxFx = montantChf > 0 && montantCfa > 0 ? montantCfa / montantChf : immoRate;
+      if (!tauxFx) tauxFx = getHistoricalCfaPerChf(immoFormData.date)?.cfaPerChf || 0;
+      if (montantChf > 0 && !montantCfa && tauxFx) montantCfa = montantChf * tauxFx;
+      if (montantCfa > 0 && !montantChf && tauxFx) montantChf = montantCfa / tauxFx;
+    }
 
     const payload = {
       date_operation: immoFormData.date,
@@ -1571,8 +1600,8 @@ const Finance = () => {
       team: immoFormData.team,
       departement: immoFormData.departement,
       phase_projet: immoFormData.phaseProjet,
-      source_file: 'M3S App',
-      enrichi_genspark: false
+      source_file: editingImmo ? immoFormData.sourceFile : 'M3S App',
+      enrichi_genspark: editingImmo ? immoFormData.enrichiGenspark : false
     };
     setFeedback(null);
     setPendingAction({
@@ -2589,11 +2618,11 @@ const Finance = () => {
                                 <td className="px-4 py-3 text-slate-400 whitespace-nowrap">{item.id}</td>
                                 <td className="px-4 py-3 text-slate-300 whitespace-nowrap">{formatDateForDisplay(item.date)}</td>
                                 <td className="px-4 py-3 text-white font-medium max-w-[360px]">{item.designation}</td>
-                                <td className="px-4 py-3 text-orange-300 font-semibold whitespace-nowrap">{formatAmount(item.montantChf)} CHF</td>
-                                <td className="px-4 py-3 text-slate-300 whitespace-nowrap">{formatAmount(item.montantCfa)} CFA</td>
-                                <td className="px-4 py-3 text-purple-300">{item.tauxFx ? item.tauxFx.toLocaleString(undefined, { maximumFractionDigits: 3 }) : '-'}</td>
-                                <td className="px-4 py-3 text-blue-300 whitespace-nowrap">{formatAmount(item.partCheikhChf)} CHF</td>
-                                <td className="px-4 py-3 text-green-300 whitespace-nowrap">{formatAmount(item.remboursementCheikhChf)} CHF</td>
+                                <td className="px-4 py-3 text-orange-300 font-semibold whitespace-nowrap">{formatOptionalAmount(item.montantChf)} CHF</td>
+                                <td className="px-4 py-3 text-slate-300 whitespace-nowrap">{formatOptionalAmount(item.montantCfa)} CFA</td>
+                                <td className="px-4 py-3 text-purple-300">{item.tauxFx !== null ? item.tauxFx.toLocaleString(undefined, { maximumFractionDigits: 3 }) : '—'}</td>
+                                <td className="px-4 py-3 text-blue-300 whitespace-nowrap">{formatOptionalAmount(item.partCheikhChf)} CHF</td>
+                                <td className="px-4 py-3 text-green-300 whitespace-nowrap">{formatOptionalAmount(item.remboursementCheikhChf)} CHF</td>
                                 <td className="px-4 py-3 text-slate-300">{translateCategory(item.categorie)}</td>
                                 <td className="px-4 py-3 text-slate-300">{formatCell(item.agent)}</td>
                                 <td className="px-4 py-3 text-slate-300">{translateStandardValue(item.team)}</td>
@@ -2640,6 +2669,14 @@ const Finance = () => {
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
             <div className="bg-slate-800 rounded-lg p-6 w-full max-w-5xl max-h-[90vh] overflow-y-auto border border-slate-700">
               <h2 className="text-white text-xl font-bold mb-5">{editingImmoId ? t.modifierOperationImmo : t.nouvelleOperationImmo}</h2>
+              {invalidImmoAmounts.length > 0 && (
+                <p id="immo-amounts-error" role="alert" className="text-sm text-amber-300 mb-4">
+                  {t.immoAmountsError.replace('{fields}', invalidImmoAmounts.map(([, label]) => label).join(', '))}
+                </p>
+              )}
+              {immoRateInvalid && (
+                <p id="immo-rate-error" role="alert" className="text-sm text-amber-300 mb-4">{t.immoRateError}</p>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <label className="lg:col-span-2 text-sm text-slate-300">
                   <span className="block mb-1">{t.designation}</span>
@@ -2652,23 +2689,23 @@ const Finance = () => {
 
                 <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.montantCHF}</span>
-                  <input type="number" step="any" value={immoFormData.montantChf} onChange={(event) => handleImmoFormChange('montantChf', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                  <input type="number" step="any" {...immoAmountValidation('montantChf')} value={immoFormData.montantChf} onChange={(event) => handleImmoFormChange('montantChf', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
                 </label>
                 <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.montantCFA}</span>
-                  <input type="number" step="any" value={immoFormData.montantCfa} onChange={(event) => handleImmoFormChange('montantCfa', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                  <input type="number" step="any" {...immoAmountValidation('montantCfa')} value={immoFormData.montantCfa} onChange={(event) => handleImmoFormChange('montantCfa', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
                 </label>
                 <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.tauxFXCol}</span>
-                  <input type="number" step="any" value={immoFormData.tauxFx} onChange={(event) => handleImmoFormChange('tauxFx', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                  <input type="number" step="any" aria-invalid={immoRateInvalid} aria-describedby={immoRateInvalid ? 'immo-rate-error' : undefined} value={immoFormData.tauxFx} onChange={(event) => handleImmoFormChange('tauxFx', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
                 </label>
                 <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.partCheikh}</span>
-                  <input type="number" step="any" value={immoFormData.partCheikhChf} onChange={(event) => handleImmoFormChange('partCheikhChf', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                  <input type="number" step="any" {...immoAmountValidation('partCheikhChf')} value={immoFormData.partCheikhChf} onChange={(event) => handleImmoFormChange('partCheikhChf', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
                 </label>
                 <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.remboursementCheikh}</span>
-                  <input type="number" step="any" value={immoFormData.remboursementCheikhChf} onChange={(event) => handleImmoFormChange('remboursementCheikhChf', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
+                  <input type="number" step="any" {...immoAmountValidation('remboursementCheikhChf')} value={immoFormData.remboursementCheikhChf} onChange={(event) => handleImmoFormChange('remboursementCheikhChf', event.target.value)} className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white" />
                 </label>
                 <label className="text-sm text-slate-300">
                   <span className="block mb-1">{t.categorie}</span>
@@ -2746,7 +2783,7 @@ const Finance = () => {
               </div>
               <div className="flex justify-end gap-3 mt-6">
                 <button onClick={() => setShowImmoModal(false)} disabled={savingImmo} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg disabled:opacity-50">{t.annuler}</button>
-                <button onClick={handleImmoSave} disabled={savingImmo} className={`${editingImmoId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 px-4`}>{t.enregistrer}</button>
+                <button onClick={handleImmoSave} disabled={savingImmo || immoSaveInvalid} className={`${editingImmoId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 px-4 disabled:opacity-50 disabled:cursor-not-allowed`}>{t.enregistrer}</button>
               </div>
             </div>
           </div>
