@@ -270,3 +270,111 @@ test('does not backfill a historical rate when reference data arrives after open
   expect(screen.getByLabelText('Taux appliqué *')).toHaveValue(null);
   expect(screen.getByRole('button', { name: 'Enregistrer' })).toBeDisabled();
 });
+
+const immoHistory = overrides => ({
+  source_id: 'QA-IMM-001', date_operation: '2026-09-01', designation: 'Historique fictif QA',
+  montant_chf: 100, montant_cfa: 70000, taux_fx: 695,
+  part_cheikh_chf: 0, remboursement_cheikh_chf: 0,
+  type_operation: 'Avance', source_file: 'Import fictif QA', enrichi_genspark: true,
+  ...overrides,
+});
+
+const openImmoHistory = async overrides => {
+  mockSearch = '?tab=immobilier';
+  useHistoricalRates();
+  api.getRealEstateFinance.mockResolvedValue({ data: [immoHistory(overrides)], summary: {} });
+  api.updateRealEstateFinance.mockResolvedValue({ success: true });
+  renderFinance();
+  fireEvent.click(await screen.findByText('QA-IMM-001'));
+};
+
+test('preserves historical real-estate amounts, rate and provenance after a date change', async () => {
+  await openImmoHistory();
+  changeToSeptemberSecond();
+  expect(screen.getByLabelText('Taux appliqué')).toHaveValue(695);
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  expect(api.updateRealEstateFinance).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
+  await waitFor(() => expect(api.updateRealEstateFinance).toHaveBeenCalledWith('QA-IMM-001', expect.objectContaining({
+    date_operation: '2026-09-02', montant_chf: 100, montant_cfa: 70000, taux_fx: 695,
+    part_cheikh_chf: 0, remboursement_cheikh_chf: 0, source_file: 'Import fictif QA', enrichi_genspark: true,
+  })));
+});
+
+test('keeps a real zero and a missing real-estate rate instead of computing them', async () => {
+  await openImmoHistory({ montant_chf: 0, montant_cfa: 100000, taux_fx: null });
+  expect(screen.getByLabelText('Montant CHF')).toHaveValue(0);
+  expect(screen.getByLabelText('Taux appliqué')).toHaveValue(null);
+  changeToSeptemberSecond();
+  expect(screen.getByLabelText('Taux appliqué')).toHaveValue(null);
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
+  await waitFor(() => expect(api.updateRealEstateFinance).toHaveBeenCalledWith('QA-IMM-001', expect.objectContaining({
+    montant_chf: 0, montant_cfa: 100000, taux_fx: null,
+  })));
+});
+
+test.each([
+  ['montant_chf', 'Montant CHF'], ['montant_cfa', 'Montant CFA'],
+  ['part_cheikh_chf', 'Part Cheikh'], ['remboursement_cheikh_chf', 'Remboursement Cheikh'],
+])('blocks an incomplete historical amount: %s', async (field, label) => {
+  await openImmoHistory({ [field]: null });
+  const input = screen.getByLabelText(label);
+  expect(input).toHaveValue(null);
+  expect(input).toHaveAttribute('aria-invalid', 'true');
+  expect(screen.getByRole('button', { name: 'Enregistrer' })).toBeDisabled();
+  expect(screen.getByRole('alert')).toHaveTextContent(label);
+  const row = screen.getByText('QA-IMM-001').closest('tr');
+  expect(row).toHaveTextContent('—');
+  fireEvent.change(input, { target: { value: '0' } });
+  expect(screen.getByRole('button', { name: 'Enregistrer' })).toBeEnabled();
+  expect(api.updateRealEstateFinance).not.toHaveBeenCalled();
+});
+
+test('does not derive a cleared real-estate rate from two recorded amounts', async () => {
+  await openImmoHistory();
+  const rate = screen.getByLabelText('Taux appliqué');
+  fireEvent.change(rate, { target: { value: '-1' } });
+  expect(screen.getByRole('button', { name: 'Enregistrer' })).toBeDisabled();
+  fireEvent.change(rate, { target: { value: '' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
+  await waitFor(() => expect(api.updateRealEstateFinance).toHaveBeenCalledWith('QA-IMM-001', expect.objectContaining({
+    montant_chf: 100, montant_cfa: 70000, taux_fx: null,
+  })));
+});
+
+test('retains the existing new real-estate entry calculation', async () => {
+  mockSearch = '?tab=immobilier';
+  api.getRealEstateFinance.mockResolvedValue({ data: [immoHistory()], summary: {} });
+  api.createRealEstateFinance.mockResolvedValue({ success: true });
+  renderFinance();
+  await act(async () => {});
+  fireEvent.click(await screen.findByRole('button', { name: 'Nouvelle opération Immo' }));
+  fireEvent.change(screen.getByLabelText('Désignation'), { target: { value: 'Création fictive QA' } });
+  fireEvent.change(screen.getByLabelText('Montant CHF'), { target: { value: '100' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  expect(api.createRealEstateFinance).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, ajouter' }));
+  await waitFor(() => expect(api.createRealEstateFinance).toHaveBeenCalledWith(expect.objectContaining({
+    montant_chf: 100, montant_cfa: 71000, taux_fx: 710,
+  })));
+});
+
+test('keeps an explicit amount edit independent from the historical rate and other amounts', async () => {
+  await openImmoHistory();
+  fireEvent.change(screen.getByLabelText('Montant CHF'), { target: { value: '120' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
+  await waitFor(() => expect(api.updateRealEstateFinance).toHaveBeenCalledWith('QA-IMM-001', expect.objectContaining({
+    montant_chf: 120, montant_cfa: 70000, taux_fx: 695,
+  })));
+});
+
+test('keeps an invalid historical zero rate visible and blocks saving', async () => {
+  await openImmoHistory({ taux_fx: 0 });
+  expect(screen.getByLabelText('Taux appliqué')).toHaveValue(0);
+  expect(screen.getByLabelText('Taux appliqué')).toHaveAttribute('aria-invalid', 'true');
+  expect(screen.getByRole('button', { name: 'Enregistrer' })).toBeDisabled();
+  expect(api.updateRealEstateFinance).not.toHaveBeenCalled();
+});
