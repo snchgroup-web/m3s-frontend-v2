@@ -1,4 +1,5 @@
 import React from 'react';
+import FinanceTransactionCount, { sumTransactionCounts } from './FinanceTransactionCount';
 import {
   ArrowRightLeft,
   Building2,
@@ -106,6 +107,8 @@ const IndicatorCard = ({
   icon: Icon,
   tone,
   locale,
+  transactionCount,
+  countScope = 'global',
   testId
 }) => {
   const style = TONES[tone];
@@ -125,7 +128,7 @@ const IndicatorCard = ({
           <p data-testid={testId} className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-xl font-semibold">
             <span style={{ color: 'var(--m3s-status-info)' }}>{displayValue}</span>
             {secondaryUnit && (
-              <span style={{ color: 'var(--m3s-status-warning)' }}>
+              <span className="m3s-currency-cfa">
                 ≈ {displaySecondaryValue}
               </span>
             )}
@@ -135,6 +138,7 @@ const IndicatorCard = ({
           <Icon size={21} aria-hidden="true" />
         </span>
       </div>
+      {secondaryUnit && <FinanceTransactionCount count={transactionCount} scope={countScope} state={state} language={locale === 'de-CH' ? 'DE' : locale === 'en-GB' ? 'EN' : 'FR'} />}
       <p className="mt-3 border-t pt-2 text-xs" style={{ borderColor: 'var(--m3s-border)', color: 'var(--m3s-text-secondary)' }}>{stateLabel(state, value, copy, source)}</p>
     </article>
   );
@@ -142,6 +146,10 @@ const IndicatorCard = ({
 
 const FinanceOverviewIndicators = ({
   language = 'FR',
+  incomeCount,
+  expenseCount,
+  realEstateLoadedCount,
+  socialLoadedCount,
   financeState,
   totalIncome,
   totalIncomeCfa,
@@ -169,14 +177,14 @@ const FinanceOverviewIndicators = ({
 
   return (
     <section aria-label={language === 'DE' ? 'Finanzkennzahlen' : language === 'EN' ? 'Finance indicators' : 'Indicateurs financiers'} className="m3s-design-scope mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      <IndicatorCard label={t.income} value={totalIncome} secondaryValue={totalIncomeCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} icon={TrendingUp} tone="green" locale={locale} testId="finance-total-income" />
-      <IndicatorCard label={t.expenses} value={totalExpenses} secondaryValue={totalExpensesCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} icon={TrendingDown} tone="red" locale={locale} testId="finance-total-expenses" />
-      <IndicatorCard label={t.balance} value={netBalance} secondaryValue={netBalanceCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} icon={CircleDollarSign} tone="blue" locale={locale} testId="finance-net-balance" />
+      <IndicatorCard label={t.income} value={totalIncome} secondaryValue={totalIncomeCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} icon={TrendingUp} tone="green" locale={locale} transactionCount={incomeCount} testId="finance-total-income" />
+      <IndicatorCard label={t.expenses} value={totalExpenses} secondaryValue={totalExpensesCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} icon={TrendingDown} tone="red" locale={locale} transactionCount={expenseCount} testId="finance-total-expenses" />
+      <IndicatorCard label={t.balance} value={netBalance} secondaryValue={netBalanceCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} icon={CircleDollarSign} tone="blue" locale={locale} transactionCount={sumTransactionCounts(incomeCount, expenseCount)} testId="finance-net-balance" />
       <IndicatorCard label={t.rate} value={currentRate} unit="CFA / CHF" state={rateState} source={t.currentRate} icon={ArrowRightLeft} tone="violet" locale={locale} testId="finance-current-rate" />
-      <IndicatorCard label={t.realEstateFunding} value={realEstateFunding} secondaryValue={realEstateFundingCfa} secondaryUnit="CFA" state={realEstateState} source={historicalSource(t.realEstateSource)} icon={Building2} tone="cyan" locale={locale} testId="finance-real-estate-funding" />
-      <IndicatorCard label={t.reimbursements} value={reimbursements} secondaryValue={reimbursementsCfa} secondaryUnit="CFA" state={realEstateState} source={currentRateSource(t.realEstateSource)} icon={HandCoins} tone="teal" locale={locale} testId="finance-real-estate-reimbursements" />
-      <IndicatorCard label={t.outstanding} value={outstandingBalance} secondaryValue={outstandingBalanceCfa} secondaryUnit="CFA" state={realEstateState} source={currentRateSource(t.realEstateSource)} icon={Landmark} tone="amber" locale={locale} testId="finance-real-estate-outstanding" />
-      <IndicatorCard label={t.social} value={socialTotal} secondaryValue={socialTotalCfa} secondaryUnit="CFA" state={socialState} source={historicalSource(t.socialSource)} icon={HeartHandshake} tone="social" locale={locale} testId="finance-social-total" />
+      <IndicatorCard label={t.realEstateFunding} value={realEstateFunding} secondaryValue={realEstateFundingCfa} secondaryUnit="CFA" state={realEstateState} source={historicalSource(t.realEstateSource)} icon={Building2} tone="cyan" locale={locale} transactionCount={realEstateLoadedCount} countScope="registry" testId="finance-real-estate-funding" />
+      <IndicatorCard label={t.reimbursements} value={reimbursements} secondaryValue={reimbursementsCfa} secondaryUnit="CFA" state={realEstateState} source={currentRateSource(t.realEstateSource)} icon={HandCoins} tone="teal" locale={locale} transactionCount={realEstateLoadedCount} countScope="registry" testId="finance-real-estate-reimbursements" />
+      <IndicatorCard label={t.outstanding} value={outstandingBalance} secondaryValue={outstandingBalanceCfa} secondaryUnit="CFA" state={realEstateState} source={currentRateSource(t.realEstateSource)} icon={Landmark} tone="amber" locale={locale} transactionCount={realEstateLoadedCount} countScope="registry" testId="finance-real-estate-outstanding" />
+      <IndicatorCard label={t.social} value={socialTotal} secondaryValue={socialTotalCfa} secondaryUnit="CFA" state={socialState} source={historicalSource(t.socialSource)} icon={HeartHandshake} tone="social" locale={locale} transactionCount={socialLoadedCount} countScope="extract" testId="finance-social-total" />
     </section>
   );
 };
