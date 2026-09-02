@@ -26,7 +26,8 @@ import {
   Warehouse
 } from 'lucide-react';
 import api from './api';
-import FinanceTransactionCount, { parseTransactionCount, sumTransactionCounts } from './FinanceTransactionCount';
+import FinanceTransactionCount, { sumTransactionCounts } from './FinanceTransactionCount';
+import { normalizeFinanceSummary } from './financeSummary';
 import DashboardPilotageNavigation from './DashboardPilotageNavigation';
 import { getDashboardIndicatorDestination } from './dashboardNavigation';
 import { getFinanceKpiDefinition, getManagementKpiDefinition, getOperationsKpiDefinition, getSupportKpiDefinition } from './dashboardKpiDictionary';
@@ -54,7 +55,8 @@ const hasApiNumber = (value) => (
 
 const withApiFallback = async (request, fallback = null) => {
   try {
-    return await request();
+    const response = await request();
+    return response?.success === false ? fallback : response;
   } catch (error) {
     console.warn('Dashboard API fallback:', error.message);
     return fallback;
@@ -63,7 +65,10 @@ const withApiFallback = async (request, fallback = null) => {
 
 const withApiResult = async (request) => {
   try {
-    return { data: await request(), errorStatus: null };
+    const response = await request();
+    return response?.success === false
+      ? { data: null, errorStatus: Number(response.status) === 403 ? 403 : null }
+      : { data: response, errorStatus: null };
   } catch (error) {
     console.warn('Dashboard API source unavailable:', error.message);
     return { data: null, errorStatus: error.status || null };
@@ -577,7 +582,7 @@ const Dashboard = () => {
     }))
   }), [getMonthName]);
 
-  // Fetch data from API, with stable mock fallback when the backend is unavailable.
+  // Keep unavailable sources separate from confirmed values and loaded extracts.
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -592,7 +597,7 @@ const Dashboard = () => {
           withApiFallback(() => api.getManagementPortfolioSummary()),
           withApiFallback(() => api.getIncome(200, 0)),
           withApiFallback(() => api.getExpenses(200, 0)),
-          withApiFallback(() => api.getFxHistory(), {}),
+          withApiFallback(() => api.getFxHistory()),
           withApiResult(() => api.getSocialFinance(200, 0)),
           withApiResult(() => api.getRealEstateFinance(200, 0)),
           withApiResult(() => api.getSuppliersCount()),
@@ -612,31 +617,13 @@ const Dashboard = () => {
         const incomeRows = incomeAvailable ? income.data : [];
         const expenseRows = expensesAvailable ? expenses.data : [];
         const operatingIncomeRows = incomeRows.filter((row) => !String(row.category || '').toUpperCase().includes('AIDE SOCIALE'));
-        const dashboardSummary = financeDashboard?.data || {};
-        const globalIncomeCount = financeDashboard?.success !== false ? parseTransactionCount(dashboardSummary.total_income_count) : null;
-        const globalExpenseCount = financeDashboard?.success !== false ? parseTransactionCount(dashboardSummary.total_expense_count) : null;
-        const aggregateValue = (summaryValue, summaryCount, rowsAvailable, rows, fieldSelector) => {
-          if (hasApiNumber(summaryCount) && Number(summaryCount) === 0) return 0;
-          if (hasApiNumber(summaryValue)) return Number(summaryValue);
-          if (!rowsAvailable) return null;
-          return rows.reduce((sum, row) => sum + numberFromApi(fieldSelector(row)), 0);
-        };
-        const totalIncome = aggregateValue(
-          dashboardSummary.total_income, dashboardSummary.total_income_count,
-          incomeAvailable, operatingIncomeRows, (row) => row.montant_chf ?? row.montant
-        );
-        const totalIncomeCfa = aggregateValue(
-          dashboardSummary.total_income_cfa, dashboardSummary.total_income_count,
-          incomeAvailable, operatingIncomeRows, (row) => row.montant_cfa
-        );
-        const totalExpenses = aggregateValue(
-          dashboardSummary.total_expenses, dashboardSummary.total_expense_count,
-          expensesAvailable, expenseRows, (row) => row.montant_chf ?? row.montant
-        );
-        const totalExpensesCfa = aggregateValue(
-          dashboardSummary.total_expenses_cfa, dashboardSummary.total_expense_count,
-          expensesAvailable, expenseRows, (row) => row.montant_cfa
-        );
+        const financeSummary = normalizeFinanceSummary(financeDashboard);
+        const globalIncomeCount = financeSummary?.incomeCount ?? null;
+        const globalExpenseCount = financeSummary?.expenseCount ?? null;
+        const totalIncome = financeSummary?.totalIncome ?? null;
+        const totalIncomeCfa = financeSummary?.totalIncomeCfa ?? null;
+        const totalExpenses = financeSummary?.totalExpenses ?? null;
+        const totalExpensesCfa = financeSummary?.totalExpensesCfa ?? null;
         const donations = incomeAvailable
           ? incomeRows.filter((row) => String(row.category || '').toUpperCase().includes('DON')).reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0)
           : null;
@@ -710,13 +697,14 @@ const Dashboard = () => {
           || !portfolioAvailable
           || !incomeAvailable
           || !expensesAvailable
-          || (!social && socialResult.errorStatus !== 403)
-          || (!realEstate && realEstateResult.errorStatus !== 403)
+          || !financeAvailable
+          || (!socialAvailable && socialResult.errorStatus !== 403)
+          || (!realEstateAvailable && realEstateResult.errorStatus !== 403)
           || (!suppliersAvailable && suppliersResult.errorStatus !== 403)
           || (!beneficiariesAvailable && beneficiariesResult.errorStatus !== 403)
           || (!donorsAvailable && donorsResult.errorStatus !== 403)
           || (!membersAvailable && membersResult.errorStatus !== 403)
-          || fx?.success === false;
+          || !fx;
         setDataWarning(apiUnavailable);
 
         const yearlyFinance = {};
@@ -742,8 +730,8 @@ const Dashboard = () => {
             tasks: tasksAvailable ? 'available' : 'unavailable',
             users: usersAvailable ? 'available' : 'unavailable',
             portfolio: portfolioAvailable ? 'available' : 'unavailable',
-            income: incomeAvailable ? 'available' : 'unavailable',
-            expenses: expensesAvailable ? 'available' : 'unavailable',
+            income: Number.isFinite(totalIncome) && Number.isFinite(totalIncomeCfa) ? 'available' : 'unavailable',
+            expenses: Number.isFinite(totalExpenses) && Number.isFinite(totalExpensesCfa) ? 'available' : 'unavailable',
             donations: incomeAvailable ? 'available' : 'unavailable',
             financing: incomeAvailable ? 'available' : 'unavailable',
             fx: exchangeRate ? 'available' : 'unavailable',
@@ -762,8 +750,8 @@ const Dashboard = () => {
               revenueCfa: totalIncomeCfa,
               expenses: totalExpenses,
               expensesCfa: totalExpensesCfa,
-              balance: financeAvailable ? totalIncome - totalExpenses : null,
-              balanceCfa: financeAvailable ? totalIncomeCfa - totalExpensesCfa : null,
+              balance: Number.isFinite(totalIncome) && Number.isFinite(totalExpenses) ? totalIncome - totalExpenses : null,
+              balanceCfa: Number.isFinite(totalIncomeCfa) && Number.isFinite(totalExpensesCfa) ? totalIncomeCfa - totalExpensesCfa : null,
               donations,
               donationsCfa,
               financing,
