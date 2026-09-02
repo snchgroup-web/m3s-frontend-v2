@@ -62,3 +62,10 @@ test.each([['founders', 'fondateur'], ['associates', 'associe'], ['members', nul
   expect(url.searchParams.get('dashboardKpi')).toBe(indicator);
   expect(url.hash).toBe('#members-directory-register');
 });
+
+test.each(['donations', 'financing'])('%s preserves its income scope and return identity', indicator => {
+  const url = new URL(getDashboardIndicatorDestination(indicator), 'https://m3s.local');
+  expect(url.searchParams.get('incomeScope')).toBe(indicator);
+  expect(url.searchParams.get('dashboardKpi')).toBe(indicator);
+  expect(url.hash).toBe('#finance-revenue-register');
+});

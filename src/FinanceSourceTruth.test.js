@@ -130,3 +130,11 @@ test.each([{ success: false, data: [] }, { data: null }])('does not label an inv
   expect(card).toHaveTextContent('Transactions chargées : —');
   expect(card).not.toHaveTextContent('Transactions chargées : 0');
 });
+
+test('ignores explicitly rejected expense rows while preserving the global summary and income extract', async () => {
+  api.getExpenses.mockResolvedValue({ success: false, data: [{ id: 'REJECTED', montant_chf: 999 }] });
+  renderFinance();
+  await screen.findByText('Totaux globaux disponibles');
+  expect(screen.getByTestId('finance-source-status')).toHaveTextContent('1 recettes · 0 dépenses');
+  expect(screen.getByTestId('finance-total-expenses')).toHaveTextContent('400 CHF');
+});

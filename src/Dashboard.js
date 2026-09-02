@@ -28,6 +28,7 @@ import {
 import api from './api';
 import FinanceTransactionCount, { sumTransactionCounts } from './FinanceTransactionCount';
 import { normalizeFinanceSummary } from './financeSummary';
+import { matchesIncomeScope } from './financeIncomeScope';
 import DashboardPilotageNavigation from './DashboardPilotageNavigation';
 import { getDashboardIndicatorDestination } from './dashboardNavigation';
 import { getFinanceKpiDefinition, getManagementKpiDefinition, getOperationsKpiDefinition, getSupportKpiDefinition } from './dashboardKpiDictionary';
@@ -615,6 +616,8 @@ const Dashboard = () => {
         const incomeAvailable = Array.isArray(income?.data);
         const expensesAvailable = Array.isArray(expenses?.data);
         const incomeRows = incomeAvailable ? income.data : [];
+        const donationRows = incomeRows.filter(row => matchesIncomeScope(row, 'donations'));
+        const financingRows = incomeRows.filter(row => matchesIncomeScope(row, 'financing'));
         const expenseRows = expensesAvailable ? expenses.data : [];
         const operatingIncomeRows = incomeRows.filter((row) => !String(row.category || '').toUpperCase().includes('AIDE SOCIALE'));
         const financeSummary = normalizeFinanceSummary(financeDashboard);
@@ -625,16 +628,16 @@ const Dashboard = () => {
         const totalExpenses = financeSummary?.totalExpenses ?? null;
         const totalExpensesCfa = financeSummary?.totalExpensesCfa ?? null;
         const donations = incomeAvailable
-          ? incomeRows.filter((row) => String(row.category || '').toUpperCase().includes('DON')).reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0)
+          ? donationRows.reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0)
           : null;
         const donationsCfa = incomeAvailable
-          ? incomeRows.filter((row) => String(row.category || '').toUpperCase().includes('DON')).reduce((sum, row) => sum + numberFromApi(row.montant_cfa), 0)
+          ? donationRows.reduce((sum, row) => sum + numberFromApi(row.montant_cfa), 0)
           : null;
         const financing = incomeAvailable
-          ? incomeRows.filter((row) => String(row.category || '').toUpperCase() === 'FINANCEMENT').reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0)
+          ? financingRows.reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0)
           : null;
         const financingCfa = incomeAvailable
-          ? incomeRows.filter((row) => String(row.category || '').toUpperCase() === 'FINANCEMENT').reduce((sum, row) => sum + numberFromApi(row.montant_cfa), 0)
+          ? financingRows.reduce((sum, row) => sum + numberFromApi(row.montant_cfa), 0)
           : null;
         const exchangeRate = numberFromApi(fx?.taux_du_jour?.CHF_CFA, 0);
         const realEstateAvailable = Boolean(realEstate?.summary) && Array.isArray(realEstate?.data);
@@ -771,8 +774,8 @@ const Dashboard = () => {
                 income: globalIncomeCount,
                 expenses: globalExpenseCount,
                 balance: sumTransactionCounts(globalIncomeCount, globalExpenseCount),
-                donations: incomeAvailable && income?.success !== false ? incomeRows.filter(row => String(row.category || '').toUpperCase().includes('DON')).length : null,
-                financing: incomeAvailable && income?.success !== false ? incomeRows.filter(row => String(row.category || '').toUpperCase() === 'FINANCEMENT').length : null,
+                donations: incomeAvailable && income?.success !== false ? donationRows.length : null,
+                financing: incomeAvailable && income?.success !== false ? financingRows.length : null,
                 realEstate: realEstateAvailable && realEstate?.success !== false ? realEstate.data.length : null,
                 social: socialAvailable && social?.success !== false ? social.data.length : null
               }
