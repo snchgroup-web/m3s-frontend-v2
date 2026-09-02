@@ -41,3 +41,82 @@ test('blocks actions and Escape while busy, then allows closing the error', () =
   expect(handlers.onCancel).toHaveBeenCalledTimes(1);
   expect(handlers.onConfirm).not.toHaveBeenCalled();
 });
+
+test('loops Tab and Shift+Tab inside the confirmation', () => {
+  render(<ActionConfirmationDialog {...props()} />);
+  const cancel = screen.getByRole('button', { name: 'Cancel' });
+  const confirm = screen.getByRole('button', { name: 'Confirm' });
+  fireEvent.keyDown(cancel, { key: 'Tab', shiftKey: true });
+  expect(confirm).toHaveFocus();
+  fireEvent.keyDown(confirm, { key: 'Tab' });
+  expect(cancel).toHaveFocus();
+});
+
+test('returns focus to its connected opener after closing', () => {
+  const View = () => {
+    const [open, setOpen] = React.useState(false);
+    return <><button onClick={() => setOpen(true)}>Open</button>{open && <ActionConfirmationDialog {...props()} onCancel={() => setOpen(false)} />}</>;
+  };
+  render(<View />);
+  const opener = screen.getByRole('button', { name: 'Open' });
+  opener.focus();
+  fireEvent.click(opener);
+  expect(screen.getByRole('button', { name: 'Cancel' })).toHaveFocus();
+  fireEvent.keyDown(document, { key: 'Escape' });
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  expect(opener).toHaveFocus();
+});
+
+test('does not reset focus when the parent refreshes its callback', () => {
+  const { rerender } = render(<ActionConfirmationDialog {...props()} />);
+  const confirm = screen.getByRole('button', { name: 'Confirm' });
+  confirm.focus();
+  const latest = props();
+  rerender(<ActionConfirmationDialog {...latest} />);
+  expect(confirm).toHaveFocus();
+  fireEvent.keyDown(document, { key: 'Escape' });
+  expect(latest.onCancel).toHaveBeenCalledTimes(1);
+});
+
+test('keeps focus inside while both actions are disabled', () => {
+  const { rerender } = render(<ActionConfirmationDialog {...props()} />);
+  rerender(<ActionConfirmationDialog {...props()} busy />);
+  const dialog = screen.getByRole('dialog');
+  expect(dialog).toHaveFocus();
+  expect(dialog).toHaveAttribute('aria-busy', 'true');
+  fireEvent.keyDown(dialog, { key: 'Tab' });
+  expect(dialog).toHaveFocus();
+  fireEvent.keyDown(dialog, { key: 'Tab', shiftKey: true });
+  expect(dialog).toHaveFocus();
+});
+
+test('moves from an error to its only close button and loops there', () => {
+  render(<ActionConfirmationDialog {...props()} error="Not confirmed" />);
+  fireEvent.keyDown(screen.getByRole('alert'), { key: 'Tab' });
+  const close = screen.getByRole('button', { name: 'Close' });
+  expect(close).toHaveFocus();
+  fireEvent.keyDown(close, { key: 'Tab', shiftKey: true });
+  expect(close).toHaveFocus();
+});
+
+test('redirects outside focus and removes the guard on unmount', () => {
+  const View = ({ open }) => <><button>Outside</button>{open && <ActionConfirmationDialog {...props()} />}</>;
+  const { rerender } = render(<View open />);
+  const outside = screen.getByRole('button', { name: 'Outside' });
+  outside.focus();
+  expect(screen.getByRole('button', { name: 'Cancel' })).toHaveFocus();
+  rerender(<View open={false} />);
+  outside.focus();
+  expect(outside).toHaveFocus();
+});
+
+test('closing does not try to focus an opener removed with its row', () => {
+  const opener = document.createElement('button');
+  document.body.appendChild(opener);
+  opener.focus();
+  const focus = jest.spyOn(opener, 'focus');
+  const { unmount } = render(<ActionConfirmationDialog {...props()} />);
+  opener.remove();
+  expect(() => unmount()).not.toThrow();
+  expect(focus).not.toHaveBeenCalled();
+});
