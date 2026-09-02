@@ -16,6 +16,7 @@ import FinanceTransactionCount from './FinanceTransactionCount';
 import FinanceAmountPair, { convertFinanceAmount } from './FinanceAmountPair';
 import FinanceTransferComparison from './FinanceTransferComparison';
 import { createTransferComparison } from './financeTransferQuotes';
+import { parseFxRate, cfaPerChfObservation, summarizeFxHistory, yearlyFxHistory } from './financeFxHistory';
 import { normalizeFinanceSummary } from './financeSummary';
 import { matchesIncomeScope, normalizeIncomeScope } from './financeIncomeScope';
 import FinanceArchitecture from './FinanceArchitecture';
@@ -106,6 +107,7 @@ const Finance = () => {
   const [socialError, setSocialError] = useState('');
   const [socialAccessState, setSocialAccessState] = useState('loading');
   const [fxHistory, setFxHistory] = useState([]);
+  const [fxHistoryStatus, setFxHistoryStatus] = useState('loading');
   const [immoTransactions, setImmoTransactions] = useState([]);
   const [immoSummary, setImmoSummary] = useState({});
   const [immoError, setImmoError] = useState('');
@@ -272,6 +274,10 @@ const Finance = () => {
       heure: 'Heure',
       resultat: 'Résultat',
       tauxActuel: 'Taux actuel',
+      fxObservationScope: 'Historique chargé · Observations CHF/CFA valides : {count} · CFA par CHF',
+      fxSeriesEmpty: 'Aucune observation CHF/CFA datée exploitable.',
+      fxHistoryLoading: 'Chargement de l’historique FX...',
+      fxHistoryUnavailable: 'Source FX indisponible',
       maximum: 'Maximum',
       minimum: 'Minimum',
       moyenne: 'Moyenne',
@@ -444,6 +450,10 @@ const Finance = () => {
       heure: 'Time',
       resultat: 'Result',
       tauxActuel: 'Current rate',
+      fxObservationScope: 'Loaded history: {count} valid CHF/CFA observations · CFA per CHF',
+      fxSeriesEmpty: 'No usable dated CHF/CFA observations.',
+      fxHistoryLoading: 'Loading FX history...',
+      fxHistoryUnavailable: 'FX source unavailable',
       maximum: 'Maximum',
       minimum: 'Minimum',
       moyenne: 'Average',
@@ -616,6 +626,10 @@ const Finance = () => {
       heure: 'Zeit',
       resultat: 'Ergebnis',
       tauxActuel: 'Aktueller Kurs',
+      fxObservationScope: 'Geladener Verlauf: {count} gültige CHF/CFA-Beobachtungen · CFA je CHF',
+      fxSeriesEmpty: 'Keine verwendbaren datierten CHF/CFA-Beobachtungen.',
+      fxHistoryLoading: 'FX-Verlauf wird geladen...',
+      fxHistoryUnavailable: 'FX-Quelle nicht verfügbar',
       maximum: 'Maximum',
       minimum: 'Minimum',
       moyenne: 'Durchschnitt',
@@ -877,15 +891,9 @@ const Finance = () => {
     const targetDate = comparableDate(operationDate);
     const candidates = fxHistory
       .map((fx) => {
-        const from = String(fx.devise_from || '').toUpperCase();
-        const to = String(fx.devise_to || '').toUpperCase();
-        const rate = toNumber(fx.rate);
+        const observation = cfaPerChfObservation(fx);
         const date = comparableDate(fx.date);
-
-        if (!date || !rate) return null;
-        if (from === 'CHF' && to === 'CFA') return { ...fx, date, cfaPerChf: rate };
-        if (from === 'CFA' && to === 'CHF') return { ...fx, date, cfaPerChf: 1 / rate };
-        return null;
+        return date && observation ? { ...fx, date, cfaPerChf: observation.rate } : null;
       })
       .filter(Boolean)
       .filter((fx) => targetDate && fx.date === targetDate)
@@ -1321,41 +1329,28 @@ const Finance = () => {
     ].filter(Boolean))
   ], [immoTransactions, immoFormData.categorie]);
 
-  // Load FX history from BigQuery
+  // Load FX history without interpreting malformed rates as valid observations.
   useEffect(() => {
     const loadFxHistory = async () => {
       try {
         const response = await api.getFxHistory();
-        console.log('🔍 FX API Response:', response);
-
-        if (response?.data && Array.isArray(response.data)) {
-          const dataArray = response.data;
-
-          setTauxDuJour(response.taux_du_jour || {});
-
-          if (dataArray.length > 0) {
-            const mappedData = dataArray.map(item => ({
-              id: item.source_id || item.id,
-              date: item.date_taux || item.date_updated || item.date ? cleanDate(item.date_taux || item.date_updated || item.date) : '',
-              rate: parseFloat(item.taux || item.rate || 0),
-              devise_from: item.devise_base || item.source_currency || item.devise_from,
-              devise_to: item.devise_cible || item.target_currency || item.devise_to,
-              source: item.source_taux || item.source,
-              commentaire: item.commentaire || ''
-            }));
-            setFxHistory(mappedData);
-            console.log('✅ FX History loaded:', mappedData.length, 'rows');
-          } else {
-            console.log('⚠️ Response data is empty:', dataArray);
-            setFxHistory([]);
-          }
-        } else {
-          console.log('⚠️ Invalid response structure:', response);
-          setFxHistory([]);
-        }
-      } catch (error) {
-        console.log('❌ FX History error:', error);
+        if (response?.success === false || !Array.isArray(response?.data)) throw new Error('Invalid FX history');
+        const mappedData = response.data.map(item => ({
+          id: item.source_id || item.id,
+          date: item.date_taux || item.date_updated || item.date ? cleanDate(item.date_taux || item.date_updated || item.date) : '',
+          rate: parseFxRate(item.taux ?? item.rate),
+          devise_from: item.devise_base || item.source_currency || item.devise_from,
+          devise_to: item.devise_cible || item.target_currency || item.devise_to,
+          source: item.source_taux || item.source,
+          commentaire: item.commentaire || ''
+        }));
+        setTauxDuJour(response.taux_du_jour || {});
+        setFxHistory(mappedData);
+        setFxHistoryStatus('available');
+      } catch {
         setFxHistory([]);
+        setTauxDuJour({});
+        setFxHistoryStatus('unavailable');
       }
     };
     loadFxHistory();
@@ -1501,34 +1496,9 @@ const Finance = () => {
     return Object.values(yearly).sort((a, b) => a.année.localeCompare(b.année));
   }, [recettesExploitation, depensesAffichees]);
 
-  // Average the direct CHF -> CFA observations for each year.
-  const fxYearlyData = useMemo(() => {
-    const years = Array.from({ length: 8 }, (_, index) => String(2019 + index));
-    const yearlyMap = Object.fromEntries(years.map((year) => [year, { direct: [], inverse: [] }]));
-
-    fxHistory.forEach(item => {
-      if (!item.date) return;
-      const year = cleanDate(item.date).slice(0, 4);
-      if (!yearlyMap[year]) return;
-      const rawRate = toNumber(item.rate);
-      const from = String(item.devise_from || '').toUpperCase();
-      const to = String(item.devise_to || '').toUpperCase();
-      if (from === 'CHF' && to === 'CFA' && rawRate > 1) yearlyMap[year].direct.push(rawRate);
-      if (from === 'CFA' && to === 'CHF' && rawRate > 0 && rawRate < 1) yearlyMap[year].inverse.push(1 / rawRate);
-    });
-
-    return years.map((year) => {
-      const observations = yearlyMap[year].direct.length ? yearlyMap[year].direct : yearlyMap[year].inverse;
-      const average = observations.length
-        ? observations.reduce((sum, rate) => sum + rate, 0) / observations.length
-        : null;
-      return {
-        année: year,
-        'Taux Moyen': average === null ? null : Number(average.toFixed(2)),
-        observations: observations.length
-      };
-    });
-  }, [fxHistory]);
+  const fxYearlyData = useMemo(() => yearlyFxHistory(fxHistory).map(item => ({
+    année: item.year, 'Taux Moyen': item.rate, observations: item.observations
+  })), [fxHistory]);
 
   const fxYearlyDomain = useMemo(() => {
     const values = fxYearlyData.map((item) => item['Taux Moyen']).filter(Number.isFinite);
@@ -1538,28 +1508,13 @@ const Finance = () => {
     return [minimum, maximum];
   }, [fxYearlyData]);
 
-  const fxStatistics = useMemo(() => {
-    const rates = fxHistory.map((item) => {
-      const from = String(item.devise_from || '').toUpperCase();
-      const to = String(item.devise_to || '').toUpperCase();
-      const rate = toNumber(item.rate);
-      if (!rate) return null;
-      if (from === 'CHF' && to === 'CFA') return rate;
-      if (from === 'CFA' && to === 'CHF') return 1 / rate;
-      return null;
-    }).filter(Boolean);
-    if (!rates.length) return { minimum: 0, maximum: 0, average: 0 };
-    return {
-      minimum: Math.min(...rates),
-      maximum: Math.max(...rates),
-      average: rates.reduce((sum, rate) => sum + rate, 0) / rates.length
-    };
-  }, [fxHistory]);
+  const fxStatistics = useMemo(() => summarizeFxHistory(fxHistory), [fxHistory]);
+  const fxEmptyMessage = fxHistoryStatus === 'loading' ? t.fxHistoryLoading : fxHistoryStatus === 'unavailable' ? t.fxHistoryUnavailable : t.fxSeriesEmpty;
 
   const converterReferenceRate = converterDate
     ? getHistoricalCfaPerChf(converterDate)?.cfaPerChf || null
     : tauxChfCfa;
-  const converterRate = Number.isFinite(Number(converterReferenceRate)) && Number(converterReferenceRate) > 0 ? Number(converterReferenceRate) : null;
+  const converterRate = parseFxRate(converterReferenceRate);
   const converterInputCurrency = converterDirection === 'CHF_CFA' ? 'CHF' : 'CFA';
   const converterOutputCurrency = converterDirection === 'CHF_CFA' ? 'CFA' : 'CHF';
   const converterAmounts = convertFinanceAmount(converterAmount, converterInputCurrency, converterRate);
@@ -1927,7 +1882,7 @@ const Finance = () => {
 
   const handleFxEdit = (fx) => {
     setEditingFxId(fx.id);
-    setFxFormData(fx);
+    setFxFormData({ ...fx, rate: fx.rate ?? '' });
     setShowFxModal(true);
   };
 
@@ -2139,7 +2094,7 @@ const Finance = () => {
             <div className="lg:col-span-2 bg-slate-800 rounded-lg p-6 border border-slate-700">
               <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
               <p className="text-slate-400 text-sm mb-2">{t.moyenneAnnuelleFx}</p>
-              <ResponsiveContainer width="100%" height={320}>
+              {fxYearlyData.length === 0 ? <p role="status" className="py-8 text-sm text-slate-400">{fxEmptyMessage}</p> : <ResponsiveContainer width="100%" height={320}>
                 <LineChart data={fxYearlyData} margin={{ top: 28, right: 34, left: 12, bottom: 4 }}>
                   <CartesianGrid strokeDasharray="2 7" stroke="#7180a0" vertical={false} />
                   <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} padding={{ left: 20, right: 20 }} />
@@ -2149,11 +2104,11 @@ const Finance = () => {
                     formatter={(value, name, item) => [`1 CHF = ${Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} CFA (${item.payload.observations} obs.)`, t.taux]}
                     contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }}
                   />
-                  <Line type="monotone" connectNulls dataKey="Taux Moyen" stroke="#60a5fa" strokeWidth={2.25} dot={{ fill: '#0f172a', stroke: '#60a5fa', strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }}>
-                    <LabelList dataKey="Taux Moyen" position="top" offset={10} fill="#93c5fd" fontSize={12} formatter={(value) => Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} />
+                  <Line type="monotone" dataKey="Taux Moyen" name={t.moyenne} stroke="#60a5fa" strokeWidth={2.25} dot={{ fill: '#0f172a', stroke: '#60a5fa', strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }}>
+                    <LabelList dataKey="Taux Moyen" position="top" offset={10} fill="#93c5fd" fontSize={12} formatter={(value) => Number.isFinite(value) ? value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''} />
                   </Line>
                 </LineChart>
-              </ResponsiveContainer>
+              </ResponsiveContainer>}
             </div>
           </div>
         )}
@@ -2311,7 +2266,7 @@ const Finance = () => {
           <div id="finance-fx" className="scroll-mt-24 space-y-5" tabIndex="-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
               {[
-                { label: t.tauxActuel, value: tauxChfCfa, icon: ArrowRightLeft, color: 'text-blue-400' },
+                { label: t.tauxActuel, value: parseFxRate(tauxChfCfa), icon: ArrowRightLeft, color: 'text-blue-400' },
                 { label: t.maximum, value: fxStatistics.maximum, icon: TrendingUp, color: 'text-green-400' },
                 { label: t.minimum, value: fxStatistics.minimum, icon: TrendingDown, color: 'text-orange-400' },
                 { label: t.moyenne, value: fxStatistics.average, icon: Calculator, color: 'text-purple-400' }
@@ -2321,13 +2276,14 @@ const Finance = () => {
                     <Icon size={20} className={color} />
                   </div>
                   <div>
-                    <p className="text-xl font-bold text-white">{value ? Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 }) : '-'}</p>
+                    <p className="text-xl font-bold text-white">{value !== null ? Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 }) : '—'}</p>
                     <p className="text-xs text-slate-400">{label}</p>
                   </div>
                 </div>
               ))}
             </div>
 
+            <p id="finance-fx-observations" role="status" className="text-sm text-slate-400">{fxHistoryStatus === 'available' ? t.fxObservationScope.replace('{count}', fxStatistics.count) : fxEmptyMessage}</p>
             <div id="finance-fx-navigation" ref={fxNavigationRef} tabIndex={-1} role="navigation" aria-label={t.fx} className="scroll-mt-24 flex gap-2 border-b border-slate-700 overflow-x-auto">
               {[
                 { id: 'converter', label: t.convertisseur, icon: Calculator },
@@ -2421,15 +2377,15 @@ const Finance = () => {
             {fxView === 'dashboard' && (
               <section id="finance-fx-dashboard" className="min-h-[calc(100dvh-12rem)] bg-slate-800 rounded-lg p-6 border border-slate-700">
                 <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
-                <ResponsiveContainer width="100%" height={380}>
+                {fxYearlyData.length === 0 ? <p role="status" className="py-8 text-sm text-slate-400">{fxEmptyMessage}</p> : <ResponsiveContainer width="100%" height={380}>
                   <LineChart data={fxYearlyData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
                     <XAxis dataKey="année" stroke="#94a3b8" />
                     <YAxis stroke="#94a3b8" />
                     <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
-                    <Line type="monotone" dataKey="Taux Moyen" stroke="#f59e0b" strokeWidth={3} dot={{ fill: '#f59e0b', r: 5 }} />
+                    <Line type="monotone" dataKey="Taux Moyen" name={t.moyenne} stroke="#f59e0b" strokeWidth={3} dot={{ fill: '#f59e0b', r: 5 }} />
                   </LineChart>
-                </ResponsiveContainer>
+                </ResponsiveContainer>}
               </section>
             )}
 
@@ -2444,7 +2400,7 @@ const Finance = () => {
                 <TableControls rows={filteredFxHistory} renderTable={(visibleRows) => (
                   <table className="min-w-full text-sm">
                     <thead className="sticky top-0 z-10 bg-slate-700"><tr><th className="px-4 py-3 text-left text-white font-bold">{t.id}</th><th className="px-4 py-3 text-left text-white font-bold">{t.date}</th><th className="px-4 py-3 text-left text-white font-bold">{t.deviseBase}</th><th className="px-4 py-3 text-left text-white font-bold">{t.deviseCible}</th><th className="px-4 py-3 text-left text-white font-bold">{t.taux}</th><th className="px-4 py-3 text-left text-white font-bold">{t.source}</th><th className="px-4 py-3 text-left text-white font-bold">{t.actions}</th></tr></thead>
-                    <tbody>{visibleRows.map(fx => <tr key={fx.id} className="border-t border-slate-700 hover:bg-slate-700/50"><td className="px-4 py-3 text-slate-300 text-xs">{fx.id}</td><td className="px-4 py-3 text-slate-300 whitespace-nowrap">{fx.date ? formatDateForDisplay(fx.date) : '—'}</td><td className="px-4 py-3 text-blue-400 font-bold">{fx.devise_from}</td><td className="px-4 py-3 text-green-400 font-bold">{fx.devise_to}</td><td className="px-4 py-3 text-purple-400 font-bold">{parseFloat(fx.rate).toLocaleString(undefined, { maximumFractionDigits: fx.rate < 1 ? 6 : 2 })}</td><td className="px-4 py-3 text-slate-400">{fx.source}</td><td className="px-4 py-3 flex gap-2"><button onClick={() => handleFxEdit(fx)} className="p-1 hover:bg-slate-600 rounded"><Edit2 size={16} className="text-blue-400" /></button><button onClick={() => handleFxDelete(fx.id, `${fx.devise_from} → ${fx.devise_to}`)} className="p-1 hover:bg-slate-600 rounded"><Trash2 size={16} className="text-red-400" /></button></td></tr>)}</tbody>
+                    <tbody>{visibleRows.map(fx => <tr key={fx.id} className="border-t border-slate-700 hover:bg-slate-700/50"><td className="px-4 py-3 text-slate-300 text-xs">{fx.id}</td><td className="px-4 py-3 text-slate-300 whitespace-nowrap">{fx.date ? formatDateForDisplay(fx.date) : '—'}</td><td className="px-4 py-3 text-blue-400 font-bold">{fx.devise_from}</td><td className="px-4 py-3 text-green-400 font-bold">{fx.devise_to}</td><td className="px-4 py-3 text-purple-400 font-bold">{fx.rate === null ? <span title={t.fxRateMissing}>—</span> : Number(fx.rate).toLocaleString(undefined, { maximumFractionDigits: fx.rate < 1 ? 6 : 2 })}</td><td className="px-4 py-3 text-slate-400">{fx.source}</td><td className="px-4 py-3 flex gap-2"><button onClick={() => handleFxEdit(fx)} className="p-1 hover:bg-slate-600 rounded"><Edit2 size={16} className="text-blue-400" /></button><button onClick={() => handleFxDelete(fx.id, `${fx.devise_from} → ${fx.devise_to}`)} className="p-1 hover:bg-slate-600 rounded"><Trash2 size={16} className="text-red-400" /></button></td></tr>)}</tbody>
                   </table>
                 )} />
               </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import Finance from './Finance';
 import api from './api';
 import { getDashboardReturnContext, buildDashboardReturnPath } from './dashboardNavigation';
@@ -13,7 +13,7 @@ jest.mock('react-router-dom', () => ({
 }), { virtual: true });
 jest.mock('./LanguageContext', () => ({ useLanguage: () => ({ language: mockLanguage }) }));
 jest.mock('recharts', () => ({
-  LineChart: ({ children }) => <div>{children}</div>, Line: () => null,
+  LineChart: ({ children, data }) => <div data-testid="fx-chart" data-series={JSON.stringify(data)}>{children}</div>, Line: () => null,
   BarChart: ({ children }) => <div>{children}</div>, Bar: () => null,
   LabelList: () => null, XAxis: () => null, YAxis: () => null,
   CartesianGrid: () => null, Tooltip: () => null, Legend: () => null,
@@ -118,7 +118,79 @@ test('a retained fxView never changes the requested Finance parent tab', async (
 });
 
 const converter = () => within(document.getElementById('finance-fx-converter'));
+const observations = () => document.getElementById('finance-fx-observations');
+
+test('malformed and zero rates remain unavailable in history, never counted or silently replaced', async () => {
+  mockSearch += '&fxView=history';
+  api.getFxHistory.mockResolvedValue({ data: [
+    { source_id: 'QA-BAD', devise_base: 'CHF', devise_cible: 'CFA', taux: '700oops' },
+    { source_id: 'QA-ZERO', devise_base: 'CHF', devise_cible: 'CFA', taux: 0, rate: 700 },
+    { source_id: 'QA-GOOD', devise_base: 'CHF', devise_cible: 'CFA', taux: '710' }
+  ] });
+  render(<Finance />);
+  await screen.findByText('QA-BAD');
+  expect(observations()).toHaveTextContent('Observations CHF/CFA valides : 1');
+  for (const id of ['QA-BAD', 'QA-ZERO']) expect(within(screen.getByText(id).closest('tr')).getByTitle('À qualifier')).toHaveTextContent('—');
+  fireEvent.click(within(screen.getByText('QA-BAD').closest('tr')).getAllByRole('button')[0]);
+  expect(screen.getByRole('dialog', { name: 'Modifier Taux' }).querySelector('input[type="number"]')).toHaveValue(null);
+});
+
+test('annual chart includes later source years and preserves null gaps', async () => {
+  mockSearch += '&fxView=dashboard';
+  api.getFxHistory.mockResolvedValue({ data: [
+    { source_id: 'QA-25', devise_base: 'CHF', devise_cible: 'CFA', taux: 700, date_taux: '2025-09-01' },
+    { source_id: 'QA-27', devise_base: 'CHF', devise_cible: 'CFA', taux: 730, date_taux: '2027-09-01' }
+  ] });
+  render(<Finance />);
+  const chart = await screen.findByTestId('fx-chart');
+  expect(JSON.parse(chart.dataset.series)).toEqual([
+    { année: '2025', 'Taux Moyen': 700, observations: 1 },
+    { année: '2026', 'Taux Moyen': null, observations: 0 },
+    { année: '2027', 'Taux Moyen': 730, observations: 1 }
+  ]);
+});
+
+test.each([['FR', 'Aucune observation CHF/CFA datée exploitable.'], ['EN', 'No usable dated CHF/CFA observations.'], ['DE', 'Keine verwendbaren datierten CHF/CFA-Beobachtungen.']])('empty chart has an explicit localized state in %s', async (language, message) => {
+  mockLanguage = language; mockSearch += '&fxView=dashboard';
+  api.getFxHistory.mockResolvedValue({ data: [] });
+  render(<Finance />);
+  expect(await screen.findByText(message)).toBeInTheDocument();
+  expect(screen.queryByTestId('fx-chart')).not.toBeInTheDocument();
+  expect(observations()).toHaveTextContent('0');
+});
+
+test.each([{ success: false, data: [] }, { data: null }])('failed or invalid source is not reported as an empty loaded history', async response => {
+  mockSearch += '&fxView=dashboard';
+  api.getFxHistory.mockResolvedValue(response);
+  render(<Finance />);
+  await screen.findByText('Totaux globaux disponibles');
+  expect(observations()).toHaveTextContent('Source FX indisponible');
+  expect(observations()).not.toHaveTextContent('Historique chargé');
+  expect(screen.queryByTestId('fx-chart')).not.toBeInTheDocument();
+});
+
 const output = () => screen.getByRole('status', { name: 'Résultat de la conversion' });
+test('loading and a rejected FX read are distinct from an empty available register', async () => {
+  let rejectRead;
+  api.getFxHistory.mockReturnValue(new Promise((resolve, reject) => { rejectRead = reject; }));
+  render(<Finance />);
+  await screen.findByText('Totaux globaux disponibles');
+  expect(observations()).not.toHaveTextContent('Historique chargé');
+  expect(observations()).not.toHaveTextContent('Source FX indisponible');
+  expect(converter().getByRole('button', { name: 'Calculer' })).toBeDisabled();
+  await act(async () => rejectRead(new Error('QA inaccessible')));
+  expect(observations()).toHaveTextContent('Source FX indisponible');
+});
+
+test('an invalid first observation cannot shadow a valid rate on the same date', async () => {
+  const date = new Date().toISOString().slice(0, 10);
+  api.getFxHistory.mockResolvedValue({ data: [-5, 700].map((taux, i) => ({ source_id: 'QA-EXACT-' + i, taux, date_taux: date, devise_base: 'CHF', devise_cible: 'CFA' })) });
+  render(<Finance />);
+  await screen.findByText('Historique chargé · Observations CHF/CFA valides : 1 · CFA par CHF');
+  expect(converter().getByRole('button', { name: 'Calculer' })).toBeEnabled();
+  expect(output().textContent.replace(/\s/g, '')).toContain('700000CFA');
+});
+
 const readyConverter = async (rate = 700) => {
   api.getFxHistory.mockResolvedValue({ data: [{ source_id: 'QA-CONVERT-FX', devise_base: 'CHF', devise_cible: 'CFA', taux: rate, date_taux: new Date().toISOString().slice(0, 10) }] });
   render(<Finance />);
