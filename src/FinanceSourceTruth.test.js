@@ -117,4 +117,16 @@ test('uses authoritative global totals instead of the loaded page subtotal', asy
   expect(screen.getByTestId('finance-source-status')).toHaveTextContent('2 recettes · 2 dépenses');
   expect(screen.getByTestId('finance-source-status')).toHaveTextContent('1 recettes · 1 dépenses');
   expect(screen.getByText(/Tendance Recettes vs Dépenses \(CHF\) · extrait chargé/)).toBeInTheDocument();
+  expect(screen.getByTestId('finance-total-income').closest('article')).toHaveTextContent('Transactions : 2');
+  expect(screen.getByTestId('finance-total-expenses').closest('article')).toHaveTextContent('Transactions : 2');
+  expect(screen.getByTestId('finance-net-balance').closest('article')).toHaveTextContent('Transactions : 4');
+});
+
+test.each([{ success: false, data: [] }, { data: null }])('does not label an invalid social response as zero transactions', async response => {
+  api.getSocialFinance.mockResolvedValue(response);
+  renderFinance();
+  await screen.findByText('Totaux globaux disponibles');
+  const card = screen.getByTestId('finance-social-total').closest('article');
+  expect(card).toHaveTextContent('Transactions chargées : —');
+  expect(card).not.toHaveTextContent('Transactions chargées : 0');
 });

@@ -15,6 +15,7 @@
   --m3s-status-warning: #a16207;
   --m3s-status-danger: #be123c;
   --m3s-status-social: #86198f;
+  --m3s-currency-cfa: #c2410c;
   --m3s-shadow-panel: 0 8px 24px rgba(31, 52, 75, 0.08);
 }
 
@@ -34,6 +35,7 @@ html.dark {
   --m3s-status-warning: #fcd34d;
   --m3s-status-danger: #fda4af;
   --m3s-status-social: #f0abfc;
+  --m3s-currency-cfa: #fb923c;
   --m3s-shadow-panel: 0 10px 28px rgba(0, 0, 0, 0.28);
 }
 
@@ -54,6 +56,10 @@ html.dark.deep-theme {
   --m3s-status-danger: #fda4af;
   --m3s-status-social: #f0abfc;
   --m3s-shadow-panel: 0 10px 28px rgba(0, 0, 0, 0.42);
+}
+
+.m3s-currency-cfa {
+  color: var(--m3s-currency-cfa);
 }
 
 .m3s-design-scope {

@@ -1,9 +1,13 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import FinanceOverviewIndicators from './FinanceOverviewIndicators';
 
 const BASE_PROPS = {
   language: 'FR',
+  incomeCount: 12,
+  expenseCount: 15,
+  realEstateLoadedCount: 8,
+  socialLoadedCount: 4,
   financeState: 'available',
   totalIncome: 1000,
   totalIncomeCfa: 650000,
@@ -70,4 +74,20 @@ test('preserves confirmed zeros while restricted and missing values stay unavail
   expect(screen.getByText('Source indisponible')).toBeInTheDocument();
   expect(screen.queryByText(/7 800 000 CFA/)).not.toBeInTheDocument();
   expect(screen.queryByText(/975 000 CFA/)).not.toBeInTheDocument();
+});
+
+test('shares the CFA currency style and distinguishes global counts from loaded registers', () => {
+  render(<FinanceOverviewIndicators {...BASE_PROPS} />);
+  const card = id => within(screen.getByTestId(id).closest('article'));
+  expect(card('finance-total-income').getByText('Transactions : 12')).toBeInTheDocument();
+  expect(card('finance-total-expenses').getByText('Transactions : 15')).toBeInTheDocument();
+  expect(card('finance-net-balance').getByText('Transactions : 27')).toBeInTheDocument();
+  expect(card('finance-real-estate-reimbursements').getByText('Registre : transactions chargées : 8')).toBeInTheDocument();
+  expect(card('finance-social-total').getByText('Transactions chargées : 4')).toBeInTheDocument();
+  expect(card('finance-current-rate').queryByText(/Transactions/)).not.toBeInTheDocument();
+  expect(document.querySelectorAll('.m3s-currency-cfa')).toHaveLength(7);
+  document.querySelectorAll('.m3s-currency-cfa').forEach(node => {
+    expect(node.style.color).not.toBe('var(--m3s-status-warning)');
+    expect(node.parentElement).toHaveClass('text-xl', 'font-semibold');
+  });
 });

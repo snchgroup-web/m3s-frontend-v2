@@ -26,6 +26,7 @@ import {
   Warehouse
 } from 'lucide-react';
 import api from './api';
+import FinanceTransactionCount, { parseTransactionCount, sumTransactionCounts } from './FinanceTransactionCount';
 import DashboardPilotageNavigation from './DashboardPilotageNavigation';
 import { getDashboardIndicatorDestination } from './dashboardNavigation';
 import { getFinanceKpiDefinition, getManagementKpiDefinition, getOperationsKpiDefinition, getSupportKpiDefinition } from './dashboardKpiDictionary';
@@ -114,7 +115,7 @@ const kpiStatusClasses = {
   disconnected: 'border-slate-600 bg-slate-900/45 text-slate-400'
 };
 
-const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, source, status, statusLabel, icon: Icon, accent, flowAccent, onOpen, openLabel, definition, helpLabel, onHelp }) => (
+const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, transactionCount, source, status, statusLabel, icon: Icon, accent, flowAccent, onOpen, openLabel, definition, helpLabel, onHelp }) => (
   <article
     id={`dashboard-kpi-${id}`}
     className="global-kpi-card group relative min-h-[132px] scroll-mt-24 rounded-md border border-slate-700 bg-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-blue-950/25 focus-within:ring-2 focus-within:ring-blue-500"
@@ -135,7 +136,7 @@ const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, sour
     {dualCurrency ? (
       <span className="global-kpi-currency mt-2 flex flex-wrap items-baseline gap-x-1.5 gap-y-1 text-[15px] font-semibold 2xl:flex-nowrap">
         <span className={`global-kpi-primary global-kpi-flow whitespace-nowrap ${flowAccent ? kpiFlowTextClasses[flowAccent] : 'text-blue-300'}`}>{value}</span>
-        <span className="global-kpi-cfa whitespace-nowrap text-orange-400">≈ {secondary}</span>
+        <span className="global-kpi-cfa m3s-currency-cfa whitespace-nowrap">≈ {secondary}</span>
       </span>
     ) : (
       <>
@@ -143,6 +144,7 @@ const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, sour
         {secondary && <span className="global-kpi-secondary mt-0.5 block break-words text-sm font-medium text-slate-400">{secondary}</span>}
       </>
     )}
+    {transactionCount && <FinanceTransactionCount {...transactionCount} />}
     <span className="mt-auto flex items-end justify-between gap-2 border-t border-slate-700 pt-2">
       <span className="global-kpi-source min-w-0 truncate text-xs text-slate-500" title={source}>{source}</span>
       <span className={`global-kpi-status global-kpi-status--${status} shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-semibold ${kpiStatusClasses[status]}`}>{statusLabel}</span>
@@ -611,6 +613,8 @@ const Dashboard = () => {
         const expenseRows = expensesAvailable ? expenses.data : [];
         const operatingIncomeRows = incomeRows.filter((row) => !String(row.category || '').toUpperCase().includes('AIDE SOCIALE'));
         const dashboardSummary = financeDashboard?.data || {};
+        const globalIncomeCount = financeDashboard?.success !== false ? parseTransactionCount(dashboardSummary.total_income_count) : null;
+        const globalExpenseCount = financeDashboard?.success !== false ? parseTransactionCount(dashboardSummary.total_expense_count) : null;
         const aggregateValue = (summaryValue, summaryCount, rowsAvailable, rows, fieldSelector) => {
           if (hasApiNumber(summaryCount) && Number(summaryCount) === 0) return 0;
           if (hasApiNumber(summaryValue)) return Number(summaryValue);
@@ -774,7 +778,16 @@ const Dashboard = () => {
               social: socialTotal,
               socialCfa: socialTotalCfa,
               incomeCount: incomeRows.length,
-              expenseCount: expenseRows.length
+              expenseCount: expenseRows.length,
+              transactionCounts: {
+                income: globalIncomeCount,
+                expenses: globalExpenseCount,
+                balance: sumTransactionCounts(globalIncomeCount, globalExpenseCount),
+                donations: incomeAvailable && income?.success !== false ? incomeRows.filter(row => String(row.category || '').toUpperCase().includes('DON')).length : null,
+                financing: incomeAvailable && income?.success !== false ? incomeRows.filter(row => String(row.category || '').toUpperCase() === 'FINANCEMENT').length : null,
+                realEstate: realEstateAvailable && realEstate?.success !== false ? realEstate.data.length : null,
+                social: socialAvailable && social?.success !== false ? social.data.length : null
+              }
             },
             production: {
               ...mockDataBase.moduleStats.production,
@@ -878,6 +891,12 @@ const Dashboard = () => {
     return { status: 'unavailable', statusLabel: t.unavailable };
   };
   const disconnectedState = { status: 'disconnected', statusLabel: t.sourceToConnect };
+  const financeTransactionCount = (key, scope = 'global') => ({
+    count: dashboardData?.moduleStats.finance.transactionCounts?.[key],
+    state: loading ? 'loading' : 'available',
+    scope,
+    language
+  });
   const financeValues = {
     revenue: formatDualCurrency(dashboardData?.moduleStats.finance.revenue, dashboardData?.moduleStats.finance.revenueCfa),
     expenses: formatDualCurrency(dashboardData?.moduleStats.finance.expenses, dashboardData?.moduleStats.finance.expensesCfa),
@@ -960,46 +979,55 @@ const Dashboard = () => {
       cards: [
         {
           id: 'revenue', label: t.revenue, value: `${financeValues.revenue.chf} CHF`, secondary: `${financeValues.revenue.cfa} CFA`, dualCurrency: true,
+          transactionCount: financeTransactionCount('income', 'global'),
           source: t.financeIncome, ...sourceState('income'), icon: HandCoins, accent: 'emerald', flowAccent: 'emerald',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('revenue'), ...financeKpiHelp('revenue')
         },
         {
           id: 'expenses', label: t.expenses, value: `${financeValues.expenses.chf} CHF`, secondary: `${financeValues.expenses.cfa} CFA`, dualCurrency: true,
+          transactionCount: financeTransactionCount('expenses', 'global'),
           source: t.financeExpenses, ...sourceState('expenses'), icon: TrendingDown, accent: 'red', flowAccent: 'red',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('expenses'), ...financeKpiHelp('expenses')
         },
         {
           id: 'balance', label: t.balance, value: `${financeValues.balance.chf} CHF`, secondary: `${financeValues.balance.cfa} CFA`, dualCurrency: true,
+          transactionCount: financeTransactionCount('balance', 'global'),
           source: t.financeBalance, ...sourceState('finance'), icon: Scale, accent: balanceFlowAccent, flowAccent: balanceFlowAccent,
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('balance'), ...financeKpiHelp('balance')
         },
         {
           id: 'donations', label: t.donations, value: `${financeValues.donations.chf} CHF`, secondary: `${financeValues.donations.cfa} CFA`, dualCurrency: true,
+          transactionCount: financeTransactionCount('donations', 'extract'),
           source: t.financeDonations, ...sourceState('donations'), icon: Gift, accent: 'violet', flowAccent: 'violet',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('donations'), ...financeKpiHelp('donations')
         },
         {
           id: 'financing', label: t.financing, value: `${financeValues.financing.chf} CHF`, secondary: `${financeValues.financing.cfa} CFA`, dualCurrency: true,
+          transactionCount: financeTransactionCount('financing', 'extract'),
           source: t.financeFunding, ...sourceState('financing'), icon: Landmark, accent: 'teal', flowAccent: 'teal',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('financing'), ...financeKpiHelp('financing')
         },
         {
           id: 'real-estate-funding', label: t.realEstateFunding, value: `${financeValues.realEstateFunding.chf} CHF`, secondary: `${financeValues.realEstateFunding.cfa} CFA`, dualCurrency: true,
+          transactionCount: financeTransactionCount('realEstate', 'registry'),
           source: t.financeRealEstate, ...sourceState('realEstate'), icon: Building2, accent: 'sky', flowAccent: 'sky',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('real-estate-funding'), ...financeKpiHelp('real-estate-funding')
         },
         {
           id: 'real-estate-reimbursements', label: t.realEstateReimbursements, value: `${financeValues.reimbursements.chf} CHF`, secondary: `${financeValues.reimbursements.cfa} CFA`, dualCurrency: true,
+          transactionCount: financeTransactionCount('realEstate', 'registry'),
           source: t.financeRealEstate, ...sourceState('realEstate'), icon: HandCoins, accent: 'lime', flowAccent: 'lime',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('real-estate-reimbursements'), ...financeKpiHelp('real-estate-reimbursements')
         },
         {
           id: 'outstanding-balance', label: t.outstandingBalance, value: `${financeValues.outstandingBalance.chf} CHF`, secondary: `${financeValues.outstandingBalance.cfa} CFA`, dualCurrency: true,
+          transactionCount: financeTransactionCount('realEstate', 'registry'),
           source: t.financeRealEstate, ...sourceState('realEstate'), icon: Landmark, accent: 'amber', flowAccent: 'amber',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('outstanding-balance'), ...financeKpiHelp('outstanding-balance')
         },
         {
           id: 'social-flows', label: t.socialFlows, value: `${financeValues.social.chf} CHF`, secondary: `${financeValues.social.cfa} CFA`, dualCurrency: true,
+          transactionCount: financeTransactionCount('social', 'extract'),
           source: t.financeSocial, ...sourceState('social'), icon: HeartHandshake, accent: 'pink', flowAccent: 'pink',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('social-flows'), ...financeKpiHelp('social-flows')
         }

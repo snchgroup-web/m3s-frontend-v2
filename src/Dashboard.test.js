@@ -93,6 +93,33 @@ beforeEach(() => {
   api.getFxHistory.mockResolvedValue({ taux_du_jour: { CHF_CFA: 600 } });
 });
 
+test('uses summary counts, labels loaded subsets and applies the shared CFA color', async () => {
+  api.getFinanceDashboard.mockResolvedValue({ data: { total_income_count: 120, total_expense_count: 80 } });
+  render(<Dashboard />);
+  await screen.findByText('Transactions : 120');
+  const card = id => document.getElementById(`dashboard-kpi-${id}`);
+  expect(card('expenses')).toHaveTextContent('Transactions : 80');
+  expect(card('balance')).toHaveTextContent('Transactions : 200');
+  expect(card('donations')).toHaveTextContent('Loaded transactions : 1');
+  expect(card('financing')).toHaveTextContent('Loaded transactions : 1');
+  expect(card('real-estate-funding')).toHaveTextContent('Register: loaded transactions : 0');
+  expect(card('social-flows')).toHaveTextContent('Loaded transactions : 0');
+  expect(card('revenue').querySelector('.global-kpi-cfa')).toHaveClass('m3s-currency-cfa');
+  expect(card('revenue').querySelector('.global-kpi-primary')).toHaveClass('text-emerald-300');
+  expect(card('expenses').querySelector('.global-kpi-primary')).toHaveClass('text-red-300');
+});
+
+test('does not replace missing aggregate counts with page sizes or expose rejected source counts', async () => {
+  api.getFinanceDashboard.mockResolvedValue({ success: false, data: { total_income_count: 100, total_expense_count: 30 } });
+  api.getSocialFinance.mockResolvedValue({ success: false, data: [], summary: {} });
+  api.getRealEstateFinance.mockRejectedValue(Object.assign(new Error('Forbidden'), { status: 403 }));
+  render(<Dashboard />);
+  await waitFor(() => expect(document.getElementById('dashboard-kpi-revenue')).toHaveTextContent('Transactions : —'));
+  expect(document.getElementById('dashboard-kpi-balance')).toHaveTextContent('Transactions : —');
+  expect(document.getElementById('dashboard-kpi-social-flows')).toHaveTextContent('Loaded transactions : —');
+  expect(document.getElementById('dashboard-kpi-real-estate-funding')).toHaveTextContent('Register: loaded transactions : —');
+});
+
 test('shows connected KPI values and labels missing sources explicitly', async () => {
   render(<Dashboard />);
 

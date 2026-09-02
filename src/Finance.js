@@ -12,6 +12,7 @@ import FinanceGlossary from './FinanceGlossary';
 import { StandardCreateButton } from './StandardUI';
 import FinanceFunctionFrame from './FinanceFunctionFrame';
 import FinanceOverviewIndicators from './FinanceOverviewIndicators';
+import FinanceTransactionCount, { parseTransactionCount } from './FinanceTransactionCount';
 import FinanceArchitecture from './FinanceArchitecture';
 import FinanceProcessControls from './FinanceProcessControls';
 import ActionConfirmationDialog from './ActionConfirmationDialog';
@@ -47,8 +48,8 @@ const parseFiniteNumber = (value) => {
 const normalizeFinanceSummary = (response) => {
   if (response?.success === false || !response?.data) return null;
 
-  const incomeCount = parseFiniteNumber(response.data.total_income_count);
-  const expenseCount = parseFiniteNumber(response.data.total_expense_count);
+  const incomeCount = parseTransactionCount(response.data.total_income_count);
+  const expenseCount = parseTransactionCount(response.data.total_expense_count);
   const rawIncome = parseFiniteNumber(response.data.total_income);
   const rawIncomeCfa = parseFiniteNumber(response.data.total_income_cfa);
   const rawExpenses = parseFiniteNumber(response.data.total_expenses);
@@ -888,7 +889,10 @@ const Finance = () => {
     setSocialAccessState('loading');
     try {
       const response = await api.getSocialFinance(200, 0);
-      const rows = Array.isArray(response?.data) ? response.data : [];
+      if (response?.success === false || !Array.isArray(response?.data)) {
+        throw Object.assign(new Error('Invalid social register response'), { code: 'INVALID_SOCIAL_RESPONSE' });
+      }
+      const rows = response.data;
       setSocialRows(rows.map((item, index) => normalizeFinanceRow(item, 'SOC', 'Aide Sociale Ménage', index)));
       setSocialSummary(response?.summary || {});
       setSocialError('');
@@ -897,7 +901,7 @@ const Finance = () => {
       console.error('Social finance error:', error);
       setSocialRows([]);
       setSocialSummary({});
-      setSocialError(error.status === 403 ? '' : error.message);
+      setSocialError(error.status === 403 || error.code === 'INVALID_SOCIAL_RESPONSE' ? '' : error.message);
       setSocialAccessState(error.status === 403 ? 'forbidden' : 'unavailable');
     }
   }, [normalizeFinanceRow]);
@@ -1951,6 +1955,10 @@ const Finance = () => {
 
         <FinanceOverviewIndicators
           language={language}
+          incomeCount={financeSummary?.incomeCount}
+          expenseCount={financeSummary?.expenseCount}
+          realEstateLoadedCount={immoAccessState === 'available' ? immoTransactions.length : null}
+          socialLoadedCount={socialAccessState === 'available' ? socialRows.length : null}
           financeState={financeSummaryStatus}
           totalIncome={totalRecettes}
           totalIncomeCfa={totalRecettesCfa}
@@ -2542,6 +2550,7 @@ const Finance = () => {
                       <div>
                         <h2 className="text-lg font-bold text-white">{t.immoTitle}</h2>
                         <p className="text-sm text-slate-400">{t.immoSubtitle}</p>
+                        <FinanceTransactionCount count={immoTransactions.length} state={immoAccessState} scope="registry" language={language} />
                       </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 shrink-0">
@@ -2551,7 +2560,7 @@ const Finance = () => {
                       </div>
                       <div className="rounded-md px-3 py-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                         <p className="text-xs uppercase text-slate-400">{t.montantsHistoriques}</p>
-                        <p className="text-2xl font-bold text-orange-400 whitespace-nowrap">{formatOptionalAmount(immoInvestiCfa)} CFA</p>
+                        <p className="text-2xl font-bold m3s-currency-cfa whitespace-nowrap">{formatOptionalAmount(immoInvestiCfa)} CFA</p>
                       </div>
                     </div>
                   </div>
@@ -2563,28 +2572,28 @@ const Finance = () => {
                       <p className="text-xs uppercase text-slate-400 mb-1">{t.remboursementsDirects}</p>
                       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                         <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatOptionalAmount(immoRemboursementsDirects)} CHF</p>
-                        <p className="text-xl font-bold text-orange-400 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoRemboursementsDirects)} CFA</p>
+                        <p className="text-xl font-bold m3s-currency-cfa whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoRemboursementsDirects)} CFA</p>
                       </div>
                     </div>
                     <div className="py-3 xl:px-4 rounded-md px-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                       <p className="text-xs uppercase text-slate-400 mb-1">{t.remboursementsTotal}</p>
                       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                         <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatOptionalAmount(immoRemboursementsTotal)} CHF</p>
-                        <p className="text-xl font-bold text-orange-400 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoRemboursementsTotal)} CFA</p>
+                        <p className="text-xl font-bold m3s-currency-cfa whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoRemboursementsTotal)} CFA</p>
                       </div>
                     </div>
                     <div className="py-3 xl:px-4 rounded-md px-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                       <p className="text-xs uppercase text-slate-400 mb-1">{t.soldeOuvert}</p>
                       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                         <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatOptionalAmount(immoSoldeOuvert)} CHF</p>
-                        <p className="text-xl font-bold text-orange-400 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoSoldeOuvert)} CFA</p>
+                        <p className="text-xl font-bold m3s-currency-cfa whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoSoldeOuvert)} CFA</p>
                       </div>
                     </div>
                     <div className="py-3 xl:pl-4 rounded-md px-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                       <p className="text-xs uppercase text-slate-400 mb-1">{t.partCheikh}</p>
                       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                         <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatOptionalAmount(immoPartCheikh)} CHF</p>
-                        <p className="text-xl font-bold text-orange-400 whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoPartCheikh)} CFA</p>
+                        <p className="text-xl font-bold m3s-currency-cfa whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoPartCheikh)} CFA</p>
                       </div>
                     </div>
                   </div>
