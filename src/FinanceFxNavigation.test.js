@@ -39,6 +39,36 @@ beforeEach(() => {
   api.getRealEstateFinance.mockResolvedValue({ data: [], summary: {} });
 });
 const nav = () => screen.getByRole('navigation', { name: 'Historique FX' });
+test.each(['social', 'immobilier'])('%s monetary typography preserves source values, zero and missing amounts', async tab => {
+  mockSearch = '?tab=' + tab;
+  const rows = [100, 0, null].map((amount, index) => ({
+    source_id: 'QA-CURRENCY-' + index, description: 'QA currency', designation: 'QA currency',
+    date: '2026-09-01', date_operation: '2026-09-01', montant_chf: amount,
+    montant_cfa: amount === null ? null : amount * 700, taux_fx_applique: 0.001, taux_fx: 0.001,
+    part_cheikh_chf: amount, remboursement_cheikh_chf: amount
+  }));
+  api.getSocialFinance.mockResolvedValue({ data: rows, summary: { total_chf: 100, total_cfa_historique: 70000 } });
+  api.getRealEstateFinance.mockResolvedValue({ data: rows, summary: { investissements_realises_chf: 100, investissements_realises_cfa: 70000 } });
+  render(<Finance />);
+  await screen.findByText('QA-CURRENCY-0');
+  for (const [index, expected] of [[0, '100'], [1, '0'], [2, '\u2014']]) {
+    const cells = within(screen.getByText('QA-CURRENCY-' + index).closest('tr')).getAllByRole('cell');
+    expect(cells[3]).toHaveTextContent(index === 2 && tab === 'social' ? expected : expected + ' CHF');
+    expect(cells[4]).toHaveClass('m3s-currency-cfa', 'font-semibold');
+    expect(cells[3]).toHaveClass('font-semibold');
+    expect(cells[3].className).not.toMatch(/text-(orange|emerald|cyan|white)/);
+    expect(cells[5]).toHaveTextContent((0.001).toLocaleString(undefined, { maximumFractionDigits: 3 }));
+    if (tab === 'immobilier') for (const cell of [cells[6], cells[7]]) {
+      expect(cell).toHaveTextContent(expected + ' CHF');
+      expect(cell.className).not.toMatch(/text-(green|cyan|orange)/);
+    }
+  }
+  const prefix = tab === 'social' ? 'finance-social-' : 'finance-immo-';
+  expect(screen.getByTestId(prefix + 'total-chf')).toHaveClass('text-2xl', 'font-bold');
+  expect(screen.getByTestId(prefix + 'historical-cfa')).toHaveClass('text-2xl', 'font-bold', 'm3s-currency-cfa');
+  expect(screen.getByTestId(prefix + 'historical-cfa').textContent.replace(/\s/g, '')).toBe('70000CFA');
+});
+
 const labels = { converter: 'Convertisseur', dashboard: 'Tableau de bord', history: 'Taux & Historique' };
 const expectView = view => {
   expect(within(nav()).getByRole('button', { name: labels[view] })).toHaveAttribute('aria-pressed', 'true');
