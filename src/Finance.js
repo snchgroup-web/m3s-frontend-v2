@@ -2507,15 +2507,15 @@ const Finance = () => {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-emerald-500/60">
                 <p className="text-sm font-medium text-emerald-400">{t.socialTitle}</p>
-                <p className="mt-2 text-2xl font-bold text-white">{Number.isFinite(socialTotalChf) ? socialTotalChf.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'} CHF</p>
+                <p data-testid="finance-social-total-chf" className="mt-2 text-2xl font-bold" style={{ color: 'var(--m3s-status-info)' }}>{Number.isFinite(socialTotalChf) ? socialTotalChf.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'} CHF</p>
               </div>
               <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-cyan-500/60">
-                <p className="text-sm font-medium text-cyan-400">{t.socialHistoricalCfa}</p>
-                <p className="mt-2 text-2xl font-bold text-white">{Number.isFinite(socialTotalCfaHistorique) ? Math.round(socialTotalCfaHistorique).toLocaleString() : '—'} CFA</p>
+                <p className="text-sm font-medium m3s-currency-cfa">{t.socialHistoricalCfa}</p>
+                <p data-testid="finance-social-historical-cfa" className="mt-2 text-2xl font-bold m3s-currency-cfa">{Number.isFinite(socialTotalCfaHistorique) ? Math.round(socialTotalCfaHistorique).toLocaleString() : '—'} CFA</p>
               </div>
               <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-blue-500/60">
-                <p className="text-sm font-medium text-blue-400">{t.socialCurrentCfa}</p>
-                <p className="mt-2 text-2xl font-bold text-white">{Number.isFinite(socialTotalCfaActuel) ? Math.round(socialTotalCfaActuel).toLocaleString() : '—'} CFA</p>
+                <p className="text-sm font-medium m3s-currency-cfa">{t.socialCurrentCfa}</p>
+                <p data-testid="finance-social-current-cfa" className="mt-2 text-2xl font-bold m3s-currency-cfa">{Number.isFinite(socialTotalCfaActuel) ? Math.round(socialTotalCfaActuel).toLocaleString() : '—'} CFA</p>
                 <p className="mt-1 text-xs text-slate-500">1 CHF = {tauxChfCfa ? Number(tauxChfCfa).toLocaleString() : '-'} CFA</p>
               </div>
               <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-violet-500/60">
@@ -2593,8 +2593,8 @@ const Finance = () => {
                           <td className="px-4 py-3 text-slate-400">{formatCell(row.ref)}</td>
                           <td className="whitespace-nowrap px-4 py-3 text-slate-300">{formatDateForDisplay(row.date)}</td>
                           <td className="max-w-[380px] px-5 py-3 font-medium text-white">{translateDescription(row.description)}</td>
-                          <td className="whitespace-nowrap px-4 py-3 font-semibold text-emerald-300">{row.montantChfAvailable ? `${formatAmount(row.montantChf)} CHF` : '—'}</td>
-                          <td className="whitespace-nowrap px-4 py-3 font-semibold text-cyan-300">{row.montantCfaAvailable ? `${formatAmount(row.montantCfa)} CFA` : '—'}</td>
+                          <td className="whitespace-nowrap px-4 py-3 font-semibold" style={{ color: 'var(--m3s-status-info)' }}>{row.montantChfAvailable ? `${formatAmount(row.montantChf)} CHF` : '—'}</td>
+                          <td className="whitespace-nowrap px-4 py-3 font-semibold m3s-currency-cfa">{row.montantCfaAvailable ? `${formatAmount(row.montantCfa)} CFA` : '—'}</td>
                           <td className="px-4 py-3 text-purple-300">
                             {row.hasExplicitTauxFx
                               ? Number(row.tauxFx).toLocaleString(undefined, { maximumFractionDigits: 3 })
@@ -2668,43 +2668,43 @@ const Finance = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 shrink-0">
                       <div className="rounded-md px-3 py-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                         <p className="text-xs uppercase text-slate-400">{t.totalInvesti}</p>
-                        <p className="text-2xl font-bold text-cyan-300 whitespace-nowrap">{formatOptionalAmount(immoInvestiChf)} CHF</p>
+                        <p data-testid="finance-immo-total-chf" className="text-2xl font-bold whitespace-nowrap" style={{ color: 'var(--m3s-status-info)' }}>{formatOptionalAmount(immoInvestiChf)} CHF</p>
                       </div>
                       <div className="rounded-md px-3 py-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                         <p className="text-xs uppercase text-slate-400">{t.montantsHistoriques}</p>
-                        <p className="text-2xl font-bold m3s-currency-cfa whitespace-nowrap">{formatOptionalAmount(immoInvestiCfa)} CFA</p>
+                        <p data-testid="finance-immo-historical-cfa" className="text-2xl font-bold m3s-currency-cfa whitespace-nowrap">{formatOptionalAmount(immoInvestiCfa)} CFA</p>
                       </div>
                     </div>
                   </div>
                   {immoEquivalentTauxJour !== null && (
-                    <p className="text-xs text-slate-400 mt-1 text-right">≈ {formatAmount(immoEquivalentTauxJour)} CFA · {t.equivalentTauxJour}</p>
+                    <p className="text-xs text-slate-400 mt-1 text-right"><span className="m3s-currency-cfa">≈ {formatAmount(immoEquivalentTauxJour)} CFA</span> · {t.equivalentTauxJour}</p>
                   )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 border-t border-slate-700 mt-3 xl:divide-x divide-slate-700">
                     <div className="py-3 xl:pr-4 rounded-md px-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                       <p className="text-xs uppercase text-slate-400 mb-1">{t.remboursementsDirects}</p>
                       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatOptionalAmount(immoRemboursementsDirects)} CHF</p>
+                        <p className="text-xl font-bold whitespace-nowrap" style={{ color: 'var(--m3s-status-info)' }}>{formatOptionalAmount(immoRemboursementsDirects)} CHF</p>
                         <p className="text-xl font-bold m3s-currency-cfa whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoRemboursementsDirects)} CFA</p>
                       </div>
                     </div>
                     <div className="py-3 xl:px-4 rounded-md px-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                       <p className="text-xs uppercase text-slate-400 mb-1">{t.remboursementsTotal}</p>
                       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatOptionalAmount(immoRemboursementsTotal)} CHF</p>
+                        <p className="text-xl font-bold whitespace-nowrap" style={{ color: 'var(--m3s-status-info)' }}>{formatOptionalAmount(immoRemboursementsTotal)} CHF</p>
                         <p className="text-xl font-bold m3s-currency-cfa whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoRemboursementsTotal)} CFA</p>
                       </div>
                     </div>
                     <div className="py-3 xl:px-4 rounded-md px-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                       <p className="text-xs uppercase text-slate-400 mb-1">{t.soldeOuvert}</p>
                       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatOptionalAmount(immoSoldeOuvert)} CHF</p>
+                        <p className="text-xl font-bold whitespace-nowrap" style={{ color: 'var(--m3s-status-info)' }}>{formatOptionalAmount(immoSoldeOuvert)} CHF</p>
                         <p className="text-xl font-bold m3s-currency-cfa whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoSoldeOuvert)} CFA</p>
                       </div>
                     </div>
                     <div className="py-3 xl:pl-4 rounded-md px-2 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-700/30">
                       <p className="text-xs uppercase text-slate-400 mb-1">{t.partCheikh}</p>
                       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                        <p className="text-xl font-bold text-cyan-300 whitespace-nowrap">{formatOptionalAmount(immoPartCheikh)} CHF</p>
+                        <p className="text-xl font-bold whitespace-nowrap" style={{ color: 'var(--m3s-status-info)' }}>{formatOptionalAmount(immoPartCheikh)} CHF</p>
                         <p className="text-xl font-bold m3s-currency-cfa whitespace-nowrap">≈ {formatCfaWithCurrentRate(immoPartCheikh)} CFA</p>
                       </div>
                     </div>
@@ -2781,11 +2781,11 @@ const Finance = () => {
                                 <td className="px-4 py-3 text-slate-400 whitespace-nowrap">{item.id}</td>
                                 <td className="px-4 py-3 text-slate-300 whitespace-nowrap">{formatDateForDisplay(item.date)}</td>
                                 <td className="px-4 py-3 text-white font-medium max-w-[360px]">{item.designation}</td>
-                                <td className="px-4 py-3 text-orange-300 font-semibold whitespace-nowrap">{formatOptionalAmount(item.montantChf)} CHF</td>
-                                <td className="px-4 py-3 text-slate-300 whitespace-nowrap">{formatOptionalAmount(item.montantCfa)} CFA</td>
+                                <td className="px-4 py-3 font-semibold whitespace-nowrap" style={{ color: 'var(--m3s-status-info)' }}>{formatOptionalAmount(item.montantChf)} CHF</td>
+                                <td className="px-4 py-3 font-semibold m3s-currency-cfa whitespace-nowrap">{formatOptionalAmount(item.montantCfa)} CFA</td>
                                 <td className="px-4 py-3 text-purple-300">{item.tauxFx !== null ? item.tauxFx.toLocaleString(undefined, { maximumFractionDigits: 3 }) : '—'}</td>
-                                <td className="px-4 py-3 text-blue-300 whitespace-nowrap">{formatOptionalAmount(item.partCheikhChf)} CHF</td>
-                                <td className="px-4 py-3 text-green-300 whitespace-nowrap">{formatOptionalAmount(item.remboursementCheikhChf)} CHF</td>
+                                <td className="px-4 py-3 font-semibold whitespace-nowrap" style={{ color: 'var(--m3s-status-info)' }}>{formatOptionalAmount(item.partCheikhChf)} CHF</td>
+                                <td className="px-4 py-3 font-semibold whitespace-nowrap" style={{ color: 'var(--m3s-status-info)' }}>{formatOptionalAmount(item.remboursementCheikhChf)} CHF</td>
                                 <td className="px-4 py-3 text-slate-300">{translateCategory(item.categorie)}</td>
                                 <td className="px-4 py-3 text-slate-300">{formatCell(item.agent)}</td>
                                 <td className="px-4 py-3 text-slate-300">{translateStandardValue(item.team)}</td>
