@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
-import Finance from './Finance';
+import Finance, { FinanceTrendLegend, shouldShowFxLabel } from './Finance';
 import api from './api';
 import { getDashboardReturnContext, buildDashboardReturnPath } from './dashboardNavigation';
 
@@ -13,8 +13,10 @@ jest.mock('react-router-dom', () => ({
 }), { virtual: true });
 jest.mock('./LanguageContext', () => ({ useLanguage: () => ({ language: mockLanguage }) }));
 jest.mock('recharts', () => ({
-  LineChart: ({ children, data }) => <div data-testid="fx-chart" data-series={JSON.stringify(data)}>{children}</div>, Line: () => null,
-  BarChart: ({ children }) => <div>{children}</div>, Bar: () => null,
+  LineChart: ({ children, data }) => <div data-testid="fx-chart" data-series={JSON.stringify(data)}>{children}</div>,
+  Line: ({ children, ...props }) => <div data-testid="fx-line" data-style={JSON.stringify(props)}>{children}</div>,
+  BarChart: ({ children }) => <div>{children}</div>,
+  Bar: props => <div data-testid="finance-bar" data-style={JSON.stringify(props)} />,
   LabelList: () => null, XAxis: () => null, YAxis: () => null,
   CartesianGrid: () => null, Tooltip: () => null, Legend: () => null,
   ResponsiveContainer: ({ children }) => <div>{children}</div>
@@ -150,6 +152,58 @@ test('annual chart includes later source years and preserves null gaps', async (
   ]);
 });
 
+test('TFX history uses the same thin blue curve and markers as the Finance overview', async () => {
+  mockSearch = '?tab=overview';
+  const view = render(<Finance />);
+  const overviewLine = await screen.findByTestId('fx-line');
+  const overview = JSON.parse(overviewLine.dataset.style);
+  view.unmount();
+  mockSearch = '?tab=fx&fxView=dashboard';
+  render(<Finance />);
+  const tfxLine = await screen.findByTestId('fx-line');
+  expect(JSON.parse(tfxLine.dataset.style)).toEqual(overview);
+  expect(overview).toMatchObject({
+    stroke: '#60a5fa', strokeWidth: 2.25,
+    dot: { r: 4, strokeWidth: 2 }, activeDot: { r: 6 }
+  });
+});
+
+test('overview trend bars use currency colors and a distinct expense fill without changing their data keys', async () => {
+  mockSearch = '?tab=overview';
+  render(<Finance />);
+  await screen.findByTestId('fx-line');
+  const bars = screen.getAllByTestId('finance-bar').map(node => JSON.parse(node.dataset.style));
+  expect(bars.map(bar => bar.dataKey)).toEqual(['recettes', 'depenses', 'recettesCfa', 'depensesCfa']);
+  for (const [income, expense, color] of [[bars[0], bars[1], 'var(--m3s-status-info)'], [bars[2], bars[3], 'var(--m3s-currency-cfa)']]) {
+    expect(income.fill).toBe(color);
+    expect(income.fillOpacity).toBeUndefined();
+    expect(expense).toMatchObject({ fill: color, fillOpacity: 0.35, stroke: color, strokeWidth: 1.5 });
+    expect(income.name).toBe('Recettes');
+    expect(expense.name).toBe('Dépenses');
+  }
+});
+
+test('trend legends preserve series order and match the solid and outlined bar treatments', () => {
+  render(<FinanceTrendLegend payload={[
+    { dataKey: 'depenses', value: 'Dépenses', color: '#2563eb' },
+    { dataKey: 'recettes', value: 'Recettes', color: '#2563eb' }
+  ]} />);
+  const items = screen.getAllByRole('listitem');
+  expect(items.map(item => item.textContent)).toEqual(['Recettes', 'Dépenses']);
+  expect(items[0].querySelector('span span').style.opacity).toBe('1');
+  expect(items[1].querySelector('span span').style.opacity).toBe('0.35');
+  expect(items[1].querySelector('span').style.borderWidth).toBe('1.5px');
+});
+
+test.each([200, 308, 620, 1200])('FX label density adapts to %s pixels without changing points', width => {
+  const indices = Array.from({ length: 9 }, (_, index) => index).filter(index => shouldShowFxLabel(index, 9, width));
+  if (width >= 300) expect(indices[0]).toBe(0);
+  expect(indices.at(-1)).toBe(8);
+  if (width === 1200) expect(indices).toHaveLength(9);
+  if (width < 620) expect(indices.length).toBeLessThanOrEqual(3);
+  expect(shouldShowFxLabel(0, 1, width)).toBe(true);
+});
+
 test.each([['FR', 'Aucune observation CHF/CFA datée exploitable.'], ['EN', 'No usable dated CHF/CFA observations.'], ['DE', 'Keine verwendbaren datierten CHF/CFA-Beobachtungen.']])('empty chart has an explicit localized state in %s', async (language, message) => {
   mockLanguage = language; mockSearch += '&fxView=dashboard';
   api.getFxHistory.mockResolvedValue({ data: [] });
@@ -196,6 +250,70 @@ const readyConverter = async (rate = 700) => {
   render(<Finance />);
   await screen.findByText('Totaux globaux disponibles');
 };
+
+test.each(['CHF_CFA', 'CFA_CHF'])('recent %s conversion keeps currency identity, equal typography and an explicit rate unit', async direction => {
+  await readyConverter();
+  fireEvent.change(converter().getByLabelText('Direction'), { target: { value: direction } });
+  fireEvent.click(converter().getByRole('button', { name: 'Calculer' }));
+  const table = converter().getByRole('table', { name: 'Conversions récentes' });
+  const cells = within(table).getAllByRole('row')[1].querySelectorAll('td');
+  const currencies = direction.split('_');
+  expect(cells[1].textContent).toMatch(new RegExp(currencies[0] + '$'));
+  expect(cells[2].textContent).toMatch(new RegExp(currencies[1] + '$'));
+  expect(cells[1]).toHaveClass('font-medium');
+  expect(cells[2]).toHaveClass('font-medium');
+  expect(cells[0]).toHaveTextContent('Référence courante');
+  expect(within(table).getByRole('columnheader', { name: 'Taux (CFA / CHF)' })).toBeInTheDocument();
+  expect(converter().getByRole('region', { name: 'Conversions récentes' })).toHaveAttribute('tabindex', '0');
+});
+
+test('each recent conversion retains its historical date when the selected date changes', async () => {
+  const now = new Date(), month = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+  api.getFxHistory.mockResolvedValue({ data: [1, 2].map(day => ({
+    source_id: 'QA-DATE-' + day, devise_base: 'CHF', devise_cible: 'CFA',
+    taux: 700 + day, date_taux: month + '-0' + day
+  })), taux_du_jour: { CHF_CFA: 700 } });
+  render(<Finance />);
+  await screen.findByText('Totaux globaux disponibles');
+  for (const day of [1, 2]) {
+    fireEvent.click(converter().getByRole('button', { name: /Sélectionner une date/ }));
+    const dayButton = within(screen.getByRole('dialog')).getAllByRole('button', { name: String(day), exact: true })
+      .find(button => !button.classList.contains('is-outside-month'));
+    fireEvent.click(dayButton);
+    fireEvent.click(converter().getByRole('button', { name: 'Calculer' }));
+  }
+  const table = converter().getByRole('table');
+  expect([...table.querySelectorAll('time')].map(node => node.dateTime)).toEqual([month + '-02', month + '-01']);
+  expect([...table.querySelectorAll('tbody tr')].map(row => row.lastElementChild.textContent)).toEqual(['702', '701']);
+  expect(api.getFxHistory).toHaveBeenCalledTimes(1);
+});
+
+test.each([['EN', 'Recent conversions', 'Current reference'], ['DE', 'Letzte Umrechnungen', 'Aktuelle Referenz']])('saved reference labels follow a switch to %s', async (language, title, reference) => {
+  api.getFxHistory.mockResolvedValue({ data: [], taux_du_jour: { CHF_CFA: 700 } });
+  const view = render(<Finance />);
+  await screen.findByText('Totaux globaux disponibles');
+  fireEvent.click(converter().getByRole('button', { name: 'Calculer' }));
+  mockLanguage = language;
+  view.rerender(<Finance />);
+  expect(converter().getByRole('table', { name: title })).toHaveTextContent(reference);
+});
+
+test('recent conversions retain only five snapshots across FX views and clear on remount', async () => {
+  api.getFxHistory.mockResolvedValue({ data: [], taux_du_jour: { CHF_CFA: 700 } });
+  const view = render(<Finance />);
+  await screen.findByText('Totaux globaux disponibles');
+  for (let amount = 1; amount <= 6; amount++) {
+    fireEvent.change(converter().getByLabelText('Montant', { exact: true }), { target: { value: String(amount) } });
+    fireEvent.click(converter().getByRole('button', { name: 'Calculer' }));
+  }
+  expect(converter().getByRole('table').querySelectorAll('tbody tr')).toHaveLength(5);
+  fireEvent.click(within(nav()).getByRole('button', { name: 'Taux & Historique' }));
+  fireEvent.click(within(nav()).getByRole('button', { name: 'Convertisseur' }));
+  expect(converter().getByRole('table').querySelectorAll('tbody tr')).toHaveLength(5);
+  view.unmount(); render(<Finance />);
+  await screen.findByText('Totaux globaux disponibles');
+  expect(converter().queryByRole('table')).not.toBeInTheDocument();
+});
 
 test.each(['', '-5', '1e308', 'Infinity', 'NaN'])('invalid converter amount %s never becomes a zero result or a recent conversion', async value => {
   await readyConverter();

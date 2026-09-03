@@ -816,6 +816,7 @@ test.each(financeActions.flatMap(([tab, action, method]) => ['network', 'explici
       fireEvent.click(screen.getByRole('button', { name: add }));
       fireEvent.change(screen.getByPlaceholderText('Description'), { target: { value: 'Action fictive QA' } });
       fireEvent.change(screen.getByPlaceholderText('Montant'), { target: { value: '100' } });
+      fireEvent.change(screen.getByLabelText('Taux appliqué *'), { target: { value: '700' } });
     } else if (action === 'update') fireEvent.click(screen.getByText('QA-ACTION-001'));
     const trigger = () => fireEvent.click(action === 'delete' ? deleteButton : screen.getByRole('button', { name: action === 'create' ? 'Créer' : 'Enregistrer' }));
     const confirmLabel = { create: 'Oui, ajouter', update: 'Oui, modifier', delete: 'Oui, supprimer' }[action];
