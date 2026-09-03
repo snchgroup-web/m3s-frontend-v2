@@ -4,6 +4,7 @@ import { StandardCreateButton } from './StandardUI';
 import ActionConfirmationDialog from './ActionConfirmationDialog';
 import { convertFinanceAmount } from './FinanceAmountPair';
 import { useFinanceBudget } from './FinanceBudgetContext';
+import FinanceBudgetStorage from './FinanceBudgetStorage';
 import { BUDGET_CURRENCIES, BUDGET_DIRECTIONS, BUDGET_FILE_LIMIT, BUDGET_KINDS, BUDGET_MAX_REVISION, BUDGET_MAX_ROWS, createBudget, createBudgetRow, isBudgetValid, parseBudgetAmount, parseBudgetFile, parseBudgetRate, serializeBudget, summarizeBudget, summarizeBudgetRow } from './financeBudgetModel';
 
 const COPY = {
@@ -101,14 +102,14 @@ export default function FinanceBudget({ language, onSelectTab }) {
   const t = COPY[language] || COPY.FR;
   const locale = { FR: 'fr-CH', EN: 'en-GB', DE: 'de-CH' }[language] || 'fr-CH';
   if (!session) return null;
-  const { draft, setDraft, dirty, setExported, exportedAt, setExportedAt } = session;
+  const { draft, setDraft, dirty, setExported, exportedAt, setExportedAt, busy, remote, issue, detachRemote } = session;
   const months = Array.from({ length: 12 }, (_, i) => new Date(2024, i, 1).toLocaleString(locale, { month: 'short' }));
   const valid = draft && isBudgetValid(draft);
   const revisionLimit = draft?.revision >= BUDGET_MAX_REVISION;
   const rate = draft?.rateSource.trim() && /^\d{4}-\d{2}-\d{2}$/.test(draft.rateDate) && !Number.isNaN(Date.parse(draft.rateDate)) && new Date(draft.rateDate).toISOString().slice(0, 10) === draft.rateDate ? parseBudgetRate(draft.rate) : null;
   const format = value => value === null ? '\u2014' : value.toLocaleString(locale, { maximumFractionDigits: 2 });
   const change = updater => { importSequence.current += 1; setDraft(updater); setNotice(''); setError(''); };
-  const replace = next => { change(next); setExported(null); setExportedAt(null); setNotice(t.replaced); };
+  const replace = next => { detachRemote(); change(next); setExported(null); setExportedAt(null); setNotice(t.replaced); };
   const changeRow = (id, key, value) => change(current => ({ ...current, rows: current.rows.map(row => row.id === id ? { ...row, [key]: value } : row) }));
   const ask = (body, action, style = 'update') => setPending({ body, action, style });
   const add = () => {
@@ -137,7 +138,7 @@ export default function FinanceBudget({ language, onSelectTab }) {
       if (file.size > BUDGET_FILE_LIMIT) throw new Error('File too large');
       const next = parseBudgetFile(await file.text());
       if (sequence !== importSequence.current) return;
-      const apply = () => { setDraft(next); setExported(JSON.stringify(next)); setExportedAt(null); setNotice(t.restored); setError(''); };
+      const apply = () => { detachRemote(); setDraft(next); setExported(JSON.stringify(next)); setExportedAt(null); setNotice(t.restored); setError(''); };
       if (draft) ask(t.replace, apply); else apply();
     } catch { if (sequence === importSequence.current) setError(t.fileError); }
   };
@@ -149,21 +150,22 @@ export default function FinanceBudget({ language, onSelectTab }) {
     </header>
     <div className="m3s-budget-toolbar">
       <div className="m3s-budget-actions">
-        {iconButton(t.new, FilePlus2, () => draft ? ask(t.replace, () => replace(createBudget())) : replace(createBudget()))}
-        {iconButton(t.import, Upload, () => inputRef.current?.click())}
-        {iconButton(t.export, Download, download, !valid || revisionLimit)}
-        {revisionLimit && iconButton(t.copy, Copy, () => ask(t.copyBody, () => replace({ ...draft, revision: 0 })))}
+        {iconButton(t.new, FilePlus2, () => draft ? ask(t.replace, () => replace(createBudget())) : replace(createBudget()), busy)}
+        {iconButton(t.import, Upload, () => inputRef.current?.click(), busy)}
+        {iconButton(t.export, Download, download, busy || !valid || revisionLimit)}
+        {(revisionLimit || remote || issue) && draft && iconButton(t.copy, Copy, () => ask(t.copyBody, () => replace({ ...draft, revision: 0 })), busy)}
         <input ref={inputRef} type="file" accept=".json,application/json" aria-label={t.import} onChange={importFile} hidden />
       </div>
       <p>{draft ? dirty ? t.changed : draft.revision ? t.revision + ' ' + draft.revision : t.versionZero : t.empty}</p>
     </div>
-    <p className="m3s-budget-storage">{t.temporary}</p>
+    {!remote && <p className="m3s-budget-storage">{t.temporary}</p>}
+    <FinanceBudgetStorage language={language} ask={ask} onBeforeLoad={() => { importSequence.current += 1; setNotice(''); setError(''); }} />
     {exportedAt && <p className="m3s-budget-meta">{t.saved} : {new Date(exportedAt).toLocaleString(locale)}</p>}
     {notice && <p role="status" className="m3s-budget-notice">{notice}</p>}
     {error && <p role="alert" className="m3s-budget-error">{error}</p>}
     {revisionLimit && <p role="status" className="m3s-budget-storage">{t.terminal}</p>}
     {!draft ? <div className="m3s-budget-empty"><StandardCreateButton icon={FilePlus2} onClick={() => replace(createBudget())}>{t.new}</StandardCreateButton></div> : <>
-      <fieldset disabled={revisionLimit}>
+      <fieldset disabled={revisionLimit || busy}>
       <div className="m3s-budget-settings">
         <label>{t.name}<input value={draft.title} maxLength={120} required onChange={event => change({ ...draft, title: event.target.value })} /></label>
         <label>{t.entity}<input value={draft.entity} maxLength={120} required onChange={event => change({ ...draft, entity: event.target.value })} /></label>

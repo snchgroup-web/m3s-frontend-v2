@@ -48,6 +48,28 @@ const apiFetch = async (url, options = {}) => {
   return response;
 };
 
+const budgetFetch = async (path, options = {}) => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 30000);
+  const auth = getAuthHeaders();
+  try {
+    const response = await fetch(`${API_BASE_URL}/finance/budget-drafts${path}`, {
+      ...options, signal: controller.signal, cache: 'no-store',
+      headers: { ...auth, 'Content-Type': 'application/json' }
+    });
+    if (response.status === 401 && getAuthHeaders().Authorization === auth.Authorization) clearExpiredSession();
+    let payload;
+    try { payload = await response.json(); } catch { payload = null; }
+    if (!response.ok || payload?.success !== true) {
+      const error = new Error('Budget storage request failed');
+      error.status = response.status; error.code = payload?.code;
+      error.draftId = payload?.draftId; error.reconcileRequired = payload?.reconcileRequired === true;
+      throw error;
+    }
+    return payload;
+  } finally { clearTimeout(timer); }
+};
+
 const administrationFetch = async (path, options = {}) => {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
@@ -100,6 +122,13 @@ const createApiError = async (response, fallbackCode = 'API_REQUEST_FAILED') => 
 // ============================================================================
 
 export const api = {
+  getBudgetCapabilities: () => budgetFetch('/capabilities'),
+  listBudgetDrafts: (offset = 0) => budgetFetch(`?limit=20&offset=${encodeURIComponent(offset)}`),
+  getBudgetDraft: id => budgetFetch(`/${encodeURIComponent(id)}`),
+  createBudgetDraft: budget => budgetFetch('', { method: 'POST', body: JSON.stringify({ budget }) }),
+  updateBudgetDraft: (id, budget, expectedVersion) => budgetFetch(`/${encodeURIComponent(id)}`, {
+    method: 'PUT', body: JSON.stringify({ budget, expectedVersion })
+  }),
   getManagementPortfolioSummary: async () => {
     const res = await apiFetch(`${API_BASE_URL}/management/portfolio/summary`);
     if (!res.ok) throw await createApiError(res, 'MANAGEMENT_PORTFOLIO_SOURCE_UNAVAILABLE');
