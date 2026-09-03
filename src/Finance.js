@@ -44,6 +44,27 @@ const DEPARTMENT_OPTIONS = [
 ];
 const PROJECT_PHASE_OPTIONS = ['Conception', 'Mise en Place', 'Consolidation', 'Dynamisation'];
 const COUNTRY_OPTIONS = ['CH', 'SN', 'FR', 'ISR'];
+export const shouldShowFxLabel = (index, count, width) => {
+  const capacity = Math.max(1, Math.floor((width - 120) / 64));
+  const stride = Math.max(1, Math.ceil(count / capacity));
+  const last = count - 1;
+  return index === last || (index % stride === 0 && last - index >= stride);
+};
+export const FinanceTrendLegend = ({ payload = [] }) => (
+  <ul className="flex flex-wrap justify-center gap-x-4 gap-y-2 pt-2 text-sm">
+    {[...payload].sort((a, b) => Number(String(a.dataKey).startsWith('depenses')) - Number(String(b.dataKey).startsWith('depenses'))).map(entry => {
+      const expense = String(entry.dataKey).startsWith('depenses');
+      return (
+        <li key={entry.dataKey} className="flex items-center gap-2 text-slate-300">
+          <span aria-hidden="true" className="relative inline-block h-3 w-3 shrink-0" style={{ border: expense ? `1.5px solid ${entry.color}` : undefined }}>
+            <span className="absolute inset-0" style={{ backgroundColor: entry.color, opacity: expense ? 0.35 : 1 }} />
+          </span>
+          {entry.value}
+        </li>
+      );
+    })}
+  </ul>
+);
 const getFxView = (search) => {
   const view = new URLSearchParams(search).get('fxView');
   return ['converter', 'dashboard', 'history'].includes(view) ? view : 'converter';
@@ -127,6 +148,7 @@ const Finance = () => {
   const [converterDirection, setConverterDirection] = useState('CHF_CFA');
   const [converterDate, setConverterDate] = useState('');
   const [recentConversions, setRecentConversions] = useState([]);
+  const [fxChartWidth, setFxChartWidth] = useState(320);
   const [transferComparison, setTransferComparison] = useState(createTransferComparison);
   const [showFxModal, setShowFxModal] = useState(false);
   const [editingFxId, setEditingFxId] = useState(null);
@@ -271,6 +293,8 @@ const Finance = () => {
       conversionResultat: 'Résultat de la conversion',
       converterAmountError: 'Montant vide, négatif ou résultat hors limites. Un zéro saisi reste valable.',
       conversionsRecentes: 'Conversions récentes',
+      conversionReference: 'Référence utilisée',
+      conversionCurrentReference: 'Référence courante',
       heure: 'Heure',
       resultat: 'Résultat',
       tauxActuel: 'Taux actuel',
@@ -447,6 +471,8 @@ const Finance = () => {
       conversionResultat: 'Conversion result',
       converterAmountError: 'Missing or negative amount, or result out of range. An entered zero remains valid.',
       conversionsRecentes: 'Recent conversions',
+      conversionReference: 'Reference used',
+      conversionCurrentReference: 'Current reference',
       heure: 'Time',
       resultat: 'Result',
       tauxActuel: 'Current rate',
@@ -623,6 +649,8 @@ const Finance = () => {
       conversionResultat: 'Umrechnungsergebnis',
       converterAmountError: 'Betrag fehlt, ist negativ oder Ergebnis außerhalb des Wertebereichs. Eine eingegebene Null bleibt gültig.',
       conversionsRecentes: 'Letzte Umrechnungen',
+      conversionReference: 'Verwendete Referenz',
+      conversionCurrentReference: 'Aktuelle Referenz',
       heure: 'Zeit',
       resultat: 'Ergebnis',
       tauxActuel: 'Aktueller Kurs',
@@ -1509,6 +1537,7 @@ const Finance = () => {
   }, [fxYearlyData]);
 
   const fxStatistics = useMemo(() => summarizeFxHistory(fxHistory), [fxHistory]);
+  const fxLabelValue = (entry, index) => shouldShowFxLabel(index, fxYearlyData.length, fxChartWidth) ? entry.value : null;
   const fxEmptyMessage = fxHistoryStatus === 'loading' ? t.fxHistoryLoading : fxHistoryStatus === 'unavailable' ? t.fxHistoryUnavailable : t.fxSeriesEmpty;
 
   const converterReferenceRate = converterDate
@@ -1540,6 +1569,7 @@ const Finance = () => {
       output: converterOutputValue,
       outputCurrency: converterOutputCurrency,
       rate: converterRate,
+      referenceDate: converterDate,
       direction: converterDirection
     };
     setRecentConversions((current) => [entry, ...current].slice(0, 5));
@@ -2067,11 +2097,11 @@ const Finance = () => {
                 <BarChart data={annualFinanceData} margin={{ top: 8, right: 10, left: 8, bottom: 0 }} barGap={5}>
                   <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
                   <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} />
-                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={52} tickFormatter={(value) => `${Math.round(value / 1000)}k`} />
+                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={52} tickFormatter={(value) => Number(value).toLocaleString(undefined, { notation: 'compact', maximumFractionDigits: 1 })} />
                   <Tooltip formatter={(value) => [`${Number(value).toLocaleString()} CHF`]} contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }} />
-                  <Legend />
-                  <Bar dataKey="recettes" name={t.recettes} fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={36} />
-                  <Bar dataKey="depenses" name={t.depenses} fill="#ef5b62" radius={[4, 4, 0, 0]} maxBarSize={36} />
+                  <Legend content={<FinanceTrendLegend />} />
+                  <Bar dataKey="recettes" name={t.recettes} fill="var(--m3s-status-info)" radius={[4, 4, 0, 0]} maxBarSize={36} />
+                  <Bar dataKey="depenses" name={t.depenses} fill="var(--m3s-status-info)" fillOpacity={0.35} stroke="var(--m3s-status-info)" strokeWidth={1.5} radius={[4, 4, 0, 0]} maxBarSize={36} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -2082,11 +2112,11 @@ const Finance = () => {
                 <BarChart data={annualFinanceData} margin={{ top: 8, right: 10, left: 12, bottom: 0 }} barGap={5}>
                   <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
                   <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} />
-                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={66} tickFormatter={(value) => `${Math.round(value / 1000000)}M`} />
+                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={66} tickFormatter={(value) => Number(value).toLocaleString(undefined, { notation: 'compact', maximumFractionDigits: 1 })} />
                   <Tooltip formatter={(value) => [`${Math.round(Number(value)).toLocaleString()} CFA`]} contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }} />
-                  <Legend />
-                  <Bar dataKey="recettesCfa" name={t.recettes} fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={36} />
-                  <Bar dataKey="depensesCfa" name={t.depenses} fill="#ef5b62" radius={[4, 4, 0, 0]} maxBarSize={36} />
+                  <Legend content={<FinanceTrendLegend />} />
+                  <Bar dataKey="recettesCfa" name={t.recettes} fill="var(--m3s-currency-cfa)" radius={[4, 4, 0, 0]} maxBarSize={36} />
+                  <Bar dataKey="depensesCfa" name={t.depenses} fill="var(--m3s-currency-cfa)" fillOpacity={0.35} stroke="var(--m3s-currency-cfa)" strokeWidth={1.5} radius={[4, 4, 0, 0]} maxBarSize={36} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -2094,7 +2124,7 @@ const Finance = () => {
             <div className="lg:col-span-2 bg-slate-800 rounded-lg p-6 border border-slate-700">
               <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
               <p className="text-slate-400 text-sm mb-2">{t.moyenneAnnuelleFx}</p>
-              {fxYearlyData.length === 0 ? <p role="status" className="py-8 text-sm text-slate-400">{fxEmptyMessage}</p> : <ResponsiveContainer width="100%" height={320}>
+              {fxYearlyData.length === 0 ? <p role="status" className="py-8 text-sm text-slate-400">{fxEmptyMessage}</p> : <ResponsiveContainer width="100%" height={320} onResize={width => setFxChartWidth(width)}>
                 <LineChart data={fxYearlyData} margin={{ top: 28, right: 34, left: 12, bottom: 4 }}>
                   <CartesianGrid strokeDasharray="2 7" stroke="#7180a0" vertical={false} />
                   <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} padding={{ left: 20, right: 20 }} />
@@ -2105,7 +2135,7 @@ const Finance = () => {
                     contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }}
                   />
                   <Line type="monotone" dataKey="Taux Moyen" name={t.moyenne} stroke="#60a5fa" strokeWidth={2.25} dot={{ fill: '#0f172a', stroke: '#60a5fa', strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }}>
-                    <LabelList dataKey="Taux Moyen" position="top" offset={10} fill="#93c5fd" fontSize={12} formatter={(value) => Number.isFinite(value) ? value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''} />
+                    <LabelList valueAccessor={fxLabelValue} position="top" offset={10} fill="#93c5fd" fontSize={12} formatter={(value) => Number.isFinite(value) ? value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''} />
                   </Line>
                 </LineChart>
               </ResponsiveContainer>}
@@ -2360,10 +2390,21 @@ const Finance = () => {
                     {recentConversions.length === 0 ? (
                       <p className="text-sm text-slate-400">-</p>
                     ) : (
-                      <div className="overflow-x-auto">
+                      <div role="region" aria-label={t.conversionsRecentes} tabIndex={0} className="overflow-x-auto">
                         <table className="min-w-full text-sm">
-                          <thead className="text-slate-400 border-b border-slate-700"><tr><th className="text-left py-2">{t.heure}</th><th className="text-left py-2">{t.montant}</th><th className="text-left py-2">{t.resultat}</th><th className="text-right py-2">{t.taux}</th></tr></thead>
-                          <tbody>{recentConversions.map((entry) => <tr key={entry.id} className="border-b border-slate-700/60"><td className="py-2 text-slate-400">{entry.time}</td><td className="py-2 text-white">{formatConvertedValue(entry.amount, entry.inputCurrency)} {entry.inputCurrency}</td><td className="py-2 text-orange-300">{formatConvertedValue(entry.output, entry.outputCurrency)} {entry.outputCurrency}</td><td className="py-2 text-right text-slate-400">{Number(entry.rate).toLocaleString(undefined, { maximumFractionDigits: 4 })}</td></tr>)}</tbody>
+                          <caption className="sr-only">{t.conversionsRecentes}</caption>
+                          <thead className="text-slate-400 border-b border-slate-700"><tr><th scope="col" className="text-left py-2 pr-3">{t.heure} / {t.conversionReference}</th><th scope="col" className="text-left py-2 px-3">{t.montant}</th><th scope="col" className="text-left py-2 px-3">{t.resultat}</th><th scope="col" className="text-right py-2 pl-3">{t.taux} (CFA / CHF)</th></tr></thead>
+                          <tbody>{recentConversions.map((entry) => (
+                            <tr key={entry.id} className="border-b border-slate-700/60">
+                              <td className="py-2 pr-3 text-slate-400">
+                                <span className="block">{entry.time}</span>
+                                <span className="block text-xs">{entry.referenceDate ? <time dateTime={entry.referenceDate}>{formatDateForDisplay(entry.referenceDate)}</time> : t.conversionCurrentReference}</span>
+                              </td>
+                              <td className="py-2 px-3 font-medium whitespace-nowrap" style={{ color: entry.inputCurrency === 'CFA' ? 'var(--m3s-currency-cfa)' : 'var(--m3s-status-info)' }}>{formatConvertedValue(entry.amount, entry.inputCurrency)} {entry.inputCurrency}</td>
+                              <td className="py-2 px-3 font-medium whitespace-nowrap" style={{ color: entry.outputCurrency === 'CFA' ? 'var(--m3s-currency-cfa)' : 'var(--m3s-status-info)' }}>{formatConvertedValue(entry.output, entry.outputCurrency)} {entry.outputCurrency}</td>
+                              <td className="py-2 pl-3 text-right text-slate-400">{Number(entry.rate).toLocaleString(undefined, { maximumFractionDigits: 4 })}</td>
+                            </tr>
+                          ))}</tbody>
                         </table>
                       </div>
                     )}
@@ -2375,17 +2416,26 @@ const Finance = () => {
             )}
 
             {fxView === 'dashboard' && (
-              <section id="finance-fx-dashboard" className="min-h-[calc(100dvh-12rem)] bg-slate-800 rounded-lg p-6 border border-slate-700">
+              <section id="finance-fx-dashboard" className="flex flex-col lg:min-h-[calc(100dvh-12rem)] bg-slate-800 rounded-lg p-6 border border-slate-700">
                 <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
-                {fxYearlyData.length === 0 ? <p role="status" className="py-8 text-sm text-slate-400">{fxEmptyMessage}</p> : <ResponsiveContainer width="100%" height={380}>
-                  <LineChart data={fxYearlyData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-                    <XAxis dataKey="année" stroke="#94a3b8" />
-                    <YAxis stroke="#94a3b8" />
-                    <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
-                    <Line type="monotone" dataKey="Taux Moyen" name={t.moyenne} stroke="#f59e0b" strokeWidth={3} dot={{ fill: '#f59e0b', r: 5 }} />
+                <p className="text-slate-400 text-sm mb-2">{t.moyenneAnnuelleFx}</p>
+                <div className="flex min-w-0 flex-1 items-center py-4 lg:py-8" data-testid="finance-fx-chart-layout">
+                {fxYearlyData.length === 0 ? <p role="status" className="py-8 text-sm text-slate-400">{fxEmptyMessage}</p> : <ResponsiveContainer width="100%" height={320} onResize={width => setFxChartWidth(width)}>
+                  <LineChart data={fxYearlyData} margin={{ top: 28, right: 34, left: 12, bottom: 4 }}>
+                    <CartesianGrid strokeDasharray="2 7" stroke="#7180a0" vertical={false} />
+                    <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} padding={{ left: 20, right: 20 }} />
+                    <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={58} domain={fxYearlyDomain} tickFormatter={(value) => Number(value).toLocaleString(undefined, { maximumFractionDigits: 0 })} />
+                    <Tooltip
+                      labelFormatter={(year) => `${year}`}
+                      formatter={(value, name, item) => [`1 CHF = ${Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} CFA (${item.payload.observations} obs.)`, t.taux]}
+                      contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }}
+                    />
+                    <Line type="monotone" dataKey="Taux Moyen" name={t.moyenne} stroke="#60a5fa" strokeWidth={2.25} dot={{ fill: '#0f172a', stroke: '#60a5fa', strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }}>
+                      <LabelList valueAccessor={fxLabelValue} position="top" offset={10} fill="#93c5fd" fontSize={12} formatter={(value) => Number.isFinite(value) ? value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''} />
+                    </Line>
                   </LineChart>
                 </ResponsiveContainer>}
+                </div>
               </section>
             )}
 
