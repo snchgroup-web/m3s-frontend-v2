@@ -2,6 +2,7 @@ import React from 'react';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import Finance, { FinanceTrendLegend, shouldShowFxLabel, formatFinanceChartTick } from './Finance';
 import api from './api';
+import { FinanceBudgetSession } from './FinanceBudgetContext';
 import { getDashboardReturnContext, buildDashboardReturnPath } from './dashboardNavigation';
 
 let mockSearch;
@@ -39,6 +40,20 @@ beforeEach(() => {
   api.getRealEstateFinance.mockResolvedValue({ data: [], summary: {} });
 });
 const nav = () => screen.getByRole('navigation', { name: 'Historique FX' });
+test('Budget direct route replaces the placeholder and actual KPIs with a session draft', async () => {
+  mockSearch = '?tab=budget&returnTo=dashboard&dashboardKpi=income';
+  render(<FinanceBudgetSession><Finance /></FinanceBudgetSession>);
+  await screen.findByRole('heading', { name: 'Budget 2SG' });
+  expect(screen.getByRole('tab', { name: 'Budget' })).toHaveAttribute('aria-selected', 'true');
+  expect(screen.queryByText('Section a construire')).not.toBeInTheDocument();
+  expect(screen.queryByTestId('finance-source-status')).not.toBeInTheDocument();
+  fireEvent.click(screen.getAllByRole('button', { name: 'Nouveau brouillon' }).at(-1));
+  fireEvent.change(screen.getByLabelText('Nom du budget'), { target: { value: 'QA navigation' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Recettes' }));
+  expect(new URLSearchParams(mockNavigate.mock.calls.at(-1)[0].search).get('returnTo')).toBe('dashboard');
+  fireEvent.click(screen.getByRole('tab', { name: 'Budget' }));
+  expect(screen.getByLabelText('Nom du budget')).toHaveValue('QA navigation');
+});
 test.each(['social', 'immobilier'])('%s monetary typography preserves source values, zero and missing amounts', async tab => {
   mockSearch = '?tab=' + tab;
   const rows = [100, 0, null].map((amount, index) => ({

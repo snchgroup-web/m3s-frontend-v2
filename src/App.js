@@ -16,6 +16,7 @@ import Actifs from './Actifs';
 import GED from './GED';
 import TaxonomyDiagnostics from './diagnostics/TaxonomyDiagnostics';
 import LocalPilotSummary from './LocalPilotSummary';
+import FinanceBudgetProvider from './FinanceBudgetContext';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
       <AuthProvider>
         <LanguageProvider>
           <ThemeProvider>
+            <FinanceBudgetProvider>
             <Routes>
             <Route path="/login" element={<Login />} />
 
@@ -134,6 +136,7 @@ const App = () => {
 
             <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
+            </FinanceBudgetProvider>
           </ThemeProvider>
         </LanguageProvider>
       </AuthProvider>

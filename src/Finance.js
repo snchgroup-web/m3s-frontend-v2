@@ -15,6 +15,7 @@ import FinanceOverviewIndicators from './FinanceOverviewIndicators';
 import FinanceTransactionCount from './FinanceTransactionCount';
 import FinanceAmountPair, { convertFinanceAmount } from './FinanceAmountPair';
 import FinanceTransferComparison from './FinanceTransferComparison';
+import FinanceBudget from './FinanceBudget';
 import { createTransferComparison } from './financeTransferQuotes';
 import { parseFxRate, cfaPerChfObservation, summarizeFxHistory, yearlyFxHistory } from './financeFxHistory';
 import { normalizeFinanceSummary } from './financeSummary';
@@ -2018,6 +2019,7 @@ const Finance = () => {
 
         {activeTab === 'overview' && <FinanceFunctionFrame language={language} />}
 
+        {activeTab !== 'budget' && <>
         <FinanceOverviewIndicators
           language={language}
           incomeCount={financeSummary?.incomeCount}
@@ -2088,6 +2090,10 @@ const Finance = () => {
             )}
           </div>
         </div>
+
+        </>}
+
+        {activeTab === 'budget' && <FinanceBudget language={language} onSelectTab={selectFinanceTab} />}
 
         {feedback && (
           <div className="m3s-feedback m3s-feedback--success mb-6 flex items-start gap-3 px-4 py-3" role="status">
@@ -2826,7 +2832,7 @@ const Finance = () => {
 
         {activeTab === 'glossary' && <FinanceGlossary language={language} />}
 
-        <ChildTabPlaceholder moduleId="finances" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'recettes', 'depenses', 'fx', 'social', 'immobilier', 'assistant', 'resources', 'glossary']} />
+        <ChildTabPlaceholder moduleId="finances" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'recettes', 'depenses', 'fx', 'budget', 'social', 'immobilier', 'assistant', 'resources', 'glossary']} />
 
         {showImmoModal && (
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
