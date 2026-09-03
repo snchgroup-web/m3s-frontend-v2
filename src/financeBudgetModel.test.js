@@ -1,4 +1,4 @@
-import { createBudget, isBudgetValid, parseBudgetAmount, parseBudgetFile, parseBudgetRate, serializeBudget, summarizeBudget, summarizeBudgetRow } from './financeBudgetModel';
+import { BUDGET_MAX_REVISION, createBudget, isBudgetValid, parseBudgetAmount, parseBudgetFile, parseBudgetRate, serializeBudget, summarizeBudget, summarizeBudgetRow } from './financeBudgetModel';
 const valid = () => ({ ...createBudget(2026), title: 'QA budget', entity: 'QA organisation',
   rows: [{ id: 'qa-row', label: 'QA expense', currency: 'CHF', direction: 'out', kind: 'operating', months: Array(12).fill('') }] });
 test.each(['', ' ', '\t'])('blank %j stays unknown', value => expect(parseBudgetAmount(value)).toEqual({ state: 'empty', cents: null }));
@@ -53,5 +53,14 @@ test('imports only whitelisted fields', () => {
 test('documented manual rate survives exports', () => {
   const d = { ...valid(), rate: '710', rateSource: 'QA', rateDate: '2026-09-03' };
   expect(parseBudgetFile(serializeBudget(d).text)).toMatchObject({ rate: '710', rateSource: 'QA', rateDate: '2026-09-03' });
+});
+test('last export remains importable for read-only consultation and duplication', () => {
+  const draft = { ...valid(), revision: BUDGET_MAX_REVISION - 1 };
+  const terminal = parseBudgetFile(serializeBudget(draft).text);
+  expect(terminal.revision).toBe(BUDGET_MAX_REVISION);
+  expect(isBudgetValid(terminal)).toBe(true);
+  expect(() => serializeBudget(terminal)).toThrow();
+  expect(isBudgetValid({ ...terminal, revision: BUDGET_MAX_REVISION + 1 })).toBe(false);
+  expect(parseBudgetFile(serializeBudget({ ...terminal, revision: 0 }).text).revision).toBe(1);
 });
 test.each(['null', '{}', '{', ' '.repeat(512 * 1024 + 1)])('refuses invalid or excessive file', text => expect(() => parseBudgetFile(text)).toThrow());

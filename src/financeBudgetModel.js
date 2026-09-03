@@ -1,4 +1,5 @@
 export const BUDGET_MAX_ROWS = 100;
+export const BUDGET_MAX_REVISION = 1000000;
 export const BUDGET_FILE_LIMIT = 512 * 1024;
 export const BUDGET_KINDS = ['operating', 'investment', 'financing'];
 export const BUDGET_CURRENCIES = ['CHF', 'CFA'];
@@ -31,7 +32,7 @@ const validText = (value, max, required = false) => typeof value === 'string'
 export const isBudgetValid = draft => {
   if (!draft || !validText(draft.title, 120, true) || !validText(draft.entity, 120, true)
     || typeof draft.year !== 'string' || !/^\d{4}$/.test(draft.year) || Number(draft.year) < 2000 || Number(draft.year) > 2100
-    || !Number.isInteger(draft.revision) || draft.revision < 0 || draft.revision > 1000000
+    || !Number.isInteger(draft.revision) || draft.revision < 0 || draft.revision > BUDGET_MAX_REVISION
     || !validText(draft.rate, 24) || !validText(draft.rateSource, 200) || !validText(draft.rateDate, 10)
     || (draft.rate.trim() ? parseBudgetRate(draft.rate) === null || !draft.rateSource.trim() || !validDate(draft.rateDate) : Boolean(draft.rateSource || draft.rateDate))
     || !Array.isArray(draft.rows) || draft.rows.length > BUDGET_MAX_ROWS) return false;
@@ -68,7 +69,7 @@ export const summarizeBudget = draft => BUDGET_CURRENCIES.map(currency => {
   return { currency, ...groups };
 });
 export const serializeBudget = (draft, now = new Date()) => {
-  if (!isBudgetValid(draft) || draft.revision >= 1000000) throw new Error('Invalid budget');
+  if (!isBudgetValid(draft) || draft.revision >= BUDGET_MAX_REVISION) throw new Error('Invalid budget');
   const next = { ...draft, revision: draft.revision + 1 };
   return { draft: next, text: JSON.stringify({ schema: 'm3s-budget-draft', version: 1, scope: 'organization', status: 'draft', exportedAt: now.toISOString(), budget: next }, null, 2) };
 };

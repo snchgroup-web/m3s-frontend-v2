@@ -2,7 +2,7 @@ import React from 'react';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import FinanceBudget from './FinanceBudget';
 import FinanceBudgetProvider, { FinanceBudgetSession } from './FinanceBudgetContext';
-import { createBudget, serializeBudget } from './financeBudgetModel';
+import { BUDGET_MAX_REVISION, createBudget, serializeBudget } from './financeBudgetModel';
 
 let mockAuth = { token: 'qa-session-a', isAuthenticated: true };
 jest.mock('./AuthContext', () => ({ useAuth: () => mockAuth }));
@@ -101,6 +101,25 @@ test('valid imports are confirmed before replacing a draft', async () => {
   fireEvent.click(screen.getByRole('button', { name: 'Confirmer' }));
   expect(screen.getByLabelText('Nom du budget')).toHaveValue('QA imported');
   expect(screen.getByRole('status')).toHaveTextContent('Non approuvé');
+});
+
+test('a terminal revision remains readable and can be duplicated without losing amounts', async () => {
+  show();
+  const data = { ...createBudget(2026), title: 'QA terminal', entity: 'QA org', revision: BUDGET_MAX_REVISION - 1,
+    rows: [{ id: 'qa-terminal', label: 'QA service', kind: 'operating', direction: 'out', currency: 'CHF', months: ['25', ...Array(11).fill('')] }] };
+  await upload(serializeBudget(data).text);
+  expect(screen.getByText(/Limite de révisions atteinte/)).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Exporter le brouillon JSON' })).toBeDisabled();
+  expect(screen.getByLabelText('Nom du budget')).toBeDisabled();
+  expect(month(0)).toBeDisabled(); expect(month(0)).toHaveValue('25');
+  fireEvent.click(screen.getByRole('button', { name: 'Dupliquer le brouillon' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Annuler' })); expect(month(0)).toBeDisabled();
+  fireEvent.click(screen.getByRole('button', { name: 'Dupliquer le brouillon' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Confirmer' }));
+  expect(month(0)).toBeEnabled(); expect(month(0)).toHaveValue('25');
+  expect(screen.getByLabelText('Nom du budget')).toHaveValue('QA terminal');
+  fireEvent.click(screen.getByRole('button', { name: 'Exporter le brouillon JSON' }));
+  expect(screen.getByText('Révision exportée 1')).toBeInTheDocument();
 });
 
 test.each(['edit', 'unmount'])('a delayed import cannot override a newer %s', async action => {

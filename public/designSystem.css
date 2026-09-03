@@ -1933,6 +1933,7 @@ html.dark .m3s-fx-workspace input[type=datetime-local] { color-scheme: dark; }
 }
 
 .m3s-budget { color: var(--m3s-text-primary); scroll-margin-top: 104px; min-width: 0; }
+.m3s-budget fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
 .m3s-budget h2 { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
 .m3s-budget h3 { font-size: 16px; font-weight: 600; }
 .m3s-budget-heading, .m3s-budget-toolbar, .m3s-budget-grid-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }

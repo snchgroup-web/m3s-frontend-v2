@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Download, FilePlus2, LockKeyhole, Trash2, Upload, Wallet } from 'lucide-react';
+import { ArrowRight, Copy, Download, FilePlus2, LockKeyhole, Trash2, Upload, Wallet } from 'lucide-react';
 import { StandardCreateButton } from './StandardUI';
 import ActionConfirmationDialog from './ActionConfirmationDialog';
 import { convertFinanceAmount } from './FinanceAmountPair';
 import { useFinanceBudget } from './FinanceBudgetContext';
-import { BUDGET_CURRENCIES, BUDGET_DIRECTIONS, BUDGET_FILE_LIMIT, BUDGET_KINDS, BUDGET_MAX_ROWS, createBudget, createBudgetRow, isBudgetValid, parseBudgetAmount, parseBudgetFile, parseBudgetRate, serializeBudget, summarizeBudget, summarizeBudgetRow } from './financeBudgetModel';
+import { BUDGET_CURRENCIES, BUDGET_DIRECTIONS, BUDGET_FILE_LIMIT, BUDGET_KINDS, BUDGET_MAX_REVISION, BUDGET_MAX_ROWS, createBudget, createBudgetRow, isBudgetValid, parseBudgetAmount, parseBudgetFile, parseBudgetRate, serializeBudget, summarizeBudget, summarizeBudgetRow } from './financeBudgetModel';
 
 const COPY = {
   FR: {
@@ -16,6 +16,8 @@ const COPY = {
     kinds: ['Fonctionnement', 'Investissement', 'Financement'], directions: ['Entrées', 'Sorties'],
     export: 'Exporter le brouillon JSON', import: 'Importer un brouillon JSON', remove: 'Supprimer la rubrique',
     revision: 'Révision exportée', changed: 'Modifications non exportées', restored: 'Fichier importé · Non approuvé',
+    copy: 'Dupliquer le brouillon', terminal: 'Limite de révisions atteinte : lecture seule. Dupliquez le brouillon pour poursuivre.',
+    copyBody: 'Les montants et rubriques seront conservés dans une nouvelle copie non approuvée, sans historique des révisions.',
     downloaded: 'Téléchargement demandé · Vérifiez le fichier reçu', exportFailed: 'Export impossible. Le brouillon est conservé dans cette session.',
     saved: 'Dernier export demandé', temporary: 'Session uniquement · Aucun enregistrement serveur · Export nécessaire avant fermeture ou déconnexion',
     partial: 'Sous-totaux saisis, non enveloppes approuvées', filled: 'mois renseignés', annual: 'Total saisi',
@@ -41,6 +43,8 @@ const COPY = {
     kinds: ['Operating', 'Investment', 'Financing'], directions: ['Incoming', 'Outgoing'],
     export: 'Export draft JSON', import: 'Import draft JSON', remove: 'Delete category',
     revision: 'Exported revision', changed: 'Unexported changes', restored: 'File imported · Unapproved',
+    copy: 'Duplicate draft', terminal: 'Revision limit reached: read-only. Duplicate the draft to continue.',
+    copyBody: 'Amounts and categories will be retained in a new unapproved copy without revision history.',
     downloaded: 'Download requested · Check the received file', exportFailed: 'Export failed. The draft remains in this session.',
     saved: 'Last export requested', temporary: 'Session only · No server storage · Export before closing or signing out',
     partial: 'Entered subtotals, not approved allocations', filled: 'months entered', annual: 'Entered total',
@@ -66,6 +70,8 @@ const COPY = {
     kinds: ['Betrieb', 'Investition', 'Finanzierung'], directions: ['Eingänge', 'Ausgänge'],
     export: 'Entwurf als JSON exportieren', import: 'JSON-Entwurf importieren', remove: 'Rubrik löschen',
     revision: 'Exportierte Revision', changed: 'Nicht exportierte Änderungen', restored: 'Datei importiert · Nicht genehmigt',
+    copy: 'Entwurf duplizieren', terminal: 'Revisionsgrenze erreicht: schreibgeschützt. Entwurf zum Fortfahren duplizieren.',
+    copyBody: 'Beträge und Rubriken bleiben in einer neuen, nicht genehmigten Kopie ohne Revisionsverlauf erhalten.',
     downloaded: 'Download angefordert · Empfangene Datei prüfen', exportFailed: 'Export fehlgeschlagen. Entwurf bleibt in dieser Sitzung.',
     saved: 'Letzter Export angefordert', temporary: 'Nur Sitzung · Keine Serverspeicherung · Vor Schließen oder Abmelden exportieren',
     partial: 'Erfasste Teilsummen, keine genehmigten Budgets', filled: 'Monate erfasst', annual: 'Erfasste Summe',
@@ -98,6 +104,7 @@ export default function FinanceBudget({ language, onSelectTab }) {
   const { draft, setDraft, dirty, setExported, exportedAt, setExportedAt } = session;
   const months = Array.from({ length: 12 }, (_, i) => new Date(2024, i, 1).toLocaleString(locale, { month: 'short' }));
   const valid = draft && isBudgetValid(draft);
+  const revisionLimit = draft?.revision >= BUDGET_MAX_REVISION;
   const rate = draft?.rateSource.trim() && /^\d{4}-\d{2}-\d{2}$/.test(draft.rateDate) && !Number.isNaN(Date.parse(draft.rateDate)) && new Date(draft.rateDate).toISOString().slice(0, 10) === draft.rateDate ? parseBudgetRate(draft.rate) : null;
   const format = value => value === null ? '\u2014' : value.toLocaleString(locale, { maximumFractionDigits: 2 });
   const change = updater => { importSequence.current += 1; setDraft(updater); setNotice(''); setError(''); };
@@ -144,7 +151,8 @@ export default function FinanceBudget({ language, onSelectTab }) {
       <div className="m3s-budget-actions">
         {iconButton(t.new, FilePlus2, () => draft ? ask(t.replace, () => replace(createBudget())) : replace(createBudget()))}
         {iconButton(t.import, Upload, () => inputRef.current?.click())}
-        {iconButton(t.export, Download, download, !valid)}
+        {iconButton(t.export, Download, download, !valid || revisionLimit)}
+        {revisionLimit && iconButton(t.copy, Copy, () => ask(t.copyBody, () => replace({ ...draft, revision: 0 })))}
         <input ref={inputRef} type="file" accept=".json,application/json" aria-label={t.import} onChange={importFile} hidden />
       </div>
       <p>{draft ? dirty ? t.changed : draft.revision ? t.revision + ' ' + draft.revision : t.versionZero : t.empty}</p>
@@ -153,7 +161,9 @@ export default function FinanceBudget({ language, onSelectTab }) {
     {exportedAt && <p className="m3s-budget-meta">{t.saved} : {new Date(exportedAt).toLocaleString(locale)}</p>}
     {notice && <p role="status" className="m3s-budget-notice">{notice}</p>}
     {error && <p role="alert" className="m3s-budget-error">{error}</p>}
+    {revisionLimit && <p role="status" className="m3s-budget-storage">{t.terminal}</p>}
     {!draft ? <div className="m3s-budget-empty"><StandardCreateButton icon={FilePlus2} onClick={() => replace(createBudget())}>{t.new}</StandardCreateButton></div> : <>
+      <fieldset disabled={revisionLimit}>
       <div className="m3s-budget-settings">
         <label>{t.name}<input value={draft.title} maxLength={120} required onChange={event => change({ ...draft, title: event.target.value })} /></label>
         <label>{t.entity}<input value={draft.entity} maxLength={120} required onChange={event => change({ ...draft, entity: event.target.value })} /></label>
@@ -214,6 +224,7 @@ export default function FinanceBudget({ language, onSelectTab }) {
         </table>
         {!draft.rows.length && <p className="m3s-budget-empty">{t.emptyGrid}</p>}
       </div>
+      </fieldset>
       <p className="m3s-budget-meta">{t.exportHint}</p>
       <footer className="m3s-budget-actual"><h3>{t.actual}</h3><p>{t.actualBody}</p><div>{[['recettes', t.income], ['depenses', t.expenses]].map(([tab, label]) => <button type="button" key={tab} className="m3s-secondary-button" onClick={() => onSelectTab(tab)}>{label}<ArrowRight size={16} aria-hidden="true" /></button>)}</div></footer>
     </>}
