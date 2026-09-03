@@ -44,6 +44,13 @@ const DEPARTMENT_OPTIONS = [
 ];
 const PROJECT_PHASE_OPTIONS = ['Conception', 'Mise en Place', 'Consolidation', 'Dynamisation'];
 const COUNTRY_OPTIONS = ['CH', 'SN', 'FR', 'ISR'];
+const FINANCE_CHART_TOOLTIP_STYLE = {
+  backgroundColor: 'var(--m3s-surface-panel)',
+  border: '1px solid var(--m3s-border-strong)',
+  color: 'var(--m3s-text-primary)'
+};
+const FINANCE_CHART_CURSOR = { fill: 'var(--m3s-status-info)', fillOpacity: 0.08, stroke: 'var(--m3s-border-strong)' };
+export const formatFinanceChartTick = value => Number(value).toLocaleString(undefined, { notation: 'compact', maximumFractionDigits: 1 });
 export const shouldShowFxLabel = (index, count, width) => {
   const capacity = Math.max(1, Math.floor((width - 120) / 64));
   const stride = Math.max(1, Math.ceil(count / capacity));
@@ -2097,8 +2104,8 @@ const Finance = () => {
                 <BarChart data={annualFinanceData} margin={{ top: 8, right: 10, left: 8, bottom: 0 }} barGap={5}>
                   <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
                   <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} />
-                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={52} tickFormatter={(value) => Number(value).toLocaleString(undefined, { notation: 'compact', maximumFractionDigits: 1 })} />
-                  <Tooltip formatter={(value) => [`${Number(value).toLocaleString()} CHF`]} contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }} />
+                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={52} tickFormatter={formatFinanceChartTick} />
+                  <Tooltip cursor={FINANCE_CHART_CURSOR} formatter={(value, name) => [`${Number(value).toLocaleString()} CHF`, name]} contentStyle={FINANCE_CHART_TOOLTIP_STYLE} />
                   <Legend content={<FinanceTrendLegend />} />
                   <Bar dataKey="recettes" name={t.recettes} fill="var(--m3s-status-info)" radius={[4, 4, 0, 0]} maxBarSize={36} />
                   <Bar dataKey="depenses" name={t.depenses} fill="var(--m3s-status-info)" fillOpacity={0.35} stroke="var(--m3s-status-info)" strokeWidth={1.5} radius={[4, 4, 0, 0]} maxBarSize={36} />
@@ -2112,8 +2119,8 @@ const Finance = () => {
                 <BarChart data={annualFinanceData} margin={{ top: 8, right: 10, left: 12, bottom: 0 }} barGap={5}>
                   <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
                   <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} />
-                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={66} tickFormatter={(value) => Number(value).toLocaleString(undefined, { notation: 'compact', maximumFractionDigits: 1 })} />
-                  <Tooltip formatter={(value) => [`${Math.round(Number(value)).toLocaleString()} CFA`]} contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }} />
+                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={66} tickFormatter={formatFinanceChartTick} />
+                  <Tooltip cursor={FINANCE_CHART_CURSOR} formatter={(value, name) => [`${Math.round(Number(value)).toLocaleString()} CFA`, name]} contentStyle={FINANCE_CHART_TOOLTIP_STYLE} />
                   <Legend content={<FinanceTrendLegend />} />
                   <Bar dataKey="recettesCfa" name={t.recettes} fill="var(--m3s-currency-cfa)" radius={[4, 4, 0, 0]} maxBarSize={36} />
                   <Bar dataKey="depensesCfa" name={t.depenses} fill="var(--m3s-currency-cfa)" fillOpacity={0.35} stroke="var(--m3s-currency-cfa)" strokeWidth={1.5} radius={[4, 4, 0, 0]} maxBarSize={36} />
@@ -2129,13 +2136,14 @@ const Finance = () => {
                   <CartesianGrid strokeDasharray="2 7" stroke="#7180a0" vertical={false} />
                   <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} padding={{ left: 20, right: 20 }} />
                   <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={58} domain={fxYearlyDomain} tickFormatter={(value) => Number(value).toLocaleString(undefined, { maximumFractionDigits: 0 })} />
-                  <Tooltip
+                  <Tooltip cursor={FINANCE_CHART_CURSOR}
                     labelFormatter={(year) => `${year}`}
                     formatter={(value, name, item) => [`1 CHF = ${Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} CFA (${item.payload.observations} obs.)`, t.taux]}
-                    contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }}
+                    contentStyle={FINANCE_CHART_TOOLTIP_STYLE}
+                    itemStyle={{ color: 'var(--m3s-status-info)' }}
                   />
                   <Line type="monotone" dataKey="Taux Moyen" name={t.moyenne} stroke="#60a5fa" strokeWidth={2.25} dot={{ fill: '#0f172a', stroke: '#60a5fa', strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }}>
-                    <LabelList valueAccessor={fxLabelValue} position="top" offset={10} fill="#93c5fd" fontSize={12} formatter={(value) => Number.isFinite(value) ? value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''} />
+                    <LabelList valueAccessor={fxLabelValue} position="top" offset={10} fill="var(--m3s-status-info)" fontSize={12} formatter={(value) => Number.isFinite(value) ? value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''} />
                   </Line>
                 </LineChart>
               </ResponsiveContainer>}
@@ -2425,13 +2433,14 @@ const Finance = () => {
                     <CartesianGrid strokeDasharray="2 7" stroke="#7180a0" vertical={false} />
                     <XAxis dataKey="année" stroke="#94a3b8" tickLine={false} axisLine={false} padding={{ left: 20, right: 20 }} />
                     <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={58} domain={fxYearlyDomain} tickFormatter={(value) => Number(value).toLocaleString(undefined, { maximumFractionDigits: 0 })} />
-                    <Tooltip
+                    <Tooltip cursor={FINANCE_CHART_CURSOR}
                       labelFormatter={(year) => `${year}`}
                       formatter={(value, name, item) => [`1 CHF = ${Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} CFA (${item.payload.observations} obs.)`, t.taux]}
-                      contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }}
+                      contentStyle={FINANCE_CHART_TOOLTIP_STYLE}
+                      itemStyle={{ color: 'var(--m3s-status-info)' }}
                     />
                     <Line type="monotone" dataKey="Taux Moyen" name={t.moyenne} stroke="#60a5fa" strokeWidth={2.25} dot={{ fill: '#0f172a', stroke: '#60a5fa', strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }}>
-                      <LabelList valueAccessor={fxLabelValue} position="top" offset={10} fill="#93c5fd" fontSize={12} formatter={(value) => Number.isFinite(value) ? value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''} />
+                      <LabelList valueAccessor={fxLabelValue} position="top" offset={10} fill="var(--m3s-status-info)" fontSize={12} formatter={(value) => Number.isFinite(value) ? value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''} />
                     </Line>
                   </LineChart>
                 </ResponsiveContainer>}
@@ -2533,9 +2542,9 @@ const Finance = () => {
                   <BarChart data={socialAnnualData} margin={{ top: 12, right: 12, left: 8, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
                     <XAxis dataKey="annee" stroke="#94a3b8" tickLine={false} axisLine={false} />
-                    <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={54} tickFormatter={(value) => `${Math.round(value / 1000)}k`} />
-                    <Tooltip formatter={(value) => [`${Number(value).toLocaleString()} CHF`, t.socialTitle]} contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }} />
-                    <Bar dataKey="montantChf" fill="#34d399" radius={[4, 4, 0, 0]} maxBarSize={42} />
+                    <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={54} tickFormatter={formatFinanceChartTick} />
+                    <Tooltip cursor={FINANCE_CHART_CURSOR} formatter={(value) => [`${Number(value).toLocaleString()} CHF`, t.socialTitle]} contentStyle={FINANCE_CHART_TOOLTIP_STYLE} />
+                    <Bar dataKey="montantChf" fill="var(--m3s-status-info)" radius={[4, 4, 0, 0]} maxBarSize={42} />
                   </BarChart>
                 </ResponsiveContainer>
               </section>
@@ -2545,9 +2554,9 @@ const Finance = () => {
                   <BarChart data={socialAnnualData} margin={{ top: 12, right: 12, left: 12, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
                     <XAxis dataKey="annee" stroke="#94a3b8" tickLine={false} axisLine={false} />
-                    <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={62} tickFormatter={(value) => `${(value / 1000000).toLocaleString(undefined, { maximumFractionDigits: 1 })}M`} />
-                    <Tooltip formatter={(value) => [`${Math.round(Number(value)).toLocaleString()} CFA`, t.socialHistoricalCfa]} contentStyle={{ backgroundColor: '#1e293b', border: 'none', color: '#fff' }} />
-                    <Bar dataKey="montantCfa" fill="#22d3ee" radius={[4, 4, 0, 0]} maxBarSize={42} />
+                    <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={62} tickFormatter={formatFinanceChartTick} />
+                    <Tooltip cursor={FINANCE_CHART_CURSOR} formatter={(value) => [`${Math.round(Number(value)).toLocaleString()} CFA`, t.socialHistoricalCfa]} contentStyle={FINANCE_CHART_TOOLTIP_STYLE} />
+                    <Bar dataKey="montantCfa" fill="var(--m3s-currency-cfa)" radius={[4, 4, 0, 0]} maxBarSize={42} />
                   </BarChart>
                 </ResponsiveContainer>
               </section>
@@ -2709,9 +2718,9 @@ const Finance = () => {
                       <BarChart data={immoYearlyData} margin={{ top: 8, right: 10, left: 8, bottom: 0 }}>
                         <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
                         <XAxis dataKey="annee" stroke="#94a3b8" tickLine={false} axisLine={false} />
-                        <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={52} tickFormatter={(value) => `${Math.round(value / 1000)}k`} />
-                        <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: 'none' }} formatter={(value) => [`${formatAmount(value)} CHF`, t.totalInvesti]} />
-                        <Bar dataKey="montantChf" fill="#22d3ee" radius={[4, 4, 0, 0]} maxBarSize={44} />
+                        <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={52} tickFormatter={formatFinanceChartTick} />
+                        <Tooltip cursor={FINANCE_CHART_CURSOR} contentStyle={FINANCE_CHART_TOOLTIP_STYLE} formatter={(value) => [`${formatAmount(value)} CHF`, t.totalInvesti]} />
+                        <Bar dataKey="montantChf" fill="var(--m3s-status-info)" radius={[4, 4, 0, 0]} maxBarSize={44} />
                       </BarChart>
                     </ResponsiveContainer>
                   </section>
@@ -2722,9 +2731,9 @@ const Finance = () => {
                       <BarChart data={immoYearlyData} margin={{ top: 8, right: 10, left: 12, bottom: 0 }}>
                         <CartesianGrid strokeDasharray="2 6" stroke="#7180a0" vertical={false} />
                         <XAxis dataKey="annee" stroke="#94a3b8" tickLine={false} axisLine={false} />
-                        <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={66} tickFormatter={(value) => `${Math.round(value / 1000000)}M`} />
-                        <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: 'none' }} formatter={(value) => [`${formatAmount(value)} CFA`, t.totalInvesti]} />
-                        <Bar dataKey="montantCfa" fill="#f59e0b" radius={[4, 4, 0, 0]} maxBarSize={44} />
+                        <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} width={66} tickFormatter={formatFinanceChartTick} />
+                        <Tooltip cursor={FINANCE_CHART_CURSOR} contentStyle={FINANCE_CHART_TOOLTIP_STYLE} formatter={(value) => [`${formatAmount(value)} CFA`, t.totalInvesti]} />
+                        <Bar dataKey="montantCfa" fill="var(--m3s-currency-cfa)" radius={[4, 4, 0, 0]} maxBarSize={44} />
                       </BarChart>
                     </ResponsiveContainer>
                   </section>
