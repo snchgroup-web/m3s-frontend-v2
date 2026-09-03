@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
-import Finance, { FinanceTrendLegend, shouldShowFxLabel } from './Finance';
+import Finance, { FinanceTrendLegend, shouldShowFxLabel, formatFinanceChartTick } from './Finance';
 import api from './api';
 import { getDashboardReturnContext, buildDashboardReturnPath } from './dashboardNavigation';
 
@@ -17,8 +17,8 @@ jest.mock('recharts', () => ({
   Line: ({ children, ...props }) => <div data-testid="fx-line" data-style={JSON.stringify(props)}>{children}</div>,
   BarChart: ({ children }) => <div>{children}</div>,
   Bar: props => <div data-testid="finance-bar" data-style={JSON.stringify(props)} />,
-  LabelList: () => null, XAxis: () => null, YAxis: () => null,
-  CartesianGrid: () => null, Tooltip: () => null, Legend: () => null,
+  LabelList: props => <div data-testid="chart-labels" data-style={JSON.stringify(props)} />, XAxis: () => null, YAxis: () => null,
+  CartesianGrid: () => null, Tooltip: props => <div data-testid="chart-tooltip" data-style={JSON.stringify(props)} data-formatted={JSON.stringify(props.formatter(100, 'QA series', { payload: { observations: 1 } }))} />, Legend: () => null,
   ResponsiveContainer: ({ children }) => <div>{children}</div>
 }));
 jest.mock('./api', () => ({ __esModule: true, default: {
@@ -169,6 +169,40 @@ test('TFX history uses the same thin blue curve and markers as the Finance overv
     stroke: '#60a5fa', strokeWidth: 2.25,
     dot: { r: 4, strokeWidth: 2 }, activeDot: { r: 6 }
   });
+});
+
+test.each([0, 25, 100, 70000, 1000000])('chart tick %s keeps useful precision without changing units', value => {
+  expect(formatFinanceChartTick(value)).toBe(Number(value).toLocaleString(undefined, { notation: 'compact', maximumFractionDigits: 1 }));
+  if (value > 0) expect(formatFinanceChartTick(value)).not.toMatch(/^0(?:[kM]|$)/);
+});
+
+test.each(['social', 'immobilier'])('%s charts preserve their CHF/CFA keys with shared currency colors', async tab => {
+  mockSearch = '?tab=' + tab;
+  api.getRealEstateFinance.mockResolvedValue({ data: [{ source_id: 'QA-CHART', date_operation: '2026-09-01', montant_chf: 100, montant_cfa: 70000 }], summary: { investissements_realises_chf: 100, investissements_realises_cfa: 70000 } });
+  render(<Finance />);
+  const bars = await screen.findAllByTestId('finance-bar');
+  expect(bars.map(node => JSON.parse(node.dataset.style))).toEqual([
+    expect.objectContaining({ dataKey: 'montantChf', fill: 'var(--m3s-status-info)' }),
+    expect.objectContaining({ dataKey: 'montantCfa', fill: 'var(--m3s-currency-cfa)' })
+  ]);
+});
+
+test.each(['overview', 'social', 'immobilier', 'fx&fxView=dashboard'])('%s tooltips use theme surfaces, borders and text', async tab => {
+  mockSearch = '?tab=' + tab;
+  api.getRealEstateFinance.mockResolvedValue({ data: [{ source_id: 'QA-CHART', date_operation: '2026-09-01', montant_chf: 100, montant_cfa: 70000 }], summary: { investissements_realises_chf: 100, investissements_realises_cfa: 70000 } });
+  render(<Finance />);
+  const tooltips = await screen.findAllByTestId('chart-tooltip');
+  if (tab === 'overview') for (const node of tooltips.slice(0, 2)) expect(JSON.parse(node.dataset.formatted)[1]).toBe('QA series');
+  for (const node of tooltips) expect(JSON.parse(node.dataset.style).cursor.fillOpacity).toBe(0.08);
+  for (const node of tooltips) expect(JSON.parse(node.dataset.style).contentStyle).toEqual({
+    backgroundColor: 'var(--m3s-surface-panel)',
+    border: '1px solid var(--m3s-border-strong)',
+    color: 'var(--m3s-text-primary)'
+  });
+  if (tab.startsWith('fx') || tab === 'overview') {
+    expect(JSON.parse((await screen.findByTestId('chart-labels')).dataset.style).fill).toBe('var(--m3s-status-info)');
+    expect(JSON.parse(screen.getAllByTestId('chart-tooltip').at(-1).dataset.style).itemStyle.color).toBe('var(--m3s-status-info)');
+  }
 });
 
 test('overview trend bars use currency colors and a distinct expense fill without changing their data keys', async () => {
