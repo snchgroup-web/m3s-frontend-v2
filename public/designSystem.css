@@ -1931,3 +1931,55 @@ html.dark .m3s-fx-workspace input[type=datetime-local] { color-scheme: dark; }
   .m3s-fx-workspace { grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.5fr); }
   .m3s-transfer-comparison { padding-left: 28px; border-left: 1px solid var(--m3s-border); }
 }
+
+.m3s-budget { color: var(--m3s-text-primary); scroll-margin-top: 104px; min-width: 0; }
+.m3s-budget fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.m3s-budget h2 { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+.m3s-budget h3 { font-size: 16px; font-weight: 600; }
+.m3s-budget-heading, .m3s-budget-toolbar, .m3s-budget-grid-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.m3s-budget-heading p, .m3s-budget-meta, .m3s-budget-toolbar p { color: var(--m3s-text-secondary); font-size: 13px; margin-top: 6px; }
+.m3s-budget-private { display: flex; align-items: center; gap: 6px; color: var(--m3s-text-secondary); font-size: 12px; }
+.m3s-budget-toolbar { padding: 12px 0; border-bottom: 1px solid var(--m3s-border); }
+.m3s-budget-actions { display: flex; gap: 8px; }
+.m3s-budget .m3s-icon-button { width: 44px; height: 44px; flex-shrink: 0; }
+.m3s-budget button:disabled { opacity: .5; cursor: not-allowed; }
+.m3s-budget-storage { margin: 14px 0; font-size: 13px; color: var(--m3s-status-warning); }
+.m3s-budget-notice { padding: 10px 0; color: var(--m3s-status-success); font-size: 14px; }
+.m3s-budget-error { padding: 10px 0; color: var(--m3s-status-danger); font-size: 13px; }
+.m3s-budget-settings { display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 16px; margin: 20px 0 8px; }
+.m3s-budget-settings label { display: flex; flex-direction: column; gap: 6px; min-width: 0; font-size: 13px; }
+html .m3s-budget input, html .m3s-budget select { min-height: 44px; width: 100%; min-width: 0; border: 1px solid var(--m3s-border-strong); border-radius: 4px; padding: 8px; background: var(--m3s-surface-panel); color: var(--m3s-text-primary); font-size: 14px; font-weight: 400; }
+html.dark .m3s-budget input[type="date"] { color-scheme: dark; }
+.m3s-budget input:focus-visible, .m3s-budget select:focus-visible, .m3s-budget-scroll:focus-visible { outline: 2px solid var(--m3s-status-info); outline-offset: 2px; }
+html .m3s-budget input[aria-invalid="true"] { border-color: var(--m3s-status-danger); }
+.m3s-budget-totals { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; padding: 20px 0 10px; border-top: 1px solid var(--m3s-border); margin-top: 20px; }
+.m3s-budget-totals section > div { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 16px; padding-top: 8px; }
+.m3s-budget-totals strong { font-size: 20px; overflow-wrap: anywhere; }
+.m3s-budget small { display: block; font-size: 12px; font-weight: 400; overflow-wrap: anywhere; }
+.m3s-budget-totals small { color: var(--m3s-text-secondary); }
+.m3s-budget-grid-heading { margin: 24px 0 12px; }
+.m3s-budget-scroll { max-width: 100%; overflow: auto; border: 1px solid var(--m3s-border); border-radius: 6px; }
+.m3s-budget table { width: 100%; min-width: 1900px; table-layout: fixed; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+.m3s-budget caption { text-align: left; padding: 10px 14px; color: var(--m3s-text-secondary); }
+.m3s-budget th, .m3s-budget td { width: 116px; padding: 10px 8px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--m3s-border); }
+html .m3s-budget thead th { background: var(--m3s-surface-raised); color: var(--m3s-text-secondary); }
+html .m3s-budget tbody th { background: var(--m3s-surface-panel); color: var(--m3s-text-primary); font-weight: 400; }
+.m3s-budget th:first-child { width: 250px; position: sticky; left: 0; z-index: 1; }
+.m3s-budget th:last-child, .m3s-budget td:last-child { width: 230px; }
+.m3s-budget-row-title { display: flex; gap: 4px; margin-bottom: 6px; }
+.m3s-budget-row-selects { display: grid; grid-template-columns: 1fr 85px; gap: 4px; margin-top: 6px; }
+html .m3s-budget input.m3s-budget-chf, .m3s-budget .m3s-budget-chf { color: var(--m3s-status-info) !important; }
+html .m3s-budget input.m3s-currency-cfa { color: var(--m3s-currency-cfa) !important; }
+.m3s-budget td > small { margin-top: 8px; }
+.m3s-budget-annual { display: flex; flex-wrap: wrap; gap: 8px; font-size: 16px; font-weight: 600; overflow-wrap: anywhere; }
+.m3s-budget-empty { padding: 24px 0; color: var(--m3s-text-secondary); }
+.m3s-budget-scroll .m3s-budget-empty { padding: 24px; }
+.m3s-budget-actual { border-top: 1px solid var(--m3s-border); padding: 20px 0; margin-top: 24px; }
+.m3s-budget-actual p { font-size: 14px; color: var(--m3s-text-secondary); margin: 8px 0; }
+.m3s-budget-actual > div { display: flex; gap: 12px; flex-wrap: wrap; }
+.m3s-budget-actual button { min-height: 44px; padding: 8px 12px; gap: 8px; }
+@media (max-width: 700px) {
+  .m3s-budget-settings { grid-template-columns: minmax(0,1fr); }
+  .m3s-budget-totals { grid-template-columns: minmax(0,1fr); gap: 16px; }
+  .m3s-budget th:first-child { position: static; }
+}
