@@ -162,6 +162,9 @@ test('TFX history uses the same thin blue curve and markers as the Finance overv
   render(<Finance />);
   const tfxLine = await screen.findByTestId('fx-line');
   expect(JSON.parse(tfxLine.dataset.style)).toEqual(overview);
+  expect(document.getElementById('finance-fx-dashboard')).toHaveClass('flex', 'flex-col', 'lg:min-h-[calc(100dvh-12rem)]');
+  expect(document.getElementById('finance-fx-dashboard')).not.toHaveClass('min-h-[calc(100dvh-12rem)]');
+  expect(screen.getByTestId('finance-fx-chart-layout')).toHaveClass('flex-1', 'items-center');
   expect(overview).toMatchObject({
     stroke: '#60a5fa', strokeWidth: 2.25,
     dot: { r: 4, strokeWidth: 2 }, activeDot: { r: 6 }

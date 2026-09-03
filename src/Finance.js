@@ -2416,9 +2416,10 @@ const Finance = () => {
             )}
 
             {fxView === 'dashboard' && (
-              <section id="finance-fx-dashboard" className="min-h-[calc(100dvh-12rem)] bg-slate-800 rounded-lg p-6 border border-slate-700">
+              <section id="finance-fx-dashboard" className="flex flex-col lg:min-h-[calc(100dvh-12rem)] bg-slate-800 rounded-lg p-6 border border-slate-700">
                 <h3 className="text-white font-bold mb-4">{t.historiqueTaux}</h3>
                 <p className="text-slate-400 text-sm mb-2">{t.moyenneAnnuelleFx}</p>
+                <div className="flex min-w-0 flex-1 items-center py-4 lg:py-8" data-testid="finance-fx-chart-layout">
                 {fxYearlyData.length === 0 ? <p role="status" className="py-8 text-sm text-slate-400">{fxEmptyMessage}</p> : <ResponsiveContainer width="100%" height={320} onResize={width => setFxChartWidth(width)}>
                   <LineChart data={fxYearlyData} margin={{ top: 28, right: 34, left: 12, bottom: 4 }}>
                     <CartesianGrid strokeDasharray="2 7" stroke="#7180a0" vertical={false} />
@@ -2434,6 +2435,7 @@ const Finance = () => {
                     </Line>
                   </LineChart>
                 </ResponsiveContainer>}
+                </div>
               </section>
             )}
 
