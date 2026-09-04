@@ -4,6 +4,10 @@
 
 # Keep the production build configuration versioned with the M3S frontend.
 
+[context.deploy-preview.environment]
+  REACT_APP_API_URL = "https://m3s-backend-preview-production.up.railway.app/api"
+  REACT_APP_BUDGET_STORAGE_ENABLED = "true"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
