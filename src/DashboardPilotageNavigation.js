@@ -6,6 +6,7 @@ import {
   BookOpenText,
   BriefcaseBusiness,
   Building2,
+  Compass,
   Factory,
   FileDown,
   FileText,
@@ -49,6 +50,8 @@ const translations = {
     returnToIntelligence: 'Revenir au Daily Intelligence',
     returnToReporting: 'Revenir à CNS-08 · Reporting institutionnel',
     referenceTitle: 'Référentiel du 2SG Daily Intelligence Dashboard',
+    compassTitle: 'Boussole globale 2SG / M3S',
+    compassAction: 'Ouvrir la Boussole',
     mapTitle: 'Carte mentale globale des fonctions',
     mapBody: 'La carte relie 2SG/M3S à ses familles et fonctions. Sélectionnez une fonction pour afficher sa carte locale dans cette même vue.',
     managementFamily: ['Management & Gouvernance', 'Le Tableau de bord global constitue la couche de pilotage transversal de 2SG/M3S.'],
@@ -103,6 +106,8 @@ const translations = {
     returnToIntelligence: 'Return to Daily Intelligence',
     returnToReporting: 'Return to CNS-08 · Institutional reporting',
     referenceTitle: '2SG Daily Intelligence Dashboard reference',
+    compassTitle: '2SG / M3S Global Compass',
+    compassAction: 'Open the Compass',
     mapTitle: 'Global function mind map',
     mapBody: 'The map connects 2SG/M3S to its families and functions. Select a function to display its local map in this same view.',
     managementFamily: ['Management & Governance', 'The global Dashboard forms the cross-functional steering layer of 2SG/M3S.'],
@@ -157,6 +162,8 @@ const translations = {
     returnToIntelligence: 'Zur Daily Intelligence zurückkehren',
     returnToReporting: 'Zu CNS-08 · Institutionelles Reporting zurückkehren',
     referenceTitle: 'Referenz des 2SG Daily Intelligence Dashboard',
+    compassTitle: 'Globaler Kompass 2SG / M3S',
+    compassAction: 'Kompass öffnen',
     mapTitle: 'Globale Mindmap der Funktionen',
     mapBody: 'Die Karte verbindet 2SG/M3S mit seinen Bereichen und Funktionen. Wählen Sie eine Funktion, um ihre lokale Karte in derselben Ansicht anzuzeigen.',
     managementFamily: ['Management & Governance', 'Das globale Dashboard bildet die funktionsübergreifende Steuerungsebene von 2SG/M3S.'],
@@ -432,6 +439,11 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
     else navigate(selectedFunctionDefinition.path);
   };
 
+  const openCompass = () => {
+    if (onNavigate) onNavigate('/boussole');
+    else navigate('/boussole');
+  };
+
   const returnToProgrammeSection = () => {
     navigate({
       pathname: location.pathname,
@@ -519,12 +531,20 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
         ariaLabel={t.title}
       />
       <div className="global-pilotage rounded-lg border border-slate-700 bg-slate-800 p-3 shadow-lg sm:p-5">
-      <div>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="max-w-3xl">
           <p className="text-xs font-semibold uppercase text-blue-300">{t.eyebrow}</p>
           <h2 id="global-pilotage-title" className="mt-1 text-xl font-semibold text-slate-100 sm:text-2xl">{t.title}</h2>
           <p className="mt-2 text-sm leading-6 text-slate-300">{t.subtitle}</p>
         </div>
+        <button
+          type="button"
+          onClick={openCompass}
+          className="inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 rounded-md border border-blue-500/50 bg-blue-950/45 px-4 py-2 text-sm font-semibold text-blue-100 transition hover:border-blue-300 hover:bg-blue-900/60 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:w-auto"
+          title={t.compassTitle}
+        >
+          <Compass size={18} aria-hidden="true" />{t.compassAction}
+        </button>
       </div>
 
       {activeView === 'overview' && (
