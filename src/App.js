@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
 import { LanguageProvider } from './LanguageContext';
@@ -17,6 +17,18 @@ import GED from './GED';
 import TaxonomyDiagnostics from './diagnostics/TaxonomyDiagnostics';
 import LocalPilotSummary from './LocalPilotSummary';
 import FinanceBudgetProvider from './FinanceBudgetContext';
+
+const Boussole = lazy(() => import('./Boussole'));
+
+const boussoleFallback = (
+  <div
+    className="flex h-screen items-center justify-center bg-slate-950"
+    role="status"
+    aria-label="Chargement de la Boussole"
+  >
+    <span className="h-8 w-8 animate-spin rounded-full border-2 border-slate-600 border-t-blue-400" />
+  </div>
+);
 
 const App = () => {
   return (
@@ -110,6 +122,16 @@ const App = () => {
                   <Layout>
                     <GED />
                   </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/boussole"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={boussoleFallback}>
+                    <Boussole />
+                  </Suspense>
                 </ProtectedRoute>
               }
             />

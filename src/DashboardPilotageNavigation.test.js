@@ -43,6 +43,15 @@ test('shows the four management responsibilities in French', () => {
   expect(screen.getByText('Diriger')).toBeInTheDocument();
 });
 
+test('opens the protected global compass from the pilotage surface', () => {
+  const onNavigate = jest.fn();
+  renderDashboardNavigation({ onNavigate });
+
+  fireEvent.click(screen.getByRole('button', { name: 'Ouvrir la Boussole' }));
+
+  expect(onNavigate).toHaveBeenCalledWith('/boussole');
+});
+
 test('shows the governed institutional programme without inventing progress', () => {
   renderDashboardNavigation({}, '/?view=program');
 
