@@ -20,4 +20,12 @@ test('renders the protected compass surface with a dashboard return', () => {
   const documentFrame = screen.getByTitle(/Boussole globale 2SG \/ M3S/i);
   expect(documentFrame).toHaveAttribute('sandbox');
   expect(documentFrame).toHaveAttribute('srcdoc', expect.stringContaining('Boussole'));
+  expect(documentFrame).toHaveAttribute(
+    'srcdoc',
+    expect.stringContaining('data-theme-choice="deep"')
+  );
+  expect(documentFrame).toHaveAttribute(
+    'srcdoc',
+    expect.stringContaining('e.preventDefault();showSection(a.dataset.section)')
+  );
 });
