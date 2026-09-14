@@ -152,6 +152,12 @@ export const api = {
     };
   },
 
+  getBoussoleArtifact: async () => {
+    const res = await apiFetch(`${API_BASE_URL}/boussole/latest/html`, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.blob();
+  },
+
   // Finance - Tableau de bord
   getFinanceDashboard: async () => {
     try {
