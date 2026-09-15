@@ -21,7 +21,6 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "build:boussole": "node scripts/buildBoussoleArtifact.mjs",
     "validate:taxonomy": "node scripts/validateOfferTaxonomy.js",
     "eject": "react-scripts eject"
   },

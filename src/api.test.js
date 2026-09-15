@@ -202,6 +202,7 @@ test('requests the latest Intelligence metadata with authentication', async () =
 
 test('downloads a secured Intelligence artifact as a blob', async () => {
   const blob = new Blob(['2SG'], { type: 'text/html' });
+  localStorage.setItem('token', 'test-token');
   global.fetch = jest.fn().mockResolvedValue({
     ok: true,
     status: 200,
@@ -215,7 +216,26 @@ test('downloads a secured Intelligence artifact as a blob', async () => {
   });
   expect(global.fetch).toHaveBeenCalledWith(
     expect.stringMatching(/\/intelligence\/latest\/html$/),
-    expect.objectContaining({ headers: {} })
+    expect.objectContaining({ headers: { Authorization: 'Bearer test-token' } })
+  );
+});
+
+test('downloads the Boussole only through the authenticated API', async () => {
+  const blob = new Blob(['Boussole'], { type: 'text/html' });
+  localStorage.setItem('token', 'test-token');
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    status: 200,
+    blob: jest.fn().mockResolvedValue(blob)
+  });
+
+  await expect(api.getBoussoleArtifact()).resolves.toBe(blob);
+  expect(global.fetch).toHaveBeenCalledWith(
+    expect.stringMatching(/\/boussole\/latest\/html$/),
+    expect.objectContaining({
+      cache: 'no-store',
+      headers: { Authorization: 'Bearer test-token' }
+    })
   );
 });
 

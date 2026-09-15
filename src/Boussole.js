@@ -1,31 +1,65 @@
-import React from 'react';
-import { ArrowLeft, Compass } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ArrowLeft, Compass, LoaderCircle, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
-import boussoleDocument from './artifacts/boussoleDocument.generated';
+import { api } from './api';
 
 const translations = {
   FR: {
     title: 'Boussole globale 2SG / M3S',
     version: 'Référentiel pédagogique · V3.1',
-    back: 'Revenir au tableau de bord'
+    back: 'Revenir au tableau de bord',
+    loading: 'Chargement sécurisé de la Boussole',
+    error: 'La Boussole sécurisée est momentanément indisponible.',
+    retry: 'Réessayer'
   },
   DE: {
     title: 'Globaler Kompass 2SG / M3S',
     version: 'Pädagogische Referenz · V3.1',
-    back: 'Zurück zum Dashboard'
+    back: 'Zurück zum Dashboard',
+    loading: 'Der Kompass wird sicher geladen',
+    error: 'Der geschützte Kompass ist vorübergehend nicht verfügbar.',
+    retry: 'Erneut versuchen'
   },
   EN: {
     title: '2SG / M3S Global Compass',
     version: 'Learning reference · V3.1',
-    back: 'Return to dashboard'
+    back: 'Return to dashboard',
+    loading: 'Securely loading the Compass',
+    error: 'The secure Compass is temporarily unavailable.',
+    retry: 'Try again'
   }
 };
 
 const Boussole = () => {
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const [artifactUrl, setArtifactUrl] = useState('');
+  const [status, setStatus] = useState('loading');
+  const [reloadKey, setReloadKey] = useState(0);
   const t = translations[language] || translations.FR;
+
+  useEffect(() => {
+    let current = true;
+    let objectUrl = '';
+    setStatus('loading');
+
+    api.getBoussoleArtifact()
+      .then((blob) => {
+        if (!current) return;
+        objectUrl = URL.createObjectURL(blob);
+        setArtifactUrl(objectUrl);
+        setStatus('ready');
+      })
+      .catch(() => {
+        if (current) setStatus('error');
+      });
+
+    return () => {
+      current = false;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [reloadKey]);
 
   return (
     <main className="flex h-screen min-h-0 flex-col bg-slate-950 text-slate-100">
@@ -50,13 +84,36 @@ const Boussole = () => {
           <span className="hidden sm:inline">{t.back}</span>
         </button>
       </header>
-      <iframe
-        srcDoc={boussoleDocument}
-        title={t.title}
-        className="min-h-0 w-full flex-1 border-0 bg-white"
-        referrerPolicy="no-referrer"
-        sandbox="allow-scripts allow-forms allow-modals allow-popups allow-downloads"
-      />
+      {status === 'ready' ? (
+        <iframe
+          src={`${artifactUrl}#${language.toLowerCase()}/overview`}
+          title={t.title}
+          className="min-h-0 w-full flex-1 border-0 bg-white"
+          referrerPolicy="no-referrer"
+          sandbox="allow-scripts allow-forms allow-modals allow-popups allow-downloads"
+        />
+      ) : (
+        <section className="flex min-h-0 flex-1 items-center justify-center bg-slate-100 px-5 text-slate-800">
+          {status === 'loading' ? (
+            <p className="flex items-center gap-3 text-sm font-medium" role="status">
+              <LoaderCircle className="animate-spin text-blue-600" size={20} aria-hidden="true" />
+              {t.loading}
+            </p>
+          ) : (
+            <div className="max-w-md text-center">
+              <p className="text-sm font-medium">{t.error}</p>
+              <button
+                type="button"
+                onClick={() => setReloadKey((value) => value + 1)}
+                className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-md bg-blue-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <RefreshCw size={17} aria-hidden="true" />
+                {t.retry}
+              </button>
+            </div>
+          )}
+        </section>
+      )}
     </main>
   );
 };
