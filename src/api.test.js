@@ -1,4 +1,5 @@
 import api from './api';
+jest.mock('./identityClient', () => ({ currentAccessToken: async () => global.localStorage.getItem('token'), signOutIdentity: async () => {} }));
 
 const originalFetch = global.fetch;
 

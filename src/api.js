@@ -9,6 +9,8 @@
  * Langue: Français 🇫🇷
  */
 
+import { currentAccessToken, signOutIdentity } from './identityClient';
+
 const isLocalHost = typeof window !== 'undefined'
   && ['localhost', '127.0.0.1'].includes(window.location.hostname);
 const DEFAULT_API_BASE_URL = isLocalHost
@@ -16,12 +18,13 @@ const DEFAULT_API_BASE_URL = isLocalHost
   : 'https://web-production-1e53c.up.railway.app/api';
 const API_BASE_URL = process.env.REACT_APP_API_URL || DEFAULT_API_BASE_URL;
 
-const getAuthHeaders = () => {
-  const token = localStorage.getItem('token');
+const getAuthHeaders = async () => {
+  const token = await currentAccessToken();
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
 const clearExpiredSession = () => {
+  signOutIdentity().catch(() => {});
   localStorage.removeItem('token');
   localStorage.removeItem('user');
   localStorage.setItem('session_expired', 'true');
@@ -36,7 +39,7 @@ const apiFetch = async (url, options = {}) => {
   const response = await fetch(url, {
     ...options,
     headers: {
-      ...getAuthHeaders(),
+      ...await getAuthHeaders(),
       ...(options.headers || {})
     }
   });
@@ -51,13 +54,13 @@ const apiFetch = async (url, options = {}) => {
 const budgetFetch = async (path, options = {}) => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 30000);
-  const auth = getAuthHeaders();
   try {
+    const auth = await getAuthHeaders();
     const response = await fetch(`${API_BASE_URL}/finance/budget-drafts${path}`, {
       ...options, signal: controller.signal, cache: 'no-store',
       headers: { ...auth, 'Content-Type': 'application/json' }
     });
-    if (response.status === 401 && getAuthHeaders().Authorization === auth.Authorization) clearExpiredSession();
+    if (response.status === 401 && (await getAuthHeaders()).Authorization === auth.Authorization) clearExpiredSession();
     let payload;
     try { payload = await response.json(); } catch { payload = null; }
     if (!response.ok || payload?.success !== true) {
@@ -74,7 +77,7 @@ const administrationFetch = async (path, options = {}) => {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
     headers: {
-      ...getAuthHeaders(),
+      ...await getAuthHeaders(),
       ...(options.headers || {})
     }
   });
@@ -123,7 +126,7 @@ const createApiError = async (response, fallbackCode = 'API_REQUEST_FAILED') => 
 
 export const api = {
   getOwnProfile: async ({ signal } = {}) => {
-    const token = localStorage.getItem('token');
+    const token = await currentAccessToken();
     if (!token || token.startsWith('demo_session_')) {
       const error = new Error('No linked account for this session');
       error.code = 'PROFILE_NOT_LINKED';
@@ -500,7 +503,7 @@ export const api = {
   getMembersDirectory: async (limite = 100, decalage = 0) => {
     const res = await fetch(
       `${API_BASE_URL}/members-directory?limit=${limite}&offset=${decalage}`,
-      { headers: getAuthHeaders() }
+      { headers: await getAuthHeaders() }
     );
 
     let payload = null;
