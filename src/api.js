@@ -123,6 +123,12 @@ const createApiError = async (response, fallbackCode = 'API_REQUEST_FAILED') => 
 
 export const api = {
   getOwnProfile: async ({ signal } = {}) => {
+    const token = localStorage.getItem('token');
+    if (!token || token.startsWith('demo_session_')) {
+      const error = new Error('No linked account for this session');
+      error.code = 'PROFILE_NOT_LINKED';
+      throw error;
+    }
     const res = await apiFetch(`${API_BASE_URL}/auth/profile`, { signal, cache: 'no-store' });
     if (!res.ok) throw await createApiError(res, 'PROFILE_UNAVAILABLE');
     return res.json();
