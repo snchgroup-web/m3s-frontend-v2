@@ -810,6 +810,9 @@ const Admin = () => {
         {/* Utilisateurs */}
         {activeTab === 'users' && (
           <section id="administration-users-register" className="scroll-mt-24 space-y-5" tabIndex="-1">
+            <button type="button" className="m3s-secondary-button px-4 py-2" onClick={() => navigate('/account')}>
+              {{ FR: 'Mon compte', EN: 'My account', DE: 'Mein Konto' }[language]}
+            </button>
             <div className="rounded-lg border border-slate-700 bg-slate-800 p-5">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>

@@ -6,6 +6,7 @@ import { ThemeProvider } from './ThemeContext';
 import ProtectedRoute from './ProtectedRoute';
 import Layout from './Layout';
 import Login from './Login';
+import OwnProfile from './OwnProfile';
 import Dashboard from './Dashboard';
 import Finance from './Finance';
 import RH from './RH';
@@ -39,6 +40,7 @@ const App = () => {
             <FinanceBudgetProvider>
             <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/account" element={<ProtectedRoute><Layout><OwnProfile /></Layout></ProtectedRoute>} />
 
             {/* Routes avec Layout (sidebar sur toutes les pages) */}
             <Route
