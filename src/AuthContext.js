@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { DEMO_ACCOUNTS, findDemoAccount } from './demoAuth';
+import { loadIdentityProvider, googleLogin, verifyGoogleMfa, readGoogleAccount,
+  recoverGooglePassword, signOutIdentity } from './identityClient';
 
 const AuthContext = createContext();
 const isLocalHost = typeof window !== 'undefined'
@@ -56,22 +58,53 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(readStoredUser);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const demoAuthEnabled = DEMO_AUTH_ENABLED;
+  const [ready, setReady] = useState(false);
+  const [provider, setProvider] = useState(null);
+  const demoAuthEnabled = DEMO_AUTH_ENABLED && ready && provider === 'legacy';
+
+  useEffect(() => {
+    let live = true;
+    loadIdentityProvider().then(async config => {
+      if (!live) return;
+      setProvider(config.provider);
+      if (config.provider === 'google') {
+        localStorage.removeItem('token'); localStorage.removeItem('user');
+        setToken(null); setUser(null);
+        const restored = await readGoogleAccount();
+        if (live && restored) { setToken(restored.token); setUser(restored.user); }
+      }
+    }).catch(() => {
+      if (live) { setToken(null); setUser(null); setError('ACCESS_UNAVAILABLE'); }
+      signOutIdentity().catch(() => {});
+    }).finally(() => { if (live) setReady(true); });
+    return () => { live = false; };
+  }, []);
 
   useEffect(() => {
     const handleExpiredSession = () => {
       setToken(null);
       setUser(null);
+      signOutIdentity().catch(() => {});
     };
     window.addEventListener('m3s:session-expired', handleExpiredSession);
     return () => window.removeEventListener('m3s:session-expired', handleExpiredSession);
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email, password, language = 'fr') => {
     setLoading(true);
     setError('');
 
     try {
+      const config = await loadIdentityProvider();
+      setProvider(config.provider);
+      if (config.provider === 'google') {
+        const step = await googleLogin(email, password, language);
+        if (step.kind === 'mfa') return { success: false, mfaRequired: true };
+        const session = await readGoogleAccount();
+        if (!session) throw new Error('NO_SESSION');
+        setToken(session.token); setUser(session.user);
+        return { success: true };
+      }
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -91,10 +124,11 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(result.user));
 
       return { success: true };
-    } catch {
+    } catch (failure) {
+      if (provider === 'google') await signOutIdentity().catch(() => {});
       const message = 'Erreur de connexion';
       setError(message);
-      return { success: false, error: message };
+      return { success: false, error: message, code: failure.code };
     } finally {
       setLoading(false);
     }
@@ -105,7 +139,8 @@ export const AuthProvider = ({ children }) => {
     setError('');
 
     try {
-      const account = demoAuthEnabled ? findDemoAccount(email) : null;
+      const config = await loadIdentityProvider();
+      const account = demoAuthEnabled && config.provider === 'legacy' ? findDemoAccount(email) : null;
       if (!account) {
         const message = 'Compte de démonstration indisponible';
         setError(message);
@@ -142,6 +177,19 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    signOutIdentity().catch(() => {});
+  };
+
+  const verifyMfa = async code => {
+    setLoading(true);
+    try {
+      await verifyGoogleMfa(code);
+      const session = await readGoogleAccount();
+      if (!session) throw new Error('NO_SESSION');
+      setToken(session.token); setUser(session.user);
+      return { success: true };
+    } catch (failure) { return { success: false, code: failure.code }; }
+    finally { setLoading(false); }
   };
 
   const isAuthenticated = Boolean(token && user);
@@ -155,6 +203,11 @@ export const AuthProvider = ({ children }) => {
       logout,
       error,
       loading,
+      ready,
+      provider,
+      verifyMfa,
+      cancelMfa: () => signOutIdentity(),
+      recoverPassword: recoverGooglePassword,
       isAuthenticated,
       demoAuthEnabled,
       demoAccounts: DEMO_ACCOUNTS

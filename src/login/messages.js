@@ -1,5 +1,9 @@
 export const loginMessages = {
   FR: {
+    mfa: 'Validation en deux étapes', code: 'Code Authenticator', verify: 'Vérifier', back: 'Revenir à la connexion',
+    invalidCode: 'Veuillez saisir un code à six chiffres.', mfaFailed: 'Code refusé ou session expirée. Réessayez ou revenez à la connexion.',
+    tooMany: 'Trop de tentatives. Patientez avant de réessayer.', sendRecovery: 'Envoyer le lien de récupération',
+    recoverySent: 'Si cette adresse est admissible, un lien de récupération vous sera envoyé.', recoveryFailed: 'Envoi indisponible. Patientez avant de réessayer.',
     title: 'Accès M3S', login: 'Connexion', email: 'Adresse e-mail', password: 'Mot de passe', submit: 'Se connecter', wait: 'Connexion en cours…',
     language: 'Langue', theme: 'Thème', light: 'Clair', standard: 'Standard', deep: 'Sombre profond',
     showPassword: 'Afficher le mot de passe', hidePassword: 'Masquer le mot de passe',
@@ -17,6 +21,10 @@ export const loginMessages = {
     address: 'Kirchenackerweg 23, 8050 Zurich, Suisse'
   },
   EN: {
+    mfa: 'Two-step verification', code: 'Authenticator code', verify: 'Verify', back: 'Back to sign in',
+    invalidCode: 'Please enter a six-digit code.', mfaFailed: 'Code rejected or session expired. Try again or return to sign in.',
+    tooMany: 'Too many attempts. Please wait before trying again.', sendRecovery: 'Send recovery link',
+    recoverySent: 'If this address is eligible, you will receive a recovery link.', recoveryFailed: 'Sending unavailable. Please wait before trying again.',
     title: 'M3S Access', login: 'Sign in', email: 'Email address', password: 'Password', submit: 'Sign in', wait: 'Signing in…',
     language: 'Language', theme: 'Theme', light: 'Light', standard: 'Standard', deep: 'Deep dark',
     showPassword: 'Show password', hidePassword: 'Hide password',
@@ -34,6 +42,10 @@ export const loginMessages = {
     address: 'Kirchenackerweg 23, 8050 Zurich, Switzerland'
   },
   DE: {
+    mfa: 'Bestätigung in zwei Schritten', code: 'Authenticator-Code', verify: 'Bestätigen', back: 'Zurück zur Anmeldung',
+    invalidCode: 'Bitte geben Sie einen sechsstelligen Code ein.', mfaFailed: 'Code abgelehnt oder Sitzung abgelaufen. Versuchen Sie es erneut oder kehren Sie zur Anmeldung zurück.',
+    tooMany: 'Zu viele Versuche. Bitte warten Sie vor dem nächsten Versuch.', sendRecovery: 'Wiederherstellungslink senden',
+    recoverySent: 'Falls diese Adresse berechtigt ist, erhalten Sie einen Wiederherstellungslink.', recoveryFailed: 'Versand nicht verfügbar. Bitte warten Sie vor dem nächsten Versuch.',
     title: 'M3S Zugang', login: 'Anmeldung', email: 'E-Mail Adresse', password: 'Passwort', submit: 'Anmelden', wait: 'Anmeldung läuft…',
     language: 'Sprache', theme: 'Design', light: 'Hell', standard: 'Standard', deep: 'Tiefdunkel',
     showPassword: 'Passwort anzeigen', hidePassword: 'Passwort verbergen',

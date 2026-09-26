@@ -15,7 +15,8 @@ export function loginDestination(next) {
 export default function Login() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { login, loginDemo, loading, demoAuthEnabled, demoAccounts = [], isAuthenticated } = useAuth();
+  const { login, loginDemo, loading, demoAuthEnabled, demoAccounts = [], isAuthenticated,
+    ready, provider, verifyMfa, cancelMfa, recoverPassword } = useAuth();
   const { language, setLanguage } = useLanguage();
   const { theme, setTheme } = useTheme();
   const t = loginMessages[language] || loginMessages.FR;
@@ -26,9 +27,12 @@ export default function Login() {
   const [busy, setBusy] = useState(false);
   const pending = useRef(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [mfa, setMfa] = useState(false);
+  const [code, setCode] = useState('');
+  const [recoverySent, setRecoverySent] = useState(false);
   const [sessionExpired] = useState(() => searchParams.get('session') === 'expired' || localStorage.getItem('session_expired') === 'true');
   const [logoutSuccess] = useState(() => sessionStorage.getItem('logout_success') === 'true');
-  const disabled = loading || busy;
+  const disabled = loading || busy || ready === false;
   const year = new Intl.DateTimeFormat('en', { year: 'numeric', timeZone: 'Europe/Zurich' }).format(new Date());
 
   useEffect(() => {
@@ -40,6 +44,17 @@ export default function Login() {
     event.preventDefault();
     if (disabled || pending.current) return;
     const form = event.currentTarget;
+    if (mfa) {
+      if (!/^\d{6}$/.test(code)) { setError({ field: 'code', key: 'invalidCode' }); return; }
+      pending.current = true; setBusy(true); setError(null); setCode('');
+      try {
+        const result = await verifyMfa(code);
+        if (result.success) navigate(loginDestination(searchParams.get('next')));
+        else setError({ key: result.code === 'auth/too-many-requests' ? 'tooMany' : 'mfaFailed' });
+      } catch { setError({ key: 'mfaFailed' }); }
+      finally { pending.current = false; setBusy(false); }
+      return;
+    }
     const emailInput = form.elements.namedItem('email');
     const passwordInput = form.elements.namedItem('password');
     let invalid = null;
@@ -54,10 +69,23 @@ export default function Login() {
     pending.current = true;
     setBusy(true); setError(null); setVisible(false); setPassword('');
     try {
-      const result = await login(email.trim(), password);
+      const result = await login(email.trim(), password, language.toLowerCase());
       if (result.success) navigate(loginDestination(searchParams.get('next')));
-      else setError({ key: 'failed' });
+      else if (result.mfaRequired) { setMfa(true); setHelpOpen(false); }
+      else setError({ key: result.code === 'auth/too-many-requests' ? 'tooMany' : 'failed' });
     } catch { setError({ key: 'failed' }); }
+    finally { pending.current = false; setBusy(false); }
+  }
+
+  async function recover() {
+    if (disabled || pending.current || recoverySent) return;
+    const input = document.getElementById('login-email');
+    if (!email.trim() || !input?.validity.valid) {
+      setError({ field: 'email', key: 'invalidEmail' }); input?.focus(); return;
+    }
+    pending.current = true; setBusy(true); setError(null);
+    try { await recoverPassword(email.trim(), language.toLowerCase()); setRecoverySent(true); }
+    catch { setError({ key: 'recoveryFailed' }); }
     finally { pending.current = false; setBusy(false); }
   }
 
@@ -90,12 +118,19 @@ export default function Login() {
     </header>
     <LoginClock language={language}/>
     <main className="access-login-main">
-      <h1>{t.login}</h1>
+      <h1>{mfa ? t.mfa : t.login}</h1>
       {error && <p id="login-error" className="access-login-alert" role="alert"><AlertCircle size={20} aria-hidden="true"/>{t[error.key]}</p>}
       {!error && logoutSuccess && <p className="access-login-notice" role="status"><CheckCircle2 size={20} aria-hidden="true"/>{t.loggedOut}</p>}
       {!error && sessionExpired && !logoutSuccess && <p className="access-login-alert" role="status"><AlertCircle size={20} aria-hidden="true"/>{t.expired}</p>}
       <form noValidate onSubmit={submit}>
         <fieldset disabled={disabled}>
+          {mfa ? <>
+            <label htmlFor="login-code">{t.code}</label>
+            <div className="access-login-field"><LockKeyhole size={20} aria-hidden="true"/>
+              <input id="login-code" name="code" type="text" inputMode="numeric" autoComplete="one-time-code"
+                maxLength={6} pattern="[0-9]{6}" autoFocus value={code}
+                onChange={e => { setCode(e.target.value.replace(/\D/g, '')); setError(null); }} {...fieldProps('code')}/></div>
+          </> : <>
           <label htmlFor="login-email">{t.email}</label>
           <div className="access-login-field"><Mail size={20} aria-hidden="true"/>
             <input id="login-email" name="email" type="email" autoComplete="username" autoCapitalize="none" autoCorrect="off" spellCheck="false" required maxLength={254}
@@ -107,12 +142,19 @@ export default function Login() {
               value={password} onChange={e => { setPassword(e.target.value); setError(null); }} {...fieldProps('password')}/>
             <button type="button" className="access-login-eye" title={visibilityLabel} aria-label={visibilityLabel} aria-controls="login-password" aria-pressed={visible} onClick={() => setVisible(value => !value)}><VisibilityIcon size={21} aria-hidden="true"/></button>
           </div>
-          <button type="submit" className="access-login-submit"><LogIn size={20} aria-hidden="true"/>{disabled ? t.wait : t.submit}</button>
+          </>}
+          <button type="submit" className="access-login-submit"><LogIn size={20} aria-hidden="true"/>{disabled ? t.wait : mfa ? t.verify : t.submit}</button>
         </fieldset>
       </form>
-      <button type="button" className="access-login-link" aria-expanded={helpOpen} aria-controls="login-recovery-help" onClick={() => setHelpOpen(value => !value)}>{t.forgot}</button>
+      {mfa ? <button type="button" disabled={disabled} className="access-login-link" onClick={async () => {
+        await cancelMfa(); setMfa(false); setCode(''); setError(null);
+      }}>{t.back}</button> : <button type="button" className="access-login-link" aria-expanded={helpOpen} aria-controls="login-recovery-help" onClick={() => setHelpOpen(value => !value)}>{t.forgot}</button>}
       {helpOpen && <section id="login-recovery-help" className="access-login-help" aria-labelledby="login-recovery-title">
-        <h2 id="login-recovery-title">{t.recovery}</h2><p>{t.recoveryPending}</p><p>{t.keepPrivate}</p>
+        <h2 id="login-recovery-title">{t.recovery}</h2>
+        {provider === 'google' ? <>
+          {recoverySent ? <p role="status">{t.recoverySent}</p> :
+            <button type="button" className="access-login-submit" disabled={disabled} onClick={recover}><Mail size={20} aria-hidden="true"/>{t.sendRecovery}</button>}
+        </> : <p>{t.recoveryPending}</p>}<p>{t.keepPrivate}</p>
       </section>}
       {isAuthenticated && <button type="button" className="access-login-link access-login-return" onClick={() => navigate('/account')}><ArrowLeft size={17} aria-hidden="true"/>{t.account}</button>}
       {demoAuthEnabled && <section className="access-login-demo"><h2>{t.demo}</h2>{demoAccounts.map(account =>

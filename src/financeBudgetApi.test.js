@@ -1,4 +1,5 @@
 import { api } from './api';
+jest.mock('./identityClient', () => ({ currentAccessToken: async () => global.localStorage.getItem('token'), signOutIdentity: async () => {} }));
 
 beforeEach(() => { global.fetch = jest.fn(); localStorage.clear(); localStorage.setItem('token', 'test-account'); });
 afterEach(() => { jest.useRealTimers(); jest.restoreAllMocks(); });
@@ -21,6 +22,7 @@ test('a network timeout aborts the request instead of looping', async () => {
   jest.useFakeTimers();
   fetch.mockImplementation((url, { signal }) => new Promise((resolve, reject) => signal.addEventListener('abort', () => reject(new Error('Aborted')))));
   const request = api.createBudgetDraft({ title: 'Internal' });
+  await Promise.resolve(); await Promise.resolve();
   const assertion = expect(request).rejects.toThrow('Aborted'); jest.advanceTimersByTime(30000); await assertion;
   expect(fetch).toHaveBeenCalledTimes(1);
 });

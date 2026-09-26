@@ -65,7 +65,7 @@ test('signs in through the existing adapter and preserves the protected destinat
   fireEvent.change(screen.getByLabelText('Mot de passe', { exact: true }), { target: { value: 'synthetic-only-password' } });
   fireEvent.click(screen.getByRole('button', { name: 'Se connecter' }));
   await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/account'));
-  expect(mockAuth.login).toHaveBeenCalledWith('synthetic@example.test', 'synthetic-only-password');
+  expect(mockAuth.login).toHaveBeenCalledWith('synthetic@example.test', 'synthetic-only-password', 'fr');
   expect(screen.getByLabelText('Mot de passe', { exact: true })).toHaveValue('');
 });
 
@@ -91,6 +91,40 @@ test('recovery help never claims an email was sent or submits credentials', () =
   expect(mockAuth.login).not.toHaveBeenCalled();
   expect(mockAuth.loginDemo).not.toHaveBeenCalled();
   expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+});
+
+test.each(['FR', 'EN', 'DE'])('Authenticator challenge is localized and never retains the password in %s', async language => {
+  localStorage.setItem('language', language);
+  const t = loginMessages[language];
+  mockAuth.login.mockResolvedValue({ success: false, mfaRequired: true });
+  mockAuth.verifyMfa = jest.fn().mockResolvedValue({ success: true });
+  mockAuth.cancelMfa = jest.fn().mockResolvedValue();
+  renderLogin();
+  fireEvent.change(screen.getByLabelText(t.email), { target: { value: 'synthetic@example.test' } });
+  fireEvent.change(screen.getByLabelText(t.password, { exact: true }), { target: { value: 'synthetic-only-password' } });
+  fireEvent.click(screen.getByRole('button', { name: t.submit }));
+  await screen.findByLabelText(t.code);
+  expect(screen.queryByLabelText(t.password, { exact: true })).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: t.verify }));
+  expect(mockAuth.verifyMfa).not.toHaveBeenCalled();
+  expect(screen.getByRole('alert')).toHaveTextContent(t.invalidCode);
+  fireEvent.change(screen.getByLabelText(t.code), { target: { value: '123456' } });
+  fireEvent.click(screen.getByRole('button', { name: t.verify }));
+  await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/'));
+  expect(mockAuth.verifyMfa).toHaveBeenCalledWith('123456');
+});
+
+test('Google recovery needs explicit user action, email validation and sends only once', async () => {
+  mockAuth.provider = 'google'; mockAuth.recoverPassword = jest.fn().mockResolvedValue();
+  renderLogin(); fireEvent.click(screen.getByRole('button', { name: 'Mot de passe oublié ?' }));
+  expect(mockAuth.recoverPassword).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: loginMessages.FR.sendRecovery }));
+  expect(mockAuth.recoverPassword).not.toHaveBeenCalled();
+  fireEvent.change(screen.getByLabelText(loginMessages.FR.email), { target: { value: 'synthetic@example.test' } });
+  fireEvent.click(screen.getByRole('button', { name: loginMessages.FR.sendRecovery }));
+  await screen.findByText(loginMessages.FR.recoverySent);
+  expect(mockAuth.recoverPassword).toHaveBeenCalledTimes(1);
+  expect(mockAuth.recoverPassword).toHaveBeenCalledWith('synthetic@example.test', 'fr');
 });
 
 test('theme and language changes retain input and persist preferences', () => {
