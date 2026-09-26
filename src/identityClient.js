@@ -17,8 +17,15 @@ async function jsonRequest(path, options = {}) {
   try {
     const response = await fetch(`${ACCESS_API}${path}`, { ...options, signal: controller.signal, cache: 'no-store' });
     const data = await response.json();
-    if (!response.ok || data?.success !== true) throw new Error('ACCESS_UNAVAILABLE');
+    if (!response.ok || data?.success !== true) {
+      const error = new Error('ACCESS_UNAVAILABLE');
+      error.code = path === '/auth/me' && [401, 403].includes(response.status) ? 'ACCESS_ACCOUNT_REJECTED' : 'ACCESS_UNAVAILABLE';
+      throw error;
+    }
     return data;
+  } catch (error) {
+    if (error instanceof TypeError) throw Object.assign(new Error('ACCESS_NETWORK'), { code: 'ACCESS_NETWORK' });
+    throw error;
   } finally { clearTimeout(timer); }
 }
 
@@ -83,7 +90,8 @@ export async function googleLogin(email, password, language) {
   } catch (error) {
     if (error.code !== 'auth/multi-factor-auth-required') throw error;
     const pending = sdk.getMultiFactorResolver(auth, error);
-    if (!pending.hints.some(hint => hint.factorId === sdk.TotpMultiFactorGenerator.FACTOR_ID)) throw new Error('TOTP_REQUIRED');
+    if (!pending.hints.some(hint => hint.factorId === sdk.TotpMultiFactorGenerator.FACTOR_ID))
+      throw Object.assign(new Error('TOTP_REQUIRED'), { code: 'TOTP_REQUIRED' });
     resolver = pending;
     return { kind: 'mfa' };
   }

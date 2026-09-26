@@ -80,7 +80,7 @@ test('a pending request is submitted only once and a failure is translated', asy
   expect(mockAuth.login).toHaveBeenCalledTimes(1);
   expect(screen.getByRole('button', { name: 'Signing in…' })).toBeDisabled();
   await act(async () => complete({ success: false, error: 'Ancienne erreur française' }));
-  expect(screen.getByRole('alert')).toHaveTextContent(loginMessages.EN.failed);
+  expect(screen.getByRole('alert')).toHaveTextContent(loginMessages.EN.serviceFailed);
   expect(screen.queryByText('Ancienne erreur française')).not.toBeInTheDocument();
   expect(mockNavigate).not.toHaveBeenCalled();
 });
@@ -170,4 +170,23 @@ test('all languages provide the same message keys and an accurate legal status',
   for (const language of ['EN', 'DE']) expect(Object.keys(loginMessages[language]).sort()).toEqual(Object.keys(loginMessages.FR).sort());
   renderLogin(); expect(screen.getByText('Kirchenackerweg 23, 8050 Zurich, Suisse')).toBeInTheDocument();
   expect(screen.getByText(loginMessages.FR.termsText)).toBeInTheDocument();
+});
+
+test.each(['FR', 'EN', 'DE'])('technical failures and their safe reference remain localized in %s', async language => {
+  localStorage.setItem('language', language); const t = loginMessages[language];
+  mockAuth.login.mockResolvedValue({ success: false, code: 'auth/unauthorized-domain', error: 'private provider details' });
+  renderLogin();
+  fireEvent.change(screen.getByLabelText(t.email), { target: { value: 'synthetic@example.test' } });
+  fireEvent.change(screen.getByLabelText(t.password, { exact: true }), { target: { value: 'synthetic-only-password' } });
+  fireEvent.click(screen.getByRole('button', { name: t.submit }));
+  await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(t.configurationFailed));
+  expect(screen.getByRole('alert')).toHaveTextContent('ACC-CONFIG');
+  expect(screen.getByRole('alert')).not.toHaveTextContent('private provider details');
+});
+
+test('initialization failure is visible before credentials are requested', () => {
+  mockAuth.initializationFailure = { key: 'serviceFailed', reference: 'ACC-INIT' };
+  renderLogin(); expect(screen.getByRole('alert')).toHaveTextContent(loginMessages.FR.serviceFailed);
+  expect(screen.getByRole('alert')).toHaveTextContent('ACC-INIT');
+  expect(mockAuth.login).not.toHaveBeenCalled();
 });

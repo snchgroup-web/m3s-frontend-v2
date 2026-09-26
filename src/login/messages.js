@@ -1,5 +1,12 @@
 export const loginMessages = {
   FR: {
+    reference: 'Référence',
+    networkFailed: 'Le service de connexion est injoignable. Vérifiez la connexion Internet puis réessayez.',
+    credentialsFailed: 'La connexion avec ces identifiants n’a pas été acceptée. Vous pouvez utiliser « Mot de passe oublié ? ».',
+    configurationFailed: 'Un problème de configuration empêche la connexion. Contactez le support M3S ; ne modifiez pas Authenticator.',
+    accountRejected: 'L’accès à M3S n’a pas pu être validé après l’authentification. Contactez le support M3S.',
+    providerChanged: 'La connexion a été mise à jour. Rechargez cette page avant de vous connecter.',
+    serviceFailed: 'Un problème technique empêche la connexion. Réessayez plus tard ou contactez le support M3S.',
     mfa: 'Validation en deux étapes', code: 'Code Authenticator', verify: 'Vérifier', back: 'Revenir à la connexion',
     invalidCode: 'Veuillez saisir un code à six chiffres.', mfaFailed: 'Code refusé ou session expirée. Réessayez ou revenez à la connexion.',
     tooMany: 'Trop de tentatives. Patientez avant de réessayer.', sendRecovery: 'Envoyer le lien de récupération',
@@ -21,6 +28,13 @@ export const loginMessages = {
     address: 'Kirchenackerweg 23, 8050 Zurich, Suisse'
   },
   EN: {
+    reference: 'Reference',
+    networkFailed: 'The sign-in service cannot be reached. Check your Internet connection and try again.',
+    credentialsFailed: 'Sign-in with these credentials was not accepted. You can use “Forgot password?”.',
+    configurationFailed: 'A configuration problem is preventing sign-in. Contact M3S support; do not change Authenticator.',
+    accountRejected: 'M3S access could not be validated after authentication. Contact M3S support.',
+    providerChanged: 'Sign-in has been updated. Reload this page before signing in.',
+    serviceFailed: 'A technical problem is preventing sign-in. Try later or contact M3S support.',
     mfa: 'Two-step verification', code: 'Authenticator code', verify: 'Verify', back: 'Back to sign in',
     invalidCode: 'Please enter a six-digit code.', mfaFailed: 'Code rejected or session expired. Try again or return to sign in.',
     tooMany: 'Too many attempts. Please wait before trying again.', sendRecovery: 'Send recovery link',
@@ -42,6 +56,13 @@ export const loginMessages = {
     address: 'Kirchenackerweg 23, 8050 Zurich, Switzerland'
   },
   DE: {
+    reference: 'Referenz',
+    networkFailed: 'Der Anmeldedienst ist nicht erreichbar. Prüfen Sie die Internetverbindung und versuchen Sie es erneut.',
+    credentialsFailed: 'Die Anmeldung mit diesen Zugangsdaten wurde nicht akzeptiert. Sie können «Passwort vergessen?» verwenden.',
+    configurationFailed: 'Ein Konfigurationsproblem verhindert die Anmeldung. Kontaktieren Sie den M3S-Support; ändern Sie Authenticator nicht.',
+    accountRejected: 'Der M3S-Zugriff konnte nach der Authentifizierung nicht bestätigt werden. Kontaktieren Sie den M3S-Support.',
+    providerChanged: 'Die Anmeldung wurde aktualisiert. Laden Sie diese Seite vor der Anmeldung neu.',
+    serviceFailed: 'Ein technisches Problem verhindert die Anmeldung. Versuchen Sie es später oder kontaktieren Sie den M3S-Support.',
     mfa: 'Bestätigung in zwei Schritten', code: 'Authenticator-Code', verify: 'Bestätigen', back: 'Zurück zur Anmeldung',
     invalidCode: 'Bitte geben Sie einen sechsstelligen Code ein.', mfaFailed: 'Code abgelehnt oder Sitzung abgelaufen. Versuchen Sie es erneut oder kehren Sie zur Anmeldung zurück.',
     tooMany: 'Zu viele Versuche. Bitte warten Sie vor dem nächsten Versuch.', sendRecovery: 'Wiederherstellungslink senden',

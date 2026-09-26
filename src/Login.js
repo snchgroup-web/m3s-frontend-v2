@@ -6,6 +6,7 @@ import { useLanguage } from './LanguageContext';
 import { useTheme } from './ThemeContext';
 import LoginClock from './login/LoginClock';
 import { loginMessages } from './login/messages';
+import { accessFailure } from './login/accessFailure';
 
 export function loginDestination(next) {
   return typeof next === 'string' && next.startsWith('/') && !next.startsWith('//') &&
@@ -16,7 +17,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { login, loginDemo, loading, demoAuthEnabled, demoAccounts = [], isAuthenticated,
-    ready, provider, verifyMfa, cancelMfa, recoverPassword } = useAuth();
+    ready, provider, verifyMfa, cancelMfa, recoverPassword, initializationFailure } = useAuth();
   const { language, setLanguage } = useLanguage();
   const { theme, setTheme } = useTheme();
   const t = loginMessages[language] || loginMessages.FR;
@@ -33,6 +34,7 @@ export default function Login() {
   const [sessionExpired] = useState(() => searchParams.get('session') === 'expired' || localStorage.getItem('session_expired') === 'true');
   const [logoutSuccess] = useState(() => sessionStorage.getItem('logout_success') === 'true');
   const disabled = loading || busy || ready === false;
+  const displayedError = error || initializationFailure;
   const year = new Intl.DateTimeFormat('en', { year: 'numeric', timeZone: 'Europe/Zurich' }).format(new Date());
 
   useEffect(() => {
@@ -50,8 +52,8 @@ export default function Login() {
       try {
         const result = await verifyMfa(code);
         if (result.success) navigate(loginDestination(searchParams.get('next')));
-        else setError({ key: result.code === 'auth/too-many-requests' ? 'tooMany' : 'mfaFailed' });
-      } catch { setError({ key: 'mfaFailed' }); }
+        else setError(result.failure || accessFailure({ code: result.code }, 'mfa'));
+      } catch (failure) { setError(accessFailure(failure, 'mfa')); }
       finally { pending.current = false; setBusy(false); }
       return;
     }
@@ -72,8 +74,8 @@ export default function Login() {
       const result = await login(email.trim(), password, language.toLowerCase());
       if (result.success) navigate(loginDestination(searchParams.get('next')));
       else if (result.mfaRequired) { setMfa(true); setHelpOpen(false); }
-      else setError({ key: result.code === 'auth/too-many-requests' ? 'tooMany' : 'failed' });
-    } catch { setError({ key: 'failed' }); }
+      else setError(result.failure || accessFailure({ code: result.code }));
+    } catch (failure) { setError(accessFailure(failure)); }
     finally { pending.current = false; setBusy(false); }
   }
 
@@ -85,7 +87,7 @@ export default function Login() {
     }
     pending.current = true; setBusy(true); setError(null);
     try { await recoverPassword(email.trim(), language.toLowerCase()); setRecoverySent(true); }
-    catch { setError({ key: 'recoveryFailed' }); }
+    catch (failure) { setError(accessFailure(failure, 'recovery')); }
     finally { pending.current = false; setBusy(false); }
   }
 
@@ -119,9 +121,10 @@ export default function Login() {
     <LoginClock language={language}/>
     <main className="access-login-main">
       <h1>{mfa ? t.mfa : t.login}</h1>
-      {error && <p id="login-error" className="access-login-alert" role="alert"><AlertCircle size={20} aria-hidden="true"/>{t[error.key]}</p>}
-      {!error && logoutSuccess && <p className="access-login-notice" role="status"><CheckCircle2 size={20} aria-hidden="true"/>{t.loggedOut}</p>}
-      {!error && sessionExpired && !logoutSuccess && <p className="access-login-alert" role="status"><AlertCircle size={20} aria-hidden="true"/>{t.expired}</p>}
+      {displayedError && <p id="login-error" className="access-login-alert" role="alert"><AlertCircle size={20} aria-hidden="true"/>
+        <span>{t[displayedError.key]}{displayedError.reference && <small style={{ display: 'block', marginTop: 6 }}>{t.reference} : {displayedError.reference}</small>}</span></p>}
+      {!displayedError && logoutSuccess && <p className="access-login-notice" role="status"><CheckCircle2 size={20} aria-hidden="true"/>{t.loggedOut}</p>}
+      {!displayedError && sessionExpired && !logoutSuccess && <p className="access-login-alert" role="status"><AlertCircle size={20} aria-hidden="true"/>{t.expired}</p>}
       <form noValidate onSubmit={submit}>
         <fieldset disabled={disabled}>
           {mfa ? <>
