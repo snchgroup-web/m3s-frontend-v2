@@ -122,6 +122,11 @@ const createApiError = async (response, fallbackCode = 'API_REQUEST_FAILED') => 
 // ============================================================================
 
 export const api = {
+  getOwnProfile: async ({ signal } = {}) => {
+    const res = await apiFetch(`${API_BASE_URL}/auth/profile`, { signal, cache: 'no-store' });
+    if (!res.ok) throw await createApiError(res, 'PROFILE_UNAVAILABLE');
+    return res.json();
+  },
   getBudgetCapabilities: () => budgetFetch('/capabilities'),
   listBudgetDrafts: (offset = 0) => budgetFetch(`?limit=20&offset=${encodeURIComponent(offset)}`),
   getBudgetDraft: id => budgetFetch(`/${encodeURIComponent(id)}`),

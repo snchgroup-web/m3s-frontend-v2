@@ -35,6 +35,7 @@ const Header = ({ onOpenMenu }) => {
   const [languageLoading, setLanguageLoading] = useState(false);
   const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState(false);
   const [profileImageFailed, setProfileImageFailed] = useState(false);
+  const [linkedPhoto, setLinkedPhoto] = useState(null);
   const settingsRef = useRef(null);
   const settingsButtonRef = useRef(null);
   const logoutButtonRef = useRef(null);
@@ -48,7 +49,8 @@ const Header = ({ onOpenMenu }) => {
     EN: 'Diagnostics',
     DE: 'Diagnostik'
   };
-  const title = moduleId === 'diagnostics'
+  const accountTitle = { FR: 'Mon compte', EN: 'My account', DE: 'Mein Konto' }[language] || 'Mon compte';
+  const title = location.pathname === '/account' ? accountTitle : moduleId === 'diagnostics'
     ? diagnosticTitle[language] || diagnosticTitle.FR
     : moduleItem.label?.[language] || moduleItem.label?.FR;
   const childTitle = activeMenu.child?.label?.[language] || activeMenu.child?.label?.FR || '';
@@ -101,7 +103,15 @@ const Header = ({ onOpenMenu }) => {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [logoutConfirmationOpen]);
 
-  const profileImage = user?.avatar_url || user?.photo_url || user?.picture || null;
+  useEffect(() => {
+    const controller = new AbortController();
+    setLinkedPhoto(null);
+    api.getOwnProfile({ signal: controller.signal }).then(result => {
+      if (!controller.signal.aborted && result?.success === true) setLinkedPhoto(result.profile?.photo || null);
+    }).catch(() => {});
+    return () => controller.abort();
+  }, [user?.email]);
+  const profileImage = linkedPhoto || user?.avatar_url || user?.photo_url || user?.picture || null;
 
   useEffect(() => {
     setProfileImageFailed(false);
@@ -274,7 +284,7 @@ const Header = ({ onOpenMenu }) => {
           <button ref={logoutButtonRef} type="button" onClick={requestLogout} className="icon-button text-red-400" title={t.logout} aria-label={t.logout}>
             <LogOut size={19} />
           </button>
-          <div className="hidden md:flex items-center gap-2 border-l border-slate-700 pl-3 ml-1">
+          <button type="button" onClick={() => navigate('/account')} title={accountTitle} aria-label={accountTitle} className="flex items-center gap-2 border-l border-slate-700 pl-3 ml-1 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400">
             <div className="w-9 h-9 overflow-hidden rounded-full bg-sky-600 flex items-center justify-center text-white text-sm font-bold">
               {profileImage && !profileImageFailed ? (
                 <img src={profileImage} alt={`${t.profilePhoto} - ${user?.name || 'M3S'}`} className="h-full w-full object-cover" onError={() => setProfileImageFailed(true)} />
@@ -282,8 +292,8 @@ const Header = ({ onOpenMenu }) => {
                 (user?.name || 'M3S').slice(0, 2).toUpperCase()
               )}
             </div>
-            <div className="max-w-32"><p className="text-sm text-white font-semibold truncate">{user?.name || 'Utilisateur M3S'}</p><p className="text-xs text-slate-400 truncate">{user?.role || 'Manager'}</p></div>
-          </div>
+            <span className="hidden md:block max-w-32 text-left"><span className="block text-sm text-white font-semibold truncate">{user?.name || 'Utilisateur M3S'}</span><span className="block text-xs text-slate-400 truncate">{user?.role || 'Manager'}</span></span>
+          </button>
         </div>
       </div>
 

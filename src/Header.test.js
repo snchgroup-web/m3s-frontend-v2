@@ -30,7 +30,7 @@ jest.mock('./AuthContext', () => ({
 
 jest.mock('./api', () => ({
   __esModule: true,
-  default: { getFxHistory: jest.fn() }
+  default: { getFxHistory: jest.fn(), getOwnProfile: jest.fn() }
 }));
 
 beforeEach(() => {
@@ -40,6 +40,13 @@ beforeEach(() => {
   mockUser = { name: 'Cheikh', role: 'Manager' };
   sessionStorage.clear();
   api.getFxHistory.mockReturnValue(new Promise(() => {}));
+  api.getOwnProfile.mockReturnValue(new Promise(() => {}));
+});
+
+test('opens own account from the authenticated profile control', () => {
+  render(<Header/>);
+  fireEvent.click(screen.getByRole('button', { name: 'Mon compte' }));
+  expect(mockNavigate).toHaveBeenCalledWith('/account');
 });
 
 test('groups theme and language choices in one display settings panel', async () => {
