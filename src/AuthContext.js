@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
   const [provider, setProvider] = useState(null);
-  const demoAuthEnabled = DEMO_AUTH_ENABLED;
+  const demoAuthEnabled = DEMO_AUTH_ENABLED && ready && provider === 'legacy';
 
   useEffect(() => {
     let live = true;
@@ -139,7 +139,8 @@ export const AuthProvider = ({ children }) => {
     setError('');
 
     try {
-      const account = demoAuthEnabled ? findDemoAccount(email) : null;
+      const config = await loadIdentityProvider();
+      const account = demoAuthEnabled && config.provider === 'legacy' ? findDemoAccount(email) : null;
       if (!account) {
         const message = 'Compte de démonstration indisponible';
         setError(message);

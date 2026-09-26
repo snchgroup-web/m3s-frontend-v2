@@ -8,7 +8,9 @@ function Consumer() {
   const auth = useAuth();
   return <><span>{auth.ready ? auth.user?.id || 'signed-out' : 'initializing'}</span>
     <button onClick={() => auth.login('synthetic@example.test', 'synthetic-password')}>login</button>
-    <button onClick={() => auth.verifyMfa('123456')}>verify</button><button onClick={auth.logout}>logout</button></>;
+    <button onClick={() => auth.verifyMfa('123456')}>verify</button><button onClick={auth.logout}>logout</button>
+    <button onClick={() => auth.loginDemo('demo@example.test')}>demo</button>
+    <span>{auth.demoAuthEnabled ? 'demo-enabled' : 'demo-disabled'}</span></>;
 }
 beforeEach(() => {
   jest.clearAllMocks(); localStorage.clear();
@@ -45,4 +47,16 @@ test('failed account restoration never leaves an old authenticated user visible'
   await screen.findByText('signed-out');
   expect(screen.queryByText('old-user')).not.toBeInTheDocument();
   expect(identity.signOutIdentity).toHaveBeenCalled();
+});
+test('Google mode disallows demo login and clears context on session expiry', async () => {
+  identity.readGoogleAccount.mockResolvedValue({ token: 'synthetic-token', user: { id: 'pinned-account' } });
+  render(<AuthProvider><Consumer/></AuthProvider>);
+  await screen.findByText('pinned-account');
+  expect(screen.getByText('demo-disabled')).toBeInTheDocument();
+  fireEvent.click(screen.getByText('demo'));
+  await waitFor(() => expect(identity.loadIdentityProvider).toHaveBeenCalledTimes(2));
+  expect(localStorage.getItem('token')).toBeNull();
+  expect(screen.getByText('pinned-account')).toBeInTheDocument();
+  fireEvent(window, new Event('m3s:session-expired'));
+  await screen.findByText('signed-out');
 });
