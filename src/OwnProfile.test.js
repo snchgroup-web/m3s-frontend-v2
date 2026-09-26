@@ -19,6 +19,7 @@ test('reads the linked profile, refreshes and returns to dashboard', async () =>
   expect(await screen.findByText('Synthetic Person')).toBeInTheDocument();
   expect(screen.getByText('fixture@example.test')).toBeInTheDocument();
   expect(screen.getByText('PER-2SG-9001')).toBeInTheDocument();
+  expect(screen.getByText('Synthetic role')).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Actualiser' }));
   await waitFor(() => expect(api.getOwnProfile).toHaveBeenCalledTimes(2));
   fireEvent.click(screen.getByRole('button', { name: 'Retour au tableau de bord' }));
@@ -48,4 +49,18 @@ test('aborts pending reads when leaving the page', () => {
   const { signal } = api.getOwnProfile.mock.calls[0][0];
   unmount();
   expect(signal.aborted).toBe(true);
+});
+
+test.each([['FR', 'Fonction'], ['EN', 'Position'], ['DE', 'Funktion']])('renders the approved compact position in %s without changing the source or account role', async (language, label) => {
+  mockLanguage = language;
+  const position = 'Manager et coordinateur général de 2SG - architecte fonctionnel M3S';
+  const profile = Object.freeze({ ...result.profile, position });
+  api.getOwnProfile.mockResolvedValue({ ...result, profile, account: { ...result.account, role: 'Synthetic access role' } });
+  render(<OwnProfile/>);
+  await screen.findByText('Synthetic Person');
+  expect(screen.getByText(label).parentElement).toHaveTextContent(`${label}Manager`);
+  expect(screen.getByText('Manager')).toHaveAttribute('translate', 'no');
+  expect(screen.queryByText(position)).not.toBeInTheDocument();
+  expect(screen.getByText('Synthetic access role')).toBeInTheDocument();
+  expect(profile.position).toBe(position);
 });
