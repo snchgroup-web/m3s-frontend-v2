@@ -1,193 +1,130 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { AlertCircle, CheckCircle2, Lock, Mail } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Eye, EyeOff, LockKeyhole, LogIn, Mail, Sun, Moon, Eclipse, ArrowLeft } from 'lucide-react';
 import { useAuth } from './AuthContext';
 import { useLanguage } from './LanguageContext';
+import { useTheme } from './ThemeContext';
+import LoginClock from './login/LoginClock';
+import { loginMessages } from './login/messages';
 
-const Login = () => {
+export function loginDestination(next) {
+  return typeof next === 'string' && next.startsWith('/') && !next.startsWith('//') &&
+    !next.includes('\\') && ![...next].some(char => char.charCodeAt(0) < 32) ? next : '/';
+}
+
+export default function Login() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { login, loginDemo, error, loading, demoAuthEnabled, demoAccounts } = useAuth();
-  const { language } = useLanguage();
+  const { login, loginDemo, loading, demoAuthEnabled, demoAccounts = [], isAuthenticated } = useAuth();
+  const { language, setLanguage } = useLanguage();
+  const { theme, setTheme } = useTheme();
+  const t = loginMessages[language] || loginMessages.FR;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [localError, setLocalError] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [error, setError] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const pending = useRef(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const [sessionExpired] = useState(() => searchParams.get('session') === 'expired' || localStorage.getItem('session_expired') === 'true');
   const [logoutSuccess] = useState(() => sessionStorage.getItem('logout_success') === 'true');
-
-  const logoutMessages = {
-    FR: 'Déconnexion effectuée avec succès.',
-    EN: 'You have logged out successfully.',
-    DE: 'Sie wurden erfolgreich abgemeldet.'
-  };
+  const disabled = loading || busy;
+  const year = new Intl.DateTimeFormat('en', { year: 'numeric', timeZone: 'Europe/Zurich' }).format(new Date());
 
   useEffect(() => {
     if (sessionExpired) localStorage.removeItem('session_expired');
-  }, [sessionExpired]);
-
-  useEffect(() => {
     if (logoutSuccess) sessionStorage.removeItem('logout_success');
-  }, [logoutSuccess]);
+  }, [sessionExpired, logoutSuccess]);
 
-  const submitLogin = async (loginEmail, loginPassword) => {
-    const result = await login(loginEmail, loginPassword);
-
-    if (result.success) {
-      const next = searchParams.get('next');
-      navigate(next?.startsWith('/') && !next.startsWith('//') ? next : '/');
-    } else {
-      setLocalError(result.error || 'Erreur de connexion');
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLocalError('');
-
-    if (!email || !password) {
-      setLocalError('Veuillez remplir tous les champs');
+  async function submit(event) {
+    event.preventDefault();
+    if (disabled || pending.current) return;
+    const form = event.currentTarget;
+    const emailInput = form.elements.namedItem('email');
+    const passwordInput = form.elements.namedItem('password');
+    let invalid = null;
+    if (!email.trim()) invalid = { field: 'email', key: 'required' };
+    else if (!emailInput.validity.valid) invalid = { field: 'email', key: 'invalidEmail' };
+    else if (!password) invalid = { field: 'password', key: 'required' };
+    if (invalid) {
+      setError(invalid);
+      (invalid.field === 'email' ? emailInput : passwordInput).focus();
       return;
     }
+    pending.current = true;
+    setBusy(true); setError(null); setVisible(false); setPassword('');
+    try {
+      const result = await login(email.trim(), password);
+      if (result.success) navigate(loginDestination(searchParams.get('next')));
+      else setError({ key: 'failed' });
+    } catch { setError({ key: 'failed' }); }
+    finally { pending.current = false; setBusy(false); }
+  }
 
-    await submitLogin(email, password);
-  };
+  async function demoLogin(account) {
+    if (disabled || pending.current) return;
+    pending.current = true; setBusy(true); setError(null); setPassword(''); setVisible(false);
+    try {
+      const result = await loginDemo(account.email);
+      if (result.success) navigate(loginDestination(searchParams.get('next')));
+      else setError({ key: 'failed' });
+    } catch { setError({ key: 'failed' }); }
+    finally { pending.current = false; setBusy(false); }
+  }
 
-  const demoLogin = async (account) => {
-    setLocalError('');
-    setEmail(account.email);
-    setPassword('');
-    const result = await loginDemo(account.email);
-
-    if (result.success) {
-      const next = searchParams.get('next');
-      navigate(next?.startsWith('/') && !next.startsWith('//') ? next : '/');
-    } else {
-      setLocalError(result.error || 'Erreur de connexion');
-    }
-  };
-
-  return (
-    <div className="login-page min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-white p-2 shadow-xl ring-4 ring-white/10">
-            <img
-              src="/assets/logo-2sg.png"
-              alt="2SG SeneSwiss Group"
-              className="h-full w-full rounded-full object-cover"
-            />
-          </div>
-          <h1 className="text-4xl font-semibold text-white mb-2">M3S v2.0</h1>
-          <p className="text-slate-400">ERP Hybride - SENESWISS GROUP</p>
-        </div>
-
-        <div className="login-panel bg-slate-800 rounded-lg shadow-2xl p-8 border border-slate-700">
-          <h2 className="text-2xl font-semibold text-white mb-6">Connexion</h2>
-
-          {logoutSuccess && !(error || localError) && (
-            <div className="m3s-feedback m3s-feedback--success mb-4 flex items-start gap-3 p-4" role="status">
-              <CheckCircle2 size={20} className="mt-0.5 flex-shrink-0" aria-hidden="true" />
-              <p className="text-sm font-medium">{logoutMessages[language] || logoutMessages.FR}</p>
-            </div>
-          )}
-
-          {sessionExpired && !(error || localError) && (
-            <div className="login-session-alert mb-4 p-4 bg-amber-900/60 border border-amber-700 rounded flex items-start space-x-3">
-              <AlertCircle size={20} className="login-session-alert__icon text-amber-400 flex-shrink-0 mt-0.5" />
-              <p className="login-session-alert__text text-amber-100 text-sm">Votre session a expiré. Reconnectez-vous pour retrouver toutes les données.</p>
-            </div>
-          )}
-
-          {(error || localError) && (
-            <div className="mb-4 p-4 bg-red-900 border border-red-700 rounded flex items-start space-x-3">
-              <AlertCircle size={20} className="text-red-400 flex-shrink-0 mt-0.5" />
-              <p className="text-red-200 text-sm">{error || localError}</p>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
-                Adresse email
-              </label>
-              <div className="relative">
-                <Mail size={18} className="absolute left-3 top-3 text-slate-500" />
-                <input
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  autoCapitalize="none"
-                  autoCorrect="off"
-                  spellCheck="false"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="vous@example.com"
-                  className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 py-2 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
-                Mot de passe
-              </label>
-              <div className="relative">
-                <Lock size={18} className="absolute left-3 top-3 text-slate-500" />
-                <input
-                  type="password"
-                  name="password"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 py-2 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="login-submit mt-6 min-h-11 w-full rounded-md bg-blue-600 px-4 py-2 font-semibold text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {loading ? 'Connexion en cours...' : 'Se connecter'}
-            </button>
-          </form>
-
-          {demoAuthEnabled ? (
-            <div className="mt-6 pt-6 border-t border-slate-700">
-              <p className="text-xs text-slate-400 mb-3 text-center">Comptes de démonstration locaux :</p>
-              <div className="space-y-2">
-                {demoAccounts.map((account) => (
-                  <button
-                    key={account.email}
-                    onClick={() => demoLogin(account)}
-                    disabled={loading}
-                    className="w-full text-left px-3 py-2 text-sm bg-slate-700 hover:bg-slate-600 rounded transition text-slate-300 disabled:opacity-50"
-                  >
-                    <span className="font-medium text-blue-400">{account.name}</span> ({account.role})
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="mt-6 pt-6 border-t border-slate-700">
-              <p className="login-backend-notice text-center text-xs text-amber-300">
-                Connexion backend requise. Le mode démonstration local est désactivé.
-              </p>
-            </div>
-          )}
-        </div>
-
-        <div className="mt-8 text-center text-slate-500 text-xs">
-          <p>{demoAuthEnabled ? 'Mode démonstration local' : 'Accès sécurisé par backend'}</p>
-          <p className="mt-1">
-            API: {process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3001/api' : 'https://web-production-1e53c.up.railway.app/api')}
-          </p>
-        </div>
+  const fieldProps = field => ({ 'aria-invalid': error?.field === field || undefined,
+    'aria-describedby': error?.field === field ? 'login-error' : undefined });
+  const visibilityLabel = visible ? t.hidePassword : t.showPassword;
+  const VisibilityIcon = visible ? EyeOff : Eye;
+  return <div className="access-login" lang={{ FR: 'fr', DE: 'de', EN: 'en' }[language] || 'fr'}>
+    <header className="access-login-header">
+      <div className="access-login-brand"><img src="/assets/logo-2sg.png" alt="2SG SeneSwiss Group"/>
+        <div><strong>{t.title}</strong><span>SENESWISS GROUP</span></div></div>
+      <div className="access-login-preferences">
+        <select aria-label={t.language} value={loginMessages[language] ? language : 'FR'} onChange={e => setLanguage(e.target.value)}>
+          <option value="FR">FR</option><option value="EN">EN</option><option value="DE">DE</option>
+        </select>
+        <div role="group" aria-label={t.theme}>{[['light', Sun], ['standard', Moon], ['deep', Eclipse]].map(([key, Icon]) =>
+          <button type="button" key={key} title={t[key]} aria-label={t[key]} aria-pressed={theme === key} onClick={() => setTheme(key)}><Icon size={19} aria-hidden="true"/></button>)}</div>
       </div>
-    </div>
-  );
-};
-
-export default Login;
+    </header>
+    <LoginClock language={language}/>
+    <main className="access-login-main">
+      <h1>{t.login}</h1>
+      {error && <p id="login-error" className="access-login-alert" role="alert"><AlertCircle size={20} aria-hidden="true"/>{t[error.key]}</p>}
+      {!error && logoutSuccess && <p className="access-login-notice" role="status"><CheckCircle2 size={20} aria-hidden="true"/>{t.loggedOut}</p>}
+      {!error && sessionExpired && !logoutSuccess && <p className="access-login-alert" role="status"><AlertCircle size={20} aria-hidden="true"/>{t.expired}</p>}
+      <form noValidate onSubmit={submit}>
+        <fieldset disabled={disabled}>
+          <label htmlFor="login-email">{t.email}</label>
+          <div className="access-login-field"><Mail size={20} aria-hidden="true"/>
+            <input id="login-email" name="email" type="email" autoComplete="username" autoCapitalize="none" autoCorrect="off" spellCheck="false" required maxLength={254}
+              value={email} onChange={e => { setEmail(e.target.value); setError(null); }} {...fieldProps('email')}/></div>
+          <label htmlFor="login-password">{t.password}</label>
+          <div className="access-login-field access-login-password" onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setVisible(false); }}>
+            <LockKeyhole size={20} aria-hidden="true"/>
+            <input id="login-password" name="password" type={visible ? 'text' : 'password'} autoComplete="current-password" required
+              value={password} onChange={e => { setPassword(e.target.value); setError(null); }} {...fieldProps('password')}/>
+            <button type="button" className="access-login-eye" title={visibilityLabel} aria-label={visibilityLabel} aria-controls="login-password" aria-pressed={visible} onClick={() => setVisible(value => !value)}><VisibilityIcon size={21} aria-hidden="true"/></button>
+          </div>
+          <button type="submit" className="access-login-submit"><LogIn size={20} aria-hidden="true"/>{disabled ? t.wait : t.submit}</button>
+        </fieldset>
+      </form>
+      <button type="button" className="access-login-link" aria-expanded={helpOpen} aria-controls="login-recovery-help" onClick={() => setHelpOpen(value => !value)}>{t.forgot}</button>
+      {helpOpen && <section id="login-recovery-help" className="access-login-help" aria-labelledby="login-recovery-title">
+        <h2 id="login-recovery-title">{t.recovery}</h2><p>{t.recoveryPending}</p><p>{t.keepPrivate}</p>
+      </section>}
+      {isAuthenticated && <button type="button" className="access-login-link access-login-return" onClick={() => navigate('/account')}><ArrowLeft size={17} aria-hidden="true"/>{t.account}</button>}
+      {demoAuthEnabled && <section className="access-login-demo"><h2>{t.demo}</h2>{demoAccounts.map(account =>
+        <button type="button" key={account.email} disabled={disabled} onClick={() => demoLogin(account)}>{account.name} ({account.role})</button>)}</section>}
+    </main>
+    <footer className="access-login-footer">
+      <div className="access-login-legal">
+        {[['legal', t.legalText], ['privacy', t.privacyText], ['terms', t.termsText]].map(([key, text]) =>
+          <details key={key}><summary>{t[key]}</summary><p>{text}</p></details>)}
+      </div>
+      <p>M3S ERP v2.0 · © {year} SENESWISS GROUP</p>
+      <address>{t.address}</address>
+    </footer>
+  </div>;
+}

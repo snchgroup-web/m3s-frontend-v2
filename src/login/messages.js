@@ -1,0 +1,53 @@
+export const loginMessages = {
+  FR: {
+    title: 'Accès M3S', login: 'Connexion', email: 'Adresse e-mail', password: 'Mot de passe', submit: 'Se connecter', wait: 'Connexion en cours…',
+    language: 'Langue', theme: 'Thème', light: 'Clair', standard: 'Standard', deep: 'Sombre profond',
+    showPassword: 'Afficher le mot de passe', hidePassword: 'Masquer le mot de passe',
+    required: 'Veuillez remplir ce champ.', invalidEmail: 'Veuillez saisir une adresse e-mail valide.',
+    failed: 'Connexion refusée. Vérifiez vos identifiants ou réessayez.',
+    expired: 'Votre session a expiré. Reconnectez-vous.', loggedOut: 'Déconnexion effectuée avec succès.',
+    forgot: 'Mot de passe oublié ?', recovery: 'Assistance à la connexion',
+    recoveryPending: 'La récupération automatique du mot de passe et Authenticator ne sont pas encore raccordés à ce site. Aucun e-mail de récupération n’est envoyé depuis cette page. Contactez le responsable de votre accès M3S pour une assistance vérifiée.',
+    keepPrivate: 'Ne transmettez jamais votre mot de passe, un code Authenticator ou un lien de récupération.',
+    account: 'Revenir à Mon compte', demo: 'Comptes de démonstration locaux',
+    localTimes: 'Heures locales', zurich: 'Zurich', legal: 'Mentions légales', privacy: 'Confidentialité', terms: 'Conditions d’utilisation',
+    legalText: 'SENESWISS GROUP · M3S. Adresse institutionnelle : Kirchenackerweg 23, 8050 Zurich, Suisse. Les mentions légales complètes restent à valider et à publier sur ce portail.',
+    privacyText: 'Le texte de référence de la politique de confidentialité reste à valider et à publier sur ce portail.',
+    termsText: 'Les conditions d’utilisation restent à valider et à publier sur ce portail. Aucun consentement à un texte non finalisé n’est demandé ici.',
+    address: 'Kirchenackerweg 23, 8050 Zurich, Suisse'
+  },
+  EN: {
+    title: 'M3S Access', login: 'Sign in', email: 'Email address', password: 'Password', submit: 'Sign in', wait: 'Signing in…',
+    language: 'Language', theme: 'Theme', light: 'Light', standard: 'Standard', deep: 'Deep dark',
+    showPassword: 'Show password', hidePassword: 'Hide password',
+    required: 'Please complete this field.', invalidEmail: 'Please enter a valid email address.',
+    failed: 'Sign-in failed. Check your credentials or try again.',
+    expired: 'Your session has expired. Please sign in again.', loggedOut: 'You have logged out successfully.',
+    forgot: 'Forgot password?', recovery: 'Sign-in assistance',
+    recoveryPending: 'Automatic password recovery and Authenticator are not yet connected to this site. This page does not send recovery emails. Contact the person responsible for your M3S access for verified assistance.',
+    keepPrivate: 'Never share your password, an Authenticator code or a recovery link.',
+    account: 'Back to my account', demo: 'Local demonstration accounts',
+    localTimes: 'Local times', zurich: 'Zurich', legal: 'Legal notice', privacy: 'Privacy', terms: 'Terms of use',
+    legalText: 'SENESWISS GROUP · M3S. Institutional address: Kirchenackerweg 23, 8050 Zurich, Switzerland. The complete legal notice still requires approval and publication on this portal.',
+    privacyText: 'The reference privacy policy still requires approval and publication on this portal.',
+    termsText: 'The terms of use still require approval and publication on this portal. No consent to an unfinished text is requested here.',
+    address: 'Kirchenackerweg 23, 8050 Zurich, Switzerland'
+  },
+  DE: {
+    title: 'M3S Zugang', login: 'Anmeldung', email: 'E-Mail Adresse', password: 'Passwort', submit: 'Anmelden', wait: 'Anmeldung läuft…',
+    language: 'Sprache', theme: 'Design', light: 'Hell', standard: 'Standard', deep: 'Tiefdunkel',
+    showPassword: 'Passwort anzeigen', hidePassword: 'Passwort verbergen',
+    required: 'Bitte füllen Sie dieses Feld aus.', invalidEmail: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.',
+    failed: 'Anmeldung fehlgeschlagen. Prüfen Sie Ihre Zugangsdaten oder versuchen Sie es erneut.',
+    expired: 'Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.', loggedOut: 'Sie wurden erfolgreich abgemeldet.',
+    forgot: 'Passwort vergessen?', recovery: 'Hilfe bei der Anmeldung',
+    recoveryPending: 'Die automatische Passwortwiederherstellung und Authenticator sind noch nicht mit dieser Website verbunden. Diese Seite versendet keine Wiederherstellungs-E-Mails. Wenden Sie sich für eine geprüfte Unterstützung an die zuständige Person für Ihren M3S-Zugang.',
+    keepPrivate: 'Geben Sie niemals Ihr Passwort, einen Authenticator-Code oder einen Wiederherstellungslink weiter.',
+    account: 'Zurück zu meinem Konto', demo: 'Lokale Demonstrationskonten',
+    localTimes: 'Ortszeiten', zurich: 'Zürich', legal: 'Impressum', privacy: 'Datenschutz', terms: 'Nutzungsbedingungen',
+    legalText: 'SENESWISS GROUP · M3S. Institutionelle Adresse: Kirchenackerweg 23, 8050 Zürich, Schweiz. Das vollständige Impressum muss noch bestätigt und auf diesem Portal veröffentlicht werden.',
+    privacyText: 'Die massgebliche Datenschutzerklärung muss noch bestätigt und auf diesem Portal veröffentlicht werden.',
+    termsText: 'Die Nutzungsbedingungen müssen noch bestätigt und auf diesem Portal veröffentlicht werden. Eine Zustimmung zu einem unfertigen Text wird hier nicht verlangt.',
+    address: 'Kirchenackerweg 23, 8050 Zürich, Schweiz'
+  }
+};
