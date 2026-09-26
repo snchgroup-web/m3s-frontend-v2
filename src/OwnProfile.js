@@ -53,6 +53,9 @@ export default function OwnProfile() {
   }, [revision, user?.email]);
   const field = (label, value) => <div className="own-profile-field" key={label}><dt>{label}</dt><dd>{value || t.missing}</dd></div>;
   const data = state.data;
+  // Compact display only; the approved institutional source stays unchanged.
+  const position = data?.profile.position;
+  const positionLabel = position === 'Manager et coordinateur général de 2SG - architecte fonctionnel M3S' ? 'Manager' : position;
   return <article className="own-profile">
     <div className="own-profile-actions">
       <button className="m3s-secondary-button" onClick={() => navigate('/')}><ArrowLeft size={17} aria-hidden="true"/>{t.back}</button>
@@ -69,7 +72,7 @@ export default function OwnProfile() {
       <section aria-labelledby="own-profile-person"><h3 id="own-profile-person">{t.profile}</h3><dl>
         {field(t.name, data.profile.displayName)}{field(t.id, data.profile.personId)}
         {field(t.team, data.profile.team)}{field(t.type, data.profile.memberType === 'Fondateur' ? t.founder : data.profile.memberType === 'Associe' ? t.associate : data.profile.memberType)}
-        {field(t.position, data.profile.position)}
+        {field(t.position, positionLabel === 'Manager' ? <span translate="no">Manager</span> : positionLabel)}
       </dl></section>
       <footer>{t.source} : {data.source.id} · {t.approved} : <time dateTime={data.source.approvedOn}>{new Intl.DateTimeFormat({ FR: 'fr-CH', EN: 'en-GB', DE: 'de-CH' }[language] || 'fr-CH', { timeZone: 'UTC' }).format(new Date(`${data.source.approvedOn}T00:00:00Z`))}</time></footer>
     </>}
