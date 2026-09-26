@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { DEMO_ACCOUNTS, findDemoAccount } from './demoAuth';
+import { accessFailure } from './login/accessFailure';
 import { loadIdentityProvider, googleLogin, verifyGoogleMfa, readGoogleAccount,
   recoverGooglePassword, signOutIdentity } from './identityClient';
 
@@ -60,6 +61,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
   const [provider, setProvider] = useState(null);
+  const [initializationFailure, setInitializationFailure] = useState(null);
   const demoAuthEnabled = DEMO_AUTH_ENABLED && ready && provider === 'legacy';
 
   useEffect(() => {
@@ -73,8 +75,8 @@ export const AuthProvider = ({ children }) => {
         const restored = await readGoogleAccount();
         if (live && restored) { setToken(restored.token); setUser(restored.user); }
       }
-    }).catch(() => {
-      if (live) { setToken(null); setUser(null); setError('ACCESS_UNAVAILABLE'); }
+    }).catch(failure => {
+      if (live) { setToken(null); setUser(null); setError('ACCESS_UNAVAILABLE'); setInitializationFailure(accessFailure(failure, 'initialize')); }
       signOutIdentity().catch(() => {});
     }).finally(() => { if (live) setReady(true); });
     return () => { live = false; };
@@ -93,6 +95,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password, language = 'fr') => {
     setLoading(true);
     setError('');
+    setInitializationFailure(null);
 
     try {
       const config = await loadIdentityProvider();
@@ -113,9 +116,10 @@ export const AuthProvider = ({ children }) => {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        const message = result.error || 'Email ou mot de passe incorrect';
+        const message = 'ACCESS_REJECTED';
         setError(message);
-        return { success: false, error: message };
+        return { success: false, error: message, failure: accessFailure({ code: response.status === 409 ? 'ACCESS_PROVIDER_CHANGED' :
+          response.status === 401 ? 'auth/invalid-credential' : 'ACCESS_UNAVAILABLE' }) };
       }
 
       setToken(result.token);
@@ -128,7 +132,7 @@ export const AuthProvider = ({ children }) => {
       if (provider === 'google') await signOutIdentity().catch(() => {});
       const message = 'Erreur de connexion';
       setError(message);
-      return { success: false, error: message, code: failure.code };
+      return { success: false, error: message, code: failure.code, failure: accessFailure(failure) };
     } finally {
       setLoading(false);
     }
@@ -188,7 +192,7 @@ export const AuthProvider = ({ children }) => {
       if (!session) throw new Error('NO_SESSION');
       setToken(session.token); setUser(session.user);
       return { success: true };
-    } catch (failure) { return { success: false, code: failure.code }; }
+    } catch (failure) { return { success: false, code: failure.code, failure: accessFailure(failure, 'mfa') }; }
     finally { setLoading(false); }
   };
 
@@ -205,6 +209,7 @@ export const AuthProvider = ({ children }) => {
       loading,
       ready,
       provider,
+      initializationFailure,
       verifyMfa,
       cancelMfa: () => signOutIdentity(),
       recoverPassword: recoverGooglePassword,

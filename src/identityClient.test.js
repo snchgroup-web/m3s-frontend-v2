@@ -77,3 +77,17 @@ test('unsupported factors and recovery errors are handled without account disclo
   mockSdk.recover.mockRejectedValue({ code: 'auth/too-many-requests' });
   await expect(client.recoverGooglePassword('synthetic@example.test', 'fr')).rejects.toMatchObject({ code: 'auth/too-many-requests' });
 });
+
+test('a failed provider fetch is classified as network and can be retried', async () => {
+  fetch.mockRejectedValueOnce(new TypeError('Failed to fetch'));
+  await expect(client.loadIdentityProvider()).rejects.toMatchObject({ code: 'ACCESS_NETWORK' });
+  await expect(client.loadIdentityProvider()).resolves.toEqual(config);
+  expect(mockSdk.login).not.toHaveBeenCalled();
+});
+
+test.each([401, 403])('account HTTP %s is distinguished from a credential failure without copying response data', async status => {
+  await client.loadIdentityProvider();
+  mockAuth.currentUser = { getIdToken: jest.fn().mockResolvedValue('synthetic-token') };
+  fetch.mockResolvedValue({ ok: false, status, json: async () => ({ success: false, error: 'private-response' }) });
+  await expect(client.readGoogleAccount()).rejects.toMatchObject({ code: 'ACCESS_ACCOUNT_REJECTED', message: 'ACCESS_UNAVAILABLE' });
+});

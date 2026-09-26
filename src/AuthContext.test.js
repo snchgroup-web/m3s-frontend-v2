@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { AuthProvider, useAuth } from './AuthContext';
 import * as identity from './identityClient';
 jest.mock('./identityClient', () => ({ loadIdentityProvider: jest.fn(), googleLogin: jest.fn(), verifyGoogleMfa: jest.fn(),
@@ -59,4 +59,21 @@ test('Google mode disallows demo login and clears context on session expiry', as
   expect(screen.getByText('pinned-account')).toBeInTheDocument();
   fireEvent(window, new Event('m3s:session-expired'));
   await screen.findByText('signed-out');
+});
+
+test.each([[401, 'ACC-CREDENTIALS'], [409, 'ACC-RELOAD'], [500, 'ACC-SERVICE']])('legacy HTTP %s never exposes the raw backend message', async (status, reference) => {
+  const originalFetch = global.fetch;
+  identity.loadIdentityProvider.mockResolvedValue({ provider: 'legacy' });
+  global.fetch = jest.fn().mockResolvedValue({ ok: false, status,
+    json: async () => ({ success: false, error: 'private-backend-details' }) });
+  let auth, result;
+  function Probe() { auth = useAuth(); return <Consumer/>; }
+  try {
+    render(<AuthProvider><Probe/></AuthProvider>);
+    await screen.findByText('signed-out');
+    await act(async () => { result = await auth.login('synthetic@example.test', 'synthetic-only-password'); });
+    expect(auth.error).toBe('ACCESS_REJECTED');
+    expect(result).toMatchObject({ success: false, error: 'ACCESS_REJECTED', failure: { reference } });
+    expect(JSON.stringify(result)).not.toContain('private-backend-details');
+  } finally { global.fetch = originalFetch; }
 });
