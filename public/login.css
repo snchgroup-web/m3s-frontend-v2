@@ -1,0 +1,57 @@
+.access-login { min-height:100vh; display:flex; flex-direction:column; color:var(--m3s-text-primary); background:var(--m3s-surface-page); font:16px/1.5 var(--m3s-font-ui); letter-spacing:0; }
+.access-login * { box-sizing:border-box; letter-spacing:0; }
+.access-login button,.access-login input,.access-login select { font:inherit; }
+.access-login button,.access-login summary,.access-login select { cursor:pointer; }
+.access-login button:disabled { cursor:wait; opacity:.6; }
+.access-login :focus-visible { outline:3px solid var(--m3s-focus); outline-offset:3px; }
+.access-login-header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px 32px; border-bottom:1px solid var(--m3s-border); background:var(--m3s-surface-panel); }
+.access-login-brand { display:flex; align-items:center; gap:14px; min-width:0; }
+.access-login-brand img { width:72px; height:72px; flex-shrink:0; object-fit:contain; border-radius:50%; background:white; }
+.access-login-brand strong { display:block; font-size:23px; font-weight:650; }
+.access-login-brand span { display:block; font-size:12px; color:var(--m3s-text-secondary); }
+.access-login-preferences,.access-login-preferences>div { display:flex; gap:6px; align-items:center; }
+.access-login-preferences button { width:42px; height:42px; display:grid; place-items:center; border:1px solid transparent; border-radius:5px; background:transparent; color:var(--m3s-text-secondary); }
+.access-login-preferences button[aria-pressed="true"] { border-color:var(--m3s-border-strong); color:var(--m3s-status-info); background:var(--m3s-surface-raised); }
+.access-login-preferences select { min-height:42px; border:1px solid var(--m3s-border-strong); border-radius:5px; padding:4px 8px; background:var(--m3s-surface-panel); color:var(--m3s-text-primary); }
+.access-login-clock { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:6px 24px; padding:11px 20px; border-bottom:1px solid var(--m3s-border); color:var(--m3s-text-secondary); font-size:12px; }
+.access-login-clock>time,.access-login-clock>span { display:flex; align-items:center; gap:7px; }
+.access-login-clock span time { font-weight:650; font-variant-numeric:tabular-nums; min-width:5ch; color:var(--m3s-status-success); }
+.access-login-clock small { font-size:inherit; }
+.access-login-main { width:min(100% - 40px,480px); margin:36px auto 28px; flex:1 0 auto; }
+.access-login h1 { margin:0 0 24px; font-size:30px; line-height:1.25; font-weight:650; }
+.access-login h2 { margin:0 0 10px; font-size:17px; font-weight:600; }
+.access-login fieldset { border:0; padding:0; margin:0; min-width:0; }
+.access-login label { display:block; font-size:15px; font-weight:600; margin:0 0 8px; }
+.access-login-field { position:relative; margin-bottom:22px; }
+.access-login-field>svg { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--m3s-text-secondary); pointer-events:none; }
+.access-login-field input { width:100%; min-height:52px; padding:12px 14px 12px 45px; border:1px solid var(--m3s-border-strong); border-radius:5px; background:var(--m3s-surface-panel); color:var(--m3s-text-primary); }
+.access-login-password input { padding-right:55px; }
+.access-login-eye { display:grid; place-items:center; position:absolute; top:4px; right:4px; width:44px; height:44px; padding:0; background:transparent; color:var(--m3s-text-secondary); border:0; border-radius:4px; }
+.access-login-submit { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; min-height:50px; background:#2458ba; color:#fff; border:0; border-radius:5px; padding:10px 18px; font-weight:650!important; }
+.access-login-submit:hover:not(:disabled) { background:#1d4695; }
+.access-login-link { display:inline-flex; align-items:center; gap:7px; min-height:44px; padding:8px 0; margin-top:8px; color:var(--m3s-status-info); background:transparent; border:0; text-align:left; font-size:14px!important; }
+.access-login-return { display:flex; }
+.access-login-alert,.access-login-notice { display:flex; align-items:flex-start; gap:10px; border-left:3px solid; padding:12px 14px; margin:0 0 20px; font-size:14px; background:var(--m3s-surface-panel); }
+.access-login-alert { color:var(--m3s-status-danger); }
+.access-login-notice { color:var(--m3s-status-success); }
+.access-login-alert svg,.access-login-notice svg { flex-shrink:0; margin-top:1px; }
+.access-login-help,.access-login-demo { margin-top:16px; padding-top:16px; border-top:1px solid var(--m3s-border); }
+.access-login-help p { color:var(--m3s-text-secondary); font-size:14px; margin:0 0 10px; }
+.access-login-demo button { display:block; width:100%; min-height:44px; margin-top:8px; padding:8px 12px; background:var(--m3s-surface-panel); color:var(--m3s-text-primary); border:1px solid var(--m3s-border); border-radius:4px; }
+.access-login-footer { width:min(100% - 40px,640px); margin:0 auto; padding:16px 0 22px; border-top:1px solid var(--m3s-border); color:var(--m3s-text-secondary); text-align:center; font-size:12px; }
+.access-login-legal { display:flex; align-items:flex-start; flex-wrap:wrap; justify-content:center; gap:0 22px; margin-bottom:12px; }
+.access-login-legal details { max-width:100%; }
+.access-login-legal details[open] { flex-basis:100%; }
+.access-login-legal summary { min-height:40px; padding:10px 0; color:var(--m3s-status-info); }
+.access-login-legal p { text-align:left; margin:0 auto 12px; max-width:480px; }
+.access-login-footer p { margin-top:0; margin-bottom:4px; }
+.access-login-footer address { font-style:normal; overflow-wrap:anywhere; }
+@media(max-width:560px) {
+  .access-login-header { padding:14px 20px; flex-wrap:wrap; gap:12px; }
+  .access-login-brand img { width:64px; height:64px; }
+  .access-login-brand strong { font-size:21px; }
+  .access-login-preferences { margin-left:auto; }
+  .access-login-main { margin-top:26px; }
+  .access-login h1 { font-size:27px; }
+  .access-login-clock { gap:6px 18px; }
+}
