@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }) => {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        const message = result.error || 'Email ou mot de passe incorrect';
+        const message = 'ACCESS_REJECTED';
         setError(message);
         return { success: false, error: message, failure: accessFailure({ code: response.status === 409 ? 'ACCESS_PROVIDER_CHANGED' :
           response.status === 401 ? 'auth/invalid-credential' : 'ACCESS_UNAVAILABLE' }) };
