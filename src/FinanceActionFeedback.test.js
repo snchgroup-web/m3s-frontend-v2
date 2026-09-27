@@ -115,9 +115,12 @@ test('edits a versioned expense while preserving source amounts', async () => {
   await act(async () => {});
   fireEvent.click(screen.getByRole('button', { name: 'Modifier : DEP-SYNTH' }));
   expect(screen.getByLabelText('Total payé *')).toHaveValue(12.34);
+  expect(screen.queryByRole('cell', { name: 'Conception', exact: true })).not.toBeInTheDocument();
+  expect(screen.queryByRole('cell', { name: 'Operationnel', exact: true })).not.toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
   fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
   await waitFor(() => expect(api.updateExpense).toHaveBeenCalledWith('DEP-SYNTH', expect.objectContaining({ amount_contract_version: 2, source_amounts: expect.objectContaining({ original_currency: 'USD', total_paid: 12.34, fees: null }) })));
+  expect(api.updateExpense.mock.calls[0][1]).toEqual(expect.objectContaining({ categorie: '', phase_projet: '' }));
 });
 
 test('requires confirmation before creating a revenue entry and then reports success', async () => {
