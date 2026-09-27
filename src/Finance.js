@@ -26,6 +26,7 @@ import ActionConfirmationDialog from './ActionConfirmationDialog';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
 import FunctionAssistant from './FunctionAssistant';
 import PrivateGedDocuments from './PrivateGedDocuments';
+import { Files } from 'lucide-react';
 import {
   buildTeamAgentDirectory,
   findAgentTeam,
@@ -880,6 +881,7 @@ const Finance = () => {
       id: item.id || item.source_id || `${type}-${String(index + 1).padStart(4, '0')}`,
       ref: item.ref || item.reference || item.numero_ref || item.source_ref || item.source_id || `${type}-${String(index + 1).padStart(4, '0')}`,
       description: item.description || item.name || 'Transaction',
+      fournisseur: item.fournisseur || '',
       montant: montantChf,
       montantOrigine,
       devise: deviseOrigine,
@@ -2244,8 +2246,11 @@ const Finance = () => {
 
         {activeTab === 'depenses' && (
           <div id="finance-expense-register" className="scroll-mt-24" tabIndex="-1">
-            <div id="finance-documents" className="own-profile scroll-mt-24" tabIndex="-1"><PrivateGedDocuments scope="finance"/></div>
-            <div className="flex justify-end mb-4">
+            <div className="flex flex-wrap items-center justify-end gap-3 mb-4">
+              <button type="button" onClick={() => selectFinanceTab('resources')} className="flex items-center gap-2 min-h-11 px-3 py-2 text-sm text-blue-400 hover:text-blue-300">
+                <Files size={18} aria-hidden="true" />
+                {language === 'DE' ? 'Finanzdokumente' : language === 'EN' ? 'Financial documents' : 'Documents financiers'}
+              </button>
               <StandardCreateButton onClick={() => openNewModal('depense')}>{t.nouvelleDepense}</StandardCreateButton>
             </div>
             {renderFxQualityNotice(depensesAffichees)}
@@ -2266,7 +2271,8 @@ const Finance = () => {
                       <th className="px-4 py-3 text-left text-white font-bold">{t.team}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.departement}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.phaseProjet}</th>
-                      <th className="px-6 py-3 text-left text-white font-bold">{t.actions}</th>
+                      <th className="px-4 py-3 text-left text-white font-bold">{language === 'DE' ? 'Lieferant' : language === 'EN' ? 'Supplier' : 'Fournisseur'}</th>
+                      <th className="sticky right-0 z-20 bg-slate-700 px-6 py-3 text-left text-white font-bold">{t.actions}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -2291,14 +2297,15 @@ const Finance = () => {
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.team)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.departement)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.phaseProjet)}</td>
-                        <td className="px-6 py-3 flex gap-2">
+                        <td className="px-4 py-3 text-slate-400">{formatCell(d.fournisseur)}</td>
+                        <td className="sticky right-0 bg-slate-800 px-6 py-3"><div className="flex gap-2">
                           <button type="button" title={t.modifier} aria-label={`${t.modifier} : ${d.ref}`} onClick={(event) => { event.stopPropagation(); handleEdit('depense', d); }} className="m3s-icon-button hover:bg-slate-600">
                             <Edit2 size={18} className="text-blue-400" />
                           </button>
                           <button type="button" title={t.supprimer} aria-label={`${t.supprimer} : ${d.ref}`} onClick={(event) => { event.stopPropagation(); handleDelete('depense', d.id, d.description); }} className="m3s-icon-button hover:bg-slate-600">
                             <Trash2 size={18} className="text-red-400" />
                           </button>
-                        </td>
+                        </div></td>
                       </tr>
                     ))}
                   </tbody>
@@ -2828,7 +2835,10 @@ const Finance = () => {
           </div>
         )}
 
-        {activeTab === 'resources' && <FunctionResourcesOverview moduleId="finances" language={language} onSelectTab={selectFinanceTab} />}
+        {activeTab === 'resources' && <>
+          <div id="finance-documents" className="own-profile scroll-mt-24" tabIndex="-1"><PrivateGedDocuments scope="finance"/></div>
+          <FunctionResourcesOverview moduleId="finances" language={language} onSelectTab={selectFinanceTab} />
+        </>}
 
         {activeTab === 'assistant' && <FunctionAssistant moduleId="finances" language={language} />}
 
@@ -2995,6 +3005,10 @@ const Finance = () => {
                   onChange={(e) => handleFormChange('description', e.target.value)}
                   className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400"
                 />
+                {modalType === 'depense' && <label className="block text-sm text-slate-300">
+                  {language === 'DE' ? 'Lieferant' : language === 'EN' ? 'Supplier' : 'Fournisseur'}
+                  <input type="text" value={formData.fournisseur || ''} onChange={(e) => handleFormChange('fournisseur', e.target.value)} className="mt-1 w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" />
+                </label>}
                 <input
                   type="number"
                   step="any"
