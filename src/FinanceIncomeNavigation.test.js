@@ -50,9 +50,27 @@ beforeEach(() => {
   ]);
 });
 
-test('expense view exposes only owner-scoped financial documents', async () => {
-  mockSearch = '?tab=depenses';
+test('resources view exposes only owner-scoped financial documents', async () => {
+  mockSearch = '?tab=resources';
   render(<Finance/>);
+  expect(await screen.findByText('Synthetic invoice.pdf')).toBeInTheDocument();
+  expect(screen.queryByText('Synthetic CV.docx')).not.toBeInTheDocument();
+});
+
+test('expense table keeps its actions and opens documents separately', async () => {
+  mockSearch = '?tab=depenses';
+  api.getExpenses.mockResolvedValue({ data: [{ id: 'DEP-TEST', ref: 'DEP-TEST', description: 'Synthetic expense', fournisseur: 'Synthetic supplier', montant_chf: 10, montant_cfa: 7000, date: '2026-09-01' }] });
+  render(<Finance/>);
+  await screen.findByText('Synthetic expense');
+  expect(screen.getByRole('button', { name: 'Modifier : DEP-TEST' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Supprimer : DEP-TEST' })).toBeInTheDocument();
+  expect(screen.queryByText('Synthetic invoice.pdf')).not.toBeInTheDocument();
+  expect(api.getPrivateGedDocuments).not.toHaveBeenCalled();
+  expect(screen.getByText('Synthetic supplier')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Modifier : DEP-TEST' }));
+  expect(screen.getByLabelText('Fournisseur')).toHaveValue('Synthetic supplier');
+  fireEvent.click(screen.getByRole('button', { name: 'Annuler', exact: true }));
+  fireEvent.click(screen.getByRole('button', { name: 'Documents financiers', exact: true }));
   expect(await screen.findByText('Synthetic invoice.pdf')).toBeInTheDocument();
   expect(screen.queryByText('Synthetic CV.docx')).not.toBeInTheDocument();
 });

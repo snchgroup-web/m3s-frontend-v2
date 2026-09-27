@@ -628,6 +628,8 @@ const financeActions = [
   ['social', 'delete', 'deleteIncome'], ['immobilier', 'delete', 'deleteRealEstateFinance'],
 ];
 
+const swissAmount = amount => amount.toLocaleString('fr-CH', { maximumFractionDigits: 2 }).replace(/\s/g, '');
+
 test.each(['recettes', 'depenses', 'social'])('shows both currencies for the %s draft without changing the original input', async tab => {
   mockSearch = '?tab=' + tab;
   api.getSocialFinance.mockResolvedValue({ data: [], summary: { total_chf: 0, total_cfa_historique: 0 } });
@@ -639,12 +641,12 @@ test.each(['recettes', 'depenses', 'social'])('shows both currencies for the %s 
   const text = () => pair.textContent.replace(/\s/g, '');
   fireEvent.change(screen.getByPlaceholderText('Montant'), { target: { value: '100' } });
   fireEvent.change(screen.getByLabelText('Taux appliqué *'), { target: { value: '705' } });
-  expect(text()).toBe('100CHF≈70500CFA');
+  expect(text()).toBe(`100CHF≈${swissAmount(70500)}CFA`);
   fireEvent.change(screen.getByLabelText('Devise'), { target: { value: 'CFA' } });
   fireEvent.change(screen.getByPlaceholderText('Montant'), { target: { value: '70500' } });
-  expect(text()).toBe('100CHF≈70500CFA');
+  expect(text()).toBe(`100CHF≈${swissAmount(70500)}CFA`);
   fireEvent.change(screen.getByLabelText('Taux appliqué *'), { target: { value: '' } });
-  expect(text()).toBe('—CHF≈70500CFA');
+  expect(text()).toBe(`—CHF≈${swissAmount(70500)}CFA`);
   expect(screen.getByPlaceholderText('Montant')).toHaveValue(70500);
   expect(api.createIncome).not.toHaveBeenCalled();
   expect(api.createExpense).not.toHaveBeenCalled();
@@ -652,11 +654,11 @@ test.each(['recettes', 'depenses', 'social'])('shows both currencies for the %s 
 
 test('keeps recorded immo currencies distinct while translating the repayment at its historical rate', async () => {
   await openImmoHistory({ montant_chf: 100, montant_cfa: 70000, taux_fx: 695, part_cheikh_chf: 10, remboursement_cheikh_chf: 20 });
-  expect(screen.getByTestId('immo-form-amount-pair').textContent.replace(/\s/g, '')).toBe('100CHF70000CFA');
-  expect(screen.getByTestId('immo-form-share-pair').textContent.replace(/\s/g, '')).toBe('10CHF≈6950CFA');
-  expect(screen.getByTestId('immo-form-repayment-pair').textContent.replace(/\s/g, '')).toBe('20CHF≈13900CFA');
+  expect(screen.getByTestId('immo-form-amount-pair').textContent.replace(/\s/g, '')).toBe(`100CHF${swissAmount(70000)}CFA`);
+  expect(screen.getByTestId('immo-form-share-pair').textContent.replace(/\s/g, '')).toBe(`10CHF≈${swissAmount(6950)}CFA`);
+  expect(screen.getByTestId('immo-form-repayment-pair').textContent.replace(/\s/g, '')).toBe(`20CHF≈${swissAmount(13900)}CFA`);
   changeToSeptemberSecond();
-  expect(screen.getByTestId('immo-form-repayment-pair').textContent.replace(/\s/g, '')).toBe('20CHF≈13900CFA');
+  expect(screen.getByTestId('immo-form-repayment-pair').textContent.replace(/\s/g, '')).toBe(`20CHF≈${swissAmount(13900)}CFA`);
   expect(screen.getByLabelText('Taux appliqué')).toHaveValue(695);
   expect(api.updateRealEstateFinance).not.toHaveBeenCalled();
 });
@@ -674,7 +676,7 @@ test('previews a new immo counterpart without writing into the amount fields', a
   fireEvent.click(await screen.findByRole('button', { name: 'Nouvelle opération Immo' }));
   fireEvent.change(screen.getByLabelText('Montant CHF'), { target: { value: '100' } });
   fireEvent.change(screen.getByLabelText('Taux appliqué'), { target: { value: '705' } });
-  expect(screen.getByTestId('immo-form-amount-pair').textContent.replace(/\s/g, '')).toBe('100CHF≈70500CFA');
+  expect(screen.getByTestId('immo-form-amount-pair').textContent.replace(/\s/g, '')).toBe(`100CHF≈${swissAmount(70500)}CFA`);
   expect(screen.getByLabelText('Montant CFA')).toHaveValue(null);
   expect(api.createRealEstateFinance).not.toHaveBeenCalled();
 });
