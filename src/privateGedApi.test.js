@@ -35,10 +35,30 @@ test('file selection checks hash and classification without uploading its conten
   expect(fetch.mock.calls[0][1].body).toBeUndefined();
   await expect(api.preparePrivateGedImport(syntheticFile, 'finance')).rejects.toMatchObject({ code: 'GED_CATEGORY_MISMATCH' });
 });
+
+test.each([['jpg', 'image/jpeg'], ['jpeg', 'image/jpeg'], ['png', 'image/png']])('approved %s scan keeps authenticated import and MIME checks', async (ext, mime) => {
+  const file = { ...syntheticFile, name: `Synthetic.${ext}` };
+  const row = { ...approved, name: file.name, category: 'finance', contentType: mime };
+  fetch.mockResolvedValue(policyReply({ approved: [row] }));
+  const candidate = await api.preparePrivateGedImport(file, 'finance');
+  expect(candidate.contentType).toBe(mime);
+  fetch.mockResolvedValueOnce(policyReply({ approved: [row] })).mockResolvedValueOnce({ ok: true, status: 201,
+    json: async () => ({ success: true, created: true, document: { ...row, id: sha } }) });
+  await expect(api.importPrivateGedDocument(file, candidate)).resolves.toMatchObject({ created: true });
+  expect(fetch.mock.calls.at(-1)[1].headers['Content-Type']).toBe(mime);
+});
+
+test('larger approved list works but never accepts SVG or more than 64 entries', async () => {
+  fetch.mockResolvedValue(policyReply({ approved: [approved, ...Array.from({ length: 10 }, (_, i) => ({ ...approved, sha256: String(i).padStart(64, '0') }))] }));
+  await expect(api.preparePrivateGedImport(syntheticFile, 'personal')).resolves.toMatchObject({ id: sha });
+  fetch.mockResolvedValue(policyReply({ approved: Array(65).fill(approved) }));
+  await expect(api.preparePrivateGedImport(syntheticFile, 'personal')).rejects.toThrow('GED_UNAVAILABLE');
+  await expect(api.preparePrivateGedImport({ ...syntheticFile, name: 'Unsafe.svg' }, 'personal')).rejects.toThrow('GED_FORMAT_REQUIRED');
+});
 test('unknown or oversized files never send a POST', async () => {
   fetch.mockResolvedValue(policyReply({ approved: [] }));
   await expect(api.preparePrivateGedImport(syntheticFile, 'personal')).rejects.toMatchObject({ code: 'GED_DOCUMENT_NOT_APPROVED' });
-  await expect(api.preparePrivateGedImport({ ...syntheticFile, size: 1048577 }, 'personal')).rejects.toMatchObject({ code: 'GED_TOO_LARGE' });
+  await expect(api.preparePrivateGedImport({ ...syntheticFile, size: 5242881 }, 'personal')).rejects.toMatchObject({ code: 'GED_TOO_LARGE' });
   expect(fetch.mock.calls.every(([, options]) => !options.method)).toBe(true);
 });
 test('confirmed import revalidates approval, sends authenticated bytes and requires matching server evidence', async () => {

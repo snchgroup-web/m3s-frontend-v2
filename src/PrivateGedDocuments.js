@@ -12,8 +12,8 @@ const messages = {
     done: 'Téléchargement préparé.', size: 'Ko', personal: 'Dossier personnel', finance: 'Documents financiers 2SG', unclassified: 'Classement à préciser',
     add: 'Importer un document', file: 'Fichier', category: 'Classement', cancel: 'Annuler', confirm: 'Confirmer l’import', checking: 'Vérification du fichier…',
     importing: 'Import en cours…', imported: 'Document enregistré et relu avec succès.', existing: 'Ce document est déjà enregistré.', ready: 'Fichier vérifié, prêt à importer.',
-    importFailed: 'Import non confirmé. Actualise les documents avant de réessayer.', invalid: 'Format PDF ou Word (.docx) requis.',
-    tooLarge: 'Le fichier doit contenir entre 10 octets et 1 Mo.', notApproved: 'Ce fichier ne fait pas encore partie des documents autorisés à l’import.',
+    importFailed: 'Import non confirmé. Actualise les documents avant de réessayer.', invalid: 'Format PDF, Word (.docx), JPEG ou PNG requis.',
+    tooLarge: 'Le fichier doit contenir entre 10 octets et 5 Mio.', notApproved: 'Ce fichier ne fait pas encore partie des documents autorisés à l’import.',
     mismatch: 'Ce classement ne correspond pas au classement autorisé pour ce fichier.', checkFailed: 'La vérification du fichier a échoué.' },
   EN: { title: 'Restricted-access documents', refresh: 'Refresh documents', loading: 'Loading documents…',
     empty: 'No documents registered.', denied: 'This account has no access to private documents.',
@@ -22,8 +22,8 @@ const messages = {
     done: 'Download prepared.', size: 'KB', personal: 'Personal folder', finance: '2SG financial documents', unclassified: 'Classification pending',
     add: 'Import a document', file: 'File', category: 'Classification', cancel: 'Cancel', confirm: 'Confirm import', checking: 'Checking file…',
     importing: 'Importing…', imported: 'Document saved and successfully read back.', existing: 'This document is already registered.', ready: 'File verified, ready to import.',
-    importFailed: 'Import not confirmed. Refresh documents before retrying.', invalid: 'A PDF or Word (.docx) file is required.',
-    tooLarge: 'File size must be between 10 bytes and 1 MB.', notApproved: 'This file has not yet been approved for import.',
+    importFailed: 'Import not confirmed. Refresh documents before retrying.', invalid: 'A PDF, Word (.docx), JPEG or PNG file is required.',
+    tooLarge: 'File size must be between 10 bytes and 5 MiB.', notApproved: 'This file has not yet been approved for import.',
     mismatch: 'This classification does not match the approved classification for this file.', checkFailed: 'File verification failed.' },
   DE: { title: 'Zugriffsgeschützte Dokumente', refresh: 'Dokumente aktualisieren', loading: 'Dokumente werden geladen…',
     empty: 'Keine Dokumente registriert.', denied: 'Dieses Konto hat keinen Zugriff auf private Dokumente.',
@@ -32,8 +32,8 @@ const messages = {
     done: 'Download vorbereitet.', size: 'KB', personal: 'Persönlicher Ordner', finance: '2SG-Finanzdokumente', unclassified: 'Zuordnung offen',
     add: 'Dokument importieren', file: 'Datei', category: 'Zuordnung', cancel: 'Abbrechen', confirm: 'Import bestätigen', checking: 'Datei wird geprüft…',
     importing: 'Import läuft…', imported: 'Dokument gespeichert und erfolgreich erneut gelesen.', existing: 'Dieses Dokument ist bereits registriert.', ready: 'Datei geprüft, bereit zum Import.',
-    importFailed: 'Import nicht bestätigt. Dokumente vor einem erneuten Versuch aktualisieren.', invalid: 'Eine PDF- oder Word-Datei (.docx) ist erforderlich.',
-    tooLarge: 'Die Datei muss zwischen 10 Byte und 1 MB gross sein.', notApproved: 'Diese Datei ist noch nicht für den Import freigegeben.',
+    importFailed: 'Import nicht bestätigt. Dokumente vor einem erneuten Versuch aktualisieren.', invalid: 'Eine PDF-, Word- (.docx), JPEG- oder PNG-Datei ist erforderlich.',
+    tooLarge: 'Die Datei muss zwischen 10 Byte und 5 MiB gross sein.', notApproved: 'Diese Datei ist noch nicht für den Import freigegeben.',
     mismatch: 'Diese Zuordnung entspricht nicht der freigegebenen Zuordnung der Datei.', checkFailed: 'Dateiprüfung fehlgeschlagen.' }
 };
 
@@ -141,7 +141,7 @@ export default function PrivateGedDocuments({ scope = 'all' }) {
         <option value="personal">{t.personal}</option><option value="finance">{t.finance}</option>
       </select>
       <label htmlFor="ged-file">{t.file}</label>
-      <input id="ged-file" type="file" accept=".pdf,.docx" disabled={!!busy} onChange={event => {
+      <input id="ged-file" type="file" accept=".pdf,.docx,.jpg,.jpeg,.png" disabled={!!busy} onChange={event => {
         setNotice(null); setCandidate({ status: 'idle' }); setFile(event.target.files?.[0] || null);
       }}/>
       {candidate.status !== 'idle' && <p role={candidate.status === 'error' ? 'alert' : 'status'}>{t[candidate.message || candidate.status]}</p>}
@@ -151,7 +151,7 @@ export default function PrivateGedDocuments({ scope = 'all' }) {
     {state.status !== 'ready' && <p role={state.status === 'error' ? 'alert' : 'status'}>{t[state.status]}</p>}
     {state.status === 'ready' && (rows.length ? <ul className="private-ged-list">{rows.map(row =>
       <li key={row.rootId || row.id} className="ged-document-row"><FileText size={21} aria-hidden="true"/><div className="private-ged-file"><span>{row.title || row.name}</span>
-        <small>{t[row.category] || t.unclassified} · {row.name.endsWith('.docx') ? 'Word' : 'PDF'} · {new Intl.NumberFormat({ FR: 'fr-CH', EN: 'en-GB', DE: 'de-CH' }[language] || 'fr-CH', { maximumFractionDigits: 1 }).format(row.size / 1024)} {t.size}</small></div>
+        <small>{t[row.category] || t.unclassified} · {row.name.endsWith('.docx') ? 'Word' : row.name.split('.').pop().toUpperCase()} · {new Intl.NumberFormat({ FR: 'fr-CH', EN: 'en-GB', DE: 'de-CH' }[language] || 'fr-CH', { maximumFractionDigits: 1 }).format(row.size / 1024)} {t.size}</small></div>
         <button className="m3s-secondary-button" aria-label={`${t.download} ${row.name}`} title={`${t.download} ${row.name}`}
           disabled={!!busy} onClick={() => download(row)}><Download size={19}/></button>
         {row.lifecycle && <GedDocumentActions key={`${row.rootId}-${row.revision}`} row={row} disabled={!!busy} onDownload={download}

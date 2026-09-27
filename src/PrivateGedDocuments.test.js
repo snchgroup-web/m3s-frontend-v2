@@ -91,7 +91,7 @@ test('personal import requires explicit confirmation and refreshes only after re
 });
 test.each([
   ['GED_DOCUMENT_NOT_APPROVED', 'pas encore partie'], ['GED_CATEGORY_MISMATCH', 'ne correspond pas'],
-  ['GED_TOO_LARGE', '1 Mo'], ['GED_FORMAT_REQUIRED', 'Word (.docx)']
+  ['GED_TOO_LARGE', '5 Mio'], ['GED_FORMAT_REQUIRED', 'Word (.docx)']
 ])('rejected selection cannot be submitted (%s)', async (code, text) => {
   api.preparePrivateGedImport.mockRejectedValue({ code });
   render(<PrivateGedDocuments/>); await screen.findByText(record.name); await chooseImport();
