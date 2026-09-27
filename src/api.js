@@ -124,24 +124,60 @@ const createApiError = async (response, fallbackCode = 'API_REQUEST_FAILED') => 
 // APPELS API FINANCE
 // ============================================================================
 
+const gedMime = name => name?.endsWith('.docx') ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' : 'application/pdf';
+const validGedRecord = row => row && /^[a-f0-9]{64}$/.test(row.id) && typeof row.name === 'string' &&
+  /^[\p{L}\p{N} ._()-]{1,140}\.(pdf|docx)$/u.test(row.name) && !row.name.startsWith('.') &&
+  Number.isInteger(row.size) && row.size >= 10 && row.size <= 1048576 &&
+  (row.category === undefined || ['personal', 'finance', 'unclassified'].includes(row.category)) &&
+  (row.contentType === undefined || row.contentType === gedMime(row.name));
+const gedError = code => Object.assign(new Error(code), { code });
+
 export const api = {
   getPrivateGedDocuments: async ({ signal } = {}) => {
     const res = await apiFetch(`${API_BASE_URL}/ged/private/documents`, { signal, cache: 'no-store' });
     if (!res.ok) throw await createApiError(res, 'GED_UNAVAILABLE');
     const payload = await res.json();
     if (payload?.success !== true || !Array.isArray(payload.documents) || payload.documents.length > 100 ||
-        payload.documents.some(row => !/^[a-f0-9]{64}$/.test(row.id) || typeof row.name !== 'string' ||
-          !/^[\p{L}\p{N} ._()-]{1,140}\.pdf$/u.test(row.name) || row.name.startsWith('.') ||
-          !Number.isInteger(row.size) || row.size < 10 || row.size > 1048576)) {
+        payload.documents.some(row => !validGedRecord(row))) {
       throw new Error('GED_UNAVAILABLE');
     }
     return payload.documents;
+  },
+  preparePrivateGedImport: async (file, category, { signal } = {}) => {
+    if (!file || !/\.(pdf|docx)$/.test(file.name) || !['personal', 'finance'].includes(category)) throw gedError('GED_FORMAT_REQUIRED');
+    if (file.size < 10 || file.size > 1048576) throw gedError('GED_TOO_LARGE');
+    const bytes = await file.arrayBuffer();
+    const id = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2, '0')).join('');
+    if (signal?.aborted) throw gedError('GED_ABORTED');
+    const res = await apiFetch(`${API_BASE_URL}/ged/private/documents`, { signal, cache: 'no-store' });
+    if (!res.ok) throw await createApiError(res, 'GED_UNAVAILABLE');
+    const payload = await res.json();
+    if (payload?.success !== true || !Array.isArray(payload.approved) || payload.approved.length > 10 || !Array.isArray(payload.documents)) throw gedError('GED_UNAVAILABLE');
+    const approved = payload.approved.find(row => row.sha256 === id && row.size === file.size && row.name === file.name);
+    if (!approved || !validGedRecord({ ...approved, id })) throw gedError('GED_DOCUMENT_NOT_APPROVED');
+    if (approved.category !== category) throw gedError('GED_CATEGORY_MISMATCH');
+    return { id, name: approved.name, size: approved.size, category, contentType: gedMime(approved.name),
+      existing: payload.documents.some(row => row.id === id) };
+  },
+  importPrivateGedDocument: async (file, candidate, { signal } = {}) => {
+    // Revalidate the current server approval immediately before any file is sent.
+    const checked = await api.preparePrivateGedImport(file, candidate.category, { signal });
+    if (checked.id !== candidate.id) throw gedError('GED_DOCUMENT_NOT_APPROVED');
+    const res = await apiFetch(`${API_BASE_URL}/ged/private/documents/${checked.id}`, {
+      method: 'POST', signal, cache: 'no-store', headers: { 'Content-Type': checked.contentType }, body: file
+    });
+    if (!res.ok) throw await createApiError(res, 'GED_UNAVAILABLE');
+    const payload = await res.json();
+    if (payload?.success !== true || typeof payload.created !== 'boolean' || !validGedRecord(payload.document) ||
+        payload.document.id !== checked.id || payload.document.size !== checked.size ||
+        payload.document.name !== checked.name || payload.document.category !== checked.category) throw gedError('GED_UNAVAILABLE');
+    return payload;
   },
   downloadPrivateGedDocument: async (record, { signal } = {}) => {
     if (!/^[a-f0-9]{64}$/.test(record?.id)) throw new Error('GED_UNAVAILABLE');
     const res = await apiFetch(`${API_BASE_URL}/ged/private/documents/${record.id}/content`, { signal, cache: 'no-store' });
     if (!res.ok) throw await createApiError(res, 'GED_UNAVAILABLE');
-    if (res.headers.get('content-type')?.split(';')[0] !== 'application/pdf') throw new Error('GED_UNAVAILABLE');
+    if (res.headers.get('content-type')?.split(';')[0] !== gedMime(record.name)) throw new Error('GED_UNAVAILABLE');
     const blob = await res.blob();
     if (blob.size !== record.size || blob.size > 1048576) throw new Error('GED_UNAVAILABLE');
     return blob;

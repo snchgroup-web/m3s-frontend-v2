@@ -5,7 +5,7 @@ import api from './api';
 let mockLanguage = 'FR';
 jest.mock('./LanguageContext', () => ({ useLanguage: () => ({ language: mockLanguage }) }));
 jest.mock('./api', () => ({ __esModule: true, default: {
-  getPrivateGedDocuments: jest.fn(), downloadPrivateGedDocument: jest.fn()
+  getPrivateGedDocuments: jest.fn(), downloadPrivateGedDocument: jest.fn(), preparePrivateGedImport: jest.fn(), importPrivateGedDocument: jest.fn()
 } }));
 const record = { id: 'a'.repeat(64), name: 'Synthetic.pdf', size: 1234 };
 beforeEach(() => {
@@ -49,11 +49,61 @@ test.each([
   expect(screen.queryByText('Aucun document enregistré.')).not.toBeInTheDocument();
 });
 
-test.each([['FR', 'Documents GED privés', 'Télécharger'], ['EN', 'Private GED documents', 'Download'],
-  ['DE', 'Private GED-Dokumente', 'Herunterladen']])('renders localized labels in %s', async (language, title, action) => {
+test.each([['FR', 'Documents à accès restreint', 'Télécharger'], ['EN', 'Restricted-access documents', 'Download'],
+  ['DE', 'Zugriffsgeschützte Dokumente', 'Herunterladen']])('renders localized labels in %s', async (language, title, action) => {
   mockLanguage = language; render(<PrivateGedDocuments/>);
   expect(screen.getByRole('heading', { name: title })).toBeInTheDocument();
   expect(await screen.findByRole('button', { name: `${action} ${record.name}` })).toBeEnabled();
+});
+
+const chooseImport = async () => {
+  fireEvent.click(await screen.findByRole('button', { name: 'Importer un document' }));
+  const file = new File(['synthetic-only'], 'Synthetic CV.docx');
+  await act(async () => { fireEvent.change(screen.getByLabelText('Fichier'), { target: { files: [file] } }); });
+  return file;
+};
+test('personal import requires explicit confirmation and refreshes only after real success', async () => {
+  const cv = { ...record, name: 'Synthetic CV.docx', category: 'personal' };
+  api.preparePrivateGedImport.mockResolvedValue(cv);
+  api.importPrivateGedDocument.mockResolvedValue({ created: true, document: cv });
+  render(<PrivateGedDocuments/>); await screen.findByText(record.name);
+  const file = await chooseImport();
+  await screen.findByText('Fichier vérifié, prêt à importer.');
+  expect(api.importPrivateGedDocument).not.toHaveBeenCalled();
+  expect(screen.getByLabelText('Classement')).toHaveValue('personal');
+  fireEvent.click(screen.getByRole('button', { name: 'Confirmer l’import' }));
+  await screen.findByText('Document enregistré et relu avec succès.');
+  expect(api.importPrivateGedDocument).toHaveBeenCalledWith(file, cv, { signal: expect.any(AbortSignal) });
+  expect(api.getPrivateGedDocuments).toHaveBeenCalledTimes(2);
+});
+test.each([
+  ['GED_DOCUMENT_NOT_APPROVED', 'pas encore partie'], ['GED_CATEGORY_MISMATCH', 'ne correspond pas'],
+  ['GED_TOO_LARGE', '1 Mo'], ['GED_FORMAT_REQUIRED', 'Word (.docx)']
+])('rejected selection cannot be submitted (%s)', async (code, text) => {
+  api.preparePrivateGedImport.mockRejectedValue({ code });
+  render(<PrivateGedDocuments/>); await screen.findByText(record.name); await chooseImport();
+  expect(await screen.findByRole('alert')).toHaveTextContent(text);
+  expect(screen.getByRole('button', { name: 'Confirmer l’import' })).toBeDisabled();
+  expect(api.importPrivateGedDocument).not.toHaveBeenCalled();
+});
+test('existing documents are not uploaded again; cancellation sends no bytes', async () => {
+  api.preparePrivateGedImport.mockResolvedValue({ ...record, existing: true });
+  render(<PrivateGedDocuments/>); await screen.findByText(record.name); await chooseImport();
+  await screen.findByText('Ce document est déjà enregistré.');
+  expect(screen.getByRole('button', { name: 'Confirmer l’import' })).toBeDisabled();
+  fireEvent.click(screen.getByRole('button', { name: 'Annuler' }));
+  expect(screen.queryByLabelText('Fichier')).not.toBeInTheDocument();
+  expect(api.importPrivateGedDocument).not.toHaveBeenCalled();
+});
+test('failed upload never shows success or leaks provider details', async () => {
+  api.preparePrivateGedImport.mockResolvedValue(record);
+  api.importPrivateGedDocument.mockRejectedValue(new Error('sensitive provider detail'));
+  render(<PrivateGedDocuments/>); await screen.findByText(record.name); await chooseImport();
+  await screen.findByText('Fichier vérifié, prêt à importer.');
+  fireEvent.click(screen.getByRole('button', { name: 'Confirmer l’import' }));
+  expect(await screen.findByRole('alert')).toHaveTextContent('Import non confirmé');
+  expect(screen.queryByText(/sensitive provider/)).not.toBeInTheDocument();
+  expect(screen.queryByText('Document enregistré et relu avec succès.')).not.toBeInTheDocument();
 });
 
 test('shows a genuine empty register', async () => {
