@@ -125,6 +125,27 @@ const createApiError = async (response, fallbackCode = 'API_REQUEST_FAILED') => 
 // ============================================================================
 
 export const api = {
+  getPrivateGedDocuments: async ({ signal } = {}) => {
+    const res = await apiFetch(`${API_BASE_URL}/ged/private/documents`, { signal, cache: 'no-store' });
+    if (!res.ok) throw await createApiError(res, 'GED_UNAVAILABLE');
+    const payload = await res.json();
+    if (payload?.success !== true || !Array.isArray(payload.documents) || payload.documents.length > 100 ||
+        payload.documents.some(row => !/^[a-f0-9]{64}$/.test(row.id) || typeof row.name !== 'string' ||
+          !/^[\p{L}\p{N} ._()-]{1,140}\.pdf$/u.test(row.name) || row.name.startsWith('.') ||
+          !Number.isInteger(row.size) || row.size < 10 || row.size > 1048576)) {
+      throw new Error('GED_UNAVAILABLE');
+    }
+    return payload.documents;
+  },
+  downloadPrivateGedDocument: async (record, { signal } = {}) => {
+    if (!/^[a-f0-9]{64}$/.test(record?.id)) throw new Error('GED_UNAVAILABLE');
+    const res = await apiFetch(`${API_BASE_URL}/ged/private/documents/${record.id}/content`, { signal, cache: 'no-store' });
+    if (!res.ok) throw await createApiError(res, 'GED_UNAVAILABLE');
+    if (res.headers.get('content-type')?.split(';')[0] !== 'application/pdf') throw new Error('GED_UNAVAILABLE');
+    const blob = await res.blob();
+    if (blob.size !== record.size || blob.size > 1048576) throw new Error('GED_UNAVAILABLE');
+    return blob;
+  },
   getOwnProfile: async ({ signal } = {}) => {
     const token = await currentAccessToken();
     if (!token || token.startsWith('demo_session_')) {

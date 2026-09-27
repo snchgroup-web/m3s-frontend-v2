@@ -8,6 +8,7 @@ jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate }), { vir
 jest.mock('./LanguageContext', () => ({ useLanguage: () => ({ language: mockLanguage }) }));
 jest.mock('./AuthContext', () => ({ useAuth: () => ({ user: { email: 'fixture@example.test' } }) }));
 jest.mock('./api', () => ({ __esModule: true, default: { getOwnProfile: jest.fn() } }));
+jest.mock('./PrivateGedDocuments', () => () => <div data-testid="private-ged"/>);
 const result = { success: true, scope: 'current-account', account: { email: 'fixture@example.test', role: 'Manager' },
   profile: { personId: 'PER-2SG-9001', displayName: 'Synthetic Person', team: 'TZH', memberType: 'Fondateur', position: 'Synthetic role' },
   source: { id: 'RH-001', status: 'validated_documentary', approvedOn: '2026-09-26' } };
