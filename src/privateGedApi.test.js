@@ -5,6 +5,21 @@ const record = { id: 'a'.repeat(64), name: 'Synthetic.pdf', size: 15 };
 beforeEach(() => { global.fetch = jest.fn(); currentAccessToken.mockResolvedValue('synthetic-token'); });
 afterEach(() => { delete global.fetch; });
 
+test('lifecycle command uses root identity and exact revision without metadata in URL', async () => {
+  const root = { ...record, rootId: record.id, lifecycle: true, title: 'CV', revision: 0, trashed: false };
+  fetch.mockResolvedValue({ ok: true, status: 200, json: async () => ({ success: true, document: { ...root, title: 'Updated', revision: 1 } }) });
+  expect(await api.mutatePrivateGedDocument(root, { action: 'rename', title: 'Updated' })).toMatchObject({ title: 'Updated' });
+  expect(fetch.mock.calls[0][0]).toMatch(new RegExp(`/${root.rootId}/actions$`));
+  expect(JSON.parse(fetch.mock.calls[0][1].body)).toEqual({ action: 'rename', title: 'Updated', expectedRevision: 0 });
+  fetch.mockResolvedValue({ ok: true, status: 200, json: async () => ({ success: true, document: root }) });
+  await expect(api.mutatePrivateGedDocument(root, { action: 'trash' })).rejects.toThrow();
+});
+
+test('history rejects malformed document entries', async () => {
+  fetch.mockResolvedValue({ ok: true, status: 200, json: async () => ({ success: true, history: [{ revision: 0, document: { ...record, id: '../bad' } }] }) });
+  await expect(api.getPrivateGedHistory({ rootId: record.id })).rejects.toThrow();
+});
+
 const bytes = new (require('util').TextEncoder)().encode('synthetic-document-bytes');
 const syntheticFile = { name: 'Synthetic CV.docx', size: bytes.length, arrayBuffer: async () => bytes.buffer };
 const sha = require('crypto').createHash('sha256').update(bytes).digest('hex');
