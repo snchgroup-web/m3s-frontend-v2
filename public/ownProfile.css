@@ -14,3 +14,14 @@
 .own-profile dd { font-size: 15px; overflow-wrap: anywhere; }
 .own-profile footer { border-top: 1px solid var(--m3s-border); margin-top: 28px; padding-top: 16px; font-size: 12px; color: var(--m3s-text-secondary); }
 @media (max-width: 600px) { .own-profile dl { grid-template-columns: minmax(0, 1fr); } .own-profile-title h2 { font-size: 22px; } }
+.private-ged-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.private-ged-heading h3 { display: flex; align-items: center; gap: 8px; margin: 0; min-width: 0; }
+.private-ged-heading h3 svg { flex: 0 0 auto; }
+.private-ged button { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex: 0 0 44px; }
+.private-ged button:disabled { opacity: .5; cursor: wait; }
+.private-ged-list { list-style: none; margin: 0; padding: 0; }
+.private-ged-list li { display: grid; grid-template-columns: 22px minmax(0, 1fr) 44px; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--m3s-border); }
+.private-ged-file { min-width: 0; display: grid; gap: 5px; }
+.private-ged-file span { overflow-wrap: anywhere; font-size: 14px; }
+.private-ged-file small { color: var(--m3s-text-secondary); font-size: 12px; }
+.private-ged p { margin-top: 12px; font-size: 14px; }

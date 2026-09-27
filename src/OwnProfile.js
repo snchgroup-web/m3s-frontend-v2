@@ -4,6 +4,7 @@ import { ArrowLeft, RefreshCw, UserRound, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { useAuth } from './AuthContext';
 import api from './api';
+import PrivateGedDocuments from './PrivateGedDocuments';
 
 const messages = {
   FR: { title: 'Mon compte', back: 'Retour au tableau de bord', refresh: 'Actualiser', loading: 'Chargement du profil…',
@@ -74,6 +75,7 @@ export default function OwnProfile() {
         {field(t.team, data.profile.team)}{field(t.type, data.profile.memberType === 'Fondateur' ? t.founder : data.profile.memberType === 'Associe' ? t.associate : data.profile.memberType)}
         {field(t.position, positionLabel === 'Manager' ? <span translate="no">Manager</span> : positionLabel)}
       </dl></section>
+      <PrivateGedDocuments key={user?.email || 'no-account'}/>
       <footer>{t.source} : {data.source.id} · {t.approved} : <time dateTime={data.source.approvedOn}>{new Intl.DateTimeFormat({ FR: 'fr-CH', EN: 'en-GB', DE: 'de-CH' }[language] || 'fr-CH', { timeZone: 'UTC' }).format(new Date(`${data.source.approvedOn}T00:00:00Z`))}</time></footer>
     </>}
   </article>;
