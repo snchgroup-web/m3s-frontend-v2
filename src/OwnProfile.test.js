@@ -52,13 +52,23 @@ test('aborts pending reads when leaving the page', () => {
   expect(signal.aborted).toBe(true);
 });
 
-test('links HR and Finance while showing only personal documents', async () => {
+test('links HR while keeping finance outside the personal account', async () => {
   render(<OwnProfile/>); await screen.findByText('Synthetic Person');
   expect(screen.getByTestId('private-ged')).toHaveAttribute('data-scope', 'personal');
   fireEvent.click(screen.getByRole('button', { name: 'Mon compte RH' }));
   expect(mockNavigate).toHaveBeenCalledWith('/rh?tab=myaccount');
-  fireEvent.click(screen.getByRole('button', { name: 'Documents financiers 2SG' }));
-  expect(mockNavigate).toHaveBeenCalledWith('/finance?tab=depenses#finance-documents');
+  expect(screen.queryByRole('button', { name: 'Documents financiers 2SG' })).not.toBeInTheDocument();
+});
+
+test.each(['FR', 'EN', 'DE'])('no financial shortcut in either account view in %s', async language => {
+  mockLanguage = language;
+  const { rerender } = render(<OwnProfile/>);
+  await screen.findByText('Synthetic Person');
+  expect(screen.queryByRole('button', { name: /financ|finanz/i })).not.toBeInTheDocument();
+  rerender(<OwnProfile embedded/>);
+  expect(screen.queryByRole('button', { name: /financ|finanz/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
+  expect(screen.getByTestId('private-ged')).toHaveAttribute('data-scope', 'personal');
 });
 
 test('HR embedded account reuses the same profile without a self-link', async () => {
