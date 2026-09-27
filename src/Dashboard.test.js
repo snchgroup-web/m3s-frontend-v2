@@ -51,6 +51,13 @@ const summaryResponse = (overrides = {}) => ({
   data: { total_income_count: 3, total_expense_count: 1, total_income: 600, total_income_cfa: 360000, total_expenses: 50, total_expenses_cfa: 30000, ...overrides }
 });
 
+test('shows the existing 2SG logo while the dashboard data is pending', () => {
+  api.getFinanceDashboard.mockReturnValue(new Promise(() => {}));
+  render(<Dashboard/>);
+  expect(screen.getByRole('status')).toHaveTextContent('Loading dashboard');
+  expect(screen.getByRole('img', { name: '2SG - SeneSwiss Group' })).toHaveAttribute('src', '/assets/logo-2sg.png');
+});
+
 beforeEach(() => {
   jest.clearAllMocks();
   api.getFinanceDashboard.mockResolvedValue(summaryResponse());
@@ -238,8 +245,8 @@ test('shows connected KPI values and labels missing sources explicitly', async (
   expect(screen.getByRole('heading', { name: 'Documented financial trend' })).toBeInTheDocument();
   expect(screen.getByLabelText('Global indicators')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Open module: Revenue' })).toHaveTextContent('600 CHF');
-  expect(screen.getByRole('button', { name: 'Open module: Revenue' })).toHaveTextContent('360 000 CFA');
-  expect(screen.getByRole('button', { name: 'Open module: Total real estate funding' })).toHaveTextContent('12 000 CHF');
+  expect(screen.getByRole('button', { name: 'Open module: Revenue' })).toHaveTextContent(/360[\s'’]000 CFA/);
+  expect(screen.getByRole('button', { name: 'Open module: Total real estate funding' })).toHaveTextContent(/12[\s'’]000 CHF/);
   expect(screen.getByRole('button', { name: 'Open module: Reclassified social flows' })).toHaveTextContent('0 CHF');
   expect(screen.getByRole('button', { name: 'Open module: Reclassified social flows' })).toHaveTextContent('0 CFA');
   expect(screen.queryByRole('heading', { name: 'Module Statistics' })).not.toBeInTheDocument();

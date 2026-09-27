@@ -37,6 +37,7 @@ jest.mock('recharts', () => ({
 }));
 
 jest.mock('./MembersDirectory', () => ({ initialMemberType }) => <div data-member-type={initialMemberType || ''}>Internal directory</div>);
+jest.mock('./OwnProfile', () => ({ embedded }) => <div data-testid="own-profile" data-embedded={String(embedded)}>Current account profile</div>);
 
 beforeEach(() => {
   mockLocationSearch = '?tab=glossary';
@@ -44,6 +45,13 @@ beforeEach(() => {
   mockNavigate.mockReset();
   api.getMembersDirectory.mockReset();
   api.getMembersDirectory.mockResolvedValue({ data: [], total: 0 });
+});
+
+test('RH My account renders the shared current-account profile instead of a placeholder', async () => {
+  mockLocationSearch = '?tab=myaccount';
+  render(<RH/>);
+  expect(await screen.findByTestId('own-profile')).toHaveAttribute('data-embedded', 'true');
+  expect(screen.queryByText('Section to build')).not.toBeInTheDocument();
 });
 
 test('passes the URL member type to the directory and follows route changes', async () => {

@@ -33,3 +33,8 @@
 .private-ged-import label { font-size: 14px; font-weight: 600; }
 .private-ged-import input, .private-ged-import select { width: 100%; min-width: 0; max-width: 100%; min-height: 44px; padding: 8px; color: var(--m3s-text-primary); background: var(--m3s-surface-panel); border: 1px solid var(--m3s-border); border-radius: 5px; }
 .private-ged-import input:focus-visible, .private-ged-import select:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
+.own-profile-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+.own-profile-links button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 12px; }
+.m3s-branded-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; min-height: 60vh; padding: 24px; color: var(--m3s-text-primary, #172033); background: var(--m3s-surface-panel, #fff); }
+.m3s-branded-loading img { width: 96px; height: 96px; object-fit: contain; flex-shrink: 0; }
+.m3s-branded-loading p { font-size: 16px; text-align: center; }
