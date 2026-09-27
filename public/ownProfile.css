@@ -25,3 +25,11 @@
 .private-ged-file span { overflow-wrap: anywhere; font-size: 14px; }
 .private-ged-file small { color: var(--m3s-text-secondary); font-size: 12px; }
 .private-ged p { margin-top: 12px; font-size: 14px; }
+.private-ged-heading { flex-wrap: wrap; }
+.private-ged-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.private-ged-actions button:not([aria-label]) { width: auto; height: auto; min-height: 44px; flex: 0 1 auto; gap: 8px; padding: 8px 12px; }
+.private-ged-actions svg { flex-shrink: 0; }
+.private-ged-import { display: grid; gap: 10px; padding: 16px 0; margin-bottom: 16px; border-block: 1px solid var(--m3s-border); }
+.private-ged-import label { font-size: 14px; font-weight: 600; }
+.private-ged-import input, .private-ged-import select { width: 100%; min-width: 0; max-width: 100%; min-height: 44px; padding: 8px; color: var(--m3s-text-primary); background: var(--m3s-surface-panel); border: 1px solid var(--m3s-border); border-radius: 5px; }
+.private-ged-import input:focus-visible, .private-ged-import select:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }

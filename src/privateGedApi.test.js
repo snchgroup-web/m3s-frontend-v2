@@ -5,6 +5,39 @@ const record = { id: 'a'.repeat(64), name: 'Synthetic.pdf', size: 15 };
 beforeEach(() => { global.fetch = jest.fn(); currentAccessToken.mockResolvedValue('synthetic-token'); });
 afterEach(() => { delete global.fetch; });
 
+const bytes = new (require('util').TextEncoder)().encode('synthetic-document-bytes');
+const syntheticFile = { name: 'Synthetic CV.docx', size: bytes.length, arrayBuffer: async () => bytes.buffer };
+const sha = require('crypto').createHash('sha256').update(bytes).digest('hex');
+const approved = { name: syntheticFile.name, size: syntheticFile.size, sha256: sha, category: 'personal' };
+const policyReply = (patch = {}) => ({ ok: true, status: 200, json: async () => ({ success: true, documents: [], approved: [approved], ...patch }) });
+beforeAll(() => { Object.defineProperty(global, 'crypto', { configurable: true, value: require('crypto').webcrypto }); });
+
+test('file selection checks hash and classification without uploading its content', async () => {
+  fetch.mockResolvedValue(policyReply());
+  const candidate = await api.preparePrivateGedImport(syntheticFile, 'personal');
+  expect(candidate).toMatchObject({ id: sha, category: 'personal', existing: false });
+  expect(fetch).toHaveBeenCalledTimes(1);
+  expect(fetch.mock.calls[0][1].body).toBeUndefined();
+  await expect(api.preparePrivateGedImport(syntheticFile, 'finance')).rejects.toMatchObject({ code: 'GED_CATEGORY_MISMATCH' });
+});
+test('unknown or oversized files never send a POST', async () => {
+  fetch.mockResolvedValue(policyReply({ approved: [] }));
+  await expect(api.preparePrivateGedImport(syntheticFile, 'personal')).rejects.toMatchObject({ code: 'GED_DOCUMENT_NOT_APPROVED' });
+  await expect(api.preparePrivateGedImport({ ...syntheticFile, size: 1048577 }, 'personal')).rejects.toMatchObject({ code: 'GED_TOO_LARGE' });
+  expect(fetch.mock.calls.every(([, options]) => !options.method)).toBe(true);
+});
+test('confirmed import revalidates approval, sends authenticated bytes and requires matching server evidence', async () => {
+  const doc = { id: sha, name: approved.name, size: approved.size, category: 'personal' };
+  fetch.mockResolvedValueOnce(policyReply()).mockResolvedValueOnce({ ok: true, status: 201,
+    json: async () => ({ success: true, created: true, document: doc }) });
+  expect(await api.importPrivateGedDocument(syntheticFile, doc)).toMatchObject({ created: true, document: doc });
+  expect(fetch.mock.calls[1][1]).toMatchObject({ method: 'POST', body: syntheticFile,
+    headers: { Authorization: 'Bearer synthetic-token', 'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' } });
+  fetch.mockResolvedValueOnce(policyReply()).mockResolvedValueOnce({ ok: true, status: 200,
+    json: async () => ({ success: true, created: true, document: { ...doc, category: 'finance' } }) });
+  await expect(api.importPrivateGedDocument(syntheticFile, doc)).rejects.toThrow();
+});
+
 test('list uses bearer authorization and no-store, with no document metadata in URLs', async () => {
   fetch.mockResolvedValue({ ok: true, status: 200, json: async () => ({ success: true, documents: [record] }) });
   expect(await api.getPrivateGedDocuments()).toEqual([record]);
