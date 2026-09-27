@@ -13,6 +13,7 @@ import { StandardCreateButton } from './StandardUI';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
 import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
 import FunctionAssistant from './FunctionAssistant';
+import OwnProfile from './OwnProfile';
 
 const RH = () => {
   const { language } = useLanguage();
@@ -606,13 +607,15 @@ const RH = () => {
           <FunctionResourcesOverview moduleId="rh" language={language} onSelectTab={handleTabSelect} />
         )}
 
+        {activeTab === 'myaccount' && <OwnProfile embedded/>}
+
         {activeTab === 'assistant' && <FunctionAssistant moduleId="rh" language={language} />}
 
         {activeTab === 'glossary' && (
           <RHGlossary language={language} />
         )}
 
-        <ChildTabPlaceholder moduleId="rh" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'directory', 'employes', 'benevoles', 'assistant', 'resources', 'glossary']} />
+        <ChildTabPlaceholder moduleId="rh" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'directory', 'employes', 'benevoles', 'myaccount', 'assistant', 'resources', 'glossary']} />
         </div>
       </div>
 

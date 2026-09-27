@@ -25,6 +25,7 @@ import FinanceProcessControls from './FinanceProcessControls';
 import ActionConfirmationDialog from './ActionConfirmationDialog';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
 import FunctionAssistant from './FunctionAssistant';
+import PrivateGedDocuments from './PrivateGedDocuments';
 import {
   buildTeamAgentDirectory,
   findAgentTeam,
@@ -2243,6 +2244,7 @@ const Finance = () => {
 
         {activeTab === 'depenses' && (
           <div id="finance-expense-register" className="scroll-mt-24" tabIndex="-1">
+            <div id="finance-documents" className="own-profile scroll-mt-24" tabIndex="-1"><PrivateGedDocuments scope="finance"/></div>
             <div className="flex justify-end mb-4">
               <StandardCreateButton onClick={() => openNewModal('depense')}>{t.nouvelleDepense}</StandardCreateButton>
             </div>

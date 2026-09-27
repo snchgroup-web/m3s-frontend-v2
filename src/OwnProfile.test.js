@@ -8,7 +8,7 @@ jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate }), { vir
 jest.mock('./LanguageContext', () => ({ useLanguage: () => ({ language: mockLanguage }) }));
 jest.mock('./AuthContext', () => ({ useAuth: () => ({ user: { email: 'fixture@example.test' } }) }));
 jest.mock('./api', () => ({ __esModule: true, default: { getOwnProfile: jest.fn() } }));
-jest.mock('./PrivateGedDocuments', () => () => <div data-testid="private-ged"/>);
+jest.mock('./PrivateGedDocuments', () => ({ scope }) => <div data-testid="private-ged" data-scope={scope}/>);
 const result = { success: true, scope: 'current-account', account: { email: 'fixture@example.test', role: 'Manager' },
   profile: { personId: 'PER-2SG-9001', displayName: 'Synthetic Person', team: 'TZH', memberType: 'Fondateur', position: 'Synthetic role' },
   source: { id: 'RH-001', status: 'validated_documentary', approvedOn: '2026-09-26' } };
@@ -50,6 +50,21 @@ test('aborts pending reads when leaving the page', () => {
   const { signal } = api.getOwnProfile.mock.calls[0][0];
   unmount();
   expect(signal.aborted).toBe(true);
+});
+
+test('links HR and Finance while showing only personal documents', async () => {
+  render(<OwnProfile/>); await screen.findByText('Synthetic Person');
+  expect(screen.getByTestId('private-ged')).toHaveAttribute('data-scope', 'personal');
+  fireEvent.click(screen.getByRole('button', { name: 'Mon compte RH' }));
+  expect(mockNavigate).toHaveBeenCalledWith('/rh?tab=myaccount');
+  fireEvent.click(screen.getByRole('button', { name: 'Documents financiers 2SG' }));
+  expect(mockNavigate).toHaveBeenCalledWith('/finance?tab=depenses#finance-documents');
+});
+
+test('HR embedded account reuses the same profile without a self-link', async () => {
+  render(<OwnProfile embedded/>); await screen.findByText('Synthetic Person');
+  expect(api.getOwnProfile).toHaveBeenCalledTimes(1);
+  expect(screen.queryByRole('button', { name: 'Mon compte RH' })).not.toBeInTheDocument();
 });
 
 test.each([['FR', 'Fonction'], ['EN', 'Position'], ['DE', 'Funktion']])('renders the approved compact position in %s without changing the source or account role', async (language, label) => {

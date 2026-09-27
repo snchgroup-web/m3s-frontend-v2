@@ -36,23 +36,24 @@ const messages = {
     mismatch: 'Diese Zuordnung entspricht nicht der freigegebenen Zuordnung der Datei.', checkFailed: 'Dateiprüfung fehlgeschlagen.' }
 };
 
-export default function PrivateGedDocuments() {
+export default function PrivateGedDocuments({ scope = 'all' }) {
   const { language } = useLanguage();
   const t = messages[language] || messages.FR;
+  const scoped = ['personal', 'finance'].includes(scope);
   const [revision, setRevision] = useState(0);
   const [state, setState] = useState({ status: 'loading', rows: [] });
   const [busy, setBusy] = useState(null);
   const [notice, setNotice] = useState(null);
   const [importOpen, setImportOpen] = useState(false);
   const [file, setFile] = useState(null);
-  const [category, setCategory] = useState('personal');
+  const [category, setCategory] = useState(scope === 'finance' ? 'finance' : 'personal');
   const [candidate, setCandidate] = useState({ status: 'idle' });
   const active = useRef(null);
   useEffect(() => () => active.current?.abort(), []);
   useEffect(() => {
     const controller = new AbortController();
     setState({ status: 'loading', rows: [] });
-    api.getPrivateGedDocuments({ signal: controller.signal }).then(rows => {
+    Promise.resolve().then(() => api.getPrivateGedDocuments({ signal: controller.signal })).then(rows => {
       if (!controller.signal.aborted) setState({ status: 'ready', rows });
     }).catch(error => {
       if (!controller.signal.aborted) setState({ rows: [], status: error.status === 403 ? 'denied' :
@@ -116,17 +117,18 @@ export default function PrivateGedDocuments() {
     }
   }
 
+  const rows = scoped ? state.rows.filter(row => row.category === scope) : state.rows;
   return <section className="private-ged" aria-labelledby="private-ged-title" aria-busy={state.status === 'loading'}>
-    <div className="private-ged-heading"><h3 id="private-ged-title"><LockKeyhole size={18} aria-hidden="true"/>{t.title}</h3>
+    <div className="private-ged-heading"><h3 id="private-ged-title"><LockKeyhole size={18} aria-hidden="true"/>{scoped ? t[scope] : t.title}</h3>
       <div className="private-ged-actions"><button className="m3s-secondary-button" disabled={state.status !== 'ready' || !!busy || importOpen}
-        onClick={() => { setNotice(null); setFile(null); setCategory('personal'); setImportOpen(true); }}><Upload size={18} aria-hidden="true"/>{t.add}</button>
+        onClick={() => { setNotice(null); setFile(null); setCategory(scope === 'finance' ? 'finance' : 'personal'); setImportOpen(true); }}><Upload size={18} aria-hidden="true"/>{t.add}</button>
       <button className="m3s-secondary-button" aria-label={t.refresh} title={t.refresh}
         disabled={state.status === 'loading' || !!busy} onClick={() => { setNotice(null); setRevision(value => value + 1); }}><RefreshCw size={18}/></button>
       </div>
     </div>
     {importOpen && <form className="private-ged-import" onSubmit={importDocument} aria-label={t.add}>
       <label htmlFor="ged-category">{t.category}</label>
-      <select id="ged-category" value={category} disabled={!!busy} onChange={event => { setCandidate({ status: 'idle' }); setCategory(event.target.value); }}>
+      <select id="ged-category" value={category} disabled={!!busy || scoped} onChange={event => { setCandidate({ status: 'idle' }); setCategory(event.target.value); }}>
         <option value="personal">{t.personal}</option><option value="finance">{t.finance}</option>
       </select>
       <label htmlFor="ged-file">{t.file}</label>
@@ -138,7 +140,7 @@ export default function PrivateGedDocuments() {
         <button type="button" className="m3s-secondary-button" disabled={!!busy} onClick={() => { setImportOpen(false); setFile(null); }}><X size={18} aria-hidden="true"/>{t.cancel}</button></div>
     </form>}
     {state.status !== 'ready' && <p role={state.status === 'error' ? 'alert' : 'status'}>{t[state.status]}</p>}
-    {state.status === 'ready' && (state.rows.length ? <ul className="private-ged-list">{state.rows.map(row =>
+    {state.status === 'ready' && (rows.length ? <ul className="private-ged-list">{rows.map(row =>
       <li key={row.id}><FileText size={21} aria-hidden="true"/><div className="private-ged-file"><span>{row.name}</span>
         <small>{t[row.category] || t.unclassified} · {row.name.endsWith('.docx') ? 'Word' : 'PDF'} · {new Intl.NumberFormat({ FR: 'fr-CH', EN: 'en-GB', DE: 'de-CH' }[language] || 'fr-CH', { maximumFractionDigits: 1 }).format(row.size / 1024)} {t.size}</small></div>
         <button className="m3s-secondary-button" aria-label={`${t.download} ${row.name}`} title={`${t.download} ${row.name}`}

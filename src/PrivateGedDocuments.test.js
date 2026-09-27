@@ -62,6 +62,19 @@ const chooseImport = async () => {
   await act(async () => { fireEvent.change(screen.getByLabelText('Fichier'), { target: { files: [file] } }); });
   return file;
 };
+
+test.each(['personal', 'finance'])('scopes visible files and imports to %s without deleting records', async scope => {
+  const personal = { ...record, category: 'personal', name: 'Synthetic CV.docx' };
+  const finance = { ...record, id: 'b'.repeat(64), category: 'finance', name: 'Synthetic invoice.pdf' };
+  api.getPrivateGedDocuments.mockResolvedValue([personal, finance]);
+  render(<PrivateGedDocuments scope={scope}/>);
+  await screen.findByText(scope === 'personal' ? personal.name : finance.name);
+  expect(screen.queryByText(scope === 'personal' ? finance.name : personal.name)).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Importer un document' }));
+  expect(screen.getByLabelText('Classement')).toHaveValue(scope);
+  expect(screen.getByLabelText('Classement')).toBeDisabled();
+  expect(api.importPrivateGedDocument).not.toHaveBeenCalled();
+});
 test('personal import requires explicit confirmation and refreshes only after real success', async () => {
   const cv = { ...record, name: 'Synthetic CV.docx', category: 'personal' };
   api.preparePrivateGedImport.mockResolvedValue(cv);

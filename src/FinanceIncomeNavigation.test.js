@@ -21,7 +21,8 @@ jest.mock('recharts', () => ({
 }));
 jest.mock('./api', () => ({ __esModule: true, default: {
   getFinanceDashboard: jest.fn(), getExpenses: jest.fn(), getIncome: jest.fn(),
-  getFxHistory: jest.fn(), getSocialFinance: jest.fn(), getRealEstateFinance: jest.fn()
+  getFxHistory: jest.fn(), getSocialFinance: jest.fn(), getRealEstateFinance: jest.fn(),
+  getPrivateGedDocuments: jest.fn()
 } }));
 
 const income = [
@@ -43,6 +44,17 @@ beforeEach(() => {
   api.getFxHistory.mockResolvedValue({ data: [] });
   api.getSocialFinance.mockResolvedValue({ data: [], summary: {} });
   api.getRealEstateFinance.mockResolvedValue({ data: [], summary: {} });
+  api.getPrivateGedDocuments.mockResolvedValue([
+    { id: 'a'.repeat(64), name: 'Synthetic invoice.pdf', size: 100, category: 'finance' },
+    { id: 'b'.repeat(64), name: 'Synthetic CV.docx', size: 100, category: 'personal' }
+  ]);
+});
+
+test('expense view exposes only owner-scoped financial documents', async () => {
+  mockSearch = '?tab=depenses';
+  render(<Finance/>);
+  expect(await screen.findByText('Synthetic invoice.pdf')).toBeInTheDocument();
+  expect(screen.queryByText('Synthetic CV.docx')).not.toBeInTheDocument();
 });
 
 test.each([
@@ -57,7 +69,7 @@ test.each([
   expect(within(register()).queryByText(hidden)).not.toBeInTheDocument();
   expect(within(register()).queryByText('Service Delta')).not.toBeInTheDocument();
   expect(register()).toHaveTextContent(`Transactions chargées : ${count}`);
-  expect(screen.getByTestId('finance-total-income')).toHaveTextContent('10 000 CHF');
+  expect(screen.getByTestId('finance-total-income')).toHaveTextContent(/10[\s'’]000 CHF/);
   const context = getDashboardReturnContext(mockSearch);
   expect(buildDashboardReturnPath(context.indicatorId)).toContain(`#dashboard-kpi-${indicator}`);
 });
@@ -103,7 +115,7 @@ test('unknown scopes show all receipts without changing global totals', async ()
   await screen.findByText('Totaux globaux disponibles');
   expect(within(register()).getByRole('combobox', { name: 'Périmètre des recettes' })).toHaveValue('all');
   expect(register()).toHaveTextContent('Transactions chargées : 5');
-  expect(screen.getByTestId('finance-total-income')).toHaveTextContent('10 000 CHF');
+  expect(screen.getByTestId('finance-total-income')).toHaveTextContent(/10[\s'’]000 CHF/);
 });
 
 test('confirmed empty filtered subset shows zero, not a global count', async () => {
@@ -123,7 +135,7 @@ test.each([{ success: false, data: income }, { data: null }])('does not render a
   expect(register()).toHaveTextContent('Transactions chargées : —');
   expect(within(register()).queryByText('Support Alpha')).not.toBeInTheDocument();
   expect(register()).not.toHaveTextContent('Aucun résultat');
-  expect(screen.getByTestId('finance-total-income')).toHaveTextContent('10 000 CHF');
+  expect(screen.getByTestId('finance-total-income')).toHaveTextContent(/10[\s'’]000 CHF/);
 });
 
 test('loading a filtered register is not displayed as a confirmed zero', async () => {

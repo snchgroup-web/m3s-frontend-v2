@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, RefreshCw, UserRound, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, RefreshCw, UserRound, CheckCircle2, FolderOpen } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { useAuth } from './AuthContext';
 import api from './api';
@@ -30,11 +30,12 @@ const messages = {
     founder: 'Gründungsmitglied', associate: 'Assoziiertes Mitglied', missing: 'Nicht angegeben' }
 };
 
-export default function OwnProfile() {
+export default function OwnProfile({ embedded = false }) {
   const { language } = useLanguage();
   const { user } = useAuth();
   const navigate = useNavigate();
   const t = messages[language] || messages.FR;
+  const links = { FR: ['Mon compte RH', 'Documents financiers 2SG'], EN: ['My HR account', '2SG financial documents'], DE: ['Mein HR-Konto', '2SG-Finanzdokumente'] }[language] || ['Mon compte RH', 'Documents financiers 2SG'];
   const [revision, setRevision] = useState(0);
   const [state, setState] = useState({ status: 'loading', data: null });
   useEffect(() => {
@@ -75,7 +76,11 @@ export default function OwnProfile() {
         {field(t.team, data.profile.team)}{field(t.type, data.profile.memberType === 'Fondateur' ? t.founder : data.profile.memberType === 'Associe' ? t.associate : data.profile.memberType)}
         {field(t.position, positionLabel === 'Manager' ? <span translate="no">Manager</span> : positionLabel)}
       </dl></section>
-      <PrivateGedDocuments key={user?.email || 'no-account'}/>
+      <nav className="own-profile-links" aria-label={t.title}>
+        {!embedded && <button className="m3s-secondary-button" onClick={() => navigate('/rh?tab=myaccount')}><UserRound size={18} aria-hidden="true"/>{links[0]}</button>}
+        <button className="m3s-secondary-button" onClick={() => navigate('/finance?tab=depenses#finance-documents')}><FolderOpen size={18} aria-hidden="true"/>{links[1]}</button>
+      </nav>
+      <PrivateGedDocuments key={user?.email || 'no-account'} scope="personal"/>
       <footer>{t.source} : {data.source.id} · {t.approved} : <time dateTime={data.source.approvedOn}>{new Intl.DateTimeFormat({ FR: 'fr-CH', EN: 'en-GB', DE: 'de-CH' }[language] || 'fr-CH', { timeZone: 'UTC' }).format(new Date(`${data.source.approvedOn}T00:00:00Z`))}</time></footer>
     </>}
   </article>;
