@@ -80,6 +80,46 @@ beforeEach(() => {
 
 afterEach(() => jest.restoreAllMocks());
 
+test('creates a source-currency expense without inventing equivalents', async () => {
+  mockSearch = '?tab=depenses';
+  api.getExpenses.mockResolvedValue({ data: [], capabilities: { expense_amount_contract: 2 } });
+  api.createExpense.mockResolvedValue({ success: true });
+  renderFinance();
+  await act(async () => {});
+  fireEvent.click(screen.getByRole('button', { name: 'Nouvelle Dépense' }));
+  fireEvent.change(screen.getByLabelText('Description'), { target: { value: 'Synthetic USD invoice' } });
+  fireEvent.change(screen.getByLabelText('Devise du paiement'), { target: { value: 'USD' } });
+  fireEvent.change(screen.getByLabelText('Total payé *'), { target: { value: '12.34' } });
+  expect(screen.queryByLabelText('Taux appliqué *')).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Créer' }));
+  expect(api.createExpense).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, ajouter' }));
+  await waitFor(() => expect(api.createExpense).toHaveBeenCalledTimes(1));
+  const payload = api.createExpense.mock.calls[0][0];
+  expect(payload.amount_contract_version).toBe(2);
+  expect(payload.source_amounts.original_currency).toBe('USD');
+  expect(payload.source_amounts.total_paid).toBe('12.34');
+  expect(payload).not.toHaveProperty('montant_chf');
+  expect(payload).not.toHaveProperty('montant_cfa');
+});
+
+test('edits a versioned expense while preserving source amounts', async () => {
+  mockSearch = '?tab=depenses';
+  api.getExpenses.mockResolvedValue({ capabilities: { expense_amount_contract: 2 }, data: [{
+    id: 'DEP-SYNTH', ref: 'DEP-SYNTH', description: 'Synthetic source expense', date: '2026-01-15',
+    montant_origine: 12.34, devise_origine: 'USD', montant_chf: null, montant_cfa: null,
+    amount_contract_version: 2, source_amounts: { original_currency: 'USD', total_paid: 12.34, fees: null, principal: null, recipient_currency: null, recipient_amount: null, equivalent_chf: null, equivalent_cfa: null, conversion_source: null }
+  }] });
+  api.updateExpense.mockResolvedValue({ success: true });
+  renderFinance();
+  await act(async () => {});
+  fireEvent.click(screen.getByRole('button', { name: 'Modifier : DEP-SYNTH' }));
+  expect(screen.getByLabelText('Total payé *')).toHaveValue(12.34);
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
+  await waitFor(() => expect(api.updateExpense).toHaveBeenCalledWith('DEP-SYNTH', expect.objectContaining({ amount_contract_version: 2, source_amounts: expect.objectContaining({ original_currency: 'USD', total_paid: 12.34, fees: null }) })));
+});
+
 test('requires confirmation before creating a revenue entry and then reports success', async () => {
   renderFinance();
   await act(async () => {});

@@ -19,6 +19,8 @@ import FinanceBudget from './FinanceBudget';
 import { createTransferComparison } from './financeTransferQuotes';
 import { parseFxRate, cfaPerChfObservation, summarizeFxHistory, yearlyFxHistory } from './financeFxHistory';
 import { normalizeFinanceSummary } from './financeSummary';
+import ExpenseSourceFields, { emptySourceAmounts, expenseAmountLabels } from './ExpenseSourceFields';
+import { normalizeExpenseAmounts } from './financeExpenseAmounts';
 import { matchesIncomeScope, normalizeIncomeScope } from './financeIncomeScope';
 import FinanceArchitecture from './FinanceArchitecture';
 import FinanceProcessControls from './FinanceProcessControls';
@@ -129,6 +131,7 @@ const Finance = () => {
   const [recettes, setRecettes] = useState([]);
   const [depenses, setDepenses] = useState([]);
   const [financeSummary, setFinanceSummary] = useState(null);
+  const [expenseAmountsSupported, setExpenseAmountsSupported] = useState(false);
   const [financeSummaryStatus, setFinanceSummaryStatus] = useState('loading');
   const [financeExtractStatus, setFinanceExtractStatus] = useState('loading');
   const [incomeExtractStatus, setIncomeExtractStatus] = useState('loading');
@@ -727,10 +730,15 @@ const Finance = () => {
   const fxRateInvalid = fxFormRate === null || fxFormRate <= 0;
   const fxPairInvalid = !fxFormData.devise_from || !fxFormData.devise_to || fxFormData.devise_from === fxFormData.devise_to;
   const fxFormInvalid = fxRateInvalid || fxPairInvalid || !fxFormData.date;
-  const appliedRateInvalid = appliedFormRate === null || appliedFormRate <= 0;
+  const sourceAmountMode = modalType === 'depense' && formData.amount_contract_version === 2;
+  let sourceAmountResult = null;
+  if (sourceAmountMode) {
+    try { sourceAmountResult = normalizeExpenseAmounts(formData.source_amounts || {}); } catch { /* Invalid input remains editable. */ }
+  }
+  const appliedRateInvalid = sourceAmountMode ? !sourceAmountResult || !expenseAmountsSupported : appliedFormRate === null || appliedFormRate <= 0;
   const financeDescriptionInvalid = !String(formData.description ?? '').trim();
   const financeAmount = String(formData.montant ?? '').trim() === '' ? null : parseFiniteNumber(formData.montant);
-  const financeAmountInvalid = financeAmount === null;
+  const financeAmountInvalid = sourceAmountMode ? !sourceAmountResult : financeAmount === null;
   const financeAmountPair = convertFinanceAmount(formData.montant, formData.devise, appliedFormRate);
   const editingImmo = editingImmoId !== null;
   const immoAmountFields = [
@@ -882,6 +890,9 @@ const Finance = () => {
       ref: item.ref || item.reference || item.numero_ref || item.source_ref || item.source_id || `${type}-${String(index + 1).padStart(4, '0')}`,
       description: item.description || item.name || 'Transaction',
       fournisseur: item.fournisseur || '',
+      commentaire: item.commentaire || '',
+      amount_contract_version: item.amount_contract_version,
+      source_amounts: item.source_amounts,
       montant: montantChf,
       montantOrigine,
       devise: deviseOrigine,
@@ -963,6 +974,7 @@ const Finance = () => {
     const expensesData = expensesResult.status === 'fulfilled' && expensesResult.value?.success !== false && Array.isArray(expensesResult.value?.data)
       ? expensesResult.value.data
       : null;
+    setExpenseAmountsSupported(Boolean(expensesData && expensesResult.value?.capabilities?.expense_amount_contract === 2));
     const incomeData = incomeResult.status === 'fulfilled' && incomeResult.value?.success !== false && Array.isArray(incomeResult.value?.data)
       ? incomeResult.value.data
       : null;
@@ -1798,6 +1810,10 @@ const Finance = () => {
       commentaire: formData.commentaire || '',
       fournisseur: formData.fournisseur || ''
     };
+    if (sourceAmountMode) {
+      Object.assign(payload, { amount_contract_version: 2, source_amounts: formData.source_amounts });
+      for (const key of ['montant_origine', 'devise_origine', 'montant_chf', 'montant_cfa', 'taux_fx', 'taux_fx_applique', 'taux_fx_reference']) delete payload[key];
+    }
 
     setFeedback(null);
     setPendingAction({
@@ -1866,6 +1882,10 @@ const Finance = () => {
   const openNewModal = (type) => {
     setFinanceFormError(false);
     const next = createEmptyFinanceForm();
+    if (type === 'depense' && expenseAmountsSupported) {
+      next.amount_contract_version = 2;
+      next.source_amounts = emptySourceAmounts();
+    }
     next.tauxFxApplique = getHistoricalCfaPerChf(next.date)?.cfaPerChf || '';
     setModalType(type);
     setSocialModal(false);
@@ -2091,6 +2111,9 @@ const Finance = () => {
                     : `${t.extractUnavailable}.`}
               </p>
             )}
+            {(financeSummary?.expensesMissingChf > 0 || financeSummary?.expensesMissingCfa > 0) && <p role="alert" className="mt-2 text-amber-300">
+              {expenseAmountLabels[language].partial} CHF : {financeSummary.expensesMissingChf} · CFA : {financeSummary.expensesMissingCfa}
+            </p>}
           </div>
         </div>
 
@@ -2286,7 +2309,9 @@ const Finance = () => {
                       >
                         <td className="px-4 py-3 text-slate-400">{formatCell(d.ref)}</td>
                         <td className="px-6 py-3 text-slate-400 whitespace-nowrap">{formatDateForDisplay(d.date)}</td>
-                        <td className="px-6 py-3 text-slate-300">{translateDescription(d.description)}</td>
+                        <td className="px-6 py-3 text-slate-300">{translateDescription(d.description)}
+                          {d.source_amounts && <small className="block mt-1">{expenseAmountLabels[language].source} : {formatAmount(d.source_amounts.total_paid)} {d.source_amounts.original_currency}</small>}
+                        </td>
                         <td className="px-4 py-3 text-red-400 font-bold">{d.montantChfAvailable ? formatAmount(d.montantChf) : '—'}</td>
                         <td className="px-4 py-3 text-red-300 font-bold">{d.montantCfaAvailable ? formatAmount(d.montantCfa) : '—'}</td>
                         <td className="px-4 py-3 text-purple-300">
@@ -3009,7 +3034,7 @@ const Finance = () => {
                   {language === 'DE' ? 'Lieferant' : language === 'EN' ? 'Supplier' : 'Fournisseur'}
                   <input type="text" value={formData.fournisseur || ''} onChange={(e) => handleFormChange('fournisseur', e.target.value)} className="mt-1 w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" />
                 </label>}
-                <input
+                {sourceAmountMode ? <ExpenseSourceFields value={formData.source_amounts} language={language} invalid={!sourceAmountResult} onChange={value => handleFormChange('source_amounts', value)} /> : <><input
                   type="number"
                   step="any"
                   placeholder={t.montant}
@@ -3025,7 +3050,7 @@ const Finance = () => {
                   <option>CHF</option>
                   <option>CFA</option>
                 </select>
-                <FinanceAmountPair {...financeAmountPair} label={t.amountPreview} language={language} testId="finance-form-amount-pair" />
+                <FinanceAmountPair {...financeAmountPair} label={t.amountPreview} language={language} testId="finance-form-amount-pair" /></>}
                 <select
                   value={formData.categorie}
                   onChange={(e) => handleFormChange('categorie', e.target.value)}
@@ -3041,7 +3066,7 @@ const Finance = () => {
                   onChange={handleFinanceDateChange}
                   className="w-full"
                 />
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {!sourceAmountMode && <><div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <label className="text-sm text-slate-300">
                     <span className="mb-1 block">{t.tauxReference}</span>
                     <output className="block min-h-11 w-full rounded-lg border border-slate-600 bg-slate-900 px-4 py-2 text-slate-200">
@@ -3068,7 +3093,7 @@ const Finance = () => {
                 <p className="text-sm text-slate-300">{t.separationTauxInfo}</p>
                 {appliedRateInvalid && (
                   <p id="finance-applied-rate-error" role="alert" className="text-sm text-amber-300">{t.appliedRateError}</p>
-                )}
+                )}</>}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <label className="text-sm text-slate-300">
                     <span className="block mb-1">{t.team}</span>
