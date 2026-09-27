@@ -91,7 +91,7 @@ export default function GedDocumentActions({ row, onChanged, onDownload, disable
       {button('history', History, history)}</div>
     {['rename', 'version'].includes(mode) && <form className="private-ged-import" aria-label={t[mode]} onSubmit={event => { event.preventDefault(); setConfirming(true); }}>
       {mode === 'rename' ? <label>{t.title}<input value={title} maxLength={140} required disabled={busy}
-        onChange={event => setTitle(event.target.value)}/></label> : <label>{t.file}<input type="file" accept=".pdf,.docx" disabled={busy}
+        onChange={event => setTitle(event.target.value)}/></label> : <label>{t.file}<input type="file" accept=".pdf,.docx,.jpg,.jpeg,.png" disabled={busy}
         onChange={event => { setCandidate(null); setFile(event.target.files?.[0] || null); }}/></label>}
       <div className="private-ged-actions"><button type="submit" className="m3s-primary-button" disabled={busy || (mode === 'rename' ? invalidTitle : !candidate)}><Check size={18}/>{t.save}</button>
         <button type="button" className="m3s-secondary-button" disabled={busy} onClick={() => { setMode(null); setNotice(null); }}><X size={18}/>{t.cancel}</button></div>
