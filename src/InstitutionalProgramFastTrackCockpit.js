@@ -1,4 +1,5 @@
 import React from 'react';
+import accessStatus from './programAccessCurrentStatus.json';
 import { AlertTriangle, ArrowRight, CheckCircle2, Gauge, Layers3, LockKeyhole, Route } from 'lucide-react';
 
 const COPY = {
@@ -57,17 +58,42 @@ const COPY = {
 
 const InstitutionalProgramFastTrackCockpit = ({ language = 'FR' }) => {
   const t = COPY[language] || COPY.FR;
+  const locale = COPY[language] ? language : 'FR';
   return (
     <section id="institutional-fast-track-cockpit" data-testid="institutional-fast-track-cockpit" className="scroll-mt-24 m3s-panel p-4 sm:p-5">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-5xl">
-          <p className="text-xs font-semibold uppercase text-blue-300">{t.eyebrow}</p>
+          <p className="text-xs font-semibold uppercase text-blue-300">{({FR: 'PGM-CPK-001 · point documentaire', DE: 'PGM-CPK-001 · Dokumentationsstand', EN: 'PGM-CPK-001 · documentary update'})[locale]} · <time dateTime={accessStatus.snapshotDate}>{new Intl.DateTimeFormat({FR:'fr-CH',DE:'de-CH',EN:'en-GB'}[locale], {timeZone:'UTC'}).format(new Date(`${accessStatus.snapshotDate}T00:00:00Z`))}</time></p>
           <h4 className="mt-1 text-lg font-semibold text-slate-100 sm:text-xl">{t.title}</h4>
           <p className="mt-2 text-sm leading-6 text-slate-300">{t.intro}</p>
         </div>
         <Gauge className="shrink-0 text-blue-300" size={28} aria-hidden="true" />
       </div>
 
+      <div id="program-access-current" data-testid="program-access-current" className="mt-5 border-y border-slate-600 py-5">
+        <h5 className="text-lg font-semibold text-slate-100">{accessStatus.title[locale]}</h5>
+        <p className="mt-1 text-sm font-semibold text-amber-200">{accessStatus.intro[locale]}</p>
+        <a href={`/boussole#${locale.toLowerCase()}/${accessStatus.id}`} className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-blue-300 underline">
+          {({FR:'Ouvrir ce point dans la Boussole',DE:'Diesen Stand im Kompass öffnen',EN:'Open this status in the Compass'})[locale]}<ArrowRight size={16} aria-hidden="true"/>
+        </a>
+        {accessStatus.blocks.map((block, index) => (
+          <div key={index} className="mt-4">
+            <h6 className="text-sm font-semibold text-slate-100">{block.title[locale]}</h6>
+            {block.type === 'prose' ? <p className="mt-1 text-sm leading-6 text-slate-300">{block.body[locale]}</p> : (
+              <div className="mt-2 overflow-x-auto" role="region" aria-label={block.title[locale]} tabIndex={0}>
+                <table className="w-full min-w-[640px] text-left text-sm">
+                  <thead><tr>{block.heads[locale].map(head => <th key={head} scope="col" className="border-b border-slate-600 px-3 py-2">{head}</th>)}</tr></thead>
+                  <tbody>{block.rows.map((row, rowIndex) => <tr key={rowIndex}>{row.map((cell, column) => column === 0
+                    ? <th key={column} scope="row" className="w-1/5 border-b border-slate-700 px-3 py-3 align-top font-medium">{cell[locale]}</th>
+                    : <td key={column} className="w-2/5 border-b border-slate-700 px-3 py-3 align-top text-slate-300">{cell[locale]}</td>)}</tr>)}</tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <p className="mt-5 text-sm font-semibold text-slate-300">{({FR: 'Socle documentaire historique · 2 septembre 2026 · décisions et compteurs inchangés', DE: 'Historische Dokumentationsbasis · 2. September 2026 · Entscheide und Kennzahlen unverändert', EN: 'Historical documentary baseline · 2 September 2026 · decisions and counts unchanged'})[locale]}</p>
+      <p className="mt-1 text-xs text-slate-400">{t.eyebrow}</p>
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {t.stages.map(([title, value, note], index) => (
           <article key={title} className="m3s-raised min-h-32 p-3">

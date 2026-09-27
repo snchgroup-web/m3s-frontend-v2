@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Compass, LoaderCircle, RefreshCw } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import { api } from './api';
 
 const translations = {
   FR: {
     title: 'Boussole globale 2SG / M3S',
-    version: 'Référentiel pédagogique · V3.1',
+    version: 'Référentiel pédagogique · V3.3 · 27.09.2026',
     back: 'Revenir au tableau de bord',
     loading: 'Chargement sécurisé de la Boussole',
     error: 'La Boussole sécurisée est momentanément indisponible.',
@@ -15,7 +15,7 @@ const translations = {
   },
   DE: {
     title: 'Globaler Kompass 2SG / M3S',
-    version: 'Pädagogische Referenz · V3.1',
+    version: 'Pädagogische Referenz · V3.3 · 27.09.2026',
     back: 'Zurück zum Dashboard',
     loading: 'Der Kompass wird sicher geladen',
     error: 'Der geschützte Kompass ist vorübergehend nicht verfügbar.',
@@ -23,7 +23,7 @@ const translations = {
   },
   EN: {
     title: '2SG / M3S Global Compass',
-    version: 'Learning reference · V3.1',
+    version: 'Learning reference · V3.3 · 27.09.2026',
     back: 'Return to dashboard',
     loading: 'Securely loading the Compass',
     error: 'The secure Compass is temporarily unavailable.',
@@ -33,6 +33,9 @@ const translations = {
 
 const Boussole = () => {
   const navigate = useNavigate();
+  const { hash } = useLocation();
+  const requestedSection = /^#(?:fr|de|en)\/([a-z0-9-]+)$/i.exec(hash || '')?.[1];
+  const section = ['overview', 'access-20260924', 'strategy', 'functions', 'system', 'status', 'evolution', 'glossary', 'sources'].includes(requestedSection) ? requestedSection : 'overview';
   const { language } = useLanguage();
   const [artifactUrl, setArtifactUrl] = useState('');
   const [status, setStatus] = useState('loading');
@@ -86,7 +89,7 @@ const Boussole = () => {
       </header>
       {status === 'ready' ? (
         <iframe
-          src={`${artifactUrl}#${language.toLowerCase()}/overview`}
+          src={`${artifactUrl}#${language.toLowerCase()}/${section}`}
           title={t.title}
           className="min-h-0 w-full flex-1 border-0 bg-white"
           referrerPolicy="no-referrer"

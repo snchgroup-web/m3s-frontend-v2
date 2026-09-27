@@ -8,10 +8,12 @@ jest.mock('./api', () => ({
 }));
 
 jest.mock('react-router-dom', () => ({
-  useNavigate: () => jest.fn()
+  useNavigate: () => jest.fn(),
+  useLocation: jest.fn(() => ({ hash: '' }))
 }), { virtual: true });
 
 beforeEach(() => {
+  require('react-router-dom').useLocation.mockReturnValue({ hash: '' });
   api.getBoussoleArtifact.mockResolvedValue(new Blob(['<html>Boussole</html>'], { type: 'text/html' }));
   URL.createObjectURL = jest.fn(() => 'blob:m3s-boussole');
   URL.revokeObjectURL = jest.fn();
@@ -36,6 +38,19 @@ test('loads and releases the protected compass artifact with the active language
 
   unmount();
   expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:m3s-boussole');
+});
+
+test.each([
+  ['#fr/access-20260924', 'access-20260924'],
+  ['#en/access-20260924', 'access-20260924'],
+  ['#fr/unknown-section', 'overview'],
+  ['#fr/<script>', 'overview']
+])('only accepts known deep-link sections: %s', async (hash, section) => {
+  localStorage.setItem('language', 'FR');
+  require('react-router-dom').useLocation.mockReturnValue({ hash });
+  render(<LanguageProvider><Boussole /></LanguageProvider>);
+  expect(await screen.findByTitle(/Boussole globale 2SG \/ M3S/i))
+    .toHaveAttribute('src', `blob:m3s-boussole#fr/${section}`);
 });
 
 test('offers a retry when the protected artifact cannot be loaded', async () => {
