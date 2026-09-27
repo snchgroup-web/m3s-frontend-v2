@@ -138,6 +138,15 @@ const validGedRecord = row => row && /^[a-f0-9]{64}$/.test(row.id) && typeof row
 const gedError = code => Object.assign(new Error(code), { code });
 
 export const api = {
+  getExpenseProofs: async (expenseId, { signal } = {}) => {
+    if (typeof expenseId !== 'string' || !expenseId || expenseId.length > 128) throw gedError('GED_UNAVAILABLE');
+    const res = await apiFetch(`${API_BASE_URL}/ged/private/expenses/${encodeURIComponent(expenseId)}/documents`, { signal, cache: 'no-store' });
+    if (!res.ok) throw await createApiError(res, 'GED_UNAVAILABLE');
+    const payload = await res.json();
+    if (payload?.success !== true || !Array.isArray(payload.documents) || payload.documents.length > 100 ||
+      payload.documents.some(row => !validGedRecord(row) || row.category !== 'finance')) throw gedError('GED_UNAVAILABLE');
+    return payload.documents;
+  },
   mutatePrivateGedDocument: async (row, command, { signal } = {}) => {
     if (!/^[a-f0-9]{64}$/.test(row?.rootId) || !Number.isSafeInteger(row.revision)) throw gedError('GED_UNAVAILABLE');
     const res = await apiFetch(`${API_BASE_URL}/ged/private/documents/${row.rootId}/actions`, {
@@ -199,9 +208,11 @@ export const api = {
         payload.document.name !== checked.name || payload.document.category !== checked.category) throw gedError('GED_UNAVAILABLE');
     return payload;
   },
-  downloadPrivateGedDocument: async (record, { signal } = {}) => {
+  downloadPrivateGedDocument: async (record, { signal, expenseId } = {}) => {
     if (!validGedRecord(record)) throw new Error('GED_UNAVAILABLE');
-    const res = await apiFetch(`${API_BASE_URL}/ged/private/documents/${record.id}/content`, { signal, cache: 'no-store' });
+    if (expenseId !== undefined && (typeof expenseId !== 'string' || !expenseId || expenseId.length > 128)) throw gedError('GED_UNAVAILABLE');
+    const route = expenseId === undefined ? `documents/${record.id}/content` : `expenses/${encodeURIComponent(expenseId)}/documents/${record.id}/content`;
+    const res = await apiFetch(`${API_BASE_URL}/ged/private/${route}`, { signal, cache: 'no-store' });
     if (!res.ok) throw await createApiError(res, 'GED_UNAVAILABLE');
     if (res.headers.get('content-type')?.split(';')[0] !== gedMime(record.name)) throw new Error('GED_UNAVAILABLE');
     const blob = await res.blob();

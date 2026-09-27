@@ -28,6 +28,7 @@ import ActionConfirmationDialog from './ActionConfirmationDialog';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
 import FunctionAssistant from './FunctionAssistant';
 import PrivateGedDocuments from './PrivateGedDocuments';
+import ExpenseProofs from './ExpenseProofs';
 import { Files } from 'lucide-react';
 import {
   buildTeamAgentDirectory,
@@ -2324,6 +2325,7 @@ const Finance = () => {
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.phaseProjet)}</td>
                         <td className="px-4 py-3 text-slate-400">{formatCell(d.fournisseur)}</td>
                         <td className="sticky right-0 bg-slate-800 px-6 py-3"><div className="flex gap-2">
+                          <ExpenseProofs expense={d}/>
                           <button type="button" title={t.modifier} aria-label={`${t.modifier} : ${d.ref}`} onClick={(event) => { event.stopPropagation(); handleEdit('depense', d); }} className="m3s-icon-button hover:bg-slate-600">
                             <Edit2 size={18} className="text-blue-400" />
                           </button>
