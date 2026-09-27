@@ -22,13 +22,17 @@ export const normalizeFinanceSummary = (response) => {
   const totalIncomeCfa = incomeCount === 0 ? 0 : rawIncomeCfa;
   const totalExpenses = expenseCount === 0 ? 0 : rawExpenses;
   const totalExpensesCfa = expenseCount === 0 ? 0 : rawExpensesCfa;
-  if (totalIncome === null || totalExpenses === null) return null;
+  const expensesMissingChf = parseTransactionCount(response.data.expenses_missing_chf) ?? 0;
+  const expensesMissingCfa = parseTransactionCount(response.data.expenses_missing_cfa) ?? 0;
+  if (totalIncome === null || (totalExpenses === null && expensesMissingChf === 0)) return null;
 
   return {
     totalIncome,
     totalIncomeCfa,
-    totalExpenses,
-    totalExpensesCfa,
+    totalExpenses: expensesMissingChf > 0 ? null : totalExpenses,
+    totalExpensesCfa: expensesMissingCfa > 0 ? null : totalExpensesCfa,
+    expensesMissingChf,
+    expensesMissingCfa,
     incomeCount,
     expenseCount,
     timestamp: response.timestamp || null
