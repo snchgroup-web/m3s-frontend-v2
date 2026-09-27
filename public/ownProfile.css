@@ -38,3 +38,13 @@
 .m3s-branded-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; min-height: 60vh; padding: 24px; color: var(--m3s-text-primary, #172033); background: var(--m3s-surface-panel, #fff); }
 .m3s-branded-loading img { width: 96px; height: 96px; object-fit: contain; flex-shrink: 0; }
 .m3s-branded-loading p { font-size: 16px; text-align: center; }
+.private-ged-list > .ged-document-row { flex-wrap: wrap; }
+.ged-lifecycle { flex: 1 0 100%; min-width: 0; }
+.ged-lifecycle > .private-ged-actions { justify-content: flex-end; }
+.ged-lifecycle button { min-height: 44px; min-width: 44px; }
+.ged-history { margin-top: 12px; border-top: 1px solid var(--m3s-border); padding-top: 12px; }
+.ged-history ol { list-style: none; padding: 0; }
+.ged-history li { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 8px 0; }
+.ged-history span { flex: 1 1 200px; overflow-wrap: anywhere; }
+.ged-history time { font-size: 13px; }
+.private-ged-actions [aria-pressed="true"] { outline: 2px solid #60a5fa; outline-offset: 1px; }

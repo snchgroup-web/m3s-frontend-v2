@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Download, FileText, LockKeyhole, RefreshCw, Upload, X } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
+import GedDocumentActions from './GedDocumentActions';
 
 const messages = {
   FR: { title: 'Documents à accès restreint', refresh: 'Actualiser les documents', loading: 'Chargement des documents…',
@@ -44,6 +45,7 @@ export default function PrivateGedDocuments({ scope = 'all' }) {
   const [state, setState] = useState({ status: 'loading', rows: [] });
   const [busy, setBusy] = useState(null);
   const [notice, setNotice] = useState(null);
+  const [trash, setTrash] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const [file, setFile] = useState(null);
   const [category, setCategory] = useState(scope === 'finance' ? 'finance' : 'personal');
@@ -117,7 +119,10 @@ export default function PrivateGedDocuments({ scope = 'all' }) {
     }
   }
 
-  const rows = scoped ? state.rows.filter(row => row.category === scope) : state.rows;
+  const classified = scoped ? state.rows.filter(row => row.category === scope) : state.rows;
+  const rows = classified.filter(row => !!row.trashed === trash);
+  const trashText = { FR: ['Documents', 'Corbeille'], EN: ['Documents', 'Trash'], DE: ['Dokumente', 'Papierkorb'] }[language] || ['Documents', 'Corbeille'];
+  const changedText = { FR: 'Modification enregistrée.', EN: 'Change saved.', DE: 'Änderung gespeichert.' }[language] || 'Modification enregistrée.';
   return <section className="private-ged" aria-labelledby="private-ged-title" aria-busy={state.status === 'loading'}>
     <div className="private-ged-heading"><h3 id="private-ged-title"><LockKeyhole size={18} aria-hidden="true"/>{scoped ? t[scope] : t.title}</h3>
       <div className="private-ged-actions"><button className="m3s-secondary-button" disabled={state.status !== 'ready' || !!busy || importOpen}
@@ -126,6 +131,10 @@ export default function PrivateGedDocuments({ scope = 'all' }) {
         disabled={state.status === 'loading' || !!busy} onClick={() => { setNotice(null); setRevision(value => value + 1); }}><RefreshCw size={18}/></button>
       </div>
     </div>
+    {classified.some(row => row.lifecycle) && <div className="private-ged-actions" role="group" aria-label={t.title}>
+      {trashText.map((label, index) => <button key={label} className="m3s-secondary-button" type="button" aria-pressed={trash === !!index}
+        disabled={!!busy} onClick={() => setTrash(!!index)}>{label}</button>)}
+    </div>}
     {importOpen && <form className="private-ged-import" onSubmit={importDocument} aria-label={t.add}>
       <label htmlFor="ged-category">{t.category}</label>
       <select id="ged-category" value={category} disabled={!!busy || scoped} onChange={event => { setCandidate({ status: 'idle' }); setCategory(event.target.value); }}>
@@ -141,12 +150,15 @@ export default function PrivateGedDocuments({ scope = 'all' }) {
     </form>}
     {state.status !== 'ready' && <p role={state.status === 'error' ? 'alert' : 'status'}>{t[state.status]}</p>}
     {state.status === 'ready' && (rows.length ? <ul className="private-ged-list">{rows.map(row =>
-      <li key={row.id}><FileText size={21} aria-hidden="true"/><div className="private-ged-file"><span>{row.name}</span>
+      <li key={row.rootId || row.id} className="ged-document-row"><FileText size={21} aria-hidden="true"/><div className="private-ged-file"><span>{row.title || row.name}</span>
         <small>{t[row.category] || t.unclassified} · {row.name.endsWith('.docx') ? 'Word' : 'PDF'} · {new Intl.NumberFormat({ FR: 'fr-CH', EN: 'en-GB', DE: 'de-CH' }[language] || 'fr-CH', { maximumFractionDigits: 1 }).format(row.size / 1024)} {t.size}</small></div>
         <button className="m3s-secondary-button" aria-label={`${t.download} ${row.name}`} title={`${t.download} ${row.name}`}
-          disabled={!!busy} onClick={() => download(row)}><Download size={19}/></button></li>
+          disabled={!!busy} onClick={() => download(row)}><Download size={19}/></button>
+        {row.lifecycle && <GedDocumentActions key={`${row.rootId}-${row.revision}`} row={row} disabled={!!busy} onDownload={download}
+          onChanged={() => { setNotice('changed'); setRevision(value => value + 1); }}/>}
+      </li>
     )}</ul> : <p>{t.empty}</p>)}
     {busy && <p role="status">{t[busy === 'import' ? 'importing' : 'downloading']}</p>}
-    {notice && <p role={['failed', 'importFailed'].includes(notice) ? 'alert' : 'status'}>{t[notice]}</p>}
+    {notice && <p role={['failed', 'importFailed'].includes(notice) ? 'alert' : 'status'}>{notice === 'changed' ? changedText : t[notice]}</p>}
   </section>;
 }
