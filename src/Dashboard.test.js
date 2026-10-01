@@ -51,6 +51,18 @@ const summaryResponse = (overrides = {}) => ({
   data: { total_income_count: 3, total_expense_count: 1, total_income: 600, total_income_cfa: 360000, total_expenses: 50, total_expenses_cfa: 30000, ...overrides }
 });
 
+test('shows known expense subtotals without inventing a complete balance', async () => {
+  api.getFinanceDashboard.mockResolvedValue(summaryResponse({ total_expense_count: 3, expenses_missing_chf: 1, expenses_missing_cfa: 2 }));
+  render(<Dashboard />);
+  await screen.findByText('Known expenses · subtotal');
+  const expense = document.getElementById('dashboard-kpi-expenses');
+  expect(expense).toHaveTextContent('50 CHF');
+  expect(expense).toHaveTextContent('Partial');
+  expect(expense).toHaveTextContent('CHF 1 · CFA 2');
+  expect(expense).not.toHaveTextContent('≈');
+  expect(document.getElementById('dashboard-kpi-balance')).toHaveTextContent('— CHF');
+});
+
 test('shows the existing 2SG logo while the dashboard data is pending', () => {
   api.getFinanceDashboard.mockReturnValue(new Promise(() => {}));
   render(<Dashboard/>);

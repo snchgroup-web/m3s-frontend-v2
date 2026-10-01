@@ -24,6 +24,7 @@ export const normalizeFinanceSummary = (response) => {
   const totalExpensesCfa = expenseCount === 0 ? 0 : rawExpensesCfa;
   const expensesMissingChf = parseTransactionCount(response.data.expenses_missing_chf) ?? 0;
   const expensesMissingCfa = parseTransactionCount(response.data.expenses_missing_cfa) ?? 0;
+  if (expensesMissingChf > expenseCount || expensesMissingCfa > expenseCount) return null;
   if (totalIncome === null || (totalExpenses === null && expensesMissingChf === 0)) return null;
 
   return {
@@ -31,6 +32,14 @@ export const normalizeFinanceSummary = (response) => {
     totalIncomeCfa,
     totalExpenses: expensesMissingChf > 0 ? null : totalExpenses,
     totalExpensesCfa: expensesMissingCfa > 0 ? null : totalExpensesCfa,
+    ...((expensesMissingChf > 0 || expensesMissingCfa > 0) ? {
+      expenseSubtotal: {
+        chf: expensesMissingChf < expenseCount ? totalExpenses : null,
+        cfa: expensesMissingCfa < expenseCount ? totalExpensesCfa : null,
+        missingChf: expensesMissingChf,
+        missingCfa: expensesMissingCfa
+      }
+    } : {}),
     expensesMissingChf,
     expensesMissingCfa,
     incomeCount,
@@ -38,3 +47,9 @@ export const normalizeFinanceSummary = (response) => {
     timestamp: response.timestamp || null
   };
 };
+
+export const expenseSubtotalCopy = (language = 'FR') => ({
+  FR: { label: 'Dépenses connues · sous-total', partial: 'Partiel', missing: 'Contre-valeurs non renseignées', balance: 'Solde complet en attente des conversions', source: 'Montants enregistrés ; paiements non convertis exclus' },
+  EN: { label: 'Known expenses · subtotal', partial: 'Partial', missing: 'Missing currency equivalents', balance: 'Full balance pending conversions', source: 'Recorded amounts; unconverted payments excluded' },
+  DE: { label: 'Bekannte Ausgaben · Zwischensumme', partial: 'Teilbetrag', missing: 'Fehlende Gegenwerte', balance: 'Vollständiger Saldo wartet auf Umrechnungen', source: 'Erfasste Beträge; nicht umgerechnete Zahlungen ausgeschlossen' }
+}[language] || expenseSubtotalCopy('FR'));

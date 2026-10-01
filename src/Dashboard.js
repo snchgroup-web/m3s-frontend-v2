@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 import api from './api';
 import FinanceTransactionCount, { sumTransactionCounts } from './FinanceTransactionCount';
-import { normalizeFinanceSummary } from './financeSummary';
+import { normalizeFinanceSummary, expenseSubtotalCopy } from './financeSummary';
 import { matchesIncomeScope } from './financeIncomeScope';
 import DashboardPilotageNavigation from './DashboardPilotageNavigation';
 import { getDashboardIndicatorDestination } from './dashboardNavigation';
@@ -116,6 +116,7 @@ const kpiFlowTextClasses = {
 };
 
 const kpiStatusClasses = {
+  partial: 'border-amber-700/60 bg-amber-950/30 text-amber-300',
   available: 'border-emerald-700/60 bg-emerald-950/35 text-emerald-300',
   unavailable: 'border-amber-700/60 bg-amber-950/30 text-amber-300',
   restricted: 'border-violet-700/60 bg-violet-950/30 text-violet-300',
@@ -143,7 +144,7 @@ const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, tran
     {dualCurrency ? (
       <span className="global-kpi-currency mt-2 flex flex-wrap items-baseline gap-x-1.5 gap-y-1 text-[15px] font-semibold 2xl:flex-nowrap">
         <span className={`global-kpi-primary global-kpi-flow whitespace-nowrap ${flowAccent ? kpiFlowTextClasses[flowAccent] : 'text-blue-300'}`}>{value}</span>
-        <span className="global-kpi-cfa m3s-currency-cfa whitespace-nowrap">≈ {secondary}</span>
+        <span className="global-kpi-cfa m3s-currency-cfa whitespace-nowrap">{status === 'partial' ? '' : '≈ '}{secondary}</span>
       </span>
     ) : (
       <>
@@ -153,7 +154,7 @@ const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, tran
     )}
     {transactionCount && <FinanceTransactionCount {...transactionCount} />}
     <span className="mt-auto flex items-end justify-between gap-2 border-t border-slate-700 pt-2">
-      <span className="global-kpi-source min-w-0 truncate text-xs text-slate-500" title={source}>{source}</span>
+      <span className={`global-kpi-source min-w-0 text-xs text-slate-500 ${status === 'partial' ? 'whitespace-normal break-words' : 'truncate'}`} title={source}>{source}</span>
       <span className={`global-kpi-status global-kpi-status--${status} shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-semibold ${kpiStatusClasses[status]}`}>{statusLabel}</span>
     </span>
     </button>
@@ -754,6 +755,7 @@ const Dashboard = () => {
               revenueCfa: totalIncomeCfa,
               expenses: totalExpenses,
               expensesCfa: totalExpensesCfa,
+              expenseSubtotal: financeSummary?.expenseSubtotal || null,
               balance: Number.isFinite(totalIncome) && Number.isFinite(totalExpenses) ? totalIncome - totalExpenses : null,
               balanceCfa: Number.isFinite(totalIncomeCfa) && Number.isFinite(totalExpensesCfa) ? totalIncomeCfa - totalExpensesCfa : null,
               donations,
@@ -884,9 +886,11 @@ const Dashboard = () => {
     scope,
     language
   });
+  const expenseSubtotal = dashboardData?.moduleStats.finance.expenseSubtotal;
+  const subtotalText = expenseSubtotalCopy(language);
   const financeValues = {
     revenue: formatDualCurrency(dashboardData?.moduleStats.finance.revenue, dashboardData?.moduleStats.finance.revenueCfa),
-    expenses: formatDualCurrency(dashboardData?.moduleStats.finance.expenses, dashboardData?.moduleStats.finance.expensesCfa),
+    expenses: formatDualCurrency(expenseSubtotal ? expenseSubtotal.chf : dashboardData?.moduleStats.finance.expenses, expenseSubtotal ? expenseSubtotal.cfa : dashboardData?.moduleStats.finance.expensesCfa),
     balance: formatDualCurrency(dashboardData?.moduleStats.finance.balance, dashboardData?.moduleStats.finance.balanceCfa),
     donations: formatDualCurrency(dashboardData?.moduleStats.finance.donations, dashboardData?.moduleStats.finance.donationsCfa),
     financing: formatDualCurrency(dashboardData?.moduleStats.finance.financing, dashboardData?.moduleStats.finance.financingCfa),
@@ -971,9 +975,10 @@ const Dashboard = () => {
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('revenue'), ...financeKpiHelp('revenue')
         },
         {
-          id: 'expenses', label: t.expenses, value: `${financeValues.expenses.chf} CHF`, secondary: `${financeValues.expenses.cfa} CFA`, dualCurrency: true,
+          id: 'expenses', label: expenseSubtotal ? subtotalText.label : t.expenses, value: `${financeValues.expenses.chf} CHF`, secondary: `${financeValues.expenses.cfa} CFA`, dualCurrency: true,
           transactionCount: financeTransactionCount('expenses', 'global'),
           source: t.financeExpenses, ...sourceState('expenses'), icon: TrendingDown, accent: 'red', flowAccent: 'red',
+          ...(expenseSubtotal ? { status: 'partial', statusLabel: subtotalText.partial, source: `${subtotalText.source}. ${subtotalText.missing} : CHF ${expenseSubtotal.missingChf} · CFA ${expenseSubtotal.missingCfa}` } : {}),
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('expenses'), ...financeKpiHelp('expenses')
         },
         {

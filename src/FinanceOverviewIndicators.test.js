@@ -30,20 +30,21 @@ const BASE_PROPS = {
 
 test('shows core, real-estate and social totals from their dedicated sources', () => {
   render(<FinanceOverviewIndicators {...BASE_PROPS} />);
+  const amount = value => value.toLocaleString('fr-CH', { maximumFractionDigits: 2 }).replace(/\s/g, ' ');
 
-  expect(screen.getByTestId('finance-total-income')).toHaveTextContent('1 000 CHF');
-  expect(screen.getByTestId('finance-total-income')).toHaveTextContent('≈ 650 000 CFA');
+  expect(screen.getByTestId('finance-total-income')).toHaveTextContent(`${amount(1000)} CHF`);
+  expect(screen.getByTestId('finance-total-income')).toHaveTextContent(`≈ ${amount(650000)} CFA`);
   expect(screen.getByTestId('finance-total-income')).toHaveClass('text-xl', 'font-semibold');
   expect(screen.getByTestId('finance-total-expenses')).toHaveTextContent('400 CHF');
-  expect(screen.getByTestId('finance-total-expenses')).toHaveTextContent('≈ 260 000 CFA');
+  expect(screen.getByTestId('finance-total-expenses')).toHaveTextContent(`≈ ${amount(260000)} CFA`);
   expect(screen.getByTestId('finance-net-balance')).toHaveTextContent('600 CHF');
-  expect(screen.getByTestId('finance-net-balance')).toHaveTextContent('≈ 390 000 CFA');
-  expect(screen.getByTestId('finance-real-estate-funding')).toHaveTextContent('12 000 CHF');
-  expect(screen.getByTestId('finance-real-estate-funding')).toHaveTextContent('≈ 7 800 000 CFA');
-  expect(screen.getByTestId('finance-real-estate-reimbursements')).toHaveTextContent('3 000 CHF');
-  expect(screen.getByTestId('finance-real-estate-outstanding')).toHaveTextContent('9 000 CHF');
-  expect(screen.getByTestId('finance-social-total')).toHaveTextContent('1 500 CHF');
-  expect(screen.getByTestId('finance-social-total')).toHaveTextContent('≈ 975 000 CFA');
+  expect(screen.getByTestId('finance-net-balance')).toHaveTextContent(`≈ ${amount(390000)} CFA`);
+  expect(screen.getByTestId('finance-real-estate-funding')).toHaveTextContent(`${amount(12000)} CHF`);
+  expect(screen.getByTestId('finance-real-estate-funding')).toHaveTextContent(`≈ ${amount(7800000)} CFA`);
+  expect(screen.getByTestId('finance-real-estate-reimbursements')).toHaveTextContent(`${amount(3000)} CHF`);
+  expect(screen.getByTestId('finance-real-estate-outstanding')).toHaveTextContent(`${amount(9000)} CHF`);
+  expect(screen.getByTestId('finance-social-total')).toHaveTextContent(`${amount(1500)} CHF`);
+  expect(screen.getByTestId('finance-social-total')).toHaveTextContent(`≈ ${amount(975000)} CFA`);
   expect(screen.getByText('Flux sociaux reclassés')).toBeInTheDocument();
 });
 
