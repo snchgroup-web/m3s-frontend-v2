@@ -124,6 +124,7 @@ export default function PrivateGedDocuments({ scope = 'all' }) {
   const trashText = { FR: ['Documents', 'Corbeille'], EN: ['Documents', 'Trash'], DE: ['Dokumente', 'Papierkorb'] }[language] || ['Documents', 'Corbeille'];
   const changedText = { FR: 'Modification enregistrée.', EN: 'Change saved.', DE: 'Änderung gespeichert.' }[language] || 'Modification enregistrée.';
   return <section className="private-ged" aria-labelledby="private-ged-title" aria-busy={state.status === 'loading'}>
+    <div className={scope === 'finance' ? 'private-ged-toolbar private-ged-toolbar-sticky' : 'private-ged-toolbar'}>
     <div className="private-ged-heading"><h3 id="private-ged-title"><LockKeyhole size={18} aria-hidden="true"/>{scoped ? t[scope] : t.title}</h3>
       <div className="private-ged-actions"><button className="m3s-secondary-button" disabled={state.status !== 'ready' || !!busy || importOpen}
         onClick={() => { setNotice(null); setFile(null); setCategory(scope === 'finance' ? 'finance' : 'personal'); setImportOpen(true); }}><Upload size={18} aria-hidden="true"/>{t.add}</button>
@@ -135,6 +136,7 @@ export default function PrivateGedDocuments({ scope = 'all' }) {
       {trashText.map((label, index) => <button key={label} className="m3s-secondary-button" type="button" aria-pressed={trash === !!index}
         disabled={!!busy} onClick={() => setTrash(!!index)}>{label}</button>)}
     </div>}
+    </div>
     {importOpen && <form className="private-ged-import" onSubmit={importDocument} aria-label={t.add}>
       <label htmlFor="ged-category">{t.category}</label>
       <select id="ged-category" value={category} disabled={!!busy || scoped} onChange={event => { setCandidate({ status: 'idle' }); setCategory(event.target.value); }}>

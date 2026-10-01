@@ -81,7 +81,7 @@ test.each(['social', 'immobilier'])('%s monetary typography preserves source val
   const prefix = tab === 'social' ? 'finance-social-' : 'finance-immo-';
   expect(screen.getByTestId(prefix + 'total-chf')).toHaveClass('text-2xl', 'font-bold');
   expect(screen.getByTestId(prefix + 'historical-cfa')).toHaveClass('text-2xl', 'font-bold', 'm3s-currency-cfa');
-  expect(screen.getByTestId(prefix + 'historical-cfa').textContent.replace(/\s/g, '')).toBe('70000CFA');
+  expect(screen.getByTestId(prefix + 'historical-cfa').textContent.replace(/[\s'’]/g, '')).toBe('70000CFA');
 });
 
 const labels = { converter: 'Convertisseur', dashboard: 'Tableau de bord', history: 'Taux & Historique' };
@@ -324,7 +324,7 @@ test('an invalid first observation cannot shadow a valid rate on the same date',
   render(<Finance />);
   await screen.findByText('Historique chargé · Observations CHF/CFA valides : 1 · CFA par CHF');
   expect(converter().getByRole('button', { name: 'Calculer' })).toBeEnabled();
-  expect(output().textContent.replace(/\s/g, '')).toContain('700000CFA');
+  expect(output().textContent.replace(/[\s'’]/g, '')).toContain('700000CFA');
 });
 
 const readyConverter = async (rate = 700) => {
@@ -428,7 +428,7 @@ test('a changed FX reference refreshes the preview while preserving the saved co
   await readyConverter();
   fireEvent.change(converter().getByLabelText('Montant', { exact: true }), { target: { value: '10' } });
   fireEvent.click(converter().getByRole('button', { name: 'Calculer' }));
-  expect(output().textContent.replace(/\s/g, '')).toContain('7000CFA');
+  expect(output().textContent.replace(/[\s'’]/g, '')).toContain('7000CFA');
   fireEvent.click(within(nav()).getByRole('button', { name: 'Taux & Historique' }));
   const row = screen.getByText('QA-CONVERT-FX').closest('tr');
   fireEvent.click(within(row).getAllByRole('button')[0]);
@@ -437,8 +437,8 @@ test('a changed FX reference refreshes the preview while preserving the saved co
   fireEvent.click(within(form).getByRole('button', { name: 'Enregistrer' }));
   fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
   fireEvent.click(within(nav()).getByRole('button', { name: 'Convertisseur' }));
-  expect(output().textContent.replace(/\s/g, '')).toContain('7100CFA');
-  expect(converter().getByRole('table').querySelector('tbody').textContent.replace(/\s/g, '')).toContain('7000CFA700');
+  expect(output().textContent.replace(/[\s'’]/g, '')).toContain('7100CFA');
+  expect(converter().getByRole('table').querySelector('tbody').textContent.replace(/[\s'’]/g, '')).toContain('7000CFA700');
   expect(api.getFxHistory).toHaveBeenCalledTimes(1);
 });
 

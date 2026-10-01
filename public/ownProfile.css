@@ -26,6 +26,12 @@
 .private-ged-file small { color: var(--m3s-text-secondary); font-size: 12px; }
 .private-ged p { margin-top: 12px; font-size: 14px; }
 .private-ged-heading { flex-wrap: wrap; }
+.private-ged-toolbar-sticky { position: sticky; top: var(--m3s-subnav-offset, 0px); z-index: 20; padding: 12px 0; background: var(--m3s-surface-panel); border-bottom: 1px solid var(--m3s-border); }
+.private-ged-toolbar-sticky .private-ged-heading { margin-bottom: 10px; }
+.app-shell > div > main { overscroll-behavior-y: contain; }
+html:has(.app-shell), body:has(.app-shell) { height: 100%; overflow: clip; }
+html .app-shell { position: fixed; inset: 0; height: 100dvh; overflow: clip; }
+#finance-expense-register, #finance-revenue-register, #finance-documents { scroll-margin-top: calc(var(--m3s-subnav-offset, 0px) + 16px); }
 .private-ged-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .private-ged-actions button:not([aria-label]) { width: auto; height: auto; min-height: 44px; flex: 0 1 auto; gap: 8px; padding: 8px 12px; }
 .private-ged-actions svg { flex-shrink: 0; }

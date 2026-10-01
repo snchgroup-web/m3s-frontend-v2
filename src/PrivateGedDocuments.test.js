@@ -124,6 +124,18 @@ test('shows a genuine empty register', async () => {
   expect(await screen.findByText('Aucun document enregistré.')).toBeInTheDocument();
 });
 
+test('financial toolbar keeps the title, import and trash controls together', async () => {
+  api.getPrivateGedDocuments.mockResolvedValueOnce([{ ...record, category: 'finance', lifecycle: true,
+    rootId: record.id, revision: 0, trashed: false, title: record.name }]);
+  render(<PrivateGedDocuments scope="finance"/>);
+  await screen.findByText(record.name);
+  const toolbar = document.querySelector('.private-ged-toolbar-sticky');
+  expect(toolbar).toContainElement(screen.getByRole('heading', { name: 'Documents financiers 2SG' }));
+  expect(toolbar).toContainElement(screen.getByRole('button', { name: 'Importer un document' }));
+  expect(toolbar).toContainElement(screen.getByRole('button', { name: 'Documents', exact: true }));
+  expect(toolbar).toContainElement(screen.getByRole('button', { name: 'Corbeille', exact: true }));
+});
+
 test('failed downloads expose no provider details and remain retryable', async () => {
   api.downloadPrivateGedDocument.mockRejectedValueOnce(new Error('private provider data'));
   render(<PrivateGedDocuments/>); await screen.findByText(record.name);

@@ -127,6 +127,9 @@ const createApiError = async (response, fallbackCode = 'API_REQUEST_FAILED') => 
 const gedMime = name => ({ pdf: 'application/pdf', docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png' })[name?.split('.').pop()];
 const GED_MAX_BYTES = 5 * 1024 * 1024;
+const EXPENSE_DOCUMENT_ROLES = new Set(['invoice', 'payment_receipt', 'transfer_receipt', 'credit_note', 'other']);
+const unsafeExpenseReference = value => value.includes('<') || value.includes('>') ||
+  Array.from(value).some(character => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127);
 const validGedRecord = row => row && /^[a-f0-9]{64}$/.test(row.id) && typeof row.name === 'string' &&
   /^[\p{L}\p{N} ._()-]{1,140}\.(pdf|docx|jpg|jpeg|png)$/u.test(row.name) && !row.name.startsWith('.') &&
   Number.isInteger(row.size) && row.size >= 10 && row.size <= GED_MAX_BYTES &&
@@ -177,6 +180,49 @@ export const api = {
       throw new Error('GED_UNAVAILABLE');
     }
     return payload.documents;
+  },
+  getExpenseAttachmentOptions: async ({ signal } = {}) => {
+    const res = await apiFetch(`${API_BASE_URL}/ged/private/documents`, { signal, cache: 'no-store' });
+    if (!res.ok) throw await createApiError(res, 'GED_UNAVAILABLE');
+    const payload = await res.json();
+    if (payload?.success !== true || !Array.isArray(payload.documents) || payload.documents.length > 100 ||
+        payload.documents.some(row => !validGedRecord(row)) ||
+        (payload.capabilities?.expenseAttach !== undefined && typeof payload.capabilities.expenseAttach !== 'boolean')) {
+      throw gedError('GED_UNAVAILABLE');
+    }
+    return {
+      enabled: payload.capabilities?.expenseAttach === true,
+      documents: payload.documents.filter(row => row.lifecycle === true && row.trashed === false && row.category === 'finance')
+    };
+  },
+  attachExpenseDocument: async (expenseId, value, { signal } = {}) => {
+    if (typeof expenseId !== 'string' || !expenseId || expenseId.length > 128 || expenseId.trim() !== expenseId ||
+        !value || typeof value !== 'object' || Array.isArray(value) ||
+        !/^[a-f0-9]{64}$/.test(value.documentId) || !/^[a-f0-9]{64}$/.test(value.versionId) ||
+        !EXPENSE_DOCUMENT_ROLES.has(value.documentRole)) throw gedError('GED_INVALID_COMMAND');
+    if (value.externalReference !== undefined && value.externalReference !== null && typeof value.externalReference !== 'string') {
+      throw gedError('GED_INVALID_COMMAND');
+    }
+    const externalReference = value.externalReference === undefined || value.externalReference === null || value.externalReference.trim() === ''
+      ? undefined : value.externalReference.trim();
+    if (externalReference !== undefined && (externalReference.length > 140 || unsafeExpenseReference(externalReference))) {
+      throw gedError('GED_INVALID_COMMAND');
+    }
+    const body = { documentId: value.documentId, versionId: value.versionId, documentRole: value.documentRole,
+      ...(externalReference === undefined ? {} : { externalReference }) };
+    const res = await apiFetch(`${API_BASE_URL}/ged/private/expenses/${encodeURIComponent(expenseId)}/documents`, {
+      method: 'POST', signal, cache: 'no-store', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+    });
+    if (!res.ok) throw await createApiError(res, 'GED_UNAVAILABLE');
+    const payload = await res.json();
+    const link = payload?.link;
+    if (payload?.success !== true || typeof payload.created !== 'boolean' || !link ||
+        link.expenseId !== expenseId || link.documentId !== body.documentId || link.versionId !== body.versionId ||
+        link.documentRole !== body.documentRole || link.externalReference !== (externalReference ?? null) ||
+        !Number.isSafeInteger(link.revision) || link.revision < 1 || link.revision > 10000) {
+      throw gedError('GED_UNAVAILABLE');
+    }
+    return payload;
   },
   preparePrivateGedImport: async (file, category, { signal } = {}) => {
     if (!file || !/\.(pdf|docx|jpg|jpeg|png)$/.test(file.name) || !['personal', 'finance'].includes(category)) throw gedError('GED_FORMAT_REQUIRED');

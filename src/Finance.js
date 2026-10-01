@@ -29,6 +29,8 @@ import FunctionResourcesOverview from './FunctionResourcesOverview';
 import FunctionAssistant from './FunctionAssistant';
 import PrivateGedDocuments from './PrivateGedDocuments';
 import ExpenseProofs from './ExpenseProofs';
+import ExpenseDocumentPicker, { saveExpenseAttachment } from './ExpenseDocumentPicker';
+import { financeSectionIds, useFinanceSectionNavigation } from './financeNavigation';
 import { Files } from 'lucide-react';
 import {
   buildTeamAgentDirectory,
@@ -136,6 +138,7 @@ const Finance = () => {
   const [financeSummaryStatus, setFinanceSummaryStatus] = useState('loading');
   const [financeExtractStatus, setFinanceExtractStatus] = useState('loading');
   const [incomeExtractStatus, setIncomeExtractStatus] = useState('loading');
+  useFinanceSectionNavigation(location, activeTab, financeSummaryStatus !== 'loading' && financeExtractStatus !== 'loading' && incomeExtractStatus !== 'loading');
   const incomeScope = normalizeIncomeScope(new URLSearchParams(location.search).get('incomeScope'));
   const [socialRows, setSocialRows] = useState([]);
   const [socialSummary, setSocialSummary] = useState({});
@@ -171,6 +174,10 @@ const Finance = () => {
   const [socialModal, setSocialModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [savingFinance, setSavingFinance] = useState(false);
+  const [expenseAttachment, setExpenseAttachment] = useState(null);
+  const [attachmentReady, setAttachmentReady] = useState(true);
+  const [attachmentRetries, setAttachmentRetries] = useState([]);
+  const attachmentBusy = useRef(new Set());
   const [financeFormError, setFinanceFormError] = useState(false);
   const financeFormErrorRef = useRef(null);
   const [pendingAction, setPendingAction] = useState(null);
@@ -844,7 +851,7 @@ const Finance = () => {
     setActiveTab(tab);
     const params = new URLSearchParams(location.search);
     params.set('tab', tab);
-    navigate({ pathname: location.pathname, search: `?${params.toString()}` });
+    navigate({ pathname: location.pathname, search: `?${params.toString()}`, hash: financeSectionIds[tab] ? `#${financeSectionIds[tab]}` : '' });
   };
 
   const cleanDate = (value) => {
@@ -1780,6 +1787,7 @@ const Finance = () => {
   };
 
   const handleSave = () => {
+    if (modalType === 'depense' && !attachmentReady) return;
     if (financeDescriptionInvalid || financeAmountInvalid || !formData.date) {
       setFinanceFormError(true);
       financeFormErrorRef.current?.focus();
@@ -1827,6 +1835,7 @@ const Finance = () => {
       type: modalType,
       socialModal,
       label: formData.description.trim(),
+      attachment: modalType === 'depense' ? expenseAttachment : null,
       payload
     });
   };
@@ -1841,19 +1850,46 @@ const Finance = () => {
       } else if (action.itemId !== null) response = await api.updateExpense(action.itemId, action.payload);
       else response = await api.createExpense(action.payload);
       if (response?.success === false) throw new Error('Finance save not confirmed');
-      await loadFinanceData();
-      if (action.socialModal) await loadSocialData();
+      // Once the expense exists, a document failure must never resubmit its payment.
       setShowModal(false);
       setEditingId(null);
       setSocialModal(false);
       setFormData(createEmptyFinanceForm());
+      setExpenseAttachment(null);
+      setAttachmentReady(true);
+      if (action.attachment) {
+        const expenseId = response?.data?.id || action.itemId;
+        try {
+          if (!expenseId) throw new Error('Missing saved expense reference');
+          await saveExpenseAttachment(expenseId, action.attachment);
+        } catch {
+          setAttachmentRetries(current => [...current, { expenseId, selection: action.attachment, label: action.label,
+            key: `${expenseId || 'unknown'}-${Date.now()}`, busy: false }]);
+        }
+      }
+      await loadFinanceData();
+      if (action.socialModal) await loadSocialData();
       setFeedback({ tone: 'success', message: withLabel(action.action === 'update' ? t.updatedSuccess : t.savedSuccess, action.label) });
     } finally {
       setSavingFinance(false);
     }
   };
 
+  const retryExpenseAttachment = async item => {
+    if (!item.expenseId || attachmentBusy.current.has(item.key)) return;
+    attachmentBusy.current.add(item.key);
+    setAttachmentRetries(current => current.map(row => row.key === item.key ? { ...row, busy: true } : row));
+    try {
+      await saveExpenseAttachment(item.expenseId, item.selection);
+      setAttachmentRetries(current => current.filter(row => row.key !== item.key));
+    } catch {
+      setAttachmentRetries(current => current.map(row => row.key === item.key ? { ...row, busy: false } : row));
+    } finally { attachmentBusy.current.delete(item.key); }
+  };
+
   const handleEdit = (type, item) => {
+    setExpenseAttachment(null);
+    setAttachmentReady(true);
     setFinanceFormError(false);
     setModalType(type);
     setSocialModal(type === 'recette' && activeTab === 'social');
@@ -1884,6 +1920,8 @@ const Finance = () => {
   };
 
   const openNewModal = (type) => {
+    setExpenseAttachment(null);
+    setAttachmentReady(true);
     setFinanceFormError(false);
     const next = createEmptyFinanceForm();
     if (type === 'depense' && expenseAmountsSupported) {
@@ -2273,7 +2311,13 @@ const Finance = () => {
         )}
 
         {activeTab === 'depenses' && (
-          <div id="finance-expense-register" className="scroll-mt-24" tabIndex="-1">
+          <div id="finance-expense-register" className="min-h-[calc(100dvh-6rem)] scroll-mt-24" tabIndex="-1">
+            {attachmentRetries.map(item => <div key={item.key} role="alert" className="mb-4 border border-amber-600 bg-amber-950/20 p-4 text-sm text-amber-200">
+              <p>{language === 'EN' ? 'Expense saved; document attachment is not confirmed.' : language === 'DE' ? 'Ausgabe gespeichert; Belegverknüpfung noch nicht bestätigt.' : 'Dépense enregistrée ; rattachement du justificatif non confirmé.'} {item.label} {item.expenseId || ''}</p>
+              {item.expenseId && <button type="button" className="m3s-secondary-button mt-2 min-h-11 px-3" disabled={item.busy} onClick={() => retryExpenseAttachment(item)}>
+                {language === 'EN' ? 'Retry attachment only' : language === 'DE' ? 'Nur Verknüpfung erneut versuchen' : 'Réessayer uniquement le rattachement'}
+              </button>}
+            </div>)}
             <div className="flex flex-wrap items-center justify-end gap-3 mb-4">
               <button type="button" onClick={() => selectFinanceTab('resources')} className="flex items-center gap-2 min-h-11 px-3 py-2 text-sm text-blue-400 hover:text-blue-300">
                 <Files size={18} aria-hidden="true" />
@@ -2867,7 +2911,7 @@ const Finance = () => {
         )}
 
         {activeTab === 'resources' && <>
-          <div id="finance-documents" className="own-profile scroll-mt-24" tabIndex="-1"><PrivateGedDocuments scope="finance"/></div>
+          <div id="finance-documents" className="own-profile min-h-[calc(100dvh-6rem)] scroll-mt-24" tabIndex="-1"><PrivateGedDocuments scope="finance"/></div>
           <FunctionResourcesOverview moduleId="finances" language={language} onSelectTab={selectFinanceTab} />
         </>}
 
@@ -3024,7 +3068,7 @@ const Finance = () => {
                   {t.financeRequiredError}
                 </p>
               )}
-              <div className="space-y-4">
+              <fieldset disabled={savingFinance} className="space-y-4 min-w-0">
                 <input
                   type="text"
                   placeholder={t.description}
@@ -3147,11 +3191,12 @@ const Finance = () => {
                     </select>
                   </label>
                 </div>
+                {modalType === 'depense' && <ExpenseDocumentPicker onChange={setExpenseAttachment} onReadyChange={setAttachmentReady} disabled={savingFinance} />}
                 <div className="flex gap-4 justify-end">
                   <button onClick={() => { setShowModal(false); setSocialModal(false); }} disabled={savingFinance} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg disabled:opacity-50">{t.annuler}</button>
-                  <button onClick={handleSave} disabled={savingFinance || appliedRateInvalid} className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 px-4`}>{editingId ? t.enregistrer : t.creer}</button>
+                  <button onClick={handleSave} disabled={savingFinance || appliedRateInvalid || (modalType === 'depense' && !attachmentReady)} className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 px-4`}>{editingId ? t.enregistrer : t.creer}</button>
                 </div>
-              </div>
+              </fieldset>
             </div>
           </div>
         )}
