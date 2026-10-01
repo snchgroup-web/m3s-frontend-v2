@@ -50,6 +50,20 @@ async function create(income = false) {
   fireEvent.click(screen.getByRole('button', { name: 'Créer' }));
   fireEvent.click(screen.getByRole('button', { name: 'Oui, ajouter' }));
 }
+
+test('income register displays sourced indicative CFA without changing recorded totals or writing a receipt', async () => {
+  mockTab = 'recettes';
+  api.getIncome.mockResolvedValue({ capabilities: { income_amount_contract: 2 }, data: [
+    { id: 'REC-SYNTHETIC-FX', date: '2026-09-18', description: 'Synthetic refund', montant_chf: 1.62, montant_cfa: null }
+  ] });
+  render(<Finance/>);
+  await screen.findByText('Synthetic refund');
+  expect(screen.getByText(/693[,.]2541/)).toBeInTheDocument();
+  expect(screen.getByText('Référence indicative · 18.09.2026')).toBeInTheDocument();
+  expect(screen.getAllByText('Hors totaux comptables').length).toBeGreaterThan(0);
+  expect(screen.getByTestId('finance-total-income')).toHaveTextContent('0 CHF');
+  expect(api.createIncome).not.toHaveBeenCalled();
+});
 test('attaches only to the confirmed server expense ID, separately from the monetary payload', async () => {
   await create();
   await waitFor(() => expect(saveExpenseAttachment).toHaveBeenCalledWith('DEP-SYNTHETIC-CREATED', expect.objectContaining({ documentRole: 'invoice' }), {}));
