@@ -4,8 +4,39 @@ import ExpenseProofs from './ExpenseProofs';
 import { LanguageProvider } from './LanguageContext';
 import api from './api';
 jest.mock('./api',()=>({__esModule:true,default:{getExpenseProofs:jest.fn(),downloadPrivateGedDocument:jest.fn()}}));
+jest.mock('./PdfDocumentPreview', () => ({ __esModule: true, default: ({ name }) => <div data-testid="pdf-preview">{name}</div> }));
 const expense={id:'DEP-SYNTH',ref:'DEP-SYNTH',description:'Synthetic expense'};
 beforeEach(()=>{localStorage.clear(); jest.clearAllMocks();});
+
+test.each(['application/pdf', 'image/jpeg'])('previews protected %s and revokes its URL on close', async type => {
+  URL.createObjectURL = jest.fn(() => 'blob:synthetic');
+  URL.revokeObjectURL = jest.fn();
+  const row = { id: 'a'.repeat(64), name: type === 'application/pdf' ? 'Invoice.pdf' : 'Receipt.jpg', documentRole: 'invoice' };
+  api.getExpenseProofs.mockResolvedValue([row]);
+  api.downloadPrivateGedDocument.mockResolvedValue(new Blob(['synthetic'], { type }));
+  render(<LanguageProvider><ExpenseProofs expense={expense}/></LanguageProvider>);
+  fireEvent.click(screen.getByRole('button', { name: 'Justificatifs : DEP-SYNTH' }));
+  fireEvent.click(await screen.findByRole('button', { name: `Afficher : ${row.name}` }));
+  await screen.findByRole('button', { name: 'Fermer le document' });
+  expect(api.downloadPrivateGedDocument).toHaveBeenCalledWith(row, expect.objectContaining({ expenseId: expense.id }));
+  if (type === 'application/pdf') expect(await screen.findByTestId('pdf-preview')).toHaveTextContent(row.name);
+  else expect(screen.getByAltText(row.name)).toHaveAttribute('src', 'blob:synthetic');
+  fireEvent.click(screen.getByRole('button', { name: 'Fermer le document' }));
+  expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:synthetic');
+  expect(screen.getByRole('button', { name: `Afficher : ${row.name}` })).toBeInTheDocument();
+});
+
+test.each(['denied', 'unsafe-type'])('does not open preview when %s', async scenario => {
+  URL.createObjectURL = jest.fn();
+  api.getExpenseProofs.mockResolvedValue([{ id: 'a'.repeat(64), name: 'Invoice.pdf' }]);
+  if (scenario === 'denied') api.downloadPrivateGedDocument.mockRejectedValue(new Error('Forbidden'));
+  else api.downloadPrivateGedDocument.mockResolvedValue(new Blob(['<script>'], { type: 'text/html' }));
+  render(<LanguageProvider><ExpenseProofs expense={expense}/></LanguageProvider>);
+  fireEvent.click(screen.getByRole('button', { name: 'Justificatifs : DEP-SYNTH' }));
+  fireEvent.click(await screen.findByRole('button', { name: 'Afficher : Invoice.pdf' }));
+  await screen.findByRole('alert');
+  expect(URL.createObjectURL).not.toHaveBeenCalled();
+});
 test('loads only on action, shows invoice and receipt, closes with Escape',async()=>{
   api.getExpenseProofs.mockResolvedValue([{id:'a'.repeat(64),name:'Invoice.pdf',documentRole:'invoice',externalReference:'INV-SYNTH'},{id:'b'.repeat(64),name:'Receipt.pdf',documentRole:'payment_receipt'}]);
   render(<LanguageProvider><ExpenseProofs expense={expense}/></LanguageProvider>);

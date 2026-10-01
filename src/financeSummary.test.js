@@ -6,6 +6,17 @@ test('normalizes authoritative totals independently from any loaded rows', () =>
   expect(normalizeFinanceSummary({ success: true, data: valid })).toEqual({ totalIncome: 600, totalIncomeCfa: 360000, totalExpenses: 50, totalExpensesCfa: 30000, incomeCount: 3, expenseCount: 1, timestamp: null, expensesMissingChf: 0, expensesMissingCfa: 0 });
 });
 
+test('keeps known subtotals separate from full totals and never fills unknowns with zero', () => {
+  const result = normalizeFinanceSummary({ data: { ...valid, total_expense_count: 3, expenses_missing_chf: 1, expenses_missing_cfa: 2 } });
+  expect(result.totalExpenses).toBeNull();
+  expect(result.totalExpensesCfa).toBeNull();
+  expect(result.expenseSubtotal).toEqual({ chf: 50, cfa: 30000, missingChf: 1, missingCfa: 2 });
+  const unknown = normalizeFinanceSummary({ data: { ...valid, expenses_missing_chf: 1, expenses_missing_cfa: 1, total_expenses: null, total_expenses_cfa: null } });
+  expect(unknown.expenseSubtotal.chf).toBeNull();
+  expect(unknown.expenseSubtotal.cfa).toBeNull();
+  expect(normalizeFinanceSummary({ data: { ...valid, expenses_missing_chf: 2 } })).toBeNull();
+});
+
 test.each([null, {}, { success: false, data: valid }, { data: { ...valid, total_income_count: null } }, { data: { ...valid, total_expense_count: -1 } }, { data: { ...valid, total_income: null } }])('rejects unavailable or invalid summary %p', response => {
   expect(normalizeFinanceSummary(response)).toBeNull();
 });

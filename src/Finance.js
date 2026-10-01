@@ -2055,6 +2055,7 @@ const Finance = () => {
           totalIncomeCfa={totalRecettesCfa}
           totalExpenses={totalDepenses}
           totalExpensesCfa={totalDepensesCfa}
+          expenseSubtotal={financeSummary?.expenseSubtotal}
           netBalance={solde}
           netBalanceCfa={soldeCfa}
           currentRate={parseFiniteNumber(tauxChfCfa)}
