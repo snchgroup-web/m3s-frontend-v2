@@ -81,6 +81,21 @@ test('keeps a real zero distinct from an unavailable total', async () => {
   expect(screen.getByTestId('finance-source-status')).toHaveTextContent('Totaux globaux disponibles');
 });
 
+test.each([
+  ['FR', 'Sous-totaux disponibles · conversions à compléter'],
+  ['EN', 'Subtotals available · conversions pending'],
+  ['DE', 'Zwischensummen verfügbar · Umrechnungen offen']
+])('marks incomplete global totals as partial in %s', async (language, label) => {
+  localStorage.setItem('language', language);
+  api.getFinanceDashboard.mockResolvedValue(dashboardResponse({ expenses_missing_chf: 1, expenses_missing_cfa: 1 }));
+  renderFinance();
+  await screen.findByText(label);
+  const banner = screen.getByTestId('finance-source-status');
+  expect(banner).toHaveClass('border-amber-700/60');
+  expect(screen.getByTestId('finance-total-expenses')).toHaveTextContent('400 CHF');
+  expect(screen.getByTestId('finance-net-balance')).toHaveTextContent('— CHF');
+});
+
 test('shows unavailable instead of manufacturing zero when the global source fails', async () => {
   api.getFinanceDashboard.mockRejectedValue(new Error('Backend unavailable'));
 
@@ -111,7 +126,7 @@ test('uses authoritative global totals instead of the loaded page subtotal', asy
   renderFinance();
 
   await screen.findByText('Totaux globaux disponibles');
-  expect(screen.getByTestId('finance-total-income')).toHaveTextContent('1 000 CHF');
+  expect(screen.getByTestId('finance-total-income')).toHaveTextContent(`${(1000).toLocaleString('fr-CH').replace(/\s/g, ' ')} CHF`);
   expect(screen.getByTestId('finance-total-expenses')).toHaveTextContent('400 CHF');
   expect(screen.getByTestId('finance-net-balance')).toHaveTextContent('600 CHF');
   expect(screen.getByTestId('finance-source-status')).toHaveTextContent('2 recettes · 2 dépenses');

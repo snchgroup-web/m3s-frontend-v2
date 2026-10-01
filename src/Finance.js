@@ -198,6 +198,7 @@ const Finance = () => {
       tauxFX: 'Taux FX (CFA/CHF)',
       sourceLoading: 'Chargement des totaux globaux...',
       sourceAvailable: 'Totaux globaux disponibles',
+      sourcePartial: 'Sous-totaux disponibles · conversions à compléter',
       sourceUnavailable: 'Totaux globaux indisponibles',
       missingNotZero: 'Aucune valeur manquante n’est remplacée par zéro.',
       globalSource: 'Source : BigQuery via /finance/dashboard',
@@ -376,6 +377,7 @@ const Finance = () => {
       tauxFX: 'FX Rate (CFA/CHF)',
       sourceLoading: 'Loading global totals...',
       sourceAvailable: 'Global totals available',
+      sourcePartial: 'Subtotals available · conversions pending',
       sourceUnavailable: 'Global totals unavailable',
       missingNotZero: 'No missing value is replaced with zero.',
       globalSource: 'Source: BigQuery via /finance/dashboard',
@@ -554,6 +556,7 @@ const Finance = () => {
       tauxFX: 'Wechselkurs (CFA/CHF)',
       sourceLoading: 'Globale Summen werden geladen...',
       sourceAvailable: 'Globale Summen verfügbar',
+      sourcePartial: 'Zwischensummen verfügbar · Umrechnungen offen',
       sourceUnavailable: 'Globale Summen nicht verfügbar',
       missingNotZero: 'Fehlende Werte werden nicht durch null ersetzt.',
       globalSource: 'Quelle: BigQuery über /finance/dashboard',
@@ -2075,7 +2078,7 @@ const Finance = () => {
           role="status"
           data-testid="finance-source-status"
           className={`mb-6 flex items-start gap-3 rounded-lg border px-4 py-3 ${
-            financeSummaryStatus === 'available'
+            financeSummaryStatus === 'available' && !financeSummary?.expenseSubtotal
               ? 'border-emerald-700/60 bg-emerald-950/30 text-emerald-100'
               : financeSummaryStatus === 'loading'
                 ? 'border-blue-700/60 bg-blue-950/30 text-blue-100'
@@ -2084,7 +2087,7 @@ const Finance = () => {
         >
           {financeSummaryStatus === 'loading' ? (
             <LoaderCircle size={20} className="mt-0.5 shrink-0 animate-spin" aria-hidden="true" />
-          ) : financeSummaryStatus === 'available' ? (
+          ) : financeSummaryStatus === 'available' && !financeSummary?.expenseSubtotal ? (
             <Database size={20} className="mt-0.5 shrink-0" aria-hidden="true" />
           ) : (
             <AlertTriangle size={20} className="mt-0.5 shrink-0" aria-hidden="true" />
@@ -2094,7 +2097,7 @@ const Finance = () => {
               {financeSummaryStatus === 'loading'
                 ? t.sourceLoading
                 : financeSummaryStatus === 'available'
-                  ? t.sourceAvailable
+                  ? financeSummary?.expenseSubtotal ? t.sourcePartial : t.sourceAvailable
                   : t.sourceUnavailable}
             </p>
             <p className="mt-1 text-slate-300">

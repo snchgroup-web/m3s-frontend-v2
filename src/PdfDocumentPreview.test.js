@@ -39,6 +39,16 @@ test('shows a localized error for corrupt or password protected PDFs', async () 
   expect(await screen.findByRole('alert')).toHaveTextContent('Vorschau nicht verfügbar');
 });
 
+test('keeps the rendered canvas visible when optional text extraction fails', async () => {
+  const page = await getPage();
+  const getTextContent = jest.fn().mockRejectedValue(new Error('Text unavailable'));
+  getPage.mockResolvedValue({ ...page, getTextContent });
+  render(<PdfDocumentPreview blob={{ arrayBuffer: async () => new ArrayBuffer(4) }} name="Invoice.pdf" language="EN"/>);
+  await waitFor(() => expect(getTextContent).toHaveBeenCalled());
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  expect(screen.getByRole('img')).toHaveStyle({ visibility: 'visible' });
+});
+
 test('closing before bytes arrive never starts a renderer', async () => {
   let resolve;
   const { unmount } = render(<PdfDocumentPreview blob={{ arrayBuffer: () => new Promise(done => { resolve = done; }) }} name="Invoice.pdf" language="FR"/>);

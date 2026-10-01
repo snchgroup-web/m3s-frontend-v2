@@ -40,7 +40,7 @@ export default function ExpenseProofs({ expense }) {
   const closePreview = () => { releasePreview(); setPreview(null); dialog.current?.focus(); };
   const close = () => { downloadController.current?.abort(); closePreview(); setOpen(false); setBusy(false); };
   async function view(row) {
-    if (busy) return;
+    if (busy || !/\.(pdf|jpe?g|png)$/i.test(row.name)) return;
     const controller = new AbortController(); downloadController.current = controller;
     setBusy(true); setNotice('');
     try {
@@ -90,7 +90,7 @@ export default function ExpenseProofs({ expense }) {
           </div>
           {preview.image ? <div className="overflow-auto" style={{ height: '60vh' }}><img src={preview.url} alt={preview.row.name} className="max-w-full h-auto mx-auto"/></div>
             : <Suspense fallback={<p role="status">{t.loading}</p>}><PdfDocumentPreview blob={preview.blob} name={preview.row.name} language={language}/></Suspense>}
-        </> : state.loading ? <p role="status">{t.loading}</p> : state.error ? <p role="alert">{t.error}</p> : !state.rows.length ? <p>{t.empty}</p> : <ul className="divide-y divide-slate-300 dark:divide-slate-600">{state.rows.map(row => <li key={row.id} className="py-3 flex items-start gap-3"><div className="min-w-0 flex-1"><p className="font-medium break-words">{t[row.documentRole] || t.other}{row.externalReference ? ` · ${row.externalReference}` : ''}</p><p className="text-sm break-words">{row.name}</p></div><button type="button" disabled={busy} title={viewerCopy.view} aria-label={`${viewerCopy.view} : ${row.name}`} className="m3s-icon-button shrink-0" onClick={() => view(row)}><Eye size={18}/></button><button type="button" disabled={busy} title={t.download} aria-label={`${t.download} : ${row.name}`} className="m3s-icon-button shrink-0" onClick={() => download(row)}><Download size={18}/></button></li>)}</ul>}
+        </> : state.loading ? <p role="status">{t.loading}</p> : state.error ? <p role="alert">{t.error}</p> : !state.rows.length ? <p>{t.empty}</p> : <ul className="divide-y divide-slate-300 dark:divide-slate-600">{state.rows.map(row => <li key={row.id} className="py-3 flex items-start gap-3"><div className="min-w-0 flex-1"><p className="font-medium break-words">{t[row.documentRole] || t.other}{row.externalReference ? ` · ${row.externalReference}` : ''}</p><p className="text-sm break-words">{row.name}</p></div>{/\.(pdf|jpe?g|png)$/i.test(row.name) && <button type="button" disabled={busy} title={viewerCopy.view} aria-label={`${viewerCopy.view} : ${row.name}`} className="m3s-icon-button shrink-0" onClick={() => view(row)}><Eye size={18}/></button>}<button type="button" disabled={busy} title={t.download} aria-label={`${t.download} : ${row.name}`} className="m3s-icon-button shrink-0" onClick={() => download(row)}><Download size={18}/></button></li>)}</ul>}
         {busy && <p role="status" className="mt-3">{t.loading}</p>}
         {notice && <p role="alert" className="mt-3">{notice}</p>}
       </section>

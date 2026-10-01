@@ -8,6 +8,15 @@ jest.mock('./PdfDocumentPreview', () => ({ __esModule: true, default: ({ name })
 const expense={id:'DEP-SYNTH',ref:'DEP-SYNTH',description:'Synthetic expense'};
 beforeEach(()=>{localStorage.clear(); jest.clearAllMocks();});
 
+test('keeps DOCX downloadable without offering an unsupported preview', async () => {
+  api.getExpenseProofs.mockResolvedValue([{ id: 'a'.repeat(64), name: 'Invoice.docx' }]);
+  render(<LanguageProvider><ExpenseProofs expense={expense}/></LanguageProvider>);
+  fireEvent.click(screen.getByRole('button', { name: 'Justificatifs : DEP-SYNTH' }));
+  expect(await screen.findByRole('button', { name: 'Télécharger : Invoice.docx' })).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Afficher : Invoice.docx' })).not.toBeInTheDocument();
+  expect(api.downloadPrivateGedDocument).not.toHaveBeenCalled();
+});
+
 test.each(['application/pdf', 'image/jpeg'])('previews protected %s and revokes its URL on close', async type => {
   URL.createObjectURL = jest.fn(() => 'blob:synthetic');
   URL.revokeObjectURL = jest.fn();

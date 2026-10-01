@@ -60,8 +60,11 @@ export default function PdfDocumentPreview({ blob, name, language }) {
       await renderTask.promise;
       if (cancelled) return;
       setLoading(false);
-      const content = await page.getTextContent();
-      if (!cancelled) setText(content.items.map(item => item.str || '').join(' '));
+      // Optional accessibility text must not hide a successfully rendered page.
+      try {
+        const content = await page.getTextContent();
+        if (!cancelled) setText(content.items.map(item => item.str || '').join(' '));
+      } catch { /* The visual document remains available. */ }
     }).catch(() => { if (!cancelled) { setError(true); setLoading(false); } });
     return () => { cancelled = true; renderTask?.cancel(); };
   }, [pdf, pageNumber, width, zoom]);
