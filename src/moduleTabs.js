@@ -105,7 +105,7 @@ export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs =
   if (!mergedTabs.length) return null;
 
   return (
-    <div ref={tabListRef} className="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto" role="tablist" aria-label={ariaLabel}>
+    <div ref={tabListRef} data-module-tabs={moduleId} data-active-tab={activeTab} data-tab-values={mergedTabs.map(tab => tab.tab).join(',')} tabIndex={-1} className="m3s-module-tabs flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto" role="tablist" aria-label={ariaLabel}>
       {mergedTabs.map(tab => (
         <button
           key={tab.id || tab.tab}
@@ -121,6 +121,12 @@ export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs =
     </div>
   );
 };
+
+export const ModuleTabContent = ({ activeTab, ready = true, className = '', children }) => (
+  <div data-module-content data-active-tab={activeTab} data-ready={String(ready)} tabIndex={-1} className={`m3s-module-content ${className}`}>
+    {children}
+  </div>
+);
 
 export const ChildTabPlaceholder = ({ moduleId, language, activeTab, handledTabs = [], permissions = [] }) => {
   if (handledTabs.includes(activeTab)) return null;

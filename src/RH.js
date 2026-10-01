@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { CheckCircle2, Info, Edit2, Trash2, X } from 'lucide-react';
 import { api } from './api';
 import { useLanguage } from './LanguageContext';
-import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
+import { ModulePageTabs, ModuleTabContent, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
 import MembersDirectory from './MembersDirectory';
@@ -568,6 +568,7 @@ const RH = () => {
         />
 
         {/* Vue d'ensemble */}
+        <ModuleTabContent activeTab={activeTab}>
         {activeTab === 'overview' && (
           <RHOverview
             language={language}
@@ -616,6 +617,7 @@ const RH = () => {
         )}
 
         <ChildTabPlaceholder moduleId="rh" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'directory', 'employes', 'benevoles', 'myaccount', 'assistant', 'resources', 'glossary']} />
+        </ModuleTabContent>
         </div>
       </div>
 

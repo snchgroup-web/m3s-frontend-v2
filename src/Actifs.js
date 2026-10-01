@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
-import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
+import { ModulePageTabs, ModuleTabContent, ChildTabPlaceholder } from './moduleTabs';
 import TableControls from './TableControls';
 import { getDasFromLegacyBu, translateDas, translateLegacyBu } from './strategicMapping';
 import StockAssetsFrame from './StockAssetsFrame';
@@ -536,6 +536,7 @@ const Actifs = () => {
             ))}
           </div>
 
+          <ModuleTabContent activeTab={activeTab} ready={!loading}>
           {loading && <div className="py-16 text-center text-slate-400">Chargement...</div>}
 
           {!loading && activeTab === 'overview' && (
@@ -703,6 +704,7 @@ const Actifs = () => {
           )}
 
           <ChildTabPlaceholder moduleId="stock" language={language} activeTab={activeTab} handledTabs={['inventory', 'overview', 'architecture', 'processes', 'immobilisations', 'risques', 'assistant', 'resources', 'glossary']} />
+          </ModuleTabContent>
         </div>
       </div>
 

@@ -29,6 +29,8 @@
 .private-ged-toolbar-sticky { position: sticky; top: var(--m3s-subnav-offset, 0px); z-index: 20; padding: 12px 0; background: var(--m3s-surface-panel); border-bottom: 1px solid var(--m3s-border); }
 .private-ged-toolbar-sticky .private-ged-heading { margin-bottom: 10px; }
 .app-shell > div > main { overscroll-behavior-y: contain; }
+.m3s-module-content, .m3s-module-tabs { scroll-margin-top: calc(var(--m3s-subnav-offset, 0px) + 16px); }
+.m3s-module-content:not([data-active-tab="overview"]) { min-height: calc(100dvh - 112px); }
 html:has(.app-shell), body:has(.app-shell) { height: 100%; overflow: clip; }
 html .app-shell { position: fixed; inset: 0; height: 100dvh; overflow: clip; }
 #finance-expense-register, #finance-revenue-register, #finance-documents { scroll-margin-top: calc(var(--m3s-subnav-offset, 0px) + 16px); }

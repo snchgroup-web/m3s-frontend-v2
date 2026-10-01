@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
-import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
+import { ModulePageTabs, ModuleTabContent, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
 import { getOfferTaxonomy } from './offerTaxonomy';
@@ -1207,6 +1207,7 @@ const GED = () => {
           </aside>
         )}
 
+        <ModuleTabContent activeTab={activeTab}>
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
           <div id="it-support-overview" className="grid scroll-mt-24 grid-cols-1 gap-6 lg:grid-cols-2" tabIndex="-1">
@@ -2046,6 +2047,7 @@ const GED = () => {
         )}
 
         <ChildTabPlaceholder moduleId="it-support" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'documents', 'dossiers', 'archives', 'outils-documents', 'knowledge', 'assistant', 'resources', 'glossary', 'ai-digital', 'user-guide', 'tech-docs', 'help-support']} />
+        </ModuleTabContent>
         </div>
       </div>
 
