@@ -94,3 +94,8 @@ test('other pages start at the top unless a specific anchor is requested', () =>
   expect(resolveModuleTarget(main, { pathname: '/', search: '?view=resources', hash: '' })).toBe(main);
   expect(resolveModuleTarget(main, { pathname: '/', search: '?view=resources', hash: '#dashboard-detail' })).toBe(main.firstChild);
 });
+test.each(['section=institution-sources&visual=director-document', 'dashboardKpi=balance', 'kpi=expenses'])('preserves component-owned query destination %s', async query => {
+  render(<Page route={location('directory', { search: `?tab=directory&${query}` })}/>);
+  await flush();
+  expect(scroll).not.toHaveBeenCalled();
+});

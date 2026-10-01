@@ -1,6 +1,11 @@
 import { useEffect } from 'react';
 import { financeSectionIds, revealFinanceSection } from './financeNavigation';
 
+const hasQueryDestination = search => {
+  const params = new URLSearchParams(search);
+  return ['section', 'visual', 'dashboardKpi', 'kpi'].some(key => Boolean(params.get(key)));
+};
+
 export function resolveModuleTarget(main, location) {
   const tabs = main.querySelector('[data-module-tabs]');
   const panel = main.querySelector('[data-module-content]');
@@ -13,6 +18,7 @@ export function resolveModuleTarget(main, location) {
     try { id = decodeURIComponent(location.hash.slice(1)); } catch { return null; }
     return Array.from(main.querySelectorAll('[id]')).find(element => element.id === id) || null;
   }
+  if (hasQueryDestination(location.search)) return null;
   if (!tabs && !panel) return main;
   if (!tabs || !panel || panel.dataset.activeTab !== tabs.dataset.activeTab) return null;
   return tabs.dataset.activeTab === 'overview' ? tabs : panel;
@@ -22,6 +28,8 @@ export function useModuleNavigation(mainRef, { key, pathname, search, hash }) {
   useEffect(() => {
     const main = mainRef.current;
     if (!main) return undefined;
+    // Nested views own their query-based focus (for example GED -> institution visual).
+    if (!hash && hasQueryDestination(search)) return undefined;
     const tab = new URLSearchParams(search).get('tab');
     // Finance registers already wait for their asynchronous source indicators.
     const financeId = financeSectionIds[tab];
