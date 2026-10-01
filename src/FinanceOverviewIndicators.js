@@ -2,6 +2,7 @@ import React from 'react';
 import { expenseSubtotalCopy } from './financeSummary';
 import { incomeAmountLabels } from './IncomeSourceFields';
 import FinanceTransactionCount, { sumTransactionCounts } from './FinanceTransactionCount';
+import FinanceBalanceEstimate from './FinanceBalanceEstimate';
 import {
   ArrowRightLeft,
   Building2,
@@ -18,6 +19,7 @@ const COPY = {
     income: 'Recettes globales',
     expenses: 'Dépenses globales',
     balance: 'Solde net',
+    recordedBalance: 'Solde CFA comptable',
     rate: 'Taux de référence',
     realEstateFunding: 'Financement immobilier total',
     reimbursements: 'Remboursements immobiliers',
@@ -37,6 +39,7 @@ const COPY = {
     income: 'Global revenue',
     expenses: 'Global expenses',
     balance: 'Net balance',
+    recordedBalance: 'Recorded CFA balance',
     rate: 'Reference rate',
     realEstateFunding: 'Total real estate funding',
     reimbursements: 'Real estate reimbursements',
@@ -56,6 +59,7 @@ const COPY = {
     income: 'Globale Einnahmen',
     expenses: 'Globale Ausgaben',
     balance: 'Nettosaldo',
+    recordedBalance: 'CFA-Buchsaldo',
     rate: 'Referenzkurs',
     realEstateFunding: 'Immobilienfinanzierung gesamt',
     reimbursements: 'Immobilienrückzahlungen',
@@ -104,6 +108,7 @@ const IndicatorCard = ({
   unit = 'CHF',
   secondaryValue,
   secondaryUnit,
+  secondaryLabel,
   state,
   source,
   icon: Icon,
@@ -113,6 +118,7 @@ const IndicatorCard = ({
   countScope = 'global',
   note,
   independentCurrencies = false,
+  children,
   testId
 }) => {
   const style = TONES[tone];
@@ -133,6 +139,7 @@ const IndicatorCard = ({
             <span style={{ color: 'var(--m3s-status-info)' }}>{displayValue}</span>
             {secondaryUnit && (
               <span className="m3s-currency-cfa">
+                {secondaryLabel && <small className="block text-xs font-normal">{secondaryLabel}</small>}
                 {independentCurrencies ? '' : '≈ '}{displaySecondaryValue}
               </span>
             )}
@@ -143,6 +150,7 @@ const IndicatorCard = ({
         </span>
       </div>
       {secondaryUnit && <FinanceTransactionCount count={transactionCount} scope={countScope} state={state} language={locale === 'de-CH' ? 'DE' : locale === 'en-GB' ? 'EN' : 'FR'} />}
+      {children}
       <p className="mt-3 border-t pt-2 text-xs" style={{ borderColor: 'var(--m3s-border)', color: 'var(--m3s-text-secondary)' }}>{note || stateLabel(state, value, copy, source)}</p>
     </article>
   );
@@ -190,7 +198,9 @@ const FinanceOverviewIndicators = ({
     <section aria-label={language === 'DE' ? 'Finanzkennzahlen' : language === 'EN' ? 'Finance indicators' : 'Indicateurs financiers'} className="m3s-design-scope mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
       <IndicatorCard label={incomePartial ? incomeCopy.label : t.income} value={incomePartial ? incomePartial.chf : totalIncome} secondaryValue={incomePartial ? incomePartial.cfa : totalIncomeCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} note={incomePartial ? `${incomeCopy.partial} ${partialCopy.missing} : CHF ${incomePartial.missingChf} · CFA ${incomePartial.missingCfa}` : null} independentCurrencies={Boolean(incomePartial)} icon={TrendingUp} tone="green" locale={locale} transactionCount={incomeCount} testId="finance-total-income" />
       <IndicatorCard label={partial ? partialCopy.label : t.expenses} value={partial ? partial.chf : totalExpenses} secondaryValue={partial ? partial.cfa : totalExpensesCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} note={partialNote} independentCurrencies={Boolean(partial)} icon={TrendingDown} tone="red" locale={locale} transactionCount={expenseCount} testId="finance-total-expenses" />
-      <IndicatorCard label={t.balance} value={netBalance} secondaryValue={netBalanceCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} note={partial || incomePartial ? partialCopy.balance : null} icon={CircleDollarSign} tone="blue" locale={locale} transactionCount={sumTransactionCounts(incomeCount, expenseCount)} testId="finance-net-balance" />
+      <IndicatorCard label={t.balance} value={netBalance} secondaryValue={netBalanceCfa} secondaryUnit="CFA" secondaryLabel={t.recordedBalance} independentCurrencies state={financeState} source={historicalSource(t.globalSource)} note={partial || incomePartial ? partialCopy.balance : null} icon={CircleDollarSign} tone="blue" locale={locale} transactionCount={sumTransactionCounts(incomeCount, expenseCount)} testId="finance-net-balance">
+        <FinanceBalanceEstimate balance={netBalance} state={financeState} language={language} />
+      </IndicatorCard>
       <IndicatorCard label={t.rate} value={currentRate} unit="CFA / CHF" state={rateState} source={t.currentRate} icon={ArrowRightLeft} tone="violet" locale={locale} testId="finance-current-rate" />
       <IndicatorCard label={t.realEstateFunding} value={realEstateFunding} secondaryValue={realEstateFundingCfa} secondaryUnit="CFA" state={realEstateState} source={historicalSource(t.realEstateSource)} icon={Building2} tone="cyan" locale={locale} transactionCount={realEstateLoadedCount} countScope="registry" testId="finance-real-estate-funding" />
       <IndicatorCard label={t.reimbursements} value={reimbursements} secondaryValue={reimbursementsCfa} secondaryUnit="CFA" state={realEstateState} source={currentRateSource(t.realEstateSource)} icon={HandCoins} tone="teal" locale={locale} transactionCount={realEstateLoadedCount} countScope="registry" testId="finance-real-estate-reimbursements" />

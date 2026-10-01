@@ -38,7 +38,9 @@ test('shows core, real-estate and social totals from their dedicated sources', (
   expect(screen.getByTestId('finance-total-expenses')).toHaveTextContent('400 CHF');
   expect(screen.getByTestId('finance-total-expenses')).toHaveTextContent(`≈ ${amount(260000)} CFA`);
   expect(screen.getByTestId('finance-net-balance')).toHaveTextContent('600 CHF');
-  expect(screen.getByTestId('finance-net-balance')).toHaveTextContent(`≈ ${amount(390000)} CFA`);
+  expect(screen.getByTestId('finance-net-balance')).toHaveTextContent(`${amount(390000)} CFA`);
+  expect(screen.getByText('Solde CFA comptable')).toBeInTheDocument();
+  expect(screen.getByTestId('finance-net-balance')).not.toHaveTextContent('≈');
   expect(screen.getByTestId('finance-real-estate-funding')).toHaveTextContent(`${amount(12000)} CHF`);
   expect(screen.getByTestId('finance-real-estate-funding')).toHaveTextContent(`≈ ${amount(7800000)} CFA`);
   expect(screen.getByTestId('finance-real-estate-reimbursements')).toHaveTextContent(`${amount(3000)} CHF`);

@@ -9,16 +9,17 @@ const officialObservation = (date, chfPerEur, validThrough = date) => Object.fre
 
 // Public historical observations, never applied to ledger amounts or saved forms.
 export const referenceObservation = officialObservation('2026-09-25', 0.9445, '2026-09-27');
+export const balanceReferenceObservation = Object.freeze({
+  ...officialObservation('2026-10-01', 0.9437),
+  source: 'https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-chf.en.html',
+});
 const publicObservations = [
   officialObservation('2026-09-02', 0.9424),
   officialObservation('2026-09-04', 0.9405, '2026-09-06'),
   officialObservation('2026-09-18', 0.9462),
   referenceObservation,
   officialObservation('2026-09-29', 0.9461),
-  Object.freeze({
-    ...officialObservation('2026-10-01', 0.9437),
-    source: 'https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-chf.en.html',
-  }),
+  balanceReferenceObservation,
 ];
 
 const validDate = date => {
