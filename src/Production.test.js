@@ -225,16 +225,14 @@ test('offers supplier deletion from the row and the unified form with confirmati
   confirm.mockRestore();
 });
 
-test('scrolls to the Production content when a child tab changes', async () => {
-  const scrollIntoView = jest.fn();
-  const originalScrollIntoView = window.HTMLElement.prototype.scrollIntoView;
-  window.HTMLElement.prototype.scrollIntoView = scrollIntoView;
+test('exposes the selected Production content to the shared navigation controller', async () => {
   renderProduction('overview', 'FR');
 
   fireEvent.click(screen.getByRole('tab', { name: 'Fournisseurs' }));
 
-  await waitFor(() => expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' }));
-  window.HTMLElement.prototype.scrollIntoView = originalScrollIntoView;
+  await waitFor(() => expect(document.querySelector('.production-active-view')).toHaveAttribute('data-active-tab', 'fournisseurs'));
+  expect(document.querySelector('.production-active-view')).toHaveAttribute('data-module-content');
+  expect(document.querySelector('.production-active-view')).toHaveAttribute('data-ready', 'true');
 });
 
 test('offers collectives only when the secure RH-001 directory is unavailable', async () => {

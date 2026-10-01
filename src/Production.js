@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck, Wrench, X } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
-import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
+import { ModulePageTabs, ModuleTabContent, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
 import { api } from './api';
@@ -711,7 +711,6 @@ const Production = () => {
   const [modalType, setModalType] = useState('commande');
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState(getDefaultFormData('commande'));
-  const previousTabRef = useRef(activeTab);
   const agentsByTeam = useMemo(() => buildTeamAgentDirectory(directoryMembers, {
     [TEAM_CODES.ZURICH]: t.teamZhCollective,
     [TEAM_CODES.SENEGAL]: t.teamSnCollective
@@ -725,12 +724,6 @@ const Production = () => {
       setActiveTab('overview');
     }
   }, [location.search]);
-
-  useEffect(() => {
-    if (previousTabRef.current === activeTab) return;
-    previousTabRef.current = activeTab;
-    document.getElementById('production-module-tabs')?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
-  }, [activeTab]);
 
   const selectTab = (tab) => {
     setActiveTab(tab);
@@ -1013,7 +1006,7 @@ const Production = () => {
           </div>
         </div>
  
-        <div className="production-active-view">
+        <ModuleTabContent activeTab={activeTab} className="production-active-view">
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1253,7 +1246,7 @@ const Production = () => {
         {activeTab === 'glossary' && <ProductionGlossary language={language} />}
 
         <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'commandes', 'manufacturing', 'fournisseurs', 'stocks', 'assistant', 'resources', 'glossary']} />
-        </div>
+        </ModuleTabContent>
         </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Edit2, Trash2, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound, Database, AlertTriangle, CheckCircle2, LoaderCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
-import { ModulePageTabs, ChildTabPlaceholder, centerTabHorizontally } from './moduleTabs';
+import { ModulePageTabs, ModuleTabContent, ChildTabPlaceholder, centerTabHorizontally } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
 import TableControls from './TableControls';
 import { isLegacyBuCode, translateDas } from './strategicMapping';
@@ -2162,8 +2162,6 @@ const Finance = () => {
 
         </>}
 
-        {activeTab === 'budget' && <FinanceBudget language={language} onSelectTab={selectFinanceTab} />}
-
         {feedback && (
           <div className="m3s-feedback m3s-feedback--success mb-6 flex items-start gap-3 px-4 py-3" role="status">
             <CheckCircle2 className="mt-0.5 shrink-0" size={18} aria-hidden="true" />
@@ -2171,6 +2169,8 @@ const Finance = () => {
           </div>
         )}
 
+        <ModuleTabContent activeTab={activeTab} ready={financeSummaryStatus !== 'loading' && financeExtractStatus !== 'loading' && incomeExtractStatus !== 'loading'}>
+        {activeTab === 'budget' && <FinanceBudget language={language} onSelectTab={selectFinanceTab} />}
         {activeTab === 'overview' && (
           <div id="finance-overview" className="scroll-mt-24 grid grid-cols-1 lg:grid-cols-2 gap-6" tabIndex="-1">
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
@@ -2920,6 +2920,7 @@ const Finance = () => {
         {activeTab === 'glossary' && <FinanceGlossary language={language} />}
 
         <ChildTabPlaceholder moduleId="finances" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'recettes', 'depenses', 'fx', 'budget', 'social', 'immobilier', 'assistant', 'resources', 'glossary']} />
+        </ModuleTabContent>
 
         {showImmoModal && (
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">

@@ -17,7 +17,7 @@ import { getSidebarMenuGroups, resolveActiveMenuLocation } from './sidebarMenu';
 import { useAuth } from './AuthContext';
 import { hasPermission } from './accessControl';
 import { buildDashboardReturnPath, getDashboardReturnContext } from './dashboardNavigation';
-import { financeSectionIds } from './financeNavigation';
+import { useModuleNavigation } from './moduleNavigation';
 
 // Mapping des icônes
 const iconMap = {
@@ -47,6 +47,7 @@ const Layout = ({ children }) => {
   const activeParentId = activeMenu.parent?.id;
   const activeParentHasChildren = Boolean(activeMenu.parent?.children?.length);
   const dashboardReturn = getDashboardReturnContext(location.search);
+  useModuleNavigation(mainRef, location);
 
   // Traductions UI
   const translations = {
@@ -90,29 +91,6 @@ const Layout = ({ children }) => {
     if (!activeParentHasChildren) return;
     setExpandedMenus(previous => ({ ...previous, [activeParentId]: true }));
   }, [activeParentHasChildren, activeParentId]);
-
-  useEffect(() => {
-    if (!location.hash) return undefined;
-
-    const targetId = decodeURIComponent(location.hash.slice(1));
-    if (location.pathname === '/finance' && Object.values(financeSectionIds).includes(targetId)) return undefined;
-    let attempts = 0;
-    let timeoutId;
-
-    const revealTarget = () => {
-      const target = document.getElementById(targetId);
-      if (target) {
-        target.scrollIntoView({ block: 'start', inline: 'nearest' });
-        if (typeof target.focus === 'function') target.focus({ preventScroll: true });
-        return;
-      }
-      attempts += 1;
-      if (attempts < 150) timeoutId = window.setTimeout(revealTarget, 80);
-    };
-
-    timeoutId = window.setTimeout(revealTarget, 0);
-    return () => window.clearTimeout(timeoutId);
-  }, [location.hash, location.pathname, location.search]);
 
   // Expand/Collapse All
   const toggleExpandAll = () => {

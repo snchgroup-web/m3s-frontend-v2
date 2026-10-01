@@ -16,7 +16,7 @@ import {
 } from 'recharts';
 import { Gift, HeartHandshake, Info, Target, TrendingUp, Users } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
-import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
+import { ModulePageTabs, ModuleTabContent, ChildTabPlaceholder } from './moduleTabs';
 import TableControls from './TableControls';
 import { StandardActionsCell, StandardKpiCard, StandardRecordSheetModal } from './StandardUI';
 import CRMGlossary from './CRMGlossary';
@@ -812,6 +812,7 @@ const CRM = () => {
         <SourceStatusPanel />
         <Notice>{t.sourceNotice}</Notice>
 
+        <ModuleTabContent activeTab={activeTab} ready={!sourcesLoading}>
         {activeTab === 'overview' && (
           <div className="space-y-6">
             <div className="rounded-lg border border-slate-700 bg-slate-800 p-6">
@@ -944,6 +945,7 @@ const CRM = () => {
         {activeTab === 'glossary' && <CRMGlossary language={language} />}
 
         <ChildTabPlaceholder moduleId="commercial" language={language} activeTab={activeTab} handledTabs={tabs} />
+        </ModuleTabContent>
       </div>
       <StandardRecordSheetModal
         open={Boolean(selectedRecord)}

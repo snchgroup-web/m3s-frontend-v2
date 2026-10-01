@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Edit2, Trash2 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
-import { ModulePageTabs, ChildTabPlaceholder } from './moduleTabs';
+import { ModulePageTabs, ModuleTabContent, ChildTabPlaceholder } from './moduleTabs';
 import TableControls from './TableControls';
 import InstitutionOverview from './InstitutionOverview';
 import PlanningOverview from './PlanningOverview';
@@ -695,6 +695,7 @@ const Admin = () => {
           </nav>
         )}
 
+        <ModuleTabContent activeTab={activeTab}>
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
           <AdministrationDashboardOverview
@@ -933,6 +934,7 @@ const Admin = () => {
         )}
 
         <ChildTabPlaceholder moduleId="administration" language={language} activeTab={activeTab} permissions={permissions} handledTabs={['overview', 'institution', 'planning', 'communication', 'compliance', 'processes', 'architecture', 'resources', 'assistant', 'audit', 'users', 'roles', 'glossary']} />
+        </ModuleTabContent>
         </div>
       </div>
 
