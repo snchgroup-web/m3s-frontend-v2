@@ -12,7 +12,7 @@ test('values a weekend expense without rounding the rate or mutating the payment
   expect(expense.montantCfaAvailable).toBe(false);
 });
 
-const observation = { date: '2026-10-01', rate: 695, devise_from: 'CHF', devise_to: 'XOF', source: 'Synthetic dated TFX reference' };
+const observation = { date: '2026-10-02', rate: 695, devise_from: 'CHF', devise_to: 'XOF', source: 'Synthetic dated TFX reference' };
 test('uses the exact dated TFX observation, including inverse XOF pairs', () => {
   const row = { ...expense, date: observation.date };
   const history = Object.freeze([Object.freeze(observation)]);
@@ -22,7 +22,7 @@ test('uses the exact dated TFX observation, including inverse XOF pairs', () => 
 
 test.each([
   [{ ...observation, date: '2026-09-30' }],
-  [{ ...observation, date: '2026-10-02' }],
+  [{ ...observation, date: '2026-10-03' }],
   [{ ...observation, source: '' }],
   [{ ...observation, source: 'Ria transfer' }],
   [{ ...observation, rate: 0 }],
@@ -47,7 +47,7 @@ test('renders an indicative amount and an unavailable state without a false zero
   const { rerender } = render(<ExpenseReferenceAmount expense={expense} language="FR" />);
   expect(screen.getByText(/≈/)).toHaveTextContent('2');
   expect(screen.getByText('Hors totaux comptables')).toBeInTheDocument();
-  rerender(<ExpenseReferenceAmount expense={{ ...expense, date: '2026-10-01' }} language="FR" />);
+  rerender(<ExpenseReferenceAmount expense={{ ...expense, date: '2026-10-02' }} language="FR" />);
   expect(screen.getByText('Référence indisponible')).toBeInTheDocument();
   expect(screen.queryByText('0')).not.toBeInTheDocument();
 });
@@ -55,6 +55,23 @@ test('renders an indicative amount and an unavailable state without a false zero
 test('never renders executable source links', () => {
   render(<ExpenseReferenceRate expense={{ ...expense, date: observation.date }} history={[{ ...observation, source: 'javascript:alert(1)' }]} language="EN" />);
   expect(screen.queryByRole('link')).not.toBeInTheDocument();
+});
+
+test('values the October CHF debit with its dated ECB reference, without changing the source payment', () => {
+  const claude = Object.freeze({ ...expense, date: '2026-10-01', montantChf: 18.24,
+    source_amounts: Object.freeze({ original_currency: 'USD', total_paid: 21.62 }) });
+  const result = expenseReferenceValuation(claude);
+  expect(result.date).toBe('2026-10-01');
+  expect(result.validThrough).toBe('2026-10-01');
+  expect(result.rate).toBeCloseTo(655.957 / 0.9437, 10);
+  expect(Math.round(result.equivalent)).toBe(12678);
+  expect(result.source).toContain('www.ecb.europa.eu');
+  expect(result.fromHistory).toBe(false);
+  expect(claude.source_amounts.total_paid).toBe(21.62);
+  expect(claude.montantCfaAvailable).toBe(false);
+  render(<ExpenseReferenceAmount expense={claude} language="FR" />);
+  expect(screen.getByText('Hors totaux comptables')).toBeInTheDocument();
+  expect(screen.queryByText('Référence indisponible')).not.toBeInTheDocument();
 });
 
 test.each([
