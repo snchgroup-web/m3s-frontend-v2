@@ -24,12 +24,25 @@ export const normalizeFinanceSummary = (response) => {
   const totalExpensesCfa = expenseCount === 0 ? 0 : rawExpensesCfa;
   const expensesMissingChf = parseTransactionCount(response.data.expenses_missing_chf) ?? 0;
   const expensesMissingCfa = parseTransactionCount(response.data.expenses_missing_cfa) ?? 0;
+  const incomeMissingChf = parseTransactionCount(response.data.income_missing_chf) ?? 0;
+  const incomeMissingCfa = parseTransactionCount(response.data.income_missing_cfa) ?? 0;
+  if (incomeMissingChf > incomeCount || incomeMissingCfa > incomeCount) return null;
   if (expensesMissingChf > expenseCount || expensesMissingCfa > expenseCount) return null;
-  if (totalIncome === null || (totalExpenses === null && expensesMissingChf === 0)) return null;
+  if ((totalIncome === null && incomeMissingChf === 0) || (totalExpenses === null && expensesMissingChf === 0)) return null;
 
   return {
-    totalIncome,
-    totalIncomeCfa,
+    totalIncome: incomeMissingChf > 0 ? null : totalIncome,
+    totalIncomeCfa: incomeMissingCfa > 0 ? null : totalIncomeCfa,
+    ...((incomeMissingChf > 0 || incomeMissingCfa > 0) ? {
+      incomeSubtotal: {
+        chf: incomeMissingChf < incomeCount ? parseFiniteNumber(response.data.known_income_chf) ?? totalIncome : null,
+        cfa: incomeMissingCfa < incomeCount ? parseFiniteNumber(response.data.known_income_cfa) ?? totalIncomeCfa : null,
+        missingChf: incomeMissingChf,
+        missingCfa: incomeMissingCfa,
+      }
+    } : {}),
+    incomeMissingChf,
+    incomeMissingCfa,
     totalExpenses: expensesMissingChf > 0 ? null : totalExpenses,
     totalExpensesCfa: expensesMissingCfa > 0 ? null : totalExpensesCfa,
     ...((expensesMissingChf > 0 || expensesMissingCfa > 0) ? {

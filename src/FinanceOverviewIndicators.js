@@ -1,5 +1,6 @@
 import React from 'react';
 import { expenseSubtotalCopy } from './financeSummary';
+import { incomeAmountLabels } from './IncomeSourceFields';
 import FinanceTransactionCount, { sumTransactionCounts } from './FinanceTransactionCount';
 import {
   ArrowRightLeft,
@@ -159,6 +160,7 @@ const FinanceOverviewIndicators = ({
   totalExpenses,
   totalExpensesCfa,
   expenseSubtotal,
+  incomeSubtotal,
   netBalance,
   netBalanceCfa,
   currentRate,
@@ -175,6 +177,8 @@ const FinanceOverviewIndicators = ({
 }) => {
   const t = COPY[language] || COPY.FR;
   const partial = financeState === 'available' ? expenseSubtotal : null;
+  const incomePartial = financeState === 'available' ? incomeSubtotal : null;
+  const incomeCopy = incomeAmountLabels[language] || incomeAmountLabels.FR;
   const partialCopy = expenseSubtotalCopy(language);
   const partialNote = partial ? `${partialCopy.source}. ${partialCopy.missing} : CHF ${partial.missingChf} · CFA ${partial.missingCfa}` : null;
   const locale = language === 'DE' ? 'de-CH' : language === 'EN' ? 'en-GB' : 'fr-CH';
@@ -184,9 +188,9 @@ const FinanceOverviewIndicators = ({
 
   return (
     <section aria-label={language === 'DE' ? 'Finanzkennzahlen' : language === 'EN' ? 'Finance indicators' : 'Indicateurs financiers'} className="m3s-design-scope mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      <IndicatorCard label={t.income} value={totalIncome} secondaryValue={totalIncomeCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} icon={TrendingUp} tone="green" locale={locale} transactionCount={incomeCount} testId="finance-total-income" />
+      <IndicatorCard label={incomePartial ? incomeCopy.label : t.income} value={incomePartial ? incomePartial.chf : totalIncome} secondaryValue={incomePartial ? incomePartial.cfa : totalIncomeCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} note={incomePartial ? `${incomeCopy.partial} ${partialCopy.missing} : CHF ${incomePartial.missingChf} · CFA ${incomePartial.missingCfa}` : null} independentCurrencies={Boolean(incomePartial)} icon={TrendingUp} tone="green" locale={locale} transactionCount={incomeCount} testId="finance-total-income" />
       <IndicatorCard label={partial ? partialCopy.label : t.expenses} value={partial ? partial.chf : totalExpenses} secondaryValue={partial ? partial.cfa : totalExpensesCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} note={partialNote} independentCurrencies={Boolean(partial)} icon={TrendingDown} tone="red" locale={locale} transactionCount={expenseCount} testId="finance-total-expenses" />
-      <IndicatorCard label={t.balance} value={netBalance} secondaryValue={netBalanceCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} note={partial ? partialCopy.balance : null} icon={CircleDollarSign} tone="blue" locale={locale} transactionCount={sumTransactionCounts(incomeCount, expenseCount)} testId="finance-net-balance" />
+      <IndicatorCard label={t.balance} value={netBalance} secondaryValue={netBalanceCfa} secondaryUnit="CFA" state={financeState} source={historicalSource(t.globalSource)} note={partial || incomePartial ? partialCopy.balance : null} icon={CircleDollarSign} tone="blue" locale={locale} transactionCount={sumTransactionCounts(incomeCount, expenseCount)} testId="finance-net-balance" />
       <IndicatorCard label={t.rate} value={currentRate} unit="CFA / CHF" state={rateState} source={t.currentRate} icon={ArrowRightLeft} tone="violet" locale={locale} testId="finance-current-rate" />
       <IndicatorCard label={t.realEstateFunding} value={realEstateFunding} secondaryValue={realEstateFundingCfa} secondaryUnit="CFA" state={realEstateState} source={historicalSource(t.realEstateSource)} icon={Building2} tone="cyan" locale={locale} transactionCount={realEstateLoadedCount} countScope="registry" testId="finance-real-estate-funding" />
       <IndicatorCard label={t.reimbursements} value={reimbursements} secondaryValue={reimbursementsCfa} secondaryUnit="CFA" state={realEstateState} source={currentRateSource(t.realEstateSource)} icon={HandCoins} tone="teal" locale={locale} transactionCount={realEstateLoadedCount} countScope="registry" testId="finance-real-estate-reimbursements" />

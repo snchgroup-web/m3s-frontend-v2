@@ -141,9 +141,10 @@ const validGedRecord = row => row && /^[a-f0-9]{64}$/.test(row.id) && typeof row
 const gedError = code => Object.assign(new Error(code), { code });
 
 export const api = {
-  getExpenseProofs: async (expenseId, { signal } = {}) => {
+  getExpenseProofs: async (expenseId, { signal, kind = 'expense' } = {}) => {
+    if (!['expense', 'income'].includes(kind)) throw gedError('GED_INVALID_COMMAND');
     if (typeof expenseId !== 'string' || !expenseId || expenseId.length > 128) throw gedError('GED_UNAVAILABLE');
-    const res = await apiFetch(`${API_BASE_URL}/ged/private/expenses/${encodeURIComponent(expenseId)}/documents`, { signal, cache: 'no-store' });
+    const res = await apiFetch(`${API_BASE_URL}/ged/private/${kind === 'income' ? 'income' : 'expenses'}/${encodeURIComponent(expenseId)}/documents`, { signal, cache: 'no-store' });
     if (!res.ok) throw await createApiError(res, 'GED_UNAVAILABLE');
     const payload = await res.json();
     if (payload?.success !== true || !Array.isArray(payload.documents) || payload.documents.length > 100 ||
@@ -181,21 +182,24 @@ export const api = {
     }
     return payload.documents;
   },
-  getExpenseAttachmentOptions: async ({ signal } = {}) => {
+  getExpenseAttachmentOptions: async ({ signal, kind = 'expense' } = {}) => {
+    if (!['expense', 'income'].includes(kind)) throw gedError('GED_INVALID_COMMAND');
+    const capability = kind === 'income' ? 'incomeAttach' : 'expenseAttach';
     const res = await apiFetch(`${API_BASE_URL}/ged/private/documents`, { signal, cache: 'no-store' });
     if (!res.ok) throw await createApiError(res, 'GED_UNAVAILABLE');
     const payload = await res.json();
     if (payload?.success !== true || !Array.isArray(payload.documents) || payload.documents.length > 100 ||
         payload.documents.some(row => !validGedRecord(row)) ||
-        (payload.capabilities?.expenseAttach !== undefined && typeof payload.capabilities.expenseAttach !== 'boolean')) {
+        (payload.capabilities?.[capability] !== undefined && typeof payload.capabilities[capability] !== 'boolean')) {
       throw gedError('GED_UNAVAILABLE');
     }
     return {
-      enabled: payload.capabilities?.expenseAttach === true,
+      enabled: payload.capabilities?.[capability] === true,
       documents: payload.documents.filter(row => row.lifecycle === true && row.trashed === false && row.category === 'finance')
     };
   },
-  attachExpenseDocument: async (expenseId, value, { signal } = {}) => {
+  attachExpenseDocument: async (expenseId, value, { signal, kind = 'expense' } = {}) => {
+    if (!['expense', 'income'].includes(kind)) throw gedError('GED_INVALID_COMMAND');
     if (typeof expenseId !== 'string' || !expenseId || expenseId.length > 128 || expenseId.trim() !== expenseId ||
         !value || typeof value !== 'object' || Array.isArray(value) ||
         !/^[a-f0-9]{64}$/.test(value.documentId) || !/^[a-f0-9]{64}$/.test(value.versionId) ||
@@ -210,14 +214,14 @@ export const api = {
     }
     const body = { documentId: value.documentId, versionId: value.versionId, documentRole: value.documentRole,
       ...(externalReference === undefined ? {} : { externalReference }) };
-    const res = await apiFetch(`${API_BASE_URL}/ged/private/expenses/${encodeURIComponent(expenseId)}/documents`, {
+    const res = await apiFetch(`${API_BASE_URL}/ged/private/${kind === 'income' ? 'income' : 'expenses'}/${encodeURIComponent(expenseId)}/documents`, {
       method: 'POST', signal, cache: 'no-store', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
     });
     if (!res.ok) throw await createApiError(res, 'GED_UNAVAILABLE');
     const payload = await res.json();
     const link = payload?.link;
     if (payload?.success !== true || typeof payload.created !== 'boolean' || !link ||
-        link.expenseId !== expenseId || link.documentId !== body.documentId || link.versionId !== body.versionId ||
+        link[kind === 'income' ? 'incomeId' : 'expenseId'] !== expenseId || link.documentId !== body.documentId || link.versionId !== body.versionId ||
         link.documentRole !== body.documentRole || link.externalReference !== (externalReference ?? null) ||
         !Number.isSafeInteger(link.revision) || link.revision < 1 || link.revision > 10000) {
       throw gedError('GED_UNAVAILABLE');
@@ -254,10 +258,12 @@ export const api = {
         payload.document.name !== checked.name || payload.document.category !== checked.category) throw gedError('GED_UNAVAILABLE');
     return payload;
   },
-  downloadPrivateGedDocument: async (record, { signal, expenseId } = {}) => {
+  downloadPrivateGedDocument: async (record, { signal, expenseId, incomeId } = {}) => {
+    if (incomeId !== undefined && (expenseId !== undefined || typeof incomeId !== 'string' || !incomeId || incomeId.length > 128)) throw gedError('GED_UNAVAILABLE');
     if (!validGedRecord(record)) throw new Error('GED_UNAVAILABLE');
     if (expenseId !== undefined && (typeof expenseId !== 'string' || !expenseId || expenseId.length > 128)) throw gedError('GED_UNAVAILABLE');
-    const route = expenseId === undefined ? `documents/${record.id}/content` : `expenses/${encodeURIComponent(expenseId)}/documents/${record.id}/content`;
+    const route = incomeId !== undefined ? `income/${encodeURIComponent(incomeId)}/documents/${record.id}/content`
+      : expenseId === undefined ? `documents/${record.id}/content` : `expenses/${encodeURIComponent(expenseId)}/documents/${record.id}/content`;
     const res = await apiFetch(`${API_BASE_URL}/ged/private/${route}`, { signal, cache: 'no-store' });
     if (!res.ok) throw await createApiError(res, 'GED_UNAVAILABLE');
     if (res.headers.get('content-type')?.split(';')[0] !== gedMime(record.name)) throw new Error('GED_UNAVAILABLE');

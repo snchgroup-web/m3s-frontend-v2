@@ -5,6 +5,28 @@ const record = { id: 'a'.repeat(64), name: 'Synthetic.pdf', size: 15 };
 beforeEach(() => { global.fetch = jest.fn(); currentAccessToken.mockResolvedValue('synthetic-token'); });
 afterEach(() => { delete global.fetch; });
 
+test('income attachment capability is independent and the response cannot alias an expense', async () => {
+  fetch.mockResolvedValue({ ok: true, json: async () => ({ success: true, documents: [], capabilities: { expenseAttach: true, incomeAttach: false } }) });
+  expect((await api.getExpenseAttachmentOptions({ kind: 'income' })).enabled).toBe(false);
+  const command = { documentId: record.id, versionId: record.id, documentRole: 'credit_note' };
+  const link = { incomeId: 'REC-SYNTHETIC', ...command, externalReference: null, revision: 1 };
+  fetch.mockResolvedValue({ ok: true, json: async () => ({ success: true, created: true, link }) });
+  await api.attachExpenseDocument('REC-SYNTHETIC', command, { kind: 'income' });
+  expect(fetch.mock.calls.at(-1)[0]).toMatch(/\/income\/REC-SYNTHETIC\/documents$/);
+  fetch.mockResolvedValue({ ok: true, json: async () => ({ success: true, created: true, link: { ...link, incomeId: undefined, expenseId: 'REC-SYNTHETIC' } }) });
+  await expect(api.attachExpenseDocument('REC-SYNTHETIC', command, { kind: 'income' })).rejects.toThrow();
+});
+
+test('income document read uses its own route and refuses mixed identifiers', async () => {
+  const row = { ...record, category: 'finance' };
+  fetch.mockResolvedValue({ ok: true, json: async () => ({ success: true, documents: [row] }) });
+  await api.getExpenseProofs('REC-SYNTHETIC', { kind: 'income' });
+  expect(fetch.mock.calls[0][0]).toMatch(/\/income\/REC-SYNTHETIC\/documents$/);
+  await expect(api.downloadPrivateGedDocument(row, { incomeId: 'REC-SYNTHETIC', expenseId: 'DEP-SYNTHETIC' })).rejects.toThrow();
+  await expect(api.getExpenseProofs('REC-SYNTHETIC', { kind: '../expense' })).rejects.toThrow();
+  expect(fetch).toHaveBeenCalledTimes(1);
+});
+
 test('lifecycle command uses root identity and exact revision without metadata in URL', async () => {
   const root = { ...record, rootId: record.id, lifecycle: true, title: 'CV', revision: 0, trashed: false };
   fetch.mockResolvedValue({ ok: true, status: 200, json: async () => ({ success: true, document: { ...root, title: 'Updated', revision: 1 } }) });
