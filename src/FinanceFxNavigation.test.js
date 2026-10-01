@@ -413,7 +413,8 @@ test.each(['CHF_CFA', 'CFA_CHF'])('an explicit zero remains calculable in %s', a
   fireEvent.change(converter().getByLabelText('Direction'), { target: { value: direction } });
   fireEvent.change(converter().getByLabelText('Montant', { exact: true }), { target: { value: '0' } });
   expect(converter().getByRole('button', { name: 'Calculer' })).toBeEnabled();
-  expect(output().textContent.replace(/\s/g, '')).toBe(direction === 'CHF_CFA' ? '0,00CHF≈0CFA' : '0CFA≈0,00CHF');
+  const zeroChf = (0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  expect(output().textContent.replace(/\s/g, '')).toBe(direction === 'CHF_CFA' ? `${zeroChf}CHF≈0CFA` : `0CFA≈${zeroChf}CHF`);
   fireEvent.click(converter().getByRole('button', { name: 'Calculer' }));
   expect(converter().getByRole('table').querySelectorAll('tbody tr')).toHaveLength(1);
 });
