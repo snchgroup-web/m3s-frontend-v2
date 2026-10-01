@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
-import ExpenseReferenceRate, { expenseReferenceValuation } from './ExpenseReferenceRate';
+import ExpenseReferenceRate, { ExpenseReferenceAmount, expenseReferenceValuation } from './ExpenseReferenceRate';
 
 const expense = Object.freeze({ date: '2026-09-26', montantChf: 4.2, montantChfAvailable: true, montantCfaAvailable: false, hasExplicitTauxFx: false });
 
@@ -10,6 +10,51 @@ test('values a weekend expense without rounding the rate or mutating the payment
   expect(result.equivalent).toBeCloseTo(2916.907781895183, 8);
   expect(expense.montantChf).toBe(4.2);
   expect(expense.montantCfaAvailable).toBe(false);
+});
+
+const observation = { date: '2026-10-01', rate: 695, devise_from: 'CHF', devise_to: 'XOF', source: 'Synthetic dated TFX reference' };
+test('uses the exact dated TFX observation, including inverse XOF pairs', () => {
+  const row = { ...expense, date: observation.date };
+  const history = Object.freeze([Object.freeze(observation)]);
+  expect(expenseReferenceValuation(row, history)).toMatchObject({ rate: 695, fromHistory: true, source: observation.source });
+  expect(expenseReferenceValuation(row, [{ ...observation, devise_from: 'XOF', devise_to: 'CHF', rate: 1 / 695 }]).rate).toBeCloseTo(695);
+});
+
+test.each([
+  [{ ...observation, date: '2026-09-30' }],
+  [{ ...observation, date: '2026-10-02' }],
+  [{ ...observation, source: '' }],
+  [{ ...observation, source: 'Ria transfer' }],
+  [{ ...observation, rate: 0 }],
+  [observation, { ...observation, rate: 700 }],
+])('does not substitute stale, future, unsourced, transaction or conflicting rates: %j', history => {
+  expect(expenseReferenceValuation({ ...expense, date: observation.date }, history)).toBeNull();
+});
+
+test.each(['2026-09-02', '2026-09-04', '2026-09-29'])('retains official source metadata for %s', date => {
+  const result = expenseReferenceValuation({ ...expense, date });
+  expect(result.date).toBe(date);
+  expect(result.fromHistory).toBe(false);
+  expect(result.source).toContain(date.replaceAll('-', ''));
+  expect(result.equivalent).toBeGreaterThan(0);
+});
+
+test.each([{ source_amounts: { recipient_amount: 100 } }, { fournisseur: 'Ria' }, { description: 'Western Union transfer' }])('does not resolve transfer evidence with a market estimate: %j', fields => {
+  expect(expenseReferenceValuation({ ...expense, ...fields })).toBeNull();
+});
+
+test('renders an indicative amount and an unavailable state without a false zero', () => {
+  const { rerender } = render(<ExpenseReferenceAmount expense={expense} language="FR" />);
+  expect(screen.getByText(/≈/)).toHaveTextContent('2');
+  expect(screen.getByText('Hors totaux comptables')).toBeInTheDocument();
+  rerender(<ExpenseReferenceAmount expense={{ ...expense, date: '2026-10-01' }} language="FR" />);
+  expect(screen.getByText('Référence indisponible')).toBeInTheDocument();
+  expect(screen.queryByText('0')).not.toBeInTheDocument();
+});
+
+test('never renders executable source links', () => {
+  render(<ExpenseReferenceRate expense={{ ...expense, date: observation.date }} history={[{ ...observation, source: 'javascript:alert(1)' }]} language="EN" />);
+  expect(screen.queryByRole('link')).not.toBeInTheDocument();
 });
 
 test.each([

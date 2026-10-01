@@ -29,7 +29,8 @@ import FunctionResourcesOverview from './FunctionResourcesOverview';
 import FunctionAssistant from './FunctionAssistant';
 import PrivateGedDocuments from './PrivateGedDocuments';
 import ExpenseProofs from './ExpenseProofs';
-import ExpenseReferenceRate from './ExpenseReferenceRate';
+import ExpenseReferenceRate, { ExpenseReferenceAmount } from './ExpenseReferenceRate';
+import ExpensePaymentMethod, { paymentMethodLabel, paymentMethodLabels } from './ExpensePaymentMethod';
 import ExpenseDocumentPicker, { saveExpenseAttachment } from './ExpenseDocumentPicker';
 import { financeSectionIds, useFinanceSectionNavigation } from './financeNavigation';
 import { Files } from 'lucide-react';
@@ -905,12 +906,14 @@ const Finance = () => {
     const tauxNormalise = deviseOrigine === 'CFA' && tauxBrut > 0 && tauxBrut < 1 ? 1 / tauxBrut : tauxBrut;
     const tauxFx = tauxNormalise > 0 ? tauxNormalise : null;
     const hasExplicitTauxFx = Boolean(tauxFx);
+    const transactionDate = item.date_document || item.date_created || item.created_at || item.date;
 
     return {
       id: item.id || item.source_id || `${type}-${String(index + 1).padStart(4, '0')}`,
       ref: item.ref || item.reference || item.numero_ref || item.source_ref || item.source_id || `${type}-${String(index + 1).padStart(4, '0')}`,
       description: item.description || item.name || 'Transaction',
       fournisseur: item.fournisseur || '',
+      type: item.type || '',
       commentaire: item.commentaire || '',
       amount_contract_version: item.amount_contract_version,
       source_amounts: item.source_amounts,
@@ -929,7 +932,7 @@ const Finance = () => {
       sourceTauxFx: item.source_taux_fx || item.source_taux || item.source || 'Standard',
       category: item.category,
       categorie: item.category || item.categorie || (item.amount_contract_version === 2 ? '' : fallbackCategory),
-      date: cleanDate(item.date_document || item.date_created || item.created_at || item.date),
+      date: transactionDate ? cleanDate(transactionDate) : '',
       agent: item.agent || item.agent_name || item.responsable || item.owner || item.created_by || 'Non renseigne',
       team: item.team || item.team_name || item.equipe || item.bu || item.business_unit || 'Non renseigne',
       departement: item.departement || item.department || item.department_name || item.service || 'Non renseigne',
@@ -945,6 +948,7 @@ const Finance = () => {
   const formatAmount = (value) => toNumber(value).toLocaleString();
   const formatOptionalAmount = (value) => Number.isFinite(value) ? value.toLocaleString() : '—';
   const formatDateForDisplay = (value) => {
+    if (!value) return '—';
     const isoDate = cleanDate(value);
     const match = isoDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (!match) return isoDate;
@@ -2354,6 +2358,7 @@ const Finance = () => {
                       <th className="px-4 py-3 text-left text-white font-bold">{t.departement}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.phaseProjet}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{language === 'DE' ? 'Lieferant' : language === 'EN' ? 'Supplier' : 'Fournisseur'}</th>
+                      <th className="px-4 py-3 text-left text-white font-bold">{(paymentMethodLabels[language] || paymentMethodLabels.FR).label}</th>
                       <th className="sm:sticky sm:right-0 z-20 bg-slate-700 px-6 py-3 text-left text-white font-bold">{t.actions}</th>
                     </tr>
                   </thead>
@@ -2378,9 +2383,9 @@ const Finance = () => {
                           )}
                         </td>
                         <td className="px-4 py-3 text-red-400 font-bold">{d.montantChfAvailable ? formatAmount(d.montantChf) : '—'}</td>
-                        <td className="px-4 py-3 text-red-300 font-bold">{d.montantCfaAvailable ? formatAmount(d.montantCfa) : '—'}</td>
+                        <td className="px-4 py-3 text-red-300 font-bold">{d.montantCfaAvailable ? formatAmount(d.montantCfa) : <ExpenseReferenceAmount expense={d} language={language} history={fxHistory} />}</td>
                         <td className="px-4 py-3 text-purple-300">
-                          {d.hasExplicitTauxFx ? formatAmount(d.tauxFx) : <ExpenseReferenceRate expense={d} language={language} missingLabel={t.chfCfaRateMissing} />}
+                          {d.hasExplicitTauxFx ? formatAmount(d.tauxFx) : <ExpenseReferenceRate expense={d} language={language} history={fxHistory} missingLabel={t.chfCfaRateMissing} />}
                         </td>
                         <td className="px-6 py-3 text-slate-400">{translateCategory(d.categorie)}</td>
                         <td className="px-4 py-3 text-slate-400">{formatCell(d.agent)}</td>
@@ -2388,6 +2393,7 @@ const Finance = () => {
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.departement)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.phaseProjet)}</td>
                         <td className="px-4 py-3 text-slate-400">{formatCell(d.fournisseur)}</td>
+                        <td className="px-4 py-3 text-slate-400">{paymentMethodLabel(d.type, language)}</td>
                         <td className="sm:sticky sm:right-0 bg-slate-800 px-6 py-3"><div className="flex gap-2">
                           <ExpenseProofs expense={d}/>
                           <button type="button" title={t.modifier} aria-label={`${t.modifier} : ${d.ref}`} onClick={(event) => { event.stopPropagation(); handleEdit('depense', d); }} className="m3s-icon-button hover:bg-slate-600">
@@ -3101,6 +3107,7 @@ const Finance = () => {
                   {language === 'DE' ? 'Lieferant' : language === 'EN' ? 'Supplier' : 'Fournisseur'}
                   <input type="text" value={formData.fournisseur || ''} onChange={(e) => handleFormChange('fournisseur', e.target.value)} className="mt-1 w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" />
                 </label>}
+                {modalType === 'depense' && <ExpensePaymentMethod value={formData.type} language={language} onChange={value => handleFormChange('type', value)} />}
                 {sourceAmountMode ? <ExpenseSourceFields value={formData.source_amounts} language={language} invalid={!sourceAmountResult} onChange={value => handleFormChange('source_amounts', value)} /> : <><input
                   type="number"
                   step="any"
