@@ -255,6 +255,9 @@ const Finance = () => {
       montantCHF: 'Montant CHF',
       montantCFA: 'Montant CFA',
       tauxFXCol: 'Taux appliqué',
+      tauxChfCfaCol: 'Taux CHF → CFA',
+      chfCfaRateMissing: 'CHF → CFA non renseigné',
+      expenseConversionReference: 'Référence de conversion',
       devise: 'Devise',
       amountPreview: 'Équivalent au taux appliqué',
       enteredAmounts: 'Montants saisis',
@@ -307,7 +310,7 @@ const Finance = () => {
       separationTauxInfo: 'Le taux appliqué provient de la transaction ou du fournisseur. Le taux de référence reste un repère distinct.',
       appliedRateError: 'Renseignez un taux appliqué strictement positif, vérifié sur la transaction. Le taux de référence ne le remplace pas.',
       fxQualityTitle: 'Qualité FX à contrôler',
-      fxQualityRateWarning: '{count} écriture(s) affichée(s) ont un taux appliqué absent ou nul. Elles restent visibles sans conversion automatique et doivent être qualifiées à partir de la preuve de transaction.',
+      fxQualityRateWarning: '{count} écriture(s) du registre ont un taux CHF → CFA absent ou nul. Ce taux est distinct du taux bancaire d’une autre paire de devises ; aucun taux de référence n’est appliqué automatiquement.',
       fxQualityAmountWarning: '{count} écriture(s) affichée(s) ont un montant CHF ou CFA indisponible. La valeur manquante n’est pas remplacée par zéro.',
       fxRateMissing: 'À qualifier',
       calculer: 'Calculer',
@@ -434,6 +437,9 @@ const Finance = () => {
       montantCHF: 'Amount CHF',
       montantCFA: 'Amount CFA',
       tauxFXCol: 'Applied rate',
+      tauxChfCfaCol: 'CHF → CFA rate',
+      chfCfaRateMissing: 'CHF → CFA not recorded',
+      expenseConversionReference: 'Conversion reference',
       devise: 'Currency',
       amountPreview: 'Equivalent at the applied rate',
       enteredAmounts: 'Entered amounts',
@@ -486,7 +492,7 @@ const Finance = () => {
       separationTauxInfo: 'The applied rate comes from the transaction or provider. The reference rate remains a separate benchmark.',
       appliedRateError: 'Enter a strictly positive applied rate verified against the transaction. The reference rate does not replace it.',
       fxQualityTitle: 'FX quality check required',
-      fxQualityRateWarning: '{count} displayed transaction(s) have a missing or zero applied rate. They remain visible without automatic conversion and must be qualified from the transaction evidence.',
+      fxQualityRateWarning: '{count} register transaction(s) have a missing or zero CHF → CFA rate. This is separate from the bank rate for another currency pair; no reference rate is applied automatically.',
       fxQualityAmountWarning: '{count} displayed transaction(s) have an unavailable CHF or CFA amount. The missing value is not replaced with zero.',
       fxRateMissing: 'To qualify',
       calculer: 'Calculate',
@@ -613,6 +619,9 @@ const Finance = () => {
       montantCHF: 'Betrag CHF',
       montantCFA: 'Betrag CFA',
       tauxFXCol: 'Angewandter Kurs',
+      tauxChfCfaCol: 'Kurs CHF → CFA',
+      chfCfaRateMissing: 'CHF → CFA nicht erfasst',
+      expenseConversionReference: 'Umrechnungsnachweis',
       devise: 'Währung',
       amountPreview: 'Gegenwert zum angewandten Kurs',
       enteredAmounts: 'Erfasste Beträge',
@@ -665,7 +674,7 @@ const Finance = () => {
       separationTauxInfo: 'Der angewandte Kurs stammt aus der Transaktion oder vom Anbieter. Der Referenzkurs bleibt ein separater Vergleichswert.',
       appliedRateError: 'Geben Sie einen anhand der Transaktion geprüften, strikt positiven angewandten Kurs ein. Der Referenzkurs ersetzt ihn nicht.',
       fxQualityTitle: 'FX-Datenqualität prüfen',
-      fxQualityRateWarning: '{count} angezeigte Buchung(en) haben keinen oder einen null gesetzten angewandten Kurs. Sie bleiben ohne automatische Umrechnung sichtbar und müssen anhand des Transaktionsnachweises qualifiziert werden.',
+      fxQualityRateWarning: 'Bei {count} Registerbuchung(en) fehlt der Kurs CHF → CFA oder ist null. Dieser ist vom Bankkurs eines anderen Währungspaars zu unterscheiden; es wird kein Referenzkurs automatisch angewendet.',
       fxQualityAmountWarning: 'Bei {count} angezeigten Buchung(en) ist der CHF- oder CFA-Betrag nicht verfügbar. Der fehlende Wert wird nicht durch null ersetzt.',
       fxRateMissing: 'Zu qualifizieren',
       calculer: 'Berechnen',
@@ -2261,7 +2270,7 @@ const Finance = () => {
                       <th className="px-6 py-3 text-left text-white font-bold">{t.description}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.montantCHF}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.montantCFA}</th>
-                      <th className="px-4 py-3 text-left text-white font-bold">{t.tauxFXCol}</th>
+                      <th className="px-4 py-3 text-left text-white font-bold">{t.tauxChfCfaCol}</th>
                       <th className="px-6 py-3 text-left text-white font-bold">{t.categorie}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.agent}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.team}</th>
@@ -2285,7 +2294,7 @@ const Finance = () => {
                         <td className="px-4 py-3 text-green-400 font-bold">{r.montantChfAvailable ? formatAmount(r.montantChf) : '—'}</td>
                         <td className="px-4 py-3 text-green-300 font-bold">{r.montantCfaAvailable ? formatAmount(r.montantCfa) : '—'}</td>
                         <td className="px-4 py-3 text-purple-300">
-                          {r.hasExplicitTauxFx ? formatAmount(r.tauxFx) : <span className="font-semibold text-amber-300">{t.fxRateMissing}</span>}
+                          {r.hasExplicitTauxFx ? formatAmount(r.tauxFx) : <span className="font-semibold text-amber-300">{t.chfCfaRateMissing}</span>}
                         </td>
                         <td className="px-6 py-3 text-slate-400">{translateCategory(r.categorie)}</td>
                         <td className="px-4 py-3 text-slate-400">{formatCell(r.agent)}</td>
@@ -2337,14 +2346,14 @@ const Finance = () => {
                       <th className="px-6 py-3 text-left text-white font-bold">{t.description}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.montantCHF}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.montantCFA}</th>
-                      <th className="px-4 py-3 text-left text-white font-bold">{t.tauxFXCol}</th>
+                      <th className="px-4 py-3 text-left text-white font-bold">{t.tauxChfCfaCol}</th>
                       <th className="px-6 py-3 text-left text-white font-bold">{t.categorie}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.agent}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.team}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.departement}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.phaseProjet}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{language === 'DE' ? 'Lieferant' : language === 'EN' ? 'Supplier' : 'Fournisseur'}</th>
-                      <th className="sticky right-0 z-20 bg-slate-700 px-6 py-3 text-left text-white font-bold">{t.actions}</th>
+                      <th className="sm:sticky sm:right-0 z-20 bg-slate-700 px-6 py-3 text-left text-white font-bold">{t.actions}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -2360,11 +2369,17 @@ const Finance = () => {
                         <td className="px-6 py-3 text-slate-400 whitespace-nowrap">{formatDateForDisplay(d.date)}</td>
                         <td className="px-6 py-3 text-slate-300">{translateDescription(d.description)}
                           {d.source_amounts && <small className="block mt-1">{expenseAmountLabels[language].source} : {formatAmount(d.source_amounts.total_paid)} {d.source_amounts.original_currency}</small>}
+                          {typeof d.source_amounts?.conversion_source === 'string' && d.source_amounts.conversion_source.trim() && (
+                            <details className="mt-2 max-w-sm text-xs" onClick={event => event.stopPropagation()}>
+                              <summary className="cursor-pointer text-blue-400 focus-visible:outline focus-visible:outline-2">{t.expenseConversionReference}</summary>
+                              <p className="mt-2 whitespace-pre-wrap break-words">{d.source_amounts.conversion_source}</p>
+                            </details>
+                          )}
                         </td>
                         <td className="px-4 py-3 text-red-400 font-bold">{d.montantChfAvailable ? formatAmount(d.montantChf) : '—'}</td>
                         <td className="px-4 py-3 text-red-300 font-bold">{d.montantCfaAvailable ? formatAmount(d.montantCfa) : '—'}</td>
                         <td className="px-4 py-3 text-purple-300">
-                          {d.hasExplicitTauxFx ? formatAmount(d.tauxFx) : <span className="font-semibold text-amber-300">{t.fxRateMissing}</span>}
+                          {d.hasExplicitTauxFx ? formatAmount(d.tauxFx) : <span className="font-semibold text-amber-300">{t.chfCfaRateMissing}</span>}
                         </td>
                         <td className="px-6 py-3 text-slate-400">{translateCategory(d.categorie)}</td>
                         <td className="px-4 py-3 text-slate-400">{formatCell(d.agent)}</td>
@@ -2372,7 +2387,7 @@ const Finance = () => {
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.departement)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.phaseProjet)}</td>
                         <td className="px-4 py-3 text-slate-400">{formatCell(d.fournisseur)}</td>
-                        <td className="sticky right-0 bg-slate-800 px-6 py-3"><div className="flex gap-2">
+                        <td className="sm:sticky sm:right-0 bg-slate-800 px-6 py-3"><div className="flex gap-2">
                           <ExpenseProofs expense={d}/>
                           <button type="button" title={t.modifier} aria-label={`${t.modifier} : ${d.ref}`} onClick={(event) => { event.stopPropagation(); handleEdit('depense', d); }} className="m3s-icon-button hover:bg-slate-600">
                             <Edit2 size={18} className="text-blue-400" />
@@ -2667,7 +2682,7 @@ const Finance = () => {
                         <th className="px-5 py-3 text-left font-bold text-white">{t.description}</th>
                         <th className="px-4 py-3 text-left font-bold text-white">{t.montantCHF}</th>
                         <th className="px-4 py-3 text-left font-bold text-white">{t.montantCFA}</th>
-                        <th className="px-4 py-3 text-left font-bold text-white">{t.tauxFXCol}</th>
+                        <th className="px-4 py-3 text-left font-bold text-white">{t.tauxChfCfaCol}</th>
                         <th className="px-4 py-3 text-left font-bold text-white">{t.socialNature}</th>
                         <th className="px-4 py-3 text-left font-bold text-white">{t.beneficiaire}</th>
                         <th className="px-4 py-3 text-left font-bold text-white">{t.agent}</th>
@@ -2688,7 +2703,7 @@ const Finance = () => {
                           <td className="px-4 py-3 text-purple-300">
                             {row.hasExplicitTauxFx
                               ? Number(row.tauxFx).toLocaleString(undefined, { maximumFractionDigits: 3 })
-                              : <span className="font-semibold text-amber-300">{t.fxRateMissing}</span>}
+                              : <span className="font-semibold text-amber-300">{t.chfCfaRateMissing}</span>}
                           </td>
                           <td className="px-4 py-3"><span className="inline-flex whitespace-nowrap rounded bg-emerald-500/15 px-2 py-1 text-xs font-medium text-emerald-300">{translateStandardValue(row.natureSociale)}</span></td>
                           <td className="px-4 py-3 text-slate-300">{formatCell(row.beneficiaire)}</td>
@@ -2845,7 +2860,7 @@ const Finance = () => {
                               <th className="px-4 py-3 text-left text-white font-bold">{t.designation}</th>
                               <th className="px-4 py-3 text-left text-white font-bold">{t.montantCHF}</th>
                               <th className="px-4 py-3 text-left text-white font-bold">{t.montantCFA}</th>
-                              <th className="px-4 py-3 text-left text-white font-bold">{t.tauxFXCol}</th>
+                              <th className="px-4 py-3 text-left text-white font-bold">{t.tauxChfCfaCol}</th>
                               <th className="px-4 py-3 text-left text-white font-bold">{t.partCheikh}</th>
                               <th className="px-4 py-3 text-left text-white font-bold">{t.remboursementCheikh}</th>
                               <th className="px-4 py-3 text-left text-white font-bold">{t.categorie}</th>

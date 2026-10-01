@@ -80,6 +80,40 @@ beforeEach(() => {
 
 afterEach(() => jest.restoreAllMocks());
 
+test.each([
+  ['FR', 'Taux CHF → CFA', 'CHF → CFA non renseigné', 'Référence de conversion'],
+  ['EN', 'CHF → CFA rate', 'CHF → CFA not recorded', 'Conversion reference'],
+  ['DE', 'Kurs CHF → CFA', 'CHF → CFA nicht erfasst', 'Umrechnungsnachweis']
+])('separates the register pair from bank conversion evidence in %s without mutations', async (language, header, missing, reference) => {
+  mockSearch = '?tab=depenses';
+  localStorage.setItem('language', language);
+  const evidence = 'SYNTHETIC: 5 USD x 0.81 CHF/USD + 0.05 CHF = 4.10 CHF. <script>not executable</script>';
+  const source = { original_currency: 'USD', total_paid: 5, equivalent_chf: 4.1, equivalent_cfa: null, conversion_source: evidence };
+  api.getExpenses.mockResolvedValue({ data: [
+    { id: 'FX-USD-QA', ref: 'FX-USD-QA', description: 'Synthetic foreign currency payment', montant_chf: 4.1, montant_cfa: null, taux_fx: null, amount_contract_version: 2, source_amounts: source },
+    { id: 'FX-CHF-QA', ref: 'FX-CHF-QA', description: 'Synthetic CHF payment', montant_chf: 10, montant_cfa: 7000, taux_fx: 700 }
+  ] });
+  renderFinance();
+  const row = (await screen.findByText('FX-USD-QA')).closest('tr');
+  expect(screen.getByRole('columnheader', { name: header })).toBeInTheDocument();
+  expect(within(row).getByText(missing)).toBeInTheDocument();
+  expect(within(row).getByText('—')).toBeInTheDocument();
+  const summary = within(row).getByText(reference);
+  fireEvent.click(summary);
+  expect(within(row).getByText(evidence)).toBeInTheDocument();
+  expect(row.querySelector('script')).toBeNull();
+  expect(screen.queryByPlaceholderText('Description')).not.toBeInTheDocument();
+  fireEvent.keyDown(summary, { key: 'Enter' });
+  expect(screen.queryByPlaceholderText('Description')).not.toBeInTheDocument();
+  expect(within(row).queryByText('0.82')).not.toBeInTheDocument();
+  const chfRow = screen.getByText('FX-CHF-QA').closest('tr');
+  expect(within(chfRow).getByText('700')).toBeInTheDocument();
+  expect(within(chfRow).queryByText(reference)).not.toBeInTheDocument();
+  expect(api.updateExpense).not.toHaveBeenCalled();
+  expect(api.createExpense).not.toHaveBeenCalled();
+  expect(source).toEqual({ original_currency: 'USD', total_paid: 5, equivalent_chf: 4.1, equivalent_cfa: null, conversion_source: evidence });
+});
+
 test('creates a source-currency expense without inventing equivalents', async () => {
   mockSearch = '?tab=depenses';
   api.getExpenses.mockResolvedValue({ data: [], capabilities: { expense_amount_contract: 2 } });
@@ -177,9 +211,9 @@ test('keeps incomplete historical FX values visible without reference-rate subst
 
   renderFinance();
 
-  expect(await screen.findByText(/2 écriture\(s\) affichée\(s\) ont un taux appliqué absent ou nul/)).toBeInTheDocument();
+  expect(await screen.findByText(/2 écriture\(s\) du registre ont un taux CHF → CFA absent ou nul/)).toBeInTheDocument();
   expect(screen.getByText(/1 écriture\(s\) affichée\(s\) ont un montant CHF ou CFA indisponible/)).toBeInTheDocument();
-  expect(screen.getAllByText('À qualifier')).toHaveLength(2);
+  expect(screen.getAllByText('CHF → CFA non renseigné')).toHaveLength(2);
 
   const cfaRow = screen.getByText('REC-00003').closest('tr');
   const incompleteChfRow = screen.getByText('REC-00004').closest('tr');
