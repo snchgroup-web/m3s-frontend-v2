@@ -114,6 +114,25 @@ test.each([
   expect(source).toEqual({ original_currency: 'USD', total_paid: 5, equivalent_chf: 4.1, equivalent_cfa: null, conversion_source: evidence });
 });
 
+test('shows a dated reference separately from recorded CFA and never writes it back', async () => {
+  mockSearch = '?tab=depenses';
+  api.getExpenses.mockResolvedValue({ data: [{
+    id: 'REF-QA', ref: 'REF-QA', description: 'Synthetic reference valuation', date: '2026-09-26',
+    montant_chf: 4.2, montant_cfa: null, taux_fx: null, devise_origine: 'USD', amount_contract_version: 2,
+    source_amounts: { original_currency: 'USD', total_paid: 5, equivalent_chf: 4.2, equivalent_cfa: null, conversion_source: 'Synthetic bank evidence' }
+  }] });
+  renderFinance();
+  const row = (await screen.findByText('REF-QA')).closest('tr');
+  expect(within(row).getByText('Référence indicative · 25.09.2026')).toBeInTheDocument();
+  expect(within(row).queryByText('CHF → CFA non renseigné')).not.toBeInTheDocument();
+  expect(within(row).getByText('—')).toBeInTheDocument();
+  fireEvent.click(within(row).getByText('Cours BCE / BCEAO'));
+  expect(within(row).getByText('Hors totaux comptables')).toBeInTheDocument();
+  expect(screen.queryByPlaceholderText('Description')).not.toBeInTheDocument();
+  expect(api.updateExpense).not.toHaveBeenCalled();
+  expect(api.createExpense).not.toHaveBeenCalled();
+});
+
 test('creates a source-currency expense without inventing equivalents', async () => {
   mockSearch = '?tab=depenses';
   api.getExpenses.mockResolvedValue({ data: [], capabilities: { expense_amount_contract: 2 } });

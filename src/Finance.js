@@ -29,6 +29,7 @@ import FunctionResourcesOverview from './FunctionResourcesOverview';
 import FunctionAssistant from './FunctionAssistant';
 import PrivateGedDocuments from './PrivateGedDocuments';
 import ExpenseProofs from './ExpenseProofs';
+import ExpenseReferenceRate from './ExpenseReferenceRate';
 import ExpenseDocumentPicker, { saveExpenseAttachment } from './ExpenseDocumentPicker';
 import { financeSectionIds, useFinanceSectionNavigation } from './financeNavigation';
 import { Files } from 'lucide-react';
@@ -2379,7 +2380,7 @@ const Finance = () => {
                         <td className="px-4 py-3 text-red-400 font-bold">{d.montantChfAvailable ? formatAmount(d.montantChf) : '—'}</td>
                         <td className="px-4 py-3 text-red-300 font-bold">{d.montantCfaAvailable ? formatAmount(d.montantCfa) : '—'}</td>
                         <td className="px-4 py-3 text-purple-300">
-                          {d.hasExplicitTauxFx ? formatAmount(d.tauxFx) : <span className="font-semibold text-amber-300">{t.chfCfaRateMissing}</span>}
+                          {d.hasExplicitTauxFx ? formatAmount(d.tauxFx) : <ExpenseReferenceRate expense={d} language={language} missingLabel={t.chfCfaRateMissing} />}
                         </td>
                         <td className="px-6 py-3 text-slate-400">{translateCategory(d.categorie)}</td>
                         <td className="px-4 py-3 text-slate-400">{formatCell(d.agent)}</td>

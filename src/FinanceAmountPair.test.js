@@ -35,5 +35,5 @@ test('does not reinterpret independently recorded real-estate amounts', () => {
   const pair = screen.getByRole('status', { name: 'Recorded amounts' });
   expect(pair).toHaveTextContent('0 CHF');
   expect(pair).not.toHaveTextContent('≈');
-  expect(pair.children[1].textContent.replace(/\s/g, '')).toBe('100000CFA');
+  expect(pair.children[1].textContent).toBe(`${(100000).toLocaleString('fr-CH', { maximumFractionDigits: 2 })} CFA`);
 });
