@@ -87,7 +87,7 @@ test.each([
   ['DE', 'Zwischensummen verfügbar · Umrechnungen offen']
 ])('marks incomplete global totals as partial in %s', async (language, label) => {
   localStorage.setItem('language', language);
-  api.getFinanceDashboard.mockResolvedValue(dashboardResponse({ expenses_missing_chf: 1, expenses_missing_cfa: 1 }));
+  api.getFinanceDashboard.mockResolvedValue(dashboardResponse({ total_expenses: null, total_expenses_cfa: null, known_expenses_chf: 400, known_expenses_cfa: 280000, expenses_missing_chf: 1, expenses_missing_cfa: 1 }));
   renderFinance();
   await screen.findByText(label);
   const banner = screen.getByTestId('finance-source-status');

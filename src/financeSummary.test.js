@@ -17,6 +17,16 @@ test('keeps known subtotals separate from full totals and never fills unknowns w
   expect(normalizeFinanceSummary({ data: { ...valid, expenses_missing_chf: 2 } })).toBeNull();
 });
 
+test('reads dedicated known subtotals when the API masks incomplete full totals', () => {
+  const result = normalizeFinanceSummary({ data: { ...valid, total_expense_count: 3,
+    total_expenses: null, total_expenses_cfa: null,
+    known_expenses_chf: '123.45', known_expenses_cfa: 78900,
+    expenses_missing_chf: 1, expenses_missing_cfa: 2 } });
+  expect(result.expenseSubtotal).toEqual({ chf: 123.45, cfa: 78900, missingChf: 1, missingCfa: 2 });
+  expect(result.totalExpenses).toBeNull();
+  expect(result.totalExpensesCfa).toBeNull();
+});
+
 test.each([null, {}, { success: false, data: valid }, { data: { ...valid, total_income_count: null } }, { data: { ...valid, total_expense_count: -1 } }, { data: { ...valid, total_income: null } }])('rejects unavailable or invalid summary %p', response => {
   expect(normalizeFinanceSummary(response)).toBeNull();
 });
