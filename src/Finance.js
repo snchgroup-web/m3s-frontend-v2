@@ -21,6 +21,8 @@ import { parseFxRate, cfaPerChfObservation, summarizeFxHistory, yearlyFxHistory 
 import { normalizeFinanceSummary } from './financeSummary';
 import ExpenseSourceFields, { emptySourceAmounts, expenseAmountLabels } from './ExpenseSourceFields';
 import { normalizeExpenseAmounts } from './financeExpenseAmounts';
+import IncomeSourceFields, { emptyIncomeAmounts, normalizeIncomeAmounts, incomeAmountLabels } from './IncomeSourceFields';
+import { addAnnualAmounts } from './financeAnnualAmounts';
 import { matchesIncomeScope, normalizeIncomeScope } from './financeIncomeScope';
 import FinanceArchitecture from './FinanceArchitecture';
 import FinanceProcessControls from './FinanceProcessControls';
@@ -137,6 +139,7 @@ const Finance = () => {
   const [depenses, setDepenses] = useState([]);
   const [financeSummary, setFinanceSummary] = useState(null);
   const [expenseAmountsSupported, setExpenseAmountsSupported] = useState(false);
+  const [incomeAmountsSupported, setIncomeAmountsSupported] = useState(false);
   const [financeSummaryStatus, setFinanceSummaryStatus] = useState('loading');
   const [financeExtractStatus, setFinanceExtractStatus] = useState('loading');
   const [incomeExtractStatus, setIncomeExtractStatus] = useState('loading');
@@ -752,12 +755,12 @@ const Finance = () => {
   const fxRateInvalid = fxFormRate === null || fxFormRate <= 0;
   const fxPairInvalid = !fxFormData.devise_from || !fxFormData.devise_to || fxFormData.devise_from === fxFormData.devise_to;
   const fxFormInvalid = fxRateInvalid || fxPairInvalid || !fxFormData.date;
-  const sourceAmountMode = modalType === 'depense' && formData.amount_contract_version === 2;
+  const sourceAmountMode = ['depense', 'recette'].includes(modalType) && formData.amount_contract_version === 2;
   let sourceAmountResult = null;
   if (sourceAmountMode) {
-    try { sourceAmountResult = normalizeExpenseAmounts(formData.source_amounts || {}); } catch { /* Invalid input remains editable. */ }
+    try { sourceAmountResult = (modalType === 'recette' ? normalizeIncomeAmounts : normalizeExpenseAmounts)(formData.source_amounts || {}); } catch { /* Invalid input remains editable. */ }
   }
-  const appliedRateInvalid = sourceAmountMode ? !sourceAmountResult || !expenseAmountsSupported : appliedFormRate === null || appliedFormRate <= 0;
+  const appliedRateInvalid = sourceAmountMode ? !sourceAmountResult || !(modalType === 'recette' ? incomeAmountsSupported : expenseAmountsSupported) : appliedFormRate === null || appliedFormRate <= 0;
   const financeDescriptionInvalid = !String(formData.description ?? '').trim();
   const financeAmount = String(formData.montant ?? '').trim() === '' ? null : parseFiniteNumber(formData.montant);
   const financeAmountInvalid = sourceAmountMode ? !sourceAmountResult : financeAmount === null;
@@ -933,9 +936,9 @@ const Finance = () => {
       category: item.category,
       categorie: item.category || item.categorie || (item.amount_contract_version === 2 ? '' : fallbackCategory),
       date: transactionDate ? cleanDate(transactionDate) : '',
-      agent: item.agent || item.agent_name || item.responsable || item.owner || item.created_by || 'Non renseigne',
-      team: item.team || item.team_name || item.equipe || item.bu || item.business_unit || 'Non renseigne',
-      departement: item.departement || item.department || item.department_name || item.service || 'Non renseigne',
+      agent: item.agent || item.agent_name || item.responsable || item.owner || item.created_by || (item.amount_contract_version === 2 ? '' : 'Non renseigne'),
+      team: item.team || item.team_name || item.equipe || item.bu || item.business_unit || (item.amount_contract_version === 2 ? '' : 'Non renseigne'),
+      departement: item.departement || item.department || item.department_name || item.service || (item.amount_contract_version === 2 ? '' : 'Non renseigne'),
       phaseProjet: item.phase_projet || item.phaseProjet || item.project_phase || item.phase || (item.amount_contract_version === 2 ? '' : 'Conception'),
       natureSociale: item.nature_sociale || item.natureSociale || 'Aide sociale',
       beneficiaire: item.beneficiaire || '',
@@ -1000,6 +1003,7 @@ const Finance = () => {
       ? expensesResult.value.data
       : null;
     setExpenseAmountsSupported(Boolean(expensesData && expensesResult.value?.capabilities?.expense_amount_contract === 2));
+    setIncomeAmountsSupported(Boolean(incomeResult.status === 'fulfilled' && incomeResult.value?.success !== false && incomeResult.value?.capabilities?.income_amount_contract === 2));
     const incomeData = incomeResult.status === 'fulfilled' && incomeResult.value?.success !== false && Array.isArray(incomeResult.value?.data)
       ? incomeResult.value.data
       : null;
@@ -1561,11 +1565,7 @@ const Finance = () => {
       const year = cleanDate(row.date).slice(0, 4);
       if (!/^\d{4}$/.test(year)) return;
       if (!yearly[year]) yearly[year] = { année: year, recettes: 0, depenses: 0, recettesCfa: 0, depensesCfa: 0 };
-      const montantChf = toNumber(row.montantChf ?? row.montant);
-      const tauxFx = toNumber(row.tauxFx);
-      const montantCfa = toNumber(row.montantCfa) || (tauxFx > 1 ? montantChf * tauxFx : 0);
-      yearly[year][key] += montantChf;
-      yearly[year][`${key}Cfa`] += montantCfa;
+      addAnnualAmounts(yearly[year], key, row);
     });
     addRows(recettesExploitation, 'recettes');
     addRows(depensesAffichees, 'depenses');
@@ -1801,7 +1801,7 @@ const Finance = () => {
   };
 
   const handleSave = () => {
-    if (modalType === 'depense' && !attachmentReady) return;
+    if (!socialModal && !attachmentReady) return;
     if (financeDescriptionInvalid || financeAmountInvalid || !formData.date) {
       setFinanceFormError(true);
       financeFormErrorRef.current?.focus();
@@ -1849,7 +1849,7 @@ const Finance = () => {
       type: modalType,
       socialModal,
       label: formData.description.trim(),
-      attachment: modalType === 'depense' ? expenseAttachment : null,
+      attachment: !socialModal ? expenseAttachment : null,
       payload
     });
   };
@@ -1864,7 +1864,7 @@ const Finance = () => {
       } else if (action.itemId !== null) response = await api.updateExpense(action.itemId, action.payload);
       else response = await api.createExpense(action.payload);
       if (response?.success === false) throw new Error('Finance save not confirmed');
-      // Once the expense exists, a document failure must never resubmit its payment.
+      // Once the entry exists, a document failure must never resubmit it.
       setShowModal(false);
       setEditingId(null);
       setSocialModal(false);
@@ -1875,9 +1875,9 @@ const Finance = () => {
         const expenseId = response?.data?.id || action.itemId;
         try {
           if (!expenseId) throw new Error('Missing saved expense reference');
-          await saveExpenseAttachment(expenseId, action.attachment);
+          await saveExpenseAttachment(expenseId, action.attachment, action.type === 'recette' ? { kind: 'income' } : {});
         } catch {
-          setAttachmentRetries(current => [...current, { expenseId, selection: action.attachment, label: action.label,
+          setAttachmentRetries(current => [...current, { expenseId, kind: action.type === 'recette' ? 'income' : 'expense', selection: action.attachment, label: action.label,
             key: `${expenseId || 'unknown'}-${Date.now()}`, busy: false }]);
         }
       }
@@ -1894,7 +1894,7 @@ const Finance = () => {
     attachmentBusy.current.add(item.key);
     setAttachmentRetries(current => current.map(row => row.key === item.key ? { ...row, busy: true } : row));
     try {
-      await saveExpenseAttachment(item.expenseId, item.selection);
+      await saveExpenseAttachment(item.expenseId, item.selection, item.kind === 'income' ? { kind: 'income' } : {});
       setAttachmentRetries(current => current.filter(row => row.key !== item.key));
     } catch {
       setAttachmentRetries(current => current.map(row => row.key === item.key ? { ...row, busy: false } : row));
@@ -1941,6 +1941,10 @@ const Finance = () => {
     if (type === 'depense' && expenseAmountsSupported) {
       next.amount_contract_version = 2;
       next.source_amounts = emptySourceAmounts();
+    }
+    if (type === 'recette' && incomeAmountsSupported) {
+      next.amount_contract_version = 2;
+      next.source_amounts = emptyIncomeAmounts();
     }
     next.tauxFxApplique = getHistoricalCfaPerChf(next.date)?.cfaPerChf || '';
     setModalType(type);
@@ -2111,6 +2115,7 @@ const Finance = () => {
           totalExpenses={totalDepenses}
           totalExpensesCfa={totalDepensesCfa}
           expenseSubtotal={financeSummary?.expenseSubtotal}
+          incomeSubtotal={financeSummary?.incomeSubtotal}
           netBalance={solde}
           netBalanceCfa={soldeCfa}
           currentRate={parseFiniteNumber(tauxChfCfa)}
@@ -2130,7 +2135,7 @@ const Finance = () => {
           role="status"
           data-testid="finance-source-status"
           className={`mb-6 flex items-start gap-3 rounded-lg border px-4 py-3 ${
-            financeSummaryStatus === 'available' && !financeSummary?.expenseSubtotal
+            financeSummaryStatus === 'available' && !financeSummary?.expenseSubtotal && !financeSummary?.incomeSubtotal
               ? 'border-emerald-700/60 bg-emerald-950/30 text-emerald-100'
               : financeSummaryStatus === 'loading'
                 ? 'border-blue-700/60 bg-blue-950/30 text-blue-100'
@@ -2139,7 +2144,7 @@ const Finance = () => {
         >
           {financeSummaryStatus === 'loading' ? (
             <LoaderCircle size={20} className="mt-0.5 shrink-0 animate-spin" aria-hidden="true" />
-          ) : financeSummaryStatus === 'available' && !financeSummary?.expenseSubtotal ? (
+          ) : financeSummaryStatus === 'available' && !financeSummary?.expenseSubtotal && !financeSummary?.incomeSubtotal ? (
             <Database size={20} className="mt-0.5 shrink-0" aria-hidden="true" />
           ) : (
             <AlertTriangle size={20} className="mt-0.5 shrink-0" aria-hidden="true" />
@@ -2149,7 +2154,7 @@ const Finance = () => {
               {financeSummaryStatus === 'loading'
                 ? t.sourceLoading
                 : financeSummaryStatus === 'available'
-                  ? financeSummary?.expenseSubtotal ? t.sourcePartial : t.sourceAvailable
+                  ? financeSummary?.expenseSubtotal || financeSummary?.incomeSubtotal ? t.sourcePartial : t.sourceAvailable
                   : t.sourceUnavailable}
             </p>
             <p className="mt-1 text-slate-300">
@@ -2170,6 +2175,9 @@ const Finance = () => {
             )}
             {(financeSummary?.expensesMissingChf > 0 || financeSummary?.expensesMissingCfa > 0) && <p role="alert" className="mt-2 text-amber-300">
               {expenseAmountLabels[language].partial} CHF : {financeSummary.expensesMissingChf} · CFA : {financeSummary.expensesMissingCfa}
+            </p>}
+            {financeSummary?.incomeSubtotal && <p role="alert" className="mt-2 text-amber-300">
+              {incomeAmountLabels[language].partial} CHF : {financeSummary.incomeMissingChf} · CFA : {financeSummary.incomeMissingCfa}
             </p>}
           </div>
         </div>
@@ -2244,6 +2252,15 @@ const Finance = () => {
 
         {activeTab === 'processes' && <FinanceProcessControls language={language} />}
 
+        {['recettes', 'depenses'].includes(activeTab) && attachmentRetries.filter(item =>
+          (item.kind === 'income' ? 'recettes' : 'depenses') === activeTab).map(item => <div key={item.key} role="alert" className="mb-4 border border-amber-600 bg-amber-950/20 p-4 text-sm text-amber-200">
+          <p>{item.kind === 'income'
+            ? (language === 'EN' ? 'Income saved; document attachment is not confirmed.' : language === 'DE' ? 'Einnahme gespeichert; Belegverknüpfung noch nicht bestätigt.' : 'Recette enregistrée ; rattachement du justificatif non confirmé.')
+            : (language === 'EN' ? 'Expense saved; document attachment is not confirmed.' : language === 'DE' ? 'Ausgabe gespeichert; Belegverknüpfung noch nicht bestätigt.' : 'Dépense enregistrée ; rattachement du justificatif non confirmé.')} {item.label} {item.expenseId || ''}</p>
+          {item.expenseId && <button type="button" className="m3s-secondary-button mt-2 min-h-11 px-3" disabled={item.busy} onClick={() => retryExpenseAttachment(item)}>
+            {language === 'EN' ? 'Retry attachment only' : language === 'DE' ? 'Nur Verknüpfung erneut versuchen' : 'Réessayer uniquement le rattachement'}
+          </button>}
+        </div>)}
         {activeTab === 'recettes' && (
           <div id="finance-revenue-register" className="min-h-[calc(100dvh-12rem)] scroll-mt-24" tabIndex="-1">
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -2295,7 +2312,10 @@ const Finance = () => {
                       >
                         <td className="px-4 py-3 text-slate-400">{formatCell(r.ref)}</td>
                         <td className="px-6 py-3 text-slate-400 whitespace-nowrap">{formatDateForDisplay(r.date)}</td>
-                        <td className="px-6 py-3 text-slate-300">{translateDescription(r.description)}</td>
+                        <td className="px-6 py-3 text-slate-300">
+                          {translateDescription(r.description)}
+                          {r.source_amounts && <small className="block mt-1">{incomeAmountLabels[language].source} : {formatAmount(r.source_amounts.total_received)} {r.source_amounts.original_currency}</small>}
+                        </td>
                         <td className="px-4 py-3 text-green-400 font-bold">{r.montantChfAvailable ? formatAmount(r.montantChf) : '—'}</td>
                         <td className="px-4 py-3 text-green-300 font-bold">{r.montantCfaAvailable ? formatAmount(r.montantCfa) : '—'}</td>
                         <td className="px-4 py-3 text-purple-300">
@@ -2307,6 +2327,7 @@ const Finance = () => {
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(r.departement)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(r.phaseProjet)}</td>
                         <td className="px-6 py-3 flex gap-2">
+                          <ExpenseProofs expense={r} kind="income"/>
                           <button type="button" title={t.modifier} aria-label={`${t.modifier} : ${r.ref}`} onClick={(event) => { event.stopPropagation(); handleEdit('recette', r); }} className="m3s-icon-button hover:bg-slate-600">
                             <Edit2 size={18} className="text-blue-400" />
                           </button>
@@ -2326,12 +2347,6 @@ const Finance = () => {
 
         {activeTab === 'depenses' && (
           <div id="finance-expense-register" className="min-h-[calc(100dvh-6rem)] scroll-mt-24" tabIndex="-1">
-            {attachmentRetries.map(item => <div key={item.key} role="alert" className="mb-4 border border-amber-600 bg-amber-950/20 p-4 text-sm text-amber-200">
-              <p>{language === 'EN' ? 'Expense saved; document attachment is not confirmed.' : language === 'DE' ? 'Ausgabe gespeichert; Belegverknüpfung noch nicht bestätigt.' : 'Dépense enregistrée ; rattachement du justificatif non confirmé.'} {item.label} {item.expenseId || ''}</p>
-              {item.expenseId && <button type="button" className="m3s-secondary-button mt-2 min-h-11 px-3" disabled={item.busy} onClick={() => retryExpenseAttachment(item)}>
-                {language === 'EN' ? 'Retry attachment only' : language === 'DE' ? 'Nur Verknüpfung erneut versuchen' : 'Réessayer uniquement le rattachement'}
-              </button>}
-            </div>)}
             <div className="flex flex-wrap items-center justify-end gap-3 mb-4">
               <button type="button" onClick={() => selectFinanceTab('resources')} className="flex items-center gap-2 min-h-11 px-3 py-2 text-sm text-blue-400 hover:text-blue-300">
                 <Files size={18} aria-hidden="true" />
@@ -3108,7 +3123,9 @@ const Finance = () => {
                   <input type="text" value={formData.fournisseur || ''} onChange={(e) => handleFormChange('fournisseur', e.target.value)} className="mt-1 w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" />
                 </label>}
                 {modalType === 'depense' && <ExpensePaymentMethod value={formData.type} language={language} onChange={value => handleFormChange('type', value)} />}
-                {sourceAmountMode ? <ExpenseSourceFields value={formData.source_amounts} language={language} invalid={!sourceAmountResult} onChange={value => handleFormChange('source_amounts', value)} /> : <><input
+                {sourceAmountMode ? (modalType === 'recette'
+                  ? <IncomeSourceFields value={formData.source_amounts} language={language} invalid={!sourceAmountResult} onChange={value => handleFormChange('source_amounts', value)} />
+                  : <ExpenseSourceFields value={formData.source_amounts} language={language} invalid={!sourceAmountResult} onChange={value => handleFormChange('source_amounts', value)} />) : <><input
                   type="number"
                   step="any"
                   placeholder={t.montant}
@@ -3215,10 +3232,10 @@ const Finance = () => {
                     </select>
                   </label>
                 </div>
-                {modalType === 'depense' && <ExpenseDocumentPicker onChange={setExpenseAttachment} onReadyChange={setAttachmentReady} disabled={savingFinance} />}
+                {!socialModal && <ExpenseDocumentPicker key={modalType} kind={modalType === 'recette' ? 'income' : 'expense'} onChange={setExpenseAttachment} onReadyChange={setAttachmentReady} disabled={savingFinance} />}
                 <div className="flex gap-4 justify-end">
                   <button onClick={() => { setShowModal(false); setSocialModal(false); }} disabled={savingFinance} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg disabled:opacity-50">{t.annuler}</button>
-                  <button onClick={handleSave} disabled={savingFinance || appliedRateInvalid || (modalType === 'depense' && !attachmentReady)} className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 px-4`}>{editingId ? t.enregistrer : t.creer}</button>
+                  <button onClick={handleSave} disabled={savingFinance || appliedRateInvalid || (!socialModal && !attachmentReady)} className={`${editingId ? 'm3s-primary-button' : 'm3s-success-button'} min-h-11 px-4`}>{editingId ? t.enregistrer : t.creer}</button>
                 </div>
               </fieldset>
             </div>

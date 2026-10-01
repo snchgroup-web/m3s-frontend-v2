@@ -8,6 +8,21 @@ jest.mock('./PdfDocumentPreview', () => ({ __esModule: true, default: ({ name })
 const expense={id:'DEP-SYNTH',ref:'DEP-SYNTH',description:'Synthetic expense'};
 beforeEach(()=>{localStorage.clear(); jest.clearAllMocks();});
 
+test('income preview uses only the income document scope', async () => {
+  URL.createObjectURL = jest.fn(() => 'blob:synthetic');
+  URL.revokeObjectURL = jest.fn();
+  const row = { id: 'a'.repeat(64), name: 'Credit.pdf', documentRole: 'credit_note' };
+  api.getExpenseProofs.mockResolvedValue([row]);
+  api.downloadPrivateGedDocument.mockResolvedValue(new Blob(['synthetic'], { type: 'application/pdf' }));
+  render(<LanguageProvider><ExpenseProofs expense={{ ...expense, id: 'REC-SYNTH', ref: 'REC-SYNTH' }} kind="income"/></LanguageProvider>);
+  fireEvent.click(screen.getByRole('button', { name: 'Justificatifs : REC-SYNTH' }));
+  fireEvent.click(await screen.findByRole('button', { name: 'Afficher : Credit.pdf' }));
+  await screen.findByTestId('pdf-preview');
+  expect(api.getExpenseProofs).toHaveBeenCalledWith('REC-SYNTH', expect.objectContaining({ kind: 'income' }));
+  expect(api.downloadPrivateGedDocument.mock.calls[0][1]).toMatchObject({ incomeId: 'REC-SYNTH' });
+  expect(api.downloadPrivateGedDocument.mock.calls[0][1]).not.toHaveProperty('expenseId');
+});
+
 test('keeps DOCX downloadable without offering an unsupported preview', async () => {
   api.getExpenseProofs.mockResolvedValue([{ id: 'a'.repeat(64), name: 'Invoice.docx' }]);
   render(<LanguageProvider><ExpenseProofs expense={expense}/></LanguageProvider>);

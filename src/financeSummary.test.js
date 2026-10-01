@@ -3,7 +3,18 @@ import { normalizeFinanceSummary } from './financeSummary';
 const valid = { total_income_count: '3', total_expense_count: '1', total_income: '600', total_income_cfa: '360000', total_expenses: '50', total_expenses_cfa: '30000' };
 
 test('normalizes authoritative totals independently from any loaded rows', () => {
-  expect(normalizeFinanceSummary({ success: true, data: valid })).toEqual({ totalIncome: 600, totalIncomeCfa: 360000, totalExpenses: 50, totalExpensesCfa: 30000, incomeCount: 3, expenseCount: 1, timestamp: null, expensesMissingChf: 0, expensesMissingCfa: 0 });
+  expect(normalizeFinanceSummary({ success: true, data: valid })).toEqual({ totalIncome: 600, totalIncomeCfa: 360000, totalExpenses: 50, totalExpensesCfa: 30000, incomeCount: 3, expenseCount: 1, timestamp: null, expensesMissingChf: 0, expensesMissingCfa: 0, incomeMissingChf: 0, incomeMissingCfa: 0 });
+});
+
+test('income in CHF remains complete without manufacturing CFA equivalents', () => {
+  const result = normalizeFinanceSummary({ data: { ...valid, total_income_cfa: null,
+    income_missing_chf: 0, income_missing_cfa: 1, known_income_cfa: 200000 } });
+  expect(result.totalIncome).toBe(600);
+  expect(result.totalIncomeCfa).toBeNull();
+  expect(result.incomeSubtotal).toEqual({ chf: 600, cfa: 200000, missingChf: 0, missingCfa: 1 });
+  const unknown = normalizeFinanceSummary({ data: { ...valid, total_income_cfa: null, income_missing_cfa: 3 } });
+  expect(unknown.incomeSubtotal.cfa).toBeNull();
+  expect(normalizeFinanceSummary({ data: { ...valid, income_missing_cfa: 4 } })).toBeNull();
 });
 
 test('keeps known subtotals separate from full totals and never fills unknowns with zero', () => {

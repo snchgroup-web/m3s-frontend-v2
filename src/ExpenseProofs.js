@@ -12,9 +12,10 @@ const labels = {
   DE: { title: 'Belege', close: 'Schliessen', download: 'Herunterladen', loading: 'Wird geladen…', empty: 'Keine zugänglichen Belege mit dieser Ausgabe verknüpft.', error: 'Belege sind für diese Sitzung nicht verfügbar.', failed: 'Download nicht bestätigt.', invoice: 'Rechnung', payment_receipt: 'Zahlungsbeleg', transfer_receipt: 'Überweisungsbeleg', credit_note: 'Gutschrift', other: 'Sonstige' }
 };
 
-export default function ExpenseProofs({ expense }) {
+export default function ExpenseProofs({ expense, kind = 'expense' }) {
   const { language } = useLanguage();
-  const t = labels[language] || labels.FR;
+  const t = { ...(labels[language] || labels.FR), ...(kind === 'income' ? { empty: ({ FR: 'Aucune pièce accessible rattachée à cette recette.', EN: 'No accessible documents linked to this income.', DE: 'Keine zugänglichen Belege mit dieser Einnahme verknüpft.' })[language] } : {}) };
+  const documentScope = kind === 'income' ? { incomeId: expense.id } : { expenseId: expense.id };
   const viewerCopy = ({ FR: { view: 'Afficher', back: 'Fermer le document', error: 'Affichage impossible pour cette session ou ce format.' }, EN: { view: 'View', back: 'Close document', error: 'Preview unavailable for this session or format.' }, DE: { view: 'Anzeigen', back: 'Dokument schliessen', error: 'Vorschau für diese Sitzung oder dieses Format nicht verfügbar.' } })[language] || { view: 'Afficher', back: 'Fermer le document', error: 'Affichage indisponible.' };
   const [open, setOpen] = useState(false);
   const [state, setState] = useState({ loading: true, rows: [] });
@@ -32,11 +33,11 @@ export default function ExpenseProofs({ expense }) {
     const returnFocus = trigger.current;
     setState({ loading: true, rows: [] }); setNotice('');
     dialog.current?.focus();
-    api.getExpenseProofs(expense.id, { signal: controller.signal }).then(rows => {
+    api.getExpenseProofs(expense.id, { signal: controller.signal, ...(kind === 'income' ? { kind } : {}) }).then(rows => {
       if (!controller.signal.aborted) setState({ rows });
     }).catch(() => { if (!controller.signal.aborted) setState({ rows: [], error: true }); });
     return () => { controller.abort(); downloadController.current?.abort(); releasePreview(); returnFocus?.focus(); };
-  }, [open, expense.id]);
+  }, [open, expense.id, kind]);
   const closePreview = () => { releasePreview(); setPreview(null); dialog.current?.focus(); };
   const close = () => { downloadController.current?.abort(); closePreview(); setOpen(false); setBusy(false); };
   async function view(row) {
@@ -44,7 +45,7 @@ export default function ExpenseProofs({ expense }) {
     const controller = new AbortController(); downloadController.current = controller;
     setBusy(true); setNotice('');
     try {
-      const blob = await api.downloadPrivateGedDocument(row, { signal: controller.signal, expenseId: expense.id });
+      const blob = await api.downloadPrivateGedDocument(row, { signal: controller.signal, ...documentScope });
       if (controller.signal.aborted) return;
       if (!['application/pdf', 'image/jpeg', 'image/png'].includes(blob.type)) throw new Error('Unsupported preview');
       releasePreview();
@@ -59,7 +60,7 @@ export default function ExpenseProofs({ expense }) {
     const controller = new AbortController(); downloadController.current = controller;
     setBusy(true); setNotice('');
     try {
-      const blob = await api.downloadPrivateGedDocument(row, { signal: controller.signal, expenseId: expense.id });
+      const blob = await api.downloadPrivateGedDocument(row, { signal: controller.signal, ...documentScope });
       if (controller.signal.aborted) return;
       const url = URL.createObjectURL(blob), link = document.createElement('a');
       link.href = url; link.download = row.name; document.body.appendChild(link);

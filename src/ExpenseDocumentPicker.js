@@ -36,10 +36,10 @@ const copy = {
   }
 };
 
-const roles = ['invoice', 'payment_receipt', 'transfer_receipt', 'other'];
+const roles = ['invoice', 'payment_receipt', 'transfer_receipt', 'credit_note', 'other'];
 const attachmentError = code => Object.assign(new Error(code), { code });
 
-export async function saveExpenseAttachment(expenseId, selection, { signal } = {}) {
+export async function saveExpenseAttachment(expenseId, selection, { signal, kind = 'expense' } = {}) {
   if (!selection) return null;
   let versionId = selection.record?.id;
   const expectedRootId = selection.record?.rootId;
@@ -51,7 +51,8 @@ export async function saveExpenseAttachment(expenseId, selection, { signal } = {
   }
   if (!/^[a-f0-9]{64}$/.test(versionId || '')) throw attachmentError('GED_ATTACHMENT_NOT_READY');
 
-  const current = await api.getExpenseAttachmentOptions({ signal });
+  const scope = kind === 'income' ? { kind } : {};
+  const current = await api.getExpenseAttachmentOptions({ signal, ...scope });
   if (!current.enabled) throw attachmentError('GED_EXPENSE_ATTACH_DISABLED');
   const record = current.documents.find(row => row.id === versionId && row.lifecycle === true && row.trashed === false &&
     row.category === 'finance' && /^[a-f0-9]{64}$/.test(row.rootId || '') && (!expectedRootId || row.rootId === expectedRootId));
@@ -62,14 +63,21 @@ export async function saveExpenseAttachment(expenseId, selection, { signal } = {
     versionId: record.id,
     documentRole: selection.documentRole,
     ...(selection.externalReference?.trim() ? { externalReference: selection.externalReference.trim() } : {})
-  }, { signal });
+  }, { signal, ...scope });
   if (result?.success !== true || typeof result.created !== 'boolean') throw attachmentError('GED_UNAVAILABLE');
   return result;
 }
 
-export default function ExpenseDocumentPicker({ value, onChange, onReadyChange, disabled = false }) {
+export default function ExpenseDocumentPicker({ value, onChange, onReadyChange, disabled = false, kind = 'expense' }) {
   const { language } = useLanguage();
-  const t = copy[language] || copy.FR;
+  const t = useMemo(() => {
+  const incomeCopy = {
+    FR: { ready: 'Fichier approuvé. Il sera importé après l’enregistrement de la recette.', existingFile: 'Fichier déjà enregistré. Il sera rattaché après l’enregistrement de la recette.' },
+    EN: { ready: 'Approved file. It will be imported after the income is saved.', existingFile: 'File already registered. It will be attached after the income is saved.' },
+    DE: { ready: 'Freigegebene Datei. Sie wird nach dem Speichern der Einnahme importiert.', existingFile: 'Datei bereits registriert. Sie wird nach dem Speichern der Einnahme verknüpft.' }
+  };
+  return { ...(copy[language] || copy.FR), credit_note: ({ FR: 'Avoir', EN: 'Credit note', DE: 'Gutschrift' })[language] || 'Avoir', ...(kind === 'income' ? incomeCopy[language] || incomeCopy.FR : {}) };
+  }, [language, kind]);
   const [internalValue, setInternalValue] = useState(value || null);
   const currentValue = value === undefined ? internalValue : value;
   const [mode, setMode] = useState(currentValue?.file ? 'import' : currentValue?.record ? 'existing' : 'none');
@@ -104,7 +112,7 @@ export default function ExpenseDocumentPicker({ value, onChange, onReadyChange, 
     onReadyChange?.(mode === 'none');
     if (!attachmentApiAvailable) return undefined;
     const controller = new AbortController();
-    api.getExpenseAttachmentOptions({ signal: controller.signal }).then(result => {
+    api.getExpenseAttachmentOptions({ signal: controller.signal, ...(kind === 'income' ? { kind } : {}) }).then(result => {
       if (controller.signal.aborted) return;
       setOptions({ status: 'ready', ...result });
       onReadyChange?.(mode === 'none' || Boolean(currentValue));
