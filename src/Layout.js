@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import {
@@ -17,6 +17,7 @@ import { getSidebarMenuGroups, resolveActiveMenuLocation } from './sidebarMenu';
 import { useAuth } from './AuthContext';
 import { hasPermission } from './accessControl';
 import { buildDashboardReturnPath, getDashboardReturnContext } from './dashboardNavigation';
+import { financeSectionIds } from './financeNavigation';
 
 // Mapping des icônes
 const iconMap = {
@@ -30,6 +31,8 @@ const iconMap = {
 const sidebarGroups = getSidebarMenuGroups(menuData);
 
 const Layout = ({ children }) => {
+  const mainRef = useRef(null);
+  const returnNavRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
   const { language } = useLanguage();
@@ -73,6 +76,17 @@ const Layout = ({ children }) => {
   const t = translations[language];
 
   useEffect(() => {
+    const main = mainRef.current;
+    const nav = returnNavRef.current;
+    const measure = () => main?.style.setProperty('--m3s-subnav-offset', `${nav?.getBoundingClientRect().height || 0}px`);
+    measure();
+    if (!nav || typeof ResizeObserver === 'undefined') return undefined;
+    const observer = new ResizeObserver(measure);
+    observer.observe(nav);
+    return () => observer.disconnect();
+  }, [dashboardReturn.enabled]);
+
+  useEffect(() => {
     if (!activeParentHasChildren) return;
     setExpandedMenus(previous => ({ ...previous, [activeParentId]: true }));
   }, [activeParentHasChildren, activeParentId]);
@@ -81,6 +95,7 @@ const Layout = ({ children }) => {
     if (!location.hash) return undefined;
 
     const targetId = decodeURIComponent(location.hash.slice(1));
+    if (location.pathname === '/finance' && Object.values(financeSectionIds).includes(targetId)) return undefined;
     let attempts = 0;
     let timeoutId;
 
@@ -121,7 +136,7 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div className="app-shell flex h-screen bg-slate-900 text-gray-100">
+    <div className="app-shell flex h-screen overflow-hidden bg-slate-900 text-gray-100">
       {sidebarOpen && (
         <button
           type="button"
@@ -294,9 +309,9 @@ const Layout = ({ children }) => {
       {/* Main Content */}
       <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
         <Header onOpenMenu={() => setSidebarOpen(true)} />
-        <main className="m3s-design-scope flex-1 overflow-auto">
+        <main ref={mainRef} className="m3s-design-scope flex-1 overflow-auto">
           {dashboardReturn.enabled && (
-            <nav className="sticky top-0 z-30 border-b border-blue-800/70 bg-slate-950/95 px-3 py-2 shadow-sm backdrop-blur sm:px-5" aria-label={dashboardReturn.indicatorId ? t.backToDashboard : t.backToDashboardSection}>
+            <nav ref={returnNavRef} className="sticky top-0 z-30 border-b border-blue-800/70 bg-slate-950/95 px-3 py-2 shadow-sm backdrop-blur sm:px-5" aria-label={dashboardReturn.indicatorId ? t.backToDashboard : t.backToDashboardSection}>
               <button
                 type="button"
                 onClick={() => navigate(buildDashboardReturnPath(dashboardReturn.indicatorId, dashboardReturn.view, dashboardReturn.sectionId))}
