@@ -14,6 +14,10 @@ const publicObservations = [
   officialObservation('2026-09-04', 0.9405, '2026-09-06'),
   referenceObservation,
   officialObservation('2026-09-29', 0.9461),
+  Object.freeze({
+    ...officialObservation('2026-10-01', 0.9437),
+    source: 'https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-chf.en.html',
+  }),
 ];
 
 const validDate = date => {
