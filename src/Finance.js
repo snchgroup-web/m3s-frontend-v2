@@ -2317,9 +2317,9 @@ const Finance = () => {
                           {r.source_amounts && <small className="block mt-1">{incomeAmountLabels[language].source} : {formatAmount(r.source_amounts.total_received)} {r.source_amounts.original_currency}</small>}
                         </td>
                         <td className="px-4 py-3 text-green-400 font-bold">{r.montantChfAvailable ? formatAmount(r.montantChf) : '—'}</td>
-                        <td className="px-4 py-3 text-green-300 font-bold">{r.montantCfaAvailable ? formatAmount(r.montantCfa) : '—'}</td>
+                        <td className="px-4 py-3 text-green-300 font-bold">{r.montantCfaAvailable ? formatAmount(r.montantCfa) : <ExpenseReferenceAmount expense={r} language={language} history={fxHistory} />}</td>
                         <td className="px-4 py-3 text-purple-300">
-                          {r.hasExplicitTauxFx ? formatAmount(r.tauxFx) : <span className="font-semibold text-amber-300">{t.chfCfaRateMissing}</span>}
+                          {r.hasExplicitTauxFx ? formatAmount(r.tauxFx) : <ExpenseReferenceRate expense={r} language={language} history={fxHistory} missingLabel={t.chfCfaRateMissing} />}
                         </td>
                         <td className="px-6 py-3 text-slate-400">{translateCategory(r.categorie)}</td>
                         <td className="px-4 py-3 text-slate-400">{formatCell(r.agent)}</td>

@@ -12,6 +12,7 @@ export const referenceObservation = officialObservation('2026-09-25', 0.9445, '2
 const publicObservations = [
   officialObservation('2026-09-02', 0.9424),
   officialObservation('2026-09-04', 0.9405, '2026-09-06'),
+  officialObservation('2026-09-18', 0.9462),
   referenceObservation,
   officialObservation('2026-09-29', 0.9461),
   Object.freeze({

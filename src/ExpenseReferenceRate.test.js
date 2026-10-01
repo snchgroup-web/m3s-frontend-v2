@@ -13,6 +13,18 @@ test('values a weekend expense without rounding the rate or mutating the payment
 });
 
 const observation = { date: '2026-10-02', rate: 695, devise_from: 'CHF', devise_to: 'XOF', source: 'Synthetic dated TFX reference' };
+test.each([[1.62, 1123], [2.43, 1685]])('values a CHF refund of %s at the dated reference without changing ledger amounts', (amount, rounded) => {
+  const receipt = Object.freeze({ ...expense, date: '2026-09-18', montantChf: amount,
+    source_amounts: Object.freeze({ original_currency: 'CHF', total_received: amount }) });
+  const result = expenseReferenceValuation(receipt);
+  expect(result.rate).toBeCloseTo(655.957 / 0.9462, 10);
+  expect(result.date).toBe('2026-09-18');
+  expect(result.validThrough).toBe('2026-09-18');
+  expect(result.source).toContain('cambi_rif_20260918');
+  expect(Math.round(result.equivalent)).toBe(rounded);
+  expect(receipt.montantCfaAvailable).toBe(false);
+  expect(receipt.source_amounts.total_received).toBe(amount);
+});
 test('uses the exact dated TFX observation, including inverse XOF pairs', () => {
   const row = { ...expense, date: observation.date };
   const history = Object.freeze([Object.freeze(observation)]);
