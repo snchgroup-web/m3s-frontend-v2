@@ -8,8 +8,8 @@ export const parseFxRate = value => {
 export const cfaPerChfObservation = row => {
   const rate = parseFxRate(row.rate);
   if (rate === null) return null;
-  const from = String(row.devise_from || '').trim().toUpperCase();
-  const to = String(row.devise_to || '').trim().toUpperCase();
+  const from = String(row.devise_from || '').trim().toUpperCase().replace(/^XOF$/, 'CFA');
+  const to = String(row.devise_to || '').trim().toUpperCase().replace(/^XOF$/, 'CFA');
   if (from === 'CHF' && to === 'CFA') return { rate, direct: true };
   if (from === 'CFA' && to === 'CHF') {
     const inverse = parseFxRate(1 / rate);

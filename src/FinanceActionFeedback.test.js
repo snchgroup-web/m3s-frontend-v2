@@ -95,9 +95,10 @@ test.each([
   ] });
   renderFinance();
   const row = (await screen.findByText('FX-USD-QA')).closest('tr');
+  expect(within(row).getAllByRole('cell')[1]).toHaveTextContent('—');
   expect(screen.getByRole('columnheader', { name: header })).toBeInTheDocument();
   expect(within(row).getByText(missing)).toBeInTheDocument();
-  expect(within(row).getByText('—')).toBeInTheDocument();
+  expect(within(row).getByText(/Référence indisponible|Reference unavailable|Referenz nicht verfügbar/)).toBeInTheDocument();
   const summary = within(row).getByText(reference);
   fireEvent.click(summary);
   expect(within(row).getByText(evidence)).toBeInTheDocument();
@@ -125,9 +126,9 @@ test('shows a dated reference separately from recorded CFA and never writes it b
   const row = (await screen.findByText('REF-QA')).closest('tr');
   expect(within(row).getByText('Référence indicative · 25.09.2026')).toBeInTheDocument();
   expect(within(row).queryByText('CHF → CFA non renseigné')).not.toBeInTheDocument();
-  expect(within(row).getByText('—')).toBeInTheDocument();
+  expect(within(row).getByText(/≈/)).toBeInTheDocument();
   fireEvent.click(within(row).getByText('Cours BCE / BCEAO'));
-  expect(within(row).getByText('Hors totaux comptables')).toBeInTheDocument();
+  expect(within(row).getAllByText('Hors totaux comptables')).toHaveLength(2);
   expect(screen.queryByPlaceholderText('Description')).not.toBeInTheDocument();
   expect(api.updateExpense).not.toHaveBeenCalled();
   expect(api.createExpense).not.toHaveBeenCalled();
@@ -143,6 +144,7 @@ test('creates a source-currency expense without inventing equivalents', async ()
   fireEvent.change(screen.getByLabelText('Description'), { target: { value: 'Synthetic USD invoice' } });
   fireEvent.change(screen.getByLabelText('Devise du paiement'), { target: { value: 'USD' } });
   fireEvent.change(screen.getByLabelText('Total payé *'), { target: { value: '12.34' } });
+  fireEvent.change(screen.getByLabelText('Moyen de paiement'), { target: { value: 'Carte de crédit' } });
   expect(screen.queryByLabelText('Taux appliqué *')).not.toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Créer' }));
   expect(api.createExpense).not.toHaveBeenCalled();
@@ -150,16 +152,17 @@ test('creates a source-currency expense without inventing equivalents', async ()
   await waitFor(() => expect(api.createExpense).toHaveBeenCalledTimes(1));
   const payload = api.createExpense.mock.calls[0][0];
   expect(payload.amount_contract_version).toBe(2);
+  expect(payload.type).toBe('Carte de crédit');
   expect(payload.source_amounts.original_currency).toBe('USD');
   expect(payload.source_amounts.total_paid).toBe('12.34');
   expect(payload).not.toHaveProperty('montant_chf');
   expect(payload).not.toHaveProperty('montant_cfa');
 });
 
-test('edits a versioned expense while preserving source amounts', async () => {
+test.each(['Virement', 'Google Pay Credit', 'Carte de crédit'])('edits a versioned expense preserving amounts and payment method %s', async paymentMethod => {
   mockSearch = '?tab=depenses';
   api.getExpenses.mockResolvedValue({ capabilities: { expense_amount_contract: 2 }, data: [{
-    id: 'DEP-SYNTH', ref: 'DEP-SYNTH', description: 'Synthetic source expense', date: '2026-01-15',
+    id: 'DEP-SYNTH', ref: 'DEP-SYNTH', description: 'Synthetic source expense', date: '2026-09-26', type: paymentMethod,
     montant_origine: 12.34, devise_origine: 'USD', montant_chf: null, montant_cfa: null,
     amount_contract_version: 2, source_amounts: { original_currency: 'USD', total_paid: 12.34, fees: null, principal: null, recipient_currency: null, recipient_amount: null, equivalent_chf: null, equivalent_cfa: null, conversion_source: null }
   }] });
@@ -168,12 +171,16 @@ test('edits a versioned expense while preserving source amounts', async () => {
   await act(async () => {});
   fireEvent.click(screen.getByRole('button', { name: 'Modifier : DEP-SYNTH' }));
   expect(screen.getByLabelText('Total payé *')).toHaveValue(12.34);
+  expect(screen.getByLabelText('Moyen de paiement')).toHaveValue(paymentMethod);
   expect(screen.queryByRole('cell', { name: 'Conception', exact: true })).not.toBeInTheDocument();
   expect(screen.queryByRole('cell', { name: 'Operationnel', exact: true })).not.toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
   fireEvent.click(screen.getByRole('button', { name: 'Oui, modifier' }));
   await waitFor(() => expect(api.updateExpense).toHaveBeenCalledWith('DEP-SYNTH', expect.objectContaining({ amount_contract_version: 2, source_amounts: expect.objectContaining({ original_currency: 'USD', total_paid: 12.34, fees: null }) })));
   expect(api.updateExpense.mock.calls[0][1]).toEqual(expect.objectContaining({ categorie: '', phase_projet: '' }));
+  expect(api.updateExpense.mock.calls[0][1].type).toBe(paymentMethod);
+  expect(api.updateExpense.mock.calls[0][1].source_amounts.equivalent_cfa).toBeNull();
+  expect(api.updateExpense.mock.calls[0][1]).not.toHaveProperty('taux_fx');
 });
 
 test('requires confirmation before creating a revenue entry and then reports success', async () => {
