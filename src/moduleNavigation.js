@@ -18,14 +18,14 @@ export function resolveModuleTarget(main, location) {
   return tabs.dataset.activeTab === 'overview' ? tabs : panel;
 }
 
-export function useModuleNavigation(mainRef, location) {
+export function useModuleNavigation(mainRef, { key, pathname, search, hash }) {
   useEffect(() => {
     const main = mainRef.current;
     if (!main) return undefined;
-    const tab = new URLSearchParams(location.search).get('tab');
+    const tab = new URLSearchParams(search).get('tab');
     // Finance registers already wait for their asynchronous source indicators.
     const financeId = financeSectionIds[tab];
-    if (location.pathname === '/finance' && financeId && (!location.hash || location.hash === `#${financeId}`)) return undefined;
+    if (pathname === '/finance' && financeId && (!hash || hash === `#${financeId}`)) return undefined;
     let frame;
     let finished = false;
     const finish = () => {
@@ -40,7 +40,7 @@ export function useModuleNavigation(mainRef, location) {
       if (finished) return;
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        const target = resolveModuleTarget(main, location);
+        const target = resolveModuleTarget(main, { search, hash });
         if (!target) return;
         if (target === main) main.scrollTo?.({ top: 0, behavior: 'instant' });
         else revealFinanceSection(target);
@@ -56,5 +56,5 @@ export function useModuleNavigation(mainRef, location) {
     reveal();
     const timeout = window.setTimeout(finish, 12000);
     return () => { window.clearTimeout(timeout); finish(); };
-  }, [mainRef, location.key, location.pathname, location.search, location.hash]);
+  }, [mainRef, key, pathname, search, hash]);
 }
