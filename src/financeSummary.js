@@ -34,8 +34,8 @@ export const normalizeFinanceSummary = (response) => {
     totalExpensesCfa: expensesMissingCfa > 0 ? null : totalExpensesCfa,
     ...((expensesMissingChf > 0 || expensesMissingCfa > 0) ? {
       expenseSubtotal: {
-        chf: expensesMissingChf < expenseCount ? totalExpenses : null,
-        cfa: expensesMissingCfa < expenseCount ? totalExpensesCfa : null,
+        chf: expensesMissingChf < expenseCount ? parseFiniteNumber(response.data.known_expenses_chf) ?? totalExpenses : null,
+        cfa: expensesMissingCfa < expenseCount ? parseFiniteNumber(response.data.known_expenses_cfa) ?? totalExpensesCfa : null,
         missingChf: expensesMissingChf,
         missingCfa: expensesMissingCfa
       }

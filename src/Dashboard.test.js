@@ -52,7 +52,7 @@ const summaryResponse = (overrides = {}) => ({
 });
 
 test('shows known expense subtotals without inventing a complete balance', async () => {
-  api.getFinanceDashboard.mockResolvedValue(summaryResponse({ total_expense_count: 3, expenses_missing_chf: 1, expenses_missing_cfa: 2 }));
+  api.getFinanceDashboard.mockResolvedValue(summaryResponse({ total_expense_count: 3, total_expenses: null, total_expenses_cfa: null, known_expenses_chf: 50, known_expenses_cfa: 30000, expenses_missing_chf: 1, expenses_missing_cfa: 2 }));
   render(<Dashboard />);
   await screen.findByText('Known expenses · subtotal');
   const expense = document.getElementById('dashboard-kpi-expenses');
