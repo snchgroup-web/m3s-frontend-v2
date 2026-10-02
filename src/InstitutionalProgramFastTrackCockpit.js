@@ -1,5 +1,5 @@
 import React from 'react';
-import accessStatus from './programAccessCurrentStatus.json';
+import accessStatus from './programDeliveryCurrentStatus.json';
 import { AlertTriangle, ArrowRight, CheckCircle2, Gauge, Layers3, LockKeyhole, Route } from 'lucide-react';
 
 const COPY = {

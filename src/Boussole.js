@@ -7,7 +7,7 @@ import { api } from './api';
 const translations = {
   FR: {
     title: 'Boussole globale 2SG / M3S',
-    version: 'Référentiel pédagogique · V3.3 · 27.09.2026',
+    version: 'Référentiel pédagogique · V3.4 · 03.10.2026',
     back: 'Revenir au tableau de bord',
     loading: 'Chargement sécurisé de la Boussole',
     error: 'La Boussole sécurisée est momentanément indisponible.',
@@ -15,7 +15,7 @@ const translations = {
   },
   DE: {
     title: 'Globaler Kompass 2SG / M3S',
-    version: 'Pädagogische Referenz · V3.3 · 27.09.2026',
+    version: 'Pädagogische Referenz · V3.4 · 03.10.2026',
     back: 'Zurück zum Dashboard',
     loading: 'Der Kompass wird sicher geladen',
     error: 'Der geschützte Kompass ist vorübergehend nicht verfügbar.',
@@ -23,7 +23,7 @@ const translations = {
   },
   EN: {
     title: '2SG / M3S Global Compass',
-    version: 'Learning reference · V3.3 · 27.09.2026',
+    version: 'Learning reference · V3.4 · 03.10.2026',
     back: 'Return to dashboard',
     loading: 'Securely loading the Compass',
     error: 'The secure Compass is temporarily unavailable.',

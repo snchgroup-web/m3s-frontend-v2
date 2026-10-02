@@ -1,7 +1,7 @@
 import React from 'react';
 import {render, screen, within} from '@testing-library/react';
 import Cockpit from './InstitutionalProgramFastTrackCockpit';
-import status from './programAccessCurrentStatus.json';
+import status from './programDeliveryCurrentStatus.json';
 
 test.each(['FR', 'DE', 'EN'])('current access status and historical decisions stay separate in %s', language => {
   render(<Cockpit language={language} />);
