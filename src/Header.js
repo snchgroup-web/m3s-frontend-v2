@@ -8,6 +8,7 @@ import api from './api';
 import menuData from './menuStructure.json';
 import { ModuleIcon, moduleIdFromPath, modulePresentation } from './modulePresentation';
 import { resolveActiveMenuLocation } from './sidebarMenu';
+import HeaderFxRate from './HeaderFxRate';
 
 const FlagSenegal = () => (
   <span className="relative inline-grid grid-cols-3 w-8 h-5 overflow-hidden rounded-sm shadow-sm" aria-label="Sénégal">
@@ -30,7 +31,7 @@ const Header = ({ onOpenMenu }) => {
   const { theme, setTheme } = useTheme();
   const { user, logout } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [currentRate, setCurrentRate] = useState(null);
+  const [fxResponse, setFxResponse] = useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [languageLoading, setLanguageLoading] = useState(false);
   const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState(false);
@@ -62,9 +63,11 @@ const Header = ({ onOpenMenu }) => {
   }, []);
 
   useEffect(() => {
+    let current = true;
     api.getFxHistory()
-      .then((response) => setCurrentRate(Number(response?.taux_du_jour?.CHF_CFA) || null))
-      .catch(() => setCurrentRate(null));
+      .then((response) => { if (current) setFxResponse(response); })
+      .catch(() => { if (current) setFxResponse(null); });
+    return () => { current = false; };
   }, []);
 
   useEffect(() => {
@@ -211,7 +214,7 @@ const Header = ({ onOpenMenu }) => {
           </div>
           <div className="text-center px-3">
             <p className="text-slate-300 font-medium">{dateFormatted}</p>
-            <p className="text-emerald-400 font-semibold">1 CHF = {currentRate ? currentRate.toLocaleString(locale, { maximumFractionDigits: 4 }) : '–'} CFA</p>
+            <HeaderFxRate response={fxResponse} language={language} now={currentTime} />
           </div>
           <div className="header-chip flex items-center gap-2 px-3 py-2 bg-slate-900/35">
             <CloudSun size={19} className="text-sky-400" /><div><p className="text-white font-semibold">18°C</p><p className="text-slate-400">{t.cloudy}</p></div>

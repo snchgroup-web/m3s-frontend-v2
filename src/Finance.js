@@ -36,6 +36,8 @@ import ExpensePaymentMethod, { paymentMethodLabel, paymentMethodLabels } from '.
 import ExpenseDocumentPicker, { saveExpenseAttachment } from './ExpenseDocumentPicker';
 import { financeSectionIds, useFinanceSectionNavigation } from './financeNavigation';
 import { Files } from 'lucide-react';
+import FinanceConversionHelp from './FinanceConversionHelp';
+import FinanceSocialExpenses, { socialHistoricalLabel } from './FinanceSocialExpenses';
 import {
   buildTeamAgentDirectory,
   findAgentTeam,
@@ -143,6 +145,7 @@ const Finance = () => {
   const [financeSummaryStatus, setFinanceSummaryStatus] = useState('loading');
   const [financeExtractStatus, setFinanceExtractStatus] = useState('loading');
   const [incomeExtractStatus, setIncomeExtractStatus] = useState('loading');
+  const [expenseExtractStatus, setExpenseExtractStatus] = useState('loading');
   useFinanceSectionNavigation(location, activeTab, financeSummaryStatus !== 'loading' && financeExtractStatus !== 'loading' && incomeExtractStatus !== 'loading');
   const incomeScope = normalizeIncomeScope(new URLSearchParams(location.search).get('incomeScope'));
   const [socialRows, setSocialRows] = useState([]);
@@ -315,7 +318,7 @@ const Finance = () => {
       separationTauxInfo: 'Le taux appliqué provient de la transaction ou du fournisseur. Le taux de référence reste un repère distinct.',
       appliedRateError: 'Renseignez un taux appliqué strictement positif, vérifié sur la transaction. Le taux de référence ne le remplace pas.',
       fxQualityTitle: 'Qualité FX à contrôler',
-      fxQualityRateWarning: '{count} écriture(s) du registre ont un taux CHF → CFA absent ou nul. Ce taux est distinct du taux bancaire d’une autre paire de devises ; aucun taux de référence n’est appliqué automatiquement.',
+      fxQualityRateWarning: '{count} écriture(s) du registre ont un taux CHF → CFA absent ou nul. Ce taux est distinct du taux bancaire d’une autre paire de devises ; la référence indicative affichée ne remplace pas le taux appliqué documenté.',
       fxQualityAmountWarning: '{count} écriture(s) affichée(s) ont un montant CHF ou CFA indisponible. La valeur manquante n’est pas remplacée par zéro.',
       fxRateMissing: 'À qualifier',
       calculer: 'Calculer',
@@ -497,7 +500,7 @@ const Finance = () => {
       separationTauxInfo: 'The applied rate comes from the transaction or provider. The reference rate remains a separate benchmark.',
       appliedRateError: 'Enter a strictly positive applied rate verified against the transaction. The reference rate does not replace it.',
       fxQualityTitle: 'FX quality check required',
-      fxQualityRateWarning: '{count} register transaction(s) have a missing or zero CHF → CFA rate. This is separate from the bank rate for another currency pair; no reference rate is applied automatically.',
+      fxQualityRateWarning: '{count} register transaction(s) have a missing or zero CHF → CFA rate. This is separate from the bank rate for another currency pair; the displayed indicative reference does not replace the documented applied rate.',
       fxQualityAmountWarning: '{count} displayed transaction(s) have an unavailable CHF or CFA amount. The missing value is not replaced with zero.',
       fxRateMissing: 'To qualify',
       calculer: 'Calculate',
@@ -679,7 +682,7 @@ const Finance = () => {
       separationTauxInfo: 'Der angewandte Kurs stammt aus der Transaktion oder vom Anbieter. Der Referenzkurs bleibt ein separater Vergleichswert.',
       appliedRateError: 'Geben Sie einen anhand der Transaktion geprüften, strikt positiven angewandten Kurs ein. Der Referenzkurs ersetzt ihn nicht.',
       fxQualityTitle: 'FX-Datenqualität prüfen',
-      fxQualityRateWarning: 'Bei {count} Registerbuchung(en) fehlt der Kurs CHF → CFA oder ist null. Dieser ist vom Bankkurs eines anderen Währungspaars zu unterscheiden; es wird kein Referenzkurs automatisch angewendet.',
+      fxQualityRateWarning: 'Bei {count} Registerbuchung(en) fehlt der Kurs CHF → CFA oder ist null. Dieser ist vom Bankkurs eines anderen Währungspaars zu unterscheiden; die angezeigte indikative Referenz ersetzt nicht den belegten angewandten Kurs.',
       fxQualityAmountWarning: 'Bei {count} angezeigten Buchung(en) ist der CHF- oder CFA-Betrag nicht verfügbar. Der fehlende Wert wird nicht durch null ersetzt.',
       fxRateMissing: 'Zu qualifizieren',
       calculer: 'Berechnen',
@@ -986,6 +989,7 @@ const Finance = () => {
     setFinanceSummaryStatus('loading');
     setFinanceExtractStatus('loading');
     setIncomeExtractStatus('loading');
+    setExpenseExtractStatus('loading');
 
     const [dashboardResult, expensesResult, incomeResult] = await Promise.allSettled([
       api.getFinanceDashboard(),
@@ -1016,6 +1020,7 @@ const Finance = () => {
     );
 
     setDepenses(normalizedExpenses);
+    setExpenseExtractStatus(expensesData ? 'available' : 'unavailable');
     setRecettes(normalizedIncome);
     setIncomeExtractStatus(incomeData ? 'available' : 'unavailable');
     setFinanceExtractStatus(
@@ -2292,7 +2297,7 @@ const Finance = () => {
                       <th className="px-6 py-3 text-left text-white font-bold">{t.description}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.montantCHF}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.montantCFA}</th>
-                      <th className="px-4 py-3 text-left text-white font-bold">{t.tauxChfCfaCol}</th>
+                      <th aria-label={t.tauxChfCfaCol} className="px-4 py-3 text-left text-white font-bold"><span className="inline-flex items-center gap-1">{t.tauxChfCfaCol}<FinanceConversionHelp language={language} kind="rate" /></span></th>
                       <th className="px-6 py-3 text-left text-white font-bold">{t.categorie}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.agent}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.team}</th>
@@ -2366,7 +2371,7 @@ const Finance = () => {
                       <th className="px-6 py-3 text-left text-white font-bold">{t.description}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.montantCHF}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.montantCFA}</th>
-                      <th className="px-4 py-3 text-left text-white font-bold">{t.tauxChfCfaCol}</th>
+                      <th aria-label={t.tauxChfCfaCol} className="px-4 py-3 text-left text-white font-bold"><span className="inline-flex items-center gap-1">{t.tauxChfCfaCol}<FinanceConversionHelp language={language} kind="rate" /></span></th>
                       <th className="px-6 py-3 text-left text-white font-bold">{t.categorie}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.agent}</th>
                       <th className="px-4 py-3 text-left text-white font-bold">{t.team}</th>
@@ -2631,6 +2636,8 @@ const Finance = () => {
               </div>
             ) : (
               <>
+            <FinanceSocialExpenses rows={depenses} status={expenseExtractStatus} language={language} formatDate={formatDateForDisplay} formatAmount={formatAmount} onOpenExpenses={() => selectFinanceTab('depenses')} />
+            <h4 className="font-bold text-white">{socialHistoricalLabel(language)}</h4>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <div className="rounded-lg border border-slate-700 bg-slate-800 p-5 transition hover:-translate-y-0.5 hover:border-emerald-500/60">
                 <p className="text-sm font-medium text-emerald-400">{t.socialTitle}</p>

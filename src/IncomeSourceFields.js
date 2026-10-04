@@ -1,6 +1,7 @@
 import React from 'react';
 import { normalizeExpenseAmounts } from './financeExpenseAmounts';
 import { expenseAmountLabels } from './ExpenseSourceFields';
+import { ConversionReferenceField } from './FinanceConversionHelp';
 
 export const incomeAmountLabels = {
   FR: { currency: 'Devise de réception', total_received: 'Total reçu', source: 'Encaissement d’origine', partial: 'Recettes enregistrées ; conversions à compléter.', label: 'Recettes connues · sous-total', invalid: 'Vérifiez le montant reçu et les références des conversions.' },
@@ -35,9 +36,7 @@ export default function IncomeSourceFields({ value, onChange, language, invalid 
     {amount('total_received', true)}
     {value.original_currency !== 'CHF' && amount('equivalent_chf')}
     {value.original_currency !== 'XOF' && amount('equivalent_cfa')}
-    <label className="text-sm text-slate-300 md:col-span-2"><span className="mb-1 block">{t.conversion_source}</span>
-      <input className={style} maxLength={500} value={value.conversion_source || ''} onChange={event => onChange({ ...value, conversion_source: event.target.value })} />
-    </label>
+    <ConversionReferenceField label={t.conversion_source} inputClassName={style} value={value.conversion_source} language={language} onChange={conversion_source => onChange({ ...value, conversion_source })} />
     {invalid && <p role="alert" className="text-sm text-amber-300 md:col-span-2">{t.invalid}</p>}
   </fieldset>;
 }

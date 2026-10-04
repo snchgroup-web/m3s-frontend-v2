@@ -1079,6 +1079,9 @@ html:not(.dark) .m3s-business-module .m3s-ref01-evidence-matrix .ref01-evidence-
   color: #92400e !important;
 }
 
+.header-fx-trigger { color: #34d399; }
+html:not(.dark) .header-fx-trigger { color: #047857; }
+
 html:not(.dark) .m3s-business-module .text-emerald-100,
 html:not(.dark) .m3s-business-module .text-emerald-200,
 html:not(.dark) .m3s-business-module .text-emerald-300,

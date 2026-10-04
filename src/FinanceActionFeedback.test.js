@@ -80,6 +80,55 @@ beforeEach(() => {
 
 afterEach(() => jest.restoreAllMocks());
 
+test('projects social expenses without adding them to historical income or writing a transaction', async () => {
+  mockSearch = '?tab=social';
+  api.getExpenses.mockResolvedValue({ data: [
+    { id: 'SOCIAL-EXPENSE-QA', ref: 'SOCIAL-EXPENSE-QA', category: 'Social', description: 'Synthetic social expense', montant_chf: 10, montant_cfa: 6900 },
+    { id: 'PENDING-RIA-QA', ref: 'PENDING-RIA-QA', category: 'Depenses', description: 'Envoi Ria synthetic - ventilation à compléter', montant_chf: 100, montant_cfa: 68000 }
+  ] });
+  api.getSocialFinance.mockResolvedValue({ data: [], summary: { total_chf: 0, total_cfa: 0 } });
+  renderFinance();
+  const region = await screen.findByRole('region', { name: 'Dépenses classées sociales' });
+  expect(await within(region).findByText('SOCIAL-EXPENSE-QA')).toBeInTheDocument();
+  expect(within(region).getByText('PENDING-RIA-QA')).toBeInTheDocument();
+  expect(screen.getByTestId('finance-social-total-chf')).not.toHaveTextContent('110');
+  expect(api.createIncome).not.toHaveBeenCalled();
+  expect(api.createExpense).not.toHaveBeenCalled();
+  expect(api.updateExpense).not.toHaveBeenCalled();
+});
+
+test('does not expose expense projections when social access is forbidden', async () => {
+  mockSearch = '?tab=social';
+  api.getSocialFinance.mockRejectedValue({ status: 403, message: 'Restricted' });
+  api.getExpenses.mockResolvedValue({ data: [{ id: 'PRIVATE-SOCIAL-QA', category: 'Social', description: 'Private synthetic expense' }] });
+  renderFinance();
+  await waitFor(() => expect(screen.getByText(/Accès restreint/)).toBeInTheDocument());
+  expect(screen.queryByRole('region', { name: 'Dépenses classées sociales' })).not.toBeInTheDocument();
+  expect(screen.queryByText('Private synthetic expense')).not.toBeInTheDocument();
+});
+
+test.each(['recettes', 'depenses'])('uses dated TFX history and opens rate help without writing %s', async tab => {
+  mockSearch = `?tab=${tab}`;
+  const rowData = { id: 'TFX-QA', ref: 'TFX-QA', description: 'Synthetic CHF transaction', date: '2026-10-02', montant_chf: 10, montant_cfa: null, taux_fx: null };
+  api.getIncome.mockResolvedValue({ data: [rowData] });
+  api.getExpenses.mockResolvedValue({ data: [rowData] });
+  api.getFxHistory.mockResolvedValue({ data: [{ date_taux: '2026-10-02', taux: 695, devise_base: 'CHF', devise_cible: 'CFA', source_taux: 'Synthetic dated TFX' }] });
+  renderFinance();
+  const row = (await screen.findByText('TFX-QA')).closest('tr');
+  await waitFor(() => expect(within(row).getByText('Référence indicative · 02.10.2026')).toBeInTheDocument());
+  expect(within(row).getByText('695,0000')).toBeInTheDocument();
+  const header = screen.getByRole('columnheader', { name: 'Taux CHF → CFA' });
+  fireEvent.click(within(header).getByRole('button'));
+  expect(screen.getByRole('dialog', { name: 'Taux CHF → CFA' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Fermer' }));
+  expect(screen.queryByPlaceholderText('Description')).not.toBeInTheDocument();
+  expect(api.createIncome).not.toHaveBeenCalled();
+  expect(api.updateIncome).not.toHaveBeenCalled();
+  expect(api.createExpense).not.toHaveBeenCalled();
+  expect(api.updateExpense).not.toHaveBeenCalled();
+  expect(rowData.montant_cfa).toBeNull();
+});
+
 test.each([
   ['FR', 'Taux CHF → CFA', 'CHF → CFA non renseigné', 'Référence de conversion'],
   ['EN', 'CHF → CFA rate', 'CHF → CFA not recorded', 'Conversion reference'],
