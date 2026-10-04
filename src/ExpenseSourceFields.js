@@ -1,4 +1,5 @@
 import React from 'react';
+import { ConversionReferenceField } from './FinanceConversionHelp';
 
 export const expenseAmountLabels = {
   FR: { currency: 'Devise du paiement', total_paid: 'Total payé', principal: 'Montant hors frais', fees: 'Frais', recipient_amount: 'Montant remis au bénéficiaire', recipient_currency: 'Devise reçue', equivalent_chf: 'Contre-valeur CHF documentée', equivalent_cfa: 'Contre-valeur CFA documentée', conversion_source: 'Référence de conversion', invalid: 'Vérifiez les montants : total = montant hors frais + frais ; toute conversion doit avoir une référence.', partial: 'Paiements enregistrés ; conversions à compléter. Les sous-totaux excluent les contre-valeurs manquantes.', source: 'Paiement d’origine' },
@@ -29,9 +30,7 @@ export default function ExpenseSourceFields({ value, onChange, language, invalid
     {amount('recipient_amount')}
     {value.original_currency !== 'CHF' && amount('equivalent_chf')}
     {value.original_currency !== 'XOF' && amount('equivalent_cfa')}
-    <label className="text-sm text-slate-300 md:col-span-2"><span className="mb-1 block">{t.conversion_source}</span>
-      <input className={style} maxLength={500} value={value.conversion_source || ''} onChange={event => onChange({ ...value, conversion_source: event.target.value })} />
-    </label>
+    <ConversionReferenceField label={t.conversion_source} inputClassName={style} value={value.conversion_source} language={language} onChange={conversion_source => onChange({ ...value, conversion_source })} />
     {invalid && <p role="alert" className="text-sm text-amber-300 md:col-span-2">{t.invalid}</p>}
   </fieldset>;
 }
