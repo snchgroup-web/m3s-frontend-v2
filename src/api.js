@@ -36,8 +36,10 @@ const clearExpiredSession = () => {
 };
 
 export const rhReadTransport = async (path, { method = 'GET', signal } = {}) => {
-  if (method !== 'GET' || typeof path !== 'string' || !/^\/employees\?limit=(?:[1-9]|[1-9][0-9]|100)&offset=(?:0|[1-9][0-9]{0,5})$/.test(path) ||
-      Number(path.split('&offset=')[1]) > 100000) {
+  const validPath = path === '/access' || (typeof path === 'string' &&
+    /^\/employees\?limit=(?:[1-9]|[1-9][0-9]|100)&offset=(?:0|[1-9][0-9]{0,5})$/.test(path) &&
+    Number(path.split('&offset=')[1]) <= 100000);
+  if (method !== 'GET' || !validPath) {
     throw Object.assign(new Error('RH_INVALID_PAGE'), { code: 'RH_INVALID_PAGE' });
   }
   if (signal?.aborted) throw Object.assign(new Error('RH_ABORTED'), { code: 'RH_ABORTED' });

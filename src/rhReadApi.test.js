@@ -7,11 +7,19 @@ test('no missing/demo token or arbitrary URL can reach the API', async () => {
     currentAccessToken.mockResolvedValue(token);
     await expect(rhReadTransport('/employees?limit=25&offset=0')).rejects.toMatchObject({ code: 'RH_AUTH_REQUIRED' });
   }
-  for (const path of ['https://other.example.test', '/employees?limit=25&offset=100001', '/employees?limit=25&offset=0&owner=other']) {
+  for (const path of ['https://other.example.test', '/access?owner=other', '/employees?limit=25&offset=100001', '/employees?limit=25&offset=0&owner=other']) {
     await expect(rhReadTransport(path)).rejects.toMatchObject({ code: 'RH_INVALID_PAGE' });
   }
   await expect(rhReadTransport('/employees?limit=25&offset=0', { method: 'POST' })).rejects.toMatchObject({ code: 'RH_INVALID_PAGE' });
   expect(fetch).not.toHaveBeenCalled();
+});
+
+test('access metadata uses only the same authenticated bounded GET transport', async () => {
+  currentAccessToken.mockResolvedValue('synthetic.jwt.token');
+  await rhReadTransport('/access');
+  expect(fetch).toHaveBeenCalledWith(expect.stringContaining('/api/rh/private/access'), {
+    method: 'GET', signal: undefined, cache: 'no-store', headers: { Authorization: 'Bearer synthetic.jwt.token' }
+  });
 });
 test('uses the existing token provider, bounded private path, no cache and the supplied abort signal', async () => {
   currentAccessToken.mockResolvedValue('synthetic.jwt.token');

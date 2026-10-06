@@ -14,7 +14,7 @@ import FunctionResourcesOverview from './FunctionResourcesOverview';
 import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
 import FunctionAssistant from './FunctionAssistant';
 import OwnProfile from './OwnProfile';
-import RhEmployeeFiles from './rhRead/RhEmployeeFiles';
+import RhEmployeeFiles from './rhRead/RhEmployeeFilesHost';
 
 const RH = ({ rhReadAccess = null }) => {
   const { language } = useLanguage();
