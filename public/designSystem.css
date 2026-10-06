@@ -294,7 +294,8 @@ html.dark .m3s-native-date::-webkit-calendar-picker-indicator {
   box-shadow: inset 3px 0 var(--m3s-row-accent);
 }
 
-.m3s-design-scope table tbody tr:last-child td {
+.m3s-design-scope table tbody tr:last-child td,
+.m3s-design-scope table tbody tr:last-child th[scope="row"] {
   border-bottom: 0;
 }
 
