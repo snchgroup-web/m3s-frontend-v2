@@ -48,7 +48,10 @@ export const rhReadTransport = async (path, { method = 'GET', signal } = {}) => 
   const response = await fetch(`${API_BASE_URL}/rh/private${path}`, {
     method: 'GET', signal, cache: 'no-store', headers: { Authorization: `Bearer ${token}` }
   });
-  if (response.status === 401 && !signal?.aborted && await currentAccessToken() === token) clearExpiredSession();
+  if (response.status === 401 && !signal?.aborted) {
+    const currentToken = await currentAccessToken();
+    if (!signal?.aborted && currentToken === token) clearExpiredSession();
+  }
   return response;
 };
 

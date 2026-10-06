@@ -14,7 +14,7 @@ Projection limitee : reference, nom, mission/site optionnels, debut optionnel, r
 
 ## Verification
 
-- 51/51 tests cibles : formulaire RH preserve, portes d'affichage, contexte, annulation, erreurs, projection stricte, transport et non-regression Mon compte/GED.
+- 52/52 tests cibles apres revue : formulaire RH preserve, portes d'affichage, contexte, annulation, erreurs, projection stricte, transport et non-regression Mon compte/GED. Regression couverte : une annulation pendant la seconde lecture du jeton apres 401 ne deconnecte pas la session.
 - Build React Scripts termine ; correction du controle des caracteres sans desactiver ESLint. Avertissements generaux existants : Browserslist ancien, depreciation Node fs.F_OK, taille du bundle global.
 - Apercu `../qa-rh-ui` utilisant les vrais composants et styles locaux avec fournisseurs d'identite/API remplaces par des fixtures. Aucun jeton ou appel cloud. CSP connect-src none, serveur limite a six chemins d'assets sur 127.0.0.1:4330.
 - Bureau et viewport mobile 390 x 844 : logo charge, FR/DE/EN, themes clair/sombre/profond, details repliables, refus 403 et fermeture 503, retrait au changement de contexte/desactivation. Tableau mobile a defilement horizontal interne, sans debordement de page. Override de viewport retire.
