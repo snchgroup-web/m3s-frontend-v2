@@ -14,8 +14,9 @@ import FunctionResourcesOverview from './FunctionResourcesOverview';
 import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
 import FunctionAssistant from './FunctionAssistant';
 import OwnProfile from './OwnProfile';
+import RhEmployeeFiles from './rhRead/RhEmployeeFiles';
 
-const RH = () => {
+const RH = ({ rhReadAccess = null }) => {
   const { language } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
@@ -391,7 +392,6 @@ const RH = () => {
     navigate(`/rh?tab=${encodeURIComponent(tab)}`);
   };
 
-  const totalEmployes = employes.filter(e => e.statut === 'Actif').length;
   const totalBenevoles = benevoles.filter(b => b.statut === 'Actif').length;
   const totalMembresLabel = directoryStatus === 'available' ? directoryCount : '—';
 
@@ -561,7 +561,7 @@ const RH = () => {
           tabs={[
             { tab: 'overview', label: t.overview },
             { tab: 'directory', label: `${t.membres} (${totalMembresLabel})` },
-            { tab: 'employes', label: `${t.employes} (${totalEmployes})` },
+            { tab: 'employes', label: t.employes },
             { tab: 'benevoles', label: `${t.benevoles} (${totalBenevoles})` },
             { tab: 'glossary', label: t.glossary }
           ]}
@@ -589,7 +589,8 @@ const RH = () => {
 
         {/* Employés */}
         {activeTab === 'employes' && (
-          <section id="rh-employees-register" className="scroll-mt-24" tabIndex="-1">
+          <section id="rh-employees-register" className="scroll-mt-24 space-y-6" tabIndex="-1">
+            <RhEmployeeFiles access={rhReadAccess} language={language}/>
             <PersonnelTable data={employes} type="employe" onEdit={handleEdit} onDelete={requestDelete} onAdd={openNewModal} />
           </section>
         )}

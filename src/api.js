@@ -35,6 +35,23 @@ const clearExpiredSession = () => {
   }
 };
 
+export const rhReadTransport = async (path, { method = 'GET', signal } = {}) => {
+  if (method !== 'GET' || typeof path !== 'string' || !/^\/employees\?limit=(?:[1-9]|[1-9][0-9]|100)&offset=(?:0|[1-9][0-9]{0,5})$/.test(path) ||
+      Number(path.split('&offset=')[1]) > 100000) {
+    throw Object.assign(new Error('RH_INVALID_PAGE'), { code: 'RH_INVALID_PAGE' });
+  }
+  if (signal?.aborted) throw Object.assign(new Error('RH_ABORTED'), { code: 'RH_ABORTED' });
+  const token = await currentAccessToken();
+  if (!token || token.startsWith('demo_session_') || signal?.aborted) {
+    throw Object.assign(new Error('RH_AUTH_REQUIRED'), { code: 'RH_AUTH_REQUIRED' });
+  }
+  const response = await fetch(`${API_BASE_URL}/rh/private${path}`, {
+    method: 'GET', signal, cache: 'no-store', headers: { Authorization: `Bearer ${token}` }
+  });
+  if (response.status === 401 && !signal?.aborted && await currentAccessToken() === token) clearExpiredSession();
+  return response;
+};
+
 const apiFetch = async (url, options = {}) => {
   const response = await fetch(url, {
     ...options,
