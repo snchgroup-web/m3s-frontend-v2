@@ -16,6 +16,8 @@ jest.mock('./LanguageContext', () => ({
   useLanguage: () => ({ language: mockLanguage })
 }));
 
+jest.mock('./AuthContext', () => ({ useAuth: () => ({ user: null, provider: 'google', ready: true, isAuthenticated: false }) }));
+
 jest.mock('./api', () => ({
   api: {
     getMembersDirectory: jest.fn().mockResolvedValue({ data: [], total: 0 })
@@ -52,6 +54,19 @@ test('RH My account renders the shared current-account profile instead of a plac
   render(<RH/>);
   expect(await screen.findByTestId('own-profile')).toHaveAttribute('data-embedded', 'true');
   expect(screen.queryByText('Section to build')).not.toBeInTheDocument();
+});
+
+test('employee files stay off by default without replacing the local register', async () => {
+  mockLocationSearch = '?tab=employes';
+  render(<RH/>);
+  expect(await screen.findByText('HR reading not enabled')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Local working register' })).toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: 'Employees', exact: true })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Add' }));
+  for (const name of ['Personal email', 'Phone', 'Employee ID', 'Role', 'Team / Department', 'Hire Date']) {
+    expect(screen.getByText(name, { selector: 'label' })).toBeInTheDocument();
+  }
+  await waitFor(() => expect(screen.getByText('Members (0)')).toBeInTheDocument());
 });
 
 test('passes the URL member type to the directory and follows route changes', async () => {
