@@ -89,3 +89,4 @@ test('page-size selection clears the current detail and requests the new bounded
   expect(await screen.findByText('Aucun dossier sur cette page')).toBeInTheDocument();
   expect(rhReadTransport.mock.calls[1][0]).toBe('/employees?limit=10&offset=0');
 });
+jest.mock('./ContractDocuments', () => () => null);

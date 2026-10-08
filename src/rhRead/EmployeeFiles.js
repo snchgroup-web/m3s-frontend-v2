@@ -1,6 +1,7 @@
 import React from 'react';
 import { RefreshCw, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { useRhEmployeesRead } from './useEmployeeFiles';
+import ContractDocuments from './ContractDocuments';
 const h = React.createElement;
 const labels = {
   FR: { title: 'Dossiers employés', inactive: 'Lecture RH non activée', loading: 'Chargement des dossiers…',
@@ -78,7 +79,8 @@ function RhEmployeesRead({ enabled = false, active = false, scopeKey = null, tra
             [t.site, row.siteRef ?? t.missing], [t.revision, row.revision], [t.classification, row.classification]]
             .map(([label, value]) => h('div', { key: label, className: 'min-w-0' },
               h('dt', { className: 'text-sm font-medium' }, label),
-              h('dd', { className: 'text-sm break-all' }, String(value)))))))] : [])];
+              h('dd', { className: 'text-sm break-all' }, String(value))))),
+        h(ContractDocuments, { employeeId: row.employeeId, revision: row.revision, transport, language: lang })))] : [])];
   });
   return h('section', { className: 'm3s-design-scope space-y-4' }, header,
     h('div', { className: 'flex flex-wrap items-center justify-between gap-3' },

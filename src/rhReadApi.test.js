@@ -2,6 +2,18 @@ import { rhReadTransport } from './api';
 import { currentAccessToken, signOutIdentity } from './identityClient';
 jest.mock('./identityClient', () => ({ currentAccessToken: jest.fn(), signOutIdentity: jest.fn().mockResolvedValue() }));
 beforeEach(() => { global.fetch = jest.fn().mockResolvedValue({ status: 200 }); currentAccessToken.mockReset(); signOutIdentity.mockClear(); });
+test('contract viewing uses only scoped authenticated GET paths', async () => {
+  currentAccessToken.mockResolvedValue('synthetic.jwt.token');
+  const root = '/employees/11111111-1111-4111-8111-111111111111/contract-documents';
+  for (const path of [`${root}?dossierRevision=2`,`${root}/${'a'.repeat(64)}/versions/${'b'.repeat(64)}?dossierRevision=2`]) {
+    await rhReadTransport(path);
+    expect(fetch).toHaveBeenLastCalledWith(expect.stringContaining(path),expect.objectContaining({cache:'no-store',method:'GET'}));
+  }
+  for (const path of [`${root}?dossierRevision=0`,`${root}?dossierRevision=2&owner=other`,`${root}/not-a-hash/versions/x?dossierRevision=2`]) {
+    await expect(rhReadTransport(path)).rejects.toMatchObject({code:'RH_INVALID_PAGE'});
+  }
+  expect(fetch).toHaveBeenCalledTimes(2);
+});
 test('no missing/demo token or arbitrary URL can reach the API', async () => {
   for (const token of [null, 'demo_session_synthetic']) {
     currentAccessToken.mockResolvedValue(token);
