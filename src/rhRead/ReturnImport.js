@@ -26,7 +26,7 @@ export default function ReturnImport({employeeId,revision,language='FR',transpor
         if(epoch.current===generation&&!abort.signal.aborted){setContext(value);setStatus('idle');}
       })
       .catch(error=>{if(epoch.current===generation&&!abort.signal.aborted)setStatus(error.status===403?'denied':'error');});
-    return ()=>{++epoch.current;abort.abort();};
+    return ()=>{epoch.current=generation+1;abort.abort();};
   },[employeeId,revision,period,kind,transport]);
   async function choose(event) {
     const file=event.target.files?.[0];event.target.value='';setPending(null);
