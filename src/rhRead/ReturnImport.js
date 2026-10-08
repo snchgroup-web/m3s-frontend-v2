@@ -1,6 +1,7 @@
 import React from 'react';
 import {Upload, FileJson} from 'lucide-react';
 import {rhReturnTransport} from '../api';
+import './ReturnImport.css';
 const h=React.createElement;
 const labels={
   FR:{title:'Déclarations reçues',period:'Période',salary:'Salaire',hours:'Heures',file:'Fichier de déclaration JSON',send:'Importer la déclaration',ready:'Déclaration prête à importer',busy:'Contrôle en cours…',done:'Déclaration enregistrée · réception non vérifiée',error:'Import indisponible ou déclaration incompatible',denied:'Import non autorisé pour cette période',amount:'Montant attendu',revision:'Révision précédente'},
@@ -53,7 +54,7 @@ export default function ReturnImport({employeeId,revision,language='FR',transpor
       setContext({...context,expectedPreviousRevision:result.results[0].observationRevision});setPending(null);setStatus('done');
     } catch {if(epoch.current===generation)setStatus('error');}
   }
-  return h('section',{className:'space-y-3 border-t pt-4 mt-4','aria-busy':status==='busy'},
+  return h('section',{className:'rh-return-import space-y-3 border-t pt-4 mt-4','aria-busy':status==='busy'},
     h('h3',{className:'text-base font-semibold'},t.title),
     h('div',{className:'flex flex-wrap gap-3 items-center'},
       h('label',null,t.period,h('input',{type:'month',value:period,onChange:e=>setPeriod(e.target.value),className:'ml-2 rounded border p-2'})),

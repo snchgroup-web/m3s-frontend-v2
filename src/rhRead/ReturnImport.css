@@ -1,0 +1,16 @@
+.rh-return-import input[type="month"] {
+  color: var(--m3s-text-primary);
+  background: var(--m3s-surface-panel);
+  border-color: var(--m3s-border-strong);
+  min-height: 44px;
+  max-width: 100%;
+  color-scheme: light;
+}
+html.dark .rh-return-import input[type="month"] { color-scheme: dark; }
+.rh-return-import [aria-pressed="true"] {
+  color: var(--m3s-status-info);
+  background: var(--m3s-row-hover);
+  border-color: var(--m3s-row-accent);
+  font-weight: 600;
+}
+.rh-return-import input[type="file"] { min-width: 0; max-width: 100%; }
