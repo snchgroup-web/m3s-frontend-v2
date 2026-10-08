@@ -58,6 +58,20 @@ export const rhReadTransport = async (path, { method = 'GET', signal } = {}) => 
   return response;
 };
 
+export const rhReturnTransport = async (path, body, {signal} = {}) => {
+  if (!['/returns/context','/returns/observations'].includes(path) || !body ||
+      new TextEncoder().encode(JSON.stringify(body)).byteLength > 2 * 1024 * 1024) throw new Error('RH_RETURN_INVALID_FIELDS');
+  const token = await currentAccessToken();
+  if (!token || token.startsWith('demo_session_') || signal?.aborted) throw new Error('RH_AUTH_REQUIRED');
+  const response = await fetch(`${API_BASE_URL}/rh/private${path}`, {
+    method:'POST',signal,cache:'no-store',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify(body)
+  });
+  if (response.status===401 && !signal?.aborted && await currentAccessToken()===token) clearExpiredSession();
+  const payload = await response.json();
+  if (!response.ok) throw Object.assign(new Error('RH_RETURN_REQUEST_FAILED'),{code:payload?.code,status:response.status});
+  return payload;
+};
+
 const apiFetch = async (url, options = {}) => {
   const response = await fetch(url, {
     ...options,
