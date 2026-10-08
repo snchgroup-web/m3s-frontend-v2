@@ -89,4 +89,16 @@ test('page-size selection clears the current detail and requests the new bounded
   expect(await screen.findByText('Aucun dossier sur cette page')).toBeInTheDocument();
   expect(rhReadTransport.mock.calls[1][0]).toBe('/employees?limit=10&offset=0');
 });
+
+test.each([['FR', 'Lignes par page'], ['EN', 'Rows per page'], ['DE', 'Zeilen pro Seite']])(
+  'page-size field retains its theme classes, accessible label and bounded options in %s', async (language, name) => {
+    render(<RhEmployeeFiles access={access} language={language}/>);
+    await screen.findByText('Synthetic employee');
+    const field = screen.getByRole('combobox', { name });
+    expect(field).toHaveClass('m3s-field', 'rh-page-size');
+    expect(field).toHaveValue('25');
+    expect(Array.from(field.options, option => option.value)).toEqual(['10', '25', '50', '100']);
+    expect(rhReadTransport).toHaveBeenCalledTimes(1);
+  }
+);
 jest.mock('./ContractDocuments', () => () => null);

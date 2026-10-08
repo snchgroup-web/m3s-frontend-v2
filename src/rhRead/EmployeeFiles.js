@@ -88,7 +88,7 @@ function RhEmployeesRead({ enabled = false, active = false, scopeKey = null, tra
     h('div', { className: 'flex flex-wrap items-center justify-between gap-3' },
       h('p', { role: 'status', className: 'text-sm' }, `${t.count(snapshot.loadedCount)} · ${t.total}`),
       h('label', { className: 'flex items-center gap-2 text-sm' }, t.lines,
-        h('select', { value: limit, onChange: event => changePage(0, Number(event.target.value)) },
+        h('select', { className: 'm3s-field rh-page-size', value: limit, onChange: event => changePage(0, Number(event.target.value)) },
           ...[10, 25, 50, 100].map(value => h('option', { key: value, value }, String(value)))))),
     snapshot.loadedCount === 0 ? h('p', null, t.empty) : h('div', { className: 'overflow-x-auto' },
       h('table', { className: 'w-full text-sm' },
