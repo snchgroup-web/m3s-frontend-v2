@@ -3,9 +3,9 @@ import {Upload, FileJson} from 'lucide-react';
 import {rhReturnTransport} from '../api';
 const h=React.createElement;
 const labels={
-  FR:{title:'Déclarations reçues',period:'Période',salary:'Salaire',hours:'Heures',file:'Fichier de déclaration JSON',send:'Importer la déclaration',ready:'Déclaration prête à importer',busy:'Contrôle en cours…',done:'Déclaration enregistrée · réception non vérifiée',error:'Import indisponible ou déclaration incompatible',denied:'Import non autorisé pour cette période',amount:'Montant attendu',revision:'Révision précédente'},
-  EN:{title:'Received declarations',period:'Period',salary:'Salary',hours:'Hours',file:'JSON declaration file',send:'Import declaration',ready:'Declaration ready to import',busy:'Checking…',done:'Declaration saved · receipt unverified',error:'Import unavailable or incompatible declaration',denied:'Import not authorized for this period',amount:'Expected amount',revision:'Previous revision'},
-  DE:{title:'Erhaltene Erklärungen',period:'Zeitraum',salary:'Gehalt',hours:'Stunden',file:'JSON-Erklärungsdatei',send:'Erklärung importieren',ready:'Erklärung zum Import bereit',busy:'Wird geprüft…',done:'Erklärung gespeichert · Empfang nicht geprüft',error:'Import nicht verfügbar oder Erklärung inkompatibel',denied:'Import für diesen Zeitraum nicht berechtigt',amount:'Erwarteter Betrag',revision:'Vorherige Revision'}
+  FR:{title:'Déclarations reçues',period:'Période',salary:'Salaire',hours:'Heures',file:'Fichier de déclaration JSON',send:'Importer la déclaration',ready:'Déclaration prête à importer',busy:'Contrôle en cours…',done:'Déclaration enregistrée · réception non vérifiée',error:'Import indisponible ou déclaration incompatible',denied:'Import non autorisé pour cette période',amount:'Montant attendu',declared:'Montant déclaré',difference:'Écart déclaré · rapprochement requis',revision:'Révision précédente'},
+  EN:{title:'Received declarations',period:'Period',salary:'Salary',hours:'Hours',file:'JSON declaration file',send:'Import declaration',ready:'Declaration ready to import',busy:'Checking…',done:'Declaration saved · receipt unverified',error:'Import unavailable or incompatible declaration',denied:'Import not authorized for this period',amount:'Expected amount',declared:'Declared amount',difference:'Declared discrepancy · reconciliation required',revision:'Previous revision'},
+  DE:{title:'Erhaltene Erklärungen',period:'Zeitraum',salary:'Gehalt',hours:'Stunden',file:'JSON-Erklärungsdatei',send:'Erklärung importieren',ready:'Erklärung zum Import bereit',busy:'Wird geprüft…',done:'Erklärung gespeichert · Empfang nicht geprüft',error:'Import nicht verfügbar oder Erklärung inkompatibel',denied:'Import für diesen Zeitraum nicht berechtigt',amount:'Erwarteter Betrag',declared:'Erklärter Betrag',difference:'Erklärte Abweichung · Abgleich erforderlich',revision:'Vorherige Revision'}
 };
 export default function ReturnImport({employeeId,revision,language='FR',transport=rhReturnTransport}) {
   const t=labels[language]||labels.FR;
@@ -37,10 +37,16 @@ export default function ReturnImport({employeeId,revision,language='FR',transpor
       const source=await file.text(); const parsed=JSON.parse(source);
       const expected=context.expectation;
       if (!parsed||Array.isArray(parsed)||parsed.employee_name!==expected.employeeName||
-        (kind==='salary'&&(parsed.payroll_period!==period||parsed.amount_xof!==expected.amountXof))||
+        (kind==='salary'&&(parsed.schema!=='2sg.salary.declaration.local.v1'||parsed.payroll_period!==period||
+          !Number.isSafeInteger(parsed.amount_xof)||parsed.amount_xof<=0||
+          !['confirmed_local','difference_reported'].includes(parsed.status)||
+          parsed.authenticated!==false||parsed.signature!==null||parsed.sync_m3s!==false||
+          (parsed.status==='difference_reported'&&(typeof parsed.note!=='string'||!parsed.note.trim()))))||
         (kind==='hours'&&(!Array.isArray(parsed.entries)||!parsed.entries.length||parsed.entries.some(entry=>typeof entry.date!=='string'||entry.date.slice(0,7)!==period)))) throw Error('mismatch');
       if(epoch.current!==generation||selection!==fileSerial.current)return;
-      setPending({source,requestId:crypto.randomUUID(),name:file.name});setStatus('ready');
+      setPending({source,requestId:crypto.randomUUID(),name:file.name,
+        amountXof:kind==='salary'?parsed.amount_xof:null,
+        discrepancy:kind==='salary'&&(parsed.amount_xof!==expected.amountXof||parsed.status==='difference_reported')});setStatus('ready');
     } catch {if(epoch.current===generation&&selection===fileSerial.current)setStatus('error');}
   }
   async function submit() {
@@ -49,8 +55,12 @@ export default function ReturnImport({employeeId,revision,language='FR',transpor
     try {
       const result=await transport('/returns/observations',{items:[{requestId:pending.requestId,employeeId,dossierRevision:revision,kind,period,expectedPreviousRevision:context.expectedPreviousRevision,source:pending.source}]},{signal:controller.current.signal});
       if(epoch.current!==generation)return;
-      if(result.status!=='unverified_observations'||result.paymentConfirmed!==false||result.results?.length!==1)throw Error('unexpected result');
-      setContext({...context,expectedPreviousRevision:result.results[0].observationRevision});setPending(null);setStatus('done');
+      const saved=result?.results?.[0];
+      if(result?.status!=='unverified_observations'||result.paymentConfirmed!==false||result.results?.length!==1||
+        saved.employeeId!==employeeId||saved.period!==period||saved.kind!==kind||
+        !Number.isSafeInteger(saved.observationRevision)||saved.observationRevision!==context.expectedPreviousRevision+1||
+        typeof saved.replayed!=='boolean')throw Error('unexpected result');
+      setContext({...context,expectedPreviousRevision:saved.observationRevision});setPending(null);setStatus('done');
     } catch {if(epoch.current===generation)setStatus('error');}
   }
   return h('section',{className:'rh-return-import space-y-3 border-t pt-4 mt-4','aria-busy':status==='busy'},
@@ -61,6 +71,8 @@ export default function ReturnImport({employeeId,revision,language='FR',transpor
     context&&h('p',{className:'text-sm'},`${t.amount}: ${context.expectation.amountXof.toLocaleString()} FCFA · ${t.revision}: ${context.expectedPreviousRevision}`),
     context&&h('label',{className:'flex flex-wrap gap-2 items-center'},h(FileJson,{size:18,'aria-hidden':true}),t.file,h('input',{key:`${period}-${kind}`,type:'file',accept:'.json,application/json',onChange:choose,disabled:status==='busy'})),
     pending&&h('p',{className:'text-sm break-all'},pending.name),
+    pending&&pending.amountXof!==null&&h('p',{className:'text-sm'},`${t.declared}: ${pending.amountXof.toLocaleString()} FCFA`),
+    pending?.discrepancy&&h('p',{role:'status',className:'text-sm font-semibold'},t.difference),
     h('p',{role:status==='error'||status==='denied'?'alert':'status',className:'text-sm'},t[status]||''),
     context&&h('button',{type:'button',disabled:!pending||status==='busy',onClick:submit,className:'m3s-primary-button inline-flex gap-2 items-center rounded px-3 py-2 disabled:opacity-40'},h(Upload,{size:18,'aria-hidden':true}),t.send));
 }
