@@ -1,7 +1,6 @@
 import React from 'react';
 import {Upload, FileJson} from 'lucide-react';
 import {rhReturnTransport} from '../api';
-import './ReturnImport.css';
 const h=React.createElement;
 const labels={
   FR:{title:'Déclarations reçues',period:'Période',salary:'Salaire',hours:'Heures',file:'Fichier de déclaration JSON',send:'Importer la déclaration',ready:'Déclaration prête à importer',busy:'Contrôle en cours…',done:'Déclaration enregistrée · réception non vérifiée',error:'Import indisponible ou déclaration incompatible',denied:'Import non autorisé pour cette période',amount:'Montant attendu',revision:'Révision précédente'},
