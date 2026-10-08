@@ -79,6 +79,13 @@ html.dark .rh-return-import input[type="month"] { color-scheme: dark; }
 }
 .rh-return-import input[type="file"] { min-width: 0; max-width: 100%; }
 
+.m3s-design-scope select.rh-page-size {
+  min-width: 4.5rem;
+  padding: 0.375rem 0.5rem;
+  color-scheme: light;
+}
+html.dark .m3s-design-scope select.rh-page-size { color-scheme: dark; }
+
 .m3s-design-scope {
   min-width: 0;
   font-family: var(--m3s-font-ui);
