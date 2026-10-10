@@ -58,6 +58,18 @@ test('file selection checks hash and classification without uploading its conten
   await expect(api.preparePrivateGedImport(syntheticFile, 'finance')).rejects.toMatchObject({ code: 'GED_CATEGORY_MISMATCH' });
 });
 
+test('correspondence accepts only the exact approved PDF and is excluded from finance attachment options', async () => {
+  const file = { ...syntheticFile, name: 'Synthetic correspondence.pdf' };
+  const entry = { ...approved, name: file.name, category: 'correspondence' };
+  fetch.mockResolvedValue(policyReply({ approved: [entry] }));
+  const candidate = await api.preparePrivateGedImport(file, 'correspondence');
+  expect(candidate).toMatchObject({ id: sha, category: 'correspondence', contentType: 'application/pdf' });
+  await expect(api.preparePrivateGedImport(syntheticFile, 'correspondence')).rejects.toThrow('GED_FORMAT_REQUIRED');
+  await expect(api.preparePrivateGedImport(file, 'finance')).rejects.toThrow('GED_CATEGORY_MISMATCH');
+  fetch.mockResolvedValue(policyReply({ documents: [{ ...entry, id: sha, rootId: sha, title: entry.name, revision: 0, lifecycle: true, trashed: false }] }));
+  expect((await api.getExpenseAttachmentOptions()).documents).toEqual([]);
+});
+
 test.each([['jpg', 'image/jpeg'], ['jpeg', 'image/jpeg'], ['png', 'image/png']])('approved %s scan keeps authenticated import and MIME checks', async (ext, mime) => {
   const file = { ...syntheticFile, name: `Synthetic.${ext}` };
   const row = { ...approved, name: file.name, category: 'finance', contentType: mime };

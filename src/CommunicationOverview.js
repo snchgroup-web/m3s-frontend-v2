@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import InternalSectionNav from './InternalSectionNav';
 import CorrespondenceRegister from './CorrespondenceRegister';
+import PrivateGedDocuments from './PrivateGedDocuments';
 
 const COPY = {
   FR: {
@@ -344,6 +345,9 @@ const CommunicationOverview = ({ language = 'FR' }) => {
           ))}
         </div>
         <CorrespondenceRegister language={language} />
+        <div id="communication-documents" className="mt-6 scroll-mt-24">
+          <PrivateGedDocuments scope="correspondence" />
+        </div>
       </section>
 
       <section id="communication-workflow" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="communication-workflow-title">

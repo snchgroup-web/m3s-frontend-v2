@@ -2,10 +2,12 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import CommunicationOverview from './CommunicationOverview';
 import { AuthProvider } from './AuthContext';
+import { LanguageProvider } from './LanguageContext';
+jest.mock('./PrivateGedDocuments', () => ({ __esModule: true, default: ({ scope }) => <div data-testid="correspondence-ged">{scope}</div> }));
 
 const renderCommunication = language => render(
   <AuthProvider>
-    <CommunicationOverview language={language} />
+    <LanguageProvider><CommunicationOverview language={language} /></LanguageProvider>
   </AuthProvider>
 );
 
@@ -13,6 +15,7 @@ test('renders the governed communication and correspondence model in French', ()
   renderCommunication('FR');
 
   expect(screen.getByRole('heading', { name: 'Communication institutionnelle & courrier officiel' })).toBeInTheDocument();
+  expect(screen.getByTestId('correspondence-ged')).toHaveTextContent('correspondence');
   expect(screen.getByRole('navigation', { name: 'Navigation dans Communication et Courrier' })).toBeInTheDocument();
   expect(screen.getByText('Données de démonstration')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Registre pilote du courrier et des communications' })).toBeInTheDocument();

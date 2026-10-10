@@ -10,7 +10,7 @@ const messages = {
     disabled: 'Les documents privés ne sont pas encore disponibles.', error: 'Les documents sont momentanément indisponibles.',
     download: 'Télécharger', downloading: 'Téléchargement en cours…', failed: 'Le téléchargement a échoué. Réessaie.',
     done: 'Téléchargement préparé.', size: 'Ko', personal: 'Dossier personnel', finance: 'Documents financiers 2SG', unclassified: 'Classement à préciser',
-    add: 'Importer un document', file: 'Fichier', category: 'Classement', cancel: 'Annuler', confirm: 'Confirmer l’import', checking: 'Vérification du fichier…',
+    correspondence: 'Courrier restreint', add: 'Importer un document', file: 'Fichier', category: 'Classement', cancel: 'Annuler', confirm: 'Confirmer l’import', checking: 'Vérification du fichier…',
     importing: 'Import en cours…', imported: 'Document enregistré et relu avec succès.', existing: 'Ce document est déjà enregistré.', ready: 'Fichier vérifié, prêt à importer.',
     importFailed: 'Import non confirmé. Actualise les documents avant de réessayer.', invalid: 'Format PDF, Word (.docx), JPEG ou PNG requis.',
     tooLarge: 'Le fichier doit contenir entre 10 octets et 5 Mio.', notApproved: 'Ce fichier ne fait pas encore partie des documents autorisés à l’import.',
@@ -20,7 +20,7 @@ const messages = {
     disabled: 'Private documents are not available yet.', error: 'Documents are temporarily unavailable.',
     download: 'Download', downloading: 'Downloading…', failed: 'Download failed. Please try again.',
     done: 'Download prepared.', size: 'KB', personal: 'Personal folder', finance: '2SG financial documents', unclassified: 'Classification pending',
-    add: 'Import a document', file: 'File', category: 'Classification', cancel: 'Cancel', confirm: 'Confirm import', checking: 'Checking file…',
+    correspondence: 'Restricted correspondence', add: 'Import a document', file: 'File', category: 'Classification', cancel: 'Cancel', confirm: 'Confirm import', checking: 'Checking file…',
     importing: 'Importing…', imported: 'Document saved and successfully read back.', existing: 'This document is already registered.', ready: 'File verified, ready to import.',
     importFailed: 'Import not confirmed. Refresh documents before retrying.', invalid: 'A PDF, Word (.docx), JPEG or PNG file is required.',
     tooLarge: 'File size must be between 10 bytes and 5 MiB.', notApproved: 'This file has not yet been approved for import.',
@@ -30,7 +30,7 @@ const messages = {
     disabled: 'Private Dokumente sind noch nicht verfügbar.', error: 'Dokumente sind vorübergehend nicht verfügbar.',
     download: 'Herunterladen', downloading: 'Download läuft…', failed: 'Download fehlgeschlagen. Bitte erneut versuchen.',
     done: 'Download vorbereitet.', size: 'KB', personal: 'Persönlicher Ordner', finance: '2SG-Finanzdokumente', unclassified: 'Zuordnung offen',
-    add: 'Dokument importieren', file: 'Datei', category: 'Zuordnung', cancel: 'Abbrechen', confirm: 'Import bestätigen', checking: 'Datei wird geprüft…',
+    correspondence: 'Geschützte Korrespondenz', add: 'Dokument importieren', file: 'Datei', category: 'Zuordnung', cancel: 'Abbrechen', confirm: 'Import bestätigen', checking: 'Datei wird geprüft…',
     importing: 'Import läuft…', imported: 'Dokument gespeichert und erfolgreich erneut gelesen.', existing: 'Dieses Dokument ist bereits registriert.', ready: 'Datei geprüft, bereit zum Import.',
     importFailed: 'Import nicht bestätigt. Dokumente vor einem erneuten Versuch aktualisieren.', invalid: 'Eine PDF-, Word- (.docx), JPEG- oder PNG-Datei ist erforderlich.',
     tooLarge: 'Die Datei muss zwischen 10 Byte und 5 MiB gross sein.', notApproved: 'Diese Datei ist noch nicht für den Import freigegeben.',
@@ -40,7 +40,7 @@ const messages = {
 export default function PrivateGedDocuments({ scope = 'all' }) {
   const { language } = useLanguage();
   const t = messages[language] || messages.FR;
-  const scoped = ['personal', 'finance'].includes(scope);
+  const scoped = ['personal', 'finance', 'correspondence'].includes(scope);
   const [revision, setRevision] = useState(0);
   const [state, setState] = useState({ status: 'loading', rows: [] });
   const [busy, setBusy] = useState(null);
@@ -48,7 +48,7 @@ export default function PrivateGedDocuments({ scope = 'all' }) {
   const [trash, setTrash] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const [file, setFile] = useState(null);
-  const [category, setCategory] = useState(scope === 'finance' ? 'finance' : 'personal');
+  const [category, setCategory] = useState(scoped ? scope : 'personal');
   const [candidate, setCandidate] = useState({ status: 'idle' });
   const active = useRef(null);
   useEffect(() => () => active.current?.abort(), []);
@@ -127,7 +127,7 @@ export default function PrivateGedDocuments({ scope = 'all' }) {
     <div className={scope === 'finance' ? 'private-ged-toolbar private-ged-toolbar-sticky' : 'private-ged-toolbar'}>
     <div className="private-ged-heading"><h3 id="private-ged-title"><LockKeyhole size={18} aria-hidden="true"/>{scoped ? t[scope] : t.title}</h3>
       <div className="private-ged-actions"><button className="m3s-secondary-button" disabled={state.status !== 'ready' || !!busy || importOpen}
-        onClick={() => { setNotice(null); setFile(null); setCategory(scope === 'finance' ? 'finance' : 'personal'); setImportOpen(true); }}><Upload size={18} aria-hidden="true"/>{t.add}</button>
+        onClick={() => { setNotice(null); setFile(null); setCategory(scoped ? scope : 'personal'); setImportOpen(true); }}><Upload size={18} aria-hidden="true"/>{t.add}</button>
       <button className="m3s-secondary-button" aria-label={t.refresh} title={t.refresh}
         disabled={state.status === 'loading' || !!busy} onClick={() => { setNotice(null); setRevision(value => value + 1); }}><RefreshCw size={18}/></button>
       </div>
@@ -140,10 +140,10 @@ export default function PrivateGedDocuments({ scope = 'all' }) {
     {importOpen && <form className="private-ged-import" onSubmit={importDocument} aria-label={t.add}>
       <label htmlFor="ged-category">{t.category}</label>
       <select id="ged-category" value={category} disabled={!!busy || scoped} onChange={event => { setCandidate({ status: 'idle' }); setCategory(event.target.value); }}>
-        <option value="personal">{t.personal}</option><option value="finance">{t.finance}</option>
+        <option value="personal">{t.personal}</option><option value="finance">{t.finance}</option><option value="correspondence">{t.correspondence}</option>
       </select>
       <label htmlFor="ged-file">{t.file}</label>
-      <input id="ged-file" type="file" accept=".pdf,.docx,.jpg,.jpeg,.png" disabled={!!busy} onChange={event => {
+      <input id="ged-file" type="file" accept={scope === 'correspondence' ? '.pdf' : '.pdf,.docx,.jpg,.jpeg,.png'} disabled={!!busy} onChange={event => {
         setNotice(null); setCandidate({ status: 'idle' }); setFile(event.target.files?.[0] || null);
       }}/>
       {candidate.status !== 'idle' && <p role={candidate.status === 'error' ? 'alert' : 'status'}>{t[candidate.message || candidate.status]}</p>}
