@@ -170,7 +170,7 @@ const unsafeExpenseReference = value => value.includes('<') || value.includes('>
 const validGedRecord = row => row && /^[a-f0-9]{64}$/.test(row.id) && typeof row.name === 'string' &&
   /^[\p{L}\p{N} ._()-]{1,140}\.(pdf|docx|jpg|jpeg|png)$/u.test(row.name) && !row.name.startsWith('.') &&
   Number.isInteger(row.size) && row.size >= 10 && row.size <= GED_MAX_BYTES &&
-  (row.category === undefined || ['personal', 'finance', 'unclassified'].includes(row.category)) &&
+  (row.category === undefined || ['personal', 'finance', 'correspondence', 'unclassified'].includes(row.category)) &&
   (row.contentType === undefined || row.contentType === gedMime(row.name)) &&
   (row.lifecycle === undefined || (row.lifecycle === true && /^[a-f0-9]{64}$/.test(row.rootId) &&
     Number.isSafeInteger(row.revision) && row.revision >= 0 && row.revision <= 10000 && typeof row.trashed === 'boolean' &&
@@ -266,7 +266,8 @@ export const api = {
     return payload;
   },
   preparePrivateGedImport: async (file, category, { signal } = {}) => {
-    if (!file || !/\.(pdf|docx|jpg|jpeg|png)$/.test(file.name) || !['personal', 'finance'].includes(category)) throw gedError('GED_FORMAT_REQUIRED');
+    if (!file || !/\.(pdf|docx|jpg|jpeg|png)$/.test(file.name) || !['personal', 'finance', 'correspondence'].includes(category) ||
+      (category === 'correspondence' && !file.name.endsWith('.pdf'))) throw gedError('GED_FORMAT_REQUIRED');
     if (!Number.isSafeInteger(file.size) || file.size < 10 || file.size > GED_MAX_BYTES) throw gedError('GED_TOO_LARGE');
     const bytes = await file.arrayBuffer();
     const id = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2, '0')).join('');

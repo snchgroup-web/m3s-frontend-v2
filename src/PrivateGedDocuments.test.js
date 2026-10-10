@@ -63,13 +63,15 @@ const chooseImport = async () => {
   return file;
 };
 
-test.each(['personal', 'finance'])('scopes visible files and imports to %s without deleting records', async scope => {
+test.each(['personal', 'finance', 'correspondence'])('scopes visible files and imports to %s without deleting records', async scope => {
   const personal = { ...record, category: 'personal', name: 'Synthetic CV.docx' };
   const finance = { ...record, id: 'b'.repeat(64), category: 'finance', name: 'Synthetic invoice.pdf' };
-  api.getPrivateGedDocuments.mockResolvedValue([personal, finance]);
+  const correspondence = { ...record, id: 'c'.repeat(64), category: 'correspondence', name: 'Synthetic correspondence.pdf' };
+  const records = [personal, finance, correspondence];
+  api.getPrivateGedDocuments.mockResolvedValue(records);
   render(<PrivateGedDocuments scope={scope}/>);
-  await screen.findByText(scope === 'personal' ? personal.name : finance.name);
-  expect(screen.queryByText(scope === 'personal' ? finance.name : personal.name)).not.toBeInTheDocument();
+  await screen.findByText(records.find(row => row.category === scope).name);
+  records.filter(row => row.category !== scope).forEach(row => expect(screen.queryByText(row.name)).not.toBeInTheDocument());
   fireEvent.click(screen.getByRole('button', { name: 'Importer un document' }));
   expect(screen.getByLabelText('Classement')).toHaveValue(scope);
   expect(screen.getByLabelText('Classement')).toBeDisabled();
