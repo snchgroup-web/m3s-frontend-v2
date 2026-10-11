@@ -26,6 +26,7 @@ const COPY = {
     targetModel: 'Modèle fonctionnel cible',
     connectedTasks: 'Registre des tâches existant',
     navLabel: 'Navigation dans Planification & Projets',
+    navAgenda: 'Agenda',
     navSteering: 'Pilotage',
     navModel: 'Modèle',
     navBranches: 'Branches',
@@ -85,7 +86,7 @@ const COPY = {
     tasksOpen: 'Tâches ouvertes',
     tasksCompleted: 'Tâches terminées',
     completion: 'Progression documentaire',
-    currentBody: 'Le registre des tâches est utilisable et la synthèse API officielle alimente les compteurs de tâches disponibles, ouvertes et terminées. La persistance des modifications reste à raccorder. Les projets, phases, dépendances, jalons, chronologies et agendas seront raccordés après validation du modèle de données.',
+    currentBody: 'La synthèse API alimente les compteurs du registre historique des tâches. L’Agenda affiche les échéances du Courrier conservées dans la source sécurisée. Les propositions du journal restent locales ; la persistance des tâches historiques et les autres objets de planification restent à raccorder.',
     registerTitle: 'Registre des tâches et actions'
   },
   EN: {
@@ -95,6 +96,7 @@ const COPY = {
     targetModel: 'Target functional model',
     connectedTasks: 'Existing task register',
     navLabel: 'Planning & Projects navigation',
+    navAgenda: 'Agenda',
     navSteering: 'Steering',
     navModel: 'Model',
     navBranches: 'Branches',
@@ -154,7 +156,7 @@ const COPY = {
     tasksOpen: 'Open tasks',
     tasksCompleted: 'Completed tasks',
     completion: 'Documented completion',
-    currentBody: 'The task register is usable and the official API summary supplies the available, open and completed task counters. Change persistence still needs to be connected. Projects, phases, dependencies, milestones, timelines and agendas will be connected after the data model is approved.',
+    currentBody: 'The API summary supplies the historical task counters. The agenda displays correspondence deadlines stored in the secure source. Journal proposals remain local; historical task persistence and other planning objects still need to be connected.',
     registerTitle: 'Task and action register'
   },
   DE: {
@@ -164,6 +166,7 @@ const COPY = {
     targetModel: 'Funktionales Zielmodell',
     connectedTasks: 'Bestehendes Aufgabenregister',
     navLabel: 'Navigation innerhalb Planung & Projekte',
+    navAgenda: 'Agenda',
     navSteering: 'Steuerung',
     navModel: 'Modell',
     navBranches: 'Zweige',
@@ -223,7 +226,7 @@ const COPY = {
     tasksOpen: 'Offene Aufgaben',
     tasksCompleted: 'Abgeschlossene Aufgaben',
     completion: 'Dokumentierter Fortschritt',
-    currentBody: 'Das Aufgabenregister ist nutzbar und die offizielle API-Zusammenfassung liefert die Zähler für verfügbare, offene und abgeschlossene Aufgaben. Die Speicherung von Änderungen muss noch angebunden werden. Projekte, Phasen, Abhängigkeiten, Meilensteine, Zeitachsen und Agenden werden nach Freigabe des Datenmodells angebunden.',
+    currentBody: 'Die API-Zusammenfassung liefert die historischen Aufgabenzähler. Die Agenda zeigt Korrespondenzfristen aus der sicheren Quelle. Journalvorschläge bleiben lokal; die Speicherung historischer Aufgaben und weitere Planungsobjekte müssen noch angebunden werden.',
     registerTitle: 'Aufgaben- und Aktionsregister'
   }
 };
@@ -272,7 +275,7 @@ const Metric = ({ label, value }) => (
   </div>
 );
 
-const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'ready', openTasks = null, completedTasks = 0, children }) => {
+const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'ready', openTasks = null, completedTasks = 0, agenda, children }) => {
   const t = COPY[language] || COPY.FR;
   const tasksReady = tasksStatus === 'ready'
     && Number.isFinite(tasksTotal)
@@ -284,6 +287,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'read
     ? (tasksTotal > 0 ? `${Math.round((completedTasks / tasksTotal) * 100)} %` : '0 %')
     : '—';
   const navItems = [
+    ...(agenda ? [{ id: 'planning-agenda', label: t.navAgenda }] : []),
     { id: 'planning-steering', label: t.navSteering },
     { id: 'planning-model', label: t.navModel },
     { id: 'planning-branches', label: t.navBranches },
@@ -312,6 +316,8 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'read
       </header>
 
       <InternalSectionNav ariaLabel={t.navLabel} items={navItems} topId="planning-top" backToTopLabel={t.backToTop} refreshKey={language} />
+
+      {agenda}
 
       <section id="planning-steering" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="planning-steering-title">
         <div className="max-w-3xl">

@@ -6,6 +6,7 @@ import { ADMINISTRATION_CORRESPONDENCE_WRITE_PERMISSION, hasPermission } from '.
 import { correspondenceFromApi, correspondenceToApi, isDemoSession } from './administrationRegistryAdapters';
 import ActionConfirmationDialog from './ActionConfirmationDialog';
 import CorrespondenceDocument from './CorrespondenceDocument';
+import { loadCorrespondenceAgenda } from './correspondenceAgendaModel';
 
 const STORAGE_KEY_PREFIX = 'm3s-administration-correspondence-v1';
 
@@ -40,6 +41,8 @@ const SOURCE_COPY = {
   DE: { loading: 'Verbindung zur sicheren Quelle', backend: 'Sichere Backend-Quelle', local: 'Lokaler Pilot · Backend nicht verfügbar', forbidden: 'Registerzugriff nicht autorisiert', retained: 'Lokale Einträge bleiben für diesen Benutzer isoliert und werden nie automatisch importiert.' }
 };
 
+const SOURCE_UNAVAILABLE = { FR: 'Courrier indisponible · aucun résultat local substitué', EN: 'Correspondence unavailable · no local results substituted', DE: 'Korrespondenz nicht verfügbar · keine lokalen Ersatzdaten' };
+
 const today = () => new Date().toISOString().slice(0, 10);
 const defaultForm = () => ({ date: today(), directionIndex: 0, channelIndex: 1, sender: '', recipient: '', subject: '', categoryIndex: 1, confidentialityIndex: 1, person: '', ged: '', evidence: '', owner: '', next: '', statusIndex: 0, deadline: '' });
 const getStorageKey = user => {
@@ -49,22 +52,23 @@ const getStorageKey = user => {
 };
 const loadItems = storageKey => { try { const items = JSON.parse(window.localStorage.getItem(storageKey)); return Array.isArray(items) ? items : []; } catch { return []; } };
 
-const CorrespondenceRegister = ({ language = 'FR' }) => {
+const CorrespondenceRegister = ({ language = 'FR', correspondenceId = '' }) => {
   const { token, user } = useAuth();
   const t = COPY[language] || COPY.FR;
-  const sourceText = SOURCE_COPY[language] || SOURCE_COPY.FR;
+  const sourceText = { ...(SOURCE_COPY[language] || SOURCE_COPY.FR), unavailable: SOURCE_UNAVAILABLE[language] || SOURCE_UNAVAILABLE.FR };
   const storageKey = useMemo(() => getStorageKey(user), [user]);
   const [items, setItems] = useState([]);
   const [sourceState, setSourceState] = useState('loading');
   const [busy, setBusy] = useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(correspondenceId);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(defaultForm);
   const [message, setMessage] = useState('');
   const [pendingAction, setPendingAction] = useState(null);
   const hasWritePermission = hasPermission(user?.permissions, ADMINISTRATION_CORRESPONDENCE_WRITE_PERMISSION);
   const canWrite = hasWritePermission && (sourceState === 'backend' || sourceState === 'local');
-  const visible = useMemo(() => items.filter(item => `${item.subject} ${item.sender} ${item.recipient} ${item.person} ${item.ged}`.toLowerCase().includes(query.trim().toLowerCase())), [items, query]);
+  const visible = useMemo(() => items.filter(item => `${item.id} ${item.subject} ${item.sender} ${item.recipient} ${item.person} ${item.ged}`.toLowerCase().includes(query.trim().toLowerCase())), [items, query]);
+  useEffect(() => { setQuery(correspondenceId); }, [correspondenceId]);
   useEffect(() => {
     let active = true;
     const loadLocalSource = () => {
@@ -77,9 +81,16 @@ const CorrespondenceRegister = ({ language = 'FR' }) => {
       return () => { active = false; };
     }
     setSourceState('loading');
-    api.getAdministrationCorrespondence().then(result => {
+    const readSource = correspondenceId
+      ? loadCorrespondenceAgenda(api.getAdministrationCorrespondence, () => active).then(result => {
+        if (!result) return [];
+        if (result.partial && !result.records.some(item => item.id === correspondenceId)) throw new Error('Correspondence outside partial extract');
+        return result.records;
+      })
+      : api.getAdministrationCorrespondence().then(result => (result.data || []).map(correspondenceFromApi));
+    readSource.then(records => {
       if (!active) return;
-      setItems((result.data || []).map(correspondenceFromApi));
+      setItems(records);
       setSourceState('backend');
     }).catch(error => {
       if (!active) return;
@@ -88,10 +99,13 @@ const CorrespondenceRegister = ({ language = 'FR' }) => {
         setSourceState('forbidden');
         return;
       }
-      loadLocalSource();
+      if (correspondenceId) {
+        setItems([]);
+        setSourceState('unavailable');
+      } else loadLocalSource();
     });
     return () => { active = false; };
-  }, [storageKey, token]);
+  }, [storageKey, token, correspondenceId]);
 
   const persist = next => { setItems(next); window.localStorage.setItem(storageKey, JSON.stringify(next)); };
   const open = (item = null) => { if (!canWrite) return; setEditing(item?.id || 'new'); setForm(item ? { ...item } : defaultForm()); setMessage(''); };

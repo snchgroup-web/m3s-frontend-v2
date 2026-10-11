@@ -261,7 +261,7 @@ const DetailCard = ({ icon: Icon, title, body }) => (
   </article>
 );
 
-const CommunicationOverview = ({ language = 'FR' }) => {
+const CommunicationOverview = ({ language = 'FR', correspondenceId = '' }) => {
   const t = COPY[language] || COPY.FR;
   const navItems = [
     { id: 'communication-scope', label: t.navScope },
@@ -344,7 +344,7 @@ const CommunicationOverview = ({ language = 'FR' }) => {
             </article>
           ))}
         </div>
-        <CorrespondenceRegister language={language} />
+        <CorrespondenceRegister language={language} correspondenceId={correspondenceId} />
         <div id="communication-documents" className="mt-6 scroll-mt-24">
           <PrivateGedDocuments scope="correspondence" />
         </div>
