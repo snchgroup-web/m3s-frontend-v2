@@ -71,6 +71,12 @@ html.dark.deep-theme {
   color-scheme: light;
 }
 html.dark .rh-return-import input[type="month"] { color-scheme: dark; }
+
+#planning-agenda input[type="month"] {
+  color-scheme: light;
+  max-width: 100%;
+}
+html.dark #planning-agenda input[type="month"] { color-scheme: dark; }
 .rh-return-import [aria-pressed="true"] {
   color: var(--m3s-status-info);
   background: var(--m3s-row-hover);

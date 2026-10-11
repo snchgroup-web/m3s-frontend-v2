@@ -2,6 +2,12 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import PlanningOverview from './PlanningOverview';
 
+test('connects the shared agenda to planning navigation', () => {
+  render(<PlanningOverview agenda={<section id="planning-agenda">Shared synthetic agenda</section>} />);
+  expect(screen.getByRole('button', { name: 'Agenda', exact: true })).toBeInTheDocument();
+  expect(screen.getByText('Shared synthetic agenda')).toBeInTheDocument();
+});
+
 test('renders the project hierarchy and recurring activity branch in French', () => {
   render(<PlanningOverview language="FR" tasksTotal={8} openTasks={6} completedTasks={2} />);
 

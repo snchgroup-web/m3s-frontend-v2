@@ -26,6 +26,34 @@ beforeEach(() => {
 
 afterEach(() => jest.restoreAllMocks());
 
+test('filters the shared register by the identifier selected in the agenda', async () => {
+  mockToken = 'signed-token';
+  api.getAdministrationCorrespondence.mockResolvedValue({ success: true, source: 'bigquery', data: [
+    { id: 'COR-SELECTED', subject: 'Selected synthetic source' },
+    { id: 'COR-OTHER', subject: 'Other synthetic source' }
+  ] });
+  render(<CorrespondenceRegister correspondenceId="COR-SELECTED" />);
+  expect(await screen.findByText('Selected synthetic source')).toBeInTheDocument();
+  expect(screen.queryByText('Other synthetic source')).not.toBeInTheDocument();
+});
+
+test('opens an agenda source beyond the first page of correspondence', async () => {
+  mockToken = 'signed-token';
+  api.getAdministrationCorrespondence.mockResolvedValueOnce({ success: true, source: 'bigquery', data: Array.from({ length: 200 }, (_, i) => ({ id: `COR-${i}`, subject: `Synthetic ${i}` })) })
+    .mockResolvedValueOnce({ success: true, source: 'bigquery', data: [{ id: 'COR-LATER', subject: 'Later synthetic source' }] });
+  render(<CorrespondenceRegister correspondenceId="COR-LATER" />);
+  expect(await screen.findByText('Later synthetic source')).toBeInTheDocument();
+  expect(api.getAdministrationCorrespondence).toHaveBeenLastCalledWith(200, 200);
+});
+
+test('does not substitute local correspondence for an unavailable agenda source', async () => {
+  mockToken = 'signed-token';
+  api.getAdministrationCorrespondence.mockRejectedValue(new Error('Unavailable'));
+  render(<CorrespondenceRegister correspondenceId="COR-SELECTED" />);
+  expect(await screen.findByText(/aucun résultat local substitué/)).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Ajouter un courrier' })).toBeDisabled();
+});
+
 test('prepares a restricted WhatsApp CV record without accepting the file itself', () => {
   render(<CorrespondenceRegister language="FR" />);
   expect(screen.getByText(/aucun fichier ni contenu du CV/i)).toBeInTheDocument();

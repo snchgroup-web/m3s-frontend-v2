@@ -7,6 +7,7 @@ import { ModulePageTabs, ModuleTabContent, ChildTabPlaceholder } from './moduleT
 import TableControls from './TableControls';
 import InstitutionOverview from './InstitutionOverview';
 import PlanningOverview from './PlanningOverview';
+import CorrespondenceAgenda from './CorrespondenceAgenda';
 import JournalTaskRegister from './JournalTaskRegister';
 import ComplianceOverview from './ComplianceOverview';
 import CommunicationOverview from './CommunicationOverview';
@@ -715,6 +716,7 @@ const Admin = () => {
         {activeTab === 'planning' && (
           <div id="administration-task-register" className="scroll-mt-24" tabIndex="-1">
             <PlanningOverview
+              agenda={<CorrespondenceAgenda language={language} />}
               language={language}
               tasksTotal={tasksTotal}
               tasksStatus={taskSummaryStatus}
@@ -781,7 +783,7 @@ const Admin = () => {
         )}
 
         {activeTab === 'communication' && (
-          <CommunicationOverview language={language} />
+          <CommunicationOverview language={language} correspondenceId={new URLSearchParams(location.search).get('correspondenceId') || ''} />
         )}
 
         {activeTab === 'glossary' && (
