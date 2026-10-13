@@ -18,6 +18,7 @@ test('renders the governed communication and correspondence model in French', ()
   expect(screen.getByTestId('correspondence-ged')).toHaveTextContent('correspondence');
   expect(screen.getByRole('navigation', { name: 'Navigation dans Communication et Courrier' })).toBeInTheDocument();
   expect(screen.getByText('Exemples fictifs')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Registre Courrier', exact: true })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Structure et exemples de courrier' })).toBeInTheDocument();
   expect(screen.getByText(/ne correspondent à aucun courrier réel/i)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Circuit de traitement et de validation' })).toBeInTheDocument();
@@ -30,6 +31,7 @@ test('renders the German communication boundaries', () => {
 
   expect(screen.getByRole('heading', { name: 'Institutionelle Kommunikation & offizielle Korrespondenz' })).toBeInTheDocument();
   expect(screen.getByText('Fiktive Beispiele')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Korrespondenzregister', exact: true })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Nach oben' })).toBeInTheDocument();
   expect(screen.getByText(/keine echten Schreiben/i)).toBeInTheDocument();
   expect(screen.getByText(/CRM \/ Marketing: kommerzielle Kommunikation/i)).toBeInTheDocument();
@@ -60,8 +62,22 @@ test('uses the communication internal navigation', () => {
   window.HTMLElement.prototype.scrollIntoView = scrollIntoView;
 
   renderCommunication('EN');
+  expect(screen.getByRole('button', { name: 'Correspondence register', exact: true })).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Workflow' }));
 
   expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
   window.HTMLElement.prototype.scrollIntoView = originalScrollIntoView;
+});
+
+test.each([['FR', 'Registre Courrier'], ['EN', 'Correspondence register'], ['DE', 'Korrespondenzregister']])('opens the actual correspondence register directly in %s', (language, label) => {
+  const scrollIntoView = jest.fn();
+  const original = window.HTMLElement.prototype.scrollIntoView;
+  window.HTMLElement.prototype.scrollIntoView = scrollIntoView;
+  try {
+    renderCommunication(language);
+    fireEvent.click(screen.getByRole('button', { name: label, exact: true }));
+    expect(scrollIntoView.mock.instances[0]).toBe(document.getElementById('communication-mail-register'));
+  } finally {
+    window.HTMLElement.prototype.scrollIntoView = original;
+  }
 });

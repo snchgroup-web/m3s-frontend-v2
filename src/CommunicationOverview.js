@@ -29,7 +29,7 @@ const COPY = {
     demoData: 'Exemples fictifs',
     navLabel: 'Navigation dans Communication et Courrier',
     navScope: 'Périmètre',
-    navRegister: 'Registre',
+    navRegister: 'Registre Courrier',
     navWorkflow: 'Circuit',
     navCommunication: 'Communication',
     navGovernance: 'Responsabilités',
@@ -115,7 +115,7 @@ const COPY = {
     demoData: 'Fictitious examples',
     navLabel: 'Navigation within Communication and Correspondence',
     navScope: 'Scope',
-    navRegister: 'Register',
+    navRegister: 'Correspondence register',
     navWorkflow: 'Workflow',
     navCommunication: 'Communication',
     navGovernance: 'Responsibilities',
@@ -201,7 +201,7 @@ const COPY = {
     demoData: 'Fiktive Beispiele',
     navLabel: 'Navigation innerhalb Kommunikation und Korrespondenz',
     navScope: 'Umfang',
-    navRegister: 'Register',
+    navRegister: 'Korrespondenzregister',
     navWorkflow: 'Ablauf',
     navCommunication: 'Kommunikation',
     navGovernance: 'Verantwortungen',
@@ -292,7 +292,7 @@ const CommunicationOverview = ({ language = 'FR', correspondenceId = '' }) => {
   const t = COPY[language] || COPY.FR;
   const navItems = [
     { id: 'communication-scope', label: t.navScope },
-    { id: 'communication-register', label: t.navRegister },
+    { id: 'communication-mail-register', label: t.navRegister },
     { id: 'communication-workflow', label: t.navWorkflow },
     { id: 'communication-institutional', label: t.navCommunication },
     { id: 'communication-governance', label: t.navGovernance }
