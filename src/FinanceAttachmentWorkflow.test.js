@@ -59,7 +59,7 @@ test('income register displays sourced indicative CFA without changing recorded 
   render(<Finance/>);
   await screen.findByText('Synthetic refund');
   expect(screen.getByText(/693[,.]2541/)).toBeInTheDocument();
-  expect(screen.getByText('Référence indicative · 18.09.2026')).toBeInTheDocument();
+  expect(screen.getByText('18-09-26', { selector: 'time' })).toHaveAttribute('datetime', '2026-09-18');
   expect(screen.getAllByText('Hors totaux comptables').length).toBeGreaterThan(0);
   expect(screen.getByTestId('finance-total-income')).toHaveTextContent('0 CHF');
   expect(api.createIncome).not.toHaveBeenCalled();

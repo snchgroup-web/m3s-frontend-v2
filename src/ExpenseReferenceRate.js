@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatRegistryDate } from './registryDate';
 import { expenseReferenceValuation, safeSourceUrl } from './expenseReferenceValuation';
 export { expenseReferenceValuation, referenceObservation } from './expenseReferenceValuation';
 
@@ -25,12 +26,12 @@ export default function ExpenseReferenceRate({ expense, language, missingLabel, 
   if (!valuation) return <span className="font-semibold text-amber-300">{missingLabel}</span>;
   const t = labels[language] || labels.FR;
   const rate = new Intl.NumberFormat(localeFor(language), { minimumFractionDigits: 4, maximumFractionDigits: 4 }).format(valuation.rate);
-  const date = valuation.date.split('-').reverse().join('.');
+  const date = formatRegistryDate(valuation.date, language);
   const sourceUrl = safeSourceUrl(valuation.source);
   return (
     <div className="min-w-40 max-w-56 text-slate-300" onClick={event => event.stopPropagation()}>
       <span className="font-semibold">{rate}</span>
-      <small className="block">{t.reference} · {date}</small>
+      <small className="block">{t.reference} · <time dateTime={valuation.date} className="whitespace-nowrap">{date}</time></small>
       <details className="mt-1 text-xs">
         <summary className="cursor-pointer text-blue-400 focus-visible:outline focus-visible:outline-2">{valuation.fromHistory ? t.history : `${t.source} / BCEAO`}</summary>
         <p className="mt-1">{t.excluded}</p>
