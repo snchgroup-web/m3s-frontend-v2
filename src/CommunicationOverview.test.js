@@ -42,7 +42,12 @@ test.each([
 ])('separates examples and actual source, and presents the 2SG working method in %s', (language, sendTitle, recordTitle, distinction, badge) => {
   renderCommunication(language);
   const circuit = within(document.getElementById('communication-workflow'));
-  expect(circuit.getAllByRole('article')).toHaveLength(8);
+  const groups = circuit.getAllByRole('group');
+  expect(groups).toHaveLength(2);
+  expect(within(groups[0]).getAllByRole('article')).toHaveLength(4);
+  expect(within(groups[1]).getAllByRole('article')).toHaveLength(8);
+  const incomingFirstStep = { FR: 'Recevoir et inscrire immédiatement', EN: 'Receive and record immediately', DE: 'Empfangen und sofort erfassen' }[language];
+  expect(within(within(groups[0]).getAllByRole('article')[0]).getByRole('heading', { name: incomingFirstStep })).toBeInTheDocument();
   expect(circuit.getByRole('heading', { name: sendTitle })).toBeInTheDocument();
   expect(circuit.getByRole('heading', { name: recordTitle })).toBeInTheDocument();
   expect(circuit.getByText(distinction)).toBeInTheDocument();

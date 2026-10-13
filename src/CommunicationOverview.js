@@ -57,6 +57,14 @@ const COPY = {
     deadlineLabel: 'Suite',
     workflowTitle: 'Circuit de traitement et de validation',
     workflowBody: 'Notre pratique relie préparation, autorisation, envoi, enregistrement et suivi. Un entrant est inscrit dès sa réception ; un sortant après confirmation de son envoi.',
+    incomingWorkflowTitle: 'Courrier entrant : inscrire dès réception',
+    outgoingWorkflowTitle: 'Courrier sortant : inscrire après envoi confirmé',
+    incomingWorkflowSteps: [
+      ['Recevoir et inscrire immédiatement', 'Vérifier les doublons et enregistrer date, canal, origine, preuve, responsable et statut dès réception.'],
+      ['Qualifier et attribuer', 'Préciser type, confidentialité, dossier et échéance ; rattacher les pièces GED après import réalisé.'],
+      ['Préparer la réponse si nécessaire', 'Analyser la demande puis suivre le circuit sortant : relecture, autorisation, envoi et inscription distincte de la réponse.'],
+      ['Suivre et clore', 'Relier les réponses et actions à l’entrée initiale ; conserver preuves et historique avant clôture.']
+    ],
     workflowSteps: [
       ['Identifier', 'Sens, date, canal, interlocuteurs et dossier concernés.'],
       ['Préparer', 'Rédiger ou analyser la demande ; identifier les pièces utiles.'],
@@ -135,6 +143,14 @@ const COPY = {
     deadlineLabel: 'Next step',
     workflowTitle: 'Processing and approval workflow',
     workflowBody: 'Our practice links preparation, approval, dispatch, registration and follow-up. Incoming correspondence is recorded on receipt; outgoing correspondence after confirmed sending.',
+    incomingWorkflowTitle: 'Incoming correspondence: record upon receipt',
+    outgoingWorkflowTitle: 'Outgoing correspondence: record after confirmed sending',
+    incomingWorkflowSteps: [
+      ['Receive and record immediately', 'Check duplicates and record date, channel, origin, evidence, owner and status upon receipt.'],
+      ['Qualify and assign', 'Set type, confidentiality, file and deadline; link DMS records after completed import.'],
+      ['Prepare a reply if needed', 'Analyse the request, then use the outgoing process: review, approval, sending and a separate register entry for the reply.'],
+      ['Follow up and close', 'Link replies and actions to the initial entry; retain evidence and history before closing.']
+    ],
     workflowSteps: [
       ['Identify', 'Direction, date, channel, participants and related file.'],
       ['Prepare', 'Draft or analyse the request and identify useful records.'],
@@ -213,6 +229,14 @@ const COPY = {
     deadlineLabel: 'Nächster Schritt',
     workflowTitle: 'Bearbeitungs- und Freigabeablauf',
     workflowBody: 'Unsere Praxis verbindet Vorbereitung, Freigabe, Versand, Erfassung und Nachverfolgung. Eingänge werden bei Empfang erfasst, Ausgänge nach bestätigtem Versand.',
+    incomingWorkflowTitle: 'Posteingang: bei Empfang erfassen',
+    outgoingWorkflowTitle: 'Postausgang: nach bestätigtem Versand erfassen',
+    incomingWorkflowSteps: [
+      ['Empfangen und sofort erfassen', 'Duplikate prüfen und Datum, Kanal, Herkunft, Nachweis, Verantwortung und Status bei Empfang erfassen.'],
+      ['Qualifizieren und zuordnen', 'Art, Vertraulichkeit, Akte und Frist bestimmen; GED-Unterlagen nach erfolgtem Import verknüpfen.'],
+      ['Bei Bedarf eine Antwort vorbereiten', 'Anfrage prüfen, dann den Postausgangsablauf nutzen: Prüfung, Freigabe, Versand und eigener Registereintrag der Antwort.'],
+      ['Nachverfolgen und abschließen', 'Antworten und Aktionen mit dem ursprünglichen Eingang verknüpfen; Nachweise und Verlauf vor Abschluss bewahren.']
+    ],
     workflowSteps: [
       ['Identifizieren', 'Richtung, Datum, Kanal, Beteiligte und zugehörige Akte.'],
       ['Vorbereiten', 'Anfrage verfassen oder prüfen und benötigte Unterlagen bestimmen.'],
@@ -361,15 +385,23 @@ const CommunicationOverview = ({ language = 'FR', correspondenceId = '' }) => {
             <p className="mt-2 text-sm leading-6 text-slate-400">{t.workflowBody}</p>
           </div>
         </div>
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {t.workflowSteps.map(([title, body], index) => (
-            <article key={title} className="rounded-lg border border-slate-700 bg-slate-900/45 p-4">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-950 text-sm font-bold text-blue-200">{index + 1}</span>
-              <h4 className="mt-3 font-semibold text-slate-100">{title}</h4>
-              <p className="mt-2 text-sm leading-6 text-slate-400">{body}</p>
-            </article>
-          ))}
-        </div>
+        {[
+          ['incoming', t.incomingWorkflowTitle, t.incomingWorkflowSteps],
+          ['outgoing', t.outgoingWorkflowTitle, t.workflowSteps]
+        ].map(([direction, title, steps]) => (
+          <div key={direction} className="mt-5" role="group" aria-labelledby={`communication-workflow-${direction}`}>
+            <h4 id={`communication-workflow-${direction}`} className="font-semibold text-slate-100">{title}</h4>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {steps.map(([stepTitle, body], index) => (
+                <article key={stepTitle} className="rounded-lg border border-slate-700 bg-slate-900/45 p-4">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-950 text-sm font-bold text-blue-200">{index + 1}</span>
+                  <h5 className="mt-3 font-semibold text-slate-100">{stepTitle}</h5>
+                  <p className="mt-2 text-sm leading-6 text-slate-400">{body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        ))}
         <p className="mt-5 rounded-lg border border-amber-700/70 bg-amber-950/20 p-4 text-sm leading-6 text-amber-100">{t.humanRule}</p>
         <p className="mt-3 text-sm leading-6 text-slate-300">{t.manualRule}</p>
       </section>
