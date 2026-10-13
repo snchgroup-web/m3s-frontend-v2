@@ -26,6 +26,23 @@ beforeEach(() => {
 
 afterEach(() => jest.restoreAllMocks());
 
+test.each([
+  ['FR', 'Registre du courrier', 'Registre pilote local du courrier', 'Source backend sécurisée'],
+  ['EN', 'Correspondence register', 'Local pilot correspondence register', 'Secure backend source'],
+  ['DE', 'Korrespondenzregister', 'Lokales Pilotregister für Korrespondenz', 'Sichere Backend-Quelle']
+])('distinguishes connected and local register headings in %s', async (language, connected, local, source) => {
+  mockToken = 'signed-token';
+  api.getAdministrationCorrespondence.mockResolvedValue({ data: [] });
+  const view = render(<CorrespondenceRegister language={language} />);
+  expect(await screen.findByText(source)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: connected, exact: true })).toBeInTheDocument();
+  expect(screen.queryByRole('heading', { name: local, exact: true })).not.toBeInTheDocument();
+  view.unmount();
+  mockToken = 'demo_session_test';
+  render(<CorrespondenceRegister language={language} />);
+  expect(screen.getByRole('heading', { name: local, exact: true })).toBeInTheDocument();
+});
+
 test('filters the shared register by the identifier selected in the agenda', async () => {
   mockToken = 'signed-token';
   api.getAdministrationCorrespondence.mockResolvedValue({ success: true, source: 'bigquery', data: [
