@@ -88,7 +88,7 @@ const CorrespondenceAgenda = ({ language = 'FR' }) => {
                   <p className="mt-1 text-sm leading-6 text-slate-300">{item.next || t.noAction}</p>
                   <p className="mt-1 break-all font-mono text-xs text-slate-400">{item.id}</p>
                 </div>
-                <Link className="inline-flex min-h-11 shrink-0 items-center gap-2 self-start text-sm text-blue-300 underline underline-offset-4" to={`/administration?tab=communication&correspondenceId=${encodeURIComponent(item.id)}#communication-register`}><ExternalLink size={16} aria-hidden="true" />{t.open}</Link>
+                <Link className="inline-flex min-h-11 shrink-0 items-center gap-2 self-start text-sm text-blue-300 underline underline-offset-4" to={`/administration?tab=communication&correspondenceId=${encodeURIComponent(item.id)}#communication-mail-register`}><ExternalLink size={16} aria-hidden="true" />{t.open}</Link>
               </li>
             ))}
           </ul>
