@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, LabelList } from 'recharts';
 import { Edit2, Trash2, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound, Database, AlertTriangle, CheckCircle2, LoaderCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
+import { formatRegistryDate } from './registryDate';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
 import { ModulePageTabs, ModuleTabContent, ChildTabPlaceholder, centerTabHorizontally } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
@@ -955,13 +956,7 @@ const Finance = () => {
   const formatOptionalAmount = (value) => Number.isFinite(value) ? value.toLocaleString() : '—';
   const formatDateForDisplay = (value) => {
     if (!value) return '—';
-    const isoDate = cleanDate(value);
-    const match = isoDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    if (!match) return isoDate;
-    const [, year, month, day] = match;
-    if (language === 'FR') return `${day}-${month}-${year}`;
-    if (language === 'DE') return `${day}.${month}.${year}`;
-    return `${month}/${day}/${year}`;
+    return formatRegistryDate(cleanDate(value), language);
   };
 
   const getHistoricalCfaPerChf = useCallback((operationDate) => {
@@ -2538,7 +2533,7 @@ const Finance = () => {
                             <tr key={entry.id} className="border-b border-slate-700/60">
                               <td className="py-2 pr-3 text-slate-400">
                                 <span className="block">{entry.time}</span>
-                                <span className="block text-xs">{entry.referenceDate ? <time dateTime={entry.referenceDate}>{formatDateForDisplay(entry.referenceDate)}</time> : t.conversionCurrentReference}</span>
+                                <span className="block text-xs whitespace-nowrap">{entry.referenceDate ? <time dateTime={entry.referenceDate}>{formatDateForDisplay(entry.referenceDate)}</time> : t.conversionCurrentReference}</span>
                               </td>
                               <td className="py-2 px-3 font-medium whitespace-nowrap" style={{ color: entry.inputCurrency === 'CFA' ? 'var(--m3s-currency-cfa)' : 'var(--m3s-status-info)' }}>{formatConvertedValue(entry.amount, entry.inputCurrency)} {entry.inputCurrency}</td>
                               <td className="py-2 px-3 font-medium whitespace-nowrap" style={{ color: entry.outputCurrency === 'CFA' ? 'var(--m3s-currency-cfa)' : 'var(--m3s-status-info)' }}>{formatConvertedValue(entry.output, entry.outputCurrency)} {entry.outputCurrency}</td>
