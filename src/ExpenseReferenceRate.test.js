@@ -95,13 +95,16 @@ test.each([
 });
 
 test.each([
-  ['FR', 'Référence indicative', 'Hors totaux comptables', 'fr-CH'],
-  ['EN', 'Indicative reference', 'Excluded from recorded totals', 'en-GB'],
-  ['DE', 'Indikativer Referenzkurs', 'Nicht in gebuchten Summen', 'de-CH'],
-])('renders the source and indicative amount in %s without opening row editing', (language, reference, excluded, locale) => {
+  ['FR', 'Référence indicative', 'Hors totaux comptables', 'fr-CH', '25-09-26'],
+  ['EN', 'Indicative reference', 'Excluded from recorded totals', 'en-GB', '25/09/26'],
+  ['DE', 'Indikativer Referenzkurs', 'Nicht in gebuchten Summen', 'de-CH', '25.09.26'],
+])('renders the source and indicative amount in %s without opening row editing', (language, reference, excluded, locale, date) => {
   const edit = jest.fn();
   render(<div onClick={edit}><ExpenseReferenceRate expense={expense} language={language} missingLabel="missing" /></div>);
-  expect(screen.getByText(`${reference} · 25.09.2026`)).toBeInTheDocument();
+  const dateNode = screen.getByText(date);
+  expect(dateNode).toHaveAttribute('datetime', '2026-09-25');
+  expect(dateNode).toHaveClass('whitespace-nowrap');
+  expect(dateNode.closest('small')).toHaveTextContent(`${reference} · ${date}`);
   expect(screen.getByText(new Intl.NumberFormat(locale, { minimumFractionDigits: 4, maximumFractionDigits: 4 }).format(655.957 / 0.9445))).toBeInTheDocument();
   fireEvent.click(document.querySelector('summary'));
   expect(screen.getByText(excluded)).toBeInTheDocument();
