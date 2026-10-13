@@ -95,4 +95,3 @@ test.each([['FR', 'Mois', 'Ouvrir le courrier'], ['EN', 'Month', 'Open correspon
   expect(link).toHaveAttribute('href', `/administration?tab=communication&correspondenceId=${encodeURIComponent(record.data[0].id)}#communication-mail-register`);
   expect(localStorage.length).toBe(0);
 });
-
