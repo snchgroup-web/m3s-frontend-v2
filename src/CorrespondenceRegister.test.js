@@ -27,6 +27,30 @@ beforeEach(() => {
 afterEach(() => jest.restoreAllMocks());
 
 test.each([
+  ['FR', 'Non renseigné', 'Rechercher dans le registre'],
+  ['EN', 'Not specified', 'Search the register'],
+  ['DE', 'Nicht angegeben', 'Register durchsuchen']
+])('searches the visible fallback for direction, sender and recipient in %s', async (language, fallback, searchLabel) => {
+  mockToken = 'signed-token';
+  mockCurrentUser.permissions = [];
+  api.getAdministrationCorrespondence.mockResolvedValue({ data: [
+    { id: 'COR-NO-DIRECTION', subject: 'Missing direction synthetic', sender: 'A', recipient: 'B' },
+    { id: 'COR-NO-SENDER', subject: 'Missing sender synthetic', direction: 'incoming', sender: '', recipient: 'B' },
+    { id: 'COR-NO-RECIPIENT', subject: 'Missing recipient synthetic', direction: 'outgoing', sender: 'A', recipient: '' },
+    { id: 'COR-COMPLETE', subject: 'Complete synthetic', direction: 'internal', sender: 'A', recipient: 'B' }
+  ] });
+  render(<CorrespondenceRegister language={language} />);
+  await screen.findByText('Complete synthetic');
+  const table = within(screen.getByRole('table'));
+  expect(table.getAllByRole('cell', { name: fallback, exact: true })).toHaveLength(3);
+  fireEvent.change(screen.getByRole('textbox', { name: searchLabel }), { target: { value: fallback } });
+  expect(table.getAllByRole('row')).toHaveLength(4);
+  for (const id of ['COR-NO-DIRECTION', 'COR-NO-SENDER', 'COR-NO-RECIPIENT']) expect(table.getByText(id)).toBeInTheDocument();
+  expect(table.queryByText('Complete synthetic')).not.toBeInTheDocument();
+  expect(api.updateAdministrationCorrespondence).not.toHaveBeenCalled();
+});
+
+test.each([
   ['FR', 'Sens', 'Expéditeur', 'Destinataire', ['Entrant', 'Sortant', 'Interne'], 'Rechercher dans le registre'],
   ['EN', 'Direction', 'Sender', 'Recipient', ['Incoming', 'Outgoing', 'Internal'], 'Search the register'],
   ['DE', 'Richtung', 'Absender', 'Empfänger', ['Eingang', 'Ausgang', 'Intern'], 'Register durchsuchen']

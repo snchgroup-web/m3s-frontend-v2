@@ -70,7 +70,7 @@ const CorrespondenceRegister = ({ language = 'FR', correspondenceId = '' }) => {
   const [pendingAction, setPendingAction] = useState(null);
   const hasWritePermission = hasPermission(user?.permissions, ADMINISTRATION_CORRESPONDENCE_WRITE_PERMISSION);
   const canWrite = hasWritePermission && (sourceState === 'backend' || sourceState === 'local');
-  const visible = useMemo(() => items.filter(item => `${t.directions[item.directionIndex] || ''} ${item.id} ${item.subject} ${item.sender} ${item.recipient} ${item.person} ${item.ged}`.toLowerCase().includes(query.trim().toLowerCase())), [items, query, t.directions]);
+  const visible = useMemo(() => items.filter(item => `${t.directions[item.directionIndex] || t.notSpecified} ${item.id} ${item.subject} ${item.sender || t.notSpecified} ${item.recipient || t.notSpecified} ${item.person} ${item.ged}`.toLowerCase().includes(query.trim().toLowerCase())), [items, query, t.directions, t.notSpecified]);
   useEffect(() => { setQuery(correspondenceId); }, [correspondenceId]);
   useEffect(() => {
     let active = true;
