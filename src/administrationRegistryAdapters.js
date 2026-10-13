@@ -51,7 +51,7 @@ export const resourceToApi = item => ({
 export const correspondenceFromApi = item => ({
   id: item.id,
   date: dateValue(item.receipt_date),
-  directionIndex: indexOf(CORRESPONDENCE_DIRECTIONS, item.direction),
+  directionIndex: indexOf(CORRESPONDENCE_DIRECTIONS, item.direction, -1),
   channelIndex: indexOf(CORRESPONDENCE_CHANNELS, item.channel, 1),
   sender: item.sender || '',
   recipient: item.recipient || '',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import CorrespondenceRegister from './CorrespondenceRegister';
 import api from './api';
 import { ADMINISTRATION_CORRESPONDENCE_WRITE_PERMISSION } from './accessControl';
@@ -25,6 +25,84 @@ beforeEach(() => {
 });
 
 afterEach(() => jest.restoreAllMocks());
+
+test.each([
+  ['FR', 'Non renseigné', 'Rechercher dans le registre'],
+  ['EN', 'Not specified', 'Search the register'],
+  ['DE', 'Nicht angegeben', 'Register durchsuchen']
+])('searches the visible fallback for direction, sender and recipient in %s', async (language, fallback, searchLabel) => {
+  mockToken = 'signed-token';
+  mockCurrentUser.permissions = [];
+  api.getAdministrationCorrespondence.mockResolvedValue({ data: [
+    { id: 'COR-NO-DIRECTION', subject: 'Missing direction synthetic', sender: 'A', recipient: 'B' },
+    { id: 'COR-NO-SENDER', subject: 'Missing sender synthetic', direction: 'incoming', sender: '', recipient: 'B' },
+    { id: 'COR-NO-RECIPIENT', subject: 'Missing recipient synthetic', direction: 'outgoing', sender: 'A', recipient: '' },
+    { id: 'COR-COMPLETE', subject: 'Complete synthetic', direction: 'internal', sender: 'A', recipient: 'B' }
+  ] });
+  render(<CorrespondenceRegister language={language} />);
+  await screen.findByText('Complete synthetic');
+  const table = within(screen.getByRole('table'));
+  expect(table.getAllByRole('cell', { name: fallback, exact: true })).toHaveLength(3);
+  fireEvent.change(screen.getByRole('textbox', { name: searchLabel }), { target: { value: fallback } });
+  expect(table.getAllByRole('row')).toHaveLength(4);
+  for (const id of ['COR-NO-DIRECTION', 'COR-NO-SENDER', 'COR-NO-RECIPIENT']) expect(table.getByText(id)).toBeInTheDocument();
+  expect(table.queryByText('Complete synthetic')).not.toBeInTheDocument();
+  expect(api.updateAdministrationCorrespondence).not.toHaveBeenCalled();
+});
+
+test.each([
+  ['FR', 'Sens', 'Expéditeur', 'Destinataire', ['Entrant', 'Sortant', 'Interne'], 'Rechercher dans le registre'],
+  ['EN', 'Direction', 'Sender', 'Recipient', ['Incoming', 'Outgoing', 'Internal'], 'Search the register'],
+  ['DE', 'Richtung', 'Absender', 'Empfänger', ['Eingang', 'Ausgang', 'Intern'], 'Register durchsuchen']
+])('shows and searches existing directions and participants without writing in %s', async (language, directionHeader, senderHeader, recipientHeader, directions, searchLabel) => {
+  mockToken = 'signed-token';
+  mockCurrentUser.permissions = [];
+  const records = ['incoming', 'outgoing', 'internal'].map((direction, i) => ({
+    id: `COR-SYNTHETIC-${i}`, direction, receipt_date: '2026-10-13',
+    sender: `Sender synthetic ${i}`, recipient: `Recipient synthetic ${i}`,
+    subject: `Subject synthetic ${i}`, owner: 'Owner synthetic', status: 'in_progress'
+  }));
+  const original = JSON.stringify(records);
+  api.getAdministrationCorrespondence.mockResolvedValue({ data: records });
+  render(<CorrespondenceRegister language={language} />);
+  await screen.findByText('Subject synthetic 0');
+  const table = within(screen.getByRole('table'));
+  for (const name of [directionHeader, senderHeader, recipientHeader]) expect(table.getByRole('columnheader', { name, exact: true })).toBeInTheDocument();
+  records.forEach((record, i) => {
+    const row = within(table.getByText(record.id).closest('tr'));
+    for (const name of [directions[i], record.sender, record.recipient]) expect(row.getByRole('cell', { name, exact: true })).toBeInTheDocument();
+  });
+  fireEvent.change(screen.getByRole('textbox', { name: searchLabel }), { target: { value: directions[1] } });
+  expect(table.getAllByRole('row')).toHaveLength(2);
+  expect(table.getByText('Subject synthetic 1')).toBeInTheDocument();
+  fireEvent.change(screen.getByRole('textbox', { name: searchLabel }), { target: { value: records[0].recipient } });
+  expect(table.getByText('Subject synthetic 0')).toBeInTheDocument();
+  expect(table.getAllByRole('row')).toHaveLength(2);
+  expect(screen.queryByRole('button', { name: language === 'FR' ? 'Ajouter un courrier' : language === 'EN' ? 'Add correspondence' : 'Korrespondenz hinzufügen' })).not.toBeInTheDocument();
+  expect(api.createAdministrationCorrespondence).not.toHaveBeenCalled();
+  expect(api.updateAdministrationCorrespondence).not.toHaveBeenCalled();
+  expect(api.deleteAdministrationCorrespondence).not.toHaveBeenCalled();
+  expect(JSON.stringify(records)).toBe(original);
+  expect(localStorage.length).toBe(0);
+});
+
+test.each([undefined, 'unknown'])('does not infer incoming for an unqualified direction (%s)', async direction => {
+  mockToken = 'signed-token';
+  api.getAdministrationCorrespondence.mockResolvedValue({ data: [{
+    id: 'COR-UNKNOWN', direction, receipt_date: '2026-10-13', sender: 'Sender synthetic',
+    recipient: 'Recipient synthetic', subject: 'Unqualified synthetic', owner: 'Owner synthetic'
+  }] });
+  render(<CorrespondenceRegister language="FR" />);
+  const subject = await screen.findByText('Unqualified synthetic');
+  const row = within(subject.closest('tr'));
+  expect(row.getByRole('cell', { name: 'Non renseigné', exact: true })).toBeInTheDocument();
+  expect(row.queryByRole('cell', { name: 'Entrant', exact: true })).not.toBeInTheDocument();
+  fireEvent.click(subject);
+  expect(screen.getByLabelText('Sens *')).toHaveValue('-1');
+  fireEvent.click(within(screen.getByRole('dialog', { name: 'Modifier', exact: true })).getByRole('button', { name: 'Modifier', exact: true }));
+  expect(screen.queryByRole('dialog', { name: 'Confirmer la modification' })).not.toBeInTheDocument();
+  expect(api.updateAdministrationCorrespondence).not.toHaveBeenCalled();
+});
 
 test.each([
   ['FR', 'Registre du courrier', 'Registre pilote local du courrier', 'Source backend sécurisée'],
@@ -87,7 +165,7 @@ test('saves correspondence metadata after M3S confirmation', () => {
   render(<CorrespondenceRegister language="FR" />);
   fireEvent.click(screen.getByRole('button', { name: 'Ajouter un courrier' }));
   fireEvent.change(screen.getByLabelText('Expéditeur *'), { target: { value: 'Partenaire' } });
-  fireEvent.change(screen.getByLabelText('Destinataire 2SG *'), { target: { value: 'Administration' } });
+  fireEvent.change(screen.getByLabelText('Destinataire *'), { target: { value: 'Administration' } });
   fireEvent.change(screen.getByLabelText('Objet *'), { target: { value: 'Dossier reçu' } });
   fireEvent.change(screen.getByLabelText('Responsable du suivi *'), { target: { value: 'Cheikh' } });
   fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
@@ -100,7 +178,7 @@ test('isolates correspondence metadata between authenticated users', () => {
   const firstSession = render(<CorrespondenceRegister language="FR" />);
   fireEvent.click(screen.getByRole('button', { name: 'Ajouter un courrier' }));
   fireEvent.change(screen.getByLabelText('Expéditeur *'), { target: { value: 'Partenaire' } });
-  fireEvent.change(screen.getByLabelText('Destinataire 2SG *'), { target: { value: 'Administration' } });
+  fireEvent.change(screen.getByLabelText('Destinataire *'), { target: { value: 'Administration' } });
   fireEvent.change(screen.getByLabelText('Objet *'), { target: { value: 'Dossier privé Cheikh' } });
   fireEvent.change(screen.getByLabelText('Responsable du suivi *'), { target: { value: 'Cheikh' } });
   fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
@@ -148,7 +226,7 @@ test('creates correspondence through the backend without copying it to local sto
   expect(await screen.findByText('Source backend sécurisée')).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Ajouter un courrier' }));
   fireEvent.change(screen.getByLabelText('Expéditeur *'), { target: { value: 'Partenaire' } });
-  fireEvent.change(screen.getByLabelText('Destinataire 2SG *'), { target: { value: 'Administration' } });
+  fireEvent.change(screen.getByLabelText('Destinataire *'), { target: { value: 'Administration' } });
   fireEvent.change(screen.getByLabelText('Objet *'), { target: { value: 'Courrier backend' } });
   fireEvent.change(screen.getByLabelText('Responsable du suivi *'), { target: { value: 'Cheikh' } });
   fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));

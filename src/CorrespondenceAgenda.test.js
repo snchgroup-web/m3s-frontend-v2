@@ -25,7 +25,7 @@ test('displays shared deadlines and links to the exact correspondence record', a
   selectOctober();
   expect(await screen.findByText('Synthetic follow-up')).toBeInTheDocument();
   expect(screen.getByText('Planifié')).toBeInTheDocument();
-  expect(screen.getByRole('link', { name: 'Ouvrir le courrier' })).toHaveAttribute('href', '/administration?tab=communication&correspondenceId=COR-SYNTHETIC#communication-register');
+  expect(screen.getByRole('link', { name: 'Ouvrir le courrier' })).toHaveAttribute('href', '/administration?tab=communication&correspondenceId=COR-SYNTHETIC#communication-mail-register');
   expect(localStorage.length).toBe(0);
 });
 
@@ -83,4 +83,15 @@ test('drops responses belonging to the previous account', async () => {
   await screen.findByText('New account source');
   await act(async () => resolveFirst(payload('Old account source')));
   expect(screen.queryByText('Old account source')).not.toBeInTheDocument();
+});
+
+test.each([['FR', 'Mois', 'Ouvrir le courrier'], ['EN', 'Month', 'Open correspondence'], ['DE', 'Monat', 'Korrespondenz öffnen']])('targets the actual register and encodes the selected record in %s', async (language, monthLabel, linkLabel) => {
+  const record = payload();
+  record.data[0].id = 'COR A/#?+';
+  api.getAdministrationCorrespondence.mockResolvedValue(record);
+  render(view(language));
+  fireEvent.change(screen.getByLabelText(monthLabel), { target: { value: '2026-10' } });
+  const link = await screen.findByRole('link', { name: linkLabel });
+  expect(link).toHaveAttribute('href', `/administration?tab=communication&correspondenceId=${encodeURIComponent(record.data[0].id)}#communication-mail-register`);
+  expect(localStorage.length).toBe(0);
 });

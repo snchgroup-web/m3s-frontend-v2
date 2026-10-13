@@ -40,3 +40,11 @@ test('identifies local demonstration sessions', () => {
   expect(isDemoSession('demo_session_123')).toBe(true);
   expect(isDemoSession('jwt-token')).toBe(false);
 });
+
+test.each([undefined, null, '', 'unknown'])('keeps a missing or unknown correspondence direction unqualified (%s)', direction => {
+  expect(correspondenceFromApi({ direction }).directionIndex).toBe(-1);
+});
+
+test.each([['incoming', 0], ['outgoing', 1], ['internal', 2]])('keeps established correspondence direction %s unchanged', (direction, index) => {
+  expect(correspondenceFromApi({ direction }).directionIndex).toBe(index);
+});
