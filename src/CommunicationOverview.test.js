@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import CommunicationOverview from './CommunicationOverview';
 import { AuthProvider } from './AuthContext';
 import { LanguageProvider } from './LanguageContext';
@@ -17,8 +17,8 @@ test('renders the governed communication and correspondence model in French', ()
   expect(screen.getByRole('heading', { name: 'Communication institutionnelle & courrier officiel' })).toBeInTheDocument();
   expect(screen.getByTestId('correspondence-ged')).toHaveTextContent('correspondence');
   expect(screen.getByRole('navigation', { name: 'Navigation dans Communication et Courrier' })).toBeInTheDocument();
-  expect(screen.getByText('Données de démonstration')).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Registre pilote du courrier et des communications' })).toBeInTheDocument();
+  expect(screen.getByText('Exemples fictifs')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Structure et exemples de courrier' })).toBeInTheDocument();
   expect(screen.getByText(/ne correspondent à aucun courrier réel/i)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Circuit de traitement et de validation' })).toBeInTheDocument();
   expect(screen.getByText(/sans validation humaine/i)).toBeInTheDocument();
@@ -29,10 +29,29 @@ test('renders the German communication boundaries', () => {
   renderCommunication('DE');
 
   expect(screen.getByRole('heading', { name: 'Institutionelle Kommunikation & offizielle Korrespondenz' })).toBeInTheDocument();
-  expect(screen.getByText('Demonstrationsdaten')).toBeInTheDocument();
+  expect(screen.getByText('Fiktive Beispiele')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Nach oben' })).toBeInTheDocument();
   expect(screen.getByText(/keine echten Schreiben/i)).toBeInTheDocument();
   expect(screen.getByText(/CRM \/ Marketing: kommerzielle Kommunikation/i)).toBeInTheDocument();
+});
+
+test.each([
+  ['FR', 'Envoyer une seule fois', 'Inscrire immédiatement', /Envoi confirmé ≠ réception confirmée ≠ archivage réalisé/, 'Circuit documenté'],
+  ['EN', 'Send once', 'Record immediately', /Confirmed sending ≠ confirmed receipt ≠ completed archiving/, 'Documented process'],
+  ['DE', 'Einmal senden', 'Sofort erfassen', /Bestätigter Versand ≠ bestätigter Empfang ≠ abgeschlossene Archivierung/, 'Dokumentierter Ablauf']
+])('separates examples and actual source, and presents the 2SG working method in %s', (language, sendTitle, recordTitle, distinction, badge) => {
+  renderCommunication(language);
+  const circuit = within(document.getElementById('communication-workflow'));
+  const groups = circuit.getAllByRole('group');
+  expect(groups).toHaveLength(2);
+  expect(within(groups[0]).getAllByRole('article')).toHaveLength(4);
+  expect(within(groups[1]).getAllByRole('article')).toHaveLength(8);
+  const incomingFirstStep = { FR: 'Recevoir et inscrire immédiatement', EN: 'Receive and record immediately', DE: 'Empfangen und sofort erfassen' }[language];
+  expect(within(within(groups[0]).getAllByRole('article')[0]).getByRole('heading', { name: incomingFirstStep })).toBeInTheDocument();
+  expect(circuit.getByRole('heading', { name: sendTitle })).toBeInTheDocument();
+  expect(circuit.getByRole('heading', { name: recordTitle })).toBeInTheDocument();
+  expect(circuit.getByText(distinction)).toBeInTheDocument();
+  expect(screen.getByText(badge)).toBeInTheDocument();
 });
 
 test('uses the communication internal navigation', () => {

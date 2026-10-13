@@ -23,10 +23,10 @@ const COPY = {
   FR: {
     eyebrow: 'Administration / Communication & Courrier',
     title: 'Communication institutionnelle & courrier officiel',
-    subtitle: 'Vue de cadrage en lecture seule pour organiser les communications internes et externes de 2SG ainsi que le courrier entrant et sortant. Elle ne remplace ni une messagerie, ni la GED, ni le CRM.',
-    readOnly: 'Lecture seule',
-    targetModel: 'Modèle cible',
-    demoData: 'Données de démonstration',
+    subtitle: 'Circuit de travail 2SG, exemples fictifs et registre du courrier selon la source disponible. La messagerie échange, le registre suit, la GED conserve les pièces et la planification porte les suites.',
+    readOnly: 'Circuit documenté',
+    targetModel: 'Registre et pièces',
+    demoData: 'Exemples fictifs',
     navLabel: 'Navigation dans Communication et Courrier',
     navScope: 'Périmètre',
     navRegister: 'Registre',
@@ -44,8 +44,8 @@ const COPY = {
     incomingBody: 'Réception, horodatage, enregistrement, classification, attribution, échéance et réponse attendue.',
     outgoing: 'Courrier sortant',
     outgoingBody: 'Rédaction, contrôle, validation, signature, envoi, preuve de transmission et archivage.',
-    registerTitle: 'Registre pilote du courrier et des communications',
-    registerBody: 'Chaque entrée reçoit un identifiant, un responsable, un statut et un lien vers ses pièces dans la GED. Les exemples ci-dessous illustrent le modèle et ne correspondent à aucun courrier réel.',
+    registerTitle: 'Structure et exemples de courrier',
+    registerBody: 'Les exemples ci-dessous illustrent le modèle et ne correspondent à aucun courrier réel. Le registre qui suit affiche sa propre source ; une référence GED ne signifie pas que la pièce a déjà été archivée.',
     sampleBadge: 'Exemple',
     registerFields: ['Identifiant et sens', 'Date et canal', 'Expéditeur / destinataire', 'Objet et classification', 'Responsable et échéance', 'Statut et preuve GED'],
     sampleItems: [
@@ -56,17 +56,26 @@ const COPY = {
     ownerLabel: 'Responsable',
     deadlineLabel: 'Suite',
     workflowTitle: 'Circuit de traitement et de validation',
-    workflowBody: 'Le même circuit rend le courrier traçable, qu’il arrive par email, formulaire, lettre, messagerie ou remise en main propre.',
-    workflowSteps: [
-      ['Recevoir ou créer', 'Capturer la date, le canal et l’origine.'],
-      ['Enregistrer', 'Attribuer un identifiant unique.'],
-      ['Classer', 'Définir type, confidentialité et dossier.'],
-      ['Attribuer', 'Désigner responsable, contributeurs et échéance.'],
-      ['Préparer', 'Rédiger la réponse ou le message.'],
-      ['Valider', 'Contrôler fond, forme, droits et signature.'],
-      ['Envoyer ou diffuser', 'Utiliser le canal et la liste autorisés.'],
-      ['Prouver et archiver', 'Conserver version finale et preuve dans la GED.']
+    workflowBody: 'Notre pratique relie préparation, autorisation, envoi, enregistrement et suivi. Un entrant est inscrit dès sa réception ; un sortant après confirmation de son envoi.',
+    incomingWorkflowTitle: 'Courrier entrant : inscrire dès réception',
+    outgoingWorkflowTitle: 'Courrier sortant : inscrire après envoi confirmé',
+    incomingWorkflowSteps: [
+      ['Recevoir et inscrire immédiatement', 'Vérifier les doublons et enregistrer date, canal, origine, preuve, responsable et statut dès réception.'],
+      ['Qualifier et attribuer', 'Préciser type, confidentialité, dossier et échéance ; rattacher les pièces GED après import réalisé.'],
+      ['Préparer la réponse si nécessaire', 'Analyser la demande puis suivre le circuit sortant : relecture, autorisation, envoi et inscription distincte de la réponse.'],
+      ['Suivre et clore', 'Relier les réponses et actions à l’entrée initiale ; conserver preuves et historique avant clôture.']
     ],
+    workflowSteps: [
+      ['Identifier', 'Sens, date, canal, interlocuteurs et dossier concernés.'],
+      ['Préparer', 'Rédiger ou analyser la demande ; identifier les pièces utiles.'],
+      ['Relire et autoriser', 'Contrôler texte, présentation, destinataires, CC et pièces exactes.'],
+      ['Envoyer une seule fois', 'Utiliser le canal autorisé et conserver la référence d’envoi.'],
+      ['Inscrire immédiatement', 'Vérifier les doublons ; enregistrer preuve, responsable et statut.'],
+      ['Classer les pièces', 'Conserver la version finale et rattacher la GED après import réalisé.'],
+      ['Suivre les réponses', 'Relier les suites au dossier ; convenir des actions et échéances.'],
+      ['Clore et capitaliser', 'Terminer le suivi acquis et conserver son historique.']
+    ],
+    manualRule: 'Envoi confirmé ≠ réception confirmée ≠ archivage réalisé. Messagerie, GED et tâches restent des actions distinctes ; une échéance convenue n’est annoncée dans l’Agenda qu’après enregistrement vérifié.',
     humanRule: 'Aucun courrier officiel, message sensible ou prise de position institutionnelle n’est diffusé sans validation humaine et niveau d’autorisation adapté.',
     communicationTitle: 'Communication institutionnelle gouvernée',
     communicationBody: 'Le contenu doit être adapté au public, au canal, au niveau de confidentialité et à la langue, tout en conservant une version maîtresse identifiable.',
@@ -100,10 +109,10 @@ const COPY = {
   EN: {
     eyebrow: 'Administration / Communication & Correspondence',
     title: 'Institutional communication & official correspondence',
-    subtitle: 'Read-only framing view to organise 2SG internal and external communication as well as inbound and outbound correspondence. It replaces neither messaging, the DMS nor the CRM.',
-    readOnly: 'Read only',
-    targetModel: 'Target model',
-    demoData: 'Demonstration data',
+    subtitle: '2SG working process, fictitious examples and correspondence register according to the available source. Messaging exchanges, the register tracks, the DMS stores records and planning tracks follow-up.',
+    readOnly: 'Documented process',
+    targetModel: 'Register and records',
+    demoData: 'Fictitious examples',
     navLabel: 'Navigation within Communication and Correspondence',
     navScope: 'Scope',
     navRegister: 'Register',
@@ -121,8 +130,8 @@ const COPY = {
     incomingBody: 'Receipt, timestamp, registration, classification, assignment, deadline and expected response.',
     outgoing: 'Outbound correspondence',
     outgoingBody: 'Drafting, review, approval, signature, dispatch, transmission evidence and archiving.',
-    registerTitle: 'Pilot register for correspondence and communication',
-    registerBody: 'Each entry receives an identifier, owner, status and link to its records in the DMS. The examples below illustrate the model and do not represent real correspondence.',
+    registerTitle: 'Correspondence structure and examples',
+    registerBody: 'The examples below illustrate the model and do not represent real correspondence. The following register displays its own source; a DMS reference does not mean the record has already been archived.',
     sampleBadge: 'Example',
     registerFields: ['Identifier and direction', 'Date and channel', 'Sender / recipient', 'Subject and classification', 'Owner and deadline', 'Status and DMS evidence'],
     sampleItems: [
@@ -133,17 +142,26 @@ const COPY = {
     ownerLabel: 'Owner',
     deadlineLabel: 'Next step',
     workflowTitle: 'Processing and approval workflow',
-    workflowBody: 'The same workflow makes correspondence traceable whether it arrives by email, form, letter, messaging or hand delivery.',
-    workflowSteps: [
-      ['Receive or create', 'Capture date, channel and origin.'],
-      ['Register', 'Assign a unique identifier.'],
-      ['Classify', 'Set type, confidentiality and file.'],
-      ['Assign', 'Name owner, contributors and deadline.'],
-      ['Prepare', 'Draft the response or message.'],
-      ['Approve', 'Review content, form, rights and signature.'],
-      ['Send or distribute', 'Use authorised channel and list.'],
-      ['Prove and archive', 'Retain final version and evidence in the DMS.']
+    workflowBody: 'Our practice links preparation, approval, dispatch, registration and follow-up. Incoming correspondence is recorded on receipt; outgoing correspondence after confirmed sending.',
+    incomingWorkflowTitle: 'Incoming correspondence: record upon receipt',
+    outgoingWorkflowTitle: 'Outgoing correspondence: record after confirmed sending',
+    incomingWorkflowSteps: [
+      ['Receive and record immediately', 'Check duplicates and record date, channel, origin, evidence, owner and status upon receipt.'],
+      ['Qualify and assign', 'Set type, confidentiality, file and deadline; link DMS records after completed import.'],
+      ['Prepare a reply if needed', 'Analyse the request, then use the outgoing process: review, approval, sending and a separate register entry for the reply.'],
+      ['Follow up and close', 'Link replies and actions to the initial entry; retain evidence and history before closing.']
     ],
+    workflowSteps: [
+      ['Identify', 'Direction, date, channel, participants and related file.'],
+      ['Prepare', 'Draft or analyse the request and identify useful records.'],
+      ['Review and authorise', 'Check text, layout, recipients, CC and exact attachments.'],
+      ['Send once', 'Use the authorised channel and retain its dispatch reference.'],
+      ['Record immediately', 'Check duplicates; record evidence, owner and status.'],
+      ['File the records', 'Retain the final version and link the DMS after completed import.'],
+      ['Follow up replies', 'Link follow-up to the file and agree actions and deadlines.'],
+      ['Close and learn', 'Complete the accepted follow-up and retain its history.']
+    ],
+    manualRule: 'Confirmed sending ≠ confirmed receipt ≠ completed archiving. Messaging, DMS and tasks remain separate actions; an agreed deadline is reported in the agenda only after verified registration.',
     humanRule: 'No official correspondence, sensitive message or institutional position is distributed without human approval and the appropriate level of authority.',
     communicationTitle: 'Governed institutional communication',
     communicationBody: 'Content must suit the audience, channel, confidentiality level and language while retaining an identifiable master version.',
@@ -177,10 +195,10 @@ const COPY = {
   DE: {
     eyebrow: 'Verwaltung / Kommunikation & Korrespondenz',
     title: 'Institutionelle Kommunikation & offizielle Korrespondenz',
-    subtitle: 'Schreibgeschützte Rahmenansicht zur Organisation der internen und externen Kommunikation von 2SG sowie des Posteingangs und -ausgangs. Sie ersetzt weder Messaging noch GED oder CRM.',
-    readOnly: 'Schreibgeschützt',
-    targetModel: 'Zielmodell',
-    demoData: 'Demonstrationsdaten',
+    subtitle: '2SG-Arbeitsablauf, fiktive Beispiele und Korrespondenzregister je nach verfügbarer Quelle. Die Nachrichtenkanäle dienen dem Austausch, das Register der Nachverfolgung, die GED den Unterlagen und die Planung den Folgemaßnahmen.',
+    readOnly: 'Dokumentierter Ablauf',
+    targetModel: 'Register und Unterlagen',
+    demoData: 'Fiktive Beispiele',
     navLabel: 'Navigation innerhalb Kommunikation und Korrespondenz',
     navScope: 'Umfang',
     navRegister: 'Register',
@@ -198,8 +216,8 @@ const COPY = {
     incomingBody: 'Eingang, Zeitstempel, Registrierung, Klassifizierung, Zuordnung, Frist und erwartete Antwort.',
     outgoing: 'Postausgang',
     outgoingBody: 'Entwurf, Prüfung, Freigabe, Unterschrift, Versand, Übermittlungsnachweis und Archivierung.',
-    registerTitle: 'Pilotregister für Korrespondenz und Kommunikation',
-    registerBody: 'Jeder Eintrag erhält eine Kennung, Verantwortung, Status und Verknüpfung zu den Unterlagen in der GED. Die folgenden Beispiele veranschaulichen das Modell und sind keine echten Schreiben.',
+    registerTitle: 'Struktur und Beispiele der Korrespondenz',
+    registerBody: 'Die folgenden Beispiele veranschaulichen das Modell und sind keine echten Schreiben. Das anschließende Register zeigt seine eigene Quelle; ein GED-Verweis bedeutet nicht, dass die Unterlage bereits archiviert wurde.',
     sampleBadge: 'Beispiel',
     registerFields: ['Kennung und Richtung', 'Datum und Kanal', 'Absender / Empfänger', 'Betreff und Klassifizierung', 'Verantwortung und Frist', 'Status und GED-Nachweis'],
     sampleItems: [
@@ -210,17 +228,26 @@ const COPY = {
     ownerLabel: 'Verantwortung',
     deadlineLabel: 'Nächster Schritt',
     workflowTitle: 'Bearbeitungs- und Freigabeablauf',
-    workflowBody: 'Derselbe Ablauf macht Korrespondenz nachvollziehbar, unabhängig davon, ob sie per E-Mail, Formular, Brief, Messaging oder persönlich eingeht.',
-    workflowSteps: [
-      ['Empfangen oder erstellen', 'Datum, Kanal und Herkunft erfassen.'],
-      ['Registrieren', 'Eine eindeutige Kennung vergeben.'],
-      ['Klassifizieren', 'Art, Vertraulichkeit und Akte festlegen.'],
-      ['Zuordnen', 'Verantwortung, Mitwirkende und Frist bestimmen.'],
-      ['Vorbereiten', 'Antwort oder Mitteilung entwerfen.'],
-      ['Freigeben', 'Inhalt, Form, Rechte und Unterschrift prüfen.'],
-      ['Senden oder verteilen', 'Genehmigten Kanal und Verteiler nutzen.'],
-      ['Nachweisen und archivieren', 'Endfassung und Nachweis in der GED sichern.']
+    workflowBody: 'Unsere Praxis verbindet Vorbereitung, Freigabe, Versand, Erfassung und Nachverfolgung. Eingänge werden bei Empfang erfasst, Ausgänge nach bestätigtem Versand.',
+    incomingWorkflowTitle: 'Posteingang: bei Empfang erfassen',
+    outgoingWorkflowTitle: 'Postausgang: nach bestätigtem Versand erfassen',
+    incomingWorkflowSteps: [
+      ['Empfangen und sofort erfassen', 'Duplikate prüfen und Datum, Kanal, Herkunft, Nachweis, Verantwortung und Status bei Empfang erfassen.'],
+      ['Qualifizieren und zuordnen', 'Art, Vertraulichkeit, Akte und Frist bestimmen; GED-Unterlagen nach erfolgtem Import verknüpfen.'],
+      ['Bei Bedarf eine Antwort vorbereiten', 'Anfrage prüfen, dann den Postausgangsablauf nutzen: Prüfung, Freigabe, Versand und eigener Registereintrag der Antwort.'],
+      ['Nachverfolgen und abschließen', 'Antworten und Aktionen mit dem ursprünglichen Eingang verknüpfen; Nachweise und Verlauf vor Abschluss bewahren.']
     ],
+    workflowSteps: [
+      ['Identifizieren', 'Richtung, Datum, Kanal, Beteiligte und zugehörige Akte.'],
+      ['Vorbereiten', 'Anfrage verfassen oder prüfen und benötigte Unterlagen bestimmen.'],
+      ['Prüfen und freigeben', 'Text, Darstellung, Empfänger, CC und genaue Anhänge prüfen.'],
+      ['Einmal senden', 'Genehmigten Kanal nutzen und Versandreferenz bewahren.'],
+      ['Sofort erfassen', 'Duplikate prüfen; Nachweis, Verantwortung und Status erfassen.'],
+      ['Unterlagen ablegen', 'Endfassung bewahren und GED nach erfolgtem Import verknüpfen.'],
+      ['Antworten nachverfolgen', 'Folgemaßnahmen mit der Akte verbinden, Aktionen und Fristen vereinbaren.'],
+      ['Abschließen und lernen', 'Bestätigte Bearbeitung abschließen und Verlauf erhalten.']
+    ],
+    manualRule: 'Bestätigter Versand ≠ bestätigter Empfang ≠ abgeschlossene Archivierung. Nachrichtenkanäle, GED und Aufgaben bleiben getrennte Aktionen; eine vereinbarte Frist wird erst nach geprüfter Erfassung im Kalender gemeldet.',
     humanRule: 'Offizielle Schreiben, sensible Mitteilungen oder institutionelle Stellungnahmen werden nicht ohne menschliche Freigabe und angemessene Berechtigungsstufe verbreitet.',
     communicationTitle: 'Gesteuerte institutionelle Kommunikation',
     communicationBody: 'Inhalte müssen zu Zielgruppe, Kanal, Vertraulichkeit und Sprache passen und zugleich eine erkennbare Masterfassung behalten.',
@@ -358,16 +385,25 @@ const CommunicationOverview = ({ language = 'FR', correspondenceId = '' }) => {
             <p className="mt-2 text-sm leading-6 text-slate-400">{t.workflowBody}</p>
           </div>
         </div>
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {t.workflowSteps.map(([title, body], index) => (
-            <article key={title} className="rounded-lg border border-slate-700 bg-slate-900/45 p-4">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-950 text-sm font-bold text-blue-200">{index + 1}</span>
-              <h4 className="mt-3 font-semibold text-slate-100">{title}</h4>
-              <p className="mt-2 text-sm leading-6 text-slate-400">{body}</p>
-            </article>
-          ))}
-        </div>
+        {[
+          ['incoming', t.incomingWorkflowTitle, t.incomingWorkflowSteps],
+          ['outgoing', t.outgoingWorkflowTitle, t.workflowSteps]
+        ].map(([direction, title, steps]) => (
+          <div key={direction} className="mt-5" role="group" aria-labelledby={`communication-workflow-${direction}`}>
+            <h4 id={`communication-workflow-${direction}`} className="font-semibold text-slate-100">{title}</h4>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {steps.map(([stepTitle, body], index) => (
+                <article key={stepTitle} className="rounded-lg border border-slate-700 bg-slate-900/45 p-4">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-950 text-sm font-bold text-blue-200">{index + 1}</span>
+                  <h5 className="mt-3 font-semibold text-slate-100">{stepTitle}</h5>
+                  <p className="mt-2 text-sm leading-6 text-slate-400">{body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        ))}
         <p className="mt-5 rounded-lg border border-amber-700/70 bg-amber-950/20 p-4 text-sm leading-6 text-amber-100">{t.humanRule}</p>
+        <p className="mt-3 text-sm leading-6 text-slate-300">{t.manualRule}</p>
       </section>
 
       <section id="communication-institutional" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="communication-institutional-title">
