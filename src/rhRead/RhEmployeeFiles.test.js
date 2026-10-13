@@ -102,3 +102,19 @@ test.each([['FR', 'Lignes par page'], ['EN', 'Rows per page'], ['DE', 'Zeilen pr
   }
 );
 jest.mock('./ContractDocuments', () => () => null);
+
+test('RH calendar dates change with FR/DE/EN without replacing the ISO source or refetching', async () => {
+  const source = Object.freeze({ ...row, employmentStartDate: '2026-09-08' });
+  rhReadTransport.mockResolvedValue(response([source]));
+  const view = render(<RhEmployeeFiles access={access}/>);
+  await screen.findByText('Synthetic employee');
+  for (const [language, expected] of [['FR', '08-09-26'], ['DE', '08.09.26'], ['EN', '08/09/26']]) {
+    view.rerender(<RhEmployeeFiles access={access} language={language}/>);
+    const date = screen.getByText(expected);
+    expect(date.tagName).toBe('TIME'); expect(date).toHaveAttribute('datetime', '2026-09-08');
+    expect(date.closest('td')).toHaveClass('whitespace-nowrap');
+  }
+  expect(source.employmentStartDate).toBe('2026-09-08');
+  expect(rhReadTransport).toHaveBeenCalledTimes(1);
+  expect(rhReadTransport.mock.calls[0][1].method).toBe('GET');
+});

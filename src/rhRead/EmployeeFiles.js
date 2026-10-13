@@ -3,6 +3,7 @@ import { RefreshCw, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from 'lu
 import { useRhEmployeesRead } from './useEmployeeFiles';
 import ContractDocuments from './ContractDocuments';
 import ReturnImport from './ReturnImport';
+import { formatRegistryDate } from '../registryDate';
 const h = React.createElement;
 const labels = {
   FR: { title: 'Dossiers employés', inactive: 'Lecture RH non activée', loading: 'Chargement des dossiers…',
@@ -30,7 +31,6 @@ const labels = {
     position: 'Aufgabenreferenz', site: 'Standortreferenz', reference: 'Aktenreferenz',
     revision: 'Revision', missing: 'Nicht angegeben', classification: 'Klassifizierung' }
 };
-const locales = { FR: 'fr-CH', EN: 'en-GB', DE: 'de-CH' };
 const buttonClass = 'm3s-secondary-button inline-flex h-10 w-10 shrink-0 items-center justify-center rounded border disabled:opacity-40';
 
 // Mount only with the host's qualified transport and scope lifecycle marker.
@@ -53,9 +53,7 @@ function RhEmployeesRead({ enabled = false, active = false, scopeKey = null, tra
   const iconButton = (Icon, label, onClick, disabled) => h('button', {
     type: 'button', className: buttonClass, title: label, 'aria-label': label, onClick, disabled
   }, h(Icon, { size: 18, 'aria-hidden': true }));
-  const date = value => value === null ? t.missing : new Intl.DateTimeFormat(locales[lang], {
-    timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit'
-  }).format(new Date(`${value}T12:00:00Z`));
+  const date = value => value === null ? t.missing : formatRegistryDate(value, lang);
   const header = h('header', { className: 'flex flex-wrap items-center justify-between gap-3' },
     h('h2', { className: 'm3s-panel-title' }, t.title),
     iconButton(RefreshCw, t.refresh, () => { setExpanded(null); void refresh(); }, busy || snapshot.status === 'idle'));
@@ -66,7 +64,8 @@ function RhEmployeesRead({ enabled = false, active = false, scopeKey = null, tra
     const detailId = `rh-file-${row.employeeId}`;
     return [h('tr', { key: row.employeeId, className: 'border-t' },
       h('th', { scope: 'row', className: 'px-4 py-3 text-left font-medium break-words' }, row.displayName),
-      h('td', { className: 'px-4 py-3' }, date(row.employmentStartDate)),
+      h('td', { className: 'px-4 py-3 whitespace-nowrap' }, row.employmentStartDate === null ? t.missing :
+        h('time', { dateTime: row.employmentStartDate }, date(row.employmentStartDate))),
       h('td', { className: 'px-4 py-3' }, t.draft),
       h('td', { className: 'px-4 py-3' }, h('button', { type: 'button', className: buttonClass,
         'aria-label': isOpen ? t.close(row.displayName) : t.open(row.displayName),

@@ -16,3 +16,8 @@ test('leap days, month boundaries and ISO source are preserved', () => {
   expect(formatRegistryDate('2027-01-01', 'FR')).toBe('01-01-27');
   expect(formatRegistryDate('2026-12-31', 'EN')).toBe('31/12/26');
 });
+
+test('English uses the confirmed British day/month/year convention, not month/day/year', () => {
+  expect(formatRegistryDate('2026-09-18', 'EN')).toBe('18/09/26');
+  expect(formatRegistryDate('2026-01-07', 'EN')).toBe('07/01/26');
+});
