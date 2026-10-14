@@ -53,7 +53,7 @@ test('manual assumption requires source/date and never fills source amounts', ()
   fireEvent.change(screen.getByLabelText('Source de l’hypothèse'), { target: { value: 'QA' } });
   fireEvent.change(screen.getByLabelText('Date de l’hypothèse'), { target: { value: '2026-09-03' } });
   expect(month(0)).toHaveValue('100');
-  expect(month(0).closest('td')).toHaveTextContent(`${(71000).toLocaleString('fr-CH')} CFA`);
+  expect(month(0).closest('td')).toHaveTextContent(`${(71000).toLocaleString('fr-CH')} CFA`, { normalizeWhitespace: false });
 });
 test('currency change clears amounts only on confirmation; cancelling preserves values', () => {
   show(); start(); add(); fireEvent.change(month(0), { target: { value: '100' } });
