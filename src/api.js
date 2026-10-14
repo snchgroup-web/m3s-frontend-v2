@@ -36,7 +36,7 @@ const clearExpiredSession = () => {
 };
 
 export const rhReadTransport = async (path, { method = 'GET', signal } = {}) => {
-  const validPath = path === '/access' || (typeof path === 'string' &&
+  const validPath = path === '/access' || path === '/employees/summary' || (typeof path === 'string' &&
     /^\/employees\?limit=(?:[1-9]|[1-9][0-9]|100)&offset=(?:0|[1-9][0-9]{0,5})$/.test(path) &&
     Number(path.split('&offset=')[1]) <= 100000) || (typeof path === 'string' &&
     /^\/employees\/[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\/contract-documents(?:\/[a-f0-9]{64}\/versions\/[a-f0-9]{64})?\?dossierRevision=[1-9][0-9]{0,3}$/.test(path));

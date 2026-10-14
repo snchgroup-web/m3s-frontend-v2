@@ -4,6 +4,9 @@ import { parseEmployeeCount, useRhEmployeeCount } from './useEmployeeCount';
 
 let mockAuth;
 jest.mock('../AuthContext', () => ({ useAuth: () => mockAuth }));
+jest.mock('../identityClient', () => ({ currentAccessToken: async () => 'synthetic.jwt.token', signOutIdentity: async () => {} }));
+const originalFetch = global.fetch;
+afterEach(() => { global.fetch = originalFetch; });
 const auth = id => ({ user: { id, tenantId: 'SYNTHETIC-ORG', authProvider: 'google' },
   provider: 'google', ready: true, isAuthenticated: true });
 const marker = id => ({ enabled: true, qualified: true, userId: id,
@@ -19,6 +22,20 @@ function View(props) {
     <output aria-label="status">{state.status}</output><button onClick={state.refresh}>Refresh</button></>;
 }
 beforeEach(() => { mockAuth = auth('SYNTHETIC-A'); });
+
+test.each([[0, 200, 'available'], [2, 200, 'available'], [null, 403, 'restricted'],
+  [null, 503, 'unavailable']])('default production transport reaches the summary: %s, HTTP %s', async (count, status, state) => {
+  global.fetch = jest.fn(async url => url.endsWith('/access') ? response(marker('SYNTHETIC-A'))
+    : response(status === 200 ? body(count) : { code: 'RH_SERVICE_UNAVAILABLE' }, status));
+  render(<View />);
+  await waitFor(() => expect(screen.getByLabelText('status')).toHaveTextContent(state));
+  expect(screen.getByLabelText('count')).toHaveTextContent(count === null ? 'unknown' : String(count));
+  expect(fetch.mock.calls.map(([url]) => new URL(url).pathname)).toEqual([
+    '/api/rh/private/access', '/api/rh/private/employees/summary'
+  ]);
+  for (const [, init] of fetch.mock.calls) expect(init).toEqual({ method: 'GET', signal: expect.any(AbortSignal),
+    cache: 'no-store', headers: { Authorization: 'Bearer synthetic.jwt.token' } });
+});
 
 test.each([0, 2, 101])('reads a scoped aggregate %s without listing identities or sending scope parameters', async count => {
   const read = transport(count);
