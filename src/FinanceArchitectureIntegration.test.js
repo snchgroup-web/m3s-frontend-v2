@@ -70,5 +70,5 @@ test('keeps the selected Finance child in the URL', async () => {
   await screen.findByRole('heading', { name: 'Voir les objets, les sources et leurs réutilisations' });
   fireEvent.click(screen.getByRole('tab', { name: 'Processus & procédures' }));
 
-  expect(mockNavigate).toHaveBeenCalledWith({ pathname: '/finance', search: '?tab=processes' });
+  expect(mockNavigate).toHaveBeenCalledWith({ pathname: '/finance', search: '?tab=processes', hash: '' });
 });
