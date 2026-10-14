@@ -115,7 +115,10 @@ test.each(['recettes', 'depenses'])('uses dated TFX history and opens rate help 
   api.getFxHistory.mockResolvedValue({ data: [{ date_taux: '2026-10-02', taux: 695, devise_base: 'CHF', devise_cible: 'CFA', source_taux: 'Synthetic dated TFX' }] });
   renderFinance();
   const row = (await screen.findByText('TFX-QA')).closest('tr');
-  await waitFor(() => expect(within(row).getByText('Référence indicative · 02.10.2026')).toBeInTheDocument());
+  const referenceDate = await within(row).findByText('02-10-26', { selector: 'time' });
+  expect(referenceDate).toHaveAttribute('datetime', '2026-10-02');
+  expect(referenceDate).toHaveClass('whitespace-nowrap');
+  expect(referenceDate.closest('small')).toHaveTextContent('Référence indicative · 02-10-26');
   expect(within(row).getByText('695,0000')).toBeInTheDocument();
   const header = screen.getByRole('columnheader', { name: 'Taux CHF → CFA' });
   fireEvent.click(within(header).getByRole('button'));
@@ -173,7 +176,10 @@ test('shows a dated reference separately from recorded CFA and never writes it b
   }] });
   renderFinance();
   const row = (await screen.findByText('REF-QA')).closest('tr');
-  expect(within(row).getByText('Référence indicative · 25.09.2026')).toBeInTheDocument();
+  const referenceDate = within(row).getByText('25-09-26', { selector: 'time' });
+  expect(referenceDate).toHaveAttribute('datetime', '2026-09-25');
+  expect(referenceDate).toHaveClass('whitespace-nowrap');
+  expect(referenceDate.closest('small')).toHaveTextContent('Référence indicative · 25-09-26');
   expect(within(row).queryByText('CHF → CFA non renseigné')).not.toBeInTheDocument();
   expect(within(row).getByText(/≈/)).toBeInTheDocument();
   fireEvent.click(within(row).getByText('Cours BCE / BCEAO'));
