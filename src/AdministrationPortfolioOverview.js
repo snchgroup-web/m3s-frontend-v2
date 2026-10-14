@@ -7,10 +7,13 @@ import {
   Landmark,
   RefreshCw,
   Scale,
-  Waves
+  Waves,
+  UsersRound,
+  ClipboardList,
+  BookOpenText
 } from 'lucide-react';
 
-export const ADMINISTRATION_PORTFOLIO_AS_OF = '2026-08-16';
+export const ADMINISTRATION_PORTFOLIO_AS_OF = '2026-10-14';
 
 const COPY = {
   FR: {
@@ -21,6 +24,7 @@ const COPY = {
     lastChecked: 'Dernière vérification',
     nextAction: 'Prochaine action',
     source: 'Source de l’état affiché',
+    openRh: 'Ouvrir les ressources RH',
     show: 'Afficher le point documenté',
     hide: 'Masquer le point documenté',
     protectedNotice: 'Les détails de ce dossier ne sont pas intégrés au navigateur. Ils devront être chargés depuis une source autorisée.',
@@ -72,6 +76,27 @@ const COPY = {
         next: 'Établir l’ordre d’alignement, le propriétaire, la version maîtresse et la preuve de validation de chaque référentiel.',
         source: 'M3S_PLAN_ALIGNEMENT_REFERENTIEL_FONCTIONNEL_2026-07-05.md · contrôlé le 14-08-2026'
       },
+      proximityRh: {
+        type: 'Pilotage RH et capitalisation', title: 'RH de proximité',
+        status: 'Processus lié cadré · formalités à qualifier',
+        summary: 'Dossier, heures, préparation de paie, paiement externe, confirmation et contrôle restent liés. Le pilote sert de socle, pas de modèle nominatif à copier chez un tiers.',
+        next: 'Préciser pour chaque cas les responsabilités, données minimales et règles de conservation ; suivre les réponses institutionnelles sans refaire les essais acquis.',
+        source: 'RH_PROXIMITE_KIT_CANDIDAT.md · V0.5 · 14-10-2026'
+      },
+      rhTools: {
+        type: 'Outils de proximité', title: 'Outils RH',
+        status: 'Outils disponibles · périmètres séparés',
+        summary: 'Préparation de paie, générateur de confirmations, espace salarié et contrôle des retours réutilisent les outils existants. Le gestionnaire multi-profils reste distinct de la fiche individuelle.',
+        next: 'Maintenir les outils et leurs frontières ; ne pas confondre déclaration de réception, bulletin, paiement et archivage autorisé.',
+        source: 'RH_PROXIMITE_CAPITALISATION.md · outils et acquis conservés'
+      },
+      membersWelcome: {
+        type: 'Intégration institutionnelle', title: 'Accueil et livret des membres',
+        status: 'Livret V0.4 livré · appropriation à suivre',
+        summary: 'Les quatre piliers d’Institution, le Programme global et la Boussole orientent le parcours commun. Fonction, mandat et accès restent distincts ; M3S sert l’institution.',
+        next: 'Accompagner la compréhension de 2SG, la prise de fonction et les besoins de formation, sans créer de droits ou signatures automatiques.',
+        source: '2SG_LIVRET_ACCUEIL_MEMBRES_V0_4_20261012.html · version livrée conservée'
+      },
       daily: {
         type: 'Pilotage quotidien',
         title: 'Daily Intelligence Dashboard',
@@ -90,11 +115,15 @@ const COPY = {
     lastChecked: 'Last checked',
     nextAction: 'Next action',
     source: 'Source of the displayed state',
+    openRh: 'Open HR resources',
     show: 'Show documented checkpoint',
     hide: 'Hide documented checkpoint',
     protectedNotice: 'Details for this file are not embedded in the browser. They must be loaded from an authorised source.',
     confidentiality: { internal: 'Internal', restricted: 'Restricted' },
     items: {
+      proximityRh: { type: 'HR steering and reuse', title: 'Local HR', status: 'Linked process framed · formalities to qualify', summary: 'Dossiers, hours, payroll preparation, external payment, confirmation and review remain connected. The pilot is a foundation, not a named template to copy to a third party.', next: 'Qualify responsibilities, minimal data and retention for each case; follow institutional responses without repeating accepted trials.', source: 'RH_PROXIMITE_KIT_CANDIDAT.md · V0.5 · 14 Oct 2026' },
+      rhTools: { type: 'Community tools', title: 'HR tools', status: 'Tools available · separate scopes', summary: 'Payroll preparation, confirmation generator, employee space and return review reuse existing tools. The multi-profile manager remains distinct from the individual sheet.', next: 'Maintain tools and boundaries; distinguish receipt declaration, payslip, payment and authorised archiving.', source: 'RH_PROXIMITE_CAPITALISATION.md · existing tools and accepted work preserved' },
+      membersWelcome: { type: 'Institutional onboarding', title: 'Member welcome and booklet', status: 'V0.4 booklet delivered · adoption to follow', summary: 'The four Institution pillars, global Programme and Compass guide the common journey. Function, mandate and access remain distinct; M3S serves the institution.', next: 'Support understanding of 2SG, taking up responsibilities and training needs without automatic rights or signatures.', source: '2SG_LIVRET_ACCUEIL_MEMBRES_V0_4_20261012.html · delivered version preserved' },
       tfx: { type: 'Cross-functional tool', title: 'TFX · exchange rates', status: 'Rule documented · connection pending', summary: 'The current rate is an indicator; each transaction keeps the rate actually applied, its date and its source.', next: 'Connect the current TFX source without rewriting providers’ historical rates.', source: 'M3S_JOURNAL_DE_BORD_2026-08-10.md' },
       legal: { type: 'Protected file', title: 'LEGAL · restricted access', status: 'Protected metadata', summary: 'The detailed file remains outside the client bundle.' },
       windows: { type: 'Villa LR1 workstream', title: 'Window awnings', status: 'Watertightness confirmed · painting pending', summary: 'Rain provided a real-condition check and no water ingress was reported. The announced deadline was missed; painting is the final remaining finish.', next: 'Complete the painting, index the photos and videos in the DMS, then record any reservations, final acceptance and balance status.', source: 'Cheikh / Ibou field checkpoint, 16 Aug 2026 · about 15 photos and videos to index' },
@@ -112,11 +141,15 @@ const COPY = {
     lastChecked: 'Zuletzt geprüft',
     nextAction: 'Nächster Schritt',
     source: 'Quelle des angezeigten Stands',
+    openRh: 'Personalressourcen öffnen',
     show: 'Dokumentierten Stand anzeigen',
     hide: 'Dokumentierten Stand ausblenden',
     protectedNotice: 'Einzelheiten dieser Akte sind nicht im Browser eingebettet. Sie müssen aus einer autorisierten Quelle geladen werden.',
     confidentiality: { internal: 'Intern', restricted: 'Eingeschränkt' },
     items: {
+      proximityRh: { type: 'Personalsteuerung und Wiederverwendung', title: 'Praxisnahes Personalmanagement', status: 'Verknüpfter Prozess gerahmt · Formalitäten zu klären', summary: 'Akten, Stunden, Lohnvorbereitung, externe Zahlung, Bestätigung und Prüfung bleiben verbunden. Der Pilot ist eine Grundlage, keine personenbezogene Vorlage für Dritte.', next: 'Verantwortungen, minimale Daten und Aufbewahrung je Fall klären; institutionelle Antworten verfolgen, ohne akzeptierte Tests zu wiederholen.', source: 'RH_PROXIMITE_KIT_CANDIDAT.md · V0.5 · 14.10.2026' },
+      rhTools: { type: 'Praxisnahe Werkzeuge', title: 'Personalwerkzeuge', status: 'Werkzeuge verfügbar · getrennte Bereiche', summary: 'Lohnvorbereitung, Bestätigungsgenerator, Beschäftigtenbereich und Rücklaufprüfung nutzen bestehende Werkzeuge. Die Mehrprofil-Verwaltung bleibt vom individuellen Blatt getrennt.', next: 'Werkzeuge und Grenzen pflegen; Empfangserklärung, Lohnabrechnung, Zahlung und berechtigte Archivierung unterscheiden.', source: 'RH_PROXIMITE_CAPITALISATION.md · bestehende Werkzeuge und bestätigte Ergebnisse bewahrt' },
+      membersWelcome: { type: 'Institutionelle Einführung', title: 'Mitgliedereinführung und Handbuch', status: 'Handbuch V0.4 geliefert · Aneignung zu verfolgen', summary: 'Die vier Institutionssäulen, das globale Programm und der Kompass leiten den gemeinsamen Weg. Funktion, Mandat und Zugriff bleiben getrennt; M3S dient der Institution.', next: 'Verständnis von 2SG, Aufgabenübernahme und Schulungsbedarf begleiten, ohne automatische Rechte oder Unterschriften.', source: '2SG_LIVRET_ACCUEIL_MEMBRES_V0_4_20261012.html · gelieferte Fassung bewahrt' },
       tfx: { type: 'Funktionsübergreifendes Werkzeug', title: 'TFX · Wechselkurse', status: 'Regel dokumentiert · Anbindung ausstehend', summary: 'Der aktuelle Kurs dient als Kennzahl; jede Transaktion behält den tatsächlich angewandten Kurs, sein Datum und seine Quelle.', next: 'Die aktuelle TFX-Quelle anbinden, ohne historische Dienstleisterkurse umzuschreiben.', source: 'M3S_JOURNAL_DE_BORD_2026-08-10.md' },
       legal: { type: 'Geschützte Akte', title: 'LEGAL · eingeschränkter Zugriff', status: 'Geschützte Metadaten', summary: 'Die detaillierte Akte bleibt außerhalb des Client-Bundles.' },
       windows: { type: 'Vorhaben Villa LR1', title: 'Fenstervordächer', status: 'Dichtheit bestätigt · Anstrich ausstehend', summary: 'Regen diente als Prüfung unter realen Bedingungen; es wurde kein Wassereintritt gemeldet. Die angekündigte Frist wurde überschritten, der Anstrich bleibt die letzte Ausführung.', next: 'Anstrich abschließen, Fotos und Videos im DMS indexieren und danach mögliche Vorbehalte, Endabnahme und Restzahlungsstatus dokumentieren.', source: 'Geländestand Cheikh / Ibou vom 16.08.2026 · rund 15 Fotos und Videos zu indexieren' },
@@ -135,13 +168,17 @@ const ITEMS = [
   { id: 'water', checkedOn: '2026-08-16', icon: Waves, confidentiality: 'internal', tone: 'border-cyan-800 bg-cyan-950/20 text-cyan-300' },
   { id: 'directors', checkedOn: '2026-08-14', icon: FileCheck2, confidentiality: 'internal', tone: 'border-violet-800 bg-violet-950/20 text-violet-300' },
   { id: 'references', checkedOn: '2026-08-14', icon: BookOpenCheck, confidentiality: 'internal', tone: 'border-emerald-800 bg-emerald-950/20 text-emerald-300' },
-  { id: 'daily', checkedOn: '2026-08-10', icon: FolderKanban, confidentiality: 'internal', tone: 'border-slate-600 bg-slate-900/35 text-slate-300' }
+  { id: 'daily', checkedOn: '2026-08-10', icon: FolderKanban, confidentiality: 'internal', tone: 'border-slate-600 bg-slate-900/35 text-slate-300' },
+  { id: 'proximityRh', checkedOn: '2026-10-14', icon: UsersRound, confidentiality: 'internal', tone: 'border-blue-800 bg-blue-950/20 text-blue-300', dossierId: 'GD-008' },
+  { id: 'rhTools', checkedOn: '2026-10-14', icon: ClipboardList, confidentiality: 'internal', tone: 'border-cyan-800 bg-cyan-950/20 text-cyan-300', dossierId: 'GD-009' },
+  { id: 'membersWelcome', checkedOn: '2026-10-14', icon: BookOpenText, confidentiality: 'internal', tone: 'border-emerald-800 bg-emerald-950/20 text-emerald-300', dossierId: 'GD-010' }
 ];
 
 export const getAdministrationPortfolioRecords = (language = 'FR') => {
   const t = COPY[language] || COPY.FR;
-  return ITEMS.map(({ id, checkedOn, confidentiality }) => ({
+  return ITEMS.map(({ id, checkedOn, confidentiality, dossierId }) => ({
     id,
+    ...(dossierId ? { dossierId } : {}),
     checkedOn,
     confidentiality,
     ...t.items[id]
@@ -169,7 +206,7 @@ const AdministrationPortfolioOverview = ({ language = 'FR' }) => {
       </div>
 
       <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-12">
-        {ITEMS.map(({ id, checkedOn, icon: Icon, confidentiality, tone }, index) => {
+        {ITEMS.map(({ id, checkedOn, icon: Icon, confidentiality, tone, dossierId }, index) => {
           const item = t.items[id];
           const expanded = expandedId === id;
           const isRestricted = confidentiality === 'restricted';
@@ -184,6 +221,7 @@ const AdministrationPortfolioOverview = ({ language = 'FR' }) => {
                 <span className="rounded-full border border-slate-600 bg-slate-900 px-2.5 py-1 text-xs font-semibold text-slate-300">{t.confidentiality[confidentiality]}</span>
               </div>
               <p className="mt-4 text-xs font-bold uppercase text-slate-400">{item.type}</p>
+              {dossierId && <p className="mt-1 text-xs text-slate-400">{dossierId}</p>}
               <h4 className="mt-1 text-base font-semibold text-slate-100">{item.title}</h4>
               <p className="mt-2 text-sm font-semibold leading-5 text-blue-200">{item.status}</p>
               <p className="mt-3 flex-1 text-sm leading-6 text-slate-300">{item.summary}</p>
@@ -212,6 +250,7 @@ const AdministrationPortfolioOverview = ({ language = 'FR' }) => {
                     <p className="text-xs font-bold uppercase text-slate-400">{t.source}</p>
                     <p className="mt-1 break-words text-xs leading-5 text-slate-400">{item.source}</p>
                   </div>
+                  {dossierId && <a href="/rh?tab=resources" className="inline-flex min-h-10 items-center text-sm font-semibold text-blue-300 underline hover:text-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400">{t.openRh}</a>}
                 </div>
               )}
             </article>
