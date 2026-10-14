@@ -2,8 +2,11 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import Dashboard from './Dashboard';
 import api from './api';
+import { rhReadTransport } from './api';
 
 const mockNavigate = jest.fn();
+let mockAuth;
+jest.mock('./AuthContext', () => ({ useAuth: () => mockAuth }));
 
 jest.mock('react-router-dom', () => ({
   useLocation: () => ({ pathname: '/', search: '', hash: '' }),
@@ -27,6 +30,7 @@ jest.mock('recharts', () => ({
 
 jest.mock('./api', () => ({
   __esModule: true,
+  rhReadTransport: jest.fn(),
   default: {
     getFinanceDashboard: jest.fn(),
     getDocumentsCount: jest.fn(),
@@ -72,6 +76,8 @@ test('shows the existing 2SG logo while the dashboard data is pending', () => {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockAuth = { user: null, provider: 'google', ready: true, isAuthenticated: false };
+  rhReadTransport.mockReset();
   api.getFinanceDashboard.mockResolvedValue(summaryResponse());
   api.getDocumentsCount.mockResolvedValue({ total: 12 });
   api.getInventoryCount.mockResolvedValue({ total: 8 });
@@ -115,6 +121,20 @@ beforeEach(() => {
     }
   });
   api.getFxHistory.mockResolvedValue({ taux_du_jour: { CHF_CFA: 600 } });
+});
+
+test('connects the Employees KPI to the protected aggregate without listing dossiers', async () => {
+  mockAuth = { user: { id: 'SYNTHETIC', tenantId: 'SYNTHETIC-ORG', authProvider: 'google' },
+    provider: 'google', ready: true, isAuthenticated: true };
+  rhReadTransport.mockImplementation(async path => ({ status: 200, json: async () => path === '/access'
+    ? { enabled: true, qualified: true, userId: 'SYNTHETIC', organizationId: 'SYNTHETIC-ORG', revision: '1' }
+    : { count: 2, source: 'rh-read-v1', scope: 'authorized-employee-files', candidate: true } }));
+  render(<Dashboard />);
+  await waitFor(() => expect(document.getElementById('dashboard-kpi-employees')).toHaveTextContent('2'));
+  expect(document.getElementById('dashboard-kpi-employees')).toHaveTextContent('authorised scope');
+  expect(rhReadTransport.mock.calls.map(call => call[0])).toEqual(['/access', '/employees/summary']);
+  fireEvent.click(screen.getByRole('button', { name: 'Open module: Employees' }));
+  expect(mockNavigate).toHaveBeenCalled();
 });
 
 test('uses summary counts, labels loaded subsets and applies the shared CFA color', async () => {

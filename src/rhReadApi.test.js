@@ -33,6 +33,27 @@ test('access metadata uses only the same authenticated bounded GET transport', a
     method: 'GET', signal: undefined, cache: 'no-store', headers: { Authorization: 'Bearer synthetic.jwt.token' }
   });
 });
+
+test('employee summary uses the real authenticated GET transport without scope overrides', async () => {
+  currentAccessToken.mockResolvedValue('synthetic.jwt.token');
+  const signal = new AbortController().signal;
+  await rhReadTransport('/employees/summary', { signal });
+  expect(fetch).toHaveBeenCalledWith(expect.stringContaining('/api/rh/private/employees/summary'), {
+    method: 'GET', signal, cache: 'no-store', headers: { Authorization: 'Bearer synthetic.jwt.token' }
+  });
+  for (const path of ['/employees/summary?owner=other', '/employees/summary?limit=25',
+    '/employees/summary/', '/employees/summary/other']) {
+    await expect(rhReadTransport(path)).rejects.toMatchObject({ code: 'RH_INVALID_PAGE' });
+  }
+  for (const method of ['HEAD', 'POST', 'PATCH', 'DELETE']) {
+    await expect(rhReadTransport('/employees/summary', { method })).rejects.toMatchObject({ code: 'RH_INVALID_PAGE' });
+  }
+  for (const token of [null, 'demo_session_synthetic']) {
+    currentAccessToken.mockResolvedValue(token);
+    await expect(rhReadTransport('/employees/summary')).rejects.toMatchObject({ code: 'RH_AUTH_REQUIRED' });
+  }
+  expect(fetch).toHaveBeenCalledTimes(1);
+});
 test('uses the existing token provider, bounded private path, no cache and the supplied abort signal', async () => {
   currentAccessToken.mockResolvedValue('synthetic.jwt.token');
   const signal = new AbortController().signal;

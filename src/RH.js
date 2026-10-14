@@ -15,6 +15,7 @@ import { FunctionArchitectureOverview, FunctionProcessOverview } from './Functio
 import FunctionAssistant from './FunctionAssistant';
 import OwnProfile from './OwnProfile';
 import RhEmployeeFiles from './rhRead/RhEmployeeFilesHost';
+import { useRhEmployeeCount } from './rhRead/useEmployeeCount';
 
 const RH = ({ rhReadAccess = null }) => {
   const { language } = useLanguage();
@@ -318,6 +319,8 @@ const RH = ({ rhReadAccess = null }) => {
   };
 
   const [activeTab, setActiveTab] = useState('overview');
+  const employeeSummary = useRhEmployeeCount({ access: rhReadAccess,
+    active: activeTab === 'overview' && [null, 'overview'].includes(new URLSearchParams(location.search).get('tab')) });
   const [employes, setEmployes] = useState([]);
   const [benevoles, setBenevoles] = useState([]);
   const [, setMembres] = useState([]);
@@ -574,6 +577,8 @@ const RH = ({ rhReadAccess = null }) => {
             language={language}
             directoryCount={directoryCount}
             directoryStatus={directoryStatus}
+            employeeSummary={employeeSummary}
+            onOpenEmployees={() => handleTabSelect('employes')}
             employeeDraftCount={employes.length}
             volunteerDraftCount={benevoles.length}
           />

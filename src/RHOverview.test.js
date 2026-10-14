@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import RHOverview from './RHOverview';
 
 test('keeps a real zero distinct from an unavailable RH source', () => {
@@ -10,8 +10,29 @@ test('keeps a real zero distinct from an unavailable RH source', () => {
   expect(screen.getByText(/graphiques mensuels fictifs ont été retirés/i)).toBeInTheDocument();
 
   rerender(<RHOverview language="FR" directoryCount={null} directoryStatus="unavailable" />);
-  expect(screen.getByText('Source indisponible')).toBeInTheDocument();
+  expect(within(screen.getByRole('heading', { name: 'Annuaire des membres' }).closest('article')).getByText('Source indisponible')).toBeInTheDocument();
   expect(screen.queryByText('0 membre confirmé par la source')).not.toBeInTheDocument();
+});
+
+test.each([
+  ['FR', 'Dossiers employés', '2 dossiers accessibles', '0 dossier accessible', 'Source indisponible', 'Ouvrir les dossiers employés', 'Actualiser le compteur employés'],
+  ['EN', 'Employee dossiers', '2 accessible dossiers', '0 accessible dossiers', 'Source unavailable', 'Open employee dossiers', 'Refresh employee count'],
+  ['DE', 'Beschäftigtenakten', '2 zugängliche Akten', '0 zugängliche Akten', 'Quelle nicht verfügbar', 'Beschäftigtenakten öffnen', 'Beschäftigtenzahl aktualisieren']
+])('shows scoped employee counts separately from members and local drafts in %s', (language, title, two, zero, missing, openLabel, refreshLabel) => {
+  const onOpen = jest.fn(), refresh = jest.fn();
+  const props = { language, directoryCount: 6, directoryStatus: 'available',
+    employeeDraftCount: 3, volunteerDraftCount: 4, onOpenEmployees: onOpen };
+  const view = render(<RHOverview {...props} employeeSummary={{ status: 'available', count: 2, refresh }} />);
+  const card = () => within(screen.getByRole('heading', { name: title }).closest('article'));
+  expect(card().getByText(two)).toBeInTheDocument();
+  fireEvent.click(card().getByRole('button', { name: openLabel }));
+  fireEvent.click(card().getByRole('button', { name: refreshLabel }));
+  expect(onOpen).toHaveBeenCalledTimes(1); expect(refresh).toHaveBeenCalledTimes(1);
+  view.rerender(<RHOverview {...props} employeeSummary={{ status: 'available', count: 0 }} />);
+  expect(card().getByText(zero)).toBeInTheDocument();
+  view.rerender(<RHOverview {...props} employeeSummary={{ status: 'unavailable', count: null }} />);
+  expect(card().getByText(missing)).toBeInTheDocument();
+  expect(card().queryByText(zero)).not.toBeInTheDocument();
 });
 
 test('renders the German source-governance frame', () => {

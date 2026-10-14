@@ -1,10 +1,12 @@
 import React from 'react';
 import {
   BookUser,
+  ArrowUpRight,
   BriefcaseBusiness,
   Database,
   FileCheck2,
   Network,
+  RefreshCw,
   ShieldCheck,
   UsersRound
 } from 'lucide-react';
@@ -16,11 +18,11 @@ const COPY = {
     subtitle: "Cette vue relie personnes, statuts, fonctions, rôles et preuves sans confondre appartenance, relation de travail, hiérarchie et droits d'accès.",
     cards: [
       ['Finalité', 'Identifier et accompagner les membres et personnels, puis relier statuts, fonctions, responsabilités, compétences et cadres d’engagement.'],
-      ['Sources', 'RH-001 porte l’annuaire assaini des membres ; la GED conserve mandats, contrats et justificatifs ; les autres registres RH ne sont pas encore raccordés.'],
+      ['Sources', 'RH-001 porte l’annuaire des membres ; le registre privé RH porte les dossiers employés ; la GED conserve les pièces selon les droits. Bénévoles et compétences restent distincts.'],
       ['Responsabilités', 'La fonction RH tient les dossiers et obligations ; les fonctions métier valident leurs besoins ; Administration coordonne ; la gouvernance arbitre.'],
       ['Frontières', "Cette vue ne vaut ni contrat, ni paie, ni décision d'accès, ni qualification juridique ou sociale automatique."]
     ],
-    sourceNote: "Statut : cadrage pilote · Seul l'annuaire RH-001 est raccordé au backend ; aucune valeur de démonstration ne doit servir au pilotage.",
+    sourceNote: 'Statut : cadrage pilote · Annuaire et dossiers privés ont des sources distinctes. Un dossier en brouillon ne prouve ni contrat signé ni paie validée. Aucune valeur de démonstration ne doit servir au pilotage.',
     sourceTitle: 'État réel des sources RH',
     sourceIntro: 'Une valeur n’est affichée que si sa provenance et sa disponibilité sont connues.',
     directoryTitle: 'Annuaire des membres',
@@ -28,6 +30,13 @@ const COPY = {
     directoryLoading: 'Chargement de la source',
     directoryAvailable: count => `${count} membre${count > 1 ? 's' : ''} confirmé${count > 1 ? 's' : ''} par la source`,
     directoryUnavailable: 'Source indisponible',
+    employeesTitle: 'Dossiers employés',
+    employeesSource: 'Source privée RH · dossiers distincts dans le périmètre autorisé, pas la page chargée ni les comptes M3S.',
+    employeesAvailable: count => `${count} dossier${count > 1 ? 's' : ''} accessible${count > 1 ? 's' : ''}`,
+    employeesLoading: 'Chargement du compteur',
+    employeesRestricted: 'Accès RH non autorisé',
+    openEmployees: 'Ouvrir les dossiers employés',
+    refreshEmployees: 'Actualiser le compteur employés',
     localTitle: 'Employés & bénévoles',
     localState: count => `${count} brouillon${count > 1 ? 's' : ''} dans cette session`,
     localBody: 'Saisie locale non persistée : ce nombre ne représente pas le total réel du personnel.',
@@ -41,11 +50,11 @@ const COPY = {
     subtitle: 'This view connects people, statuses, functions, roles and evidence without confusing membership, employment, hierarchy and access rights.',
     cards: [
       ['Purpose', 'Identify and support members and staff, then connect statuses, functions, responsibilities, competencies and engagement frameworks.'],
-      ['Sources', 'RH-001 carries the sanitised member directory; the DMS retains mandates, contracts and evidence; other HR registers are not connected yet.'],
+      ['Sources', 'RH-001 carries the member directory; the private HR register holds employee dossiers; the DMS retains authorised evidence. Volunteers and competencies remain distinct.'],
       ['Responsibilities', 'HR maintains records and obligations; business functions validate their needs; Administration coordinates; Governance arbitrates.'],
       ['Boundaries', 'This view is not a contract, payroll record, access decision, or automatic legal or social classification.']
     ],
-    sourceNote: 'Status: pilot framing · Only the RH-001 directory is connected to the backend; no demonstration value may be used for steering.',
+    sourceNote: 'Status: pilot framing · Directory and private dossiers have distinct sources. A draft dossier proves neither a signed contract nor validated payroll. No demonstration value may be used for steering.',
     sourceTitle: 'Actual status of HR sources',
     sourceIntro: 'A value is displayed only when its provenance and availability are known.',
     directoryTitle: 'Member directory',
@@ -53,6 +62,13 @@ const COPY = {
     directoryLoading: 'Loading source',
     directoryAvailable: count => `${count} member${count === 1 ? '' : 's'} confirmed by the source`,
     directoryUnavailable: 'Source unavailable',
+    employeesTitle: 'Employee dossiers',
+    employeesSource: 'Private HR source · distinct dossiers within the authorised scope, not the loaded page or M3S accounts.',
+    employeesAvailable: count => `${count} accessible dossier${count === 1 ? '' : 's'}`,
+    employeesLoading: 'Loading count',
+    employeesRestricted: 'HR access not authorised',
+    openEmployees: 'Open employee dossiers',
+    refreshEmployees: 'Refresh employee count',
     localTitle: 'Employees & volunteers',
     localState: count => `${count} local draft${count === 1 ? '' : 's'} in this session`,
     localBody: 'Local, non-persistent input: this number is not the actual staff total.',
@@ -66,11 +82,11 @@ const COPY = {
     subtitle: 'Diese Ansicht verbindet Personen, Status, Funktionen, Rollen und Nachweise, ohne Mitgliedschaft, Arbeitsverhältnis, Hierarchie und Zugriffsrechte zu vermischen.',
     cards: [
       ['Zweck', 'Mitglieder und Personal identifizieren und begleiten sowie Status, Funktionen, Verantwortungen, Kompetenzen und Einsatzrahmen verknüpfen.'],
-      ['Quellen', 'RH-001 führt das bereinigte Mitgliederverzeichnis; das DMS bewahrt Mandate, Verträge und Nachweise; weitere Personalregister sind noch nicht angebunden.'],
+      ['Quellen', 'RH-001 führt das Mitgliederverzeichnis; das private Personalregister führt Beschäftigtenakten; das DMS bewahrt berechtigte Nachweise. Freiwillige und Kompetenzen bleiben getrennt.'],
       ['Verantwortungen', 'Das Personalwesen führt Akten und Pflichten; Fachfunktionen bestätigen ihren Bedarf; Verwaltung koordiniert; Governance entscheidet.'],
       ['Abgrenzung', 'Diese Ansicht ist weder Vertrag noch Lohnabrechnung, Zugriffsentscheidung oder automatische rechtliche beziehungsweise soziale Einstufung.']
     ],
-    sourceNote: 'Status: Pilotrahmen · Nur das Verzeichnis RH-001 ist mit dem Backend verbunden; Demonstrationswerte dürfen nicht zur Steuerung dienen.',
+    sourceNote: 'Status: Pilotrahmen · Verzeichnis und private Akten haben getrennte Quellen. Ein Aktenentwurf belegt weder einen unterschriebenen Vertrag noch freigegebene Lohnabrechnung. Demonstrationswerte dürfen nicht zur Steuerung dienen.',
     sourceTitle: 'Tatsächlicher Stand der Personalquellen',
     sourceIntro: 'Ein Wert wird nur angezeigt, wenn Herkunft und Verfügbarkeit bekannt sind.',
     directoryTitle: 'Mitgliederverzeichnis',
@@ -78,6 +94,13 @@ const COPY = {
     directoryLoading: 'Quelle wird geladen',
     directoryAvailable: count => `${count} Mitglied${count === 1 ? '' : 'er'} durch die Quelle bestätigt`,
     directoryUnavailable: 'Quelle nicht verfügbar',
+    employeesTitle: 'Beschäftigtenakten',
+    employeesSource: 'Private Personalquelle · eindeutige Akten im berechtigten Umfang, nicht die geladene Seite oder M3S-Konten.',
+    employeesAvailable: count => `${count} zugängliche ${count === 1 ? 'Akte' : 'Akten'}`,
+    employeesLoading: 'Anzahl wird geladen',
+    employeesRestricted: 'Personalzugriff nicht erlaubt',
+    openEmployees: 'Beschäftigtenakten öffnen',
+    refreshEmployees: 'Beschäftigtenzahl aktualisieren',
     localTitle: 'Beschäftigte & Freiwillige',
     localState: count => `${count} lokale${count === 1 ? 'r Entwurf' : ' Entwürfe'} in dieser Sitzung`,
     localBody: 'Lokale, nicht persistente Eingabe: Diese Zahl ist nicht der tatsächliche Personalbestand.',
@@ -89,7 +112,7 @@ const COPY = {
 
 const FRAME_ICONS = [BriefcaseBusiness, Database, Network, ShieldCheck];
 
-const SourceCard = ({ icon: Icon, title, state, body, tone = 'var(--m3s-row-accent)' }) => (
+const SourceCard = ({ icon: Icon, title, state, body, tone = 'var(--m3s-row-accent)', onOpen, openLabel, onRefresh, refreshLabel, busy }) => (
   <article className="m3s-panel p-4 transition hover:-translate-y-0.5">
     <div className="flex items-start gap-3">
       <span className="rounded-md p-2" style={{ background: `color-mix(in srgb, ${tone} 12%, transparent)`, color: tone }}>
@@ -99,14 +122,22 @@ const SourceCard = ({ icon: Icon, title, state, body, tone = 'var(--m3s-row-acce
         <h4 className="m3s-panel-title">{title}</h4>
         <p className="mt-1 text-sm font-semibold" style={{ color: tone }}>{state}</p>
         <p className="mt-2 text-xs leading-5" style={{ color: 'var(--m3s-text-secondary)' }}>{body}</p>
+      {(onOpen || onRefresh) && <div className="mt-3 flex justify-end gap-1">
+        {onRefresh && <button type="button" className="m3s-icon-button" onClick={onRefresh} disabled={busy} aria-label={refreshLabel} title={refreshLabel}><RefreshCw size={17} aria-hidden="true" /></button>}
+        {onOpen && <button type="button" className="m3s-icon-button" onClick={onOpen} aria-label={openLabel} title={openLabel}><ArrowUpRight size={17} aria-hidden="true" /></button>}
+      </div>}
       </div>
     </div>
   </article>
 );
 
-const RHOverview = ({ language = 'FR', directoryCount = null, directoryStatus = 'loading', employeeDraftCount = 0, volunteerDraftCount = 0 }) => {
+const RHOverview = ({ language = 'FR', directoryCount = null, directoryStatus = 'loading', employeeDraftCount = 0, volunteerDraftCount = 0,
+  employeeSummary = { status: 'idle', count: null }, onOpenEmployees }) => {
   const t = COPY[language] || COPY.FR;
   const localDraftCount = employeeDraftCount + volunteerDraftCount;
+  const employeeState = employeeSummary.status === 'available' && Number.isSafeInteger(employeeSummary.count) && employeeSummary.count >= 0
+    ? t.employeesAvailable(employeeSummary.count) : employeeSummary.status === 'loading'
+      ? t.employeesLoading : employeeSummary.status === 'restricted' ? t.employeesRestricted : t.directoryUnavailable;
   const directoryState = directoryStatus === 'available'
     ? t.directoryAvailable(directoryCount)
     : directoryStatus === 'unavailable'
@@ -140,11 +171,14 @@ const RHOverview = ({ language = 'FR', directoryCount = null, directoryStatus = 
 
       <p className="border-l-2 pl-3 text-xs leading-5" style={{ borderColor: 'var(--m3s-row-accent)', color: 'var(--m3s-text-secondary)' }}>{t.sourceNote}</p>
 
-      <section className="m3s-panel p-4 sm:p-5" aria-labelledby="rh-source-state-title">
+      <section aria-labelledby="rh-source-state-title">
         <h3 id="rh-source-state-title" className="m3s-section-title">{t.sourceTitle}</h3>
         <p className="mt-2 text-sm" style={{ color: 'var(--m3s-text-secondary)' }}>{t.sourceIntro}</p>
-        <div className="mt-4 grid gap-3 lg:grid-cols-3">
+        <div className="mt-4 grid gap-3 md:grid-cols-2 2xl:grid-cols-4">
           <SourceCard icon={BookUser} title={t.directoryTitle} state={directoryState} body={t.directorySource} tone={directoryStatus === 'available' ? '#10b981' : directoryStatus === 'unavailable' ? '#f59e0b' : 'var(--m3s-row-accent)'} />
+          <SourceCard icon={UsersRound} title={t.employeesTitle} state={employeeState} body={t.employeesSource}
+            onOpen={onOpenEmployees} openLabel={t.openEmployees} onRefresh={employeeSummary.refresh}
+            refreshLabel={t.refreshEmployees} busy={employeeSummary.status === 'loading'} />
           <SourceCard icon={UsersRound} title={t.localTitle} state={t.localState(localDraftCount)} body={t.localBody} tone="#38bdf8" />
           <SourceCard icon={FileCheck2} title={t.historyTitle} state={t.historyState} body={t.historyBody} tone="#f59e0b" />
         </div>

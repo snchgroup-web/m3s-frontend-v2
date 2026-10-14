@@ -32,6 +32,7 @@ import { normalizeFinanceSummary, expenseSubtotalCopy } from './financeSummary';
 import { matchesIncomeScope } from './financeIncomeScope';
 import DashboardPilotageNavigation from './DashboardPilotageNavigation';
 import { getDashboardIndicatorDestination } from './dashboardNavigation';
+import { useRhEmployeeCount } from './rhRead/useEmployeeCount';
 import { getFinanceKpiDefinition, getManagementKpiDefinition, getOperationsKpiDefinition, getSupportKpiDefinition } from './dashboardKpiDictionary';
 
 // Month translations (stable constants, defined at module level)
@@ -116,6 +117,7 @@ const kpiFlowTextClasses = {
 };
 
 const kpiStatusClasses = {
+  loading: 'border-slate-600 bg-slate-900/45 text-slate-400',
   partial: 'border-amber-700/60 bg-amber-950/30 text-amber-300',
   available: 'border-emerald-700/60 bg-emerald-950/35 text-emerald-300',
   unavailable: 'border-amber-700/60 bg-amber-950/30 text-amber-300',
@@ -230,6 +232,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { language } = useLanguage();
+  const employeeSummary = useRhEmployeeCount();
   const [, setUser] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -321,7 +324,8 @@ const Dashboard = () => {
       sourceToConnect: 'À connecter',
       authenticationAccounts: 'M3S · Comptes authentifiés',
       membersDirectory: 'RH · Annuaire gouverné des membres',
-      employeesRegister: 'RH · Registre des employés à raccorder',
+      employeesRegister: 'RH · Dossiers employés · périmètre autorisé',
+      employeesLoading: 'Chargement du compteur',
       itAccounts: 'Comptes M3S',
       itDocuments: 'Documents GED',
       itIncidents: 'Incidents IT ouverts',
@@ -429,7 +433,8 @@ const Dashboard = () => {
       sourceToConnect: 'To connect',
       authenticationAccounts: 'M3S · Authenticated accounts',
       membersDirectory: 'HR · Governed member directory',
-      employeesRegister: 'HR · Employee register to connect',
+      employeesRegister: 'HR · Employee dossiers · authorised scope',
+      employeesLoading: 'Loading count',
       itAccounts: 'M3S accounts',
       itDocuments: 'DMS documents',
       itIncidents: 'Open IT incidents',
@@ -537,7 +542,8 @@ const Dashboard = () => {
       sourceToConnect: 'Zu verbinden',
       authenticationAccounts: 'M3S · Authentifizierte Konten',
       membersDirectory: 'Personalwesen · Geregeltes Mitgliederverzeichnis',
-      employeesRegister: 'Personalwesen · Mitarbeiterregister anzubinden',
+      employeesRegister: 'Personalwesen · Beschäftigtenakten · berechtigter Umfang',
+      employeesLoading: 'Anzahl wird geladen',
       itAccounts: 'M3S-Konten',
       itDocuments: 'GED-Dokumente',
       itIncidents: 'Offene IT-Vorfälle',
@@ -1052,8 +1058,12 @@ const Dashboard = () => {
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('teams'), ...supportKpiHelp('teams')
         },
         {
-          id: 'employees', label: t.employees, value: formatCount(dashboardData?.moduleStats.rh.employees),
-          source: t.employeesRegister, ...disconnectedState, icon: UsersRound, accent: 'amber',
+          id: 'employees', label: t.employees, value: formatCount(employeeSummary.count),
+          source: t.employeesRegister, status: employeeSummary.status === 'idle' ? 'unavailable' : employeeSummary.status,
+          statusLabel: employeeSummary.status === 'available' ? t.available :
+            employeeSummary.status === 'restricted' ? t.restricted :
+              employeeSummary.status === 'loading' ? t.employeesLoading : t.unavailable,
+          icon: UsersRound, accent: 'amber',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('employees'), ...supportKpiHelp('employees')
         }
       ]
