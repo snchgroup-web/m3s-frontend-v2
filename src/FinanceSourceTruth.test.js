@@ -144,6 +144,19 @@ test.each([{ success: false, data: [] }, { data: null }])('does not label an inv
   const card = screen.getByTestId('finance-social-total').closest('article');
   expect(card).toHaveTextContent('Transactions chargées : —');
   expect(card).not.toHaveTextContent('Transactions chargées : 0');
+  expect(screen.getByTestId('finance-source-status')).toHaveTextContent('Registre social : Indisponible');
+});
+
+test('keeps pending and failed social reads explicit when global finance totals are available', async () => {
+  let rejectSocial;
+  api.getSocialFinance.mockReturnValue(new Promise((resolve, reject) => { rejectSocial = reject; }));
+  renderFinance();
+  await screen.findByText('Totaux globaux disponibles');
+  expect(screen.getByTestId('finance-source-status')).toHaveTextContent('Registre social : Chargement en cours');
+  rejectSocial(new Error('Synthetic social outage'));
+  await waitFor(() => expect(screen.getByTestId('finance-source-status')).toHaveTextContent('Registre social : Indisponible'));
+  expect(screen.getByTestId('finance-source-status')).not.toHaveTextContent('Flux sociaux chargés');
+  expect(screen.getByTestId('finance-total-income')).toHaveTextContent(`${(1000).toLocaleString('fr-CH').replace(/\s/g, ' ')} CHF`);
 });
 
 test('ignores explicitly rejected expense rows while preserving the global summary and income extract', async () => {

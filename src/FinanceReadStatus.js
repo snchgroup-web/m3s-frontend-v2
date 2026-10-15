@@ -11,6 +11,7 @@ const COPY = {
     extract: 'extrait chargé pour les tableaux et graphiques', limit: 'maximum 200 par registre',
     extractPartial: 'Extrait partiel : une source d’écritures est indisponible.', extractUnavailable: 'Extrait des écritures indisponible.',
     social: 'Flux sociaux chargés', separate: 'Comptés séparément, exclus des recettes globales et du solde.',
+    socialRegister: 'Registre social', socialLoading: 'Chargement en cours', socialUnavailable: 'Indisponible',
     restricted: 'Accès restreint', missing: 'Aucune valeur manquante n’est remplacée par zéro.',
     conversions: 'Contre-valeurs non renseignées', refresh: 'Actualiser recettes, dépenses et flux sociaux'
   },
@@ -22,6 +23,7 @@ const COPY = {
     extract: 'geladener Auszug für Tabellen und Diagramme', limit: 'höchstens 200 pro Register',
     extractPartial: 'Teilauszug: Eine Buchungsquelle ist nicht verfügbar.', extractUnavailable: 'Buchungsauszug nicht verfügbar.',
     social: 'Geladene soziale Flüsse', separate: 'Separat gezählt, nicht in globalen Einnahmen und Saldo enthalten.',
+    socialRegister: 'Sozialregister', socialLoading: 'Wird geladen', socialUnavailable: 'Nicht verfügbar',
     restricted: 'Eingeschränkter Zugriff', missing: 'Fehlende Werte werden nie durch Null ersetzt.',
     conversions: 'Fehlende Gegenwerte', refresh: 'Einnahmen, Ausgaben und soziale Flüsse aktualisieren'
   },
@@ -33,6 +35,7 @@ const COPY = {
     extract: 'loaded extract for tables and charts', limit: 'maximum 200 per register',
     extractPartial: 'Partial extract: an entry source is unavailable.', extractUnavailable: 'Entry extract unavailable.',
     social: 'Loaded social flows', separate: 'Counted separately, excluded from global revenue and balance.',
+    socialRegister: 'Social register', socialLoading: 'Loading', socialUnavailable: 'Unavailable',
     restricted: 'Restricted access', missing: 'Missing values are never replaced with zero.',
     conversions: 'Missing currency equivalents', refresh: 'Refresh income, expenses and social flows'
   }
@@ -48,7 +51,7 @@ export function formatFinanceReadTime(value, language = 'FR') {
 }
 
 export default function FinanceReadStatus({ language = 'FR', summary, status, incomeLoaded, expenseLoaded,
-  socialLoaded, socialState, onRefresh, refreshing = false }) {
+  socialLoaded, socialState = 'available', onRefresh, refreshing = false }) {
   const t = COPY[language] || COPY.FR;
   const current = status === 'available' ? summary : null;
   const partial = current?.expenseSubtotal || current?.incomeSubtotal;
@@ -59,6 +62,13 @@ export default function FinanceReadStatus({ language = 'FR', summary, status, in
   const count = value => Number.isSafeInteger(value) && value >= 0 ? value.toLocaleString(locale) : '—';
   const incomeAvailable = Number.isSafeInteger(incomeLoaded) && incomeLoaded >= 0;
   const expensesAvailable = Number.isSafeInteger(expenseLoaded) && expenseLoaded >= 0;
+  const socialMessage = socialState === 'forbidden' || socialState === 'restricted'
+    ? `${t.socialRegister} : ${t.restricted}`
+    : socialState === 'loading'
+      ? `${t.socialRegister} : ${t.socialLoading}`
+      : socialState !== 'available' || !Number.isSafeInteger(socialLoaded) || socialLoaded < 0
+        ? `${t.socialRegister} : ${t.socialUnavailable}`
+        : `${t.social} : ${count(socialLoaded)}`;
   return (
     <section className="m3s-design-scope mb-6 flex items-start gap-3 border-l-2 px-3 py-3" aria-busy={reading}
       style={{ borderColor: current && !partial ? 'var(--m3s-status-info)' : 'var(--m3s-status-warning)', color: 'var(--m3s-text-primary)' }}>
@@ -71,7 +81,7 @@ export default function FinanceReadStatus({ language = 'FR', summary, status, in
         {!reading && <>
           <p>{count(incomeLoaded)} {t.income} · {count(expenseLoaded)} {t.expenses} · {t.extract} ({t.limit}).</p>
           {(!incomeAvailable || !expensesAvailable) && <p>{incomeAvailable || expensesAvailable ? t.extractPartial : t.extractUnavailable}</p>}
-          <p>{t.social} : {socialState === 'forbidden' || socialState === 'restricted' ? t.restricted : count(socialLoaded)} · {t.limit}. {t.separate}</p>
+          <p>{socialMessage} · {t.limit}. {t.separate}</p>
           {!current && <p>{t.missing}</p>}
           {current?.expenseSubtotal && <p>{t.conversions} · {t.expenses} : CHF {count(current.expensesMissingChf)} · CFA {count(current.expensesMissingCfa)}</p>}
           {current?.incomeSubtotal && <p>{t.conversions} · {t.income} : CHF {count(current.incomeMissingChf)} · CFA {count(current.incomeMissingCfa)}</p>}

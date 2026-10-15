@@ -26,7 +26,7 @@ test('keeps source failure, restricted social records and true empty extracts di
   const status = screen.getByRole('status');
   expect(status).toHaveTextContent('0 recettes · — dépenses');
   expect(status).toHaveTextContent('Extrait partiel : une source d’écritures est indisponible.');
-  expect(status).toHaveTextContent('Flux sociaux chargés : Accès restreint');
+  expect(status).toHaveTextContent('Registre social : Accès restreint');
   expect(status).not.toHaveTextContent('62');
   expect(status.querySelector('time')).toBeNull();
 });
@@ -41,4 +41,26 @@ test('blocks a second refresh while reading and never substitutes the render tim
 
 test.each([null, '', 'invalid', undefined])('does not manufacture a timestamp for %p', value => {
   expect(formatFinanceReadTime(value, 'EN')).toBeNull();
+});
+
+test.each([
+  ['FR', 'loading', 'Registre social : Chargement en cours', 'Flux sociaux chargés'],
+  ['FR', 'unavailable', 'Registre social : Indisponible', 'Flux sociaux chargés'],
+  ['DE', 'loading', 'Sozialregister : Wird geladen', 'Geladene soziale Flüsse'],
+  ['DE', 'unavailable', 'Sozialregister : Nicht verfügbar', 'Geladene soziale Flüsse'],
+  ['EN', 'loading', 'Social register : Loading', 'Loaded social flows'],
+  ['EN', 'unavailable', 'Social register : Unavailable', 'Loaded social flows']
+])('marks the social source as %s/%s even if an old count is supplied', (language, socialState, label, loaded) => {
+  render(<FinanceReadStatus language={language} summary={summary} status="available"
+    socialLoaded={26} socialState={socialState} />);
+  expect(screen.getByRole('status')).toHaveTextContent(label);
+  expect(screen.getByRole('status')).not.toHaveTextContent(loaded);
+});
+
+test('distinguishes a confirmed empty social register from an unavailable count', () => {
+  const view = render(<FinanceReadStatus status="available" summary={summary} socialState="available" socialLoaded={0} />);
+  expect(screen.getByRole('status')).toHaveTextContent('Flux sociaux chargés : 0');
+  view.rerender(<FinanceReadStatus status="available" summary={summary} socialState="available" socialLoaded={null} />);
+  expect(screen.getByRole('status')).toHaveTextContent('Registre social : Indisponible');
+  expect(screen.getByRole('status')).not.toHaveTextContent('Flux sociaux chargés');
 });
