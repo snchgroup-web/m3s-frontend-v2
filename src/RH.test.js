@@ -252,3 +252,68 @@ test('preserves draft values and navigation across a language change, including 
   expect(mockNavigate).not.toHaveBeenCalled();
   await waitFor(() => expect(api.getMembersDirectory).toHaveBeenCalledTimes(1));
 });
+
+const feedbackLocales = [
+  { language: 'FR', created: 'ajouté localement avec succès', updated: 'modifié localement avec succès', deleted: 'supprimé localement avec succès', required: 'Renseignez le nom et l’adresse e-mail avant de poursuivre.', close: 'Fermer le message' },
+  { language: 'DE', created: 'wurde lokal hinzugefügt', updated: 'wurde lokal geändert', deleted: 'wurde lokal gelöscht', required: 'Geben Sie einen Namen und eine E-Mail-Adresse ein, bevor Sie fortfahren.', close: 'Meldung schließen' },
+  { language: 'EN', created: 'added locally', updated: 'updated locally', deleted: 'deleted locally', required: 'Enter a name and email address before continuing.', close: 'Close message' }
+];
+
+test.each(['created', 'updated', 'deleted'])('retranslates %s feedback without repeating the local operation', async kind => {
+  mockLocationSearch = '?tab=benevoles&returnTo=dashboard';
+  const name = 'QA $& {name} <test>';
+  const view = render(<RH />);
+  await screen.findByText('Members (0)');
+  fireEvent.click(screen.getByRole('button', { name: 'Add', exact: true }));
+  fireEvent.change(screen.getByRole('textbox', { name: 'Name', exact: true }), { target: { value: name } });
+  fireEvent.change(screen.getByRole('textbox', { name: 'Email', exact: true }), { target: { value: 'qa@example.test' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Create', exact: true }));
+  expect(screen.getByRole('dialog')).toHaveTextContent(name);
+  fireEvent.click(screen.getByRole('button', { name: 'Yes, confirm', exact: true }));
+  if (kind === 'updated') {
+    fireEvent.click(screen.getByRole('button', { name: `Edit draft ${name}`, exact: true }));
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Edit', exact: true }));
+    fireEvent.click(screen.getByRole('button', { name: 'Yes, confirm', exact: true }));
+  } else if (kind === 'deleted') {
+    fireEvent.click(screen.getByRole('button', { name: `Delete draft ${name}`, exact: true }));
+    fireEvent.click(screen.getByRole('button', { name: 'Yes, confirm', exact: true }));
+  }
+  for (const locale of feedbackLocales) {
+    mockLanguage = locale.language;
+    view.rerender(<RH />);
+    const status = screen.getByRole('status');
+    expect(status).toHaveTextContent(locale[kind]);
+    expect(status).toHaveTextContent(name);
+    const rows = screen.queryAllByText(name, { selector: 'td' });
+    expect(rows).toHaveLength(kind === 'deleted' ? 0 : 1);
+    expect(screen.getByRole('tab', { name: /^(Bénévoles|Freiwillige|Volunteers) \(/ })).toHaveAttribute('aria-selected', 'true');
+  }
+  expect(mockNavigate).not.toHaveBeenCalled();
+  expect(api.getMembersDirectory).toHaveBeenCalledTimes(1);
+  fireEvent.click(screen.getByRole('button', { name: 'Close message', exact: true }));
+  mockLanguage = 'FR';
+  view.rerender(<RH />);
+  expect(screen.queryByRole('status')).not.toBeInTheDocument();
+});
+
+test('retranslates a visible validation error and keeps the same unsubmitted draft', async () => {
+  mockLocationSearch = '?tab=benevoles';
+  const view = render(<RH />);
+  await screen.findByText('Members (0)');
+  fireEvent.click(screen.getByRole('button', { name: 'Add', exact: true }));
+  fireEvent.click(screen.getByRole('button', { name: 'Create', exact: true }));
+  for (const locale of feedbackLocales) {
+    mockLanguage = locale.language;
+    view.rerender(<RH />);
+    expect(screen.getByRole('alert')).toHaveTextContent(locale.required);
+    expect(screen.getByRole('dialog')).toContainElement(screen.getByRole('alert'));
+    expect(screen.getByRole('textbox', { name: locale.language === 'FR' ? 'Nom' : 'Name', exact: true })).toHaveValue('');
+  }
+  fireEvent.click(screen.getByRole('button', { name: 'Close message', exact: true }));
+  mockLanguage = 'DE';
+  view.rerender(<RH />);
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  expect(screen.getByRole('dialog')).toBeInTheDocument();
+  expect(mockNavigate).not.toHaveBeenCalled();
+  expect(api.getMembersDirectory).toHaveBeenCalledTimes(1);
+});
