@@ -21,6 +21,8 @@ import { createTransferComparison } from './financeTransferQuotes';
 import { parseFxRate, cfaPerChfObservation, summarizeFxHistory, yearlyFxHistory } from './financeFxHistory';
 import { normalizeFinanceSummary } from './financeSummary';
 import FinanceReadStatus from './FinanceReadStatus';
+import FinanceDescription from './FinanceDescription';
+import { translateFinanceDescription } from './financeDescriptionTranslation';
 import ExpenseSourceFields, { emptySourceAmounts, expenseAmountLabels } from './ExpenseSourceFields';
 import { normalizeExpenseAmounts } from './financeExpenseAmounts';
 import IncomeSourceFields, { emptyIncomeAmounts, normalizeIncomeAmounts, incomeAmountLabels } from './IncomeSourceFields';
@@ -1063,13 +1065,8 @@ const Finance = () => {
     return () => { socialReadVersion.current += 1; };
   }, [loadSocialData]);
 
-  // Data translations for categories and descriptions
+  // Presentation translations for categories
   const dataTranslations = {
-    descriptions: {
-      FR: { 'Vente produits': 'Vente produits', 'Donation': 'Donation', 'Services': 'Services', 'Loyer bureau': 'Loyer bureau', 'Salaires': 'Salaires', 'Fournitures': 'Fournitures' },
-      EN: { 'Vente produits': 'Product Sales', 'Donation': 'Donation', 'Services': 'Services', 'Loyer bureau': 'Office Rent', 'Salaires': 'Salaries', 'Fournitures': 'Supplies' },
-      DE: { 'Vente produits': 'Produktverkauf', 'Donation': 'Spende', 'Services': 'Dienstleistungen', 'Loyer bureau': 'Büromiete', 'Salaires': 'Gehälter', 'Fournitures': 'Materialien' }
-    },
     categories: {
       FR: { 'Ventes': 'Ventes', 'Dons': 'Dons', 'Services': 'Services', 'Immobilier': 'Immobilier', 'Paie': 'Paie', 'Opérationnel': 'Opérationnel' },
       EN: { 'Ventes': 'Sales', 'Dons': 'Donations', 'Services': 'Services', 'Immobilier': 'Real Estate', 'Paie': 'Payroll', 'Opérationnel': 'Operations' },
@@ -1393,7 +1390,7 @@ const Finance = () => {
     const key = normalizeCategoryKey(value);
     return standardValueTranslations[language]?.[key] || formatUnknownCategory(value);
   };
-  const translateDescription = (desc) => dataTranslations.descriptions[language]?.[desc] || desc;
+  const descriptionSearchText = useCallback(row => translateFinanceDescription(row.description, language), [language]);
   const translateCategory = (cat) => {
     const key = normalizeCategoryKey(cat);
     return supplementalCategoryTranslations[language]?.[key] || dataTranslations.categories[language]?.[cat] || formatUnknownCategory(cat);
@@ -2249,6 +2246,7 @@ const Finance = () => {
             <TableControls
               key={incomeScope}
               rows={incomeRegisterRows}
+              getSearchText={descriptionSearchText}
               renderTable={(visibleRows) => (
                 <table className="min-w-[1900px] text-sm">
                   <thead className="sticky top-0 z-10 bg-slate-700">
@@ -2279,7 +2277,7 @@ const Finance = () => {
                         <td className="px-4 py-3 text-slate-400">{formatCell(r.ref)}</td>
                         <td className="px-6 py-3 text-slate-400 whitespace-nowrap">{formatDateForDisplay(r.date)}</td>
                         <td className="px-6 py-3 text-slate-300">
-                          {translateDescription(r.description)}
+                          <FinanceDescription value={r.description} language={language} />
                           {r.source_amounts && <small className="block mt-1">{incomeAmountLabels[language].source} : {formatAmount(r.source_amounts.total_received)} {r.source_amounts.original_currency}</small>}
                         </td>
                         <td className="px-4 py-3 text-green-400 font-bold">{r.montantChfAvailable ? formatAmount(r.montantChf) : '—'}</td>
@@ -2323,6 +2321,7 @@ const Finance = () => {
             {renderFxQualityNotice(depensesAffichees)}
             <TableControls
               rows={depensesAffichees}
+              getSearchText={descriptionSearchText}
               renderTable={(visibleRows) => (
                 <table className="min-w-[1900px] text-sm">
                   <thead className="sticky top-0 z-10 bg-slate-700">
@@ -2354,7 +2353,7 @@ const Finance = () => {
                       >
                         <td className="px-4 py-3 text-slate-400">{formatCell(d.ref)}</td>
                         <td className="px-6 py-3 text-slate-400 whitespace-nowrap">{formatDateForDisplay(d.date)}</td>
-                        <td className="px-6 py-3 text-slate-300">{translateDescription(d.description)}
+                        <td className="px-6 py-3 text-slate-300"><FinanceDescription value={d.description} language={language} />
                           {d.source_amounts && <small className="block mt-1">{expenseAmountLabels[language].source} : {formatAmount(d.source_amounts.total_paid)} {d.source_amounts.original_currency}</small>}
                           {typeof d.source_amounts?.conversion_source === 'string' && d.source_amounts.conversion_source.trim() && (
                             <details className="mt-2 max-w-sm text-xs" onClick={event => event.stopPropagation()}>
@@ -2661,6 +2660,7 @@ const Finance = () => {
             <section>
               <TableControls
                 rows={socialRowsAffichees}
+                getSearchText={descriptionSearchText}
                 defaultPageSize={10}
                 maxHeight="34rem"
                 renderTable={(visibleRows) => (
@@ -2687,7 +2687,7 @@ const Finance = () => {
                         <tr key={row.id} onClick={() => handleEdit('recette', row)} onKeyDown={(event) => event.target === event.currentTarget && event.key === 'Enter' && handleEdit('recette', row)} tabIndex={0} className="cursor-pointer border-t border-slate-700 hover:bg-slate-700/50 focus:bg-slate-700/70 focus:outline-none">
                           <td className="px-4 py-3 text-slate-400">{formatCell(row.ref)}</td>
                           <td className="whitespace-nowrap px-4 py-3 text-slate-300">{formatDateForDisplay(row.date)}</td>
-                          <td className="max-w-[380px] px-5 py-3 font-medium text-white">{translateDescription(row.description)}</td>
+                          <td className="max-w-[380px] px-5 py-3 font-medium text-white"><FinanceDescription value={row.description} language={language} /></td>
                           <td className="whitespace-nowrap px-4 py-3 font-semibold" style={{ color: 'var(--m3s-status-info)' }}>{row.montantChfAvailable ? `${formatAmount(row.montantChf)} CHF` : '—'}</td>
                           <td className="whitespace-nowrap px-4 py-3 font-semibold m3s-currency-cfa">{row.montantCfaAvailable ? `${formatAmount(row.montantCfa)} CFA` : '—'}</td>
                           <td className="px-4 py-3 text-purple-300">

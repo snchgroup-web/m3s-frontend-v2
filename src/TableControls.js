@@ -35,9 +35,10 @@ const normalizeSearchValue = (value) =>
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
 
-const rowMatchesSearch = (row, query) => {
+const rowMatchesSearch = (row, query, getSearchText) => {
   if (!query) return true;
-  return normalizeSearchValue(JSON.stringify(row)).includes(query);
+  return normalizeSearchValue(JSON.stringify(row)).includes(query)
+    || (getSearchText ? normalizeSearchValue(getSearchText(row)).includes(query) : false);
 };
 
 const TableControls = ({
@@ -47,7 +48,8 @@ const TableControls = ({
   pageSizeOptions = [10, 25, 50, 100],
   defaultPageSize = 10,
   maxHeight = '30rem',
-  searchPlaceholder
+  searchPlaceholder,
+  getSearchText
 }) => {
   const { language } = useLanguage();
   const t = tableText[language] || tableText.FR;
@@ -58,8 +60,8 @@ const TableControls = ({
   const normalizedQuery = normalizeSearchValue(query);
 
   const filteredRows = useMemo(
-    () => safeRows.filter(row => rowMatchesSearch(row, normalizedQuery)),
-    [safeRows, normalizedQuery]
+    () => safeRows.filter(row => rowMatchesSearch(row, normalizedQuery, getSearchText)),
+    [safeRows, normalizedQuery, getSearchText]
   );
 
   const pageCount = Math.max(1, Math.ceil(filteredRows.length / pageSize));
