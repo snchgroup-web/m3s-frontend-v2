@@ -75,6 +75,37 @@ test('shows the existing 2SG logo while the dashboard data is pending', () => {
   expect(screen.getByRole('img', { name: '2SG - SeneSwiss Group' })).toHaveAttribute('src', '/assets/logo-2sg.png');
 });
 
+test('retains known income CFA rather than hiding all amounts when a conversion is missing', async () => {
+  api.getFinanceDashboard.mockResolvedValue(summaryResponse({ total_income_cfa: null, known_income_chf: 600,
+    known_income_cfa: 240000, income_missing_chf: 0, income_missing_cfa: 1 }));
+  render(<Dashboard />);
+  await screen.findByText('Known income · subtotal');
+  const card = document.getElementById('dashboard-kpi-revenue');
+  expect(card).toHaveTextContent('600 CHF');
+  expect(card).toHaveTextContent("240'000 CFA");
+  expect(card).toHaveTextContent('Partial');
+  expect(card).not.toHaveTextContent('≈');
+});
+
+test('displays a sourced indicative income total only for a reconciled complete extract', async () => {
+  api.getFinanceDashboard.mockResolvedValue(summaryResponse({ total_income_cfa: null, known_income_chf: 600,
+    known_income_cfa: 240000, income_missing_chf: 0, income_missing_cfa: 1 }));
+  api.getIncome.mockResolvedValue({ data: [
+    { id: 'A', montant_chf: 300, montant_cfa: 180000, date: '2026-10-10' },
+    { id: 'B', montant_chf: 100, montant_cfa: 60000, date: '2026-10-10' },
+    { id: 'C', montant_chf: 200, montant_cfa: null, date: '2026-10-10' }
+  ] });
+  api.getFxHistory.mockResolvedValue({ data: [{ date: '2026-10-10', devise_from: 'CHF', devise_to: 'CFA', rate: 600, source: 'https://example.test/rate' }] });
+  render(<Dashboard />);
+  await screen.findByText('Income · indicative CFA');
+  const card = document.getElementById('dashboard-kpi-revenue');
+  expect(card).toHaveTextContent("≈ 360'000 CFA");
+  expect(card).toHaveTextContent('Indicative');
+  expect(screen.getByText('Indicative income CFA equivalents').closest('details')).not.toHaveAttribute('open');
+  expect(screen.getByText('TFX', { exact: true })).toHaveAttribute('href', 'https://example.test/rate');
+  expect(document.getElementById('dashboard-kpi-balance')).toHaveTextContent('— CFA');
+});
+
 beforeEach(() => {
   jest.clearAllMocks();
   mockLanguage = 'EN';

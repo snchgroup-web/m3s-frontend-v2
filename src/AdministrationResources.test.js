@@ -24,6 +24,26 @@ beforeEach(() => {
 
 afterEach(() => jest.restoreAllMocks());
 
+test('retranslates feedback without saving again or translating the original resource', async () => {
+  const view = render(<AdministrationResources language="FR" />);
+  fireEvent.click(screen.getByRole('button', { name: 'Ajouter une ressource' }));
+  fireEvent.change(screen.getByLabelText('Titre *'), { target: { value: 'Original QA' } });
+  fireEvent.change(screen.getByLabelText('Autorité ou propriétaire *'), { target: { value: 'Owner QA' } });
+  fireEvent.change(screen.getByLabelText('URL ou emplacement GED *'), { target: { value: 'GED / QA' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, ajouter' }));
+  await screen.findByText('Ressource enregistrée avec succès.');
+  const stored = JSON.stringify(localStorage);
+  for (const [language, message] of [['EN', 'Resource saved successfully.'], ['DE', 'Ressource erfolgreich gespeichert.'], ['FR', 'Ressource enregistrée avec succès.']]) {
+    view.rerender(<AdministrationResources language={language} />);
+    expect(screen.getByRole('status')).toHaveTextContent(message);
+    expect(screen.getByText('Original QA')).toBeInTheDocument();
+    expect(JSON.stringify(localStorage)).toBe(stored);
+  }
+  expect(api.createAdministrationResource).not.toHaveBeenCalled();
+  expect(api.updateAdministrationResource).not.toHaveBeenCalled();
+});
+
 test('shows the governed resource baseline and adds a local resource after M3S confirmation', () => {
   render(<AdministrationResources language="FR" />);
 

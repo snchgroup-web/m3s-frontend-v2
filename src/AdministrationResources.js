@@ -108,7 +108,8 @@ const AdministrationResources = ({ language = 'FR' }) => {
   const [familyFilter, setFamilyFilter] = useState('all');
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(emptyForm);
-  const [message, setMessage] = useState('');
+  const [messageKey, setMessage] = useState('');
+  const message = messageKey ? t[messageKey] : '';
   const [pendingAction, setPendingAction] = useState(null);
   const hasWritePermission = hasPermission(user?.permissions, ADMINISTRATION_RESOURCES_WRITE_PERMISSION);
   const canWrite = hasWritePermission && (sourceState === 'backend' || sourceState === 'local');
@@ -158,7 +159,7 @@ const AdministrationResources = ({ language = 'FR' }) => {
   const save = event => {
     event.preventDefault();
     if (!canWrite) return;
-    if (!form.title.trim() || !form.authority.trim() || !form.location.trim()) { setMessage(t.required); return; }
+    if (!form.title.trim() || !form.authority.trim() || !form.location.trim()) { setMessage('required'); return; }
     setPendingAction({ type: editing === 'new' ? 'create' : 'update', editing, form: { ...form } });
   };
   const remove = item => { if (canWrite) setPendingAction({ type: 'delete', item }); };
@@ -172,7 +173,7 @@ const AdministrationResources = ({ language = 'FR' }) => {
         const nextResources = resources.filter(current => current.id !== action.item.id);
         if (sourceState === 'local') window.localStorage.setItem(storageKey, JSON.stringify(nextResources));
         setResources(nextResources);
-        setMessage(t.deleted);
+        setMessage('deleted');
       } else {
         const { contentKey, sourceKind, ...editableFields } = action.form;
         const item = { ...editableFields, id: action.editing === 'new' ? `RES-${Date.now()}` : action.editing, sourceKind: sourceState };
@@ -185,14 +186,14 @@ const AdministrationResources = ({ language = 'FR' }) => {
         } else if (sourceState === 'local') {
           persist(action.type === 'create' ? [item, ...resources] : resources.map(current => current.id === action.editing ? item : current));
         } else {
-          setMessage(t.saveFailed);
+          setMessage('saveFailed');
           return;
         }
         close();
-        setMessage(t.saved);
+        setMessage('saved');
       }
     } catch {
-      setMessage(action.type === 'delete' ? t.deleteFailed : t.saveFailed);
+      setMessage(action.type === 'delete' ? 'deleteFailed' : 'saveFailed');
     } finally {
       setBusy(false);
       setPendingAction(null);

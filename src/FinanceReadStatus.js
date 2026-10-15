@@ -1,6 +1,8 @@
 import React from 'react';
-import { AlertTriangle, Database, LoaderCircle, RefreshCw } from 'lucide-react';
+import { AlertTriangle, ChevronDown, Database, LoaderCircle, RefreshCw } from 'lucide-react';
 import { formatRegistryDate } from './registryDate';
+import { incomeEstimateCopy } from './incomeReferenceEstimate';
+import { safeSourceUrl } from './expenseReferenceValuation';
 
 const COPY = {
   FR: {
@@ -51,7 +53,7 @@ export function formatFinanceReadTime(value, language = 'FR') {
 }
 
 export default function FinanceReadStatus({ language = 'FR', summary, status, incomeLoaded, expenseLoaded,
-  socialLoaded, socialState = 'available', onRefresh, refreshing = false }) {
+  socialLoaded, socialState = 'available', onRefresh, refreshing = false, incomeEstimate = null }) {
   const t = COPY[language] || COPY.FR;
   const current = status === 'available' ? summary : null;
   const partial = current?.expenseSubtotal || current?.incomeSubtotal;
@@ -70,11 +72,16 @@ export default function FinanceReadStatus({ language = 'FR', summary, status, in
         ? `${t.socialRegister} : ${t.socialUnavailable}`
         : `${t.social} : ${count(socialLoaded)}`;
   return (
-    <section className="m3s-design-scope mb-6 flex items-start gap-3 border-l-2 px-3 py-3" aria-busy={reading}
+    <section className="m3s-design-scope mb-4 flex items-start gap-3 border-l-2 px-3 py-2" aria-busy={reading}
       style={{ borderColor: current && !partial ? 'var(--m3s-status-info)' : 'var(--m3s-status-warning)', color: 'var(--m3s-text-primary)' }}>
-      <Icon size={20} className={`mt-0.5 shrink-0 ${reading ? 'animate-spin' : ''}`} aria-hidden="true" />
       <div role="status" data-testid="finance-source-status" className="min-w-0 flex-1 text-sm leading-6">
-        <p className="font-semibold">{reading ? t.loading : current ? partial ? t.partial : t.available : t.unavailable}</p>
+        <details className="group">
+        <summary className="flex min-h-11 cursor-pointer list-none items-center gap-3 font-semibold focus-visible:outline focus-visible:outline-2 [&::-webkit-details-marker]:hidden">
+          <Icon size={20} className={`shrink-0 ${reading ? 'animate-spin' : ''}`} aria-hidden="true" />
+          <span className="min-w-0 flex-1">{reading ? t.loading : current ? partial ? t.partial : t.available : t.unavailable}</span>
+          <ChevronDown size={18} className="shrink-0 transition-transform group-open:rotate-180" aria-hidden="true" />
+        </summary>
+        <div className="space-y-1 pb-2 pt-2">
         <p>{current ? `${count(current.incomeCount)} ${t.income} · ${count(current.expenseCount)} ${t.expenses} · ` : ''}{t.source}</p>
         <p>{t.scope}</p>
         <p>{t.read} : {readTime ? <time className="whitespace-nowrap" dateTime={current.timestamp}>{readTime}</time> : '—'}</p>
@@ -85,7 +92,20 @@ export default function FinanceReadStatus({ language = 'FR', summary, status, in
           {!current && <p>{t.missing}</p>}
           {current?.expenseSubtotal && <p>{t.conversions} · {t.expenses} : CHF {count(current.expensesMissingChf)} · CFA {count(current.expensesMissingCfa)}</p>}
           {current?.incomeSubtotal && <p>{t.conversions} · {t.income} : CHF {count(current.incomeMissingChf)} · CFA {count(current.incomeMissingCfa)}</p>}
+          {current && incomeEstimate && <div className="mt-3 border-t pt-3" style={{ borderColor: 'var(--m3s-border)' }}>
+            <p className="font-semibold">{incomeEstimateCopy(language).details}</p>
+            <p>{incomeEstimateCopy(language).known} : {incomeEstimate.knownCfa.toLocaleString(locale, { maximumFractionDigits: 2 })} CFA</p>
+            <p>{incomeEstimateCopy(language).estimate} : ≈ {incomeEstimate.cfa.toLocaleString(locale, { maximumFractionDigits: 2 })} CFA</p>
+            <p>{incomeEstimateCopy(language).excluded}</p>
+            <ul className="mt-2 space-y-2">{incomeEstimate.references.map((row, index) => <li key={index}>
+              <span className="font-mono">{row.reference}</span> · <time className="whitespace-nowrap" dateTime={row.date}>{formatRegistryDate(row.date, language)}</time> · {row.chf.toLocaleString(locale)} CHF · {incomeEstimateCopy(language).rate} {row.rate.toLocaleString(locale, { maximumFractionDigits: 4 })}
+              {safeSourceUrl(row.source) ? <a className="ml-2 break-all underline" href={safeSourceUrl(row.source)} target="_blank" rel="noopener noreferrer">{row.fromHistory ? 'TFX' : 'BCE / ECB'}</a> : <span className="ml-2">{row.source}</span>}
+              {safeSourceUrl(row.paritySource) && <a className="ml-2 underline" href={safeSourceUrl(row.paritySource)} target="_blank" rel="noopener noreferrer">BCEAO</a>}
+            </li>)}</ul>
+          </div>}
         </>}
+        </div>
+        </details>
       </div>
       <button type="button" className="m3s-raised flex h-11 w-11 shrink-0 items-center justify-center rounded border focus-visible:outline focus-visible:outline-2 disabled:opacity-50"
         title={t.refresh} aria-label={t.refresh} disabled={reading} onClick={onRefresh}>
