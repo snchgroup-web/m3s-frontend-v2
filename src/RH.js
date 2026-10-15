@@ -428,11 +428,12 @@ const RH = ({ rhReadAccess = null }) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const interpolateName = (template, name) => template.replace('{name}', name || t.nonRenseigne);
+  const interpolateName = (template, name) => template.replace('{name}', () => name || t.nonRenseigne);
+  const feedbackMessage = feedback ? interpolateName(t[feedback.messageKey], feedback.name) : '';
 
   const requestSave = () => {
     if (!formData.nom || !formData.email) {
-      setFeedback({ tone: 'error', message: t.requiredMessage });
+      setFeedback({ tone: 'error', messageKey: 'requiredMessage' });
       return;
     }
 
@@ -481,7 +482,7 @@ const RH = ({ rhReadAccess = null }) => {
     else updateRegister(setMembres);
 
     const successKey = kind === 'create' ? 'createdSuccess' : kind === 'update' ? 'updatedSuccess' : 'deletedSuccess';
-    setFeedback({ tone: 'success', message: interpolateName(t[successKey], name) });
+    setFeedback({ tone: 'success', messageKey: successKey, name });
     setPendingAction(null);
     if (kind !== 'delete') {
       setShowModal(false);
@@ -516,7 +517,7 @@ const RH = ({ rhReadAccess = null }) => {
         <div className={`${feedback.tone === 'success' ? 'm3s-feedback m3s-feedback--success' : 'rounded-md border border-red-500/50 bg-red-950/30 text-red-100'} flex items-start justify-between gap-3 px-4 py-3`} role={feedback.tone === 'success' ? 'status' : 'alert'}>
           <div className="flex items-start gap-2">
             {feedback.tone === 'success' && <CheckCircle2 className="mt-0.5 shrink-0" size={18} aria-hidden="true" />}
-            <span className="text-sm leading-5">{feedback.message}</span>
+            <span className="text-sm leading-5">{feedbackMessage}</span>
           </div>
           <button type="button" className="shrink-0 rounded p-1 hover:bg-black/10" onClick={() => setFeedback(null)} aria-label={t.closeMessage}><X size={16} /></button>
         </div>
@@ -662,7 +663,7 @@ const RH = ({ rhReadAccess = null }) => {
 
             {feedback?.tone === 'error' && (
               <div className="mb-5 flex items-start justify-between gap-3 rounded-md border border-red-500/50 bg-red-950/30 px-4 py-3 text-red-100" role="alert">
-                <span className="text-sm leading-5">{feedback.message}</span>
+                <span className="text-sm leading-5">{feedbackMessage}</span>
                 <button type="button" className="shrink-0 rounded p-1 hover:bg-black/10" onClick={() => setFeedback(null)} aria-label={t.closeMessage}>
                   <X size={16} />
                 </button>
