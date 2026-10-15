@@ -42,6 +42,8 @@ const RH = ({ rhReadAccess = null }) => {
       evolution: 'Évolution Mensuelle',
       departements: 'Statistiques par Département',
       nom: 'Nom',
+      fullName: 'Nom complet',
+      positionExample: 'ex. : Développeur',
       email: 'Email',
       emailPerso: 'Email perso',
       telephone: 'Téléphone',
@@ -100,6 +102,8 @@ const RH = ({ rhReadAccess = null }) => {
       evolution: 'Monthly Evolution',
       departements: 'Department Statistics',
       nom: 'Name',
+      fullName: 'Full name',
+      positionExample: 'e.g. Developer',
       email: 'Email',
       emailPerso: 'Personal email',
       telephone: 'Phone',
@@ -158,6 +162,8 @@ const RH = ({ rhReadAccess = null }) => {
       evolution: 'Monatliche Entwicklung',
       departements: 'Abteilungsstatistiken',
       nom: 'Name',
+      fullName: 'Vollständiger Name',
+      positionExample: 'z. B. Entwickler',
       email: 'E-Mail',
       emailPerso: 'Private E-Mail',
       telephone: 'Telefon',
@@ -200,10 +206,20 @@ const RH = ({ rhReadAccess = null }) => {
     }
   };
 
-  const t = translations[language];
+  const t = translations[language] || translations.FR;
 
   // Data translations for positions, departments, and roles
   const dataTranslations = {
+    roles: {
+      FR: { Utilisateur: 'Utilisateur', Admin: 'Admin' },
+      EN: { Utilisateur: 'User', Admin: 'Admin' },
+      DE: { Utilisateur: 'Benutzer', Admin: 'Admin' }
+    },
+    memberTypes: {
+      FR: { Fondateur: 'Fondateur', Associé: 'Associé' },
+      EN: { Fondateur: 'Founder', Associé: 'Associate' },
+      DE: { Fondateur: 'Gründungsmitglied', Associé: 'Assoziiertes Mitglied' }
+    },
     // Positions/Roles
     positions: {
       FR: {
@@ -284,8 +300,14 @@ const RH = ({ rhReadAccess = null }) => {
     }
   };
 
-  const translatePosition = (position) => dataTranslations.positions[language]?.[position] || position;
-  const translateDepartment = (dept) => dataTranslations.departments[language]?.[dept] || dept;
+  const translateDataValue = (group, value) => {
+    const labels = dataTranslations[group][language] || dataTranslations[group].FR;
+    return Object.hasOwn(labels, value) ? labels[value] : value;
+  };
+  const translatePosition = position => translateDataValue('positions', position);
+  const translateDepartment = dept => translateDataValue('departments', dept);
+  const translateRole = role => translateDataValue('roles', role);
+  const translateMemberType = type => translateDataValue('memberTypes', type);
   const normalizeRole = (value) => {
     const text = String(value || '').trim().toLowerCase();
     if (text === 'admin' || text === 'administrator' || text === 'administrateur') return 'Admin';
@@ -317,6 +339,8 @@ const RH = ({ rhReadAccess = null }) => {
     if (type === 'benevole') return t.benevole;
     return t.employe;
   };
+  const personSearchText = item => [translatePosition(item.poste), translateDepartment(item.departement),
+    translateRole(item.role), translateMemberType(item.typeMembre), getStatusLabel(item.statut)].join(' ');
 
   const [activeTab, setActiveTab] = useState('overview');
   const employeeSummary = useRhEmployeeCount({ access: rhReadAccess,
@@ -503,6 +527,7 @@ const RH = ({ rhReadAccess = null }) => {
       </div>
       <TableControls
         rows={data}
+        getSearchText={personSearchText}
         renderTable={(visibleRows) => (
           <table className="min-w-full text-sm">
             <thead className="sticky top-0 z-10 bg-slate-700">
@@ -526,8 +551,8 @@ const RH = ({ rhReadAccess = null }) => {
                   <td className="px-4 py-2 text-slate-400 text-xs">{formatValue(item.telephone)}</td>
                   <td className="px-4 py-2 text-slate-300">{translatePosition(item.poste)}</td>
                   <td className="px-4 py-2 text-slate-400">{formatValue(translateDepartment(item.departement))}</td>
-                  <td className="px-4 py-2 text-slate-400">{formatValue(item.role)}</td>
-                  {type === 'membre' && <td className="px-4 py-2 text-slate-400">{formatValue(item.typeMembre)}</td>}
+                  <td className="px-4 py-2 text-slate-400">{formatValue(translateRole(item.role))}</td>
+                  {type === 'membre' && <td className="px-4 py-2 text-slate-400">{formatValue(translateMemberType(item.typeMembre))}</td>}
                   <td className="px-4 py-2">
                     <span className={`px-2 py-1 rounded text-xs font-semibold ${getStatusClass(item.statut)}`}>
                       {getStatusLabel(item.statut)}
@@ -647,17 +672,17 @@ const RH = ({ rhReadAccess = null }) => {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">{t.nom} *</label>
-                <input type="text" value={formData.nom} onChange={(e) => handleFormChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="Nom complet" />
+                <input type="text" aria-label={t.nom} value={formData.nom} onChange={(e) => handleFormChange('nom', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder={t.fullName} />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">{t.email} *</label>
-                <input type="email" value={formData.email} onChange={(e) => handleFormChange('email', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="email@example.com" />
+                <input type="email" aria-label={t.email} value={formData.email} onChange={(e) => handleFormChange('email', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="email@example.com" />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">{t.emailPerso}</label>
-                <input type="email" value={formData.emailPerso || ''} onChange={(e) => handleFormChange('emailPerso', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="email personnel" />
+                <input type="email" aria-label={t.emailPerso} value={formData.emailPerso || ''} onChange={(e) => handleFormChange('emailPerso', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder={t.emailPerso} />
               </div>
 
               <div>
@@ -667,12 +692,12 @@ const RH = ({ rhReadAccess = null }) => {
 
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">{t.poste}</label>
-                <input type="text" value={formData.poste} onChange={(e) => handleFormChange('poste', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder="ex: Développeur" />
+                <input type="text" aria-label={t.poste} value={formData.poste} onChange={(e) => handleFormChange('poste', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500" placeholder={t.positionExample} />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">{t.departement}</label>
-                <select value={formData.departement} onChange={(e) => handleFormChange('departement', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                <select aria-label={t.departement} value={formData.departement} onChange={(e) => handleFormChange('departement', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
                   <option value="">{t.selectionner}</option>
                   <option value="IT">{translateDepartment('IT')}</option>
                   <option value="Finance">{translateDepartment('Finance')}</option>
@@ -691,18 +716,18 @@ const RH = ({ rhReadAccess = null }) => {
 
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">{t.role}</label>
-                <select value={formData.role || 'Utilisateur'} onChange={(e) => handleFormChange('role', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
-                  <option value="Utilisateur">Utilisateur</option>
-                  <option value="Admin">Admin</option>
+                <select aria-label={t.role} value={formData.role || 'Utilisateur'} onChange={(e) => handleFormChange('role', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                  <option value="Utilisateur">{translateRole('Utilisateur')}</option>
+                  <option value="Admin">{translateRole('Admin')}</option>
                 </select>
               </div>
 
               {modalType === 'membre' && (
                 <div>
                   <label className="block text-sm font-medium text-slate-300 mb-2">{t.typeMembre}</label>
-                  <select value={formData.typeMembre || 'Associé'} onChange={(e) => handleFormChange('typeMembre', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
-                    <option value="Fondateur">Fondateur</option>
-                    <option value="Associé">Associé</option>
+                  <select aria-label={t.typeMembre} value={formData.typeMembre || 'Associé'} onChange={(e) => handleFormChange('typeMembre', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                    <option value="Fondateur">{translateMemberType('Fondateur')}</option>
+                    <option value="Associé">{translateMemberType('Associé')}</option>
                   </select>
                 </div>
               )}
@@ -714,7 +739,7 @@ const RH = ({ rhReadAccess = null }) => {
 
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">{t.statut}</label>
-                <select value={formData.statut} onChange={(e) => handleFormChange('statut', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
+                <select aria-label={t.statut} value={formData.statut} onChange={(e) => handleFormChange('statut', e.target.value)} className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500">
                   <option value="Actif">{t.actif}</option>
                   <option value="Inactif">{t.inactif}</option>
                   <option value="Congé">{t.conge}</option>
