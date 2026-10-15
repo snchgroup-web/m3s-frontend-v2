@@ -53,6 +53,29 @@ const renderFinance = () => render(
 );
 
 test.each(['recettes', 'depenses', 'social'].flatMap(tab => [
+  [tab, 'FR', 'Non renseigné', 'Aide Sociale'],
+  [tab, 'DE', 'Nicht angegeben', 'Sozialhilfe'],
+  [tab, 'EN', 'Not provided', 'Social Aid']
+]))('localises only the missing agent marker in %s/%s, retaining names and source fields', async (tab, language, missing, nature) => {
+  mockSearch = `?tab=${tab}`;
+  localStorage.setItem('language', language);
+  const missingRow = Object.freeze({ id: 'MISSING-AGENT-QA', ref: 'MISSING-AGENT-QA', description: 'Synthetic entry', agent: 'Non renseigne', nature_sociale: 'Aide sociale', date: '2026-10-02', montant_chf: 10, montant_cfa: 7000, taux_fx: 700 });
+  const namedRow = Object.freeze({ ...missingRow, id: 'NAMED-AGENT-QA', ref: 'NAMED-AGENT-QA', agent: 'Personne-QA_Test' });
+  api.getIncome.mockResolvedValue({ data: [missingRow, namedRow] });
+  api.getExpenses.mockResolvedValue({ data: [missingRow, namedRow] });
+  api.getSocialFinance.mockResolvedValue({ data: [missingRow, namedRow], summary: {} });
+  renderFinance();
+  const entry = (await screen.findByText('MISSING-AGENT-QA')).closest('tr');
+  expect(within(entry).getAllByRole('cell').some(cell => cell.textContent === missing)).toBe(true);
+  expect(within((await screen.findByText('NAMED-AGENT-QA')).closest('tr')).getByText('Personne-QA_Test')).toBeInTheDocument();
+  if (tab === 'social') expect(within(entry).getByText(nature)).toBeInTheDocument();
+  expect(missingRow.agent).toBe('Non renseigne');
+  expect(missingRow.nature_sociale).toBe('Aide sociale');
+  expect(api.updateIncome).not.toHaveBeenCalled();
+  expect(api.updateExpense).not.toHaveBeenCalled();
+});
+
+test.each(['recettes', 'depenses', 'social'].flatMap(tab => [
   [tab, 'FR', 'Fournitures', 'Description', 'Rechercher...'],
   [tab, 'DE', 'Materialien', 'Beschreibung', 'Suchen...'],
   [tab, 'EN', 'Supplies', 'Description', 'Search...']

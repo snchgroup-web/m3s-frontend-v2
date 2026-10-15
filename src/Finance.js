@@ -1277,7 +1277,7 @@ const Finance = () => {
     String(cat || '').replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
   const standardValueTranslations = {
     FR: {
-      'NON RENSEIGNE': 'Non renseigne',
+      'NON RENSEIGNE': 'Non renseigné',
       'CONCEPTION': 'Conception',
       'MISE EN PLACE': 'Mise en Place',
       'CONSOLIDATION': 'Consolidation',
@@ -1395,6 +1395,8 @@ const Finance = () => {
     const key = normalizeCategoryKey(cat);
     return supplementalCategoryTranslations[language]?.[key] || dataTranslations.categories[language]?.[cat] || formatUnknownCategory(cat);
   };
+  const formatAgent = value => normalizeCategoryKey(value) === 'NON RENSEIGNE'
+    ? translateStandardValue(value) : formatCell(value);
 
   const categoryOptions = useMemo(() => {
     if (socialModal) {
@@ -2286,7 +2288,7 @@ const Finance = () => {
                           {r.hasExplicitTauxFx ? formatAmount(r.tauxFx) : <ExpenseReferenceRate expense={r} language={language} history={fxHistory} missingLabel={t.chfCfaRateMissing} />}
                         </td>
                         <td className="px-6 py-3 text-slate-400">{translateCategory(r.categorie)}</td>
-                        <td className="px-4 py-3 text-slate-400">{formatCell(r.agent)}</td>
+                        <td className="px-4 py-3 text-slate-400">{formatAgent(r.agent)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(r.team)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(r.departement)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(r.phaseProjet)}</td>
@@ -2368,7 +2370,7 @@ const Finance = () => {
                           {d.hasExplicitTauxFx ? formatAmount(d.tauxFx) : <ExpenseReferenceRate expense={d} language={language} history={fxHistory} missingLabel={t.chfCfaRateMissing} />}
                         </td>
                         <td className="px-6 py-3 text-slate-400">{translateCategory(d.categorie)}</td>
-                        <td className="px-4 py-3 text-slate-400">{formatCell(d.agent)}</td>
+                        <td className="px-4 py-3 text-slate-400">{formatAgent(d.agent)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.team)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.departement)}</td>
                         <td className="px-4 py-3 text-slate-400">{translateStandardValue(d.phaseProjet)}</td>
@@ -2695,9 +2697,9 @@ const Finance = () => {
                               ? Number(row.tauxFx).toLocaleString(undefined, { maximumFractionDigits: 3 })
                               : <span className="font-semibold text-amber-300">{t.chfCfaRateMissing}</span>}
                           </td>
-                          <td className="px-4 py-3"><span className="inline-flex whitespace-nowrap rounded bg-emerald-500/15 px-2 py-1 text-xs font-medium text-emerald-300">{translateStandardValue(row.natureSociale)}</span></td>
+                          <td className="px-4 py-3"><span className="inline-flex whitespace-nowrap rounded bg-emerald-500/15 px-2 py-1 text-xs font-medium text-emerald-300">{supplementalCategoryTranslations[language]?.[normalizeCategoryKey(row.natureSociale)] || translateStandardValue(row.natureSociale)}</span></td>
                           <td className="px-4 py-3 text-slate-300">{formatCell(row.beneficiaire)}</td>
-                          <td className="px-4 py-3 text-slate-300">{formatCell(row.agent)}</td>
+                          <td className="px-4 py-3 text-slate-300">{formatAgent(row.agent)}</td>
                           <td className="px-4 py-3 text-slate-300">{translateStandardValue(row.team)}</td>
                           <td className="px-4 py-3 text-slate-300">{translateStandardValue(row.departement)}</td>
                           <td className="px-4 py-3 text-slate-300">{formatCell(row.pays)}</td>
@@ -2882,7 +2884,7 @@ const Finance = () => {
                                 <td className="px-4 py-3 font-semibold whitespace-nowrap" style={{ color: 'var(--m3s-status-info)' }}>{formatOptionalAmount(item.partCheikhChf)} CHF</td>
                                 <td className="px-4 py-3 font-semibold whitespace-nowrap" style={{ color: 'var(--m3s-status-info)' }}>{formatOptionalAmount(item.remboursementCheikhChf)} CHF</td>
                                 <td className="px-4 py-3 text-slate-300">{translateCategory(item.categorie)}</td>
-                                <td className="px-4 py-3 text-slate-300">{formatCell(item.agent)}</td>
+                                <td className="px-4 py-3 text-slate-300">{formatAgent(item.agent)}</td>
                                 <td className="px-4 py-3 text-slate-300">{translateStandardValue(item.team)}</td>
                                 <td className="px-4 py-3 text-slate-300">{translateStandardValue(item.departement)}</td>
                                 <td className="px-4 py-3 text-slate-300">{translateStandardValue(item.phase_projet)}</td>
