@@ -52,6 +52,66 @@ const renderFinance = () => render(
   </LanguageProvider>
 );
 
+test.each(['recettes', 'depenses', 'social'].flatMap(tab => [
+  [tab, 'FR', 'Non renseigné', 'Aide Sociale'],
+  [tab, 'DE', 'Nicht angegeben', 'Sozialhilfe'],
+  [tab, 'EN', 'Not provided', 'Social Aid']
+]))('localises only the missing agent marker in %s/%s, retaining names and source fields', async (tab, language, missing, nature) => {
+  mockSearch = `?tab=${tab}`;
+  localStorage.setItem('language', language);
+  const missingRow = Object.freeze({ id: 'MISSING-AGENT-QA', ref: 'MISSING-AGENT-QA', description: 'Synthetic entry', agent: 'Non renseigne', nature_sociale: 'Aide sociale', date: '2026-10-02', montant_chf: 10, montant_cfa: 7000, taux_fx: 700 });
+  const namedRow = Object.freeze({ ...missingRow, id: 'NAMED-AGENT-QA', ref: 'NAMED-AGENT-QA', agent: 'Personne-QA_Test' });
+  api.getIncome.mockResolvedValue({ data: [missingRow, namedRow] });
+  api.getExpenses.mockResolvedValue({ data: [missingRow, namedRow] });
+  api.getSocialFinance.mockResolvedValue({ data: [missingRow, namedRow], summary: {} });
+  renderFinance();
+  const entry = (await screen.findByText('MISSING-AGENT-QA')).closest('tr');
+  expect(within(entry).getAllByRole('cell').some(cell => cell.textContent === missing)).toBe(true);
+  expect(within((await screen.findByText('NAMED-AGENT-QA')).closest('tr')).getByText('Personne-QA_Test')).toBeInTheDocument();
+  if (tab === 'social') expect(within(entry).getByText(nature)).toBeInTheDocument();
+  expect(missingRow.agent).toBe('Non renseigne');
+  expect(missingRow.nature_sociale).toBe('Aide sociale');
+  expect(api.updateIncome).not.toHaveBeenCalled();
+  expect(api.updateExpense).not.toHaveBeenCalled();
+});
+
+test.each(['recettes', 'depenses', 'social'].flatMap(tab => [
+  [tab, 'FR', 'Fournitures', 'Description', 'Rechercher...'],
+  [tab, 'DE', 'Materialien', 'Beschreibung', 'Suchen...'],
+  [tab, 'EN', 'Supplies', 'Description', 'Search...']
+]))('localises %s descriptions in %s, searches them and edits only the source', async (tab, language, translated, field, search) => {
+  mockSearch = `?tab=${tab}`;
+  localStorage.setItem('language', language);
+  const row = { id: 'DESC-QA', ref: 'DESC-QA', description: 'Fournitures', category: 'Services', date: '2026-10-02', montant_chf: 10, montant_cfa: 7000, taux_fx: 700 };
+  api.getIncome.mockResolvedValue({ data: [row] });
+  api.getExpenses.mockResolvedValue({ data: [row] });
+  api.getSocialFinance.mockResolvedValue({ data: [row], summary: { total_chf: 10, total_cfa_historique: 7000 } });
+  renderFinance();
+  const entry = (await screen.findByText('DESC-QA')).closest('tr');
+  expect(within(entry).getByText(translated)).toBeInTheDocument();
+  const date = { FR: '02-10-26', DE: '02.10.26', EN: '02/10/26' }[language];
+  expect(within(entry).getByText(date)).toHaveClass('whitespace-nowrap');
+  fireEvent.change(within(entry.closest('.m3s-table-shell').parentElement).getByPlaceholderText(search), { target: { value: translated } });
+  expect(screen.getByText('DESC-QA')).toBeInTheDocument();
+  fireEvent.click(entry);
+  expect(screen.getByLabelText(field)).toHaveValue('Fournitures');
+  expect(row.description).toBe('Fournitures');
+  expect(api.updateIncome).not.toHaveBeenCalled();
+  expect(api.updateExpense).not.toHaveBeenCalled();
+});
+
+test('submits the original expense description, never its EN presentation', async () => {
+  mockSearch = '?tab=depenses';
+  localStorage.setItem('language', 'EN');
+  api.getExpenses.mockResolvedValue({ data: [{ id: 'DESC-SAVE-QA', ref: 'DESC-SAVE-QA', description: 'Fournitures', date: '2026-10-02', montant_chf: 10, montant_cfa: 7000, taux_fx: 700 }] });
+  api.updateExpense.mockResolvedValue({ success: true });
+  renderFinance();
+  fireEvent.click((await screen.findByText('DESC-SAVE-QA')).closest('tr'));
+  fireEvent.click(screen.getByRole('button', { name: 'Save' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Yes, update' }));
+  await waitFor(() => expect(api.updateExpense).toHaveBeenCalledWith('DESC-SAVE-QA', expect.objectContaining({ description: 'Fournitures' })));
+});
+
 beforeEach(() => {
   mockSearch = '?tab=recettes';
   localStorage.clear();

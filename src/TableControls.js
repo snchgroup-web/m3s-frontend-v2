@@ -7,6 +7,10 @@ const tableText = {
     search: 'Rechercher...',
     clearSearch: 'Effacer la recherche',
     rows: 'Lignes',
+    page: 'Page',
+    previous: 'Page précédente',
+    next: 'Page suivante',
+    total: 'au total',
     noResult: 'Aucun résultat',
     of: 'sur',
     shown: 'affichées'
@@ -15,6 +19,10 @@ const tableText = {
     search: 'Search...',
     clearSearch: 'Clear search',
     rows: 'Rows',
+    page: 'Page',
+    previous: 'Previous page',
+    next: 'Next page',
+    total: 'total',
     noResult: 'No results',
     of: 'of',
     shown: 'shown'
@@ -23,6 +31,10 @@ const tableText = {
     search: 'Suchen...',
     clearSearch: 'Suche löschen',
     rows: 'Zeilen',
+    page: 'Seite',
+    previous: 'Vorherige Seite',
+    next: 'Nächste Seite',
+    total: 'insgesamt',
     noResult: 'Keine Ergebnisse',
     of: 'von',
     shown: 'angezeigt'
@@ -35,9 +47,10 @@ const normalizeSearchValue = (value) =>
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
 
-const rowMatchesSearch = (row, query) => {
+const rowMatchesSearch = (row, query, getSearchText) => {
   if (!query) return true;
-  return normalizeSearchValue(JSON.stringify(row)).includes(query);
+  return normalizeSearchValue(JSON.stringify(row)).includes(query)
+    || (getSearchText ? normalizeSearchValue(getSearchText(row)).includes(query) : false);
 };
 
 const TableControls = ({
@@ -47,7 +60,8 @@ const TableControls = ({
   pageSizeOptions = [10, 25, 50, 100],
   defaultPageSize = 10,
   maxHeight = '30rem',
-  searchPlaceholder
+  searchPlaceholder,
+  getSearchText
 }) => {
   const { language } = useLanguage();
   const t = tableText[language] || tableText.FR;
@@ -58,8 +72,8 @@ const TableControls = ({
   const normalizedQuery = normalizeSearchValue(query);
 
   const filteredRows = useMemo(
-    () => safeRows.filter(row => rowMatchesSearch(row, normalizedQuery)),
-    [safeRows, normalizedQuery]
+    () => safeRows.filter(row => rowMatchesSearch(row, normalizedQuery, getSearchText)),
+    [safeRows, normalizedQuery, getSearchText]
   );
 
   const pageCount = Math.max(1, Math.ceil(filteredRows.length / pageSize));
@@ -119,7 +133,7 @@ const TableControls = ({
           </label>
           <span className="text-slate-400">
             {filteredRows.length ? `${startIndex + 1}-${endIndex}` : '0'} {t.of} {filteredRows.length} {t.shown}
-            {filteredRows.length !== safeRows.length ? ` (${safeRows.length} total)` : ''}
+            {filteredRows.length !== safeRows.length ? ` (${safeRows.length} ${t.total})` : ''}
           </span>
         </div>
       </div>
@@ -133,10 +147,12 @@ const TableControls = ({
       </div>
 
       <div className="mt-3 flex items-center justify-between text-sm text-slate-400">
-        <span>Page {safePage} / {pageCount}</span>
+        <span>{t.page} {safePage} / {pageCount}</span>
         <div className="flex gap-2">
           <button
             type="button"
+            title={t.previous}
+            aria-label={t.previous}
             onClick={() => setPage(Math.max(1, safePage - 1))}
             disabled={safePage <= 1}
             className="rounded border border-slate-600 bg-slate-700 p-2 text-white disabled:cursor-not-allowed disabled:opacity-40"
@@ -145,6 +161,8 @@ const TableControls = ({
           </button>
           <button
             type="button"
+            title={t.next}
+            aria-label={t.next}
             onClick={() => setPage(Math.min(pageCount, safePage + 1))}
             disabled={safePage >= pageCount}
             className="rounded border border-slate-600 bg-slate-700 p-2 text-white disabled:cursor-not-allowed disabled:opacity-40"

@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import TableControls from './TableControls';
 import ExpenseProofs from './ExpenseProofs';
+import FinanceDescription from './FinanceDescription';
+import { translateFinanceDescription } from './financeDescriptionTranslation';
 
 const text = {
   FR: {
@@ -59,6 +61,7 @@ export const socialHistoricalLabel = language => (text[language] || text.FR).his
 
 export default function FinanceSocialExpenses({ rows, status, language, formatDate, formatAmount, onOpenExpenses }) {
   const t = text[language] || text.FR;
+  const descriptionSearchText = useCallback(row => translateFinanceDescription(row.description, language), [language]);
   const social = selectSocialExpenses(rows);
   const pending = selectPendingSocialTransfers(rows);
   const renderTable = visibleRows => (
@@ -72,7 +75,7 @@ export default function FinanceSocialExpenses({ rows, status, language, formatDa
         <tr key={row.id} className="border-t border-slate-700">
           <td className="px-4 py-3 text-slate-400">{row.ref || '—'}</td>
           <td className="px-4 py-3 text-slate-400 whitespace-nowrap">{formatDate(row.date)}</td>
-          <td className="px-4 py-3 text-slate-300">{row.description}</td>
+          <td className="px-4 py-3 text-slate-300"><FinanceDescription value={row.description} language={language} /></td>
           <td className="px-4 py-3 text-red-400">{row.montantChfAvailable ? formatAmount(row.montantChf) : '—'}</td>
           <td className="px-4 py-3 text-red-300">{row.montantCfaAvailable ? formatAmount(row.montantCfa) : '—'}</td>
           <td className="px-4 py-3"><ExpenseProofs expense={row} /></td>
@@ -91,10 +94,10 @@ export default function FinanceSocialExpenses({ rows, status, language, formatDa
       <p className="text-sm text-slate-400">{t.scope}</p>
       <p className="text-sm text-slate-400">{t.qualification}</p>
       {status !== 'available' ? <p role="status" className="text-sm text-slate-300">{status === 'loading' ? t.loading : t.unavailable}</p> : <>
-        <TableControls rows={social} renderTable={renderTable} renderEmpty={() => <p className="p-4 text-sm text-slate-400">{t.empty}</p>} />
+        <TableControls rows={social} getSearchText={descriptionSearchText} renderTable={renderTable} renderEmpty={() => <p className="p-4 text-sm text-slate-400">{t.empty}</p>} />
         {pending.length > 0 && <section aria-label={t.pending} className="space-y-3 pt-3">
           <h5 className="text-sm font-semibold text-amber-300">{t.pending}</h5>
-          <TableControls rows={pending} renderTable={renderTable} />
+          <TableControls rows={pending} getSearchText={descriptionSearchText} renderTable={renderTable} />
         </section>}
       </>}
     </section>
