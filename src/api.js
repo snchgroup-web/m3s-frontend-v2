@@ -359,7 +359,7 @@ export const api = {
   // Finance - Tableau de bord
   getFinanceDashboard: async () => {
     try {
-      const res = await apiFetch(`${API_BASE_URL}/finance/dashboard`);
+      const res = await apiFetch(`${API_BASE_URL}/finance/dashboard`, { cache: 'no-store' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (erreur) {
@@ -371,7 +371,7 @@ export const api = {
   getExpenses: async (limite = 100, decalage = 0) => {
     try {
       const res = await apiFetch(
-        `${API_BASE_URL}/finance/expenses?limit=${limite}&offset=${decalage}`
+        `${API_BASE_URL}/finance/expenses?limit=${limite}&offset=${decalage}`, { cache: 'no-store' }
       );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
@@ -406,7 +406,7 @@ export const api = {
   getIncome: async (limite = 100, decalage = 0) => {
     try {
       const res = await apiFetch(
-        `${API_BASE_URL}/finance/income?limit=${limite}&offset=${decalage}`
+        `${API_BASE_URL}/finance/income?limit=${limite}&offset=${decalage}`, { cache: 'no-store' }
       );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
@@ -440,7 +440,7 @@ export const api = {
   getSocialFinance: async (limite = 200, decalage = 0) => {
     try {
       const res = await apiFetch(
-        `${API_BASE_URL}/finance/social?limit=${limite}&offset=${decalage}`
+        `${API_BASE_URL}/finance/social?limit=${limite}&offset=${decalage}`, { cache: 'no-store' }
       );
       if (!res.ok) throw await createApiError(res, 'FINANCE_SOCIAL_REQUEST_FAILED');
       return await res.json();

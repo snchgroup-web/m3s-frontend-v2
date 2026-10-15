@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, LabelList } from 'recharts';
-import { Edit2, Trash2, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound, Database, AlertTriangle, CheckCircle2, LoaderCircle } from 'lucide-react';
+import { Edit2, Trash2, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound, AlertTriangle, CheckCircle2, LoaderCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { formatRegistryDate } from './registryDate';
 import api from './api'; // Phase 2: Aide API pour données BigQuery réelles
@@ -20,6 +20,7 @@ import FinanceBudget from './FinanceBudget';
 import { createTransferComparison } from './financeTransferQuotes';
 import { parseFxRate, cfaPerChfObservation, summarizeFxHistory, yearlyFxHistory } from './financeFxHistory';
 import { normalizeFinanceSummary } from './financeSummary';
+import FinanceReadStatus from './FinanceReadStatus';
 import ExpenseSourceFields, { emptySourceAmounts, expenseAmountLabels } from './ExpenseSourceFields';
 import { normalizeExpenseAmounts } from './financeExpenseAmounts';
 import IncomeSourceFields, { emptyIncomeAmounts, normalizeIncomeAmounts, incomeAmountLabels } from './IncomeSourceFields';
@@ -147,6 +148,9 @@ const Finance = () => {
   const [financeExtractStatus, setFinanceExtractStatus] = useState('loading');
   const [incomeExtractStatus, setIncomeExtractStatus] = useState('loading');
   const [expenseExtractStatus, setExpenseExtractStatus] = useState('loading');
+  const financeReadVersion = useRef(0);
+  const socialReadVersion = useRef(0);
+  const [refreshingFinance, setRefreshingFinance] = useState(false);
   useFinanceSectionNavigation(location, activeTab, financeSummaryStatus !== 'loading' && financeExtractStatus !== 'loading' && incomeExtractStatus !== 'loading');
   const incomeScope = normalizeIncomeScope(new URLSearchParams(location.search).get('incomeScope'));
   const [socialRows, setSocialRows] = useState([]);
@@ -980,6 +984,7 @@ const Finance = () => {
 
   // Phase 2: Load real data from BigQuery via API
   const loadFinanceData = useCallback(async () => {
+    const version = ++financeReadVersion.current;
     setFinanceSummary(null);
     setFinanceSummaryStatus('loading');
     setFinanceExtractStatus('loading');
@@ -991,6 +996,7 @@ const Finance = () => {
       api.getExpenses(200, 0),
       api.getIncome(200, 0)
     ]);
+    if (version !== financeReadVersion.current) return;
 
     const summary = dashboardResult.status === 'fulfilled'
       ? normalizeFinanceSummary(dashboardResult.value)
@@ -1025,12 +1031,15 @@ const Finance = () => {
 
   useEffect(() => {
     loadFinanceData();
+    return () => { financeReadVersion.current += 1; };
   }, [loadFinanceData]);
 
   const loadSocialData = useCallback(async () => {
+    const version = ++socialReadVersion.current;
     setSocialAccessState('loading');
     try {
       const response = await api.getSocialFinance(200, 0);
+      if (version !== socialReadVersion.current) return;
       if (response?.success === false || !Array.isArray(response?.data)) {
         throw Object.assign(new Error('Invalid social register response'), { code: 'INVALID_SOCIAL_RESPONSE' });
       }
@@ -1040,6 +1049,7 @@ const Finance = () => {
       setSocialError('');
       setSocialAccessState('available');
     } catch (error) {
+      if (version !== socialReadVersion.current) return;
       console.error('Social finance error:', error);
       setSocialRows([]);
       setSocialSummary({});
@@ -1050,6 +1060,7 @@ const Finance = () => {
 
   useEffect(() => {
     loadSocialData();
+    return () => { socialReadVersion.current += 1; };
   }, [loadSocialData]);
 
   // Data translations for categories and descriptions
@@ -1518,12 +1529,6 @@ const Finance = () => {
     : null;
   const soldeCfa = Number.isFinite(totalRecettesCfa) && Number.isFinite(totalDepensesCfa)
     ? totalRecettesCfa - totalDepensesCfa
-    : null;
-  const financeSummaryReadAt = financeSummary?.timestamp && !Number.isNaN(new Date(financeSummary.timestamp).getTime())
-    ? new Intl.DateTimeFormat(
-      language === 'DE' ? 'de-CH' : language === 'EN' ? 'en-GB' : 'fr-CH',
-      { dateStyle: 'short', timeStyle: 'short' }
-    ).format(new Date(financeSummary.timestamp))
     : null;
   const latestHistoricalFx = getHistoricalCfaPerChf(new Date().toISOString().split('T')[0]);
   const tauxChfCfa = tauxDuJour.CHF_CFA || latestHistoricalFx?.cfaPerChf || null;
@@ -2131,56 +2136,17 @@ const Finance = () => {
           socialTotalCfa={socialTotalCfaHistorique}
         />
 
-        <div
-          role="status"
-          data-testid="finance-source-status"
-          className={`mb-6 flex items-start gap-3 rounded-lg border px-4 py-3 ${
-            financeSummaryStatus === 'available' && !financeSummary?.expenseSubtotal && !financeSummary?.incomeSubtotal
-              ? 'border-emerald-700/60 bg-emerald-950/30 text-emerald-100'
-              : financeSummaryStatus === 'loading'
-                ? 'border-blue-700/60 bg-blue-950/30 text-blue-100'
-                : 'border-amber-700/60 bg-amber-950/30 text-amber-100'
-          }`}
-        >
-          {financeSummaryStatus === 'loading' ? (
-            <LoaderCircle size={20} className="mt-0.5 shrink-0 animate-spin" aria-hidden="true" />
-          ) : financeSummaryStatus === 'available' && !financeSummary?.expenseSubtotal && !financeSummary?.incomeSubtotal ? (
-            <Database size={20} className="mt-0.5 shrink-0" aria-hidden="true" />
-          ) : (
-            <AlertTriangle size={20} className="mt-0.5 shrink-0" aria-hidden="true" />
-          )}
-          <div className="min-w-0 text-sm">
-            <p className="font-semibold">
-              {financeSummaryStatus === 'loading'
-                ? t.sourceLoading
-                : financeSummaryStatus === 'available'
-                  ? financeSummary?.expenseSubtotal || financeSummary?.incomeSubtotal ? t.sourcePartial : t.sourceAvailable
-                  : t.sourceUnavailable}
-            </p>
-            <p className="mt-1 text-slate-300">
-              {financeSummaryStatus === 'available'
-                ? `${financeSummary.incomeCount.toLocaleString()} ${t.incomeRecords} · ${financeSummary.expenseCount.toLocaleString()} ${t.expenseRecords} · ${t.globalSource}${financeSummaryReadAt ? ` · ${t.sourceRead} : ${financeSummaryReadAt}` : ''}`
-                : financeSummaryStatus === 'unavailable'
-                  ? `${t.missingNotZero} ${t.globalSource}`
-                  : t.globalSource}
-            </p>
-            {financeExtractStatus !== 'loading' && (
-              <p className="mt-1 text-slate-400">
-                {financeExtractStatus === 'available'
-                  ? `${recettes.length.toLocaleString()} ${t.incomeRecords} · ${depenses.length.toLocaleString()} ${t.expenseRecords} · ${t.loadedExtract} (${t.maxPerRegister}).`
-                  : financeExtractStatus === 'partial'
-                    ? `${t.extractPartial} (${recettes.length.toLocaleString()} ${t.incomeRecords} · ${depenses.length.toLocaleString()} ${t.expenseRecords}).`
-                    : `${t.extractUnavailable}.`}
-              </p>
-            )}
-            {(financeSummary?.expensesMissingChf > 0 || financeSummary?.expensesMissingCfa > 0) && <p role="alert" className="mt-2 text-amber-300">
-              {expenseAmountLabels[language].partial} CHF : {financeSummary.expensesMissingChf} · CFA : {financeSummary.expensesMissingCfa}
-            </p>}
-            {financeSummary?.incomeSubtotal && <p role="alert" className="mt-2 text-amber-300">
-              {incomeAmountLabels[language].partial} CHF : {financeSummary.incomeMissingChf} · CFA : {financeSummary.incomeMissingCfa}
-            </p>}
-          </div>
-        </div>
+        <FinanceReadStatus language={language} summary={financeSummary} status={financeSummaryStatus}
+          incomeLoaded={incomeExtractStatus === 'available' ? recettes.length : null}
+          expenseLoaded={expenseExtractStatus === 'available' ? depenses.length : null}
+          socialLoaded={socialAccessState === 'available' ? socialRows.length : null} socialState={socialAccessState}
+          refreshing={refreshingFinance}
+          onRefresh={async () => {
+            if (refreshingFinance) return;
+            setRefreshingFinance(true);
+            try { await Promise.all([loadFinanceData(), loadSocialData()]); }
+            finally { setRefreshingFinance(false); }
+          }} />
 
         </>}
 

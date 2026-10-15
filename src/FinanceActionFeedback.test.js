@@ -102,7 +102,7 @@ test('does not expose expense projections when social access is forbidden', asyn
   api.getSocialFinance.mockRejectedValue({ status: 403, message: 'Restricted' });
   api.getExpenses.mockResolvedValue({ data: [{ id: 'PRIVATE-SOCIAL-QA', category: 'Social', description: 'Private synthetic expense' }] });
   renderFinance();
-  await waitFor(() => expect(screen.getByText(/Accès restreint/)).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByText('Accès restreint', { exact: true })).toBeInTheDocument());
   expect(screen.queryByRole('region', { name: 'Dépenses classées sociales' })).not.toBeInTheDocument();
   expect(screen.queryByText('Private synthetic expense')).not.toBeInTheDocument();
 });

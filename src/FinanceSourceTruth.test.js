@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { LanguageProvider } from './LanguageContext';
 import Finance from './Finance';
 import api from './api';
@@ -91,7 +91,7 @@ test.each([
   renderFinance();
   await screen.findByText(label);
   const banner = screen.getByTestId('finance-source-status');
-  expect(banner).toHaveClass('border-amber-700/60');
+  expect(banner).toHaveTextContent('CHF 1 · CFA 1');
   expect(screen.getByTestId('finance-total-expenses')).toHaveTextContent('400 CHF');
   expect(screen.getByTestId('finance-net-balance')).toHaveTextContent('— CHF');
 });
@@ -144,12 +144,41 @@ test.each([{ success: false, data: [] }, { data: null }])('does not label an inv
   const card = screen.getByTestId('finance-social-total').closest('article');
   expect(card).toHaveTextContent('Transactions chargées : —');
   expect(card).not.toHaveTextContent('Transactions chargées : 0');
+  expect(screen.getByTestId('finance-source-status')).toHaveTextContent('Registre social : Indisponible');
+});
+
+test('keeps pending and failed social reads explicit when global finance totals are available', async () => {
+  let rejectSocial;
+  api.getSocialFinance.mockReturnValue(new Promise((resolve, reject) => { rejectSocial = reject; }));
+  renderFinance();
+  await screen.findByText('Totaux globaux disponibles');
+  expect(screen.getByTestId('finance-source-status')).toHaveTextContent('Registre social : Chargement en cours');
+  rejectSocial(new Error('Synthetic social outage'));
+  await waitFor(() => expect(screen.getByTestId('finance-source-status')).toHaveTextContent('Registre social : Indisponible'));
+  expect(screen.getByTestId('finance-source-status')).not.toHaveTextContent('Flux sociaux chargés');
+  expect(screen.getByTestId('finance-total-income')).toHaveTextContent(`${(1000).toLocaleString('fr-CH').replace(/\s/g, ' ')} CHF`);
 });
 
 test('ignores explicitly rejected expense rows while preserving the global summary and income extract', async () => {
   api.getExpenses.mockResolvedValue({ success: false, data: [{ id: 'REJECTED', montant_chf: 999 }] });
   renderFinance();
   await screen.findByText('Totaux globaux disponibles');
-  expect(screen.getByTestId('finance-source-status')).toHaveTextContent('1 recettes · 0 dépenses');
+  expect(screen.getByTestId('finance-source-status')).toHaveTextContent('1 recettes · — dépenses');
   expect(screen.getByTestId('finance-total-expenses')).toHaveTextContent('400 CHF');
+});
+
+test('refreshes summary, extracts and social counts together without changing financial records', async () => {
+  renderFinance();
+  await screen.findByText('Totaux globaux disponibles');
+  api.getFinanceDashboard.mockResolvedValue({ ...dashboardResponse({ total_income_count: 3 }), timestamp: '2026-10-15T14:00:00Z' });
+  api.getIncome.mockResolvedValue({ data: [] });
+  api.getExpenses.mockResolvedValue({ data: [] });
+  api.getSocialFinance.mockResolvedValue({ data: [{ id: 'SOC-DEMO', montant_chf: 10 }], summary: {} });
+  fireEvent.click(screen.getByRole('button', { name: 'Actualiser recettes, dépenses et flux sociaux' }));
+  await waitFor(() => expect(screen.getByTestId('finance-source-status')).toHaveTextContent('3 recettes · 2 dépenses'));
+  expect(screen.getByTestId('finance-source-status')).toHaveTextContent('Flux sociaux chargés : 1');
+  expect(screen.getByTestId('finance-source-status').querySelector('time')).toHaveAttribute('dateTime', '2026-10-15T14:00:00Z');
+  expect(api.getIncome).toHaveBeenCalledTimes(2);
+  expect(api.getExpenses).toHaveBeenCalledTimes(2);
+  expect(api.getSocialFinance).toHaveBeenCalledTimes(2);
 });
