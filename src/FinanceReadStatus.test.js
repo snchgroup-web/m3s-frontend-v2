@@ -4,6 +4,18 @@ import FinanceReadStatus, { formatFinanceReadTime } from './FinanceReadStatus';
 
 const summary = { incomeCount: 62, expenseCount: 150, timestamp: '2026-10-15T14:00:00Z' };
 
+test('keeps the source details collapsed without losing scope, dates or refresh controls', () => {
+  const view = render(<FinanceReadStatus summary={summary} status="available" />);
+  const details = screen.getByRole('status').querySelector('details');
+  expect(details).not.toHaveAttribute('open');
+  expect(details.querySelector('summary')).toHaveTextContent('Totaux globaux disponibles');
+  details.open = true;
+  view.rerender(<FinanceReadStatus language="EN" summary={summary} status="available" />);
+  expect(details).toHaveAttribute('open');
+  expect(details.querySelector('summary')).toHaveTextContent('Global totals available');
+  expect(screen.getByRole('button', { name: 'Refresh income, expenses and social flows' })).toBeEnabled();
+});
+
 test.each([
   ['FR', 'Recettes globales et solde : hors flux sociaux.', /15-10-26/, 'Actualiser recettes, dépenses et flux sociaux'],
   ['DE', 'Globale Einnahmen und Saldo: ohne soziale Flüsse.', /15\.10\.26/, 'Einnahmen, Ausgaben und soziale Flüsse aktualisieren'],

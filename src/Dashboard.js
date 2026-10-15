@@ -30,6 +30,8 @@ import api from './api';
 import FinanceTransactionCount, { sumTransactionCounts } from './FinanceTransactionCount';
 import { normalizeFinanceSummary, expenseSubtotalCopy } from './financeSummary';
 import FinanceReadStatus, { formatFinanceReadTime } from './FinanceReadStatus';
+import { incomeAmountLabels } from './IncomeSourceFields';
+import { incomeReferenceEstimate, incomeEstimateCopy } from './incomeReferenceEstimate';
 import { matchesIncomeScope } from './financeIncomeScope';
 import DashboardPilotageNavigation from './DashboardPilotageNavigation';
 import { getDashboardIndicatorDestination } from './dashboardNavigation';
@@ -117,7 +119,7 @@ const kpiStatusClasses = {
   disconnected: 'border-slate-600 bg-slate-900/45 text-slate-400'
 };
 
-const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, transactionCount, source, status, statusLabel, icon: Icon, accent, flowAccent, onOpen, openLabel, definition, helpLabel, onHelp }) => (
+const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, approximateSecondary, transactionCount, source, status, statusLabel, icon: Icon, accent, flowAccent, onOpen, openLabel, definition, helpLabel, onHelp }) => (
   <article
     id={`dashboard-kpi-${id}`}
     className="global-kpi-card group relative min-h-[132px] scroll-mt-24 rounded-md border border-slate-700 bg-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-blue-950/25 focus-within:ring-2 focus-within:ring-blue-500"
@@ -138,7 +140,7 @@ const GlobalKpiCard = ({ id, label, value, secondary, dualCurrency = false, tran
     {dualCurrency ? (
       <span className="global-kpi-currency mt-2 flex flex-wrap items-baseline gap-x-1.5 gap-y-1 text-[15px] font-semibold 2xl:flex-nowrap">
         <span className={`global-kpi-primary global-kpi-flow whitespace-nowrap ${flowAccent ? kpiFlowTextClasses[flowAccent] : 'text-blue-300'}`}>{value}</span>
-        <span className="global-kpi-cfa m3s-currency-cfa whitespace-nowrap">{status === 'partial' ? '' : '≈ '}{secondary}</span>
+        <span className="global-kpi-cfa m3s-currency-cfa whitespace-nowrap">{(approximateSecondary ?? status !== 'partial') ? '≈ ' : ''}{secondary}</span>
       </span>
     ) : (
       <>
@@ -616,6 +618,8 @@ const Dashboard = () => {
         const totalIncomeCfa = financeSummary?.totalIncomeCfa ?? null;
         const totalExpenses = financeSummary?.totalExpenses ?? null;
         const totalExpensesCfa = financeSummary?.totalExpensesCfa ?? null;
+        const incomeEstimate = incomeAvailable && income.success !== false
+          ? incomeReferenceEstimate(financeSummary, operatingIncomeRows, fx?.data) : null;
         const donations = incomeAvailable
           ? donationRows.reduce((sum, row) => sum + numberFromApi(row.montant_chf ?? row.montant), 0)
           : null;
@@ -672,6 +676,12 @@ const Dashboard = () => {
         const associatesTotal = membersComplete ? memberRows.filter((row) => normalizedMemberType(row.member_type) === 'associe').length : null;
         const teamsTotal = membersComplete ? new Set(memberRows.map((row) => String(row.team || '').trim()).filter(Boolean)).size : null;
         const financeAvailable = [totalIncome, totalIncomeCfa, totalExpenses, totalExpensesCfa].every(Number.isFinite);
+        const financeReadable = financeSummary && [
+          Number.isFinite(totalIncome) || financeSummary.incomeMissingChf > 0,
+          Number.isFinite(totalIncomeCfa) || financeSummary.incomeMissingCfa > 0,
+          Number.isFinite(totalExpenses) || financeSummary.expensesMissingChf > 0,
+          Number.isFinite(totalExpensesCfa) || financeSummary.expensesMissingCfa > 0
+        ].every(Boolean);
         const apiUnavailable = [
           financeDashboard,
           documentsCount,
@@ -689,7 +699,7 @@ const Dashboard = () => {
           || !portfolioAvailable
           || !incomeAvailable
           || !expensesAvailable
-          || !financeAvailable
+          || !financeReadable
           || (!socialAvailable && socialResult.errorStatus !== 403)
           || (!realEstateAvailable && realEstateResult.errorStatus !== 403)
           || (!suppliersAvailable && suppliersResult.errorStatus !== 403)
@@ -716,6 +726,7 @@ const Dashboard = () => {
           readAt: new Date().toISOString(),
           financeRead: {
             summary: financeSummary,
+            incomeEstimate,
             incomeLoaded: incomeAvailable ? incomeRows.length : null,
             expenseLoaded: expensesAvailable ? expenseRows.length : null,
             socialLoaded: socialAvailable ? social.data.length : null,
@@ -748,6 +759,8 @@ const Dashboard = () => {
               ...mockDataBase.moduleStats.finance,
               revenue: totalIncome,
               revenueCfa: totalIncomeCfa,
+              incomeSubtotal: financeSummary?.incomeSubtotal || null,
+              incomeEstimate,
               expenses: totalExpenses,
               expensesCfa: totalExpensesCfa,
               expenseSubtotal: financeSummary?.expenseSubtotal || null,
@@ -884,9 +897,14 @@ const Dashboard = () => {
     language
   });
   const expenseSubtotal = dashboardData?.moduleStats.finance.expenseSubtotal;
+  const incomeSubtotal = dashboardData?.moduleStats.finance.incomeSubtotal;
+  const incomeEstimate = dashboardData?.moduleStats.finance.incomeEstimate;
+  const incomeCopy = incomeAmountLabels[language] || incomeAmountLabels.FR;
+  const estimateCopy = incomeEstimateCopy(language);
   const subtotalText = expenseSubtotalCopy(language);
   const financeValues = {
-    revenue: formatDualCurrency(dashboardData?.moduleStats.finance.revenue, dashboardData?.moduleStats.finance.revenueCfa),
+    revenue: formatDualCurrency(incomeSubtotal ? incomeSubtotal.chf : dashboardData?.moduleStats.finance.revenue,
+      incomeEstimate ? incomeEstimate.cfa : incomeSubtotal ? incomeSubtotal.cfa : dashboardData?.moduleStats.finance.revenueCfa),
     expenses: formatDualCurrency(expenseSubtotal ? expenseSubtotal.chf : dashboardData?.moduleStats.finance.expenses, expenseSubtotal ? expenseSubtotal.cfa : dashboardData?.moduleStats.finance.expensesCfa),
     balance: formatDualCurrency(dashboardData?.moduleStats.finance.balance, dashboardData?.moduleStats.finance.balanceCfa),
     donations: formatDualCurrency(dashboardData?.moduleStats.finance.donations, dashboardData?.moduleStats.finance.donationsCfa),
@@ -966,10 +984,13 @@ const Dashboard = () => {
       gridClass: 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4',
       cards: [
         {
-          id: 'revenue', label: t.revenue, value: `${financeValues.revenue.chf} CHF`, secondary: `${financeValues.revenue.cfa} CFA`, dualCurrency: true,
+          id: 'revenue', label: incomeEstimate ? estimateCopy.label : incomeSubtotal ? incomeCopy.label : t.revenue, value: `${financeValues.revenue.chf} CHF`, secondary: `${financeValues.revenue.cfa} CFA`, dualCurrency: true,
           transactionCount: financeTransactionCount('income', 'global'),
           source: t.financeIncome, ...sourceState('income'), icon: HandCoins, accent: 'emerald', flowAccent: 'emerald',
-          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('revenue'), ...financeKpiHelp('revenue')
+          ...(incomeSubtotal ? { status: 'partial', statusLabel: incomeEstimate ? estimateCopy.status : subtotalText.partial,
+            approximateSecondary: Boolean(incomeEstimate), source: incomeEstimate ? estimateCopy.source : incomeCopy.partial } : {}),
+          openLabel: t.openModule, onOpen: () => handleIndicatorOpen('revenue'), ...financeKpiHelp('revenue'),
+          ...(incomeEstimate ? { definition: `${estimateCopy.source}. ${estimateCopy.excluded}` } : {})
         },
         {
           id: 'expenses', label: expenseSubtotal ? subtotalText.label : t.expenses, value: `${financeValues.expenses.chf} CHF`, secondary: `${financeValues.expenses.cfa} CFA`, dualCurrency: true,

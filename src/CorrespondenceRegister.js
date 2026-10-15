@@ -67,7 +67,8 @@ const CorrespondenceRegister = ({ language = 'FR', correspondenceId = '' }) => {
   const [query, setQuery] = useState(correspondenceId);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(defaultForm);
-  const [message, setMessage] = useState('');
+  const [messageKey, setMessage] = useState('');
+  const message = messageKey ? t[messageKey] : '';
   const [pendingAction, setPendingAction] = useState(null);
   const hasWritePermission = hasPermission(user?.permissions, ADMINISTRATION_CORRESPONDENCE_WRITE_PERMISSION);
   const canWrite = hasWritePermission && (sourceState === 'backend' || sourceState === 'local');
@@ -118,7 +119,7 @@ const CorrespondenceRegister = ({ language = 'FR', correspondenceId = '' }) => {
   const save = event => {
     event.preventDefault();
     if (!canWrite) return;
-    if (!t.directions[form.directionIndex] || !form.date || !form.sender.trim() || !form.recipient.trim() || !form.subject.trim() || !form.owner.trim()) { setMessage(t.required); return; }
+    if (!t.directions[form.directionIndex] || !form.date || !form.sender.trim() || !form.recipient.trim() || !form.subject.trim() || !form.owner.trim()) { setMessage('required'); return; }
     setPendingAction({ type: editing === 'new' ? 'create' : 'update', editing, form: { ...form } });
   };
   const remove = item => { if (canWrite) setPendingAction({ type: 'delete', item }); };
@@ -132,7 +133,7 @@ const CorrespondenceRegister = ({ language = 'FR', correspondenceId = '' }) => {
         const nextItems = items.filter(current => current.id !== action.item.id);
         if (sourceState === 'local') window.localStorage.setItem(storageKey, JSON.stringify(nextItems));
         setItems(nextItems);
-        setMessage(t.deleted);
+        setMessage('deleted');
       } else {
         const entry = { ...action.form, id: action.editing === 'new' ? `COR-${Date.now()}` : action.editing, sourceKind: sourceState };
         if (sourceState === 'backend') {
@@ -144,14 +145,14 @@ const CorrespondenceRegister = ({ language = 'FR', correspondenceId = '' }) => {
         } else if (sourceState === 'local') {
           persist(action.type === 'create' ? [entry, ...items] : items.map(item => item.id === action.editing ? entry : item));
         } else {
-          setMessage(t.saveFailed);
+          setMessage('saveFailed');
           return;
         }
         close();
-        setMessage(t.saved);
+        setMessage('saved');
       }
     } catch {
-      setMessage(action.type === 'delete' ? t.deleteFailed : t.saveFailed);
+      setMessage(action.type === 'delete' ? 'deleteFailed' : 'saveFailed');
     } finally {
       setBusy(false);
       setPendingAction(null);

@@ -26,6 +26,26 @@ beforeEach(() => {
 
 afterEach(() => jest.restoreAllMocks());
 
+test('retranslates saved feedback without changing or resaving the original correspondence', async () => {
+  const view = render(<CorrespondenceRegister language="FR" />);
+  fireEvent.click(screen.getByRole('button', { name: 'Ajouter un courrier' }));
+  for (const [label, value] of [['Expéditeur *', 'Sender QA'], ['Destinataire *', 'Recipient QA'], ['Objet *', 'Original QA'], ['Responsable du suivi *', 'Owner QA']]) {
+    fireEvent.change(screen.getByLabelText(label), { target: { value } });
+  }
+  fireEvent.click(screen.getByRole('button', { name: 'Enregistrer', exact: true }));
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, ajouter', exact: true }));
+  await screen.findByText('Courrier enregistré avec succès.');
+  const stored = JSON.stringify(localStorage);
+  for (const [language, message] of [['EN', 'Correspondence saved successfully.'], ['DE', 'Korrespondenz erfolgreich gespeichert.'], ['FR', 'Courrier enregistré avec succès.']]) {
+    view.rerender(<CorrespondenceRegister language={language} />);
+    expect(screen.getByRole('status')).toHaveTextContent(message);
+    expect(screen.getByText('Original QA')).toBeInTheDocument();
+    expect(JSON.stringify(localStorage)).toBe(stored);
+  }
+  expect(api.createAdministrationCorrespondence).not.toHaveBeenCalled();
+  expect(api.updateAdministrationCorrespondence).not.toHaveBeenCalled();
+});
+
 test.each([
   ['FR', 'Non renseigné', 'Rechercher dans le registre'],
   ['EN', 'Not specified', 'Search the register'],
