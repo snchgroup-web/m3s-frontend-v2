@@ -1837,7 +1837,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'CNS-03 decision baseline validated as a working framework' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Confirm two separate frameworks without opening execution' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governed decision record')).toHaveLength(98);
+  expect(screen.getAllByText('Governed decision record')).toHaveLength(100);
   expect(screen.getAllByText('Working framework validated', { selector: 'span' })).toHaveLength(8);
   expect(screen.getAllByText('Human validation recorded')).toHaveLength(3);
   expect(screen.getAllByText('Unavailable')).toHaveLength(9);
@@ -1849,7 +1849,7 @@ test('translates the CNS decision matrix in English and German', () => {
   expect(screen.getByRole('heading', { name: 'Entscheidungsgrundlage CNS-03 als Arbeitsrahmen validiert' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Zwei getrennte Rahmen bestätigen, ohne ihre Ausführung zu öffnen' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'REF-01-DEC-040 · V1.0' })).toBeInTheDocument();
-  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(98);
+  expect(screen.getAllByText('Governance-konformer Entscheidnachweis')).toHaveLength(100);
   expect(screen.getAllByText('Arbeitsrahmen validiert', { selector: 'span.rounded-full' })).toHaveLength(8);
   expect(screen.getAllByText('Menschliche Validierung dokumentiert')).toHaveLength(3);
   expect(screen.getAllByText('Nicht verfügbar')).toHaveLength(9);
@@ -2141,7 +2141,7 @@ test('opens the four governed global views without confusing architecture with t
     expect(screen.getByRole('heading', { name: 'Fonctions support · Finances' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Opérations & Développement' })).toBeInTheDocument();
     expect(screen.getByText('Nombre de comptes authentifiés retournés par le service de comptage M3S.')).toBeInTheDocument();
-    expect(screen.getByText('Somme CHF des remboursements immobiliers réalisés ; l’équivalent CFA affiché est une conversion au taux de référence courant.')).toBeInTheDocument();
+    expect(screen.getByText('Somme CHF des remboursements immobiliers réalisés par Cheikh, et non vers Cheikh ; l’équivalent CFA affiché est une conversion au taux de référence courant.')).toBeInTheDocument();
     expect(screen.getByText('Nombre de clients enregistrés dans le registre Commercial & CRM lorsque son compteur global sera raccordé.')).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: 'Revenir à l’indicateur' })).toHaveLength(29);
   fireEvent.click(screen.getByRole('button', { name: 'Ouvrir le Glossaire central' }));

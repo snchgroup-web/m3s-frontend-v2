@@ -6,6 +6,7 @@ import { rhReadTransport } from './api';
 
 const mockNavigate = jest.fn();
 let mockAuth;
+let mockLanguage = 'EN';
 jest.mock('./AuthContext', () => ({ useAuth: () => mockAuth }));
 
 jest.mock('react-router-dom', () => ({
@@ -14,7 +15,7 @@ jest.mock('react-router-dom', () => ({
 }), { virtual: true });
 
 jest.mock('./LanguageContext', () => ({
-  useLanguage: () => ({ language: 'EN' })
+  useLanguage: () => ({ language: mockLanguage })
 }));
 
 jest.mock('recharts', () => ({
@@ -76,6 +77,7 @@ test('shows the existing 2SG logo while the dashboard data is pending', () => {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockLanguage = 'EN';
   mockAuth = { user: null, provider: 'google', ready: true, isAuthenticated: false };
   rhReadTransport.mockReset();
   api.getFinanceDashboard.mockResolvedValue(summaryResponse());
@@ -435,4 +437,25 @@ test('opens a local function map without leaving global steering', async () => {
     { pathname: '/', search: '?view=map&function=administration' },
     { replace: true }
   );
+});
+
+test('refreshes authoritative totals and separate loaded counts, then clears failed summary dates', async () => {
+  const view = render(<Dashboard />);
+  await screen.findByTestId('finance-source-status');
+  api.getFinanceDashboard.mockResolvedValue({ ...summaryResponse({ total_income_count: 62, total_expense_count: 150 }), timestamp: '2026-10-15T14:00:00Z' });
+  api.getSocialFinance.mockResolvedValue({ data: Array.from({ length: 26 }, () => ({})), summary: {} });
+  fireEvent.click(screen.getByRole('button', { name: 'Refresh income, expenses and social flows' }));
+  await screen.findByText(/62 income records · 150 expense records/);
+  expect(screen.getByTestId('finance-source-status')).toHaveTextContent('Loaded social flows : 26');
+  expect(screen.getByTestId('finance-source-status')).not.toHaveTextContent('88 income records');
+  expect(screen.getByTestId('finance-source-status').querySelector('time')).toHaveAttribute('dateTime', '2026-10-15T14:00:00Z');
+  mockLanguage = 'DE';
+  view.rerender(<Dashboard />);
+  expect(screen.getByTestId('finance-source-status')).toHaveTextContent('Globale Einnahmen und Saldo: ohne soziale Flüsse.');
+  expect(api.getFinanceDashboard).toHaveBeenCalledTimes(2);
+  api.getFinanceDashboard.mockResolvedValue(null);
+  fireEvent.click(screen.getByRole('button', { name: 'Einnahmen, Ausgaben und soziale Flüsse aktualisieren' }));
+  await screen.findByText('Globale Summen nicht verfügbar');
+  expect(screen.getByTestId('finance-source-status').querySelector('time')).toBeNull();
+  expect(document.getElementById('dashboard-kpi-revenue')).toHaveTextContent('— CHF');
 });

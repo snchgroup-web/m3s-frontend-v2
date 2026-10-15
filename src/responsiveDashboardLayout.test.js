@@ -25,7 +25,7 @@ describe('responsive dashboard shell', () => {
     expect(dashboardSource).toContain('global-kpi-card group relative min-h-[132px]');
     expect(dashboardSource).toContain('flex min-h-[130px] w-full flex-col rounded-md');
     expect(dashboardSource).toContain('global-kpi-currency mt-2 flex flex-wrap items-baseline');
-    expect(dashboardSource).toContain('global-kpi-cfa whitespace-nowrap text-orange-400');
+    expect(dashboardSource).toContain('global-kpi-cfa m3s-currency-cfa whitespace-nowrap');
     expect(dashboardSource).toContain('const kpiFlowTextClasses = {');
     expect(dashboardSource).toContain("icon: TrendingDown, accent: 'red', flowAccent: 'red'");
     expect(dashboardSource).toContain("icon: Gift, accent: 'violet', flowAccent: 'violet'");
@@ -64,7 +64,7 @@ describe('responsive dashboard shell', () => {
     expect(dashboardSource).toContain('Operations & Development');
     expect(indexHtml).toContain('html:not(.dark) .global-kpi-group .text-slate-100{color:#172033!important}');
     expect(indexHtml).toContain('html:not(.dark) .global-kpi-card{background-color:#fff!important');
-    expect(indexHtml).toContain('html:not(.dark) .global-kpi-card .global-kpi-cfa{color:#c2410c!important}');
+    expect(indexHtml).toContain('html:not(.dark) .global-kpi-card .global-kpi-cfa{color:var(--m3s-currency-cfa)!important}');
     expect(indexHtml).toContain('html:not(.dark) .global-kpi-card .global-kpi-status--available');
   });
 

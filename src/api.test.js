@@ -3,6 +3,18 @@ jest.mock('./identityClient', () => ({ currentAccessToken: async () => global.lo
 
 const originalFetch = global.fetch;
 
+test.each([
+  ['getFinanceDashboard', /\/finance\/dashboard$/],
+  ['getIncome', /\/finance\/income\?limit=100&offset=0$/],
+  ['getExpenses', /\/finance\/expenses\?limit=100&offset=0$/],
+  ['getSocialFinance', /\/finance\/social\?limit=200&offset=0$/]
+])('%s bypasses the browser cache without writing data', async (method, url) => {
+  global.fetch = jest.fn().mockResolvedValue({ ok: true, status: 200, json: async () => ({ success: true, data: [] }) });
+  await api[method]();
+  expect(global.fetch).toHaveBeenCalledWith(expect.stringMatching(url), expect.objectContaining({ cache: 'no-store' }));
+  expect(global.fetch.mock.calls[0][1].method).toBeUndefined();
+});
+
 afterEach(() => {
   global.fetch = originalFetch;
   localStorage.clear();

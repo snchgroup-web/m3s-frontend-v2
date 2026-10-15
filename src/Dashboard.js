@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import BrandedLoading from './BrandedLoading';
@@ -29,20 +29,12 @@ import {
 import api from './api';
 import FinanceTransactionCount, { sumTransactionCounts } from './FinanceTransactionCount';
 import { normalizeFinanceSummary, expenseSubtotalCopy } from './financeSummary';
+import FinanceReadStatus, { formatFinanceReadTime } from './FinanceReadStatus';
 import { matchesIncomeScope } from './financeIncomeScope';
 import DashboardPilotageNavigation from './DashboardPilotageNavigation';
 import { getDashboardIndicatorDestination } from './dashboardNavigation';
 import { useRhEmployeeCount } from './rhRead/useEmployeeCount';
 import { getFinanceKpiDefinition, getManagementKpiDefinition, getOperationsKpiDefinition, getSupportKpiDefinition } from './dashboardKpiDictionary';
-
-// Month translations (stable constants, defined at module level)
-const monthTranslations = {
-  FR: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-  EN: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-  DE: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
-};
-
-const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
 const numberFromApi = (value, fallback = 0) => {
   const parsed = Number(value);
@@ -237,6 +229,7 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [dataWarning, setDataWarning] = useState(false);
+  const [refreshVersion, setRefreshVersion] = useState(0);
 
   // Translations
   const translations = {
@@ -576,23 +569,10 @@ const Dashboard = () => {
     DE: 'Einige Live-Daten sind vorübergehend nicht verfügbar. Es werden keine Demowerte angezeigt. Melden Sie sich erneut an, falls Ihre Sitzung abgelaufen ist.'
   }[language] || '';
 
-  // Get translated month name
-  const getMonthName = useCallback((shortMonth) => {
-    const index = shortMonths.indexOf(shortMonth);
-    return monthTranslations[language][index] || shortMonth;
-  }, [language]);
-
-  // Apply month translations
-  const mockDataBase = useMemo(() => ({
-    ...mockDataBaseRaw,
-    financialTrend: mockDataBaseRaw.financialTrend.map(item => ({
-      ...item,
-      month: getMonthName(item.month)
-    }))
-  }), [getMonthName]);
-
   // Keep unavailable sources separate from confirmed values and loaded extracts.
   useEffect(() => {
+    let disposed = false;
+    const mockDataBase = mockDataBaseRaw;
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
@@ -614,6 +594,7 @@ const Dashboard = () => {
           withApiResult(() => api.getDonorsCount()),
           withApiResult(() => api.getMembersDirectory(100, 0))
         ]);
+        if (disposed) return;
 
         const social = socialResult.data;
         const realEstate = realEstateResult.data;
@@ -732,6 +713,14 @@ const Dashboard = () => {
 
         setDashboardData({
           ...mockDataBase,
+          readAt: new Date().toISOString(),
+          financeRead: {
+            summary: financeSummary,
+            incomeLoaded: incomeAvailable ? incomeRows.length : null,
+            expenseLoaded: expensesAvailable ? expenseRows.length : null,
+            socialLoaded: socialAvailable ? social.data.length : null,
+            socialState: socialAvailable ? 'available' : socialResult.errorStatus === 403 ? 'restricted' : 'unavailable'
+          },
           exchangeRate,
           financialTrend,
           sourceStatus: {
@@ -837,6 +826,7 @@ const Dashboard = () => {
           });
         }
       } catch (err) {
+        if (disposed) return;
         console.warn('Dashboard data unavailable:', err.message);
         setDataWarning(true);
         setDashboardData(mockDataBase);
@@ -846,11 +836,12 @@ const Dashboard = () => {
           department: 'Administration'
         });
       } finally {
-        setLoading(false);
+        if (!disposed) setLoading(false);
       }
     };
     fetchDashboardData();
-  }, [mockDataBase]);
+    return () => { disposed = true; };
+  }, [refreshVersion]);
 
   useEffect(() => {
     if (loading || !location.hash.startsWith('#dashboard-kpi-')) return undefined;
@@ -1165,6 +1156,9 @@ const Dashboard = () => {
             </div>
           )}
           <DashboardPilotageNavigation language={language} onNavigate={handleModuleClick} />
+          <FinanceReadStatus language={language} {...dashboardData?.financeRead}
+            status={dashboardData?.financeRead?.summary ? 'available' : 'unavailable'}
+            onRefresh={() => setRefreshVersion(value => value + 1)} />
           <section id="global-situation" aria-label={t.dashboard} className="space-y-6">
           <div className="space-y-6" aria-label={t.globalIndicators}>
             {kpiGroups.map((group) => (
@@ -1216,7 +1210,7 @@ const Dashboard = () => {
 
           {/* Footer */}
           <div className="text-center text-slate-500 text-xs py-4">
-            <p>{t.lastUpdate}: {new Date().toLocaleString({ FR: 'fr-CH', EN: 'en-GB', DE: 'de-CH' }[language] || 'fr-CH')}</p>
+            <p>{t.lastUpdate}: {formatFinanceReadTime(dashboardData?.readAt, language) || '—'}</p>
             <p>M3S ERP v2.0 - SENESWISS GROUP © 2026</p>
           </div>
         </div>
