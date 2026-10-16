@@ -4,6 +4,7 @@ import api from './api';
 import TableControls from './TableControls';
 import { formatRegistryDate } from './registryDate';
 import { PRODUCTION_SERVICE_DESTINATIONS } from './productionServiceNavigation';
+import ProductionServiceCycle from './ProductionServiceCyclePanel';
 
 const TRACKS = [
   { id: 'documents', sourceIds: ['GD-005', 'GD-006'], href: PRODUCTION_SERVICE_DESTINATIONS.documents, label: 'openDocuments' },
@@ -152,6 +153,7 @@ export default function ProductionServices({ language = 'FR' }) {
         </nav>
         <p className="text-xs leading-5 text-slate-400">{t.costNote}</p>
       </>}
+      <ProductionServiceCycle language={language} sourceKind={source.kind} sourceRows={source.rows} />
     </section>
   );
 }
