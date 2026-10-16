@@ -4,7 +4,7 @@ import api from './api';
 import TableControls from './TableControls';
 import { formatRegistryDate } from './registryDate';
 import { PRODUCTION_SERVICE_DESTINATIONS } from './productionServiceNavigation';
-import ProductionServiceCycle from './ProductionServiceCyclePanel';
+import ProductionServiceWorkspace from './ProductionSharedServiceCyclePanel';
 
 const TRACKS = [
   { id: 'documents', sourceIds: ['GD-005', 'GD-006'], href: PRODUCTION_SERVICE_DESTINATIONS.documents, label: 'openDocuments' },
@@ -13,7 +13,7 @@ const TRACKS = [
 const SOURCE_TYPES = { 'GD-005': 'document_governance', 'GD-006': 'document_governance', 'GD-008': 'rh_proximity_framework', 'GD-009': 'rh_tools' };
 const COPY = {
   FR: {
-    title: 'Suivi des prestations', scope: 'Préparation interne · lecture seule',
+    title: 'Suivi des prestations', scope: 'Préparation interne · sources en lecture seule',
     boundary: 'Deux parcours candidats, pas des commandes clients. Le statut des dossiers sources ne vaut ni livraison ni réception de prestation.',
     loading: 'Chargement des dossiers sources…', forbidden: 'Accès aux métadonnées non autorisé.',
     unavailable: 'Source de suivi indisponible. Aucun résultat local ne lui est substitué.',
@@ -29,7 +29,7 @@ const COPY = {
     costNote: 'Le classeur de mesure interne reste séparé. Aucun salaire, coût employeur ou prix n’est déduit de ces dossiers.'
   },
   EN: {
-    title: 'Service delivery follow-up', scope: 'Internal preparation · read only',
+    title: 'Service delivery follow-up', scope: 'Internal preparation · read-only sources',
     boundary: 'Two candidate paths, not customer orders. Source dossier status is not evidence of service delivery or acceptance.',
     loading: 'Loading source dossiers…', forbidden: 'Source metadata access is not authorised.',
     unavailable: 'Follow-up source unavailable. No local result is substituted.',
@@ -45,7 +45,7 @@ const COPY = {
     costNote: 'The internal measurement workbook remains separate. No salary, employer cost or price is derived from these dossiers.'
   },
   DE: {
-    title: 'Leistungsverfolgung', scope: 'Interne Vorbereitung · nur lesen',
+    title: 'Leistungsverfolgung', scope: 'Interne Vorbereitung · schreibgeschützte Quellen',
     boundary: 'Zwei mögliche Leistungswege, keine Kundenaufträge. Der Quellenstatus belegt weder Lieferung noch Abnahme einer Leistung.',
     loading: 'Quellenakten werden geladen…', forbidden: 'Zugriff auf Quellenmetadaten nicht erlaubt.',
     unavailable: 'Verfolgungsquelle nicht verfügbar. Kein lokales Ergebnis wird eingesetzt.',
@@ -153,7 +153,7 @@ export default function ProductionServices({ language = 'FR' }) {
         </nav>
         <p className="text-xs leading-5 text-slate-400">{t.costNote}</p>
       </>}
-      <ProductionServiceCycle language={language} sourceKind={source.kind} sourceRows={source.rows} />
+      <ProductionServiceWorkspace language={language} sourceKind={source.kind} sourceRows={source.rows} />
     </section>
   );
 }

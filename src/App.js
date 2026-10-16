@@ -18,6 +18,7 @@ import GED from './GED';
 import TaxonomyDiagnostics from './diagnostics/TaxonomyDiagnostics';
 import LocalPilotSummary from './LocalPilotSummary';
 import FinanceBudgetProvider from './FinanceBudgetContext';
+import { ProductionServiceSessionProvider } from './ProductionSharedServiceCyclePanel';
 
 const Boussole = lazy(() => import('./Boussole'));
 
@@ -38,6 +39,7 @@ const App = () => {
         <LanguageProvider>
           <ThemeProvider>
             <FinanceBudgetProvider>
+            <ProductionServiceSessionProvider>
             <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/account" element={<ProtectedRoute><Layout><OwnProfile /></Layout></ProtectedRoute>} />
@@ -160,6 +162,7 @@ const App = () => {
 
             <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
+            </ProductionServiceSessionProvider>
             </FinanceBudgetProvider>
           </ThemeProvider>
         </LanguageProvider>
