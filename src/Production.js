@@ -700,7 +700,9 @@ const Production = () => {
       .sort((a, b) => b.montantChf - a.montantChf || a.nom.localeCompare(b.nom));
   };
 
-  const [activeTab, setActiveTab] = useState('overview');
+  const requestedTab = new URLSearchParams(location.search).get('tab');
+  const activeTab = ['overview', 'architecture', 'processes', 'commandes', 'services', 'fournisseurs', 'stocks', 'manufacturing', 'assistant', 'resources', 'glossary'].includes(requestedTab)
+    ? requestedTab : 'overview';
   const [commandes, setCommandes] = useState([]);
   const [fournisseurs, setFournisseurs] = useState([]);
   const [fournisseursLoading, setFournisseursLoading] = useState(false);
@@ -717,17 +719,7 @@ const Production = () => {
     [TEAM_CODES.SENEGAL]: t.teamSnCollective
   }), [directoryMembers, t.teamSnCollective, t.teamZhCollective]);
 
-  useEffect(() => {
-    const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'architecture', 'processes', 'commandes', 'services', 'fournisseurs', 'stocks', 'manufacturing', 'assistant', 'resources', 'glossary'].includes(tab)) {
-      setActiveTab(tab);
-    } else {
-      setActiveTab('overview');
-    }
-  }, [location.search]);
-
   const selectTab = (tab) => {
-    setActiveTab(tab);
     const params = new URLSearchParams(location.search);
     params.set('tab', tab);
     navigate(`/production?${params.toString()}`);

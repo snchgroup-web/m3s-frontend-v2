@@ -5,11 +5,21 @@ import Production from './Production';
 import { api } from './api';
 
 let mockSearch = '';
+const mockRouteListeners = new Set();
 
-jest.mock('react-router-dom', () => ({
-  useLocation: () => ({ search: mockSearch }),
-  useNavigate: () => jest.fn()
-}), { virtual: true });
+jest.mock('react-router-dom', () => {
+  const { useSyncExternalStore } = require('react');
+  return {
+    useLocation: () => ({ search: useSyncExternalStore(listener => {
+      mockRouteListeners.add(listener);
+      return () => mockRouteListeners.delete(listener);
+    }, () => mockSearch) }),
+    useNavigate: () => path => {
+      mockSearch = new URL(path, 'http://localhost').search;
+      mockRouteListeners.forEach(listener => listener());
+    }
+  };
+}, { virtual: true });
 
 jest.mock('recharts', () => ({
   BarChart: ({ children }) => <div>{children}</div>,
@@ -41,7 +51,7 @@ const directory = [
   { person_id: 'PER-6', display_name: 'Ibrahima Ndiaye', preferred_name: 'Ibou', team: 'TSN', active: true }
 ];
 
-const renderProduction = (tab, language = 'EN', { expenses = [], inventory = [], members = directory, directoryError = null } = {}) => {
+const renderProduction = (tab, language = 'EN', { expenses = [], inventory = [], members = directory, directoryError = null, onRender = null } = {}) => {
   mockSearch = `?tab=${tab}`;
   localStorage.setItem('language', language);
   api.getExpenses.mockResolvedValue({ data: expenses });
@@ -51,7 +61,7 @@ const renderProduction = (tab, language = 'EN', { expenses = [], inventory = [],
 
   return render(
     <LanguageProvider>
-      <Production />
+      {onRender ? <React.Profiler id="production-route" onRender={onRender}><Production /></React.Profiler> : <Production />}
     </LanguageProvider>
   );
 };
@@ -81,6 +91,35 @@ test('opens the source-connected services tab without demo KPI or demo-source ba
   expect(screen.getByRole('tab', { name: 'Prestations' })).toHaveAttribute('aria-selected', 'true');
   expect(screen.queryByRole('heading', { name: 'Pilote local Production' })).not.toBeInTheDocument();
   expect(screen.queryByText('Commandes Livrées')).not.toBeInTheDocument();
+});
+
+test('never paints the demo overview when opening services directly', async () => {
+  api.getProductionServiceFollowup.mockResolvedValue({ success: true, data: [],
+    source: { system: 'bigquery', registry: 'management_dossiers', scope: 'internal_service_preparation', read_only: true } });
+  const frames = [];
+  renderProduction('services', 'FR', { onRender: () => frames.push({
+    services: Boolean(document.querySelector('[data-testid="production-services"]')),
+    demo: Boolean(document.querySelector('.production-pilot-summary, .production-kpi-summary'))
+  }) });
+  expect(frames[0]).toEqual({ services: true, demo: false });
+  await screen.findByRole('button', { name: 'Point source conservé · RH de proximité' });
+});
+
+test('never paints the previous demo view when the route changes to services', async () => {
+  api.getProductionServiceFollowup.mockResolvedValue({ success: true, data: [],
+    source: { system: 'bigquery', registry: 'management_dossiers', scope: 'internal_service_preparation', read_only: true } });
+  const frames = [];
+  const onRender = () => frames.push({
+    services: Boolean(document.querySelector('[data-testid="production-services"]')),
+    demo: Boolean(document.querySelector('.production-pilot-summary, .production-kpi-summary'))
+  });
+  const view = renderProduction('commandes', 'FR', { onRender });
+  await screen.findByRole('heading', { name: 'Pilote local Production' });
+  const nextFrame = frames.length;
+  mockSearch = '?tab=services';
+  view.rerender(<LanguageProvider><React.Profiler id="production-route" onRender={onRender}><Production /></React.Profiler></LanguageProvider>);
+  expect(frames[nextFrame]).toEqual({ services: true, demo: false });
+  await screen.findByRole('button', { name: 'Point source conservé · RH de proximité' });
 });
 
 test('renders the operational stock pilot without write actions', async () => {
