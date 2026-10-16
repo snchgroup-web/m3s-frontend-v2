@@ -3,10 +3,11 @@ import { ArrowUpRight, ChevronDown, RefreshCw } from 'lucide-react';
 import api from './api';
 import TableControls from './TableControls';
 import { formatRegistryDate } from './registryDate';
+import { PRODUCTION_SERVICE_DESTINATIONS } from './productionServiceNavigation';
 
 const TRACKS = [
-  { id: 'documents', sourceIds: ['GD-005', 'GD-006'], href: '/administration?tab=communication', label: 'openDocuments' },
-  { id: 'rh', sourceIds: ['GD-008', 'GD-009'], href: '/rh?tab=resources', label: 'openRh' }
+  { id: 'documents', sourceIds: ['GD-005', 'GD-006'], href: PRODUCTION_SERVICE_DESTINATIONS.documents, label: 'openDocuments' },
+  { id: 'rh', sourceIds: ['GD-008', 'GD-009'], href: PRODUCTION_SERVICE_DESTINATIONS.rh, label: 'openRh' }
 ];
 const SOURCE_TYPES = { 'GD-005': 'document_governance', 'GD-006': 'document_governance', 'GD-008': 'rh_proximity_framework', 'GD-009': 'rh_tools' };
 const COPY = {
@@ -147,7 +148,7 @@ export default function ProductionServices({ language = 'FR' }) {
           </table>} />
         <nav className="flex flex-wrap gap-4 text-sm text-blue-300" aria-label={t.next}>
           {TRACKS.map(track => <a className="inline-flex min-h-11 items-center gap-2 underline" key={track.id} href={track.href}>{t[track.label]}<ArrowUpRight size={15} aria-hidden="true" /></a>)}
-          <a className="inline-flex min-h-11 items-center gap-2 underline" href="/administration?tab=planning">{t.shared}<ArrowUpRight size={15} aria-hidden="true" /></a>
+          <a className="inline-flex min-h-11 items-center gap-2 underline" href={PRODUCTION_SERVICE_DESTINATIONS.planning}>{t.shared}<ArrowUpRight size={15} aria-hidden="true" /></a>
         </nav>
         <p className="text-xs leading-5 text-slate-400">{t.costNote}</p>
       </>}

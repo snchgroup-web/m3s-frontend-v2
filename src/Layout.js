@@ -18,6 +18,7 @@ import { useAuth } from './AuthContext';
 import { hasPermission } from './accessControl';
 import { buildDashboardReturnPath, getDashboardReturnContext } from './dashboardNavigation';
 import { useModuleNavigation } from './moduleNavigation';
+import { getProductionServiceReturnPath } from './productionServiceNavigation';
 
 // Mapping des icônes
 const iconMap = {
@@ -47,6 +48,7 @@ const Layout = ({ children }) => {
   const activeParentId = activeMenu.parent?.id;
   const activeParentHasChildren = Boolean(activeMenu.parent?.children?.length);
   const dashboardReturn = getDashboardReturnContext(location.search);
+  const serviceReturnPath = getProductionServiceReturnPath(location.pathname, location.search);
   useModuleNavigation(mainRef, location);
 
   // Traductions UI
@@ -56,25 +58,33 @@ const Layout = ({ children }) => {
       expandAll: 'Déplier tout',
       collapseAll: 'Replier tout',
       backToDashboard: 'Retour à l’indicateur du Tableau de bord',
-      backToDashboardSection: 'Retour à la section du Tableau de bord'
+      backToDashboardSection: 'Retour à la section du Tableau de bord',
+      backToServices: 'Retour au suivi des prestations'
     },
     EN: {
       logout: 'Logout',
       expandAll: 'Expand All',
       collapseAll: 'Collapse All',
       backToDashboard: 'Back to the Dashboard indicator',
-      backToDashboardSection: 'Back to the Dashboard section'
+      backToDashboardSection: 'Back to the Dashboard section',
+      backToServices: 'Back to service delivery follow-up'
     },
     DE: {
       logout: 'Abmelden',
       expandAll: 'Alles erweitern',
       collapseAll: 'Alles einklappen',
       backToDashboard: 'Zur Dashboard-Kennzahl zurück',
-      backToDashboardSection: 'Zum Dashboard-Bereich zurück'
+      backToDashboardSection: 'Zum Dashboard-Bereich zurück',
+      backToServices: 'Zurück zur Leistungsverfolgung'
     }
   };
 
   const t = translations[language];
+  const returnPath = serviceReturnPath || (dashboardReturn.enabled
+    ? buildDashboardReturnPath(dashboardReturn.indicatorId, dashboardReturn.view, dashboardReturn.sectionId)
+    : null);
+  const returnLabel = serviceReturnPath ? t.backToServices
+    : dashboardReturn.indicatorId ? t.backToDashboard : t.backToDashboardSection;
 
   useEffect(() => {
     const main = mainRef.current;
@@ -85,7 +95,7 @@ const Layout = ({ children }) => {
     const observer = new ResizeObserver(measure);
     observer.observe(nav);
     return () => observer.disconnect();
-  }, [dashboardReturn.enabled]);
+  }, [dashboardReturn.enabled, serviceReturnPath]);
 
   useEffect(() => {
     if (!activeParentHasChildren) return;
@@ -288,15 +298,15 @@ const Layout = ({ children }) => {
       <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
         <Header onOpenMenu={() => setSidebarOpen(true)} />
         <main ref={mainRef} className="m3s-design-scope flex-1 overflow-auto">
-          {dashboardReturn.enabled && (
-            <nav ref={returnNavRef} className="sticky top-0 z-30 border-b border-blue-800/70 bg-slate-950/95 px-3 py-2 shadow-sm backdrop-blur sm:px-5" aria-label={dashboardReturn.indicatorId ? t.backToDashboard : t.backToDashboardSection}>
+          {returnPath && (
+            <nav ref={returnNavRef} className="sticky top-0 z-30 border-b border-blue-800/70 bg-slate-950/95 px-3 py-2 shadow-sm backdrop-blur sm:px-5" aria-label={returnLabel}>
               <button
                 type="button"
-                onClick={() => navigate(buildDashboardReturnPath(dashboardReturn.indicatorId, dashboardReturn.view, dashboardReturn.sectionId))}
+                onClick={() => navigate(returnPath)}
                 className="inline-flex min-h-10 items-center gap-2 rounded-md border border-blue-600 bg-blue-950/70 px-3 text-sm font-semibold text-blue-100 transition hover:border-blue-400 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
                 <ArrowLeft size={17} aria-hidden="true" />
-                {dashboardReturn.indicatorId ? t.backToDashboard : t.backToDashboardSection}
+                {returnLabel}
               </button>
             </nav>
           )}
