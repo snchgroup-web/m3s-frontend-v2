@@ -88,6 +88,32 @@ const apiFetch = async (url, options = {}) => {
   return response;
 };
 
+export const productionServiceTransport = async (path, body, { signal } = {}) => {
+  if (!(path === '/access' || /^\?track=(documents|rh)$/.test(path) ||
+      /^\/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}(\/events)?$/i.test(path) || path === '') ||
+      (body !== undefined && path !== '' && !path.endsWith('/events'))) throw new Error('SERVICE_INVALID');
+  const token = await currentAccessToken();
+  if (!token || token.startsWith('demo_session_') || signal?.aborted) throw Object.assign(new Error('SERVICE_AUTH_REQUIRED'), { status: 401 });
+  const json = body === undefined ? undefined : JSON.stringify(body);
+  if (json && new TextEncoder().encode(json).byteLength > 8192) throw Object.assign(new Error('SERVICE_BODY_TOO_LARGE'), { status: 413 });
+  const controller = new AbortController();
+  const abort = () => controller.abort();
+  signal?.addEventListener('abort', abort, { once: true });
+  const timer = setTimeout(abort, 30000);
+  try {
+    const response = await fetch(`${API_BASE_URL}/production/service-cycles${path}`, {
+      method: body === undefined ? 'GET' : 'POST', signal: controller.signal, cache: 'no-store',
+      headers: { Authorization: `Bearer ${token}`, ...(json ? { 'Content-Type': 'application/json' } : {}) }, body: json
+    });
+    if (response.status === 401 && !signal?.aborted && await currentAccessToken() === token) clearExpiredSession();
+    let payload;
+    try { payload = await response.json(); } catch { payload = null; }
+    if (!response.ok) throw Object.assign(new Error('SERVICE_REQUEST_FAILED'), { status: response.status, code: payload?.code });
+    if (payload?.storage !== 'shared') throw new Error('SERVICE_RESPONSE_INVALID');
+    return payload;
+  } finally { clearTimeout(timer); signal?.removeEventListener('abort', abort); }
+};
+
 const budgetFetch = async (path, options = {}) => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 30000);

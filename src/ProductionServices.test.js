@@ -77,8 +77,8 @@ test('source search and cross-function links reuse the existing spaces', async (
   show();
   await screen.findByText('GD-008');
   fireEvent.change(screen.getByPlaceholderText('Rechercher...'), { target: { value: 'Action originale' } });
-  expect(screen.getByText('RH de proximité')).toBeInTheDocument();
-  expect(screen.queryByText('Organisation documentaire')).not.toBeInTheDocument();
+  expect(screen.getByRole('rowheader', { name: 'RH de proximité' })).toBeInTheDocument();
+  expect(screen.queryByRole('rowheader', { name: 'Organisation documentaire' })).not.toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'Ouvrir le suivi documentaire' })).toHaveAttribute('href', '/administration?tab=communication&returnTo=production-services');
   expect(screen.getByRole('link', { name: 'Ouvrir les ressources RH' })).toHaveAttribute('href', '/rh?tab=resources&returnTo=production-services');
   expect(screen.getByRole('link', { name: 'Planification et projets' })).toHaveAttribute('href', '/administration?tab=planning&returnTo=production-services');
