@@ -332,6 +332,11 @@ export const api = {
     if (!res.ok) throw await createApiError(res, 'MANAGEMENT_PORTFOLIO_SOURCE_UNAVAILABLE');
     return res.json();
   },
+  getProductionServiceFollowup: async ({ signal } = {}) => {
+    const res = await apiFetch(`${API_BASE_URL}/production/service-followup`, { signal, cache: 'no-store' });
+    if (!res.ok) throw await createApiError(res, 'SERVICE_FOLLOWUP_SOURCE_UNAVAILABLE');
+    return res.json();
+  },
 
   getLatestIntelligence: async () => {
     const res = await apiFetch(`${API_BASE_URL}/intelligence/latest`);

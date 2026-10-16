@@ -22,13 +22,15 @@ jest.mock('recharts', () => ({
   ResponsiveContainer: ({ children }) => <div>{children}</div>
 }));
 
-jest.mock('./api', () => ({
-  api: {
+jest.mock('./api', () => {
+  const api = {
     getExpenses: jest.fn(),
     getInventory: jest.fn(),
-    getMembersDirectory: jest.fn()
-  }
-}));
+    getMembersDirectory: jest.fn(),
+    getProductionServiceFollowup: jest.fn()
+  };
+  return { __esModule: true, api, default: api };
+});
 
 const directory = [
   { person_id: 'PER-1', display_name: 'Cheikh Ndiaye', preferred_name: 'Cheikh', team: 'TZH', active: true },
@@ -69,6 +71,16 @@ test('renders the orders pilot as read only', async () => {
   expect(screen.getAllByRole('button', { name: 'Delete' })).toHaveLength(4);
   screen.getAllByRole('button', { name: 'Edit' }).forEach(button => expect(button).toBeDisabled());
   screen.getAllByRole('button', { name: 'Delete' }).forEach(button => expect(button).toBeDisabled());
+});
+
+test('opens the source-connected services tab without demo KPI or demo-source banner', async () => {
+  api.getProductionServiceFollowup.mockResolvedValue({ success: true, data: [],
+    source: { system: 'bigquery', registry: 'management_dossiers', scope: 'internal_service_preparation', read_only: true } });
+  renderProduction('services', 'FR');
+  expect(await screen.findByRole('heading', { name: 'Suivi des prestations' })).toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: 'Prestations' })).toHaveAttribute('aria-selected', 'true');
+  expect(screen.queryByRole('heading', { name: 'Pilote local Production' })).not.toBeInTheDocument();
+  expect(screen.queryByText('Commandes Livrées')).not.toBeInTheDocument();
 });
 
 test('renders the operational stock pilot without write actions', async () => {
