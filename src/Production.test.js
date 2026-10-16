@@ -5,11 +5,21 @@ import Production from './Production';
 import { api } from './api';
 
 let mockSearch = '';
+const mockRouteListeners = new Set();
 
-jest.mock('react-router-dom', () => ({
-  useLocation: () => ({ search: mockSearch }),
-  useNavigate: () => jest.fn()
-}), { virtual: true });
+jest.mock('react-router-dom', () => {
+  const { useSyncExternalStore } = require('react');
+  return {
+    useLocation: () => ({ search: useSyncExternalStore(listener => {
+      mockRouteListeners.add(listener);
+      return () => mockRouteListeners.delete(listener);
+    }, () => mockSearch) }),
+    useNavigate: () => path => {
+      mockSearch = new URL(path, 'http://localhost').search;
+      mockRouteListeners.forEach(listener => listener());
+    }
+  };
+}, { virtual: true });
 
 jest.mock('recharts', () => ({
   BarChart: ({ children }) => <div>{children}</div>,
@@ -22,13 +32,15 @@ jest.mock('recharts', () => ({
   ResponsiveContainer: ({ children }) => <div>{children}</div>
 }));
 
-jest.mock('./api', () => ({
-  api: {
+jest.mock('./api', () => {
+  const api = {
     getExpenses: jest.fn(),
     getInventory: jest.fn(),
-    getMembersDirectory: jest.fn()
-  }
-}));
+    getMembersDirectory: jest.fn(),
+    getProductionServiceFollowup: jest.fn()
+  };
+  return { __esModule: true, api, default: api };
+});
 
 const directory = [
   { person_id: 'PER-1', display_name: 'Cheikh Ndiaye', preferred_name: 'Cheikh', team: 'TZH', active: true },
@@ -39,7 +51,7 @@ const directory = [
   { person_id: 'PER-6', display_name: 'Ibrahima Ndiaye', preferred_name: 'Ibou', team: 'TSN', active: true }
 ];
 
-const renderProduction = (tab, language = 'EN', { expenses = [], inventory = [], members = directory, directoryError = null } = {}) => {
+const renderProduction = (tab, language = 'EN', { expenses = [], inventory = [], members = directory, directoryError = null, onRender = null } = {}) => {
   mockSearch = `?tab=${tab}`;
   localStorage.setItem('language', language);
   api.getExpenses.mockResolvedValue({ data: expenses });
@@ -49,7 +61,7 @@ const renderProduction = (tab, language = 'EN', { expenses = [], inventory = [],
 
   return render(
     <LanguageProvider>
-      <Production />
+      {onRender ? <React.Profiler id="production-route" onRender={onRender}><Production /></React.Profiler> : <Production />}
     </LanguageProvider>
   );
 };
@@ -69,6 +81,45 @@ test('renders the orders pilot as read only', async () => {
   expect(screen.getAllByRole('button', { name: 'Delete' })).toHaveLength(4);
   screen.getAllByRole('button', { name: 'Edit' }).forEach(button => expect(button).toBeDisabled());
   screen.getAllByRole('button', { name: 'Delete' }).forEach(button => expect(button).toBeDisabled());
+});
+
+test('opens the source-connected services tab without demo KPI or demo-source banner', async () => {
+  api.getProductionServiceFollowup.mockResolvedValue({ success: true, data: [],
+    source: { system: 'bigquery', registry: 'management_dossiers', scope: 'internal_service_preparation', read_only: true } });
+  renderProduction('services', 'FR');
+  expect(await screen.findByRole('heading', { name: 'Suivi des prestations' })).toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: 'Prestations' })).toHaveAttribute('aria-selected', 'true');
+  expect(screen.queryByRole('heading', { name: 'Pilote local Production' })).not.toBeInTheDocument();
+  expect(screen.queryByText('Commandes Livrées')).not.toBeInTheDocument();
+});
+
+test('never paints the demo overview when opening services directly', async () => {
+  api.getProductionServiceFollowup.mockResolvedValue({ success: true, data: [],
+    source: { system: 'bigquery', registry: 'management_dossiers', scope: 'internal_service_preparation', read_only: true } });
+  const frames = [];
+  renderProduction('services', 'FR', { onRender: () => frames.push({
+    services: Boolean(document.querySelector('[data-testid="production-services"]')),
+    demo: Boolean(document.querySelector('.production-pilot-summary, .production-kpi-summary'))
+  }) });
+  expect(frames[0]).toEqual({ services: true, demo: false });
+  await screen.findByRole('button', { name: 'Point source conservé · RH de proximité' });
+});
+
+test('never paints the previous demo view when the route changes to services', async () => {
+  api.getProductionServiceFollowup.mockResolvedValue({ success: true, data: [],
+    source: { system: 'bigquery', registry: 'management_dossiers', scope: 'internal_service_preparation', read_only: true } });
+  const frames = [];
+  const onRender = () => frames.push({
+    services: Boolean(document.querySelector('[data-testid="production-services"]')),
+    demo: Boolean(document.querySelector('.production-pilot-summary, .production-kpi-summary'))
+  });
+  const view = renderProduction('commandes', 'FR', { onRender });
+  await screen.findByRole('heading', { name: 'Pilote local Production' });
+  const nextFrame = frames.length;
+  mockSearch = '?tab=services';
+  view.rerender(<LanguageProvider><React.Profiler id="production-route" onRender={onRender}><Production /></React.Profiler></LanguageProvider>);
+  expect(frames[nextFrame]).toEqual({ services: true, demo: false });
+  await screen.findByRole('button', { name: 'Point source conservé · RH de proximité' });
 });
 
 test('renders the operational stock pilot without write actions', async () => {

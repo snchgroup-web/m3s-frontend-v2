@@ -13,6 +13,7 @@ import ProductionGlossary from './ProductionGlossary';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
 import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
 import FunctionAssistant from './FunctionAssistant';
+import ProductionServices from './ProductionServices';
 import {
   buildTeamAgentDirectory,
   findAgentTeam,
@@ -699,7 +700,9 @@ const Production = () => {
       .sort((a, b) => b.montantChf - a.montantChf || a.nom.localeCompare(b.nom));
   };
 
-  const [activeTab, setActiveTab] = useState('overview');
+  const requestedTab = new URLSearchParams(location.search).get('tab');
+  const activeTab = ['overview', 'architecture', 'processes', 'commandes', 'services', 'fournisseurs', 'stocks', 'manufacturing', 'assistant', 'resources', 'glossary'].includes(requestedTab)
+    ? requestedTab : 'overview';
   const [commandes, setCommandes] = useState([]);
   const [fournisseurs, setFournisseurs] = useState([]);
   const [fournisseursLoading, setFournisseursLoading] = useState(false);
@@ -716,17 +719,7 @@ const Production = () => {
     [TEAM_CODES.SENEGAL]: t.teamSnCollective
   }), [directoryMembers, t.teamSnCollective, t.teamZhCollective]);
 
-  useEffect(() => {
-    const tab = new URLSearchParams(location.search).get('tab');
-    if (['overview', 'architecture', 'processes', 'commandes', 'fournisseurs', 'stocks', 'manufacturing', 'assistant', 'resources', 'glossary'].includes(tab)) {
-      setActiveTab(tab);
-    } else {
-      setActiveTab('overview');
-    }
-  }, [location.search]);
-
   const selectTab = (tab) => {
-    setActiveTab(tab);
     const params = new URLSearchParams(location.search);
     params.set('tab', tab);
     navigate(`/production?${params.toString()}`);
@@ -941,7 +934,7 @@ const Production = () => {
         </div>
 
         <div className={`production-content-stack${activeTab === 'overview' ? '' : ' production-content-stack--detail'}`}>
-        <section className="production-pilot-summary mb-6 rounded-lg border border-blue-500/40 bg-blue-950/45 p-5 text-blue-50">
+        {activeTab !== 'services' && <section className="production-pilot-summary mb-6 rounded-lg border border-blue-500/40 bg-blue-950/45 p-5 text-blue-50">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex items-start gap-3">
               <AlertCircle size={20} className="mt-0.5 shrink-0 text-blue-300" aria-hidden="true" />
@@ -961,10 +954,10 @@ const Production = () => {
               <div className="rounded border border-blue-400/25 bg-slate-950/25 px-3 py-2">{t.pilotFreshness}</div>
             </dl>
           </div>
-        </section>
+        </section>}
  
         {/* KPIs */}
-        <div className="production-kpi-summary grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        {activeTab !== 'services' && <div className="production-kpi-summary grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
             <div className="flex items-center justify-between">
               <div>
@@ -1004,9 +997,10 @@ const Production = () => {
               <AlertCircle size={32} className={stocksBas === 0 ? 'text-green-400' : 'text-orange-400'} />
             </div>
           </div>
-        </div>
+        </div>}
  
         <ModuleTabContent activeTab={activeTab} className="production-active-view">
+        {activeTab === 'services' && <ProductionServices language={language} />}
         {/* Vue d'ensemble */}
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1245,7 +1239,7 @@ const Production = () => {
 
         {activeTab === 'glossary' && <ProductionGlossary language={language} />}
 
-        <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'commandes', 'manufacturing', 'fournisseurs', 'stocks', 'assistant', 'resources', 'glossary']} />
+        <ChildTabPlaceholder moduleId="production" language={language} activeTab={activeTab} handledTabs={['overview', 'architecture', 'processes', 'commandes', 'services', 'manufacturing', 'fournisseurs', 'stocks', 'assistant', 'resources', 'glossary']} />
         </ModuleTabContent>
         </div>
         </div>

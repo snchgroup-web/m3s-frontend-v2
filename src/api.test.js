@@ -7,7 +7,8 @@ test.each([
   ['getFinanceDashboard', /\/finance\/dashboard$/],
   ['getIncome', /\/finance\/income\?limit=100&offset=0$/],
   ['getExpenses', /\/finance\/expenses\?limit=100&offset=0$/],
-  ['getSocialFinance', /\/finance\/social\?limit=200&offset=0$/]
+  ['getSocialFinance', /\/finance\/social\?limit=200&offset=0$/],
+  ['getProductionServiceFollowup', /\/production\/service-followup$/]
 ])('%s bypasses the browser cache without writing data', async (method, url) => {
   global.fetch = jest.fn().mockResolvedValue({ ok: true, status: 200, json: async () => ({ success: true, data: [] }) });
   await api[method]();

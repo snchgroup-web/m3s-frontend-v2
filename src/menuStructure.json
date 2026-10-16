@@ -590,6 +590,12 @@
           "path": "/production?tab=commandes"
         },
         {
+          "id": "production-services",
+          "label": { "FR": "Prestations", "EN": "Services", "DE": "Leistungen" },
+          "icon": "ClipboardList",
+          "path": "/production?tab=services"
+        },
+        {
           "id": "manufacturing",
           "label": {
             "FR": "Fabrication",
