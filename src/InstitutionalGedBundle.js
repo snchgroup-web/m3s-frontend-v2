@@ -23,13 +23,19 @@ const RH_COPY = {
   EN: { title: 'Linked HR documents', heading: 'Local HR · V0.1', linked: 'GD-008 · GD-009' }
 };
 
+const OFFERS_COPY = {
+  FR: { title: 'Documents complémentaires', heading: 'Offres, kits et accueil', linked: 'GD-005 · GD-006 · GD-008 · GD-009', internal: 'Interne · ressources complémentaires', version: 'Version' },
+  DE: { title: 'Ergänzende Dokumente', heading: 'Angebote, Kits und Einführung', linked: 'GD-005 · GD-006 · GD-008 · GD-009', internal: 'Intern · ergänzende Ressourcen', version: 'Version' },
+  EN: { title: 'Supplementary documents', heading: 'Offers, kits and onboarding', linked: 'GD-005 · GD-006 · GD-008 · GD-009', internal: 'Internal · supplementary resources', version: 'Version' }
+};
+
 export default function InstitutionalGedBundle(props) {
   return <Bundle key={props.kind || 'documents'} {...props} />;
 }
 
 function Bundle({ language = 'FR', kind = 'documents' }) {
-  const t = { ...(COPY[language] || COPY.FR), ...(kind === 'rh' ? RH_COPY[language] || RH_COPY.FR : {}) };
-  const filesId = kind === 'rh' ? 'rh-institutional-ged-files' : 'institutional-ged-files';
+  const t = { ...(COPY[language] || COPY.FR), ...(kind === 'rh' ? RH_COPY[language] || RH_COPY.FR : kind === 'offers' ? OFFERS_COPY[language] || OFFERS_COPY.FR : {}) };
+  const filesId = kind === 'offers' ? 'offers-institutional-ged-files' : kind === 'rh' ? 'rh-institutional-ged-files' : 'institutional-ged-files';
   const [open, setOpen] = useState(false), [reload, setReload] = useState(0);
   const [state, setState] = useState({ kind: 'idle' }), [busy, setBusy] = useState(null), [notice, setNotice] = useState(null);
   const active = useRef(null);
@@ -67,7 +73,7 @@ function Bundle({ language = 'FR', kind = 'documents' }) {
       if (!controller.signal.aborted) setBusy(null);
     }
   }
-  return <section className="border-t border-slate-700 pt-4" data-testid={kind === 'rh' ? 'rh-institutional-ged-bundle' : 'institutional-ged-bundle'}>
+  return <section className="border-t border-slate-700 pt-4" data-testid={kind === 'offers' ? 'offers-institutional-ged-bundle' : kind === 'rh' ? 'rh-institutional-ged-bundle' : 'institutional-ged-bundle'}>
     <div className="flex flex-wrap items-center justify-between gap-3">
       <button type="button" className="m3s-field inline-flex min-h-11 items-center gap-2 px-3 py-2 text-blue-300"
         aria-expanded={open} aria-controls={filesId} onClick={() => open ? close() : setOpen(true)}>
@@ -84,7 +90,9 @@ function Bundle({ language = 'FR', kind = 'documents' }) {
       {state.kind === 'ready' ? <>
         <p className="text-xs text-blue-300">{t.linked}</p>
         <ul className="divide-y divide-slate-700">{state.bundle.files.map(file => <li key={file.id} className="flex min-w-0 items-center gap-3 py-3">
-          <div className="min-w-0 flex-1"><p className="break-all text-sm text-slate-100">{file.name}</p><p className="mt-1 text-xs text-slate-400">{new Intl.NumberFormat(language === 'DE' ? 'de-CH' : language === 'EN' ? 'en-GB' : 'fr-CH', { maximumFractionDigits: 1 }).format(file.size / 1024)} {t.size}</p></div>
+          <div className="min-w-0 flex-1"><p className="break-all text-sm text-slate-100">{file.name}</p><p className="mt-1 text-xs text-slate-400">{new Intl.NumberFormat(language === 'DE' ? 'de-CH' : language === 'EN' ? 'en-GB' : 'fr-CH', { maximumFractionDigits: 1 }).format(file.size / 1024)} {t.size}</p>
+            {kind === 'offers' && <p className="mt-1 break-words text-xs text-slate-300">{t.version} {file.version} · {file.dossiers.join(' · ')}</p>}
+          </div>
           <button type="button" className="m3s-icon-button min-h-11 min-w-11 shrink-0 text-blue-300" title={`${t.download} ${file.name}`} aria-label={`${t.download} ${file.name}`}
             disabled={Boolean(busy)} onClick={() => download(file)}><Download size={18} aria-hidden="true" /></button>
         </li>)}</ul>
