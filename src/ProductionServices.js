@@ -150,6 +150,7 @@ export default function ProductionServices({ language = 'FR' }) {
           </table>} />
         {source.rows.some(item => item.dossier_id === 'GD-005') && source.rows.some(item => item.dossier_id === 'GD-006') && <InstitutionalGedBundle language={language} />}
         {source.rows.some(item => item.dossier_id === 'GD-008') && source.rows.some(item => item.dossier_id === 'GD-009') && <InstitutionalGedBundle language={language} kind="rh" />}
+        {['GD-005', 'GD-006', 'GD-008', 'GD-009'].every(id => source.rows.some(item => item.dossier_id === id)) && <InstitutionalGedBundle language={language} kind="offers" />}
         <nav className="flex flex-wrap gap-4 text-sm text-blue-300" aria-label={t.next}>
           {TRACKS.map(track => <a className="inline-flex min-h-11 items-center gap-2 underline" key={track.id} href={track.href}>{t[track.label]}<ArrowUpRight size={15} aria-hidden="true" /></a>)}
           <a className="inline-flex min-h-11 items-center gap-2 underline" href={PRODUCTION_SERVICE_DESTINATIONS.planning}>{t.shared}<ArrowUpRight size={15} aria-hidden="true" /></a>

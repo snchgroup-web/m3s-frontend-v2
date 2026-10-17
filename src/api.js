@@ -12,6 +12,7 @@
 import { currentAccessToken, signOutIdentity } from './identityClient';
 import { readInstitutionalBundle, readInstitutionalDownload } from './institutionalGedModel';
 import { readRhInstitutionalBundle } from './institutionalRhGedModel';
+import { readOffersBundle } from './gedOffersModel';
 
 const isLocalHost = typeof window !== 'undefined'
   && ['localhost', '127.0.0.1'].includes(window.location.hostname);
@@ -207,6 +208,7 @@ const gedError = code => Object.assign(new Error(code), { code });
 const institutionalPath = kind => {
   if (kind === 'documents') return 'document-cycle-v01';
   if (kind === 'rh') return 'rh-cycle-v01';
+  if (kind === 'offers') return 'offers-20261017';
   throw new Error('INSTITUTIONAL_RESPONSE_INVALID');
 };
 
@@ -214,7 +216,7 @@ export const api = {
   getInstitutionalGedBundle: async ({ signal, kind = 'documents' } = {}) => {
     const res = await apiFetch(`${API_BASE_URL}/ged/institutional/${institutionalPath(kind)}`, { signal, cache: 'no-store' });
     if (!res.ok) throw await createApiError(res, 'INSTITUTIONAL_UNAVAILABLE');
-    return (kind === 'rh' ? readRhInstitutionalBundle : readInstitutionalBundle)(await res.json());
+    return (kind === 'offers' ? readOffersBundle : kind === 'rh' ? readRhInstitutionalBundle : readInstitutionalBundle)(await res.json());
   },
   downloadInstitutionalGedFile: async (record, { signal, kind = 'documents' } = {}) => {
     const bundle = await api.getInstitutionalGedBundle({ signal, kind });
