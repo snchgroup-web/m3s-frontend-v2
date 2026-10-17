@@ -17,8 +17,19 @@ const COPY = {
     download: 'Download', busy: 'Downloading…', failed: 'Download not confirmed.', done: 'Download prepared.', size: 'KB' }
 };
 
-export default function InstitutionalGedBundle({ language = 'FR' }) {
-  const t = COPY[language] || COPY.FR;
+const RH_COPY = {
+  FR: { title: 'Documents RH rattachés', heading: 'RH de proximité · V0.1', linked: 'GD-008 · GD-009' },
+  DE: { title: 'Verknüpfte HR-Dokumente', heading: 'HR vor Ort · V0.1', linked: 'GD-008 · GD-009' },
+  EN: { title: 'Linked HR documents', heading: 'Local HR · V0.1', linked: 'GD-008 · GD-009' }
+};
+
+export default function InstitutionalGedBundle(props) {
+  return <Bundle key={props.kind || 'documents'} {...props} />;
+}
+
+function Bundle({ language = 'FR', kind = 'documents' }) {
+  const t = { ...(COPY[language] || COPY.FR), ...(kind === 'rh' ? RH_COPY[language] || RH_COPY.FR : {}) };
+  const filesId = kind === 'rh' ? 'rh-institutional-ged-files' : 'institutional-ged-files';
   const [open, setOpen] = useState(false), [reload, setReload] = useState(0);
   const [state, setState] = useState({ kind: 'idle' }), [busy, setBusy] = useState(null), [notice, setNotice] = useState(null);
   const active = useRef(null);
@@ -27,13 +38,13 @@ export default function InstitutionalGedBundle({ language = 'FR' }) {
     if (!open) return undefined;
     const controller = new AbortController();
     setState({ kind: 'loading' }); setNotice(null);
-    Promise.resolve().then(() => api.getInstitutionalGedBundle({ signal: controller.signal })).then(bundle => {
+    Promise.resolve().then(() => api.getInstitutionalGedBundle({ signal: controller.signal, kind })).then(bundle => {
       if (!controller.signal.aborted) setState({ kind: 'ready', bundle });
     }).catch(error => {
       if (!controller.signal.aborted) setState({ kind: error?.status === 401 || error?.status === 403 ? 'denied' : 'unavailable' });
     });
     return () => controller.abort();
-  }, [open, reload]);
+  }, [open, reload, kind]);
 
   function close() {
     active.current?.abort(); active.current = null;
@@ -44,7 +55,7 @@ export default function InstitutionalGedBundle({ language = 'FR' }) {
     const controller = new AbortController(); active.current = controller;
     setBusy(file.id); setNotice(null);
     try {
-      const blob = await api.downloadInstitutionalGedFile(file, { signal: controller.signal });
+      const blob = await api.downloadInstitutionalGedFile(file, { signal: controller.signal, kind });
       if (controller.signal.aborted) return;
       const url = URL.createObjectURL(blob), link = document.createElement('a');
       try { link.href = url; link.download = file.name; document.body.appendChild(link); link.click(); }
@@ -56,15 +67,15 @@ export default function InstitutionalGedBundle({ language = 'FR' }) {
       if (!controller.signal.aborted) setBusy(null);
     }
   }
-  return <section className="border-t border-slate-700 pt-4" data-testid="institutional-ged-bundle">
+  return <section className="border-t border-slate-700 pt-4" data-testid={kind === 'rh' ? 'rh-institutional-ged-bundle' : 'institutional-ged-bundle'}>
     <div className="flex flex-wrap items-center justify-between gap-3">
       <button type="button" className="m3s-field inline-flex min-h-11 items-center gap-2 px-3 py-2 text-blue-300"
-        aria-expanded={open} aria-controls="institutional-ged-files" onClick={() => open ? close() : setOpen(true)}>
+        aria-expanded={open} aria-controls={filesId} onClick={() => open ? close() : setOpen(true)}>
         <Paperclip size={18} aria-hidden="true" />{t.title}
       </button>
       {open && <button type="button" className="m3s-icon-button min-h-11 min-w-11" title={t.close} aria-label={t.close} onClick={close}><X size={18} aria-hidden="true" /></button>}
     </div>
-    {open && <div id="institutional-ged-files" className="mt-4 space-y-3">
+    {open && <div id={filesId} className="mt-4 space-y-3">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0"><h3 className="text-base font-semibold text-slate-100">{t.heading}</h3><p className="mt-1 text-sm text-slate-300">{t.internal}</p></div>
         <button type="button" className="m3s-icon-button min-h-11 min-w-11 shrink-0" title={t.refresh} aria-label={t.refresh}

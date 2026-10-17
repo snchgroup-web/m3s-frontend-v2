@@ -11,6 +11,7 @@
 
 import { currentAccessToken, signOutIdentity } from './identityClient';
 import { readInstitutionalBundle, readInstitutionalDownload } from './institutionalGedModel';
+import { readRhInstitutionalBundle } from './institutionalRhGedModel';
 
 const isLocalHost = typeof window !== 'undefined'
   && ['localhost', '127.0.0.1'].includes(window.location.hostname);
@@ -203,18 +204,23 @@ const validGedRecord = row => row && /^[a-f0-9]{64}$/.test(row.id) && typeof row
     Number.isSafeInteger(row.revision) && row.revision >= 0 && row.revision <= 10000 && typeof row.trashed === 'boolean' &&
     typeof row.title === 'string' && row.title.length > 0 && row.title.length <= 144));
 const gedError = code => Object.assign(new Error(code), { code });
+const institutionalPath = kind => {
+  if (kind === 'documents') return 'document-cycle-v01';
+  if (kind === 'rh') return 'rh-cycle-v01';
+  throw new Error('INSTITUTIONAL_RESPONSE_INVALID');
+};
 
 export const api = {
-  getInstitutionalGedBundle: async ({ signal } = {}) => {
-    const res = await apiFetch(`${API_BASE_URL}/ged/institutional/document-cycle-v01`, { signal, cache: 'no-store' });
+  getInstitutionalGedBundle: async ({ signal, kind = 'documents' } = {}) => {
+    const res = await apiFetch(`${API_BASE_URL}/ged/institutional/${institutionalPath(kind)}`, { signal, cache: 'no-store' });
     if (!res.ok) throw await createApiError(res, 'INSTITUTIONAL_UNAVAILABLE');
-    return readInstitutionalBundle(await res.json());
+    return (kind === 'rh' ? readRhInstitutionalBundle : readInstitutionalBundle)(await res.json());
   },
-  downloadInstitutionalGedFile: async (record, { signal } = {}) => {
-    const bundle = await api.getInstitutionalGedBundle({ signal });
+  downloadInstitutionalGedFile: async (record, { signal, kind = 'documents' } = {}) => {
+    const bundle = await api.getInstitutionalGedBundle({ signal, kind });
     const file = bundle.files.find(item => item.id === record?.id && item.name === record?.name && item.size === record?.size);
     if (!file) throw new Error('INSTITUTIONAL_RESPONSE_INVALID');
-    const res = await apiFetch(`${API_BASE_URL}/ged/institutional/document-cycle-v01/files/${file.id}`, { signal, cache: 'no-store' });
+    const res = await apiFetch(`${API_BASE_URL}/ged/institutional/${institutionalPath(kind)}/files/${file.id}`, { signal, cache: 'no-store' });
     if (!res.ok) throw await createApiError(res, 'INSTITUTIONAL_UNAVAILABLE');
     return readInstitutionalDownload(res, file);
   },
