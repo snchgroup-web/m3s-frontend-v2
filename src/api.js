@@ -10,6 +10,7 @@
  */
 
 import { currentAccessToken, signOutIdentity } from './identityClient';
+import { readInstitutionalBundle, readInstitutionalDownload } from './institutionalGedModel';
 
 const isLocalHost = typeof window !== 'undefined'
   && ['localhost', '127.0.0.1'].includes(window.location.hostname);
@@ -204,6 +205,19 @@ const validGedRecord = row => row && /^[a-f0-9]{64}$/.test(row.id) && typeof row
 const gedError = code => Object.assign(new Error(code), { code });
 
 export const api = {
+  getInstitutionalGedBundle: async ({ signal } = {}) => {
+    const res = await apiFetch(`${API_BASE_URL}/ged/institutional/document-cycle-v01`, { signal, cache: 'no-store' });
+    if (!res.ok) throw await createApiError(res, 'INSTITUTIONAL_UNAVAILABLE');
+    return readInstitutionalBundle(await res.json());
+  },
+  downloadInstitutionalGedFile: async (record, { signal } = {}) => {
+    const bundle = await api.getInstitutionalGedBundle({ signal });
+    const file = bundle.files.find(item => item.id === record?.id && item.name === record?.name && item.size === record?.size);
+    if (!file) throw new Error('INSTITUTIONAL_RESPONSE_INVALID');
+    const res = await apiFetch(`${API_BASE_URL}/ged/institutional/document-cycle-v01/files/${file.id}`, { signal, cache: 'no-store' });
+    if (!res.ok) throw await createApiError(res, 'INSTITUTIONAL_UNAVAILABLE');
+    return readInstitutionalDownload(res, file);
+  },
   getExpenseProofs: async (expenseId, { signal, kind = 'expense' } = {}) => {
     if (!['expense', 'income'].includes(kind)) throw gedError('GED_INVALID_COMMAND');
     if (typeof expenseId !== 'string' || !expenseId || expenseId.length > 128) throw gedError('GED_UNAVAILABLE');
