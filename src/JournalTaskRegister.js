@@ -1,14 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { AlertCircle, Edit2, FileText, Save, Trash2, X } from 'lucide-react';
 import { StandardCreateButton } from './StandardUI';
+import PlanningTaskHelp from './PlanningTaskHelp';
 
 const STORAGE_KEY = 'm3s:planning:journal-candidates:v1';
 
 const COPY = {
   FR: {
-    eyebrow: 'Pilote local - Validation humaine',
-    title: 'Candidats issus du journal de bord',
-    body: "Ce registre transforme une décision ou une action documentée en tâche candidate. Aucune écriture dans l'Agenda n'est effectuée automatiquement.",
+    eyebrow: 'Propositions issues du journal · Stockage local',
+    title: 'Propositions locales issues du journal',
+    body: 'Les propositions restent dans ce navigateur. Leur validation humaine ne les enregistre pas automatiquement dans les tâches partagées ni dans l’Agenda.',
     candidates: 'Candidats',
     validated: 'Validés',
     agendaReady: "Prêts pour l'Agenda",
@@ -63,9 +64,9 @@ const COPY = {
     }
   },
   EN: {
-    eyebrow: 'Local pilot - Human validation',
-    title: 'Candidates from the work journal',
-    body: 'This register turns a documented decision or action into a task candidate. Nothing is written to the Agenda automatically.',
+    eyebrow: 'Journal proposals · Local storage',
+    title: 'Local proposals from the journal',
+    body: 'Proposals stay in this browser. Human validation does not automatically save them as shared tasks or Agenda entries.',
     candidates: 'Candidates',
     validated: 'Validated',
     agendaReady: 'Ready for Agenda',
@@ -120,9 +121,9 @@ const COPY = {
     }
   },
   DE: {
-    eyebrow: 'Lokaler Pilot - Menschliche Freigabe',
-    title: 'Kandidaten aus dem Arbeitsjournal',
-    body: 'Dieses Register überführt eine dokumentierte Entscheidung oder Maßnahme in einen Aufgabenkandidaten. Es erfolgt kein automatischer Eintrag in die Agenda.',
+    eyebrow: 'Journalvorschläge · Lokale Speicherung',
+    title: 'Lokale Vorschläge aus dem Journal',
+    body: 'Vorschläge bleiben in diesem Browser. Eine menschliche Freigabe speichert sie nicht automatisch als gemeinsame Aufgaben oder Agendaeinträge.',
     candidates: 'Kandidaten',
     validated: 'Freigegeben',
     agendaReady: 'Für Agenda bereit',
@@ -382,6 +383,7 @@ const JournalTaskRegister = ({ language = 'FR' }) => {
         </div>
         <StandardCreateButton onClick={openNew}>{t.newTask}</StandardCreateButton>
       </div>
+      <PlanningTaskHelp language={language} />
 
       <div className="mt-5 grid gap-3 sm:grid-cols-3">
         <div className="rounded-lg border border-slate-700 bg-slate-950/30 p-4">

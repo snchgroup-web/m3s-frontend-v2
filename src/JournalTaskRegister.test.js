@@ -9,10 +9,10 @@ describe('JournalTaskRegister', () => {
     window.alert = jest.fn();
   });
 
-  test('renders the bounded local pilot and journal candidates', () => {
+  test('renders the bounded local journal proposals without implying shared registration', () => {
     render(<JournalTaskRegister language="FR" />);
 
-    expect(screen.getByRole('heading', { name: 'Candidats issus du journal de bord' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Propositions locales issues du journal' })).toBeInTheDocument();
     expect(screen.getAllByText('Valider le micro-correctif P2 des bordures en mode clair')).toHaveLength(2);
     expect(screen.getAllByText('Validation requise').length).toBeGreaterThan(0);
     expect(screen.getByText('Stockage local au navigateur')).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe('JournalTaskRegister', () => {
   test('renders the governed pilot in German', () => {
     render(<JournalTaskRegister language="DE" />);
 
-    expect(screen.getByRole('heading', { name: 'Kandidaten aus dem Arbeitsjournal' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Lokale Vorschläge aus dem Journal' })).toBeInTheDocument();
     expect(screen.getAllByText('P2-Mikrokorrektur der Rahmen im hellen Modus freigeben')).toHaveLength(2);
     expect(screen.getByRole('button', { name: 'Neuer Aufgabenkandidat' })).toBeInTheDocument();
   });
