@@ -6,15 +6,15 @@ const COPY = {
   FR: { title: 'Documents rattachés', heading: 'Organisation documentaire · V0.1', linked: 'GD-005 · GD-006',
     internal: 'Interne · preuve de préparation', loading: 'Chargement des documents…', denied: 'Accès documentaire non autorisé.',
     unavailable: 'Documents momentanément indisponibles.', close: 'Fermer les documents', refresh: 'Actualiser les documents',
-    download: 'Télécharger', busy: 'Téléchargement en cours…', failed: 'Téléchargement non confirmé.', done: 'Téléchargement préparé.', size: 'Ko' },
+    download: 'Télécharger', busy: 'Téléchargement en cours…', failed: 'Téléchargement non confirmé.', done: 'Téléchargement préparé.', size: 'Ko', missing: 'Version documentaire demandée indisponible.' },
   DE: { title: 'Verknüpfte Dokumente', heading: 'Dokumentenorganisation · V0.1', linked: 'GD-005 · GD-006',
     internal: 'Intern · Vorbereitungsnachweis', loading: 'Dokumente werden geladen…', denied: 'Dokumentenzugriff nicht erlaubt.',
     unavailable: 'Dokumente vorübergehend nicht verfügbar.', close: 'Dokumente schliessen', refresh: 'Dokumente aktualisieren',
-    download: 'Herunterladen', busy: 'Download läuft…', failed: 'Download nicht bestätigt.', done: 'Download vorbereitet.', size: 'KB' },
+    download: 'Herunterladen', busy: 'Download läuft…', failed: 'Download nicht bestätigt.', done: 'Download vorbereitet.', size: 'KB', missing: 'Angeforderte Dokumentversion nicht verfügbar.' },
   EN: { title: 'Linked documents', heading: 'Document organisation · V0.1', linked: 'GD-005 · GD-006',
     internal: 'Internal · preparation evidence', loading: 'Loading documents…', denied: 'Document access is not authorised.',
     unavailable: 'Documents are temporarily unavailable.', close: 'Close documents', refresh: 'Refresh documents',
-    download: 'Download', busy: 'Downloading…', failed: 'Download not confirmed.', done: 'Download prepared.', size: 'KB' }
+    download: 'Download', busy: 'Downloading…', failed: 'Download not confirmed.', done: 'Download prepared.', size: 'KB', missing: 'Requested document version unavailable.' }
 };
 
 const RH_COPY = {
@@ -30,10 +30,11 @@ const OFFERS_COPY = {
 };
 
 export default function InstitutionalGedBundle(props) {
-  return <Bundle key={props.kind || 'documents'} {...props} />;
+  const selectionKey = props.fileIds === undefined ? null : JSON.stringify(props.fileIds);
+  return <Bundle key={JSON.stringify([props.kind || 'documents', selectionKey])} {...props} selectionKey={selectionKey} />;
 }
 
-function Bundle({ language = 'FR', kind = 'documents' }) {
+function Bundle({ language = 'FR', kind = 'documents', selectionKey }) {
   const t = { ...(COPY[language] || COPY.FR), ...(kind === 'rh' ? RH_COPY[language] || RH_COPY.FR : kind === 'offers' ? OFFERS_COPY[language] || OFFERS_COPY.FR : {}) };
   const filesId = kind === 'offers' ? 'offers-institutional-ged-files' : kind === 'rh' ? 'rh-institutional-ged-files' : 'institutional-ged-files';
   const [open, setOpen] = useState(false), [reload, setReload] = useState(0);
@@ -44,13 +45,18 @@ function Bundle({ language = 'FR', kind = 'documents' }) {
     if (!open) return undefined;
     const controller = new AbortController();
     setState({ kind: 'loading' }); setNotice(null);
-    Promise.resolve().then(() => api.getInstitutionalGedBundle({ signal: controller.signal, kind })).then(bundle => {
-      if (!controller.signal.aborted) setState({ kind: 'ready', bundle });
+    Promise.resolve().then(() => !controller.signal.aborted && api.getInstitutionalGedBundle({ signal: controller.signal, kind })).then(bundle => {
+      if (!controller.signal.aborted) {
+        const fileIds = selectionKey === null ? null : JSON.parse(selectionKey);
+        const files = fileIds === null ? bundle.files : bundle.files.filter(file => fileIds.includes(file.id));
+        setState(fileIds !== null && (!fileIds.length || files.length !== new Set(fileIds).size)
+          ? { kind: 'missing' } : { kind: 'ready', bundle: { ...bundle, files } });
+      }
     }).catch(error => {
       if (!controller.signal.aborted) setState({ kind: error?.status === 401 || error?.status === 403 ? 'denied' : 'unavailable' });
     });
     return () => controller.abort();
-  }, [open, reload, kind]);
+  }, [open, reload, kind, selectionKey]);
 
   function close() {
     active.current?.abort(); active.current = null;
@@ -88,7 +94,7 @@ function Bundle({ language = 'FR', kind = 'documents' }) {
           disabled={state.kind === 'loading' || Boolean(busy)} onClick={() => setReload(value => value + 1)}><RefreshCw size={18} aria-hidden="true" /></button>
       </div>
       {state.kind === 'ready' ? <>
-        <p className="text-xs text-blue-300">{t.linked}</p>
+        <p className="text-xs text-blue-300">{kind === 'offers' ? [...new Set(state.bundle.files.flatMap(file => file.dossiers))].join(' · ') : t.linked}</p>
         <ul className="divide-y divide-slate-700">{state.bundle.files.map(file => <li key={file.id} className="flex min-w-0 items-center gap-3 py-3">
           <div className="min-w-0 flex-1"><p className="break-all text-sm text-slate-100">{file.name}</p><p className="mt-1 text-xs text-slate-400">{new Intl.NumberFormat(language === 'DE' ? 'de-CH' : language === 'EN' ? 'en-GB' : 'fr-CH', { maximumFractionDigits: 1 }).format(file.size / 1024)} {t.size}</p>
             {kind === 'offers' && <p className="mt-1 break-words text-xs text-slate-300">{t.version} {file.version} · {file.dossiers.join(' · ')}</p>}

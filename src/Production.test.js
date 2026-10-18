@@ -134,11 +134,12 @@ test('renders the operational stock pilot without write actions', async () => {
   expect(screen.getAllByRole('button', { name: 'Delete' })).toHaveLength(4);
 });
 
-test('identifies manufacturing as the next read-only production sub-lot', async () => {
+test('identifies the existing digital kit without creating a manufacturing order', async () => {
   renderProduction('manufacturing');
 
   expect(await screen.findByRole('heading', { name: 'Manufacturing' })).toBeInTheDocument();
-  expect(screen.getByText('Next sub-lot')).toBeInTheDocument();
+  expect(screen.getByText('First digital case')).toBeInTheDocument();
+  expect(screen.getByTestId('manufacturing-digital-kit')).toBeInTheDocument();
   expect(screen.getByText('Need and deliverable')).toBeInTheDocument();
   expect(screen.getByText('Quality, version and delivery')).toBeInTheDocument();
   expect(screen.queryByRole('button', { name: 'Create' })).not.toBeInTheDocument();
