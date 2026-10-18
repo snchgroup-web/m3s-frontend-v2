@@ -18,6 +18,7 @@ import GlossaryHelp from './GlossaryHelp';
 import InternalSectionNav from './InternalSectionNav';
 import ProjectMinimumMethod from './ProjectMinimumMethod';
 import { taskCoverageCopy } from './taskIndicator';
+import PlanningTaskHelp from './PlanningTaskHelp';
 
 const COPY = {
   FR: {
@@ -35,7 +36,7 @@ const COPY = {
     navMethod: 'Contrôle minimal',
     navPilotProject: 'Projet pilote',
     navStatus: 'État',
-    navJournal: 'Journal validé',
+    navJournal: 'Propositions locales',
     navRegister: 'Registre',
     backToTop: 'Revenir en haut',
     steeringTitle: "De la cible à l'exécution",
@@ -105,7 +106,7 @@ const COPY = {
     navMethod: 'Minimum control',
     navPilotProject: 'Pilot project',
     navStatus: 'Status',
-    navJournal: 'Validated journal',
+    navJournal: 'Local proposals',
     navRegister: 'Register',
     backToTop: 'Back to top',
     steeringTitle: 'From target to execution',
@@ -175,7 +176,7 @@ const COPY = {
     navMethod: 'Mindestkontrolle',
     navPilotProject: 'Pilotprojekt',
     navStatus: 'Stand',
-    navJournal: 'Freigegebenes Journal',
+    navJournal: 'Lokale Vorschläge',
     navRegister: 'Register',
     backToTop: 'Nach oben',
     steeringTitle: 'Vom Zielbild zur Umsetzung',
@@ -424,6 +425,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'read
           ))}
         </div>
         <p className="mt-4 text-xs font-medium text-slate-400">{t.pilotProjectOwner}</p>
+        <PlanningTaskHelp language={language} />
         {registered && <ol className="mt-4 grid gap-2 border-t border-slate-700 pt-4 sm:grid-cols-2">
           {taskReferences.choices.phases.map((phase, index) => <li key={phase.id} className="min-w-0 text-sm">
             <span className="font-semibold">{index + 1}. {phase.label}</span>

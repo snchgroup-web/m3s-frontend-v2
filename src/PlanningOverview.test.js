@@ -113,7 +113,7 @@ test('connects the validated journal layer before the historical register', () =
     </PlanningOverview>
   );
 
-  expect(screen.getByRole('button', { name: 'Journal validé' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Propositions locales' })).toBeInTheDocument();
   expect(screen.getByText('Registre pilote du journal')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Registre des tâches et actions' })).toBeInTheDocument();
 });
