@@ -82,6 +82,8 @@ test('renders the orders pilot as read only', async () => {
   expect(screen.getAllByRole('button', { name: 'Delete' })).toHaveLength(4);
   screen.getAllByRole('button', { name: 'Edit' }).forEach(button => expect(button).toBeDisabled());
   screen.getAllByRole('button', { name: 'Delete' }).forEach(button => expect(button).toBeDisabled());
+  expect(document.querySelector('.production-kpi-summary')).not.toHaveTextContent('Suppliers');
+  expect(api.getExpenses).not.toHaveBeenCalled();
 });
 
 test('opens the source-connected services tab without demo KPI or demo-source banner', async () => {

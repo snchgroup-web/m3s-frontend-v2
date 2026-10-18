@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck, Wrench, X } from 'lucide-react';
+import { Edit2, Trash2, Package, CheckCircle, AlertCircle, Wrench, X } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ModuleTabContent, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
@@ -799,7 +799,6 @@ const Production = () => {
 
   const totalCommandes = commandes.length;
   const commandesLivrees = commandes.filter(c => normalizeStatus(c.statut) === 'Livrée').length;
-  const totalFournisseurs = fournisseurs.length;
   const stocksBas = stocks.filter(s => s.quantite <= s.seuil).length;
  
  
@@ -955,7 +954,7 @@ const Production = () => {
         </section>}
  
         {/* KPIs */}
-        {showLocalPilot && <div className="production-kpi-summary grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        {showLocalPilot && <div className="production-kpi-summary grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
             <div className="flex items-center justify-between">
               <div>
@@ -976,15 +975,6 @@ const Production = () => {
             </div>
           </div>
  
-          <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-purple-200 text-sm">{t.fournisseurs}</p>
-                <p className="text-white text-2xl font-bold">{totalFournisseurs}</p>
-              </div>
-              <Truck size={32} className="text-purple-400" />
-            </div>
-          </div>
  
           <div className={`bg-gradient-to-br ${stocksBas === 0 ? 'from-green-900 to-green-800' : 'from-orange-900 to-orange-800'} rounded-lg p-6 border ${stocksBas === 0 ? 'border-green-700' : 'border-orange-700'}`}>
             <div className="flex items-center justify-between">
