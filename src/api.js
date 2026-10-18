@@ -13,6 +13,8 @@ import { currentAccessToken, signOutIdentity } from './identityClient';
 import { readInstitutionalBundle, readInstitutionalDownload } from './institutionalGedModel';
 import { readRhInstitutionalBundle } from './institutionalRhGedModel';
 import { readOffersBundle } from './gedOffersModel';
+import { TASK_VERSION, isValidTaskFields, validTaskReferences, taskFieldsFromRecord } from './taskContract';
+export { isValidTaskFields } from './taskContract';
 
 const isLocalHost = typeof window !== 'undefined'
   && ['localhost', '127.0.0.1'].includes(window.location.hostname);
@@ -162,6 +164,59 @@ const administrationFetch = async (path, options = {}) => {
     throw error;
   }
   return payload;
+};
+
+const taskError = (code, details = {}) => Object.assign(new Error(code), { code, ...details });
+const taskReferenceKey = reference => reference.normalize('NFKC').trim().replace(/\s+/g, ' ').toLowerCase();
+const taskCount = value => Number.isSafeInteger(value) && value >= 0;
+const taskText = (value, min, max) => typeof value === 'string' && value.trim().length >= min && value.trim().length <= max;
+const taskReference = value => taskText(value, 3, 180)
+  && !Array.from(value).some(character => character.charCodeAt(0) < 32 || (character.charCodeAt(0) >= 127 && character.charCodeAt(0) <= 159));
+const validTaskRow = row => row && ['string', 'number'].includes(typeof row.id) && String(row.id).length > 0
+  && typeof (row.title ?? row.titre) === 'string' && typeof row.can_edit === 'boolean'
+  && ((row.source_kind === 'historical' && row.can_edit === false)
+    || (row.source_kind === 'operational' && row.contract_version === TASK_VERSION
+      && taskReference(row.reference) && Number.isSafeInteger(row.revision) && row.revision > 0
+      && isValidTaskFields(taskFieldsFromRecord(row))));
+const validTaskCoverage = payload => typeof payload?.operational_available === 'boolean'
+  && ['historical_only', 'historical_and_current_account'].includes(payload.coverage);
+
+// A mutation is never retried here: its acknowledgement may have been lost.
+export const tasksTransport = async (path, { method = 'GET', body, signal } = {}) => {
+  const readPath = ['/access', '/count', '/references'].includes(path) || /^\?limit=\d+&offset=\d+&search=[^#]*$/.test(path);
+  const updatePath = typeof path === 'string' && /^\/[A-Za-z0-9%_.~-]+$/.test(path)
+    && !['/access', '/count', '/references', '/.', '/..'].includes(path);
+  if (!((method === 'GET' && readPath && body === undefined) || (method === 'POST' && path === '' && body)
+    || (method === 'PUT' && updatePath && body))) throw taskError('TASK_INVALID');
+  if (signal?.aborted) throw taskError('TASK_ABORTED');
+  const token = await currentAccessToken();
+  if (!token || token.startsWith('demo_session_')) throw taskError('TASK_FORBIDDEN', { status: 401 });
+  if (signal?.aborted) throw taskError('TASK_ABORTED');
+  const controller = new AbortController();
+  const abort = () => controller.abort();
+  signal?.addEventListener('abort', abort, { once: true });
+  const timer = setTimeout(abort, 30000);
+  try {
+    const version = method === 'GET' ? `${path.includes('?') ? '&' : '?'}contract_version=${encodeURIComponent(TASK_VERSION)}` : '';
+    const response = await fetch(`${API_BASE_URL}/tasks${path}${version}`, {
+      method, signal: controller.signal, cache: 'no-store',
+      headers: { Authorization: `Bearer ${token}`, ...(body ? { 'Content-Type': 'application/json' } : {}) },
+      ...(body ? { body: JSON.stringify(body) } : {})
+    });
+    if (response.status === 401 && !signal?.aborted && await currentAccessToken() === token) clearExpiredSession();
+    let payload;
+    try { payload = await response.json(); } catch { payload = null; }
+    if (!response.ok || payload?.success !== true) {
+      throw taskError(payload?.code || (response.ok ? 'TASK_RESPONSE_INVALID' : 'TASK_REQUEST_FAILED'), { status: response.status });
+    }
+    return payload;
+  } catch (error) {
+    if (error.code) throw error;
+    throw taskError(signal?.aborted ? 'TASK_ABORTED' : 'TASK_NETWORK_UNKNOWN');
+  } finally {
+    clearTimeout(timer);
+    signal?.removeEventListener('abort', abort);
+  }
 };
 
 // Gestion des erreurs centralisée
@@ -683,29 +738,53 @@ export const api = {
   // APPELS API TÂCHES
   // ============================================================================
 
-  // Tâches - Liste
-  getTasks: async (limite = 100, decalage = 0, statut = null) => {
-    try {
-      let url = `${API_BASE_URL}/tasks?limit=${limite}&offset=${decalage}`;
-      if (statut) url += `&status=${statut}`;
-
-      const res = await apiFetch(url);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.json();
-    } catch (erreur) {
-      handleError(erreur, '/tasks');
-    }
+  getTasks: async (limit = 100, offset = 0, search = '', options = {}) => {
+    if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100 || !taskCount(offset) || typeof search !== 'string') throw taskError('TASK_INVALID');
+    const query = new URLSearchParams({ limit: String(limit), offset: String(offset), search });
+    const payload = await tasksTransport(`?${query}`, options);
+    if (!Array.isArray(payload.data) || !payload.data.every(validTaskRow) || !taskCount(payload.total)
+      || payload.count !== payload.data.length || payload.limit !== limit || payload.offset !== offset
+      || payload.data.length > limit || !validTaskCoverage(payload)) throw taskError('TASK_RESPONSE_INVALID');
+    return payload;
   },
 
-  // Tâches - Nombre total
-  getTasksCount: async () => {
-    try {
-      const res = await apiFetch(`${API_BASE_URL}/tasks/count`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.json();
-    } catch (erreur) {
-      handleError(erreur, '/tasks/count');
-    }
+  getTasksCount: async (options = {}) => {
+    const payload = await tasksTransport('/count', options);
+    if (!['total', 'open', 'completed', 'blocked', 'cancelled', 'historical_total'].every(key => taskCount(payload[key]))
+      || !(taskCount(payload.operational_total) || (payload.operational_total === null && payload.operational_available === false && payload.coverage === 'historical_only'))
+      || !validTaskCoverage(payload)) throw taskError('TASK_RESPONSE_INVALID');
+    return payload;
+  },
+
+  getTasksAccess: async (options = {}) => {
+    const payload = await tasksTransport('/access', options);
+    if (!['enabled', 'can_read', 'can_write'].every(key => typeof payload[key] === 'boolean') || payload.scope !== 'current_account'
+      || (payload.can_write && (payload.contract_version !== TASK_VERSION || payload.client_contract_compatible !== true))) throw taskError('TASK_RESPONSE_INVALID');
+    return payload;
+  },
+
+  getTaskReferences: async (options = {}) => {
+    const payload = await tasksTransport('/references', options);
+    if (!validTaskReferences(payload)) throw taskError('TASK_RESPONSE_INVALID');
+    return payload;
+  },
+
+  createTask: async (task, { signal } = {}) => {
+    if (!isValidTaskFields(task)) throw taskError('TASK_INVALID');
+    const payload = await tasksTransport('', { method: 'POST', body: task, signal });
+    if (!validTaskRow(payload.data) || payload.data.source_kind !== 'operational'
+      || taskReferenceKey(payload.data.reference) !== taskReferenceKey(task.reference)) throw taskError('TASK_RESPONSE_INVALID');
+    return payload;
+  },
+
+  updateTask: async (id, { expected_revision, task } = {}, { signal } = {}) => {
+    if (!['string', 'number'].includes(typeof id) || !String(id) || ['.', '..', 'access', 'count', 'references'].includes(String(id))
+      || !Number.isSafeInteger(expected_revision) || expected_revision < 1 || !isValidTaskFields(task, false)
+      || Object.hasOwn(task, 'reference')) throw taskError('TASK_INVALID');
+    const payload = await tasksTransport(`/${encodeURIComponent(id)}`, { method: 'PUT', body: { expected_revision, task }, signal });
+    if (!validTaskRow(payload.data) || payload.data.source_kind !== 'operational' || payload.data.id !== id
+      || payload.data.revision !== expected_revision + 1) throw taskError('TASK_RESPONSE_INVALID');
+    return payload;
   },
 
   // ============================================================================

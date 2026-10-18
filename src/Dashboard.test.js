@@ -56,6 +56,35 @@ const summaryResponse = (overrides = {}) => ({
   data: { total_income_count: 3, total_expense_count: 1, total_income: 600, total_income_cfa: 360000, total_expenses: 50, total_expenses_cfa: 30000, ...overrides }
 });
 
+test('persistent task counter refresh reads only saved server totals after a task event', async () => {
+  api.getTasksCount.mockResolvedValue({ total: 654, open: 88, completed: 566, blocked: 0, cancelled: 0,
+    coverage: 'historical_and_current_account' });
+  render(<Dashboard />);
+  await waitFor(() => expect(document.getElementById('dashboard-kpi-tasks')).toHaveTextContent('654'));
+  const financeReads = api.getFinanceDashboard.mock.calls.length;
+  api.getTasksCount.mockResolvedValue({ total: 655, open: 89, completed: 566, blocked: 0, cancelled: 0,
+    coverage: 'historical_and_current_account' });
+  fireEvent(window, new Event('m3s:tasks-changed'));
+  await waitFor(() => expect(document.getElementById('dashboard-kpi-tasks')).toHaveTextContent('655'));
+  expect(document.getElementById('dashboard-kpi-tasks')).toHaveTextContent('Open 89');
+  expect(document.getElementById('dashboard-kpi-tasks')).toHaveTextContent('History + my account');
+  expect(api.getFinanceDashboard).toHaveBeenCalledTimes(financeReads);
+});
+
+test('persistent task counter preserves historical subtotal and signals incomplete current-account coverage', async () => {
+  api.getTasksCount.mockResolvedValue({ total: 654, open: 88, completed: 566, operational_total: null,
+    coverage: 'historical_only' });
+  const { unmount } = render(<Dashboard />);
+  await waitFor(() => expect(document.getElementById('dashboard-kpi-tasks')).toHaveTextContent('654'));
+  const card = document.getElementById('dashboard-kpi-tasks');
+  expect(card).toHaveTextContent('Partial');
+  expect(card).toHaveTextContent('Historical tasks only');
+  const reads = api.getTasksCount.mock.calls.length;
+  unmount();
+  fireEvent(window, new Event('m3s:tasks-changed'));
+  expect(api.getTasksCount).toHaveBeenCalledTimes(reads);
+});
+
 test('shows known expense subtotals without inventing a complete balance', async () => {
   api.getFinanceDashboard.mockResolvedValue(summaryResponse({ total_expense_count: 3, total_expenses: null, total_expenses_cfa: null, known_expenses_chf: 50, known_expenses_cfa: 30000, expenses_missing_chf: 1, expenses_missing_cfa: 2 }));
   render(<Dashboard />);
@@ -82,7 +111,7 @@ test('retains known income CFA rather than hiding all amounts when a conversion 
   await screen.findByText('Known income · subtotal');
   const card = document.getElementById('dashboard-kpi-revenue');
   expect(card).toHaveTextContent('600 CHF');
-  expect(card).toHaveTextContent("240'000 CFA");
+  expect(card).toHaveTextContent(`${(240000).toLocaleString()} CFA`);
   expect(card).toHaveTextContent('Partial');
   expect(card).not.toHaveTextContent('≈');
 });
@@ -99,7 +128,7 @@ test('displays a sourced indicative income total only for a reconciled complete 
   render(<Dashboard />);
   await screen.findByText('Income · indicative CFA');
   const card = document.getElementById('dashboard-kpi-revenue');
-  expect(card).toHaveTextContent("≈ 360'000 CFA");
+  expect(card).toHaveTextContent(`≈ ${(360000).toLocaleString()} CFA`);
   expect(card).toHaveTextContent('Indicative');
   expect(screen.getByText('Indicative income CFA equivalents').closest('details')).not.toHaveAttribute('open');
   expect(screen.getByText('TFX', { exact: true })).toHaveAttribute('href', 'https://example.test/rate');
