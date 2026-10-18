@@ -60,3 +60,31 @@ test('download uses the checked file, never renders HTML, and releases its blob 
   expect(screen.queryByRole('iframe')).not.toBeInTheDocument();
   await waitFor(() => expect(revoke).toHaveBeenCalledWith('blob:synthetic'), { timeout: 1500 }); click.mockRestore();
 });
+
+test('an exact selection does not leak other files and equivalent props do not refetch', async () => {
+  const view = render(<InstitutionalGedBundle fileIds={[bundle.files[1].id]} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Documents rattachés' }));
+  await screen.findByText('B.html');
+  expect(screen.queryByText('A.md')).not.toBeInTheDocument();
+  view.rerender(<InstitutionalGedBundle language="DE" fileIds={[bundle.files[1].id]} />);
+  expect(screen.getByRole('button', { name: 'Herunterladen B.html' })).toBeVisible();
+  expect(api.getInstitutionalGedBundle).toHaveBeenCalledTimes(1);
+});
+
+test.each([{ ids: [] }, { ids: ['missing'] }, { ids: [bundle.files[0].id, 'missing'] }])('missing selection $ids never falls back to the full bundle', async ({ ids }) => {
+  render(<InstitutionalGedBundle language="EN" fileIds={ids} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Linked documents' }));
+  expect(await screen.findByRole('alert')).toHaveTextContent('Requested document version unavailable.');
+  expect(screen.queryByText('A.md')).not.toBeInTheDocument();
+});
+
+test('changing selection aborts old metadata and requires an explicit reopen', async () => {
+  const view = render(<InstitutionalGedBundle fileIds={[bundle.files[0].id]} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Documents rattachés' }));
+  await screen.findByText('A.md');
+  const signal = api.getInstitutionalGedBundle.mock.calls[0][0].signal;
+  view.rerender(<InstitutionalGedBundle fileIds={[bundle.files[1].id]} />);
+  expect(signal.aborted).toBe(true);
+  expect(screen.queryByText('A.md')).not.toBeInTheDocument();
+  expect(screen.queryByText('B.html')).not.toBeInTheDocument();
+});

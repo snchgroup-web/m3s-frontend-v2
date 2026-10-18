@@ -14,6 +14,7 @@ import { FunctionArchitectureOverview, FunctionProcessOverview } from './Functio
 import FunctionAssistant from './FunctionAssistant';
 import ProductionServices from './ProductionServices';
 import ProductionOverview from './ProductionOverview';
+import ProductionManufacturingKit from './ProductionManufacturingKit';
 import {
   buildTeamAgentDirectory,
   findAgentTeam,
@@ -112,8 +113,8 @@ const Production = () => {
       connectedSuppliers: 'L’onglet Fournisseurs reste un registre connecté séparé, hors de ce pilote.',
       noWriteAction: 'Les ajouts, modifications et suppressions seront réintroduits plus tard avec droits, confirmations et traçabilité.',
       manufacturingTitle: 'Fabrication',
-      manufacturingStatus: 'Prochain sous-lot',
-      manufacturingDescription: 'La Fabrication est identifiée dans Production, mais aucune donnée réelle ou consolidée n’est encore disponible.',
+      manufacturingStatus: 'Premier cas numérique',
+      manufacturingDescription: 'Le kit documentaire existant illustre une fabrication numérique. Aucun registre d’ordres ni total consolidé de fabrication n’est encore raccordé.',
       manufacturingGuardrail: 'Cette vue prépare le cadre métier sans créer de faux ordres de fabrication.',
       manufacturingSteps: ['Besoin et livrable', 'Étapes et moyens', 'Responsable et rattachements', 'Contrôle, version et remise'],
       manufacturingNext: 'À qualifier avant tout ordre : objet à produire, demande autorisée, étapes, moyens, responsable, contrôle qualité et version livrable. Les kits DOC/RH restent dans leurs cycles existants, sans second enregistrement.',
@@ -202,8 +203,8 @@ const Production = () => {
       connectedSuppliers: 'The Suppliers tab remains a separate connected register outside this pilot.',
       noWriteAction: 'Create, edit and delete actions will return later with permissions, confirmations and traceability.',
       manufacturingTitle: 'Manufacturing',
-      manufacturingStatus: 'Next sub-lot',
-      manufacturingDescription: 'Manufacturing is identified within Production, but no real or consolidated data is available yet.',
+      manufacturingStatus: 'First digital case',
+      manufacturingDescription: 'The existing document kit illustrates digital production. No manufacturing order register or consolidated manufacturing total is connected yet.',
       manufacturingGuardrail: 'This view prepares the business scope without creating fake manufacturing orders.',
       manufacturingSteps: ['Need and deliverable', 'Steps and resources', 'Owner and links', 'Quality, version and delivery'],
       manufacturingNext: 'Qualify before any order: item to produce, authorised request, steps, resources, owner, quality control and deliverable version. DOC/HR kits remain in their existing cycles, without a second record.',
@@ -292,8 +293,8 @@ const Production = () => {
       connectedSuppliers: 'Der Reiter Lieferanten bleibt ein separates verbundenes Register außerhalb dieses Piloten.',
       noWriteAction: 'Erstellen, Bearbeiten und Löschen werden später mit Rechten, Bestätigungen und Nachverfolgung wieder eingeführt.',
       manufacturingTitle: 'Herstellung',
-      manufacturingStatus: 'Nächstes Teilpaket',
-      manufacturingDescription: 'Die Herstellung ist innerhalb der Produktion vorgesehen, aber es sind noch keine realen oder konsolidierten Daten verfügbar.',
+      manufacturingStatus: 'Erster digitaler Fall',
+      manufacturingDescription: 'Das bestehende Dokumenten-Kit veranschaulicht digitale Herstellung. Ein Fertigungsauftragsregister oder konsolidierte Herstellungszahlen sind noch nicht angebunden.',
       manufacturingGuardrail: 'Diese Ansicht bereitet den fachlichen Rahmen vor, ohne fiktive Fertigungsaufträge anzulegen.',
       manufacturingSteps: ['Bedarf und Ergebnis', 'Schritte und Mittel', 'Verantwortung und Verknüpfungen', 'Qualität, Version und Übergabe'],
       manufacturingNext: 'Vor jedem Auftrag klären: herzustellendes Objekt, genehmigter Bedarf, Schritte, Mittel, Verantwortung, Qualitätskontrolle und Ergebnisversion. DOC/HR-Kits bleiben in ihren bestehenden Zyklen, ohne zweiten Eintrag.',
@@ -1043,7 +1044,7 @@ const Production = () => {
         {activeTab === 'processes' && <FunctionProcessOverview moduleId="production" language={language} />}
 
         {activeTab === 'manufacturing' && (
-          <section className="rounded-lg border border-slate-700 bg-slate-800 p-5 text-slate-100">
+          <section className="text-slate-100">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div className="flex items-start gap-3">
                 <div className="rounded-md border border-orange-400/30 bg-orange-500/10 p-2 text-orange-300">
@@ -1074,6 +1075,7 @@ const Production = () => {
             </div>
             <p className="mt-5 text-sm leading-6 text-slate-300">{t.manufacturingNext}</p>
             <p className="mt-3 text-xs leading-5 text-slate-400">{t.manufacturingSource}</p>
+            <ProductionManufacturingKit language={language} />
             <button type="button" className="m3s-secondary-button mt-4 min-h-11 px-3" onClick={() => selectTab('services')}>{t.openServices}</button>
           </section>
         )}
