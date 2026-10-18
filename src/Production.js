@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Edit2, Trash2, Package, CheckCircle, AlertCircle, Truck, Wrench, X } from 'lucide-react';
+import { Edit2, Trash2, Package, CheckCircle, AlertCircle, Wrench, X } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { ModulePageTabs, ModuleTabContent, ChildTabPlaceholder } from './moduleTabs';
 import LocalizedDateInput from './LocalizedDateInput';
@@ -14,6 +13,7 @@ import FunctionResourcesOverview from './FunctionResourcesOverview';
 import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
 import FunctionAssistant from './FunctionAssistant';
 import ProductionServices from './ProductionServices';
+import ProductionOverview from './ProductionOverview';
 import {
   buildTeamAgentDirectory,
   findAgentTeam,
@@ -115,7 +115,10 @@ const Production = () => {
       manufacturingStatus: 'Prochain sous-lot',
       manufacturingDescription: 'La Fabrication est identifiée dans Production, mais aucune donnée réelle ou consolidée n’est encore disponible.',
       manufacturingGuardrail: 'Cette vue prépare le cadre métier sans créer de faux ordres de fabrication.',
-      manufacturingSteps: ['Ordres de fabrication', 'Phases et avancement', 'Équipe et responsables', 'Qualité et délais']
+      manufacturingSteps: ['Besoin et livrable', 'Étapes et moyens', 'Responsable et rattachements', 'Contrôle, version et remise'],
+      manufacturingNext: 'À qualifier avant tout ordre : objet à produire, demande autorisée, étapes, moyens, responsable, contrôle qualité et version livrable. Les kits DOC/RH restent dans leurs cycles existants, sans second enregistrement.',
+      manufacturingSource: 'Cadre de référence : Production V2 de travail, sections 2, 3 et 10. Aucun ordre, délai ou coût réel n’est déduit de ce cadrage.',
+      openServices: 'Ouvrir le suivi des prestations'
     },
     EN: {
       title: 'Production & Logistics',
@@ -202,7 +205,10 @@ const Production = () => {
       manufacturingStatus: 'Next sub-lot',
       manufacturingDescription: 'Manufacturing is identified within Production, but no real or consolidated data is available yet.',
       manufacturingGuardrail: 'This view prepares the business scope without creating fake manufacturing orders.',
-      manufacturingSteps: ['Manufacturing orders', 'Phases and progress', 'Team and owners', 'Quality and deadlines']
+      manufacturingSteps: ['Need and deliverable', 'Steps and resources', 'Owner and links', 'Quality, version and delivery'],
+      manufacturingNext: 'Qualify before any order: item to produce, authorised request, steps, resources, owner, quality control and deliverable version. DOC/HR kits remain in their existing cycles, without a second record.',
+      manufacturingSource: 'Reference framework: Production V2 working version, sections 2, 3 and 10. No real order, deadline or cost is inferred from this scope.',
+      openServices: 'Open service delivery follow-up'
     },
     DE: {
       title: 'Produktion & Logistik',
@@ -289,7 +295,10 @@ const Production = () => {
       manufacturingStatus: 'Nächstes Teilpaket',
       manufacturingDescription: 'Die Herstellung ist innerhalb der Produktion vorgesehen, aber es sind noch keine realen oder konsolidierten Daten verfügbar.',
       manufacturingGuardrail: 'Diese Ansicht bereitet den fachlichen Rahmen vor, ohne fiktive Fertigungsaufträge anzulegen.',
-      manufacturingSteps: ['Fertigungsaufträge', 'Phasen und Fortschritt', 'Team und Verantwortliche', 'Qualität und Termine']
+      manufacturingSteps: ['Bedarf und Ergebnis', 'Schritte und Mittel', 'Verantwortung und Verknüpfungen', 'Qualität, Version und Übergabe'],
+      manufacturingNext: 'Vor jedem Auftrag klären: herzustellendes Objekt, genehmigter Bedarf, Schritte, Mittel, Verantwortung, Qualitätskontrolle und Ergebnisversion. DOC/HR-Kits bleiben in ihren bestehenden Zyklen, ohne zweiten Eintrag.',
+      manufacturingSource: 'Referenzrahmen: Production V2 Arbeitsfassung, Abschnitte 2, 3 und 10. Daraus werden keine realen Aufträge, Fristen oder Kosten abgeleitet.',
+      openServices: 'Leistungsverfolgung öffnen'
     }
   };
 
@@ -473,7 +482,6 @@ const Production = () => {
     return 'bg-blue-900 text-blue-200';
   };
   const translateProduct = (product) => dataTranslations.products[language]?.[product] || product;
-  const translateMonth = (month) => dataTranslations.months[language]?.[month] || month;
   const normalizedLabelKey = (value) => normalizeLookupKey(value).replace(/[_-]+/g, ' ').replace(/\s+/g, ' ');
   const translateFromDictionary = (dictionary, value) => {
     if (!value || value === '-') return '-';
@@ -500,7 +508,6 @@ const Production = () => {
     const normalized = normalizeCountry(country);
     return dataTranslations.countries[language]?.[normalized] || country;
   };
-  const translateChartLabel = (label) => dataTranslations.chartLabels[language]?.[label] || label;
   const teamOptions = [
     { value: 'Team_ZH', label: t.teamZh },
     { value: 'Team_SN', label: t.teamSn }
@@ -703,6 +710,7 @@ const Production = () => {
   const requestedTab = new URLSearchParams(location.search).get('tab');
   const activeTab = ['overview', 'architecture', 'processes', 'commandes', 'services', 'fournisseurs', 'stocks', 'manufacturing', 'assistant', 'resources', 'glossary'].includes(requestedTab)
     ? requestedTab : 'overview';
+  const showLocalPilot = ['commandes', 'stocks'].includes(activeTab);
   const [commandes, setCommandes] = useState([]);
   const [fournisseurs, setFournisseurs] = useState([]);
   const [fournisseursLoading, setFournisseursLoading] = useState(false);
@@ -742,6 +750,7 @@ const Production = () => {
   }, []);
 
   useEffect(() => {
+    if (activeTab !== 'fournisseurs') return undefined;
     let cancelled = false;
 
     const loadFournisseurs = async () => {
@@ -786,24 +795,12 @@ const Production = () => {
     };
     // buildSuppliersFromSources is pure and intentionally scoped to this page.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activeTab]);
 
   const totalCommandes = commandes.length;
   const commandesLivrees = commandes.filter(c => normalizeStatus(c.statut) === 'Livrée').length;
-  const totalFournisseurs = fournisseurs.length;
   const stocksBas = stocks.filter(s => s.quantite <= s.seuil).length;
  
-  const commandesParMois = [
-    { mois: translateMonth('Fév'), commandes: 3 },
-    { mois: translateMonth('Mar'), commandes: 5 },
-    { mois: translateMonth('Avr'), commandes: totalCommandes },
-  ];
-
-  const stocksParProduit = stocks.map(s => ({
-    produit: translateProduct(s.produit),
-    quantite: s.quantite,
-    seuil: s.seuil
-  }));
  
   const handleFormChange = (field, value) => {
     if (field === 'team') {
@@ -934,7 +931,7 @@ const Production = () => {
         </div>
 
         <div className={`production-content-stack${activeTab === 'overview' ? '' : ' production-content-stack--detail'}`}>
-        {activeTab !== 'services' && <section className="production-pilot-summary mb-6 rounded-lg border border-blue-500/40 bg-blue-950/45 p-5 text-blue-50">
+        {showLocalPilot && <section className="production-pilot-summary mb-6 rounded-lg border border-blue-500/40 bg-blue-950/45 p-5 text-blue-50">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex items-start gap-3">
               <AlertCircle size={20} className="mt-0.5 shrink-0 text-blue-300" aria-hidden="true" />
@@ -957,7 +954,7 @@ const Production = () => {
         </section>}
  
         {/* KPIs */}
-        {activeTab !== 'services' && <div className="production-kpi-summary grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        {showLocalPilot && <div className="production-kpi-summary grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-700">
             <div className="flex items-center justify-between">
               <div>
@@ -978,15 +975,6 @@ const Production = () => {
             </div>
           </div>
  
-          <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-purple-200 text-sm">{t.fournisseurs}</p>
-                <p className="text-white text-2xl font-bold">{totalFournisseurs}</p>
-              </div>
-              <Truck size={32} className="text-purple-400" />
-            </div>
-          </div>
  
           <div className={`bg-gradient-to-br ${stocksBas === 0 ? 'from-green-900 to-green-800' : 'from-orange-900 to-orange-800'} rounded-lg p-6 border ${stocksBas === 0 ? 'border-green-700' : 'border-orange-700'}`}>
             <div className="flex items-center justify-between">
@@ -1002,37 +990,7 @@ const Production = () => {
         <ModuleTabContent activeTab={activeTab} className="production-active-view">
         {activeTab === 'services' && <ProductionServices language={language} />}
         {/* Vue d'ensemble */}
-        {activeTab === 'overview' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">{t.commandesParMois}</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={commandesParMois}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-                  <XAxis dataKey="mois" stroke="#94a3b8" />
-                  <YAxis stroke="#94a3b8" />
-                  <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
-                  <Bar dataKey="commandes" fill="#3b82f6" radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
- 
-            <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h3 className="text-white font-bold mb-4">{t.stocksParProduit}</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={stocksParProduit} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-                  <XAxis type="number" stroke="#94a3b8" />
-                  <YAxis dataKey="produit" type="category" stroke="#94a3b8" width={100} />
-                  <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
-                  <Legend />
-                  <Bar dataKey="quantite" name={translateChartLabel('quantite')} fill="#10b981" radius={[0, 8, 8, 0]} />
-                  <Bar dataKey="seuil" name={translateChartLabel('seuil')} fill="#ef4444" radius={[0, 8, 8, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        )}
+        {activeTab === 'overview' && <ProductionOverview language={language} onOpenServices={() => selectTab('services')} />}
  
         {/* Tables */}
         {activeTab === 'commandes' && (
@@ -1114,6 +1072,9 @@ const Production = () => {
                 </div>
               ))}
             </div>
+            <p className="mt-5 text-sm leading-6 text-slate-300">{t.manufacturingNext}</p>
+            <p className="mt-3 text-xs leading-5 text-slate-400">{t.manufacturingSource}</p>
+            <button type="button" className="m3s-secondary-button mt-4 min-h-11 px-3" onClick={() => selectTab('services')}>{t.openServices}</button>
           </section>
         )}
 
