@@ -39,8 +39,9 @@ jest.mock('./api', () => {
     getMembersDirectory: jest.fn(),
     getProductionServiceFollowup: jest.fn()
   };
-  return { __esModule: true, api, default: api };
+  return { __esModule: true, api, default: api, productionServiceTransport: jest.fn().mockRejectedValue({ status: 403 }) };
 });
+jest.mock('./AuthContext', () => ({ useAuth: () => ({ isAuthenticated: true, user: { id: 'test', tenantId: '2sg' } }) }));
 
 const directory = [
   { person_id: 'PER-1', display_name: 'Cheikh Ndiaye', preferred_name: 'Cheikh', team: 'TZH', active: true },
@@ -136,9 +137,27 @@ test('identifies manufacturing as the next read-only production sub-lot', async 
 
   expect(await screen.findByRole('heading', { name: 'Manufacturing' })).toBeInTheDocument();
   expect(screen.getByText('Next sub-lot')).toBeInTheDocument();
-  expect(screen.getByText('Manufacturing orders')).toBeInTheDocument();
-  expect(screen.getByText('Quality and deadlines')).toBeInTheDocument();
+  expect(screen.getByText('Need and deliverable')).toBeInTheDocument();
+  expect(screen.getByText('Quality, version and delivery')).toBeInTheDocument();
   expect(screen.queryByRole('button', { name: 'Create' })).not.toBeInTheDocument();
+  expect(screen.queryByRole('heading', { name: 'Local Production pilot' })).not.toBeInTheDocument();
+  expect(screen.queryByText('Total Orders')).not.toBeInTheDocument();
+  expect(api.getExpenses).not.toHaveBeenCalled();
+});
+
+test('overview uses shared cycles, not demo metrics or supplier/HR records', async () => {
+  api.getProductionServiceFollowup.mockResolvedValue({ success: true, data: [],
+    source: { system: 'bigquery', registry: 'management_dossiers', scope: 'internal_service_preparation', read_only: true } });
+  renderProduction('overview', 'FR');
+  expect(await screen.findByRole('heading', { name: 'Production suivie' })).toBeInTheDocument();
+  expect(screen.queryByRole('heading', { name: 'Pilote local Production' })).not.toBeInTheDocument();
+  expect(screen.queryByText('Commandes par Mois')).not.toBeInTheDocument();
+  expect(api.getExpenses).not.toHaveBeenCalled();
+  expect(api.getInventory).not.toHaveBeenCalled();
+  expect(api.getMembersDirectory).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: 'Ouvrir le suivi des prestations' }));
+  expect(mockSearch).toContain('tab=services');
+  await screen.findByRole('button', { name: 'Point source conservé · RH de proximité' });
 });
 
 test('keeps the connected suppliers register available separately', async () => {
@@ -305,8 +324,8 @@ test('marks a detail tab so its content is visually prioritised on mobile', asyn
   expect(stack.querySelector('.production-active-view')).toContainElement(
     screen.getByRole('heading', { name: 'Architecture & relations Production' })
   );
-  expect(stack.querySelector('.production-pilot-summary')).toBeInTheDocument();
-  expect(stack.querySelector('.production-kpi-summary')).toBeInTheDocument();
+  expect(stack.querySelector('.production-pilot-summary')).not.toBeInTheDocument();
+  expect(stack.querySelector('.production-kpi-summary')).not.toBeInTheDocument();
 });
 
 test('renders the local Production glossary from the governed tab', async () => {
