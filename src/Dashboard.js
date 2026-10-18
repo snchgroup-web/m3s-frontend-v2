@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { taskIndicatorSnapshot } from './taskIndicator';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import BrandedLoading from './BrandedLoading';
@@ -328,6 +329,9 @@ const Dashboard = () => {
       itIncidentSource: 'IT & Support · Registre des incidents à raccorder',
       itStorageSource: 'IT & Support · Mesure du stockage à raccorder',
       administrationTasks: 'Administration · Registre des tâches',
+      tasksHistoricalSource: 'Administration · Historique seul',
+      tasksCombinedSource: 'Administration · Historique + mon compte',
+      tasksPartial: 'Partiel',
       gedDocuments: 'GED · Documents',
       financeIncome: 'Finance · Recettes',
       financeExpenses: 'Finance · Dépenses',
@@ -437,6 +441,9 @@ const Dashboard = () => {
       itIncidentSource: 'IT & Support · Incident register to connect',
       itStorageSource: 'IT & Support · Storage measure to connect',
       administrationTasks: 'Administration · Task register',
+      tasksHistoricalSource: 'Administration · Historical tasks only',
+      tasksCombinedSource: 'Administration · History + my account',
+      tasksPartial: 'Partial',
       gedDocuments: 'Document Management · Documents',
       financeIncome: 'Finance · Income',
       financeExpenses: 'Finance · Expenses',
@@ -546,6 +553,9 @@ const Dashboard = () => {
       itIncidentSource: 'IT & Support · Vorfallregister anzubinden',
       itStorageSource: 'IT & Support · Speichermessung anzubinden',
       administrationTasks: 'Verwaltung · Aufgabenregister',
+      tasksHistoricalSource: 'Verwaltung · Nur historische Aufgaben',
+      tasksCombinedSource: 'Verwaltung · Historie + mein Konto',
+      tasksPartial: 'Teilweise',
       gedDocuments: 'Dokumentenverwaltung · Dokumente',
       financeIncome: 'Finanzen · Einnahmen',
       financeExpenses: 'Finanzen · Ausgaben',
@@ -738,7 +748,7 @@ const Dashboard = () => {
             finance: financeAvailable ? 'available' : 'unavailable',
             documents: documentsAvailable ? 'available' : 'unavailable',
             inventory: inventoryAvailable ? 'available' : 'unavailable',
-            tasks: tasksAvailable ? 'available' : 'unavailable',
+            tasks: taskIndicatorSnapshot(tasksCount).status,
             users: usersAvailable ? 'available' : 'unavailable',
             portfolio: portfolioAvailable ? 'available' : 'unavailable',
             income: Number.isFinite(totalIncome) && Number.isFinite(totalIncomeCfa) ? 'available' : 'unavailable',
@@ -810,7 +820,8 @@ const Dashboard = () => {
               open: tasksOpen,
               completed: tasksCompleted,
               blocked: tasksBlocked,
-              cancelled: tasksCancelled
+              cancelled: tasksCancelled,
+              coverage: tasksCount?.coverage || null
             },
             rh: {
               ...mockDataBase.moduleStats.rh,
@@ -852,8 +863,26 @@ const Dashboard = () => {
         if (!disposed) setLoading(false);
       }
     };
-    fetchDashboardData();
-    return () => { disposed = true; };
+    const initialRead = fetchDashboardData();
+    let taskReadVersion = 0;
+    const refreshTasks = async () => {
+      const version = ++taskReadVersion;
+      await initialRead;
+      if (disposed) return;
+      const result = await withApiFallback(() => api.getTasksCount());
+      if (disposed || version !== taskReadVersion) return;
+      const snapshot = taskIndicatorSnapshot(result);
+      setDashboardData(current => current ? {
+        ...current,
+        sourceStatus: { ...current.sourceStatus, tasks: snapshot.status },
+        moduleStats: { ...current.moduleStats, tasks: snapshot.stats }
+      } : current);
+    };
+    window.addEventListener('m3s:tasks-changed', refreshTasks);
+    return () => {
+      disposed = true;
+      window.removeEventListener('m3s:tasks-changed', refreshTasks);
+    };
   }, [refreshVersion]);
 
   useEffect(() => {
@@ -886,6 +915,7 @@ const Dashboard = () => {
   const sourceState = (sourceKey) => {
     const sourceStatus = dashboardData?.sourceStatus?.[sourceKey];
     if (sourceStatus === 'available') return { status: 'available', statusLabel: t.available };
+    if (sourceKey === 'tasks' && sourceStatus === 'partial') return { status: 'partial', statusLabel: t.tasksPartial };
     if (sourceStatus === 'restricted') return { status: 'restricted', statusLabel: t.restricted };
     return { status: 'unavailable', statusLabel: t.unavailable };
   };
@@ -965,12 +995,14 @@ const Dashboard = () => {
         },
         {
           id: 'tasks', label: t.trackedTasks, value: formatCount(dashboardData?.moduleStats.tasks.total),
-          secondary: dashboardData?.sourceStatus.tasks === 'available'
+          secondary: ['available', 'partial'].includes(dashboardData?.sourceStatus.tasks)
             && Number.isFinite(dashboardData?.moduleStats.tasks.open)
             && Number.isFinite(dashboardData?.moduleStats.tasks.completed)
             ? `${t.openTasks} ${formatCount(dashboardData.moduleStats.tasks.open)} · ${t.completedTasks} ${formatCount(dashboardData.moduleStats.tasks.completed)}`
             : null,
-          source: t.administrationTasks, ...sourceState('tasks'), icon: ListChecks, accent: 'cyan',
+          source: dashboardData?.moduleStats.tasks.coverage === 'historical_only' ? t.tasksHistoricalSource
+            : dashboardData?.moduleStats.tasks.coverage === 'historical_and_current_account' ? t.tasksCombinedSource : t.administrationTasks,
+          ...sourceState('tasks'), icon: ListChecks, accent: 'cyan',
           openLabel: t.openModule, onOpen: () => handleIndicatorOpen('tasks'),
           definition: getManagementKpiDefinition('tasks', language)?.definition,
           helpLabel: t.explainIndicator, onHelp: () => handleIndicatorHelp('tasks')

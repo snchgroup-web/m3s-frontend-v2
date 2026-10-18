@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Edit2, Trash2 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import api from './api';
 import { ModulePageTabs, ModuleTabContent, ChildTabPlaceholder } from './moduleTabs';
-import TableControls from './TableControls';
 import InstitutionOverview from './InstitutionOverview';
 import PlanningOverview from './PlanningOverview';
 import CorrespondenceAgenda from './CorrespondenceAgenda';
 import JournalTaskRegister from './JournalTaskRegister';
+import PersistentTaskRegister from './PersistentTaskRegister';
 import ComplianceOverview from './ComplianceOverview';
 import CommunicationOverview from './CommunicationOverview';
 import AdministrationGlossary from './AdministrationGlossary';
@@ -372,35 +372,6 @@ const Admin = () => {
 
   const translateRole = (role) => dataTranslations.roles[language]?.[role] || role;
   const translateRoleDescription = (desc) => dataTranslations.roleDescriptions[language]?.[desc] || desc;
-  const normalizeLookupKey = (value) => String(value || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
-  const taskStatusKeys = {
-    'TERMINE': 'Terminé',
-    'EN COURS': 'En cours',
-    'A FAIRE': 'À faire',
-    'BLOQUE': 'Bloqué',
-    'ANNULE': 'Annulé'
-  };
-  const taskPriorityKeys = {
-    'HAUTE': 'Haute',
-    'MOYENNE': 'Moyenne',
-    'BASSE': 'Basse',
-    'URGENTE': 'Urgente'
-  };
-  const taskStatusOptions = ['À faire', 'En cours', 'Terminé', 'Bloqué', 'Annulé'];
-  const taskPriorityOptions = ['Basse', 'Moyenne', 'Haute', 'Urgente'];
-  const taskModuleOptions = ['ADMINISTRATION', 'TACHES', 'DOCUMENTS', 'RECETTES', 'DEPENSES', 'FINANCE', 'SOCIAL', 'IMMO', 'STOCKS', 'ACTIFS', 'RH', 'GED', 'CRM', 'PRODUCTION', 'FX'];
-  const translateTaskStatus = (status) => {
-    const canonical = taskStatusKeys[normalizeLookupKey(status)] || status;
-    return dataTranslations.taskStatuses[language]?.[canonical] || status;
-  };
-  const translateTaskPriority = (priority) => {
-    const canonical = taskPriorityKeys[normalizeLookupKey(priority)] || priority;
-    return dataTranslations.taskPriorities[language]?.[canonical] || priority;
-  };
-  const translateTaskModule = (module) => {
-    const key = normalizeLookupKey(module);
-    return dataTranslations.taskModules[language]?.[key] || module;
-  };
   const formatValue = (value) => {
     const text = String(value || '').trim();
     return text && text !== 'N/A' ? text : t.nonRenseigne;
@@ -431,26 +402,22 @@ const Admin = () => {
   const [authAccountsStatus, setAuthAccountsStatus] = useState('loading');
   const [usersSourceTimestamp, setUsersSourceTimestamp] = useState(null);
   const [roles, setRoles] = useState([]);
-  const [tasks, setTasks] = useState([]);
   const [taskSummary, setTaskSummary] = useState({ total: null, open: null, completed: null });
   const [taskSummaryStatus, setTaskSummaryStatus] = useState('loading');
+  const [taskReferences, setTaskReferences] = useState(null);
+  useEffect(() => { setTaskReferences(null); }, [user?.id]);
   const [showRoleModal, setShowRoleModal] = useState(false);
-  const [showTaskModal, setShowTaskModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [editingTaskId, setEditingTaskId] = useState(null);
   const [roleFormData, setRoleFormData] = useState({
     nom: '',
     permissions: [],
     description: ''
   });
-  const [taskFormData, setTaskFormData] = useState({
-    titre: '',
-    statut: 'En cours',
-    priorite: 'Moyenne',
-    responsable: '',
-    module: 'ADMINISTRATION',
-    progression: 0
-  });
+
+  const handleTaskSummary = useCallback((summary, status) => {
+    setTaskSummary(summary || { total: null, open: null, completed: null });
+    setTaskSummaryStatus(status);
+  }, []);
 
   useEffect(() => {
     const requestedTab = new URLSearchParams(location.search).get('tab');
@@ -462,48 +429,16 @@ const Admin = () => {
   }, [canReadAudit, location.search, navigate]);
 
   useEffect(() => {
-    const loadTasks = async () => {
-      setTaskSummaryStatus('loading');
-
-      const [tasksResult, summaryResult] = await Promise.allSettled([
-        api.getTasks(100, 0),
-        api.getTasksCount()
-      ]);
-
-      if (tasksResult.status === 'fulfilled' && Array.isArray(tasksResult.value?.data)) {
-        setTasks(tasksResult.value.data);
-      } else {
-        console.error('Erreur chargement taches:', tasksResult.reason || 'Source taches invalide');
-        setTasks([]);
-      }
-
-      const summary = summaryResult.status === 'fulfilled' ? summaryResult.value : null;
-      const hasSummaryCounts = summary?.total !== null
-        && summary?.total !== undefined
-        && summary?.total !== ''
-        && summary?.completed !== null
-        && summary?.completed !== undefined
-        && summary?.completed !== '';
-      const total = hasSummaryCounts ? Number(summary.total) : NaN;
-      const completed = hasSummaryCounts ? Number(summary.completed) : NaN;
-      if (hasSummaryCounts && Number.isFinite(total) && Number.isFinite(completed)) {
-        const hasOpenCount = summary?.open !== null
-          && summary?.open !== undefined
-          && summary?.open !== '';
-        const open = hasOpenCount && Number.isFinite(Number(summary.open))
-          ? Number(summary.open)
-          : null;
-        setTaskSummary({ total, open, completed });
-        setTaskSummaryStatus('ready');
-      } else {
-        console.error('Erreur chargement synthese taches:', summaryResult.reason || 'Synthese taches invalide');
-        setTaskSummary({ total: null, open: null, completed: null });
-        setTaskSummaryStatus('unavailable');
-      }
-    };
-
-    loadTasks();
-  }, []);
+    if (activeTab === 'planning') return;
+    const controller = new AbortController();
+    handleTaskSummary(null, 'loading');
+    api.getTasksCount({ signal: controller.signal }).then(summary => {
+      if (!controller.signal.aborted) handleTaskSummary(summary, 'ready');
+    }).catch(() => {
+      if (!controller.signal.aborted) handleTaskSummary(null, 'unavailable');
+    });
+    return () => controller.abort();
+  }, [activeTab, handleTaskSummary, user?.id]);
 
   // Les rôles restent un prototype local distinct du registre utilisateurs.
   useEffect(() => {
@@ -561,10 +496,6 @@ const Admin = () => {
     setRoleFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleTaskChange = (field, value) => {
-    setTaskFormData(prev => ({ ...prev, [field]: value }));
-  };
-
   const handleSaveRole = () => {
     if (!roleFormData.nom) {
       alert(t.remplirChamps);
@@ -590,64 +521,6 @@ const Admin = () => {
 
   const handleDeleteRole = (id) => {
     setRoles(roles.filter(r => r.id !== id));
-  };
-
-  const getDefaultTaskFormData = () => ({
-    titre: '',
-    statut: 'En cours',
-    priorite: 'Moyenne',
-    responsable: '',
-    module: 'ADMINISTRATION',
-    progression: 0
-  });
-
-  const openNewTaskModal = () => {
-    setEditingTaskId(null);
-    setTaskFormData(getDefaultTaskFormData());
-    setShowTaskModal(true);
-  };
-
-  const handleEditTask = (task) => {
-    setEditingTaskId(task.id || task.source_id);
-    setTaskFormData({
-      titre: task.titre || task.title || '',
-      statut: taskStatusKeys[normalizeLookupKey(task.statut || task.status)] || 'En cours',
-      priorite: taskPriorityKeys[normalizeLookupKey(task.priorite || task.priority)] || 'Moyenne',
-      responsable: task.responsable || '',
-      module: normalizeLookupKey(task.module || 'ADMINISTRATION') || 'ADMINISTRATION',
-      progression: Number(task.progression || 0)
-    });
-    setShowTaskModal(true);
-  };
-
-  const handleSaveTask = () => {
-    if (!taskFormData.titre) {
-      alert(t.remplirChamps);
-      return;
-    }
-
-    const normalizedTask = {
-      titre: taskFormData.titre,
-      statut: taskStatusKeys[normalizeLookupKey(taskFormData.statut)] || taskFormData.statut,
-      priorite: taskPriorityKeys[normalizeLookupKey(taskFormData.priorite)] || taskFormData.priorite,
-      responsable: taskFormData.responsable,
-      module: normalizeLookupKey(taskFormData.module) || 'ADMINISTRATION',
-      progression: Math.max(0, Math.min(100, Number(taskFormData.progression) || 0))
-    };
-
-    if (editingTaskId) {
-      setTasks(tasks.map(task => (task.id || task.source_id) === editingTaskId ? { ...task, ...normalizedTask, id: task.id || editingTaskId } : task));
-    } else {
-      setTasks([{ ...normalizedTask, id: Date.now() }, ...tasks]);
-    }
-
-    setShowTaskModal(false);
-    setEditingTaskId(null);
-    setTaskFormData(getDefaultTaskFormData());
-  };
-
-  const handleDeleteTask = (id) => {
-    setTasks(tasks.filter(task => (task.id || task.source_id) !== id));
   };
 
   const handleTabSelect = (tab, { fromOverview = false } = {}) => {
@@ -703,6 +576,7 @@ const Admin = () => {
             language={language}
             tasksTotal={tasksTotal}
             tasksStatus={taskSummaryStatus}
+            tasksCoverage={taskSummary.coverage}
             openTasks={openTasks}
             completedTasks={completedTasks}
             onNavigate={handleOverviewNavigate}
@@ -720,61 +594,14 @@ const Admin = () => {
               language={language}
               tasksTotal={tasksTotal}
               tasksStatus={taskSummaryStatus}
+              tasksCoverage={taskSummary.coverage}
+              taskReferences={taskReferences}
               openTasks={openTasks}
               completedTasks={completedTasks}
             >
               <JournalTaskRegister language={language} />
             </PlanningOverview>
-            <div className="flex justify-end mb-4">
-              <StandardCreateButton onClick={openNewTaskModal}>{t.nouvelleTache}</StandardCreateButton>
-            </div>
-            <TableControls rows={tasks} renderTable={(visibleRows) => (
-              <table className="min-w-full text-sm">
-                <thead className="sticky top-0 z-10 bg-slate-700">
-                  <tr>
-                    <th className="px-4 py-2 text-left text-white font-bold">{t.titleTask}</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">{t.statut}</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">{t.priorite}</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">{t.responsable}</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">{t.module}</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">{t.progression}</th>
-                    <th className="px-4 py-2 text-left text-white font-bold">{t.actions}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {visibleRows.map(task => (
-                    <tr
-                      key={task.id || task.source_id}
-                      className="administration-table-row cursor-pointer border-t border-slate-700 transition-colors hover:bg-blue-950/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-400"
-                      tabIndex={0}
-                      aria-label={`${t.modifier} : ${formatValue(task.titre || task.title)}`}
-                      onClick={() => handleEditTask(task)}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter' || event.key === ' ') {
-                          event.preventDefault();
-                          handleEditTask(task);
-                        }
-                      }}
-                    >
-                      <td className="px-4 py-2 text-slate-300 font-medium">{formatValue(task.titre || task.title)}</td>
-                      <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskStatus(task.statut || task.status))}</td>
-                      <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskPriority(task.priorite || task.priority))}</td>
-                      <td className="px-4 py-2 text-slate-400">{formatValue(task.responsable)}</td>
-                      <td className="px-4 py-2 text-slate-400">{formatValue(translateTaskModule(task.module))}</td>
-                      <td className="px-4 py-2 text-blue-400 font-bold">{Number(task.progression || 0)}%</td>
-                      <td className="px-4 py-2 flex gap-2">
-                        <button onClick={(event) => { event.stopPropagation(); handleEditTask(task); }} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.modifier} : ${formatValue(task.titre || task.title)}`} title={t.modifier}>
-                          <Edit2 size={16} className="text-blue-400" />
-                        </button>
-                        <button onClick={(event) => { event.stopPropagation(); handleDeleteTask(task.id || task.source_id); }} className="rounded p-1 hover:bg-slate-600" aria-label={`${t.supprimer} : ${formatValue(task.titre || task.title)}`} title={t.supprimer}>
-                          <Trash2 size={16} className="text-red-400" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )} />
+            <PersistentTaskRegister key={user?.id || user?.email || 'current-account'} language={language} moduleLabels={dataTranslations.taskModules[language]} onSummaryChange={handleTaskSummary} onReferencesChange={setTaskReferences} />
           </div>
         )}
 
@@ -940,71 +767,6 @@ const Admin = () => {
         </div>
       </div>
 
-      {/* Modal Tache */}
-      {showTaskModal && (
-        <div className="administration-modal fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-4 sm:items-center">
-          <form
-            className="administration-modal__panel max-h-[calc(100vh-2rem)] w-full max-w-md overflow-y-auto rounded-lg border border-slate-700 bg-slate-800 p-5 shadow-2xl sm:p-8"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="task-modal-title"
-            onSubmit={(event) => { event.preventDefault(); handleSaveTask(); }}
-          >
-            <h2 id="task-modal-title" className="mb-6 text-2xl font-semibold text-slate-100">
-              {editingTaskId ? t.modifierTache : t.nouvelleTache}
-            </h2>
-
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="task-title" className="mb-2 block text-sm font-medium text-slate-300">{t.titleTask} *</label>
-                <input id="task-title" type="text" required value={taskFormData.titre} onChange={(e) => handleTaskChange('titre', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40" />
-              </div>
-
-              <div>
-                <label htmlFor="task-status" className="mb-2 block text-sm font-medium text-slate-300">{t.statut}</label>
-                <select id="task-status" value={taskFormData.statut} onChange={(e) => handleTaskChange('statut', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40">
-                  {taskStatusOptions.map(status => (
-                    <option key={status} value={status}>{translateTaskStatus(status)}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="task-priority" className="mb-2 block text-sm font-medium text-slate-300">{t.priorite}</label>
-                <select id="task-priority" value={taskFormData.priorite} onChange={(e) => handleTaskChange('priorite', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40">
-                  {taskPriorityOptions.map(priority => (
-                    <option key={priority} value={priority}>{translateTaskPriority(priority)}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="task-owner" className="mb-2 block text-sm font-medium text-slate-300">{t.responsable}</label>
-                <input id="task-owner" type="text" value={taskFormData.responsable} onChange={(e) => handleTaskChange('responsable', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40" />
-              </div>
-
-              <div>
-                <label htmlFor="task-module" className="mb-2 block text-sm font-medium text-slate-300">{t.module}</label>
-                <select id="task-module" value={taskFormData.module} onChange={(e) => handleTaskChange('module', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40">
-                  {taskModuleOptions.map(module => (
-                    <option key={module} value={module}>{translateTaskModule(module)}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="task-progress" className="mb-2 block text-sm font-medium text-slate-300">{t.progression}</label>
-                <input id="task-progress" type="number" min="0" max="100" value={taskFormData.progression} onChange={(e) => handleTaskChange('progression', e.target.value)} className="min-h-11 w-full rounded-md border border-slate-600 bg-slate-700 px-4 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40" />
-              </div>
-            </div>
-
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              <button type="button" onClick={() => setShowTaskModal(false)} className="administration-modal__cancel min-h-11 rounded-md bg-slate-700 px-4 py-2 font-medium text-white transition hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400">{t.annuler}</button>
-              <button type="submit" className={`${editingTaskId ? 'm3s-primary-button' : 'm3s-success-button'} administration-modal__primary min-h-11 px-4`}>{editingTaskId ? t.modifier : t.creer}</button>
-            </div>
-          </form>
-        </div>
-      )}
 
       {/* Modal Rôle */}
       {showRoleModal && (

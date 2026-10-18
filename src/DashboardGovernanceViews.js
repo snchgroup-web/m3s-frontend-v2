@@ -33,16 +33,27 @@ const copy = {
       dataModelStatus: 'Cible à valider',
       dataModelBody: 'Ce schéma prépare les relations transversales attendues. Il ne signifie pas que les tables, identifiants ou raccordements sont déjà disponibles.',
       dataModelGroups: [
-        ['Cadre de travail', 'Dossier → Projet → Phase → Tâche'],
+        ['Cadre de travail · Projet', 'Dossier → Projet → Phase → Tâche'],
         ['Responsabilités', 'Fonction → Team → Personne ou collectif'],
-        ['Flux métier', 'Action → Opération → Recette, dépense ou mouvement de stock'],
+        ['Flux métier', 'Opération métier → Résultat → Preuve'],
         ['Traçabilité', 'Source → Document → Contrôle → Décision']
       ],
       dataModelRelations: [
-        'Une tâche appartient à une phase, elle-même rattachée à un projet et à un dossier.',
+        'Une tâche de projet appartient à une phase du projet et du dossier. Une tâche opérationnelle relève d’un plan opérationnel, sans projet artificiel.',
         'Une personne ou un collectif assume une responsabilité dans une fonction et une Team.',
-        'Une opération peut exécuter ou financer une tâche sans se confondre avec elle.',
+        'Une opération métier relève de sa fonction : planification, RH, IT, CRM, production, actifs ou finances. Une écriture financière n’est qu’un résultat possible.',
         'Une preuve documente une opération, un contrôle ou une décision avec sa provenance.'
+      ],
+      businessExamplesTitle: 'Exemples de résultats métier',
+      businessExamplesBoundary: 'La tâche organise le travail ; le dossier, la transaction, l’intervention ou la livraison restent des objets métier distincts. Ces exemples ne créent ni écriture, ni registre, ni réception automatique.',
+      businessExamples: [
+        ['Planification', 'Planning daté, jalon ou décision de suivi'],
+        ['Ressources humaines', 'Dossier, contrat, relevé d’heures ou confirmation de réception'],
+        ['IT & Support', 'Fiche d’intervention, archive de sauvegarde ou livraison technique'],
+        ['Commercial & CRM', 'Contact qualifié, opportunité, devis ou suivi client'],
+        ['Production', 'Livrable, réalisation, remise ou réception consignée'],
+        ['Stock & Actifs', 'Mouvement de stock, inventaire ou maintenance d’un actif'],
+        ['Finances', 'Recette, dépense, paiement ou rapprochement']
       ],
       pilotTitle: 'Premier domaine pilote · Achat & approvisionnement',
       pilotBody: 'Ce domaine teste les identifiants et relations nécessaires sans modifier les registres actuels.',
@@ -157,19 +168,21 @@ const copy = {
         ['project_id', 'Projet délimité', 'Administration · Planification & Projets avec la fonction responsable', '1 dossier → 0..n projets ; chaque projet → 0..1 dossier.'],
         ['phase_id', 'Phase gouvernée', 'Administration · Planification & Projets', '1 projet → 0..n phases ; chaque phase → exactement 1 projet.'],
         ['activity_id', 'Activité cohérente facultative', 'Fonction responsable · Planification & Projets', '1 phase → 0..n activités ; chaque activité → exactement 1 phase. Niveau facultatif.'],
-        ['task_id', 'Tâche exécutable', 'Fonction responsable · registre des tâches', '1 phase → 0..n tâches ; chaque tâche → exactement 1 phase et 0..1 activité. Toute activité renseignée appartient à la même phase.'],
+        ['task_id', 'Tâche exécutable', 'Fonction responsable · registre des tâches', 'Projet : chaque tâche → exactement 1 phase et 0..1 activité de cette phase. Opération : chaque tâche → exactement 1 plan opérationnel, sans phase artificielle.'],
         ['action_id', 'Action élémentaire facultative', 'Fonction responsable · journal d’exécution', '1 tâche → 0..n actions ; chaque action → exactement 1 tâche. Niveau facultatif.'],
         ['milestone_id', 'Jalon de contrôle', 'Planification & Projets · fonction responsable', '1 projet → 0..n jalons ; chaque jalon → 1 projet et 0..1 phase.']
       ],
       workRulesTitle: 'Garde-fous du cadrage',
       workRules: [
         'Aucun niveau vide n’est créé pour satisfaire artificiellement une hiérarchie.',
-        'Une tâche reste reliée à sa phase ; son activité est facultative et ne peut appartenir à une autre phase.',
+        'Une tâche de projet reste reliée à sa phase ; son activité est facultative et ne peut appartenir à une autre phase.',
         'Le statut ou la progression d’un parent n’est jamais déduit automatiquement de ses enfants.',
         'L’auteur d’une saisie ne devient pas automatiquement responsable, contrôleur ou validateur.',
         'Les preuves restent dans la GED et se relient à l’objet concerné sans copie concurrente.'
       ],
       workDecisionTitle: 'Décision métier validée · 23.08.2026',
+      workCurrentTitle: 'Règle actuelle · 18.10.2026',
+      workCurrentBody: 'Pour les nouvelles tâches, la branche projet exige une phase et permet une activité de cette phase ; la branche opération exige un plan opérationnel, sans projet ni phase artificiels. Une récurrence exige un modèle et une occurrence qualifiés. Cette décision remplace la règle générale du 23 août sans reclasser l’historique. Architecture & Relations et Planification & Projets réutilisent les mêmes références, sans second registre.',
       workDecisionBody: 'Chaque tâche porte un `phase_id` obligatoire et un `activity_id` facultatif. Aucune activité vide n’est créée par défaut ; l’intégrité Phase–Activité–Tâche devra être garantie avant toute persistance.'
     },
     processes: {
@@ -226,8 +239,16 @@ const copy = {
       relationTitle: 'Relationship chain', relation: ['Steering decision', 'Responsible function', 'Action or transaction', 'Evidence and review'],
       dataModelTitle: 'Candidate relational model', dataModelStatus: 'Target to validate',
       dataModelBody: 'This diagram prepares the expected cross-functional relationships. It does not mean that the tables, identifiers or connections are already available.',
-      dataModelGroups: [['Work frame', 'File → Project → Phase → Task'], ['Responsibilities', 'Function → Team → Person or collective'], ['Business flows', 'Action → Operation → Income, expense or stock movement'], ['Traceability', 'Source → Document → Control → Decision']],
-      dataModelRelations: ['A task belongs to a phase, itself linked to a project and a file.', 'A person or collective assumes a responsibility within a function and a Team.', 'An operation may execute or finance a task without being the same object.', 'Evidence documents an operation, control or decision together with its provenance.'],
+      dataModelGroups: [['Work frame · Project', 'File → Project → Phase → Task'], ['Responsibilities', 'Function → Team → Person or collective'], ['Business flows', 'Business operation → Result → Evidence'], ['Traceability', 'Source → Document → Control → Decision']],
+      dataModelRelations: ['A project task belongs to a project phase and dossier. An operational task belongs to an operational plan, without an artificial project.', 'A person or collective assumes a responsibility within a function and a Team.', 'A business operation belongs to its function: planning, HR, IT, CRM, production, assets or finance. A financial entry is only one possible result.', 'Evidence documents an operation, control or decision together with its provenance.'],
+      businessExamplesTitle: 'Examples of business results',
+      businessExamplesBoundary: 'A task organises work; a dossier, transaction, intervention or delivery remains a separate business object. These examples create no entry, register or automatic receipt.',
+      businessExamples: [
+        ['Planning', 'Dated plan, milestone or follow-up decision'], ['Human resources', 'Dossier, contract, timesheet or receipt confirmation'],
+        ['IT & Support', 'Intervention record, backup archive or technical delivery'], ['Commercial & CRM', 'Qualified contact, opportunity, quotation or customer follow-up'],
+        ['Production', 'Deliverable, realisation, handover or recorded receipt'], ['Stock & Assets', 'Stock movement, inventory or asset maintenance'],
+        ['Finance', 'Income, expense, payment or reconciliation']
+      ],
       pilotTitle: 'First pilot domain · Purchasing & procurement', pilotBody: 'This domain tests the required identifiers and relationships without changing current registers.',
       pilotObserved: 'Observed today', pilotTarget: 'Candidate target',
       pilotObservedItems: ['Expense: supplier, amounts, Team, Agent and project phase as values.', 'Stock: supplier, quantities and purchase amounts in a separate register.', 'Supplier view: matching derived from normalised names, without a shared supplier key.', 'DMS evidence: no consistent reference in generic financial entries.'],
@@ -329,19 +350,21 @@ const copy = {
         ['project_id', 'Bounded project', 'Administration · Planning & Projects with the responsible function', '1 file → 0..n projects; each project → 0..1 file.'],
         ['phase_id', 'Governed phase', 'Administration · Planning & Projects', '1 project → 0..n phases; each phase → exactly 1 project.'],
         ['activity_id', 'Optional coherent activity', 'Responsible function · Planning & Projects', '1 phase → 0..n activities; each activity → exactly 1 phase. Optional level.'],
-        ['task_id', 'Executable task', 'Responsible function · task register', '1 phase → 0..n tasks; each task → exactly 1 phase and 0..1 activity. Any selected activity belongs to the same phase.'],
+        ['task_id', 'Executable task', 'Responsible function · task register', 'Project: each task → exactly 1 phase and 0..1 activity in that phase. Operation: each task → exactly 1 operational plan, without an artificial phase.'],
         ['action_id', 'Optional elementary action', 'Responsible function · execution log', '1 task → 0..n actions; each action → exactly 1 task. Optional level.'],
         ['milestone_id', 'Control milestone', 'Planning & Projects · responsible function', '1 project → 0..n milestones; each milestone → 1 project and 0..1 phase.']
       ],
       workRulesTitle: 'Framing guardrails',
       workRules: [
         'No empty level is created merely to satisfy a hierarchy.',
-        'A task remains linked to its phase; its activity is optional and cannot belong to another phase.',
+        'A project task remains linked to its phase; its activity is optional and cannot belong to another phase.',
         'A parent status or progress is never inferred automatically from its children.',
         'The author of an entry does not automatically become its owner, controller or validator.',
         'Evidence remains in the DMS and links to the relevant object without a competing copy.'
       ],
       workDecisionTitle: 'Business decision validated · 23 Aug 2026',
+      workCurrentTitle: 'Current rule · 18 Oct 2026',
+      workCurrentBody: 'For new tasks, the project branch requires a phase and permits an activity in that phase; the operation branch requires an operational plan, without an artificial project or phase. Recurrence requires a qualified model and occurrence. This decision supersedes the general rule of 23 August without reclassifying history. Architecture & Relations and Planning & Projects reuse the same references, without a second register.',
       workDecisionBody: 'Each task has a required `phase_id` and an optional `activity_id`. No empty activity is created by default; Phase–Activity–Task integrity must be guaranteed before any persistence.'
     },
     processes: {
@@ -370,8 +393,16 @@ const copy = {
       relationTitle: 'Beziehungskette', relation: ['Steuerungsentscheidung', 'Verantwortliche Funktion', 'Aktion oder Transaktion', 'Nachweis und Prüfung'],
       dataModelTitle: 'Kandidatenmodell der Beziehungen', dataModelStatus: 'Zielbild zu validieren',
       dataModelBody: 'Dieses Schema bereitet die erwarteten funktionsübergreifenden Beziehungen vor. Es bedeutet nicht, dass Tabellen, Kennungen oder Verbindungen bereits verfügbar sind.',
-      dataModelGroups: [['Arbeitsrahmen', 'Dossier → Projekt → Phase → Aufgabe'], ['Verantwortung', 'Funktion → Team → Person oder Kollektiv'], ['Fachliche Flüsse', 'Aktion → Vorgang → Einnahme, Ausgabe oder Lagerbewegung'], ['Nachvollziehbarkeit', 'Quelle → Dokument → Kontrolle → Entscheidung']],
-      dataModelRelations: ['Eine Aufgabe gehört zu einer Phase, die einem Projekt und einem Dossier zugeordnet ist.', 'Eine Person oder ein Kollektiv übernimmt Verantwortung innerhalb einer Funktion und eines Teams.', 'Ein Vorgang kann eine Aufgabe ausführen oder finanzieren, ohne mit ihr identisch zu sein.', 'Ein Nachweis dokumentiert einen Vorgang, eine Kontrolle oder eine Entscheidung samt Herkunft.'],
+      dataModelGroups: [['Arbeitsrahmen · Projekt', 'Dossier → Projekt → Phase → Aufgabe'], ['Verantwortung', 'Funktion → Team → Person oder Kollektiv'], ['Fachliche Flüsse', 'Fachlicher Vorgang → Ergebnis → Nachweis'], ['Nachvollziehbarkeit', 'Quelle → Dokument → Kontrolle → Entscheidung']],
+      dataModelRelations: ['Eine Projektaufgabe gehört zu einer Projektphase und einem Dossier. Eine Betriebsaufgabe gehört zu einem Betriebsplan, ohne künstliches Projekt.', 'Eine Person oder ein Kollektiv übernimmt Verantwortung innerhalb einer Funktion und eines Teams.', 'Ein fachlicher Vorgang gehört zu seiner Funktion: Planung, Personalwesen, IT, CRM, Produktion, Anlagen oder Finanzen. Eine Finanzbuchung ist nur ein mögliches Ergebnis.', 'Ein Nachweis dokumentiert einen Vorgang, eine Kontrolle oder eine Entscheidung samt Herkunft.'],
+      businessExamplesTitle: 'Beispiele fachlicher Ergebnisse',
+      businessExamplesBoundary: 'Eine Aufgabe organisiert Arbeit; Dossier, Transaktion, Intervention oder Lieferung bleiben eigene Fachobjekte. Diese Beispiele erzeugen keine Buchung, kein Register und keine automatische Empfangsbestätigung.',
+      businessExamples: [
+        ['Planung', 'Datierter Plan, Meilenstein oder Folgeentscheidung'], ['Personalwesen', 'Dossier, Vertrag, Stundennachweis oder Empfangsbestätigung'],
+        ['IT & Support', 'Interventionsbericht, Sicherungsarchiv oder technische Lieferung'], ['Vertrieb & CRM', 'Qualifizierter Kontakt, Verkaufschance, Angebot oder Kundenbetreuung'],
+        ['Produktion', 'Liefergegenstand, Durchführung, Übergabe oder erfasster Empfang'], ['Bestand & Anlagen', 'Lagerbewegung, Inventar oder Anlagenwartung'],
+        ['Finanzen', 'Einnahme, Ausgabe, Zahlung oder Abstimmung']
+      ],
       pilotTitle: 'Erster Pilotbereich · Einkauf & Beschaffung', pilotBody: 'Dieser Bereich prüft die erforderlichen Kennungen und Beziehungen, ohne aktuelle Register zu ändern.',
       pilotObserved: 'Heute beobachtet', pilotTarget: 'Kandidatenziel',
       pilotObservedItems: ['Ausgabe: Lieferant, Beträge, Team, Agent und Projektphase als Werte.', 'Bestand: Lieferant, Mengen und Einkaufsbeträge in einem getrennten Register.', 'Lieferantenansicht: Ableitung über normalisierte Namen ohne gemeinsamen Lieferantenschlüssel.', 'GED-Nachweis: keine einheitliche Referenz in allgemeinen Finanzbuchungen.'],
@@ -473,19 +504,21 @@ const copy = {
         ['project_id', 'Abgegrenztes Projekt', 'Verwaltung · Planung & Projekte mit der verantwortlichen Funktion', '1 Akte → 0..n Projekte; jedes Projekt → 0..1 Akte.'],
         ['phase_id', 'Geregelte Phase', 'Verwaltung · Planung & Projekte', '1 Projekt → 0..n Phasen; jede Phase → genau 1 Projekt.'],
         ['activity_id', 'Optionale zusammenhängende Aktivität', 'Verantwortliche Funktion · Planung & Projekte', '1 Phase → 0..n Aktivitäten; jede Aktivität → genau 1 Phase. Optionale Ebene.'],
-        ['task_id', 'Ausführbare Aufgabe', 'Verantwortliche Funktion · Aufgabenregister', '1 Phase → 0..n Aufgaben; jede Aufgabe → genau 1 Phase und 0..1 Aktivität. Eine gewählte Aktivität gehört zur selben Phase.'],
+        ['task_id', 'Ausführbare Aufgabe', 'Verantwortliche Funktion · Aufgabenregister', 'Projekt: jede Aufgabe → genau 1 Phase und 0..1 Aktivität dieser Phase. Betrieb: jede Aufgabe → genau 1 Betriebsplan, ohne künstliche Phase.'],
         ['action_id', 'Optionale Einzelaktion', 'Verantwortliche Funktion · Ausführungsjournal', '1 Aufgabe → 0..n Aktionen; jede Aktion → genau 1 Aufgabe. Optionale Ebene.'],
         ['milestone_id', 'Kontrollmeilenstein', 'Planung & Projekte · verantwortliche Funktion', '1 Projekt → 0..n Meilensteine; jeder Meilenstein → 1 Projekt und 0..1 Phase.']
       ],
       workRulesTitle: 'Leitplanken der Rahmung',
       workRules: [
         'Keine leere Ebene wird nur zur Erfüllung einer Hierarchie angelegt.',
-        'Eine Aufgabe bleibt mit ihrer Phase verknüpft; ihre Aktivität ist optional und darf keiner anderen Phase angehören.',
+        'Eine Projektaufgabe bleibt mit ihrer Phase verknüpft; ihre Aktivität ist optional und darf keiner anderen Phase angehören.',
         'Status oder Fortschritt eines Elternobjekts werden nie automatisch aus den Kindern abgeleitet.',
         'Der Autor eines Eintrags wird nicht automatisch verantwortlich, kontrollierend oder validierend.',
         'Nachweise bleiben in der GED und werden ohne konkurrierende Kopie mit dem betroffenen Objekt verknüpft.'
       ],
       workDecisionTitle: 'Fachentscheidung validiert · 23.08.2026',
+      workCurrentTitle: 'Aktuelle Regel · 18.10.2026',
+      workCurrentBody: 'Für neue Aufgaben erfordert der Projektzweig eine Phase und erlaubt eine Aktivität derselben Phase; der Betriebszweig erfordert einen Betriebsplan ohne künstliches Projekt oder künstliche Phase. Wiederholung erfordert ein qualifiziertes Modell und eine Ausführung. Diese Entscheidung ersetzt die allgemeine Regel vom 23. August ohne rückwirkende Umklassifizierung. Architektur & Beziehungen und Planung & Projekte nutzen dieselben Referenzen, ohne zweites Register.',
       workDecisionBody: 'Jede Aufgabe besitzt eine verpflichtende `phase_id` und eine optionale `activity_id`. Standardmäßig wird keine leere Aktivität angelegt; die Integrität Phase–Aktivität–Aufgabe muss vor jeder Persistenz gewährleistet sein.'
     },
     processes: {
@@ -559,6 +592,16 @@ const ArchitectureView = ({ data }) => {
             </li>
           ))}
         </ol>
+        <details className="mt-3 border-t border-cyan-800/70 pt-3">
+          <summary className="cursor-pointer text-sm font-semibold text-slate-100">{data.businessExamplesTitle}</summary>
+          <p className="mt-2 text-sm leading-6 text-slate-300">{data.businessExamplesBoundary}</p>
+          <dl className="mt-3 grid min-w-0 gap-x-5 gap-y-3 sm:grid-cols-2">
+            {data.businessExamples.map(([domain, result]) => <div key={domain} className="min-w-0 border-b border-slate-700 pb-2">
+              <dt className="text-sm font-semibold text-cyan-300">{domain}</dt>
+              <dd className="mt-1 break-words text-sm leading-6 text-slate-300">{result}</dd>
+            </div>)}
+          </dl>
+        </details>
       </section>
       <section className="mt-4 rounded-md border border-slate-700 bg-slate-900/30 p-3" aria-labelledby="global-purchase-pilot">
         <h4 id="global-purchase-pilot" className="text-sm font-semibold text-slate-100">{data.pilotTitle}</h4>
@@ -752,8 +795,12 @@ const ArchitectureView = ({ data }) => {
             </ul>
           </article>
           <article className="rounded-md border border-amber-700/70 bg-amber-950/15 p-3">
-            <h5 className="text-sm font-semibold text-amber-100">{data.workDecisionTitle}</h5>
-            <p className="mt-2 text-sm leading-6 text-amber-100/90">{data.workDecisionBody}</p>
+            <h5 className="text-sm font-semibold text-amber-100">{data.workCurrentTitle}</h5>
+            <p className="mt-2 text-sm leading-6 text-amber-100/90">{data.workCurrentBody}</p>
+            <details className="mt-3 text-sm text-amber-100/90">
+              <summary className="cursor-pointer"><h5 className="inline font-semibold">{data.workDecisionTitle}</h5></summary>
+              <p className="mt-2 leading-6">{data.workDecisionBody}</p>
+            </details>
           </article>
         </div>
       </section>

@@ -16,6 +16,7 @@ import {
 import { getAdministrationGlossaryTerms } from './AdministrationGlossary';
 import AdministrationPortfolioOverview from './AdministrationPortfolioOverview';
 import { LEGAL_DOCUMENTARY_BASELINE } from './legalDocumentaryProgress';
+import { taskCoverageCopy } from './taskIndicator';
 
 const COPY = {
   FR: {
@@ -188,7 +189,7 @@ const MetricCard = ({ icon: Icon, label, value, detail, source, state, tone, ope
   </button>
 );
 
-const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, tasksStatus = 'loading', openTasks = null, completedTasks = null, onNavigate }) => {
+const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, tasksStatus = 'loading', tasksCoverage = null, openTasks = null, completedTasks = null, onNavigate }) => {
   const t = COPY[language] || COPY.FR;
   const glossaryCount = getAdministrationGlossaryTerms(language).length;
   const tasksReady = tasksStatus === 'ready'
@@ -223,8 +224,8 @@ const AdministrationDashboardOverview = ({ language = 'FR', tasksTotal = null, t
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-        <MetricCard icon={ClipboardList} label={t.metrics.tasks} value={taskValue} detail={openDetail} source={t.sources.tasks} state={taskState} tone="bg-blue-950 text-blue-300" openLabel={t.open} onOpen={() => onNavigate?.('planning')} />
-        <MetricCard icon={CheckCircle2} label={t.metrics.completed} value={completedValue} source={t.sources.tasks} state={taskState} tone="bg-emerald-950 text-emerald-300" openLabel={t.open} onOpen={() => onNavigate?.('planning')} />
+        <MetricCard icon={ClipboardList} label={t.metrics.tasks} value={taskValue} detail={openDetail} source={taskCoverageCopy(tasksCoverage, language) || t.sources.tasks} state={taskState} tone="bg-blue-950 text-blue-300" openLabel={t.open} onOpen={() => onNavigate?.('planning')} />
+        <MetricCard icon={CheckCircle2} label={t.metrics.completed} value={completedValue} source={taskCoverageCopy(tasksCoverage, language) || t.sources.tasks} state={taskState} tone="bg-emerald-950 text-emerald-300" openLabel={t.open} onOpen={() => onNavigate?.('planning')} />
         <MetricCard icon={Network} label={t.metrics.components} value={components.length} source={t.sources.components} state={t.statuses.structured} tone="bg-cyan-950 text-cyan-300" openLabel={t.open} onOpen={() => onNavigate?.('architecture')} />
         <MetricCard icon={BookOpenText} label={t.metrics.glossary} value={glossaryCount} source={t.sources.glossary} state={t.statuses.governed} tone="bg-violet-950 text-violet-300" openLabel={t.open} onOpen={() => onNavigate?.('glossary')} />
         <MetricCard icon={ShieldCheck} label={t.metrics.compliance} value={LEGAL_DOCUMENTARY_BASELINE.externalDeliverableStatus === 'review' ? t.metrics.complianceValue : '—'} detail={t.metrics.complianceDetail} source={t.sources.compliance} state={t.statuses.documentaryBaseline} tone="bg-amber-950 text-amber-300" openLabel={t.open} onOpen={() => onNavigate?.('compliance')} />

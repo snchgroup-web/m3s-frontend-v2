@@ -17,6 +17,7 @@ import {
 import GlossaryHelp from './GlossaryHelp';
 import InternalSectionNav from './InternalSectionNav';
 import ProjectMinimumMethod from './ProjectMinimumMethod';
+import { taskCoverageCopy } from './taskIndicator';
 
 const COPY = {
   FR: {
@@ -86,7 +87,7 @@ const COPY = {
     tasksOpen: 'Tâches ouvertes',
     tasksCompleted: 'Tâches terminées',
     completion: 'Progression documentaire',
-    currentBody: 'La synthèse API alimente les compteurs du registre historique des tâches. L’Agenda affiche les échéances du Courrier conservées dans la source sécurisée. Les propositions du journal restent locales ; la persistance des tâches historiques et les autres objets de planification restent à raccorder.',
+    currentBody: 'Les compteurs sont relus depuis le serveur. Le registre distingue l’historique en lecture seule des tâches persistantes du compte courant, lorsque leur source est disponible. L’agenda conserve les échéances du courrier ; les candidats du journal restent locaux et séparés.',
     registerTitle: 'Registre des tâches et actions'
   },
   EN: {
@@ -156,7 +157,7 @@ const COPY = {
     tasksOpen: 'Open tasks',
     tasksCompleted: 'Completed tasks',
     completion: 'Documented completion',
-    currentBody: 'The API summary supplies the historical task counters. The agenda displays correspondence deadlines stored in the secure source. Journal proposals remain local; historical task persistence and other planning objects still need to be connected.',
+    currentBody: 'Counts are read back from the server. The register separates read-only history from persistent current-account tasks when their source is available. The agenda retains correspondence deadlines; journal candidates remain local and separate.',
     registerTitle: 'Task and action register'
   },
   DE: {
@@ -226,7 +227,7 @@ const COPY = {
     tasksOpen: 'Offene Aufgaben',
     tasksCompleted: 'Abgeschlossene Aufgaben',
     completion: 'Dokumentierter Fortschritt',
-    currentBody: 'Die API-Zusammenfassung liefert die historischen Aufgabenzähler. Die Agenda zeigt Korrespondenzfristen aus der sicheren Quelle. Journalvorschläge bleiben lokal; die Speicherung historischer Aufgaben und weitere Planungsobjekte müssen noch angebunden werden.',
+    currentBody: 'Die Zähler werden erneut vom Server gelesen. Das Register trennt schreibgeschützte historische Aufgaben von persistenten Aufgaben des aktuellen Kontos, sofern deren Quelle verfügbar ist. Die Agenda behält Korrespondenzfristen; Journalkandidaten bleiben lokal und getrennt.',
     registerTitle: 'Aufgaben- und Aktionsregister'
   }
 };
@@ -275,8 +276,19 @@ const Metric = ({ label, value }) => (
   </div>
 );
 
-const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'ready', openTasks = null, completedTasks = 0, agenda, children }) => {
-  const t = COPY[language] || COPY.FR;
+const registeredCopy = {
+  FR: { eyebrow: 'Projet enregistré · Standardisation', status: 'Références enregistrées', active: 'Écriture activée · compte courant', pending: 'Écriture non activée',
+    next: 'Poursuivre les tâches autorisées dans leur phase ; aucune phase ni tâche clôturée automatiquement.' },
+  DE: { eyebrow: 'Registriertes Projekt · Standardisierung', status: 'Referenzen registriert', active: 'Schreiben aktiviert · aktuelles Konto', pending: 'Schreiben nicht aktiviert',
+    next: 'Autorisierte Aufgaben in ihrer Phase fortsetzen; kein automatischer Abschluss von Phasen oder Aufgaben.' },
+  EN: { eyebrow: 'Registered project · Standardisation', status: 'References registered', active: 'Writing enabled · current account', pending: 'Writing not enabled',
+    next: 'Continue authorised tasks within their phase; no automatic completion of phases or tasks.' }
+};
+const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'ready', tasksCoverage = null, taskReferences = null, openTasks = null, completedTasks = 0, agenda, children }) => {
+  const registered = taskReferences?.execution_catalogue_ready === true && taskReferences?.choices?.phases?.length === 4;
+  const r = registeredCopy[language] || registeredCopy.FR;
+  const t = { ...(COPY[language] || COPY.FR), ...(registered ? { pilotProjectEyebrow: r.eyebrow,
+    pilotProjectStatus: taskReferences.writes_enabled === true ? r.active : `${r.status} · ${r.pending}`, pilotProjectNextBody: r.next } : {}) };
   const tasksReady = tasksStatus === 'ready'
     && Number.isFinite(tasksTotal)
     && Number.isFinite(completedTasks);
@@ -412,6 +424,12 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'read
           ))}
         </div>
         <p className="mt-4 text-xs font-medium text-slate-400">{t.pilotProjectOwner}</p>
+        {registered && <ol className="mt-4 grid gap-2 border-t border-slate-700 pt-4 sm:grid-cols-2">
+          {taskReferences.choices.phases.map((phase, index) => <li key={phase.id} className="min-w-0 text-sm">
+            <span className="font-semibold">{index + 1}. {phase.label}</span>
+            <span className="mt-1 block break-words text-xs text-slate-400">{phase.id}</span>
+          </li>)}
+        </ol>}
       </section>
 
       <section id="planning-status" className="scroll-mt-20 rounded-lg border border-slate-700 bg-slate-800 p-5" aria-labelledby="current-title">
@@ -425,6 +443,7 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'read
           <Metric label={t.tasksCompleted} value={completedTaskValue} />
           <Metric label={t.completion} value={completion} />
         </div>
+        {tasksReady && tasksCoverage && <p className="mt-4 text-sm text-blue-300">{taskCoverageCopy(tasksCoverage, language)}</p>}
         <p className="mt-4 text-sm leading-6 text-slate-400">{t.currentBody}</p>
       </section>
 

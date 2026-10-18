@@ -2067,7 +2067,7 @@ test('opens the four governed global views without confusing architecture with t
   expect(screen.getByRole('heading', { name: 'Modèle relationnel candidat' })).toBeInTheDocument();
   expect(screen.getByText('Cible à valider')).toBeInTheDocument();
   expect(screen.getByText('Dossier → Projet → Phase → Tâche')).toBeInTheDocument();
-  expect(screen.getByText('Une opération peut exécuter ou financer une tâche sans se confondre avec elle.')).toBeInTheDocument();
+  expect(screen.getByText('Une opération métier relève de sa fonction : planification, RH, IT, CRM, production, actifs ou finances. Une écriture financière n’est qu’un résultat possible.')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Premier domaine pilote · Achat & approvisionnement' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Observé aujourd’hui' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Cible candidate' })).toBeInTheDocument();
