@@ -15,6 +15,7 @@ import FunctionAssistant from './FunctionAssistant';
 import ProductionServices from './ProductionServices';
 import ProductionOverview from './ProductionOverview';
 import ProductionManufacturingKit from './ProductionManufacturingKit';
+import ProductionTools from './ProductionTools';
 import {
   buildTeamAgentDirectory,
   findAgentTeam,
@@ -1076,6 +1077,7 @@ const Production = () => {
             <p className="mt-5 text-sm leading-6 text-slate-300">{t.manufacturingNext}</p>
             <p className="mt-3 text-xs leading-5 text-slate-400">{t.manufacturingSource}</p>
             <ProductionManufacturingKit language={language} />
+            <ProductionTools language={language} />
             <button type="button" className="m3s-secondary-button mt-4 min-h-11 px-3" onClick={() => selectTab('services')}>{t.openServices}</button>
           </section>
         )}

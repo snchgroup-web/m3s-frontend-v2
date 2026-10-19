@@ -43,6 +43,15 @@ html .app-shell { position: fixed; inset: 0; height: 100dvh; overflow: clip; }
 .private-ged-import input:focus-visible, .private-ged-import select:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
 .own-profile-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
 .own-profile-links button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 12px; }
+.personal-budget { min-width: 0; color: var(--m3s-text-primary); }
+.personal-budget > p { margin: 12px 0; line-height: 1.6; color: var(--m3s-text-secondary); }
+.personal-budget-form { display: grid; gap: 16px; max-width: 620px; margin-top: 22px; }
+.personal-budget-form label { display: grid; gap: 8px; min-width: 0; font-size: 14px; }
+.personal-budget-form input { min-height: 44px; width: 100%; min-width: 0; padding: 10px; color: var(--m3s-text-primary); background: var(--m3s-bg-elevated, var(--m3s-bg-primary)); border: 1px solid var(--m3s-border); border-radius: 4px; }
+.personal-budget-form button, .personal-budget-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 14px; }
+.personal-budget button:disabled { opacity: .5; cursor: not-allowed; }
+.personal-budget-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 18px 0; }
+.personal-budget-frame { display: block; width: 100%; height: 80dvh; min-height: 520px; border: 1px solid var(--m3s-border); border-radius: 4px; background: var(--m3s-bg-primary); }
 .m3s-branded-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; min-height: 60vh; padding: 24px; color: var(--m3s-text-primary, #172033); background: var(--m3s-surface-panel, #fff); }
 .m3s-branded-loading img { width: 96px; height: 96px; object-fit: contain; flex-shrink: 0; }
 .m3s-branded-loading p { font-size: 16px; text-align: center; }
