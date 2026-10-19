@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, RefreshCw, UserRound, CheckCircle2 } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { ArrowLeft, RefreshCw, UserRound, CheckCircle2, Wallet } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { useAuth } from './AuthContext';
 import api from './api';
 import PrivateGedDocuments from './PrivateGedDocuments';
+import PersonalBudget from './PersonalBudget';
 
 const messages = {
   FR: { title: 'Mon compte', back: 'Retour au tableau de bord', refresh: 'Actualiser', loading: 'Chargement du profil…',
@@ -31,10 +32,21 @@ const messages = {
 };
 
 export default function OwnProfile({ embedded = false }) {
+  const { user } = useAuth();
+  return <AccountProfile key={JSON.stringify([user?.id, user?.tenantId, user?.email])} embedded={embedded}/>;
+}
+
+function AccountProfile({ embedded }) {
   const { language } = useLanguage();
+  const t = messages[language] || messages.FR;
   const { user } = useAuth();
   const navigate = useNavigate();
-  const t = messages[language] || messages.FR;
+  const location = useLocation();
+  const financesOpen = !embedded && new URLSearchParams(location.search).get('view') === 'finances';
+  const productionReturn = !embedded && new URLSearchParams(location.search).get('returnTo') === 'production';
+  const backLabel = productionReturn ? ({ FR: 'Retour aux outils Production', DE: 'Zurück zu den Produktionswerkzeugen', EN: 'Back to Production tools' }[language] || 'Retour aux outils Production') : t.back;
+  const financeLabel = { FR: 'Mes finances personnelles', EN: 'My personal finances', DE: 'Meine persönlichen Finanzen' }[language] || 'Mes finances personnelles';
+  const profileLabel = { FR: 'Mon profil', EN: 'My profile', DE: 'Mein Profil' }[language] || 'Mon profil';
   const hrLink = { FR: 'Mon compte RH', EN: 'My HR account', DE: 'Mein HR-Konto' }[language] || 'Mon compte RH';
   const [revision, setRevision] = useState(0);
   const [state, setState] = useState({ status: 'loading', data: null });
@@ -60,7 +72,7 @@ export default function OwnProfile({ embedded = false }) {
   const positionLabel = position === 'Manager et coordinateur général de 2SG - architecte fonctionnel M3S' ? 'Manager' : position;
   return <article className="own-profile">
     <div className="own-profile-actions">
-      <button className="m3s-secondary-button" onClick={() => navigate('/')}><ArrowLeft size={17} aria-hidden="true"/>{t.back}</button>
+      <button className="m3s-secondary-button" onClick={() => navigate(productionReturn ? '/production?tab=manufacturing#production-tools' : '/')}><ArrowLeft size={17} aria-hidden="true"/>{backLabel}</button>
       <button className="m3s-secondary-button" title={t.refresh} aria-label={t.refresh} disabled={state.status === 'loading'} onClick={() => setRevision(value => value + 1)}><RefreshCw size={18}/></button>
     </div>
     <header className="own-profile-title">{data?.profile.photo ? <img className="own-profile-photo" src={data.profile.photo} alt={data.profile.displayName}/> : <UserRound size={25} aria-hidden="true"/>}<h2>{t.title}</h2></header>
@@ -78,7 +90,9 @@ export default function OwnProfile({ embedded = false }) {
       </dl></section>
       {!embedded && <nav className="own-profile-links" aria-label={t.title}>
         <button className="m3s-secondary-button" onClick={() => navigate('/rh?tab=myaccount')}><UserRound size={18} aria-hidden="true"/>{hrLink}</button>
+        <button className="m3s-secondary-button" aria-pressed={financesOpen} onClick={() => navigate(financesOpen ? `/account${productionReturn ? '?returnTo=production' : ''}` : `/account?view=finances${productionReturn ? '&returnTo=production' : ''}#personal-finances`)}><Wallet size={18} aria-hidden="true"/>{financesOpen ? profileLabel : financeLabel}</button>
       </nav>}
+      {financesOpen && <PersonalBudget principal={user} language={language}/>}
       <PrivateGedDocuments key={user?.email || 'no-account'} scope="personal"/>
       <footer>{t.source} : {data.source.id} · {t.approved} : <time dateTime={data.source.approvedOn}>{new Intl.DateTimeFormat({ FR: 'fr-CH', EN: 'en-GB', DE: 'de-CH' }[language] || 'fr-CH', { timeZone: 'UTC' }).format(new Date(`${data.source.approvedOn}T00:00:00Z`))}</time></footer>
     </>}

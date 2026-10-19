@@ -4,16 +4,19 @@ import api from './api';
 
 const mockNavigate = jest.fn();
 let mockLanguage = 'FR';
-jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate }), { virtual: true });
+let mockSearch = '';
+let mockUser = { email: 'fixture@example.test' };
+jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate, useLocation: () => ({ search: mockSearch }) }), { virtual: true });
 jest.mock('./LanguageContext', () => ({ useLanguage: () => ({ language: mockLanguage }) }));
-jest.mock('./AuthContext', () => ({ useAuth: () => ({ user: { email: 'fixture@example.test' } }) }));
+jest.mock('./AuthContext', () => ({ useAuth: () => ({ user: mockUser }) }));
+jest.mock('./PersonalBudget', () => ({ principal }) => <div data-testid="personal-budget" data-account={principal.email}/>);
 jest.mock('./api', () => ({ __esModule: true, default: { getOwnProfile: jest.fn() } }));
 jest.mock('./PrivateGedDocuments', () => ({ scope }) => <div data-testid="private-ged" data-scope={scope}/>);
 const result = { success: true, scope: 'current-account', account: { email: 'fixture@example.test', role: 'Manager' },
   profile: { personId: 'PER-2SG-9001', displayName: 'Synthetic Person', team: 'TZH', memberType: 'Fondateur', position: 'Synthetic role' },
   source: { id: 'RH-001', status: 'validated_documentary', approvedOn: '2026-09-26' } };
 
-beforeEach(() => { jest.clearAllMocks(); mockLanguage = 'FR'; api.getOwnProfile.mockResolvedValue(result); });
+beforeEach(() => { jest.clearAllMocks(); mockLanguage = 'FR'; mockSearch = ''; mockUser = { email: 'fixture@example.test' }; api.getOwnProfile.mockResolvedValue(result); });
 
 test('reads the linked profile, refreshes and returns to dashboard', async () => {
   render(<OwnProfile/>);
@@ -60,15 +63,44 @@ test('links HR while keeping finance outside the personal account', async () => 
   expect(screen.queryByRole('button', { name: 'Documents financiers 2SG' })).not.toBeInTheDocument();
 });
 
-test.each(['FR', 'EN', 'DE'])('no financial shortcut in either account view in %s', async language => {
+test.each(['FR', 'EN', 'DE'])('personal finance is distinct from organisational finance in %s', async language => {
   mockLanguage = language;
   const { rerender } = render(<OwnProfile/>);
   await screen.findByText('Synthetic Person');
-  expect(screen.queryByRole('button', { name: /financ|finanz/i })).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: /financ|finanz/i }));
+  expect(mockNavigate).toHaveBeenCalledWith('/account?view=finances#personal-finances');
+  expect(screen.queryByRole('button', { name: /2SG/ })).not.toBeInTheDocument();
   rerender(<OwnProfile embedded/>);
   expect(screen.queryByRole('button', { name: /financ|finanz/i })).not.toBeInTheDocument();
   expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
   expect(screen.getByTestId('private-ged')).toHaveAttribute('data-scope', 'personal');
+});
+
+test('opens the private budget only after the own profile is linked and never in the embedded HR view', async () => {
+  mockSearch = '?view=finances';
+  const { rerender } = render(<OwnProfile/>);
+  expect(screen.queryByTestId('personal-budget')).not.toBeInTheDocument();
+  expect(await screen.findByTestId('personal-budget')).toHaveAttribute('data-account', 'fixture@example.test');
+  rerender(<OwnProfile embedded/>);
+  expect(screen.queryByTestId('personal-budget')).not.toBeInTheDocument();
+});
+
+test('changing account unmounts its private content before the new profile resolves', async () => {
+  mockSearch = '?view=finances';
+  const { rerender } = render(<OwnProfile/>);
+  await screen.findByTestId('personal-budget');
+  mockUser = { email: 'another@example.test' };
+  api.getOwnProfile.mockReturnValue(new Promise(() => {}));
+  rerender(<OwnProfile/>);
+  expect(screen.queryByTestId('personal-budget')).not.toBeInTheDocument();
+  expect(screen.queryByText('Synthetic Person')).not.toBeInTheDocument();
+});
+
+test('returns from the budget to the Production catalogue without a new cycle', async () => {
+  mockSearch = '?view=finances&returnTo=production';
+  render(<OwnProfile/>); await screen.findByTestId('personal-budget');
+  fireEvent.click(screen.getByRole('button', { name: 'Retour aux outils Production' }));
+  expect(mockNavigate).toHaveBeenCalledWith('/production?tab=manufacturing#production-tools');
 });
 
 test('HR embedded account reuses the same profile without a self-link', async () => {
