@@ -1,16 +1,22 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import PersonalHours, { HOURS_COPY } from './PersonalHours';
-import { HOURS_SCHEMA, hoursAccountKey, createHoursVault, sealHoursVault, openHoursVault } from './personalHoursVault';
+import PersonalHours, { HOURS_COPY, HOURS_WORK_COPY } from './PersonalHours';
+import api from './api';
+import { testTask } from './taskContractFixtures';
+import { HOURS_SCHEMA, HOURS_STORAGE_SCHEMA, hoursAccountKey, createHoursVault, sealHoursVault, openHoursVault } from './personalHoursVault';
+jest.mock('./api', () => ({ __esModule: true, default: { getOwnTasks: jest.fn() } }));
 jest.mock('./personalHoursVault', () => ({ ...jest.requireActual('./personalHoursVault'),
   hoursAccountKey: jest.fn(), createHoursVault: jest.fn(), sealHoursVault: jest.fn(), openHoursVault: jest.fn() }));
 const principal = { id: 'test-a', tenantId: 'tenant-test', email: 'a@example.test' };
-const key = `${HOURS_SCHEMA}.${'a'.repeat(64)}`;
+const key = `${HOURS_STORAGE_SCHEMA}.${'a'.repeat(64)}`;
+const task = () => ({ ...testTask(), id: 'task-test', revision: 2, source_kind: 'operational', can_edit: false, project_id: 'project-test' });
+const page = () => ({ data: [task()], count: 1, total: 1 });
 const empty = () => ({ schema: HOURS_SCHEMA, subject: key, timezone: 'Europe/Zurich', entries: [] });
 const entry = () => ({ id: 'HOUR-file', date: '2026-10-18', start: '15:00', end: '17:00', pause: 15, overnight: false, minutes: 105 });
 let serial;
 beforeEach(() => {
   jest.useFakeTimers().setSystemTime(new Date('2026-10-19T20:00:00Z'));
   jest.clearAllMocks(); localStorage.clear(); serial = 0;
+  api.getOwnTasks.mockResolvedValue(page());
   hoursAccountKey.mockResolvedValue(key); createHoursVault.mockImplementation(async () => ({ state: empty(), key: {}, salt: new Uint8Array(16) }));
   sealHoursVault.mockImplementation(async () => `encrypted-fixture-${++serial}`);
   openHoursVault.mockResolvedValue({ state: empty(), key: {}, salt: new Uint8Array(16) });
@@ -26,9 +32,11 @@ async function start(language = 'FR') {
   fireEvent.change(screen.getByLabelText(t.repeat), { target: { value: 'synthetic private hours' } });
   fireEvent.click(screen.getByRole('button', { name: t.open }));
   await screen.findByRole('button', { name: t.lock });
+  await screen.findByLabelText(HOURS_WORK_COPY[language].task);
   return view;
 }
 function fill() {
+  fireEvent.change(screen.getByLabelText(HOURS_WORK_COPY.FR.task), { target: { value: 'task-test' } });
   for (const [label,value] of [['Date','2026-10-18'],['Début','15:00'],['Fin','17:00'],['Pause (min)','15']]) {
     fireEvent.change(screen.getByLabelText(label), { target: { value } });
   }
@@ -41,6 +49,45 @@ test.each(['FR','DE','EN'])('locked and open %s states are translated and do not
   expect(localStorage.getItem(key)).toMatch(/^encrypted-fixture-/);
   expect(localStorage.getItem(key)).not.toContain('synthetic private hours');
 });
+
+test('new entries require an assigned task and inherit its context without choosing unrelated parents', async () => {
+  await start();
+  for (const [label,value] of [['Début','15:00'],['Fin','17:00']]) fireEvent.change(screen.getByLabelText(label), { target: { value } });
+  expect(screen.getByRole('button', { name: 'Ajouter la saisie' })).toBeDisabled();
+  fireEvent.change(screen.getByLabelText(HOURS_WORK_COPY.FR.task), { target: { value: 'task-test' } });
+  expect(screen.getByText('project-test')).toBeInTheDocument();
+  expect(screen.getByText('phase-test')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Ajouter la saisie' })).toBeEnabled();
+  fireEvent.click(screen.getByRole('button', { name: 'Ajouter la saisie' }));
+  fireEvent.click(await screen.findByRole('button', { name: 'Oui, enregistrer' }));
+  await screen.findByText('Total du mois : 2 h 00 · 1 saisies');
+  const savedState = sealHoursVault.mock.calls.at(-1)[1];
+  expect(savedState.entries[0].work).toMatchObject({ task_id: 'task-test', task_revision: 2, project_id: 'project-test', activity_id: null });
+  expect(api.getOwnTasks).toHaveBeenCalledTimes(2);
+});
+
+test.each([[503, 'unavailable'], [401, 'forbidden'], [403, 'forbidden']])('failed task source %s leaves encrypted history usable without fake assignments', async (status, message) => {
+  await start(); fill(); const old = localStorage.getItem(key);
+  expect(screen.getByRole('button', { name: 'Ajouter la saisie' })).toBeEnabled();
+  api.getOwnTasks.mockRejectedValue(Object.assign(new Error('unavailable'), { status }));
+  fireEvent.click(screen.getByRole('button', { name: HOURS_WORK_COPY.FR.refresh }));
+  await screen.findByText(HOURS_WORK_COPY.FR[message]);
+  expect(screen.getByRole('button', { name: 'Ajouter la saisie' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: HOURS_COPY.FR.backup })).toBeEnabled();
+  expect(screen.getByLabelText('Début')).toHaveValue('15:00');
+  expect(localStorage.getItem(key)).toBe(old);
+});
+
+test('a changed task revision at confirmation refuses saving and preserves the draft', async () => {
+  await start(); fill(); const old = localStorage.getItem(key);
+  fireEvent.click(screen.getByRole('button', { name: 'Ajouter la saisie' }));
+  await screen.findByRole('dialog');
+  api.getOwnTasks.mockResolvedValue({ ...page(), data: [{ ...task(), revision: 3 }] });
+  fireEvent.click(screen.getByRole('button', { name: 'Oui, enregistrer' }));
+  expect(await screen.findByRole('alert')).toHaveTextContent(HOURS_WORK_COPY.FR.changed);
+  expect(localStorage.getItem(key)).toBe(old);
+  expect(screen.getByLabelText('Début')).toHaveValue('15:00');
+});
 test('confirmation gates new entries; duplicates do not write and language/tab changes preserve the record', async () => {
   const view = await start(), initial = localStorage.getItem(key);
   fill(); fireEvent.click(screen.getByRole('button', { name: 'Ajouter la saisie' }));
@@ -52,7 +99,7 @@ test('confirmation gates new entries; duplicates do not write and language/tab c
   expect(await screen.findByText(HOURS_COPY.FR.duplicate)).toBeInTheDocument();
   expect(sealHoursVault).toHaveBeenCalledTimes(calls); expect(localStorage.getItem(key)).toBe(saved);
   view.rerender(<PersonalHours principal={principal} language="DE" active={false}/>);
-  view.rerender(<PersonalHours principal={principal} language="EN" active/>);
+  await act(async () => view.rerender(<PersonalHours principal={principal} language="EN" active/>));
   expect(screen.getByText('Month total : 1 h 45 · 1 entries')).toBeInTheDocument();
   expect(screen.getByText('18/10/26')).toBeInTheDocument();
 });

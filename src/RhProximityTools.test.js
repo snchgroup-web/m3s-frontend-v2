@@ -48,6 +48,17 @@ test('named employee tools are not presented as hosted applications or individua
   expect(api.downloadInstitutionalGedFile).not.toHaveBeenCalled();
 });
 
+test.each([
+  ['FR', 'Mes heures du compte connecté'], ['DE', 'Eigene Stunden des angemeldeten Kontos'], ['EN', 'Hours for my signed-in account']
+])('%s reuses the current-account hours entry without opening employee files', (language, label) => {
+  const open = jest.fn();
+  render(<RhProximityTools language={language} onOpenPersonalHours={open}/>);
+  fireEvent.click(screen.getByRole('button', { name: label }));
+  expect(open).toHaveBeenCalledTimes(1);
+  expect(api.getInstitutionalGedBundle).not.toHaveBeenCalled();
+  expect(api.downloadInstitutionalGedFile).not.toHaveBeenCalled();
+});
+
 test.each([403, 503])('a denied or failed %s source never falls back to local employee files', async status => {
   api.getInstitutionalGedBundle.mockRejectedValue({ status });
   render(<RhProximityTools />);

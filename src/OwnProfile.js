@@ -137,7 +137,8 @@ function AccountProfile({ embedded }) {
       <footer>{t.source} : {data.source.id} · {t.approved} : <time dateTime={data.source.approvedOn}>{new Intl.DateTimeFormat({ FR: 'fr-CH', EN: 'en-GB', DE: 'de-CH' }[language] || 'fr-CH', { timeZone: 'UTC' }).format(new Date(`${data.source.approvedOn}T00:00:00Z`))}</time></footer>
       </div>
       <div role="tabpanel" id="own-account-panel-hours" aria-labelledby="own-account-tab-hours" hidden={activeView !== 'hours'} className="own-account-panel">
-        {(hoursVisited || activeView === 'hours') && <PersonalHours principal={user} language={language} active={activeView === 'hours'}/>}
+        {(hoursVisited || activeView === 'hours') && <PersonalHours principal={user} language={language} active={activeView === 'hours'}
+          onOpenTasks={() => selectView('tasks')} onOpenRhTools={() => navigate('/rh?tab=resources#rh-proximity-tools')}/>}
       </div>
       <div role="tabpanel" id="own-account-panel-tasks" aria-labelledby="own-account-tab-tasks" hidden={activeView !== 'tasks'} className="own-account-panel">
         {activeView === 'tasks' && <OwnTaskRegister language={language}/>}

@@ -640,7 +640,8 @@ const RH = ({ rhReadAccess = null }) => {
 
         {activeTab === 'resources' && (
           <>
-            <RhProximityTools language={language} onBack={() => handleTabSelect('overview')} onOpenEmployees={() => handleTabSelect('employes')} />
+            <RhProximityTools language={language} onBack={() => handleTabSelect('overview')} onOpenEmployees={() => handleTabSelect('employes')}
+              onOpenPersonalHours={() => navigate('/rh?tab=myaccount&accountView=hours#own-account-panel')}/>
             <FunctionResourcesOverview moduleId="rh" language={language} onSelectTab={handleTabSelect} />
           </>
         )}
