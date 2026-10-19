@@ -19,6 +19,7 @@ jest.mock('./PersonalBudget', () => ({ principal }) => <div data-testid="persona
 jest.mock('./api', () => ({ __esModule: true, default: { getOwnProfile: jest.fn() } }));
 jest.mock('./PrivateGedDocuments', () => ({ scope }) => <div data-testid="private-ged" data-scope={scope}/>);
 jest.mock('./OwnTaskRegister', () => ({ language }) => <div data-testid="own-tasks" data-language={language}>Synthetic own assignments</div>);
+jest.mock('./PersonalHours', () => ({ principal, active }) => <div data-testid="personal-hours" data-account={principal.email} data-active={String(active)}><input aria-label="Synthetic hours draft" defaultValue=""/></div>);
 const result = { success: true, scope: 'current-account', account: { email: 'fixture@example.test', role: 'Manager' },
   profile: { personId: 'PER-2SG-9001', displayName: 'Synthetic Person', team: 'TZH', memberType: 'Fondateur', position: 'Synthetic role' },
   source: { id: 'RH-001', status: 'validated_documentary', approvedOn: '2026-09-26' } };
@@ -113,12 +114,17 @@ test('four horizontal tabs keep the dossier and private budget separate without 
   expect(api.getOwnProfile).toHaveBeenCalledTimes(1);
 });
 
-test.each([['hours', 'Mes heures', 'Aucune source d’heures personnelles']])('shows a truthful pending state for %s, not a personal zero or the shared register', async (view, name, text) => {
-  mockSearch = `?view=${view}`;
+test('hours load for the current account, retain drafts across tabs and stay separate from personal finance', async () => {
   render(<OwnProfile/>); await screen.findByText('Synthetic Person');
-  expect(screen.getByRole('tabpanel', { name })).toHaveTextContent(text);
-  expect(screen.getByRole('tabpanel', { name })).toHaveTextContent('À raccorder');
-  expect(screen.queryByRole('table')).not.toBeInTheDocument();
+  expect(screen.queryByTestId('personal-hours')).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('tab', { name: 'Mes heures' }));
+  expect(screen.getByTestId('personal-hours')).toHaveAttribute('data-account', mockUser.email);
+  fireEvent.change(screen.getByLabelText('Synthetic hours draft'), { target: { value: 'synthetic draft' } });
+  fireEvent.click(screen.getByRole('tab', { name: 'Mes tâches' }));
+  expect(screen.getByTestId('personal-hours')).not.toBeVisible();
+  expect(screen.getByTestId('personal-hours')).toHaveAttribute('data-active', 'false');
+  fireEvent.click(screen.getByRole('tab', { name: 'Mes heures' }));
+  expect(screen.getByLabelText('Synthetic hours draft')).toHaveValue('synthetic draft');
   expect(screen.queryByTestId('personal-budget')).not.toBeInTheDocument();
 });
 
