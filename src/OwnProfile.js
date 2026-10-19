@@ -96,7 +96,7 @@ function AccountProfile({ embedded }) {
   // Compact display only; the approved institutional source stays unchanged.
   const position = data?.profile.position;
   const positionLabel = position === 'Manager et coordinateur général de 2SG - architecte fonctionnel M3S' ? 'Manager' : position;
-  return <article className="own-profile">
+  return <article className={`own-profile${activeView === 'tasks' ? ' own-profile-tasks' : ''}`}>
     <div className="own-profile-actions">
       <button className="m3s-secondary-button" onClick={() => navigate(productionReturn ? '/production?tab=manufacturing#production-tools' : '/')}><ArrowLeft size={17} aria-hidden="true"/>{backLabel}</button>
       <button className="m3s-secondary-button" title={t.refresh} aria-label={t.refresh} disabled={state.status === 'loading'} onClick={() => setRevision(value => value + 1)}><RefreshCw size={18}/></button>

@@ -1,4 +1,5 @@
 .own-profile { max-width: 960px; margin: 0 auto; color: var(--m3s-text-primary); letter-spacing: 0; }
+.own-profile-tasks { max-width: 1440px; }
 .own-profile-actions { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 24px; }
 .own-profile-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 14px; }
 .own-profile-actions button:disabled { opacity: .5; cursor: wait; }
@@ -36,13 +37,38 @@
 .own-work-table details { min-width: 120px; max-width: 360px; overflow-wrap: anywhere; }
 .own-work-table dt { font-weight: 600; margin-top: 8px; }
 .own-work-table dd { margin: 4px 0 12px; }
-.own-task-table table { min-width: 1040px; }
-.own-task-table td { max-width: 360px; }
+.own-task-table { max-height: min(60dvh, 640px); overflow: auto; scrollbar-gutter: stable; }
+.own-task-table table { min-width: 1120px; table-layout: fixed; }
+.own-task-col-status { width: 136px; }
+.own-task-col-priority { width: 96px; }
+.own-task-col-owner { width: 130px; }
+.own-task-col-module { width: 116px; }
+.own-task-col-progress { width: 104px; }
+.own-task-col-due { width: 98px; }
+.own-task-col-source { width: 130px; }
+.own-task-col-actions { width: 80px; }
+.own-task-table td { height: 84px; padding: 10px 12px; }
+.own-task-table th { position: sticky; top: 0; z-index: 1; background: var(--m3s-surface-panel, var(--m3s-bg-primary)); }
+.own-task-table tbody tr:nth-child(even) { background: var(--m3s-surface-raised); }
+.own-task-table td:nth-child(5) { overflow: hidden; text-overflow: ellipsis; }
+.own-task-title, .own-task-owner { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; line-height: 20px; }
+.own-task-reference { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 11px; }
 .own-task-table th, .own-task-table td:nth-child(2), .own-task-table td:nth-child(3),
 .own-task-table td:nth-child(5), .own-task-table td:nth-child(6), .own-task-table td:nth-child(8) { white-space: nowrap; }
-.own-task-table td:last-child { min-width: 240px; }
-.own-task-details { cursor: pointer; list-style: none; }
-.own-task-details::-webkit-details-marker { display: none; }
+.own-task-reader-overlay { position: fixed; inset: 0; z-index: 90; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgb(0 0 0 / .65); }
+.own-task-reader { display: flex; flex-direction: column; width: min(768px, 100%); max-height: calc(100dvh - 32px); min-width: 0; overflow: hidden; border: 1px solid var(--m3s-border); border-radius: 8px; color: var(--m3s-text-primary); background: var(--m3s-surface-panel, var(--m3s-bg-primary)); }
+.own-task-reader header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 20px; border-bottom: 1px solid var(--m3s-border); }
+.own-task-reader header div { min-width: 0; }
+.own-task-reader h3 { margin: 0; font-size: 18px; line-height: 1.4; overflow-wrap: anywhere; }
+.own-task-reader header p { margin: 8px 0 0; font-size: 12px; overflow-wrap: anywhere; color: var(--m3s-text-secondary); }
+.own-task-reader-body { min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 20px; }
+.own-task-reader dl { margin: 0; }
+.own-task-reader-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; }
+.own-task-reader dt { font-size: 12px; color: var(--m3s-text-secondary); margin: 0 0 5px; }
+.own-task-reader dd { margin: 0; font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; white-space: pre-wrap; }
+.own-task-reader dd.own-work-date { white-space: nowrap; }
+.own-task-reader-text > div { margin-top: 24px; }
+@media (max-width: 480px) { .own-task-reader-meta { grid-template-columns: minmax(0, 1fr); } .own-task-reader header, .own-task-reader-body { padding: 16px; } }
 .own-profile .own-work-table dl { display: block; margin: 8px 0; }
 .own-profile .own-work-table dd { font-size: 14px; }
 .own-profile-linked { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--m3s-text-secondary); }
