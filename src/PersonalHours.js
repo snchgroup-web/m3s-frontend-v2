@@ -67,6 +67,7 @@ export const HOURS_COPY = {
 export const HOURS_WORK_COPY = {
   FR: { task: 'Tâche affectée', choose: 'Choisir une tâche existante', search: 'Rechercher une tâche', refresh: 'Actualiser les tâches',
     loading: 'Chargement des affectations…', unavailable: 'Source des affectations indisponible. Aucune nouvelle saisie non rattachée ne sera créée.',
+    forbidden: 'Ce compte n’est pas autorisé à lire les affectations. Aucun accès supplémentaire n’est ajouté.',
     empty: 'Aucune tâche affectée trouvée.', count: '{shown} tâche(s) affichée(s) sur {total}. Affine la recherche si nécessaire.',
     project: 'Projet', phase: 'Phase', activity: 'Action / activité de la tâche', plan: 'Plan opérationnel', recurrence: 'Récurrence', occurrence: 'Occurrence',
     missing: 'Non renseigné dans la tâche', legacy: 'Ancienne saisie non rattachée', linked: 'Rattachement au travail', revision: 'Révision de la tâche',
@@ -76,6 +77,7 @@ export const HOURS_WORK_COPY = {
     tools: 'Ouvrir les outils RH existants', tasks: 'Ouvrir Mes tâches' },
   DE: { task: 'Zugewiesene Aufgabe', choose: 'Bestehende Aufgabe wählen', search: 'Aufgabe suchen', refresh: 'Aufgaben aktualisieren',
     loading: 'Zuweisungen werden geladen…', unavailable: 'Zuweisungsquelle nicht verfügbar. Kein neuer Eintrag ohne Verknüpfung wird erstellt.',
+    forbidden: 'Dieses Konto darf die Zuweisungen nicht lesen. Kein zusätzlicher Zugriff wird eingerichtet.',
     empty: 'Keine zugewiesene Aufgabe gefunden.', count: '{shown} von {total} Aufgaben angezeigt. Bei Bedarf Suche eingrenzen.',
     project: 'Projekt', phase: 'Phase', activity: 'Aktion / Aktivität der Aufgabe', plan: 'Betriebsplan', recurrence: 'Wiederholung', occurrence: 'Ausführung',
     missing: 'In der Aufgabe nicht angegeben', legacy: 'Alter Eintrag ohne Verknüpfung', linked: 'Arbeitszuordnung', revision: 'Aufgabenrevision',
@@ -85,6 +87,7 @@ export const HOURS_WORK_COPY = {
     tools: 'Vorhandene HR-Werkzeuge öffnen', tasks: 'Meine Aufgaben öffnen' },
   EN: { task: 'Assigned task', choose: 'Choose an existing task', search: 'Search tasks', refresh: 'Refresh tasks',
     loading: 'Loading assignments…', unavailable: 'Assignment source unavailable. No new unlinked entry will be created.',
+    forbidden: 'This account is not authorised to read assignments. No additional access is granted.',
     empty: 'No assigned task found.', count: '{shown} of {total} tasks shown. Refine the search if needed.',
     project: 'Project', phase: 'Phase', activity: 'Task action / activity', plan: 'Operational plan', recurrence: 'Recurrence', occurrence: 'Occurrence',
     missing: 'Not provided in the task', legacy: 'Earlier unlinked entry', linked: 'Work link', revision: 'Task revision',
@@ -94,7 +97,7 @@ export const HOURS_WORK_COPY = {
     tools: 'Open existing HR tools', tasks: 'Open My tasks' }
 };
 const errorKey = error => ({ HOURS_INVALID: 'invalid', HOURS_COLLISION: 'collision', HOURS_CLOCK_CHANGE: 'clock',
-  HOURS_ZONE_MISMATCH: 'zoneMismatch', HOURS_STORAGE_CHANGED: 'conflict', HOURS_WORK_INVALID: 'required', HOURS_WORK_CHANGED: 'changed', HOURS_WORK_UNAVAILABLE: 'unavailable' }[error?.message] || 'error');
+  HOURS_ZONE_MISMATCH: 'zoneMismatch', HOURS_STORAGE_CHANGED: 'conflict', HOURS_WORK_INVALID: 'required', HOURS_WORK_CHANGED: 'changed', HOURS_WORK_UNAVAILABLE: 'unavailable', HOURS_WORK_FORBIDDEN: 'forbidden' }[error?.message] || 'error');
 const initialFields = zone => ({ date: hoursToday(zone), start: '', end: '', pause: '0', overnight: false });
 function download(text, name, type) {
   const url = URL.createObjectURL(new Blob([text], { type }));
@@ -138,7 +141,7 @@ function AccountHours({ principal, language = 'FR', active = true, onOpenTasks, 
     setTaskSource({ status: 'loading', page: null }); setPending(null);
     api.getOwnTasks(100, 0, taskQuery, { signal: controller.signal }).then(page => {
       if (!controller.signal.aborted) setTaskSource({ status: 'ready', page });
-    }).catch(() => { if (!controller.signal.aborted) setTaskSource({ status: 'unavailable', page: null }); });
+    }).catch(error => { if (!controller.signal.aborted) setTaskSource({ status: [401,403].includes(error.status) ? 'forbidden' : 'unavailable', page: null }); });
     return () => controller.abort();
   }, [unlocked, active, taskQuery, taskRefresh]);
   useEffect(() => {
@@ -228,7 +231,7 @@ function AccountHours({ principal, language = 'FR', active = true, onOpenTasks, 
       if (proposal.work) {
         let page;
         try { page = await api.getOwnTasks(100, 0, proposal.query); }
-        catch { throw new Error('HOURS_WORK_UNAVAILABLE'); }
+        catch (error) { throw new Error([401,403].includes(error.status) ? 'HOURS_WORK_FORBIDDEN' : 'HOURS_WORK_UNAVAILABLE'); }
         if (!current(token)) return;
         const row = page.data.find(row => String(row.id) === proposal.work.task_id);
         if (!row || !sameHoursWorkLink(hoursWorkLinkFromTask(row), proposal.work)) throw new Error('HOURS_WORK_CHANGED');

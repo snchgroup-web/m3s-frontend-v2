@@ -66,12 +66,12 @@ test('new entries require an assigned task and inherit its context without choos
   expect(api.getOwnTasks).toHaveBeenCalledTimes(2);
 });
 
-test('unavailable task source leaves the encrypted copy and existing entries usable without fake assignments', async () => {
+test.each([[503, 'unavailable'], [401, 'forbidden'], [403, 'forbidden']])('failed task source %s leaves encrypted history usable without fake assignments', async (status, message) => {
   await start(); fill(); const old = localStorage.getItem(key);
   expect(screen.getByRole('button', { name: 'Ajouter la saisie' })).toBeEnabled();
-  api.getOwnTasks.mockRejectedValue(new Error('unavailable'));
+  api.getOwnTasks.mockRejectedValue(Object.assign(new Error('unavailable'), { status }));
   fireEvent.click(screen.getByRole('button', { name: HOURS_WORK_COPY.FR.refresh }));
-  await screen.findByText(HOURS_WORK_COPY.FR.unavailable);
+  await screen.findByText(HOURS_WORK_COPY.FR[message]);
   expect(screen.getByRole('button', { name: 'Ajouter la saisie' })).toBeDisabled();
   expect(screen.getByRole('button', { name: HOURS_COPY.FR.backup })).toBeEnabled();
   expect(screen.getByLabelText('Début')).toHaveValue('15:00');
