@@ -5,6 +5,19 @@
 .own-profile-title { display: flex; gap: 12px; align-items: center; }
 .own-profile-photo { width: 88px; height: 104px; flex: 0 0 auto; object-fit: cover; object-position: center 25%; border-radius: 6px; }
 .own-profile-title h2 { font-size: 24px; font-weight: 650; }
+.own-account-tabs { position: sticky; top: 0; z-index: 20; display: flex; gap: 4px; width: 100%; overflow-x: auto; margin: 20px 0 0; background: var(--m3s-surface-panel, var(--m3s-bg-primary)); border-bottom: 1px solid var(--m3s-border); }
+.own-account-tabs button { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; gap: 8px; min-height: 48px; padding: 12px 14px; white-space: nowrap; color: var(--m3s-text-secondary); background: transparent; border: 0; border-bottom: 3px solid transparent; font-size: 14px; font-weight: 600; }
+.own-account-tabs button[aria-selected="true"] { color: var(--m3s-status-info, #2563eb); border-bottom-color: currentColor; }
+.own-account-tabs button:hover { color: var(--m3s-text-primary); }
+.own-account-tabs button:focus-visible { outline: 2px solid var(--m3s-status-info, #2563eb); outline-offset: -3px; }
+.own-account-panels { scroll-margin-top: 64px; }
+.own-profile #personal-finances { scroll-margin-top: 64px; }
+.own-profile .private-ged-toolbar-sticky { top: 51px; z-index: 15; }
+.own-account-panel[hidden] { display: none; }
+.own-account-pending { padding: 24px 0; }
+.own-account-pending p { margin: 12px 0; line-height: 1.6; }
+.own-account-pending-state { color: var(--m3s-text-secondary); font-weight: 600; }
+.own-account-pending button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 12px; padding: 10px 14px; }
 .own-profile-linked { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--m3s-text-secondary); }
 .own-profile section { border-top: 1px solid var(--m3s-border); margin-top: 24px; padding-top: 22px; }
 .own-profile h3 { font-size: 17px; font-weight: 600; margin-bottom: 18px; }

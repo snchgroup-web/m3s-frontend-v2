@@ -3,20 +3,29 @@ import OwnProfile from './OwnProfile';
 import api from './api';
 
 const mockNavigate = jest.fn();
+const mockRouteListeners = new Set();
 let mockLanguage = 'FR';
 let mockSearch = '';
 let mockUser = { email: 'fixture@example.test' };
-jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate, useLocation: () => ({ search: mockSearch }) }), { virtual: true });
+jest.mock('react-router-dom', () => {
+  const { useSyncExternalStore } = require('react');
+  return { useNavigate: () => mockNavigate, useLocation: () => ({ search: useSyncExternalStore(listener => {
+    mockRouteListeners.add(listener); return () => mockRouteListeners.delete(listener);
+  }, () => mockSearch) }) };
+}, { virtual: true });
 jest.mock('./LanguageContext', () => ({ useLanguage: () => ({ language: mockLanguage }) }));
 jest.mock('./AuthContext', () => ({ useAuth: () => ({ user: mockUser }) }));
-jest.mock('./PersonalBudget', () => ({ principal }) => <div data-testid="personal-budget" data-account={principal.email}/>);
+jest.mock('./PersonalBudget', () => ({ principal }) => <div data-testid="personal-budget" data-account={principal.email}><input aria-label="Synthetic budget state" defaultValue=""/></div>);
 jest.mock('./api', () => ({ __esModule: true, default: { getOwnProfile: jest.fn() } }));
 jest.mock('./PrivateGedDocuments', () => ({ scope }) => <div data-testid="private-ged" data-scope={scope}/>);
 const result = { success: true, scope: 'current-account', account: { email: 'fixture@example.test', role: 'Manager' },
   profile: { personId: 'PER-2SG-9001', displayName: 'Synthetic Person', team: 'TZH', memberType: 'Fondateur', position: 'Synthetic role' },
   source: { id: 'RH-001', status: 'validated_documentary', approvedOn: '2026-09-26' } };
 
-beforeEach(() => { jest.clearAllMocks(); mockLanguage = 'FR'; mockSearch = ''; mockUser = { email: 'fixture@example.test' }; api.getOwnProfile.mockResolvedValue(result); });
+beforeEach(() => {
+  jest.clearAllMocks(); mockLanguage = 'FR'; mockSearch = ''; mockUser = { email: 'fixture@example.test' }; api.getOwnProfile.mockResolvedValue(result);
+  mockNavigate.mockImplementation(path => { mockSearch = new URL(path, 'https://example.test').search; mockRouteListeners.forEach(listener => listener()); });
+});
 
 test('reads the linked profile, refreshes and returns to dashboard', async () => {
   render(<OwnProfile/>);
@@ -55,7 +64,7 @@ test('aborts pending reads when leaving the page', () => {
   expect(signal.aborted).toBe(true);
 });
 
-test('links HR while keeping finance outside the personal account', async () => {
+test('links HR while keeping organisational finance outside the personal account', async () => {
   render(<OwnProfile/>); await screen.findByText('Synthetic Person');
   expect(screen.getByTestId('private-ged')).toHaveAttribute('data-scope', 'personal');
   fireEvent.click(screen.getByRole('button', { name: 'Mon compte RH' }));
@@ -67,22 +76,69 @@ test.each(['FR', 'EN', 'DE'])('personal finance is distinct from organisational 
   mockLanguage = language;
   const { rerender } = render(<OwnProfile/>);
   await screen.findByText('Synthetic Person');
-  fireEvent.click(screen.getByRole('button', { name: /financ|finanz/i }));
-  expect(mockNavigate).toHaveBeenCalledWith('/account?view=finances#personal-finances');
+  fireEvent.click(screen.getByRole('tab', { name: /financ|finanz/i }));
+  expect(mockNavigate).toHaveBeenCalledWith('/account?view=finances#own-account-panel');
   expect(screen.queryByRole('button', { name: /2SG/ })).not.toBeInTheDocument();
   rerender(<OwnProfile embedded/>);
-  expect(screen.queryByRole('button', { name: /financ|finanz/i })).not.toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: /financ|finanz/i })).toBeInTheDocument();
   expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
   expect(screen.getByTestId('private-ged')).toHaveAttribute('data-scope', 'personal');
 });
 
-test('opens the private budget only after the own profile is linked and never in the embedded HR view', async () => {
+test('opens the private budget only after the own profile is linked, including in the embedded own account', async () => {
   mockSearch = '?view=finances';
   const { rerender } = render(<OwnProfile/>);
   expect(screen.queryByTestId('personal-budget')).not.toBeInTheDocument();
   expect(await screen.findByTestId('personal-budget')).toHaveAttribute('data-account', 'fixture@example.test');
+  mockSearch = '?tab=myaccount&accountView=finances';
   rerender(<OwnProfile embedded/>);
+  expect(screen.getByTestId('personal-budget')).toBeVisible();
+});
+
+test('four horizontal tabs keep the dossier and private budget separate without remounting budget state', async () => {
+  render(<OwnProfile/>); await screen.findByText('Synthetic Person');
+  expect(screen.getAllByRole('tab')).toHaveLength(4);
+  expect(screen.getByRole('tab', { name: 'Mon dossier perso' })).toHaveAttribute('aria-selected', 'true');
   expect(screen.queryByTestId('personal-budget')).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('tab', { name: 'Mes finances perso' }));
+  fireEvent.change(screen.getByLabelText('Synthetic budget state'), { target: { value: 'unsaved fixture' } });
+  expect(screen.getByRole('tabpanel')).toHaveAccessibleName('Mes finances perso');
+  expect(screen.getByTestId('private-ged')).not.toBeVisible();
+  fireEvent.click(screen.getByRole('tab', { name: 'Mes tâches' }));
+  expect(screen.getByTestId('personal-budget')).not.toBeVisible();
+  expect(screen.getByRole('tabpanel')).toHaveTextContent('mes seules affectations reste à raccorder');
+  fireEvent.click(screen.getByRole('tab', { name: 'Mes finances perso' }));
+  expect(screen.getByLabelText('Synthetic budget state')).toHaveValue('unsaved fixture');
+  expect(api.getOwnProfile).toHaveBeenCalledTimes(1);
+});
+
+test.each([['hours', 'Mes heures', 'Aucune source d’heures personnelles'], ['tasks', 'Mes tâches', 'mes seules affectations']])('shows a truthful pending state for %s, not a personal zero or the shared register', async (view, name, text) => {
+  mockSearch = `?view=${view}`;
+  render(<OwnProfile/>); await screen.findByText('Synthetic Person');
+  expect(screen.getByRole('tabpanel', { name })).toHaveTextContent(text);
+  expect(screen.getByRole('tabpanel', { name })).toHaveTextContent('À raccorder');
+  expect(screen.queryByRole('table')).not.toBeInTheDocument();
+  expect(screen.queryByTestId('personal-budget')).not.toBeInTheDocument();
+});
+
+test('keyboard navigation and embedded URLs preserve the parent tab and return context', async () => {
+  mockSearch = '?tab=myaccount&accountView=dossier&language=DE';
+  render(<OwnProfile embedded/>); await screen.findByText('Synthetic Person');
+  fireEvent.keyDown(screen.getByRole('tab', { name: 'Mon dossier perso' }), { key: 'ArrowRight' });
+  expect(screen.getByRole('tab', { name: 'Mes heures' })).toHaveAttribute('aria-selected', 'true');
+  expect(mockNavigate).toHaveBeenLastCalledWith('/rh?tab=myaccount&accountView=hours&language=DE#own-account-panel');
+  fireEvent.keyDown(screen.getByRole('tab', { name: 'Mes heures' }), { key: 'End' });
+  expect(screen.getByRole('tab', { name: 'Mes finances perso' })).toHaveAttribute('aria-selected', 'true');
+  fireEvent.keyDown(screen.getByRole('tab', { name: 'Mes finances perso' }), { key: 'Home' });
+  expect(screen.getByRole('tab', { name: 'Mon dossier perso' })).toHaveAttribute('aria-selected', 'true');
+});
+
+test('unknown views fall back to the dossier and tab changes preserve the Production return', async () => {
+  mockSearch = '?view=unknown&returnTo=production';
+  render(<OwnProfile/>); await screen.findByText('Synthetic Person');
+  expect(screen.getByRole('tab', { name: 'Mon dossier perso' })).toHaveAttribute('aria-selected', 'true');
+  fireEvent.click(screen.getByRole('tab', { name: 'Mes finances perso' }));
+  expect(mockNavigate).toHaveBeenLastCalledWith('/account?view=finances&returnTo=production#own-account-panel');
 });
 
 test('changing account unmounts its private content before the new profile resolves', async () => {
