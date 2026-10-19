@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowUpRight, ChevronLeft, ChevronRight, RefreshCw, Search, X } from 'lucide-react';
+import { ArrowUpRight, ChevronLeft, ChevronRight, Eye, RefreshCw, Search, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import api from './api';
 import { TASK_REGISTER_COPY } from './PersistentTaskRegister';
 import { formatRegistryDate } from './registryDate';
+import { EXECUTION_COPY } from './TaskExecutionFields';
+import { TASK_MODULE_LABELS, TASK_REGISTER_COLUMNS } from './taskRegisterPresentation';
 
 const COPY = {
   FR: { title: 'Mes tâches', coverage: 'Mes tâches enregistrées et affectées · projet Standardisation · lecture seule. Historique exclu.',
@@ -17,7 +19,9 @@ const COPY = {
     forbidden: 'Reading these assignments is not authorised for this account.' }
 };
 export default function OwnTaskRegister({ language = 'FR' }) {
-  const t = { ...(TASK_REGISTER_COPY[language] || TASK_REGISTER_COPY.FR), ...(COPY[language] || COPY.FR) };
+  const registerCopy = TASK_REGISTER_COPY[language] || TASK_REGISTER_COPY.FR;
+  const t = { ...registerCopy, ...(EXECUTION_COPY[language] || EXECUTION_COPY.FR), ...(COPY[language] || COPY.FR) };
+  const moduleLabels = TASK_MODULE_LABELS[language] || TASK_MODULE_LABELS.FR;
   const navigate = useNavigate();
   const [query, setQuery] = useState({ limit: 25, offset: 0, search: '' });
   const [search, setSearch] = useState('');
@@ -51,14 +55,20 @@ export default function OwnTaskRegister({ language = 'FR' }) {
       {iconButton(t.clear, X, () => { setSearch(''); setQuery(previous => ({ ...previous, search: '', offset: 0 })); }, !search && !query.search)}
       <label>{t.rows} <select className="m3s-field" value={query.limit} onChange={event => setQuery(previous => ({ ...previous, limit: Number(event.target.value), offset: 0 }))}>{[10,25,50,100].map(value => <option key={value}>{value}</option>)}</select></label>
     </form>
-    {page?.data.length ? <div className="m3s-table-shell own-work-table"><table><thead><tr>{[t.title,t.status,t.priority,t.due,t.details].map(label => <th key={label} scope="col">{label}</th>)}</tr></thead><tbody>
+    {page?.data.length ? <div className="m3s-table-shell own-work-table own-task-table" role="region" aria-label={t.title} tabIndex={0}><table><thead><tr>{TASK_REGISTER_COLUMNS.map(key => <th key={key} scope="col">{registerCopy[key]}</th>)}</tr></thead><tbody>
       {page.data.map(row => <tr key={row.id}>
-        <td><strong>{row.title}</strong><small>{row.reference}</small></td><td>{t.statuses[row.status] || row.status}</td><td>{t.priorities[row.priority] || row.priority}</td>
+        <td><strong>{row.title}</strong><small>{row.reference}</small>{row.related_reference && <small>{t.related}: {row.related_reference}</small>}</td>
+        <td>{t.statuses[row.status] || row.status || '\u2014'}</td><td>{t.priorities[row.priority] || row.priority || '\u2014'}</td>
+        <td>{row.responsable || '\u2014'}</td><td>{moduleLabels[row.module] || row.module || '\u2014'}</td>
+        <td>{Number.isFinite(row.progression) ? `${row.progression}%` : '\u2014'}</td>
         <td className="own-work-date">{formatRegistryDate(row.due_date, language)}</td>
-        <td><details><summary>{t.details}</summary><dl>
-          <dt>{t.expected}</dt><dd>{row.expected_result}</dd>
+        <td>{row.source_kind === 'operational' ? t.operational : '\u2014'}</td>
+        <td><details><summary className="m3s-secondary-button own-work-icon own-task-details" title={t.details} aria-label={`${t.details} : ${row.title}`}><Eye size={18} aria-hidden="true"/></summary><dl>
+          <dt>{t.expected}</dt><dd>{row.expected_result || '\u2014'}</dd>
           {row.description && <><dt>{t.description}</dt><dd>{row.description}</dd></>}
-          <dt>{t.phase}</dt><dd>{row.phase_id}</dd><dt>{t.progress}</dt><dd>{row.progression === null ? '\u2014' : `${row.progression}%`}</dd>
+          <dt>{t.project}</dt><dd>{row.project_id || '\u2014'}</dd>
+          <dt>{t.phase}</dt><dd>{row.execution_context?.phase_id || row.phase_id || '\u2014'}</dd>
+          <dt>{t.activity}</dt><dd>{row.execution_context?.activity_id || '\u2014'}</dd>
           <dt>{t.revision}</dt><dd>{row.revision}</dd>
         </dl></details></td>
       </tr>)}

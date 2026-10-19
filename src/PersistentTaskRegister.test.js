@@ -1,6 +1,7 @@
 import React from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import PersistentTaskRegister from './PersistentTaskRegister';
+import PersistentTaskRegister, { TASK_REGISTER_COPY } from './PersistentTaskRegister';
+import { TASK_MODULE_LABELS, TASK_REGISTER_COLUMNS } from './taskRegisterPresentation';
 import api from './api';
 import { testTask, testTaskReferences } from './taskContractFixtures';
 
@@ -37,6 +38,15 @@ const start = async () => {
 };
 const propose = () => fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
 const confirm = () => fireEvent.click(screen.getByRole('button', { name: /Oui, (ajouter|modifier)/ }));
+
+test.each(['FR', 'DE', 'EN'])('%s keeps shared column order and module labels after extraction', async language => {
+  show({ language, moduleLabels: TASK_MODULE_LABELS[language] });
+  await screen.findByText(task.title);
+  expect(screen.getAllByRole('columnheader').map(header => header.textContent))
+    .toEqual(TASK_REGISTER_COLUMNS.map(key => TASK_REGISTER_COPY[language][key]));
+  const cells = within(screen.getByText(task.title).closest('tr')).getAllByRole('cell');
+  expect(cells[4]).toHaveTextContent(TASK_MODULE_LABELS[language].ADMINISTRATION);
+});
 
 test('historical register stays read only, real server total is propagated and no delete is offered', async () => {
   const onSummaryChange = jest.fn(); show({ onSummaryChange }); await ready();

@@ -36,6 +36,13 @@
 .own-work-table details { min-width: 120px; max-width: 360px; overflow-wrap: anywhere; }
 .own-work-table dt { font-weight: 600; margin-top: 8px; }
 .own-work-table dd { margin: 4px 0 12px; }
+.own-task-table table { min-width: 1040px; }
+.own-task-table td { max-width: 360px; }
+.own-task-table th, .own-task-table td:nth-child(2), .own-task-table td:nth-child(3),
+.own-task-table td:nth-child(5), .own-task-table td:nth-child(6), .own-task-table td:nth-child(8) { white-space: nowrap; }
+.own-task-table td:last-child { min-width: 240px; }
+.own-task-details { cursor: pointer; list-style: none; }
+.own-task-details::-webkit-details-marker { display: none; }
 .own-profile .own-work-table dl { display: block; margin: 8px 0; }
 .own-profile .own-work-table dd { font-size: 14px; }
 .own-profile-linked { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--m3s-text-secondary); }

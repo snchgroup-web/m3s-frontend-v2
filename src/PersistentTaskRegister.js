@@ -6,6 +6,7 @@ import { StandardCreateButton } from './StandardUI';
 import { formatRegistryDate } from './registryDate';
 import TaskExecutionFields, { EXECUTION_COPY } from './TaskExecutionFields';
 import { TASK_VERSION, emptyTaskFields, isTaskSelectionValid, taskFieldsFromRecord } from './taskContract';
+import { TASK_REGISTER_COLUMNS } from './taskRegisterPresentation';
 
 const COPY = {
   FR: {
@@ -299,7 +300,7 @@ const PersistentTaskRegister = ({ language = 'FR', moduleLabels, onSummaryChange
       <div className="m3s-table-shell overflow-auto">
         {page?.data.length ? <table className="min-w-full text-sm" style={{ minWidth: '65rem' }}>
           <thead className="bg-slate-700 text-left text-white"><tr>
-            {[t.title, t.status, t.priority, t.owner, t.module, t.progress, t.due, t.source, t.actions].map(label => <th key={label} scope="col" className="px-4 py-2 font-semibold">{label}</th>)}
+            {TASK_REGISTER_COLUMNS.map(key => <th key={key} scope="col" className="px-4 py-2 font-semibold">{t[key]}</th>)}
           </tr></thead>
           <tbody>{page.data.map(row => {
             const editable = canWrite && row.source_kind === 'operational' && row.can_edit === true;

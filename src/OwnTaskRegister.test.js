@@ -1,5 +1,6 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import OwnTaskRegister from './OwnTaskRegister';
+import { TASK_REGISTER_COPY } from './PersistentTaskRegister';
 import api from './api';
 import { testTask } from './taskContractFixtures';
 const mockNavigate = jest.fn();
@@ -16,6 +17,40 @@ test.each([['FR','Mes tâches','En cours','12-11-26'],['DE','Meine Aufgaben','In
   expect(screen.getByText(status)).toBeInTheDocument(); expect(screen.getByText(date)).toBeInTheDocument();
   expect(screen.queryByRole('button', { name: /Modifier|bearbeiten|Edit task|Nouvelle tâche/ })).not.toBeInTheDocument();
   expect(api.getOwnTasks).toHaveBeenCalledWith(25,0,'',expect.objectContaining({signal:expect.anything()}));
+});
+
+test.each([
+  ['FR', ['Tâche','Statut','Priorité','Responsable','Module','Progression','Échéance','Source','Actions'], 'Administration'],
+  ['DE', ['Aufgabe','Status','Priorität','Verantwortlich','Modul','Fortschritt','Frist','Quelle','Aktionen'], 'Verwaltung'],
+  ['EN', ['Task','Status','Priority','Owner','Module','Progress','Due date','Source','Actions'], 'Administration']
+])('%s uses the shared task columns, values and read-only details', async (language, headers, module) => {
+  const record = { ...row, responsable: 'Synthetic owner', source_kind: 'operational', progression: 0,
+    related_reference: 'GD-QA-001', project_id: 'PROJECT-QA',
+    execution_context: { ...row.execution_context, phase_id: 'PHASE-QA', activity_id: 'ACTIVITY-QA' } };
+  const before = JSON.stringify(record);
+  api.getOwnTasks.mockResolvedValue({ ...page, data: [record] });
+  render(<OwnTaskRegister language={language}/>); await screen.findByText(row.title);
+  expect(screen.getAllByRole('columnheader').map(header => header.textContent)).toEqual(headers);
+  const cells = within(screen.getByText(row.title).closest('tr')).getAllByRole('cell');
+  expect(cells).toHaveLength(headers.length);
+  expect(cells[3]).toHaveTextContent('Synthetic owner'); expect(cells[4]).toHaveTextContent(module);
+  expect(cells[5]).toHaveTextContent('0%'); expect(cells[7]).toHaveTextContent(TASK_REGISTER_COPY[language].operational);
+  expect(cells[6]).toHaveClass('own-work-date');
+  const details = cells[8].querySelector('details');
+  fireEvent.click(details.querySelector('summary')); expect(details).toHaveAttribute('open');
+  expect(within(details).getByText('PROJECT-QA')).toBeInTheDocument();
+  expect(within(details).getByText('PHASE-QA')).toBeInTheDocument();
+  expect(within(details).getByText('ACTIVITY-QA')).toBeInTheDocument();
+  fireEvent.click(details.querySelector('summary')); expect(details).not.toHaveAttribute('open');
+  expect(JSON.stringify(record)).toBe(before);
+});
+
+test.each([null, undefined])('missing progress %s is not converted to zero or a percentage', async progression => {
+  api.getOwnTasks.mockResolvedValue({ ...page, data: [{ ...row, progression, responsable: null, module: null, due_date: null }] });
+  render(<OwnTaskRegister/>); await screen.findByText(row.title);
+  const cells = within(screen.getByText(row.title).closest('tr')).getAllByRole('cell');
+  [3,4,5,6,7].forEach(index => expect(cells[index].textContent).toBe('\u2014'));
+  expect(screen.queryByText(/undefined%|null%|0%/)).not.toBeInTheDocument();
 });
 test('server total, pagination, search and refresh remain distinct from the loaded page', async () => {
   api.getOwnTasks.mockResolvedValue({ ...page, total: 70 });
