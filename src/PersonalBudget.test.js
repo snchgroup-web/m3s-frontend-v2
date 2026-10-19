@@ -59,6 +59,16 @@ test('failed source or phrase never replaces an existing vault', async () => {
   expect(screen.queryByTitle('Budget personnel isolé')).not.toBeInTheDocument();
 });
 
+test('never overwrites a copy changed by another tab', async () => {
+  const frame = await start(); sealBudgetVault.mockClear();
+  localStorage.setItem(key, 'newer-encrypted-copy');
+  fireEvent(window, new MessageEvent('message', { source: frame.contentWindow, origin: 'null',
+    data: { type: 'm3s-budget-storage', nonce: 'nonce-fixture', storage: {} } }));
+  expect(await screen.findByRole('alert')).toHaveTextContent('Enregistrement impossible');
+  expect(sealBudgetVault).not.toHaveBeenCalled();
+  expect(localStorage.getItem(key)).toBe('newer-encrypted-copy');
+});
+
 test('leaving during a pending unlock never saves or reopens private content', async () => {
   localStorage.setItem(key, 'existing-encrypted'); let resolve;
   openBudgetVault.mockReturnValue(new Promise(done => { resolve = done; }));

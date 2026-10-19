@@ -43,6 +43,7 @@ export default function PersonalBudget({ principal, language = 'FR' }) {
   const frame = useRef(null), vault = useRef(null), active = useRef(true), sequence = useRef(0), lockRequested = useRef(false);
   const nonce = useRef(null);
   const request = useRef(null);
+  const lastSaved = useRef(null);
   const identity = JSON.stringify([principal?.id, principal?.tenantId, principal?.email]);
   useEffect(() => {
     active.current = true;
@@ -62,10 +63,14 @@ export default function PersonalBudget({ principal, language = 'FR' }) {
       const current = ++sequence.current;
       setStatus('saving');
       try {
+        const previous = localStorage.getItem(accountKey);
+        if (previous !== lastSaved.current) throw new Error('STORAGE_CHANGED');
         const storage = validateBudgetStorage(event.data.storage);
         const encrypted = await sealBudgetVault(vault.current, storage);
         if (!active.current || current !== sequence.current) return;
+        if (localStorage.getItem(accountKey) !== previous) throw new Error('STORAGE_CHANGED');
         localStorage.setItem(accountKey, encrypted);
+        lastSaved.current = encrypted;
         vault.current.storage = storage;
         setError(''); setStatus('ready');
         if (lockRequested.current) {
@@ -102,6 +107,7 @@ export default function PersonalBudget({ principal, language = 'FR' }) {
       if (!active.current || current !== sequence.current) return;
       if (localStorage.getItem(accountKey) !== stored) throw new Error('STORAGE_CHANGED');
       localStorage.setItem(accountKey, encrypted);
+      lastSaved.current = encrypted;
       nonce.current = token; vault.current = next;
       setPhrase(''); setConfirm(''); setFile(null); setExisting(true); setFrameDoc(document); setStatus('ready');
     } catch (_) { if (active.current && current === sequence.current) { setError(t.error); setStatus('locked'); } }
