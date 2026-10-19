@@ -23,6 +23,7 @@ const COPY = {
       ['Frontières', "Cette vue ne vaut ni contrat, ni paie, ni décision d'accès, ni qualification juridique ou sociale automatique."]
     ],
     sourceNote: 'Statut : cadrage pilote · Annuaire et dossiers privés ont des sources distinctes. Un dossier en brouillon ne prouve ni contrat signé ni paie validée. Aucune valeur de démonstration ne doit servir au pilotage.',
+    openTools: 'Ouvrir les outils RH de proximité',
     sourceTitle: 'État réel des sources RH',
     sourceIntro: 'Une valeur n’est affichée que si sa provenance et sa disponibilité sont connues.',
     directoryTitle: 'Annuaire des membres',
@@ -55,6 +56,7 @@ const COPY = {
       ['Boundaries', 'This view is not a contract, payroll record, access decision, or automatic legal or social classification.']
     ],
     sourceNote: 'Status: pilot framing · Directory and private dossiers have distinct sources. A draft dossier proves neither a signed contract nor validated payroll. No demonstration value may be used for steering.',
+    openTools: 'Open proximity HR tools',
     sourceTitle: 'Actual status of HR sources',
     sourceIntro: 'A value is displayed only when its provenance and availability are known.',
     directoryTitle: 'Member directory',
@@ -87,6 +89,7 @@ const COPY = {
       ['Abgrenzung', 'Diese Ansicht ist weder Vertrag noch Lohnabrechnung, Zugriffsentscheidung oder automatische rechtliche beziehungsweise soziale Einstufung.']
     ],
     sourceNote: 'Status: Pilotrahmen · Verzeichnis und private Akten haben getrennte Quellen. Ein Aktenentwurf belegt weder einen unterschriebenen Vertrag noch freigegebene Lohnabrechnung. Demonstrationswerte dürfen nicht zur Steuerung dienen.',
+    openTools: 'Werkzeuge für wohnortnahe Personalarbeit öffnen',
     sourceTitle: 'Tatsächlicher Stand der Personalquellen',
     sourceIntro: 'Ein Wert wird nur angezeigt, wenn Herkunft und Verfügbarkeit bekannt sind.',
     directoryTitle: 'Mitgliederverzeichnis',
@@ -132,7 +135,7 @@ const SourceCard = ({ icon: Icon, title, state, body, tone = 'var(--m3s-row-acce
 );
 
 const RHOverview = ({ language = 'FR', directoryCount = null, directoryStatus = 'loading', employeeDraftCount = 0, volunteerDraftCount = 0,
-  employeeSummary = { status: 'idle', count: null }, onOpenEmployees }) => {
+  employeeSummary = { status: 'idle', count: null }, onOpenEmployees, onOpenTools }) => {
   const t = COPY[language] || COPY.FR;
   const localDraftCount = employeeDraftCount + volunteerDraftCount;
   const employeeState = employeeSummary.status === 'available' && Number.isSafeInteger(employeeSummary.count) && employeeSummary.count >= 0
@@ -150,6 +153,7 @@ const RHOverview = ({ language = 'FR', directoryCount = null, directoryStatus = 
         <p className="text-xs font-semibold uppercase" style={{ color: 'var(--m3s-row-accent)' }}>{t.eyebrow}</p>
         <h2 id="rh-overview-title" className="m3s-page-title mt-2">{t.title}</h2>
         <p className="mt-2 text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{t.subtitle}</p>
+        {onOpenTools && <button type="button" className="m3s-secondary-button mt-4 inline-flex min-h-11 items-center gap-2 px-3" onClick={onOpenTools}><BookUser size={18} aria-hidden="true" />{t.openTools}</button>}
       </div>
 
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">

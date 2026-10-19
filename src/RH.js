@@ -9,6 +9,7 @@ import TableControls from './TableControls';
 import MembersDirectory from './MembersDirectory';
 import RHGlossary from './RHGlossary';
 import RHOverview from './RHOverview';
+import RhProximityTools from './RhProximityTools';
 import { StandardCreateButton } from './StandardUI';
 import FunctionResourcesOverview from './FunctionResourcesOverview';
 import { FunctionArchitectureOverview, FunctionProcessOverview } from './FunctionStructuralViews';
@@ -605,6 +606,7 @@ const RH = ({ rhReadAccess = null }) => {
             directoryStatus={directoryStatus}
             employeeSummary={employeeSummary}
             onOpenEmployees={() => handleTabSelect('employes')}
+            onOpenTools={() => handleTabSelect('resources')}
             employeeDraftCount={employes.length}
             volunteerDraftCount={benevoles.length}
           />
@@ -637,7 +639,10 @@ const RH = ({ rhReadAccess = null }) => {
         )}
 
         {activeTab === 'resources' && (
-          <FunctionResourcesOverview moduleId="rh" language={language} onSelectTab={handleTabSelect} />
+          <>
+            <RhProximityTools language={language} onBack={() => handleTabSelect('overview')} onOpenEmployees={() => handleTabSelect('employes')} />
+            <FunctionResourcesOverview moduleId="rh" language={language} onSelectTab={handleTabSelect} />
+          </>
         )}
 
         {activeTab === 'myaccount' && <OwnProfile embedded/>}

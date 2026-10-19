@@ -56,6 +56,17 @@ test('RH My account renders the shared current-account profile instead of a plac
   expect(screen.queryByText('Section to build')).not.toBeInTheDocument();
 });
 
+test('the HR overview opens existing tools from Resources and returns without a new module', async () => {
+  mockLocationSearch = '?tab=overview';
+  const view = render(<RH />);
+  fireEvent.click(screen.getByRole('button', { name: 'Open proximity HR tools' }));
+  expect(mockNavigate).toHaveBeenCalledWith('/rh?tab=resources');
+  mockLocationSearch = '?tab=resources'; view.rerender(<RH />);
+  expect(await screen.findByTestId('rh-proximity-tools')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Back to HR overview' }));
+  expect(mockNavigate).toHaveBeenCalledWith('/rh?tab=overview');
+});
+
 test('employee files stay off by default without replacing the local register', async () => {
   mockLocationSearch = '?tab=employes';
   render(<RH/>);

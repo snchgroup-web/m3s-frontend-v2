@@ -42,3 +42,9 @@ test('renders the German source-governance frame', () => {
   expect(screen.getByText('3 Mitglieder durch die Quelle bestätigt')).toBeInTheDocument();
   expect(screen.getByText(/nicht persistente Eingabe/i)).toBeInTheDocument();
 });
+
+test.each([['FR', 'Ouvrir les outils RH de proximit\u00e9'], ['DE', 'Werkzeuge f\u00fcr wohnortnahe Personalarbeit \u00f6ffnen'], ['EN', 'Open proximity HR tools']])('provides a visible tools entry in %s', (language, label) => {
+  const open = jest.fn(); render(<RHOverview language={language} onOpenTools={open} />);
+  fireEvent.click(screen.getByRole('button', { name: label }));
+  expect(open).toHaveBeenCalledTimes(1);
+});
