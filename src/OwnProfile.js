@@ -1,29 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, RefreshCw, UserRound, CheckCircle2, Wallet, FolderOpen, Clock3, ListChecks, ArrowUpRight } from 'lucide-react';
+import { ArrowLeft, RefreshCw, UserRound, CheckCircle2, Wallet, FolderOpen, Clock3, ListChecks } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { useAuth } from './AuthContext';
 import api from './api';
 import PrivateGedDocuments from './PrivateGedDocuments';
 import PersonalBudget from './PersonalBudget';
 import OwnTaskRegister from './OwnTaskRegister';
+import PersonalHours from './PersonalHours';
 import { centerTabHorizontally } from './moduleTabs';
 
 const VIEWS = ['dossier', 'hours', 'tasks', 'finances'];
 const ICONS = [FolderOpen, Clock3, ListChecks, Wallet];
 const ACCOUNT_COPY = {
-  FR: { tabs: ['Mon dossier perso', 'Mes heures', 'Mes tâches', 'Mes finances perso'], pending: 'À raccorder',
-    hours: 'Aucune source d’heures personnelles n’est encore raccordée à ce compte.',
-    tasks: 'La vue de mes seules affectations reste à raccorder. Le registre partagé est disponible dans Planification & Projets.',
-    openHours: 'Consulter les outils RH', openTasks: 'Ouvrir le registre partagé des tâches' },
-  DE: { tabs: ['Mein persönliches Dossier', 'Meine Stunden', 'Meine Aufgaben', 'Meine persönlichen Finanzen'], pending: 'Noch anzubinden',
-    hours: 'Für dieses Konto ist noch keine persönliche Stundenquelle angebunden.',
-    tasks: 'Die Ansicht meiner eigenen Zuweisungen ist noch anzubinden. Das gemeinsame Register ist unter Planung & Projekte verfügbar.',
-    openHours: 'HR-Werkzeuge ansehen', openTasks: 'Gemeinsames Aufgabenregister öffnen' },
-  EN: { tabs: ['My personal dossier', 'My hours', 'My tasks', 'My personal finances'], pending: 'Connection pending',
-    hours: 'No personal hours source is connected to this account yet.',
-    tasks: 'The view of my own assignments is still to be connected. The shared register is available under Planning & Projects.',
-    openHours: 'View HR tools', openTasks: 'Open shared task register' }
+  FR: { tabs: ['Mon dossier perso', 'Mes heures', 'Mes tâches', 'Mes finances perso'] },
+  DE: { tabs: ['Mein persönliches Dossier', 'Meine Stunden', 'Meine Aufgaben', 'Meine persönlichen Finanzen'] },
+  EN: { tabs: ['My personal dossier', 'My hours', 'My tasks', 'My personal finances'] }
 };
 
 const messages = {
@@ -65,9 +57,11 @@ function AccountProfile({ embedded }) {
   const requestedView = new URLSearchParams(location.search).get(embedded ? 'accountView' : 'view');
   const activeView = VIEWS.includes(requestedView) ? requestedView : 'dossier';
   const [financeVisited, setFinanceVisited] = useState(activeView === 'finances');
+  const [hoursVisited, setHoursVisited] = useState(activeView === 'hours');
   const tabList = useRef(null);
   useEffect(() => {
     if (activeView === 'finances') setFinanceVisited(true);
+    if (activeView === 'hours') setHoursVisited(true);
     centerTabHorizontally(tabList.current, tabList.current?.querySelector('[aria-selected="true"]'));
   }, [activeView, language]);
   const selectView = view => {
@@ -142,13 +136,9 @@ function AccountProfile({ embedded }) {
       <PrivateGedDocuments key={user?.email || 'no-account'} scope="personal"/>
       <footer>{t.source} : {data.source.id} · {t.approved} : <time dateTime={data.source.approvedOn}>{new Intl.DateTimeFormat({ FR: 'fr-CH', EN: 'en-GB', DE: 'de-CH' }[language] || 'fr-CH', { timeZone: 'UTC' }).format(new Date(`${data.source.approvedOn}T00:00:00Z`))}</time></footer>
       </div>
-      {['hours'].map(view => <div role="tabpanel" id={`own-account-panel-${view}`} aria-labelledby={`own-account-tab-${view}`} hidden={activeView !== view} key={view} className="own-account-panel own-account-pending">
-        <h3>{a.tabs[VIEWS.indexOf(view)]}</h3>
-        <p className="own-account-pending-state">{a.pending}</p><p>{a[view]}</p>
-        <button type="button" className="m3s-secondary-button" onClick={() => navigate(view === 'hours' ? '/rh?tab=resources#rh-proximity-tools' : '/administration?tab=planning#planning-register')}>
-          <ArrowUpRight size={18} aria-hidden="true"/>{view === 'hours' ? a.openHours : a.openTasks}
-        </button>
-      </div>)}
+      <div role="tabpanel" id="own-account-panel-hours" aria-labelledby="own-account-tab-hours" hidden={activeView !== 'hours'} className="own-account-panel">
+        {(hoursVisited || activeView === 'hours') && <PersonalHours principal={user} language={language} active={activeView === 'hours'}/>}
+      </div>
       <div role="tabpanel" id="own-account-panel-tasks" aria-labelledby="own-account-tab-tasks" hidden={activeView !== 'tasks'} className="own-account-panel">
         {activeView === 'tasks' && <OwnTaskRegister language={language}/>}
       </div>
