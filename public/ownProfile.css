@@ -101,6 +101,12 @@ html .app-shell { position: fixed; inset: 0; height: 100dvh; overflow: clip; }
 .personal-hours-import, .personal-hours-help { padding: 16px 0; border-bottom: 1px solid var(--m3s-border); margin-top: 12px; }
 .personal-hours-help summary { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .personal-hours-help p { line-height: 1.6; margin-top: 12px; }
+.personal-hours-task { display: grid; gap: 8px; }
+.personal-hours-work p { line-height: 1.6; margin-top: 12px; font-size: 14px; }
+.own-profile .personal-hours-context { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+.personal-hours-context > div { min-width: 0; overflow-wrap: anywhere; }
+.personal-hours-context dd { margin: 0; font-size: 14px; }
+.personal-hours .own-work-table td:last-child { min-width: 200px; max-width: 320px; overflow-wrap: anywhere; }
 .personal-hours button:disabled { opacity: .5; cursor: not-allowed; }
 @media (max-width: 700px) { .personal-hours-form fieldset { grid-template-columns: repeat(2, minmax(0, 1fr)); } .personal-hours-form .personal-hours-check { grid-column: span 2; } .personal-hours-form button { grid-column: span 2; } .personal-hours-form output { grid-column: span 2; } }
 .m3s-branded-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; min-height: 60vh; padding: 24px; color: var(--m3s-text-primary, #172033); background: var(--m3s-surface-panel, #fff); }
