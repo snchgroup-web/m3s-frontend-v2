@@ -9,6 +9,7 @@ import PlanningOverview from './PlanningOverview';
 import CorrespondenceAgenda from './CorrespondenceAgenda';
 import JournalTaskRegister from './JournalTaskRegister';
 import PersistentTaskRegister from './PersistentTaskRegister';
+import { TASK_MODULE_LABELS } from './taskRegisterPresentation';
 import ComplianceOverview from './ComplianceOverview';
 import CommunicationOverview from './CommunicationOverview';
 import AdministrationGlossary from './AdministrationGlossary';
@@ -312,62 +313,7 @@ const Admin = () => {
       EN: { 'Haute': 'High', 'Moyenne': 'Medium', 'Basse': 'Low', 'Urgente': 'Urgent' },
       DE: { 'Haute': 'Hoch', 'Moyenne': 'Mittel', 'Basse': 'Niedrig', 'Urgente': 'Dringend' }
     },
-    taskModules: {
-      FR: {
-        'DOCUMENTS': 'Documents',
-        'RECETTES': 'Recettes',
-        'DEPENSES': 'Dépenses',
-        'FINANCE': 'Finance',
-        'FINANCES': 'Finances',
-        'SOCIAL': 'Social',
-        'IMMO': 'Immo',
-        'STOCKS': 'Stocks',
-        'ACTIFS': 'Actifs',
-        'TACHES': 'Tâches',
-        'RH': 'RH',
-        'GED': 'GED',
-        'CRM': 'CRM',
-        'PRODUCTION': 'Production',
-        'FX': 'Convertisseur FX',
-        'ADMINISTRATION': 'Administration'
-      },
-      EN: {
-        'DOCUMENTS': 'Documents',
-        'RECETTES': 'Income',
-        'DEPENSES': 'Expenses',
-        'FINANCE': 'Finance',
-        'FINANCES': 'Finance',
-        'SOCIAL': 'Social',
-        'IMMO': 'Real estate',
-        'STOCKS': 'Stock',
-        'ACTIFS': 'Assets',
-        'TACHES': 'Tasks',
-        'RH': 'HR',
-        'GED': 'Document management',
-        'CRM': 'CRM',
-        'PRODUCTION': 'Production',
-        'FX': 'FX converter',
-        'ADMINISTRATION': 'Administration'
-      },
-      DE: {
-        'DOCUMENTS': 'Dokumente',
-        'RECETTES': 'Einnahmen',
-        'DEPENSES': 'Ausgaben',
-        'FINANCE': 'Finanzen',
-        'FINANCES': 'Finanzen',
-        'SOCIAL': 'Soziales',
-        'IMMO': 'Immobilien',
-        'STOCKS': 'Bestände',
-        'ACTIFS': 'Aktiva',
-        'TACHES': 'Aufgaben',
-        'RH': 'Personal',
-        'GED': 'Dokumentenverwaltung',
-        'CRM': 'CRM',
-        'PRODUCTION': 'Produktion',
-        'FX': 'FX-Konverter',
-        'ADMINISTRATION': 'Verwaltung'
-      }
-    }
+    taskModules: TASK_MODULE_LABELS
   };
 
   const translateRole = (role) => dataTranslations.roles[language]?.[role] || role;
