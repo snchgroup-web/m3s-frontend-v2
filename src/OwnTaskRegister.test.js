@@ -36,13 +36,64 @@ test.each([
   expect(cells[3]).toHaveTextContent('Synthetic owner'); expect(cells[4]).toHaveTextContent(module);
   expect(cells[5]).toHaveTextContent('0%'); expect(cells[7]).toHaveTextContent(TASK_REGISTER_COPY[language].operational);
   expect(cells[6]).toHaveClass('own-work-date');
-  const details = cells[8].querySelector('details');
-  fireEvent.click(details.querySelector('summary')); expect(details).toHaveAttribute('open');
+  const opener = within(cells[8]).getByRole('button'); opener.focus(); fireEvent.click(opener);
+  const details = screen.getByRole('dialog', { name: row.title });
+  expect(details.closest('table')).toBeNull();
   expect(within(details).getByText('PROJECT-QA')).toBeInTheDocument();
   expect(within(details).getByText('PHASE-QA')).toBeInTheDocument();
   expect(within(details).getByText('ACTIVITY-QA')).toBeInTheDocument();
-  fireEvent.click(details.querySelector('summary')); expect(details).not.toHaveAttribute('open');
+  const close = within(details).getByRole('button', { name: TASK_REGISTER_COPY[language].close });
+  expect(close).toHaveFocus(); fireEvent.click(close);
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument(); expect(opener).toHaveFocus();
   expect(JSON.stringify(record)).toBe(before);
+});
+
+test('long descriptions stay outside rows; Escape, backdrop and keyboard focus close the read-only reader', async () => {
+  const description = 'Synthetic long description. '.repeat(100);
+  api.getOwnTasks.mockResolvedValue({ ...page, data: [{ ...row, description }] });
+  render(<OwnTaskRegister/>); await screen.findByText(row.title);
+  const table = screen.getByRole('table');
+  const opener = within(table).getByRole('button'); opener.focus(); fireEvent.click(opener);
+  let reader = screen.getByRole('dialog');
+  expect(within(reader).getByText(description.trim())).toBeInTheDocument();
+  expect(within(table).queryByText(description.trim())).not.toBeInTheDocument();
+  const close = within(reader).getByRole('button', { name: 'Fermer' });
+  fireEvent.keyDown(close, { key: 'Tab', shiftKey: true });
+  expect(within(reader).getByRole('region', { name: 'Détails' })).toHaveFocus();
+  fireEvent.keyDown(document.activeElement, { key: 'Tab' }); expect(close).toHaveFocus();
+  fireEvent.keyDown(document, { key: 'Escape' });
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument(); expect(opener).toHaveFocus();
+  fireEvent.click(opener); reader = screen.getByRole('dialog');
+  fireEvent.mouseDown(reader.parentElement); expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  expect(api.getOwnTasks).toHaveBeenCalledTimes(1);
+});
+
+test('600 tasks are read in server pages only, with visible row ranges and selectable page size', async () => {
+  const records = Array.from({ length: 600 }, (_, index) => ({ ...row, id: `task-${index}`, title: `Task ${index}`, reference: `QA-${index}` }));
+  api.getOwnTasks.mockImplementation(async (limit, offset, search) => {
+    const filtered = records.filter(row => row.title.includes(search));
+    const data = filtered.slice(offset, offset + limit);
+    return { data, total: filtered.length, count: data.length };
+  });
+  render(<OwnTaskRegister/>); await screen.findByText('Task 0');
+  expect(screen.getAllByRole('row')).toHaveLength(26);
+  expect(screen.getByText('1–25 / 600')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Page suivante' })); await screen.findByText('Task 25');
+  expect(screen.getByText('26–50 / 600')).toBeInTheDocument();
+  expect(screen.queryByText('Task 0')).not.toBeInTheDocument();
+  fireEvent.change(screen.getByRole('combobox', { name: 'Lignes' }), { target: { value: '100' } });
+  await screen.findByText('1–100 / 600'); expect(screen.getAllByRole('row')).toHaveLength(101);
+  expect(api.getOwnTasks).toHaveBeenLastCalledWith(100,0,'',expect.anything());
+});
+
+test('source refresh dismisses an open reader instead of keeping stale task details', async () => {
+  render(<OwnTaskRegister/>); await screen.findByText(row.title);
+  fireEvent.click(within(screen.getByRole('table')).getByRole('button'));
+  expect(screen.getByRole('dialog')).toBeInTheDocument();
+  api.getOwnTasks.mockResolvedValue({ data: [], count: 0, total: 0 });
+  act(() => window.dispatchEvent(new Event('m3s:tasks-changed')));
+  await screen.findByText('Aucune tâche dans ce résultat.');
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 });
 
 test.each([null, undefined])('missing progress %s is not converted to zero or a percentage', async progression => {
