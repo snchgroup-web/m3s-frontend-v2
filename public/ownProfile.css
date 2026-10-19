@@ -18,6 +18,26 @@
 .own-account-pending p { margin: 12px 0; line-height: 1.6; }
 .own-account-pending-state { color: var(--m3s-text-secondary); font-weight: 600; }
 .own-account-pending button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 12px; padding: 10px 14px; }
+.own-work-register p { line-height: 1.6; margin: 16px 0; }
+.own-work-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin: 12px 0; min-width: 0; }
+.own-work-toolbar h3 { margin: 0; }
+.own-work-toolbar .m3s-field { min-height: 44px; padding: 8px; border: 1px solid var(--m3s-border); border-radius: 4px; background: var(--m3s-bg-primary); color: var(--m3s-text-primary); }
+.own-work-search { flex: 1 1 180px; min-width: 0; }
+.own-work-search input { width: 100%; }
+.own-work-icon { display: inline-flex; width: 44px; height: 44px; flex: 0 0 auto; align-items: center; justify-content: center; }
+.own-work-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 14px; }
+.own-work-table { width: 100%; overflow-x: auto; }
+.own-work-table table { width: 100%; min-width: 680px; border-collapse: collapse; font-size: 14px; }
+.own-work-table th, .own-work-table td { padding: 12px; border-bottom: 1px solid var(--m3s-border); text-align: left; vertical-align: top; }
+.own-work-table th { background: var(--m3s-surface-panel, var(--m3s-bg-primary)); }
+.own-work-table td:first-child { min-width: 220px; max-width: 360px; overflow-wrap: anywhere; }
+.own-work-table small { display: block; margin-top: 6px; color: var(--m3s-text-secondary); }
+.own-work-date { white-space: nowrap; }
+.own-work-table details { min-width: 120px; max-width: 360px; overflow-wrap: anywhere; }
+.own-work-table dt { font-weight: 600; margin-top: 8px; }
+.own-work-table dd { margin: 4px 0 12px; }
+.own-profile .own-work-table dl { display: block; margin: 8px 0; }
+.own-profile .own-work-table dd { font-size: 14px; }
 .own-profile-linked { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--m3s-text-secondary); }
 .own-profile section { border-top: 1px solid var(--m3s-border); margin-top: 24px; padding-top: 22px; }
 .own-profile h3 { font-size: 17px; font-weight: 600; margin-bottom: 18px; }

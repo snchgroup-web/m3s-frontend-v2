@@ -343,3 +343,4 @@ const PersistentTaskRegister = ({ language = 'FR', moduleLabels, onSummaryChange
 };
 
 export default PersistentTaskRegister;
+export { COPY as TASK_REGISTER_COPY };

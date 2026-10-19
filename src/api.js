@@ -183,9 +183,9 @@ const validTaskCoverage = payload => typeof payload?.operational_available === '
 
 // A mutation is never retried here: its acknowledgement may have been lost.
 export const tasksTransport = async (path, { method = 'GET', body, signal } = {}) => {
-  const readPath = ['/access', '/count', '/references'].includes(path) || /^\?limit=\d+&offset=\d+&search=[^#]*$/.test(path);
+  const readPath = ['/access', '/count', '/references'].includes(path) || /^(?:\/mine)?\?limit=\d+&offset=\d+&search=[^#]*$/.test(path);
   const updatePath = typeof path === 'string' && /^\/[A-Za-z0-9%_.~-]+$/.test(path)
-    && !['/access', '/count', '/references', '/.', '/..'].includes(path);
+    && !['/access', '/count', '/references', '/mine', '/.', '/..'].includes(path);
   if (!((method === 'GET' && readPath && body === undefined) || (method === 'POST' && path === '' && body)
     || (method === 'PUT' && updatePath && body))) throw taskError('TASK_INVALID');
   if (signal?.aborted) throw taskError('TASK_ABORTED');
@@ -753,6 +753,23 @@ export const api = {
     if (!['total', 'open', 'completed', 'blocked', 'cancelled', 'historical_total'].every(key => taskCount(payload[key]))
       || !(taskCount(payload.operational_total) || (payload.operational_total === null && payload.operational_available === false && payload.coverage === 'historical_only'))
       || !validTaskCoverage(payload)) throw taskError('TASK_RESPONSE_INVALID');
+    return payload;
+  },
+
+  getOwnTasks: async (limit = 25, offset = 0, search = '', options = {}) => {
+    if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100 || !taskCount(offset) || offset > 100000
+      || typeof search !== 'string' || search.length > 240) throw taskError('TASK_INVALID');
+    const query = new URLSearchParams({ limit: String(limit), offset: String(offset), search });
+    const payload = await tasksTransport(`/mine?${query}`, options);
+    if (payload.scope !== 'current_account_assignments' || payload.read_only !== true
+      || payload.coverage !== 'owned_and_assigned_registered_project' || payload.historical_included !== false
+      || payload.contract_version !== TASK_VERSION || !taskText(payload.assignment?.assignee_agent_id, 1, 180)
+      || !taskText(payload.assignment?.project_id, 1, 180) || !Array.isArray(payload.data)
+      || !payload.data.every(row => validTaskRow(row) && row.source_kind === 'operational' && row.can_edit === false
+        && row.assignee_agent_id === payload.assignment.assignee_agent_id && row.project_id === payload.assignment.project_id)
+      || new Set(payload.data.map(row => row.id)).size !== payload.data.length
+      || !taskCount(payload.total) || payload.count !== payload.data.length || payload.data.length > limit
+      || payload.total < payload.data.length || payload.limit !== limit || payload.offset !== offset) throw taskError('TASK_RESPONSE_INVALID');
     return payload;
   },
 

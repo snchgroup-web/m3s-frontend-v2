@@ -18,6 +18,7 @@ jest.mock('./AuthContext', () => ({ useAuth: () => ({ user: mockUser }) }));
 jest.mock('./PersonalBudget', () => ({ principal }) => <div data-testid="personal-budget" data-account={principal.email}><input aria-label="Synthetic budget state" defaultValue=""/></div>);
 jest.mock('./api', () => ({ __esModule: true, default: { getOwnProfile: jest.fn() } }));
 jest.mock('./PrivateGedDocuments', () => ({ scope }) => <div data-testid="private-ged" data-scope={scope}/>);
+jest.mock('./OwnTaskRegister', () => ({ language }) => <div data-testid="own-tasks" data-language={language}>Synthetic own assignments</div>);
 const result = { success: true, scope: 'current-account', account: { email: 'fixture@example.test', role: 'Manager' },
   profile: { personId: 'PER-2SG-9001', displayName: 'Synthetic Person', team: 'TZH', memberType: 'Fondateur', position: 'Synthetic role' },
   source: { id: 'RH-001', status: 'validated_documentary', approvedOn: '2026-09-26' } };
@@ -106,19 +107,28 @@ test('four horizontal tabs keep the dossier and private budget separate without 
   expect(screen.getByTestId('private-ged')).not.toBeVisible();
   fireEvent.click(screen.getByRole('tab', { name: 'Mes tâches' }));
   expect(screen.getByTestId('personal-budget')).not.toBeVisible();
-  expect(screen.getByRole('tabpanel')).toHaveTextContent('mes seules affectations reste à raccorder');
+  expect(screen.getByRole('tabpanel')).toHaveTextContent('Synthetic own assignments');
   fireEvent.click(screen.getByRole('tab', { name: 'Mes finances perso' }));
   expect(screen.getByLabelText('Synthetic budget state')).toHaveValue('unsaved fixture');
   expect(api.getOwnProfile).toHaveBeenCalledTimes(1);
 });
 
-test.each([['hours', 'Mes heures', 'Aucune source d’heures personnelles'], ['tasks', 'Mes tâches', 'mes seules affectations']])('shows a truthful pending state for %s, not a personal zero or the shared register', async (view, name, text) => {
+test.each([['hours', 'Mes heures', 'Aucune source d’heures personnelles']])('shows a truthful pending state for %s, not a personal zero or the shared register', async (view, name, text) => {
   mockSearch = `?view=${view}`;
   render(<OwnProfile/>); await screen.findByText('Synthetic Person');
   expect(screen.getByRole('tabpanel', { name })).toHaveTextContent(text);
   expect(screen.getByRole('tabpanel', { name })).toHaveTextContent('À raccorder');
   expect(screen.queryByRole('table')).not.toBeInTheDocument();
   expect(screen.queryByTestId('personal-budget')).not.toBeInTheDocument();
+});
+
+test('loads the own-assignment register only for the active task view', async () => {
+  render(<OwnProfile/>); await screen.findByText('Synthetic Person');
+  expect(screen.queryByTestId('own-tasks')).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('tab', { name: 'Mes tâches' }));
+  expect(screen.getByTestId('own-tasks')).toHaveAttribute('data-language', 'FR');
+  fireEvent.click(screen.getByRole('tab', { name: 'Mes heures' }));
+  expect(screen.queryByTestId('own-tasks')).not.toBeInTheDocument();
 });
 
 test('keyboard navigation and embedded URLs preserve the parent tab and return context', async () => {

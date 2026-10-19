@@ -6,6 +6,7 @@ import { useAuth } from './AuthContext';
 import api from './api';
 import PrivateGedDocuments from './PrivateGedDocuments';
 import PersonalBudget from './PersonalBudget';
+import OwnTaskRegister from './OwnTaskRegister';
 import { centerTabHorizontally } from './moduleTabs';
 
 const VIEWS = ['dossier', 'hours', 'tasks', 'finances'];
@@ -141,13 +142,16 @@ function AccountProfile({ embedded }) {
       <PrivateGedDocuments key={user?.email || 'no-account'} scope="personal"/>
       <footer>{t.source} : {data.source.id} · {t.approved} : <time dateTime={data.source.approvedOn}>{new Intl.DateTimeFormat({ FR: 'fr-CH', EN: 'en-GB', DE: 'de-CH' }[language] || 'fr-CH', { timeZone: 'UTC' }).format(new Date(`${data.source.approvedOn}T00:00:00Z`))}</time></footer>
       </div>
-      {['hours', 'tasks'].map(view => <div role="tabpanel" id={`own-account-panel-${view}`} aria-labelledby={`own-account-tab-${view}`} hidden={activeView !== view} key={view} className="own-account-panel own-account-pending">
+      {['hours'].map(view => <div role="tabpanel" id={`own-account-panel-${view}`} aria-labelledby={`own-account-tab-${view}`} hidden={activeView !== view} key={view} className="own-account-panel own-account-pending">
         <h3>{a.tabs[VIEWS.indexOf(view)]}</h3>
         <p className="own-account-pending-state">{a.pending}</p><p>{a[view]}</p>
         <button type="button" className="m3s-secondary-button" onClick={() => navigate(view === 'hours' ? '/rh?tab=resources#rh-proximity-tools' : '/administration?tab=planning#planning-register')}>
           <ArrowUpRight size={18} aria-hidden="true"/>{view === 'hours' ? a.openHours : a.openTasks}
         </button>
       </div>)}
+      <div role="tabpanel" id="own-account-panel-tasks" aria-labelledby="own-account-tab-tasks" hidden={activeView !== 'tasks'} className="own-account-panel">
+        {activeView === 'tasks' && <OwnTaskRegister language={language}/>}
+      </div>
       <div role="tabpanel" id="own-account-panel-finances" aria-labelledby="own-account-tab-finances" hidden={activeView !== 'finances'} className="own-account-panel">
         {(financeVisited || activeView === 'finances') && <PersonalBudget principal={user} language={language}/>}
       </div>

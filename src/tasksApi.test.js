@@ -131,3 +131,33 @@ test('an old server cannot advertise V2 write access', async () => {
   fetch.mockResolvedValue(response({ success: true, enabled: true, can_read: true, can_write: true, scope: 'current_account' }));
   await expect(api.getTasksAccess()).rejects.toMatchObject({ code: 'TASK_RESPONSE_INVALID' });
 });
+
+const ownTaskPayload = () => ({ success: true, scope: 'current_account_assignments', read_only: true,
+  coverage: 'owned_and_assigned_registered_project', historical_included: false, contract_version: 'm3s.task-execution.v2',
+  assignment: { assignee_agent_id: row.assignee_agent_id, project_id: 'project-test' },
+  data: [{ ...row, can_edit: false, project_id: 'project-test' }], count: 1, total: 1, limit: 25, offset: 0 });
+test('own tasks use a distinct authenticated read-only source, never a client-selected person', async () => {
+  fetch.mockResolvedValue(response(ownTaskPayload()));
+  await expect(api.getOwnTasks()).resolves.toMatchObject({ total: 1, historical_included: false });
+  const [url, options] = fetch.mock.calls[0];
+  expect(url).toContain('/tasks/mine?limit=25&offset=0&search=');
+  expect(url).not.toMatch(/assignee|owner|tenant/);
+  expect(options).toMatchObject({ method: 'GET', cache: 'no-store' });
+});
+test.each([
+  { scope: 'all' }, { read_only: false }, { historical_included: true }, { total: null },
+  { data: [{ ...row, project_id: 'project-test', can_edit: false, assignee_agent_id: 'foreign' }] },
+  { data: [{ ...row, source_kind: 'historical', can_edit: false }] },
+  { data: [{ ...row, can_edit: true, project_id: 'project-test' }] }
+])('rejects invalid personal task scope or foreign rows %p', async patch => {
+  fetch.mockResolvedValue(response({ ...ownTaskPayload(), ...patch }));
+  await expect(api.getOwnTasks()).rejects.toMatchObject({ code: 'TASK_RESPONSE_INVALID' });
+});
+test('own tasks preserve true empty results and reject bad paging and mutation paths', async () => {
+  fetch.mockResolvedValue(response({ ...ownTaskPayload(), data: [], count: 0, total: 0 }));
+  await expect(api.getOwnTasks()).resolves.toMatchObject({ total: 0, data: [] });
+  await expect(api.getOwnTasks(101)).rejects.toMatchObject({ code: 'TASK_INVALID' });
+  await expect(api.getOwnTasks(25,100001)).rejects.toMatchObject({ code: 'TASK_INVALID' });
+  await expect(tasksTransport('/mine', { method: 'PUT', body: {} })).rejects.toMatchObject({ code: 'TASK_INVALID' });
+  expect(fetch).toHaveBeenCalledTimes(1);
+});
