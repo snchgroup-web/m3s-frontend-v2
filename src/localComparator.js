@@ -1,6 +1,7 @@
 export const COMPARATOR_SOURCES = Object.freeze([
   Object.freeze({ sha256: '1b781c4a9f24006f65772631ea625d9f12ccebbc8b3b93fc07f91af66fd764c8', bytes: 59220, variant: 'base', version: '2026-07-24' }),
-  Object.freeze({ sha256: '2b09f9f8ed230162fcd728020a4c5300ee1a691270d6816b1b2033da6fac1028', bytes: 531699, variant: 'shared', version: '2026-07-24' })
+  Object.freeze({ sha256: '2b09f9f8ed230162fcd728020a4c5300ee1a691270d6816b1b2033da6fac1028', bytes: 531699, variant: 'shared', version: '2026-07-24' }),
+  Object.freeze({ sha256: 'df4fcd60970d3915b4ae439ed31c266ef80dad33e5f63f00da1fe6f11f4e816b', bytes: 312918, variant: 'neutral', version: '0.1', language: 'FR' })
 ]);
 
 export async function openLocalComparator(file, webCrypto = window.crypto) {
@@ -11,6 +12,19 @@ export async function openLocalComparator(file, webCrypto = window.crypto) {
   const source = COMPARATOR_SOURCES.find(source => source.sha256 === hash && source.bytes === bytes.byteLength);
   if (!source) throw new Error('COMPARATOR_SOURCE');
   const doc = new DOMParser().parseFromString(new TextDecoder('utf-8', { fatal: true }).decode(bytes), 'text/html');
+  if (source.variant === 'neutral') {
+    const privacy = doc.querySelector('header > .mini');
+    if (privacy) privacy.textContent = 'Copie temporaire en mémoire, sans stockage durable ni synchronisation. Exportez le JSON avant de quitter. Ne pas y placer de données sensibles ; les anciens JSON du chantier sont refusés.';
+    const save = doc.getElementById('saveBtn');
+    if (save) { save.title = 'Garder en mémoire dans cette vue'; save.setAttribute('aria-label', save.title); }
+    doc.querySelectorAll('script').forEach(script => {
+      script.textContent = script.textContent
+        .replace('Copie enregistrée sur cet appareil.', 'Copie gardée en mémoire dans cette vue. Exportez le JSON pour la conserver.')
+        .replace('Fichier neutre chargé. Enregistrez-le pour conserver cette copie sur l’appareil.', 'Fichier neutre chargé en mémoire. Exportez le JSON avant de quitter cette vue.');
+    });
+    // Keep the standalone icon notice when serialising only documentElement.
+    [...doc.childNodes].filter(node => node.nodeType === 8 && node.data.includes('Icon notice, lucide-react:')).forEach(node => doc.body.appendChild(node));
+  }
   doc.querySelectorAll('link,base,iframe,object,embed,meta[http-equiv="Content-Security-Policy"]').forEach(node => node.remove());
   const policy = doc.createElement('meta');
   policy.httpEquiv = 'Content-Security-Policy';
@@ -18,7 +32,7 @@ export async function openLocalComparator(file, webCrypto = window.crypto) {
   const bridge = doc.createElement('script');
   // The existing engine saves only in frame memory. No parent snapshot or server transport.
   bridge.textContent = `(() => {
-    const key='2sg-lac-rose-avants-fenetres-v1', values=Object.create(null);
+    const key=${JSON.stringify(source.variant === 'neutral' ? '2sg.neutral-window-quotes.v1' : '2sg-lac-rose-avants-fenetres-v1')}, values=Object.create(null);
     Object.defineProperty(window,'localStorage',{value:{
       getItem:k=>k===key&&Object.hasOwn(values,k)?values[k]:null,
       setItem:(k,v)=>{if(k!==key)return;v=String(v);if(v.length>2*1024*1024)throw new Error('LOCAL_LIMIT');values[k]=v},

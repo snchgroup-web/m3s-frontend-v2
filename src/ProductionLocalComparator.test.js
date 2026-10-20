@@ -58,3 +58,16 @@ test('returning from an open synthetic frame requires confirmation before leavin
   fireEvent.click(screen.getByRole('button', { name: 'Retour à la fiche de l’outil' })); expect(onReturn).toHaveBeenCalledTimes(1);
   confirm.mockRestore();
 });
+
+test.each([
+  ['FR', /copie neutre V0.1/, /Sources françaises/, /mémoire/],
+  ['DE', /neutrale Kopie V0.1/, /Französische Quellen/, /Arbeitsspeicher/],
+  ['EN', /neutral V0.1 copy/, /French sources/, /memory/]
+])('neutral choice in %s preserves the French-tool and temporary-storage boundaries', (language, label, scope, memory) => {
+  const { container } = render(<ProductionLocalComparator language={language}/>);
+  expect(screen.getByLabelText(label)).toHaveAttribute('type', 'file');
+  expect(container).toHaveTextContent(scope);
+  expect(container).toHaveTextContent(memory);
+  expect(container).toHaveTextContent(/JSON/);
+  expect(container.querySelector('iframe')).toBeNull();
+});

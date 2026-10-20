@@ -79,3 +79,23 @@ test('opens only the local verified launcher for the comparator without a public
   fireEvent.click(screen.getByRole('button', { name: 'Retour à la fiche de l’outil' }));
   expect(mockNavigate).toHaveBeenLastCalledWith('/production?tab=manufacturing#production-tool-comparator-avants-fenetres');
 });
+
+test.each([
+  ['FR', /publiés à l’identique le 20-10-26/, /sans régénération/, /contrôle visuel encore ouvert/],
+  ['DE', /am 20.10.26 nach Freigabe unverändert veröffentlicht/, /ohne Neugenerierung/, /visuelle Prüfung noch offen/],
+  ['EN', /published unchanged on 20\/10\/26/, /without regeneration/, /visual review still pending/]
+])('qualified facts in %s separate recovery, editorial freshness and the neutral candidate', (language, published, noRegeneration, visual) => {
+  const { container } = render(<ProductionTools language={language}/>);
+  const daily = container.querySelector('#production-tool-daily-dashboard');
+  expect(daily).toHaveTextContent(published);
+  expect(daily).toHaveTextContent(noRegeneration);
+  expect(daily).not.toHaveTextContent(/HTTP 500/);
+  expect(container.querySelector('#production-tool-fluxconvert')).toHaveTextContent('7e1143b');
+  expect(container.querySelector('#production-tool-fluxconvert')).toHaveTextContent('PostgreSQL');
+  expect(container.querySelector('#production-tool-comparator-avants-fenetres')).toHaveTextContent(visual);
+  expect(container.querySelectorAll('.production-tool-row')).toHaveLength(8);
+  expect(container.textContent).not.toMatch(/file:\/\/\/|C:\\/);
+  expect(TOOL_FACTS['daily-dashboard'].dates).toContainEqual(['2026-10-20', 'recovered']);
+  expect(TOOL_FACTS['comparator-avants-fenetres'].dates).toContainEqual(['2026-10-20', 'neutral']);
+  expect(TOOL_FACTS.fluxconvert.dates).toContainEqual(['2026-10-20', 'qualified']);
+});
