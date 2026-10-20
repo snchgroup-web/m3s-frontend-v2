@@ -71,7 +71,7 @@ test('each family has translated documentary facts without invented hours or cre
 test('opens only the local verified launcher for the comparator without a public source file', () => {
   mockSearch = '?tab=manufacturing&tool=comparator-avants-fenetres';
   const { container } = render(<ProductionTools/>);
-  expect(screen.getByRole('heading', { name: 'Comparateur Avants de fenêtre' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Comparaison et suivi des offres' })).toBeInTheDocument();
   expect(screen.getByLabelText(/Fichier HTML existant/)).toHaveAttribute('type', 'file');
   expect(screen.getByRole('button', { name: 'Ouvrir la copie locale' })).toBeDisabled();
   expect(container.querySelector('iframe')).toBeNull();
@@ -93,6 +93,7 @@ test.each([
   expect(container.querySelector('#production-tool-fluxconvert')).toHaveTextContent('7e1143b');
   expect(container.querySelector('#production-tool-fluxconvert')).toHaveTextContent('PostgreSQL');
   expect(container.querySelector('#production-tool-comparator-avants-fenetres')).toHaveTextContent(visual);
+  expect(container.querySelector('#production-tool-comparator-avants-fenetres details')).toHaveTextContent('V0.1/V0.2');
   expect(container.querySelectorAll('.production-tool-row')).toHaveLength(8);
   expect(container.textContent).not.toMatch(/file:\/\/\/|C:\\/);
   expect(TOOL_FACTS['daily-dashboard'].dates).toContainEqual(['2026-10-20', 'recovered']);

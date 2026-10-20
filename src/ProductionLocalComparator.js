@@ -3,21 +3,21 @@ import { ArrowLeft, FolderOpen, X } from 'lucide-react';
 import { openLocalComparator } from './localComparator';
 
 const COPY = {
-  FR: { title: 'Comparateur Avants de fenêtre', scope: 'Sources françaises : originales du 24-07-26 ou copie neutre V0.1 du 20-10-26',
+  FR: { title: 'Comparaison et suivi des offres', scope: 'Biens, services et travaux · V0.2 FR/DE/EN · Originaux français et copie neutre V0.1 toujours admis',
     privacy: 'Copie de travail temporaire, sans téléversement ni synchronisation M3S. Les saisies et « Enregistrer » restent en mémoire ; seul l’export JSON conserve le travail. Changer de rubrique, fermer ou recharger cette vue abandonne les saisies non exportées.',
-    file: 'Fichier HTML existant — base, partagé ou copie neutre V0.1', open: 'Ouvrir la copie locale', close: 'Fermer le comparateur',
+    file: 'Fichier HTML existant — V0.2 multilingue, copie neutre V0.1 ou original', open: 'Ouvrir la copie locale', close: 'Fermer le comparateur',
     confirm: 'Fermer cette copie locale ? Les saisies non exportées seront perdues.', busy: 'Vérification de la source…', verified: 'Source exacte vérifiée · données conservées uniquement dans la copie locale',
-    error: 'Fichier non reconnu ou lecture indisponible. Seuls les deux originaux référencés et la copie neutre V0.1 exacte sont admis ; le fichier original n’a pas été modifié.', frame: 'Comparateur local isolé' },
-  DE: { title: 'Vergleich Fenstervorbauten', scope: 'Französische Quellen: Originale vom 24.07.26 oder neutrale Kopie V0.1 vom 20.10.26',
+    error: 'Fichier non reconnu ou lecture indisponible. Seuls les deux originaux et les copies neutres V0.1/V0.2 exactes sont admis ; le fichier original n’a pas été modifié.', frame: 'Comparateur local isolé' },
+  DE: { title: 'Angebote vergleichen und verfolgen', scope: 'Waren, Dienstleistungen und Arbeiten · V0.2 FR/DE/EN · Französische Originale und neutrale Kopie V0.1 weiterhin zugelassen',
     privacy: 'Temporäre lokale Arbeitskopie ohne Upload oder M3S-Synchronisierung. Eingaben und «Speichern» bleiben im Arbeitsspeicher; nur der JSON-Export erhält die Arbeit. Bereichswechsel, Schliessen oder Neuladen verwirft nicht exportierte Eingaben.',
-    file: 'Bestehende HTML-Datei — Basis, Freigabe oder neutrale Kopie V0.1', open: 'Lokale Kopie öffnen', close: 'Vergleich schliessen',
+    file: 'Bestehende HTML-Datei — mehrsprachige V0.2, neutrale Kopie V0.1 oder Original', open: 'Lokale Kopie öffnen', close: 'Vergleich schliessen',
     confirm: 'Lokale Kopie schliessen? Nicht exportierte Eingaben gehen verloren.', busy: 'Quelle wird geprüft…', verified: 'Exakte Quelle geprüft · Daten nur in der lokalen Kopie',
-    error: 'Datei nicht erkannt oder Lesen nicht möglich. Nur die zwei referenzierten Originale und die exakte neutrale Kopie V0.1 sind zugelassen; das Original wurde nicht verändert.', frame: 'Isolierter lokaler Vergleich' },
-  EN: { title: 'Window awnings comparator', scope: 'French sources: originals dated 24/07/26 or neutral V0.1 copy dated 20/10/26',
+    error: 'Datei nicht erkannt oder Lesen nicht möglich. Nur die zwei Originale und die exakten neutralen Kopien V0.1/V0.2 sind zugelassen; das Original wurde nicht verändert.', frame: 'Isolierter lokaler Vergleich' },
+  EN: { title: 'Offer comparison and tracking', scope: 'Goods, services and works · V0.2 FR/DE/EN · French originals and neutral V0.1 copy remain accepted',
     privacy: 'Temporary local working copy, without upload or M3S synchronisation. Entries and “Save” stay in memory; only JSON export retains the work. Changing section, closing or reloading this view discards unexported entries.',
-    file: 'Existing HTML file — base, sharing or neutral V0.1 copy', open: 'Open local copy', close: 'Close comparator',
+    file: 'Existing HTML file — multilingual V0.2, neutral V0.1 copy or original', open: 'Open local copy', close: 'Close comparator',
     confirm: 'Close this local copy? Unexported entries will be lost.', busy: 'Verifying source…', verified: 'Exact source verified · data held only in the local copy',
-    error: 'File not recognised or reading unavailable. Only the two referenced originals and the exact neutral V0.1 copy are accepted; the original file has not changed.', frame: 'Isolated local comparator' }
+    error: 'File not recognised or reading unavailable. Only the two originals and exact neutral V0.1/V0.2 copies are accepted; the original file has not changed.', frame: 'Isolated local comparator' }
 };
 
 export default function ProductionLocalComparator({ language = 'FR', onReturn }) {
@@ -34,7 +34,7 @@ export default function ProductionLocalComparator({ language = 'FR', onReturn })
   const open = async event => {
     event.preventDefault(); const id = ++operation.current; setState({ status: 'loading' });
     try {
-      const result = await openLocalComparator(file);
+      const result = await openLocalComparator(file, window.crypto, { language });
       if (operation.current === id) setState({ status: 'ready', document: result.document });
     } catch { if (operation.current === id) setState({ status: 'error' }); }
   };

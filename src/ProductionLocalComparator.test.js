@@ -4,7 +4,7 @@ import { openLocalComparator } from './localComparator';
 jest.mock('./localComparator', () => ({ openLocalComparator: jest.fn() }));
 beforeEach(() => { jest.clearAllMocks(); });
 
-test.each([['FR', 'Comparateur Avants de fenêtre'], ['DE', 'Vergleich Fenstervorbauten'], ['EN', 'Window awnings comparator']])('keeps the local launcher translated and closed in %s', (language, title) => {
+test.each([['FR', 'Comparaison et suivi des offres'], ['DE', 'Angebote vergleichen und verfolgen'], ['EN', 'Offer comparison and tracking']])('keeps the local launcher translated and closed in %s', (language, title) => {
   const { container } = render(<ProductionLocalComparator language={language}/>);
   expect(screen.getByRole('heading', { name: title })).toBeVisible();
   expect(container.querySelector('input[type=file]')).toHaveAttribute('accept', '.html,text/html');
@@ -60,10 +60,10 @@ test('returning from an open synthetic frame requires confirmation before leavin
 });
 
 test.each([
-  ['FR', /copie neutre V0.1/, /Sources françaises/, /mémoire/],
-  ['DE', /neutrale Kopie V0.1/, /Französische Quellen/, /Arbeitsspeicher/],
-  ['EN', /neutral V0.1 copy/, /French sources/, /memory/]
-])('neutral choice in %s preserves the French-tool and temporary-storage boundaries', (language, label, scope, memory) => {
+  ['FR', /copie neutre V0.1/, /V0.2 FR\/DE\/EN/, /mémoire/],
+  ['DE', /neutrale Kopie V0.1/, /V0.2 FR\/DE\/EN/, /Arbeitsspeicher/],
+  ['EN', /neutral V0.1 copy/, /V0.2 FR\/DE\/EN/, /memory/]
+])('neutral choice in %s describes multilingual V0.2 and temporary-storage boundaries', (language, label, scope, memory) => {
   const { container } = render(<ProductionLocalComparator language={language}/>);
   expect(screen.getByLabelText(label)).toHaveAttribute('type', 'file');
   expect(container).toHaveTextContent(scope);
