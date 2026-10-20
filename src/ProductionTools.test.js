@@ -4,7 +4,7 @@ import ProductionTools from './ProductionTools';
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate }), { virtual: true });
 
-test.each(['FR', 'DE', 'EN'])('lists eight existing tools, with only four real entry links in %s', language => {
+test.each(['FR', 'DE', 'EN'])('keeps eight families, four internal entries and the existing external SaaS in %s', language => {
   const { container } = render(<ProductionTools language={language}/>);
   expect(container.querySelectorAll('article')).toHaveLength(8);
   expect(screen.getAllByRole('button')).toHaveLength(4);
@@ -17,6 +17,8 @@ test.each(['FR', 'DE', 'EN'])('lists eight existing tools, with only four real e
   expect(container.querySelectorAll('details')).toHaveLength(2);
   expect(container.textContent).toContain('0.1.0');
   expect(container.textContent).toContain('SQLite');
-  expect(container.textContent).toContain('LibreOffice');
+  expect(container.textContent).toContain('24');
   expect(container.textContent).not.toContain('file:///');
+  expect(screen.getByRole('link', { name: /FluxConvert/ })).toHaveAttribute('href', 'https://fluxconvert-app.vercel.app/fr');
+  expect(screen.getByRole('link', { name: /FluxConvert/ })).toHaveAttribute('rel', 'noreferrer');
 });
