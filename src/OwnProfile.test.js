@@ -79,7 +79,7 @@ test.each(['FR', 'EN', 'DE'])('personal finance is distinct from organisational 
   const { rerender } = render(<OwnProfile/>);
   await screen.findByText('Synthetic Person');
   fireEvent.click(screen.getByRole('tab', { name: /financ|finanz/i }));
-  expect(mockNavigate).toHaveBeenCalledWith('/account?view=finances#own-account-panel');
+  expect(mockNavigate).toHaveBeenCalledWith('/account?view=finances#own-account-top');
   expect(screen.queryByRole('button', { name: /2SG/ })).not.toBeInTheDocument();
   rerender(<OwnProfile embedded/>);
   expect(screen.getByRole('tab', { name: /financ|finanz/i })).toBeInTheDocument();
@@ -142,7 +142,7 @@ test('keyboard navigation and embedded URLs preserve the parent tab and return c
   render(<OwnProfile embedded/>); await screen.findByText('Synthetic Person');
   fireEvent.keyDown(screen.getByRole('tab', { name: 'Mon dossier perso' }), { key: 'ArrowRight' });
   expect(screen.getByRole('tab', { name: 'Mes heures' })).toHaveAttribute('aria-selected', 'true');
-  expect(mockNavigate).toHaveBeenLastCalledWith('/rh?tab=myaccount&accountView=hours&language=DE#own-account-panel');
+  expect(mockNavigate).toHaveBeenLastCalledWith('/rh?tab=myaccount&accountView=hours&language=DE#own-account-top');
   fireEvent.keyDown(screen.getByRole('tab', { name: 'Mes heures' }), { key: 'End' });
   expect(screen.getByRole('tab', { name: 'Mes finances perso' })).toHaveAttribute('aria-selected', 'true');
   fireEvent.keyDown(screen.getByRole('tab', { name: 'Mes finances perso' }), { key: 'Home' });
@@ -154,7 +154,7 @@ test('unknown views fall back to the dossier and tab changes preserve the Produc
   render(<OwnProfile/>); await screen.findByText('Synthetic Person');
   expect(screen.getByRole('tab', { name: 'Mon dossier perso' })).toHaveAttribute('aria-selected', 'true');
   fireEvent.click(screen.getByRole('tab', { name: 'Mes finances perso' }));
-  expect(mockNavigate).toHaveBeenLastCalledWith('/account?view=finances&returnTo=production#own-account-panel');
+  expect(mockNavigate).toHaveBeenLastCalledWith('/account?view=finances&returnTo=production#own-account-top');
 });
 
 test('changing account unmounts its private content before the new profile resolves', async () => {
@@ -188,7 +188,7 @@ test.each([['FR', 'Fonction'], ['EN', 'Position'], ['DE', 'Funktion']])('renders
   api.getOwnProfile.mockResolvedValue({ ...result, profile, account: { ...result.account, role: 'Synthetic access role' } });
   render(<OwnProfile/>);
   await screen.findByText('Synthetic Person');
-  expect(screen.getByText(label).parentElement).toHaveTextContent(`${label}Manager`);
+  expect(screen.getByText(label, { selector: 'dt' }).parentElement).toHaveTextContent(`${label}Manager`);
   expect(screen.getByText('Manager')).toHaveAttribute('translate', 'no');
   expect(screen.queryByText(position)).not.toBeInTheDocument();
   expect(screen.getByText('Synthetic access role')).toBeInTheDocument();

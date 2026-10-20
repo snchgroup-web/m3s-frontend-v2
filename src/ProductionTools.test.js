@@ -14,4 +14,9 @@ test.each(['FR', 'DE', 'EN'])('lists eight existing tools, with only four real e
   expect(mockNavigate).toHaveBeenLastCalledWith('/?view=intelligence');
   expect(container.textContent).not.toMatch(/C:\\|50000|30000|50 000|30 000/);
   expect(screen.queryByRole('button', { name: /FluxConvert/ })).not.toBeInTheDocument();
+  expect(container.querySelectorAll('details')).toHaveLength(2);
+  expect(container.textContent).toContain('0.1.0');
+  expect(container.textContent).toContain('SQLite');
+  expect(container.textContent).toContain('LibreOffice');
+  expect(container.textContent).not.toContain('file:///');
 });
