@@ -93,6 +93,7 @@ test.each([
   expect(container.querySelector('#production-tool-fluxconvert')).toHaveTextContent('7e1143b');
   expect(container.querySelector('#production-tool-fluxconvert')).toHaveTextContent('PostgreSQL');
   expect(container.querySelector('#production-tool-comparator-avants-fenetres')).toHaveTextContent(visual);
+  expect(container.querySelector('#production-tool-comparator-avants-fenetres details')).toHaveTextContent('V0.1/V0.2');
   expect(container.querySelectorAll('.production-tool-row')).toHaveLength(8);
   expect(container.textContent).not.toMatch(/file:\/\/\/|C:\\/);
   expect(TOOL_FACTS['daily-dashboard'].dates).toContainEqual(['2026-10-20', 'recovered']);
