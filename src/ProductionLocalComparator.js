@@ -3,17 +3,17 @@ import { ArrowLeft, FolderOpen, X } from 'lucide-react';
 import { openLocalComparator } from './localComparator';
 
 const COPY = {
-  FR: { title: 'Comparateur Avants de fenêtre', scope: 'Sources françaises : originales du 24-07-26 ou copie neutre V0.1 du 20-10-26 · aperçu visuel de la copie neutre à contrôler',
+  FR: { title: 'Comparateur Avants de fenêtre', scope: 'Sources françaises : originales du 24-07-26 ou copie neutre V0.1 du 20-10-26',
     privacy: 'Copie de travail temporaire, sans téléversement ni synchronisation M3S. Les saisies et « Enregistrer » restent en mémoire ; seul l’export JSON conserve le travail. Changer de rubrique, fermer ou recharger cette vue abandonne les saisies non exportées.',
     file: 'Fichier HTML existant — base, partagé ou copie neutre V0.1', open: 'Ouvrir la copie locale', close: 'Fermer le comparateur',
     confirm: 'Fermer cette copie locale ? Les saisies non exportées seront perdues.', busy: 'Vérification de la source…', verified: 'Source exacte vérifiée · données conservées uniquement dans la copie locale',
     error: 'Fichier non reconnu ou lecture indisponible. Seuls les deux originaux référencés et la copie neutre V0.1 exacte sont admis ; le fichier original n’a pas été modifié.', frame: 'Comparateur local isolé' },
-  DE: { title: 'Vergleich Fenstervorbauten', scope: 'Französische Quellen: Originale vom 24.07.26 oder neutrale Kopie V0.1 vom 20.10.26 · visuelle Prüfung der neutralen Kopie offen',
+  DE: { title: 'Vergleich Fenstervorbauten', scope: 'Französische Quellen: Originale vom 24.07.26 oder neutrale Kopie V0.1 vom 20.10.26',
     privacy: 'Temporäre lokale Arbeitskopie ohne Upload oder M3S-Synchronisierung. Eingaben und «Speichern» bleiben im Arbeitsspeicher; nur der JSON-Export erhält die Arbeit. Bereichswechsel, Schliessen oder Neuladen verwirft nicht exportierte Eingaben.',
     file: 'Bestehende HTML-Datei — Basis, Freigabe oder neutrale Kopie V0.1', open: 'Lokale Kopie öffnen', close: 'Vergleich schliessen',
     confirm: 'Lokale Kopie schliessen? Nicht exportierte Eingaben gehen verloren.', busy: 'Quelle wird geprüft…', verified: 'Exakte Quelle geprüft · Daten nur in der lokalen Kopie',
     error: 'Datei nicht erkannt oder Lesen nicht möglich. Nur die zwei referenzierten Originale und die exakte neutrale Kopie V0.1 sind zugelassen; das Original wurde nicht verändert.', frame: 'Isolierter lokaler Vergleich' },
-  EN: { title: 'Window awnings comparator', scope: 'French sources: originals dated 24/07/26 or neutral V0.1 copy dated 20/10/26 · neutral copy visual review pending',
+  EN: { title: 'Window awnings comparator', scope: 'French sources: originals dated 24/07/26 or neutral V0.1 copy dated 20/10/26',
     privacy: 'Temporary local working copy, without upload or M3S synchronisation. Entries and “Save” stay in memory; only JSON export retains the work. Changing section, closing or reloading this view discards unexported entries.',
     file: 'Existing HTML file — base, sharing or neutral V0.1 copy', open: 'Open local copy', close: 'Close comparator',
     confirm: 'Close this local copy? Unexported entries will be lost.', busy: 'Verifying source…', verified: 'Exact source verified · data held only in the local copy',

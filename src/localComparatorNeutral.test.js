@@ -49,3 +49,19 @@ test('neutral launcher retains the network policy and rejects same-sized content
   expect(documentText).not.toContain('postMessage');
   await expect(openLocalComparator(file, webcrypto)).rejects.toThrow('COMPARATOR_SOURCE');
 });
+
+test('fragment navigation scrolls inside the isolated document instead of loading the parent URL', async () => {
+  const { document: documentText } = await openLocalComparator(file, pinnedCrypto);
+  const doc = new DOMParser().parseFromString(documentText, 'text/html');
+  const target = doc.createElement('section'); target.id = 'offres'; target.scrollIntoView = jest.fn();
+  const link = doc.createElement('a'); link.href = '#offres'; link.textContent = 'Offres';
+  doc.body.append(target, link);
+  new Function('window', 'document', doc.querySelector('script').textContent)({}, doc);
+  const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+  link.dispatchEvent(click);
+  expect(click.defaultPrevented).toBe(true);
+  expect(target.scrollIntoView).toHaveBeenCalledWith({ block: 'start' });
+  const blocked = doc.createElement('a'); blocked.href = 'https://example.test'; doc.body.appendChild(blocked);
+  const externalClick = new MouseEvent('click', { bubbles: true, cancelable: true }); blocked.dispatchEvent(externalClick);
+  expect(externalClick.defaultPrevented).toBe(true);
+});

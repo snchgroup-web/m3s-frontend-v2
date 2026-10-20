@@ -81,9 +81,9 @@ test('opens only the local verified launcher for the comparator without a public
 });
 
 test.each([
-  ['FR', /publiés à l’identique le 20-10-26/, /sans régénération/, /contrôle visuel encore ouvert/],
-  ['DE', /am 20.10.26 nach Freigabe unverändert veröffentlicht/, /ohne Neugenerierung/, /visuelle Prüfung noch offen/],
-  ['EN', /published unchanged on 20\/10\/26/, /without regeneration/, /visual review still pending/]
+  ['FR', /publiés à l’identique le 20-10-26/, /sans régénération/, /raccordement contrôlé sur données fictives/],
+  ['DE', /am 20.10.26 nach Freigabe unverändert veröffentlicht/, /ohne Neugenerierung/, /Anbindung mit fiktiven Daten geprüft/],
+  ['EN', /published unchanged on 20\/10\/26/, /without regeneration/, /connection checked with synthetic data/]
 ])('qualified facts in %s separate recovery, editorial freshness and the neutral candidate', (language, published, noRegeneration, visual) => {
   const { container } = render(<ProductionTools language={language}/>);
   const daily = container.querySelector('#production-tool-daily-dashboard');

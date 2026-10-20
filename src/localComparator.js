@@ -39,7 +39,11 @@ export async function openLocalComparator(file, webCrypto = window.crypto) {
       removeItem:k=>{if(k===key)delete values[k]}, clear:()=>{delete values[key]},
       key:i=>i===0&&Object.hasOwn(values,key)?key:null,get length(){return Object.keys(values).length}
     }});
-    document.addEventListener('click',e=>{const href=e.target.closest('a')?.getAttribute('href')||'';if(href&&!href.startsWith('#')&&!href.startsWith('blob:'))e.preventDefault()},true);
+    document.addEventListener('click',e=>{
+      const href=e.target.closest('a')?.getAttribute('href')||'';
+      if(href.startsWith('#')){e.preventDefault();document.getElementById(href.slice(1))?.scrollIntoView({block:'start'});return;}
+      if(href&&!href.startsWith('blob:'))e.preventDefault();
+    },true);
   })();`;
   doc.head.prepend(bridge); doc.head.prepend(policy);
   return { source, document: `<!doctype html>\n${doc.documentElement.outerHTML}` };
