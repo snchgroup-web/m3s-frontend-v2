@@ -40,6 +40,14 @@ beforeEach(() => {
   api.getRealEstateFinance.mockResolvedValue({ data: [], summary: {} });
 });
 const nav = () => screen.getByRole('navigation', { name: 'Historique FX' });
+
+test.each([['FR', 'Retour aux outils Production'], ['DE', 'Zurück zu den Produktionswerkzeugen'], ['EN', 'Back to Production tools']])('Finance exposes the qualified Production return in %s', async (language, label) => {
+  mockLanguage = language; mockSearch = '?tab=fx&fxView=converter&returnTo=production-tools&returnTool=fx';
+  render(<Finance/>);
+  fireEvent.click(screen.getByRole('button', { name: label }));
+  expect(mockNavigate).toHaveBeenLastCalledWith('/production?tab=manufacturing#production-tool-fx');
+  await act(async () => {});
+});
 test('Budget direct route replaces the placeholder and actual KPIs with a session draft', async () => {
   mockSearch = '?tab=budget&returnTo=dashboard&dashboardKpi=income';
   render(<FinanceBudgetSession><Finance /></FinanceBudgetSession>);

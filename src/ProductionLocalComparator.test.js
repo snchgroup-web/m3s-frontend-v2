@@ -45,3 +45,16 @@ test('a completed read cannot reopen a departed launcher', async () => {
   await act(async () => resolve({ document: '<html>fixture</html>' }));
   expect(document.querySelector('iframe')).toBeNull();
 });
+
+test('returning from an open synthetic frame requires confirmation before leaving', async () => {
+  const onReturn = jest.fn();
+  const confirm = jest.spyOn(window, 'confirm').mockReturnValueOnce(false).mockReturnValueOnce(true);
+  openLocalComparator.mockResolvedValue({ document: '<html><body>Synthetic only</body></html>' });
+  const { container } = render(<ProductionLocalComparator onReturn={onReturn}/>);
+  fireEvent.change(container.querySelector('input'), { target: { files: [new File(['fixture'], 'fixture.html')] } });
+  fireEvent.click(screen.getByRole('button', { name: 'Ouvrir la copie locale' }));
+  await screen.findByTitle('Comparateur local isolé');
+  fireEvent.click(screen.getByRole('button', { name: 'Retour à la fiche de l’outil' })); expect(onReturn).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: 'Retour à la fiche de l’outil' })); expect(onReturn).toHaveBeenCalledTimes(1);
+  confirm.mockRestore();
+});

@@ -5,6 +5,7 @@ import { api } from './api';
 
 let mockLocationSearch = '?tab=glossary';
 let mockLanguage = 'EN';
+let mockAuthenticated = false;
 const mockNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({
@@ -16,7 +17,7 @@ jest.mock('./LanguageContext', () => ({
   useLanguage: () => ({ language: mockLanguage })
 }));
 
-jest.mock('./AuthContext', () => ({ useAuth: () => ({ user: null, provider: 'google', ready: true, isAuthenticated: false }) }));
+jest.mock('./AuthContext', () => ({ useAuth: () => ({ user: mockAuthenticated ? { email: 'qa@example.test' } : null, provider: 'google', ready: true, isAuthenticated: mockAuthenticated }) }));
 
 jest.mock('./api', () => ({
   api: {
@@ -44,6 +45,7 @@ jest.mock('./OwnProfile', () => ({ embedded }) => <div data-testid="own-profile"
 beforeEach(() => {
   mockLocationSearch = '?tab=glossary';
   mockLanguage = 'EN';
+  mockAuthenticated = false;
   mockNavigate.mockReset();
   api.getMembersDirectory.mockReset();
   api.getMembersDirectory.mockResolvedValue({ data: [], total: 0 });
@@ -54,6 +56,19 @@ test('RH My account renders the shared current-account profile instead of a plac
   render(<RH/>);
   expect(await screen.findByTestId('own-profile')).toHaveAttribute('data-embedded', 'true');
   expect(screen.queryByText('Section to build')).not.toBeInTheDocument();
+});
+
+test('HR keeps the tool origin through its tabs and nested personal hours link', async () => {
+  mockAuthenticated = true;
+  mockLocationSearch = '?tab=resources&returnTo=production-tools&returnTool=rh-proximite';
+  render(<RH/>);
+  await screen.findByTestId('rh-proximity-tools');
+  fireEvent.click(screen.getByRole('button', { name: 'Back to Production tools' }));
+  expect(mockNavigate).toHaveBeenLastCalledWith('/production?tab=manufacturing#production-tool-rh-proximite');
+  fireEvent.click(screen.getByRole('button', { name: 'Hours for my signed-in account' }));
+  expect(mockNavigate).toHaveBeenLastCalledWith('/rh?tab=myaccount&accountView=hours&returnTo=production-tools&returnTool=rh-proximite#own-account-panel');
+  fireEvent.click(screen.getByRole('tab', { name: 'My Account', exact: true }));
+  expect(mockNavigate).toHaveBeenLastCalledWith('/rh?tab=myaccount&returnTo=production-tools&returnTool=rh-proximite');
 });
 
 test('the HR overview opens existing tools from Resources and returns without a new module', async () => {

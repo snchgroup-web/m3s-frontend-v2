@@ -1,5 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ProductionToolsReturn from './ProductionToolsReturn';
+import { withProductionToolReturn } from './productionToolConnections';
 import { CheckCircle2, Info, Edit2, Trash2, X } from 'lucide-react';
 import { api } from './api';
 import { useLanguage } from './LanguageContext';
@@ -417,7 +419,7 @@ const RH = ({ rhReadAccess = null }) => {
 
   const handleTabSelect = (tab) => {
     setActiveTab(tab);
-    navigate(`/rh?tab=${encodeURIComponent(tab)}`);
+    navigate(withProductionToolReturn(`/rh?tab=${encodeURIComponent(tab)}`, location.search));
   };
 
   const totalBenevoles = benevoles.filter(b => b.statut === 'Actif').length;
@@ -582,6 +584,8 @@ const RH = ({ rhReadAccess = null }) => {
       <div className="m3s-design-scope m3s-business-module min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-8">
         <div className="mx-auto w-full max-w-[1800px]">
 
+        <ProductionToolsReturn language={language}/>
+
         {/* Tabs */}
         <ModulePageTabs
           moduleId="rh"
@@ -641,7 +645,7 @@ const RH = ({ rhReadAccess = null }) => {
         {activeTab === 'resources' && (
           <>
             <RhProximityTools language={language} onBack={() => handleTabSelect('overview')} onOpenEmployees={() => handleTabSelect('employes')}
-              onOpenPersonalHours={() => navigate('/rh?tab=myaccount&accountView=hours#own-account-panel')}/>
+              onOpenPersonalHours={() => navigate(withProductionToolReturn('/rh?tab=myaccount&accountView=hours#own-account-panel', location.search))}/>
             <FunctionResourcesOverview moduleId="rh" language={language} onSelectTab={handleTabSelect} />
           </>
         )}
