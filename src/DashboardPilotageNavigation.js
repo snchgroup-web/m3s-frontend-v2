@@ -405,6 +405,7 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
   const returnView = new URLSearchParams(location.search).get('returnView') || '';
   const returnSection = new URLSearchParams(location.search).get('returnSection') || '';
   const canReturnToProgrammeSection = returnView === 'program' && returnSection.startsWith('institutional-');
+  const productionToolsReturn = new URLSearchParams(location.search).get('returnTo') === 'production-tools';
   const [intelligenceState, setIntelligenceState] = useState({ status: 'idle', data: null });
   const [artifactError, setArtifactError] = useState('');
   const intelligenceRequested = useRef(false);
@@ -486,7 +487,7 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
       const url = URL.createObjectURL(blob);
       const artifactOptions = {
         title: artifactType === 'reference' ? t.referenceTitle : t.intelligenceTitle,
-        returnUrl: `${window.location.origin}/?view=intelligence`,
+        returnUrl: `${window.location.origin}/?view=intelligence${productionToolsReturn ? '&returnTo=production-tools' : ''}`,
         returnLabel: t.returnToIntelligence
       };
       if (artifactType === 'html' && target) {
@@ -567,6 +568,9 @@ const DashboardPilotageNavigation = ({ language = 'FR', onNavigate }) => {
 
       {activeView === 'intelligence' && (
         <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[1.1fr_1fr]">
+          {productionToolsReturn && <button type="button" onClick={() => navigate('/production?tab=manufacturing#production-tools')}
+            className="m3s-secondary-button inline-flex min-h-11 items-center gap-2 px-3 lg:col-span-2 lg:w-fit"><ArrowLeft size={17} aria-hidden="true"/>
+            {{ FR: 'Retour aux outils Production', DE: 'Zurück zu den Produktionswerkzeugen', EN: 'Back to Production tools' }[language] || 'Retour aux outils Production'}</button>}
           {canReturnToProgrammeSection && (
             <button
               type="button"
