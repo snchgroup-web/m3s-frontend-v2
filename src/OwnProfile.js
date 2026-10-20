@@ -8,6 +8,7 @@ import PrivateGedDocuments from './PrivateGedDocuments';
 import PersonalBudget from './PersonalBudget';
 import OwnTaskRegister from './OwnTaskRegister';
 import PersonalHours from './PersonalHours';
+import OwnFunctionGuide from './OwnFunctionGuide';
 import { centerTabHorizontally } from './moduleTabs';
 
 const VIEWS = ['dossier', 'hours', 'tasks', 'finances'];
@@ -62,14 +63,19 @@ function AccountProfile({ embedded }) {
   useEffect(() => {
     if (activeView === 'finances') setFinanceVisited(true);
     if (activeView === 'hours') setHoursVisited(true);
-    centerTabHorizontally(tabList.current, tabList.current?.querySelector('[aria-selected="true"]'));
+    const center = () => centerTabHorizontally(tabList.current, tabList.current?.querySelector('[aria-selected="true"]'));
+    center();
+    if (typeof ResizeObserver === 'undefined' || !tabList.current) return undefined;
+    const observer = new ResizeObserver(center);
+    observer.observe(tabList.current);
+    return () => observer.disconnect();
   }, [activeView, language]);
   const selectView = view => {
     if (view === activeView) return;
     const params = new URLSearchParams(location.search);
     params.set(embedded ? 'accountView' : 'view', view);
     if (embedded) params.set('tab', 'myaccount');
-    navigate(`${embedded ? '/rh' : '/account'}?${params}#own-account-panel`);
+    navigate(`${embedded ? '/rh' : '/account'}?${params}#own-account-top`);
   };
   const productionReturn = !embedded && new URLSearchParams(location.search).get('returnTo') === 'production';
   const backLabel = productionReturn ? ({ FR: 'Retour aux outils Production', DE: 'Zurück zu den Produktionswerkzeugen', EN: 'Back to Production tools' }[language] || 'Retour aux outils Production') : t.back;
@@ -96,7 +102,7 @@ function AccountProfile({ embedded }) {
   // Compact display only; the approved institutional source stays unchanged.
   const position = data?.profile.position;
   const positionLabel = position === 'Manager et coordinateur général de 2SG - architecte fonctionnel M3S' ? 'Manager' : position;
-  return <article className={`own-profile${activeView === 'tasks' ? ' own-profile-tasks' : ''}`}>
+  return <article id="own-account-top" className="own-profile">
     <div className="own-profile-actions">
       <button className="m3s-secondary-button" onClick={() => navigate(productionReturn ? '/production?tab=manufacturing#production-tools' : '/')}><ArrowLeft size={17} aria-hidden="true"/>{backLabel}</button>
       <button className="m3s-secondary-button" title={t.refresh} aria-label={t.refresh} disabled={state.status === 'loading'} onClick={() => setRevision(value => value + 1)}><RefreshCw size={18}/></button>
@@ -129,7 +135,7 @@ function AccountProfile({ embedded }) {
         {field(t.name, data.profile.displayName)}{field(t.id, data.profile.personId)}
         {field(t.team, data.profile.team)}{field(t.type, data.profile.memberType === 'Fondateur' ? t.founder : data.profile.memberType === 'Associe' ? t.associate : data.profile.memberType)}
         {field(t.position, positionLabel === 'Manager' ? <span translate="no">Manager</span> : positionLabel)}
-      </dl></section>
+      </dl><OwnFunctionGuide profile={data.profile} source={data.source} language={language}/></section>
       {!embedded && <nav className="own-profile-links" aria-label={t.title}>
         <button className="m3s-secondary-button" onClick={() => navigate('/rh?tab=myaccount')}><UserRound size={18} aria-hidden="true"/>{hrLink}</button>
       </nav>}

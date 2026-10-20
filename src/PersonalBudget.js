@@ -1,5 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Download, FolderOpen, LockKeyhole } from 'lucide-react';
+import ThemeContext from './ThemeContext';
+import { budgetHostTheme } from './budgetAppearance';
 import { budgetAccountKey, budgetFrameDocument, loadBudgetTemplate, newBudgetVault, openBudgetVault, sealBudgetVault, validateBudgetStorage } from './personalBudgetVault';
 
 const COPY = {
@@ -32,6 +34,10 @@ const COPY = {
 
 export default function PersonalBudget({ principal, language = 'FR' }) {
   const t = COPY[language] || COPY.FR;
+  const themeContext = useContext(ThemeContext);
+  const theme = budgetHostTheme(themeContext?.theme || document.documentElement.dataset.theme);
+  const currentTheme = useRef(theme);
+  currentTheme.current = theme;
   const [accountKey, setAccountKey] = useState(null);
   const [existing, setExisting] = useState(false);
   const [file, setFile] = useState(null);
@@ -45,6 +51,10 @@ export default function PersonalBudget({ principal, language = 'FR' }) {
   const request = useRef(null);
   const lastSaved = useRef(null);
   const identity = JSON.stringify([principal?.id, principal?.tenantId, principal?.email]);
+  const sendAppearance = useCallback(() => frame.current?.contentWindow.postMessage({ type: 'm3s-budget-appearance', nonce: nonce.current, theme: currentTheme.current }, '*'), []);
+  useEffect(() => {
+    if (frameDoc) sendAppearance();
+  }, [theme, frameDoc, sendAppearance]);
   useEffect(() => {
     active.current = true;
     budgetAccountKey(principal).then(key => {
@@ -103,7 +113,7 @@ export default function PersonalBudget({ principal, language = 'FR' }) {
         ? await openBudgetVault(text, phrase) : await newBudgetVault(text, phrase);
       const encrypted = await sealBudgetVault(next, next.storage);
       const token = window.crypto.randomUUID();
-      const document = budgetFrameDocument(next.html, next.storage, token);
+      const document = budgetFrameDocument(next.html, next.storage, token, currentTheme.current);
       if (!active.current || current !== sequence.current) return;
       if (localStorage.getItem(accountKey) !== stored) throw new Error('STORAGE_CHANGED');
       localStorage.setItem(accountKey, encrypted);
@@ -140,7 +150,7 @@ export default function PersonalBudget({ principal, language = 'FR' }) {
           lockRequested.current = true; setStatus('saving'); frame.current?.contentWindow.postMessage({ type: 'm3s-budget-flush', nonce: nonce.current }, '*');
         }}><LockKeyhole size={18} aria-hidden="true"/>{t.lock}</button>
       </div>
-      <iframe ref={frame} title={t.frame} srcDoc={frameDoc} sandbox="allow-scripts allow-downloads allow-modals" referrerPolicy="no-referrer" className="personal-budget-frame"/>
+      <iframe ref={frame} title={t.frame} srcDoc={frameDoc} onLoad={sendAppearance} sandbox="allow-scripts allow-downloads allow-modals" referrerPolicy="no-referrer" className="personal-budget-frame"/>
     </>}
   </section>;
 }

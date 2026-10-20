@@ -1,6 +1,7 @@
 import React from 'react';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import PersonalBudget from './PersonalBudget';
+import ThemeContext from './ThemeContext';
 import { budgetAccountKey, budgetFrameDocument, loadBudgetTemplate, newBudgetVault, openBudgetVault, sealBudgetVault, validateBudgetStorage } from './personalBudgetVault';
 jest.mock('./personalBudgetVault');
 const principal = { id: 'synthetic', tenantId: 'test', email: 'private@example.test' };
@@ -86,4 +87,22 @@ test.each([['DE', 'Meine persönlichen Finanzen'], ['EN', 'My personal finances'
   expect(screen.getByRole('heading', { name: title })).toBeInTheDocument();
   await waitFor(() => expect(screen.getAllByLabelText(/Passphrase|passphrase/)[0]).toBeEnabled());
   expect(screen.queryByText('Mes finances personnelles')).not.toBeInTheDocument();
+});
+
+test('theme changes update only frame appearance without remounting or resealing the vault', async () => {
+  const { rerender } = render(<ThemeContext.Provider value={{ theme: 'light' }}><PersonalBudget principal={principal}/></ThemeContext.Provider>);
+  await waitFor(() => expect(screen.getByLabelText(/Phrase privée/)).toBeEnabled());
+  fireEvent.change(screen.getByLabelText(/Phrase privée/), { target: { value: 'synthetic private phrase' } });
+  fireEvent.change(screen.getByLabelText(/Répéter/), { target: { value: 'synthetic private phrase' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Ouvrir mon budget' }));
+  const frame = await screen.findByTitle('Budget personnel isolé');
+  const post = jest.spyOn(frame.contentWindow, 'postMessage');
+  const builds = budgetFrameDocument.mock.calls.length, seals = sealBudgetVault.mock.calls.length;
+  expect(budgetFrameDocument).toHaveBeenLastCalledWith(vault.html, vault.storage, 'nonce-fixture', 'light');
+  rerender(<ThemeContext.Provider value={{ theme: 'deep' }}><PersonalBudget principal={principal}/></ThemeContext.Provider>);
+  expect(screen.getByTitle('Budget personnel isolé')).toBe(frame);
+  expect(budgetFrameDocument).toHaveBeenCalledTimes(builds);
+  expect(sealBudgetVault).toHaveBeenCalledTimes(seals);
+  expect(post).toHaveBeenLastCalledWith({ type: 'm3s-budget-appearance', nonce: 'nonce-fixture', theme: 'deep' }, '*');
+  expect(localStorage.getItem(key)).toBe('encrypted-fixture-only');
 });

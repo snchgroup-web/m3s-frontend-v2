@@ -56,7 +56,38 @@ test('uses an opaque local frame bridge, blocks remote services and escapes snap
   expect(parsed.head.firstElementChild.content).toContain("form-action 'none'");
   expect(html).not.toContain('</script><script>bad()');
   expect(html).toContain("Object.defineProperty(window, 'claude', {value:undefined})");
-  expect(html).toContain("e.source===parent");
+  expect(html).toContain("e.source!==parent||e.data?.nonce!==nonce");
   expect(parsed.querySelectorAll('script')).toHaveLength(2);
   expect(() => new Function(parsed.querySelector('script').textContent)).not.toThrow();
+});
+
+test.each(['light', 'standard', 'deep'])('applies only the 2SG display layer in %s without modifying the source or saved preference', theme => {
+  const storage = Object.freeze({ 'budget-perso-ch-v2-theme': 'deep' });
+  const html = budgetFrameDocument(source, storage, 'fixture-style', theme);
+  const parsed = new DOMParser().parseFromString(html, 'text/html');
+  expect(parsed.documentElement.dataset.m3sTheme).toBe(theme);
+  expect(parsed.body.lastElementChild.id).toBe('m3s-budget-appearance');
+  expect(parsed.querySelector('#m3s-budget-appearance').textContent).toContain('--surface:#111e31');
+  expect(storage).toEqual({ 'budget-perso-ch-v2-theme': 'deep' });
+  expect(source).not.toContain('m3s-budget-appearance');
+  expect(parsed.querySelectorAll('script')).toHaveLength(2);
+});
+
+test('appearance messages require the parent and nonce and never emit a storage change', () => {
+  const parsed = new DOMParser().parseFromString(budgetFrameDocument(source, {}, 'fixture-style', 'light'), 'text/html');
+  const parent = { postMessage: jest.fn() }, window = {};
+  let receive;
+  new Function('window', 'document', 'parent', 'addEventListener', parsed.querySelector('script').textContent)(window, parsed, parent, (_, handler) => { receive = handler; });
+  expect(window.localStorage.getItem('budget-perso-ch-v2-theme')).toBe('auto');
+  expect(window.localStorage.length).toBe(0);
+  const data = { type: 'm3s-budget-appearance', nonce: 'fixture-style', theme: 'deep' };
+  receive({ source: {}, data });
+  receive({ source: parent, data: { ...data, nonce: 'wrong' } });
+  receive({ source: parent, data: { ...data, theme: '<script>' } });
+  expect(parsed.documentElement.dataset.m3sTheme).toBe('light');
+  receive({ source: parent, data });
+  expect(parsed.documentElement.dataset.m3sTheme).toBe('deep');
+  expect(parent.postMessage).not.toHaveBeenCalled();
+  receive({ source: parent, data: { type: 'm3s-budget-flush', nonce: 'fixture-style' } });
+  expect(parent.postMessage).toHaveBeenLastCalledWith({ type: 'm3s-budget-storage', nonce: 'fixture-style', storage: {} }, '*');
 });

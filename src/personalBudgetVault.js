@@ -1,3 +1,5 @@
+import { BUDGET_APPEARANCE_CSS, budgetHostTheme } from './budgetAppearance';
+
 export const BUDGET_SOURCE_SHA256 = 'c909fc463cbc172de5f575cc2827b30c9205156e7a5c426fd6fa995b50b30146';
 const PREFIX = 'budget-perso-ch-v2';
 const KEYS = [PREFIX, ...['lang', 'theme', 'tab', 'tour'].map(key => `${PREFIX}-${key}`)];
@@ -70,10 +72,15 @@ export async function openBudgetVault(text, passphrase, webCrypto = window.crypt
   return { html: await verifyBudgetSource(data.html, webCrypto), storage: validateBudgetStorage(data.storage), key, salt };
 }
 
-export function budgetFrameDocument(html, storage, nonce) {
+export function budgetFrameDocument(html, storage, nonce, theme = 'standard') {
   validateBudgetStorage(storage);
   const document = new DOMParser().parseFromString(html, 'text/html');
   document.querySelectorAll('link, base, iframe, object, embed').forEach(node => node.remove());
+  document.documentElement.dataset.m3sTheme = budgetHostTheme(theme);
+  const appearance = document.createElement('style');
+  appearance.id = 'm3s-budget-appearance';
+  appearance.textContent = BUDGET_APPEARANCE_CSS;
+  document.body.append(appearance);
   const policy = document.createElement('meta');
   policy.httpEquiv = 'Content-Security-Policy';
   policy.content = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; font-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'";
@@ -86,13 +93,17 @@ export function budgetFrameDocument(html, storage, nonce) {
     const send = () => parent.postMessage({type:'m3s-budget-storage', nonce, storage:{...values}}, '*');
     Object.defineProperty(window, 'claude', {value:undefined});
     Object.defineProperty(window, 'localStorage', {value:{
-      getItem:k=>allowed.includes(k)&&Object.hasOwn(values,k)?values[k]:null,
+      getItem:k=>allowed.includes(k)&&Object.hasOwn(values,k)?values[k]:k==='${PREFIX}-theme'?'auto':null,
       setItem:(k,v)=>{if(allowed.includes(k)){values[k]=String(v);send()}},
       removeItem:k=>{if(allowed.includes(k)){delete values[k];send()}},
       clear:()=>{for(const k of Object.keys(values))delete values[k];send()},
       key:i=>Object.keys(values)[i]||null, get length(){return Object.keys(values).length}
     }});
-    addEventListener('message', e=>{if(e.source===parent&&e.data?.type==='m3s-budget-flush'&&e.data.nonce===nonce)send()});
+    addEventListener('message', e=>{
+      if(e.source!==parent||e.data?.nonce!==nonce)return;
+      if(e.data.type==='m3s-budget-flush')send();
+      if(e.data.type==='m3s-budget-appearance'&&['light','standard','deep'].includes(e.data.theme))document.documentElement.dataset.m3sTheme=e.data.theme;
+    });
     document.addEventListener('click', e=>{const a=e.target.closest('a');const href=(a?.getAttribute('href')||'').toLowerCase();if(href.startsWith('http:')||href.startsWith('https:')||href.startsWith('//'))e.preventDefault()},true);
   })();`;
   document.head.insertBefore(bridge, policy.nextSibling);
