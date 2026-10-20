@@ -7,10 +7,11 @@ const source = '<!doctype html><html><head><link href="https://example.test/font
 const fixture = bytes => ({ size: bytes, arrayBuffer: async () => Uint8Array.from(source.padEnd(bytes, ' '), c => c.charCodeAt(0)).buffer });
 const pinnedCrypto = { subtle: { digest: async () => Uint8Array.from(COMPARATOR_SOURCES[0].sha256.match(/../g), h => parseInt(h, 16)).buffer } };
 
-test('pins the two known versions without treating sharing aliases as extra tools', () => {
-  expect(COMPARATOR_SOURCES).toHaveLength(2);
-  expect(new Set(COMPARATOR_SOURCES.map(s => s.sha256)).size).toBe(2);
+test('pins two originals and one neutral version without treating sharing aliases as extra tools', () => {
+  expect(COMPARATOR_SOURCES).toHaveLength(3);
+  expect(new Set(COMPARATOR_SOURCES.map(s => s.sha256)).size).toBe(3);
   expect(COMPARATOR_SOURCES[1].bytes).toBe(531699);
+  expect(COMPARATOR_SOURCES[2]).toMatchObject({ variant: 'neutral', bytes: 312918, language: 'FR', version: '0.1' });
 });
 
 test('rejects unknown sizes and unknown executable content before constructing a frame', async () => {
