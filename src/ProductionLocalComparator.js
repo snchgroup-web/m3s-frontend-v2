@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FolderOpen, X } from 'lucide-react';
+import { ArrowLeft, FolderOpen, X } from 'lucide-react';
 import { openLocalComparator } from './localComparator';
 
 const COPY = {
@@ -20,7 +20,7 @@ const COPY = {
     error: 'File not recognised or reading unavailable. Only the two referenced existing versions are accepted; the original file has not changed.', frame: 'Isolated local comparator' }
 };
 
-export default function ProductionLocalComparator({ language = 'FR' }) {
+export default function ProductionLocalComparator({ language = 'FR', onReturn }) {
   const t = COPY[language] || COPY.FR;
   const [file, setFile] = useState(null), [state, setState] = useState({ status: 'idle' });
   const operation = useRef(0);
@@ -39,6 +39,9 @@ export default function ProductionLocalComparator({ language = 'FR' }) {
     } catch { if (operation.current === id) setState({ status: 'error' }); }
   };
   return <section id="production-local-comparator" className="mt-5 border-t border-slate-700 pt-5" aria-labelledby="production-comparator-title">
+    {onReturn && <button type="button" className="m3s-secondary-button mb-4 inline-flex min-h-11 items-center gap-2 px-3" disabled={state.status === 'loading'} onClick={() => {
+      if (state.status !== 'ready' || window.confirm(t.confirm)) onReturn();
+    }}><ArrowLeft size={18} aria-hidden="true"/>{({ FR: 'Retour à la fiche de l’outil', DE: 'Zurück zum Werkzeug-Eintrag', EN: 'Back to the tool entry' }[language] || 'Retour à la fiche de l’outil')}</button>}
     <h4 id="production-comparator-title" className="m3s-panel-title">{t.title}</h4>
     <p className="mt-2 text-sm" style={{ color: 'var(--m3s-text-secondary)' }}>{t.scope}</p><p className="my-4 text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{t.privacy}</p>
     {state.status === 'ready' ? <>

@@ -189,6 +189,15 @@ test('HR embedded account reuses the same profile without a self-link', async ()
   expect(screen.queryByRole('button', { name: 'Mon compte RH' })).not.toBeInTheDocument();
 });
 
+test('preserves the exact Budget origin when opening the HR account', async () => {
+  mockSearch = '?view=dossier&returnTo=production&returnTool=budget-perso-ch';
+  render(<OwnProfile/>); await screen.findByText('Synthetic Person');
+  fireEvent.click(screen.getByRole('button', { name: 'Mon compte RH' }));
+  expect(mockNavigate).toHaveBeenLastCalledWith('/rh?tab=myaccount&returnTo=production&returnTool=budget-perso-ch');
+  fireEvent.click(screen.getByRole('button', { name: 'Retour aux outils Production' }));
+  expect(mockNavigate).toHaveBeenLastCalledWith('/production?tab=manufacturing#production-tool-budget-perso-ch');
+});
+
 test.each([['FR', 'Fonction'], ['EN', 'Position'], ['DE', 'Funktion']])('renders the approved compact position in %s without changing the source or account role', async (language, label) => {
   mockLanguage = language;
   const position = 'Manager et coordinateur général de 2SG - architecte fonctionnel M3S';

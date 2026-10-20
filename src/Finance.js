@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ProductionToolsReturn from './ProductionToolsReturn';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, LabelList } from 'recharts';
 import { Edit2, Trash2, TrendingUp, TrendingDown, ArrowRightLeft, Building2, Calculator, BarChart3, History, SlidersHorizontal, Heart, UsersRound, AlertTriangle, CheckCircle2, LoaderCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
@@ -2088,6 +2089,8 @@ const Finance = () => {
     <>
       <div className="m3s-business-module min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-8">
         <div className="mx-auto w-full max-w-[1800px]">
+
+        <ProductionToolsReturn language={language}/>
 
         <ModulePageTabs
           moduleId="finances"

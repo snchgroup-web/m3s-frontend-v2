@@ -45,6 +45,13 @@ test.each([
   expect(api.getLatestIntelligenceArtifact).not.toHaveBeenCalled();
 });
 
+test('Daily reader returns to its exact Production row', async () => {
+  renderDashboardNavigation({}, '/?view=intelligence&returnTo=production-tools&returnTool=daily-dashboard');
+  await act(async () => {});
+  fireEvent.click(screen.getByRole('button', { name: 'Retour aux outils Production' }));
+  expect(mockNavigate).toHaveBeenLastCalledWith('/production?tab=manufacturing#production-tool-daily-dashboard');
+});
+
 test('shows the four management responsibilities in French', () => {
   renderDashboardNavigation();
 

@@ -2028,3 +2028,14 @@ html .m3s-budget input.m3s-currency-cfa { color: var(--m3s-currency-cfa) !import
   .m3s-budget-totals { grid-template-columns: minmax(0,1fr); gap: 16px; }
   .m3s-budget th:first-child { position: static; }
 }
+
+.production-tool-list { margin-top: 16px; border-top: 1px solid var(--m3s-border); }
+.production-tool-row { padding: 16px 12px; border-bottom: 1px solid var(--m3s-border); scroll-margin-top: 100px; }
+.production-tool-row:nth-child(even) { background: var(--m3s-surface-raised); }
+.production-tool-row:target { outline: 2px solid var(--m3s-status-info); outline-offset: -2px; }
+.production-tool-row h5 { overflow-wrap: anywhere; }
+.production-tool-facts { border-top: 1px solid var(--m3s-border); padding-top: 16px; color: var(--m3s-text-primary); }
+.production-tool-facts dt { font-weight: 600; margin-bottom: 4px; }
+.production-tool-facts dd { color: var(--m3s-text-secondary); overflow-wrap: anywhere; }
+.production-tool-facts time { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.production-tools-return { position: sticky; top: 8px; z-index: 15; max-width: 100%; }

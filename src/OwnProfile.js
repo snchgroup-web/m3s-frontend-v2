@@ -7,6 +7,7 @@ import api from './api';
 import PrivateGedDocuments from './PrivateGedDocuments';
 import PersonalBudget from './PersonalBudget';
 import OwnTaskRegister from './OwnTaskRegister';
+import { getProductionToolReturnPath, withProductionToolReturn } from './productionToolConnections';
 import PersonalHours from './PersonalHours';
 import OwnFunctionGuide from './OwnFunctionGuide';
 import { centerTabHorizontally } from './moduleTabs';
@@ -77,7 +78,7 @@ function AccountProfile({ embedded }) {
     if (embedded) params.set('tab', 'myaccount');
     navigate(`${embedded ? '/rh' : '/account'}?${params}#own-account-top`);
   };
-  const productionReturn = !embedded && new URLSearchParams(location.search).get('returnTo') === 'production';
+  const productionReturn = !embedded && getProductionToolReturnPath(location.search);
   const backLabel = productionReturn ? ({ FR: 'Retour aux outils Production', DE: 'Zurück zu den Produktionswerkzeugen', EN: 'Back to Production tools' }[language] || 'Retour aux outils Production') : t.back;
   const hrLink = { FR: 'Mon compte RH', EN: 'My HR account', DE: 'Mein HR-Konto' }[language] || 'Mon compte RH';
   const [revision, setRevision] = useState(0);
@@ -104,7 +105,7 @@ function AccountProfile({ embedded }) {
   const positionLabel = position === 'Manager et coordinateur général de 2SG - architecte fonctionnel M3S' ? 'Manager' : position;
   return <article id="own-account-top" className="own-profile">
     <div className="own-profile-actions">
-      <button className="m3s-secondary-button" onClick={() => navigate(productionReturn ? '/production?tab=manufacturing#production-tools' : '/')}><ArrowLeft size={17} aria-hidden="true"/>{backLabel}</button>
+      <button className="m3s-secondary-button" onClick={() => navigate(productionReturn || '/')}><ArrowLeft size={17} aria-hidden="true"/>{backLabel}</button>
       <button className="m3s-secondary-button" title={t.refresh} aria-label={t.refresh} disabled={state.status === 'loading'} onClick={() => setRevision(value => value + 1)}><RefreshCw size={18}/></button>
     </div>
     <header className="own-profile-title">{data?.profile.photo ? <img className="own-profile-photo" src={data.profile.photo} alt={data.profile.displayName}/> : <UserRound size={25} aria-hidden="true"/>}<h2>{t.title}</h2></header>
@@ -137,14 +138,14 @@ function AccountProfile({ embedded }) {
         {field(t.position, positionLabel === 'Manager' ? <span translate="no">Manager</span> : positionLabel)}
       </dl><OwnFunctionGuide profile={data.profile} source={data.source} language={language}/></section>
       {!embedded && <nav className="own-profile-links" aria-label={t.title}>
-        <button className="m3s-secondary-button" onClick={() => navigate('/rh?tab=myaccount')}><UserRound size={18} aria-hidden="true"/>{hrLink}</button>
+        <button className="m3s-secondary-button" onClick={() => navigate(withProductionToolReturn('/rh?tab=myaccount', location.search))}><UserRound size={18} aria-hidden="true"/>{hrLink}</button>
       </nav>}
       <PrivateGedDocuments key={user?.email || 'no-account'} scope="personal"/>
       <footer>{t.source} : {data.source.id} · {t.approved} : <time dateTime={data.source.approvedOn}>{new Intl.DateTimeFormat({ FR: 'fr-CH', EN: 'en-GB', DE: 'de-CH' }[language] || 'fr-CH', { timeZone: 'UTC' }).format(new Date(`${data.source.approvedOn}T00:00:00Z`))}</time></footer>
       </div>
       <div role="tabpanel" id="own-account-panel-hours" aria-labelledby="own-account-tab-hours" hidden={activeView !== 'hours'} className="own-account-panel">
         {(hoursVisited || activeView === 'hours') && <PersonalHours principal={user} language={language} active={activeView === 'hours'}
-          onOpenTasks={() => selectView('tasks')} onOpenRhTools={() => navigate('/rh?tab=resources#rh-proximity-tools')}/>}
+          onOpenTasks={() => selectView('tasks')} onOpenRhTools={() => navigate(withProductionToolReturn('/rh?tab=resources#rh-proximity-tools', location.search))}/>}
       </div>
       <div role="tabpanel" id="own-account-panel-tasks" aria-labelledby="own-account-tab-tasks" hidden={activeView !== 'tasks'} className="own-account-panel">
         {activeView === 'tasks' && <OwnTaskRegister language={language} initialSearch={new URLSearchParams(location.search).get('taskSearch') || ''}/>}

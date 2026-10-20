@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowUpRight, ListChecks } from 'lucide-react';
+import { ArrowUpRight, HelpCircle, ListChecks } from 'lucide-react';
 import { useAuth } from './AuthContext';
 import ProductionLocalComparator from './ProductionLocalComparator';
-import { DAILY_BRIEF_URL, DAILY_PRODUCTION_PATH, LOCAL_COMPARATOR_PATH, PRODUCTION_TOOL_IDS, PRODUCTION_TOOLS_TASK_PATH, TOOL_SOURCE_REFERENCES } from './productionToolConnections';
+import ProductionToolFacts from './ProductionToolFacts';
+import { TOOL_FACTS_COPY } from './productionToolFactsData';
+import { DAILY_BRIEF_URL, DAILY_PRODUCTION_PATH, LOCAL_COMPARATOR_PATH, PRODUCTION_TOOL_IDS, PRODUCTION_TOOLS_TASK_PATH, TOOL_ENTRY_PATHS, TOOL_SOURCE_REFERENCES } from './productionToolConnections';
 
 const COPY = {
   FR: { title: 'Outils existants', scope: 'Répertoire de fabrication numérique · qualification documentaire au 20-10-26',
@@ -82,14 +84,24 @@ export default function ProductionTools({ language = 'FR' }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const [helpTool, setHelpTool] = useState(null);
+  const helpButtons = useRef({});
+  const closeHelp = id => { setHelpTool(null); helpButtons.current[id]?.focus(); };
+  const helpCopy = TOOL_FACTS_COPY[language] || TOOL_FACTS_COPY.FR;
   const comparatorOpen = new URLSearchParams(location.search).get('tool') === 'comparator-avants-fenetres';
   return <section id="production-tools" aria-labelledby="production-tools-title" className="mt-6 border-t border-slate-700 pt-5">
     <h4 id="production-tools-title" className="m3s-section-title">{t.title}</h4>
     <p className="mt-2 text-sm" style={{ color: 'var(--m3s-text-secondary)' }}>{t.scope}</p>
     <p className="my-4 text-sm leading-6" style={{ color: 'var(--m3s-text-secondary)' }}>{t.boundary}</p>
     <button type="button" className="m3s-secondary-button inline-flex min-h-11 items-center gap-2 px-3" onClick={() => navigate(PRODUCTION_TOOLS_TASK_PATH)}><ListChecks size={18} aria-hidden="true"/>{t.task}</button>
-    <div className="divide-y divide-slate-700">{t.rows.map(([name, source, state, path], index) => <article id={`production-tool-${PRODUCTION_TOOL_IDS[index]}`} key={PRODUCTION_TOOL_IDS[index]} className="flex flex-wrap items-start justify-between gap-3 py-4">
-      <div className="min-w-0 flex-1 basis-64"><h5 className="m3s-panel-title">{name}</h5>
+    <div className="production-tool-list">{t.rows.map(([name, source, state, originalPath], index) => {
+      const id = PRODUCTION_TOOL_IDS[index], path = TOOL_ENTRY_PATHS[id] || originalPath;
+      return <article id={`production-tool-${id}`} key={id} className="production-tool-row flex flex-wrap items-start justify-between gap-3" onKeyDown={event => {
+        if (event.key === 'Escape' && helpTool === id) { event.preventDefault(); closeHelp(id); }
+      }}>
+      <div className="min-w-0 flex-1 basis-64"><div className="flex items-center gap-3"><h5 className="m3s-panel-title min-w-0 flex-1">{name}</h5>
+        <button type="button" ref={node => { helpButtons.current[id] = node; }} title={`${helpCopy.help} : ${name}`} aria-label={`${helpCopy.help} : ${name}`} aria-expanded={helpTool === id} aria-controls={`production-help-${id}`}
+          className="m3s-secondary-button inline-flex h-11 w-11 shrink-0 items-center justify-center" onClick={() => setHelpTool(helpTool === id ? null : id)}><HelpCircle size={18} aria-hidden="true"/></button></div>
         <p className="mt-1 text-sm" style={{ color: 'var(--m3s-text-secondary)' }}>{t.source} : {source}</p><p className="mt-1 text-sm" style={{ color: 'var(--m3s-text-secondary)' }}>{t.state} : {state}</p>
         {t.qualifications[name] && <details className="mt-3 text-sm leading-6" style={{ color: 'var(--m3s-text-primary)' }}><summary className="min-h-11 cursor-pointer" style={{ color: 'var(--m3s-status-info)' }}>{t.qualification}</summary>
           {t.qualifications[name].map(text => <p key={text} className="mt-2">{text}</p>)}
@@ -99,7 +111,9 @@ export default function ProductionTools({ language = 'FR' }) {
       {path && (path.startsWith('https://')
         ? <a href={path} target="_blank" rel="noreferrer" className="m3s-secondary-button inline-flex min-h-11 items-center gap-2 px-3" aria-label={`${t.open} ${name}`}><ArrowUpRight size={18} aria-hidden="true"/>{t.open}</a>
         : <button type="button" className="m3s-secondary-button inline-flex min-h-11 items-center gap-2 px-3" onClick={() => navigate(path)} aria-label={`${t.open} ${name}`}><ArrowUpRight size={18} aria-hidden="true"/>{t.open}</button>)}
-    </article>)}</div>
-    {comparatorOpen && <ProductionLocalComparator key={JSON.stringify([user?.id, user?.tenantId, user?.email])} language={language}/>}
+      {helpTool === id && <ProductionToolFacts toolId={id} name={name} language={language} external={path?.startsWith('https://')} onClose={() => closeHelp(id)}/>}
+    </article>; })}</div>
+    {comparatorOpen && <ProductionLocalComparator key={JSON.stringify([user?.id, user?.tenantId, user?.email])} language={language}
+      onReturn={() => navigate('/production?tab=manufacturing#production-tool-comparator-avants-fenetres')}/>}
   </section>;
 }

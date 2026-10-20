@@ -1,6 +1,8 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import ProductionTools from './ProductionTools';
+import { TOOL_ENTRY_PATHS, PRODUCTION_TOOL_IDS } from './productionToolConnections';
+import { TOOL_FACTS, TOOL_FACTS_COPY } from './productionToolFactsData';
 const mockNavigate = jest.fn();
 let mockSearch = '';
 jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate, useLocation: () => ({ search: mockSearch }) }), { virtual: true });
@@ -10,13 +12,13 @@ beforeEach(() => { mockSearch = ''; jest.clearAllMocks(); });
 test.each(['FR', 'DE', 'EN'])('keeps eight families, five internal entries, two existing external links and one shared task in %s', language => {
   const { container } = render(<ProductionTools language={language}/>);
   expect(container.querySelectorAll('article')).toHaveLength(8);
-  expect(screen.getAllByRole('button')).toHaveLength(6);
-  fireEvent.click(screen.getByRole('button', { name: /Budget Perso CH/ }));
-  expect(mockNavigate).toHaveBeenLastCalledWith('/account?view=finances&returnTo=production#personal-finances');
-  fireEvent.click(screen.getByRole('button', { name: /Daily Intelligence Dashboard/ }));
-  expect(mockNavigate).toHaveBeenLastCalledWith('/?view=intelligence&returnTo=production-tools');
+  expect(screen.getAllByRole('button')).toHaveLength(14);
+  fireEvent.click(screen.getByRole('button', { name: /^(Ouvrir|Öffnen|Open) Budget Perso CH$/ }));
+  expect(mockNavigate).toHaveBeenLastCalledWith(TOOL_ENTRY_PATHS['budget-perso-ch']);
+  fireEvent.click(screen.getByRole('button', { name: /^(Ouvrir|Öffnen|Open) Daily Intelligence Dashboard$/ }));
+  expect(mockNavigate).toHaveBeenLastCalledWith(TOOL_ENTRY_PATHS['daily-dashboard']);
   expect(container.textContent).not.toMatch(/C:\\|50000|30000|50 000|30 000/);
-  expect(screen.queryByRole('button', { name: /FluxConvert/ })).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /^(Ouvrir|Öffnen|Open) FluxConvert$/ })).not.toBeInTheDocument();
   expect(container.querySelectorAll('details')).toHaveLength(4);
   expect(container.textContent).toContain('0.1.0');
   expect(container.textContent).toContain('SQLite');
@@ -31,6 +33,41 @@ test.each(['FR', 'DE', 'EN'])('keeps eight families, five internal entries, two 
   expect(mockNavigate).toHaveBeenLastCalledWith('/account?view=tasks&returnTo=production&taskSearch=TAC-PROD-OUTILS-20261019-001#own-account-top');
 });
 
+test.each([['FR', '22-07-26'], ['DE', '22.07.26'], ['EN', '22/07/26']])('opens dated help, one tool at a time, with keyboard return in %s', (language, date) => {
+  const { container } = render(<ProductionTools language={language}/>);
+  const t = TOOL_FACTS_COPY[language];
+  const row = container.querySelector('#production-tool-comparator-avants-fenetres');
+  const trigger = within(row).getByRole('button', { name: new RegExp(`^${t.help}`) });
+  fireEvent.click(trigger);
+  const region = within(row).getByRole('region');
+  expect(region).toHaveTextContent(date);
+  expect(region).toHaveTextContent(TOOL_FACTS['comparator-avants-fenetres'].makers[language]);
+  expect(region).toHaveTextContent(t.effortNote);
+  expect(trigger).toHaveAttribute('aria-expanded', 'true');
+  const close = within(region).getByRole('button', { name: t.close }); close.focus();
+  fireEvent.keyDown(close, { key: 'Escape' });
+  expect(container.querySelector('.production-tool-facts')).toBeNull(); expect(trigger).toHaveFocus();
+  fireEvent.click(trigger);
+  fireEvent.click(within(container.querySelector('#production-tool-fluxconvert')).getByRole('button', { name: new RegExp(`^${t.help}`) }));
+  expect(container.querySelectorAll('.production-tool-facts')).toHaveLength(1);
+  expect(screen.getByRole('region', { name: new RegExp(`^${t.help}`) })).toHaveTextContent(t.external);
+  fireEvent.click(screen.getByRole('button', { name: t.close }));
+  expect(container.querySelector('.production-tool-facts')).toBeNull();
+  expect(container.querySelectorAll('.production-tool-row')).toHaveLength(8);
+});
+
+test('each family has translated documentary facts without invented hours or creation dates', () => {
+  expect(Object.keys(TOOL_FACTS).sort()).toEqual([...PRODUCTION_TOOL_IDS].sort());
+  for (const fact of Object.values(TOOL_FACTS)) {
+    for (const key of ['purpose', 'makers', 'systems', 'evidence']) for (const language of ['FR', 'DE', 'EN']) expect(fact[key][language].length).toBeGreaterThan(20);
+    for (const [date, kind] of fact.dates) {
+      expect(new Date(`${date}T00:00:00Z`).toISOString().slice(0, 10)).toBe(date);
+      for (const language of ['FR', 'DE', 'EN']) expect(TOOL_FACTS_COPY[language].kinds[kind]).toBeTruthy();
+    }
+  }
+  expect(TOOL_FACTS.fluxconvert.systems.EN).toContain('not verified as active services');
+});
+
 test('opens only the local verified launcher for the comparator without a public source file', () => {
   mockSearch = '?tab=manufacturing&tool=comparator-avants-fenetres';
   const { container } = render(<ProductionTools/>);
@@ -39,4 +76,6 @@ test('opens only the local verified launcher for the comparator without a public
   expect(screen.getByRole('button', { name: 'Ouvrir la copie locale' })).toBeDisabled();
   expect(container.querySelector('iframe')).toBeNull();
   expect(container.querySelectorAll('#production-tools article')).toHaveLength(8);
+  fireEvent.click(screen.getByRole('button', { name: 'Retour à la fiche de l’outil' }));
+  expect(mockNavigate).toHaveBeenLastCalledWith('/production?tab=manufacturing#production-tool-comparator-avants-fenetres');
 });
