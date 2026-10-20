@@ -71,7 +71,7 @@ test('each family has translated documentary facts without invented hours or cre
 test('opens only the local verified launcher for the comparator without a public source file', () => {
   mockSearch = '?tab=manufacturing&tool=comparator-avants-fenetres';
   const { container } = render(<ProductionTools/>);
-  expect(screen.getByRole('heading', { name: 'Comparateur Avants de fenêtre' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Comparaison et suivi des offres' })).toBeInTheDocument();
   expect(screen.getByLabelText(/Fichier HTML existant/)).toHaveAttribute('type', 'file');
   expect(screen.getByRole('button', { name: 'Ouvrir la copie locale' })).toBeDisabled();
   expect(container.querySelector('iframe')).toBeNull();

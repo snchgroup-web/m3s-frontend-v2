@@ -27,7 +27,7 @@ const COPY = {
       ['Mon Espace salarié', 'Pilote Koné / Mariam', 'Versions nominatives locales restreintes ; hébergement à raccorder', null],
       ['Convertisseur FX', 'Module Finances / historique TFX', 'Convertisseur M3S existant', '/finance?tab=fx&fxView=converter'],
       ['FluxConvert', 'SaaS existant / commit 7e1143b / archive 0.1.0 distincte', 'Filiation source/déploiement vérifiée le 20-10-26 ; stockage et conservation à qualifier', 'https://fluxconvert-app.vercel.app/fr'],
-      ['Générateurs et comparateurs de devis', 'Originaux Avants de fenêtre / copie neutre V0.1 FR / Mini-Forage distinct', 'Ouverture locale contrôlée ; copie neutre en français', LOCAL_COMPARATOR_PATH],
+      ['Générateurs et comparateurs de devis', 'Comparaison et suivi des offres V0.2 FR/DE/EN · originaux et V0.1 conservés · Mini-Forage distinct', 'Ouverture locale contrôlée · clair, sombre et profond', LOCAL_COMPARATOR_PATH],
       ['Brief quotidien', 'Page ChatGPT sauvegardée et lien partagé', 'Page existante ; fraîcheur éditoriale non déduite', DAILY_BRIEF_URL],
       ['Daily Intelligence Dashboard', 'Tableau de bord V4', 'Vue M3S existante ; fraîcheur éditoriale à contrôler séparément', DAILY_PRODUCTION_PATH]
     ] },
@@ -50,7 +50,7 @@ const COPY = {
       ['Mein Mitarbeiterbereich', 'Pilot Koné / Mariam', 'Lokale personenbezogene Versionen geschützt; Hosting noch offen', null],
       ['FX-Rechner', 'Finanzen / TFX-Verlauf', 'Bestehender M3S-Rechner', '/finance?tab=fx&fxView=converter'],
       ['FluxConvert', 'Bestehender SaaS / Commit 7e1143b / separates Archiv 0.1.0', 'Quelle/Deployment am 20.10.26 zugeordnet; Speicherung und Aufbewahrung offen', 'https://fluxconvert-app.vercel.app/fr'],
-      ['Angebotsgeneratoren und -vergleiche', 'Originale Fenstervorbauten / neutrale Kopie V0.1 FR / Mini-Forage separat', 'Geprüfte lokale Öffnung; neutrale Kopie auf Französisch', LOCAL_COMPARATOR_PATH],
+      ['Angebotsgeneratoren und -vergleiche', 'Angebote vergleichen und verfolgen V0.2 FR/DE/EN · Originale und V0.1 erhalten · Mini-Forage separat', 'Geprüfte lokale Öffnung · hell, dunkel und tiefdunkel', LOCAL_COMPARATOR_PATH],
       ['Tägliches Briefing', 'Gespeicherte ChatGPT-Seite und Freigabelink', 'Bestehende Seite; redaktionelle Aktualität nicht abgeleitet', DAILY_BRIEF_URL],
       ['Daily Intelligence Dashboard', 'Dashboard V4', 'Bestehende M3S-Ansicht; redaktionelle Aktualität separat prüfen', DAILY_PRODUCTION_PATH]
     ] },
@@ -73,7 +73,7 @@ const COPY = {
       ['My employee space', 'Koné / Mariam pilot', 'Restricted named local versions; hosting still to connect', null],
       ['FX converter', 'Finance / TFX history', 'Existing M3S converter', '/finance?tab=fx&fxView=converter'],
       ['FluxConvert', 'Existing SaaS / commit 7e1143b / separate archive 0.1.0', 'Source/deployment lineage checked on 20/10/26; storage and retention to qualify', 'https://fluxconvert-app.vercel.app/fr'],
-      ['Quote generators and comparators', 'Window awnings originals / neutral V0.1 FR copy / Mini-Forage separate', 'Controlled local opening; neutral copy in French', LOCAL_COMPARATOR_PATH],
+      ['Quote generators and comparators', 'Offer comparison and tracking V0.2 FR/DE/EN · originals and V0.1 retained · Mini-Forage separate', 'Controlled local opening · light, dark and deep', LOCAL_COMPARATOR_PATH],
       ['Daily Brief', 'Saved ChatGPT page and sharing link', 'Existing page; editorial freshness not inferred', DAILY_BRIEF_URL],
       ['Daily Intelligence Dashboard', 'V4 dashboard', 'Existing M3S view; editorial freshness checked separately', DAILY_PRODUCTION_PATH]
     ] }
