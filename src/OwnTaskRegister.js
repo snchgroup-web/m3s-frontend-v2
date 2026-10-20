@@ -67,13 +67,15 @@ function TaskReader({ row, t, moduleLabels, language, onClose }) {
   </div>, document.body);
 }
 
-export default function OwnTaskRegister({ language = 'FR' }) {
+export default function OwnTaskRegister({ language = 'FR', initialSearch = '' }) {
   const registerCopy = TASK_REGISTER_COPY[language] || TASK_REGISTER_COPY.FR;
   const t = { ...registerCopy, ...(EXECUTION_COPY[language] || EXECUTION_COPY.FR), ...(COPY[language] || COPY.FR) };
   const moduleLabels = TASK_MODULE_LABELS[language] || TASK_MODULE_LABELS.FR;
   const navigate = useNavigate();
-  const [query, setQuery] = useState({ limit: 25, offset: 0, search: '' });
-  const [search, setSearch] = useState('');
+  const sourceSearch = typeof initialSearch === 'string' ? initialSearch.slice(0, 240) : '';
+  const [query, setQuery] = useState({ limit: 25, offset: 0, search: sourceSearch });
+  const [search, setSearch] = useState(sourceSearch);
+  useEffect(() => { setSearch(sourceSearch); setQuery(previous => previous.search === sourceSearch ? previous : { ...previous, search: sourceSearch, offset: 0 }); }, [sourceSearch]);
   const [revision, setRevision] = useState(0);
   const [state, setState] = useState({ status: 'loading', page: null });
   const [selectedId, setSelectedId] = useState(null);

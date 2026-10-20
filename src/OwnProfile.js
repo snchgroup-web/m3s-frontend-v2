@@ -147,7 +147,7 @@ function AccountProfile({ embedded }) {
           onOpenTasks={() => selectView('tasks')} onOpenRhTools={() => navigate('/rh?tab=resources#rh-proximity-tools')}/>}
       </div>
       <div role="tabpanel" id="own-account-panel-tasks" aria-labelledby="own-account-tab-tasks" hidden={activeView !== 'tasks'} className="own-account-panel">
-        {activeView === 'tasks' && <OwnTaskRegister language={language}/>}
+        {activeView === 'tasks' && <OwnTaskRegister language={language} initialSearch={new URLSearchParams(location.search).get('taskSearch') || ''}/>}
       </div>
       <div role="tabpanel" id="own-account-panel-finances" aria-labelledby="own-account-tab-finances" hidden={activeView !== 'finances'} className="own-account-panel">
         {(financeVisited || activeView === 'finances') && <PersonalBudget principal={user} language={language}/>}

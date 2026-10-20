@@ -18,7 +18,7 @@ jest.mock('./AuthContext', () => ({ useAuth: () => ({ user: mockUser }) }));
 jest.mock('./PersonalBudget', () => ({ principal }) => <div data-testid="personal-budget" data-account={principal.email}><input aria-label="Synthetic budget state" defaultValue=""/></div>);
 jest.mock('./api', () => ({ __esModule: true, default: { getOwnProfile: jest.fn() } }));
 jest.mock('./PrivateGedDocuments', () => ({ scope }) => <div data-testid="private-ged" data-scope={scope}/>);
-jest.mock('./OwnTaskRegister', () => ({ language }) => <div data-testid="own-tasks" data-language={language}>Synthetic own assignments</div>);
+jest.mock('./OwnTaskRegister', () => ({ language, initialSearch }) => <div data-testid="own-tasks" data-language={language} data-search={initialSearch}>Synthetic own assignments</div>);
 jest.mock('./PersonalHours', () => ({ principal, active }) => <div data-testid="personal-hours" data-account={principal.email} data-active={String(active)}><input aria-label="Synthetic hours draft" defaultValue=""/></div>);
 const result = { success: true, scope: 'current-account', account: { email: 'fixture@example.test', role: 'Manager' },
   profile: { personId: 'PER-2SG-9001', displayName: 'Synthetic Person', team: 'TZH', memberType: 'Fondateur', position: 'Synthetic role' },
@@ -39,6 +39,14 @@ test('reads the linked profile, refreshes and returns to dashboard', async () =>
   await waitFor(() => expect(api.getOwnProfile).toHaveBeenCalledTimes(2));
   fireEvent.click(screen.getByRole('button', { name: 'Retour au tableau de bord' }));
   expect(mockNavigate).toHaveBeenCalledWith('/');
+});
+
+test('retains the Production return and passes the existing task reference to the reader', async () => {
+  mockSearch = '?view=tasks&returnTo=production&taskSearch=TAC-PROD-OUTILS-20261019-001';
+  render(<OwnProfile/>);
+  expect(await screen.findByTestId('own-tasks')).toHaveAttribute('data-search', 'TAC-PROD-OUTILS-20261019-001');
+  fireEvent.click(screen.getByRole('button', { name: 'Retour aux outils Production' }));
+  expect(mockNavigate).toHaveBeenLastCalledWith('/production?tab=manufacturing#production-tools');
 });
 
 test('refresh failure clears previously displayed private profile', async () => {

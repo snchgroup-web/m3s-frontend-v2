@@ -9,6 +9,14 @@ jest.mock('./api', () => ({ __esModule: true, default: { getOwnTasks: jest.fn() 
 const row = { ...testTask(), id: 'task-test', phase_id: 'phase-test', revision: 2 };
 const page = { data: [row], total: 1, count: 1 };
 beforeEach(() => { jest.clearAllMocks(); api.getOwnTasks.mockResolvedValue(page); });
+
+test('a Production reference prefilters only the existing own-task reader, with no write', async () => {
+  render(<OwnTaskRegister initialSearch="TAC-PROD-OUTILS-20261019-001"/>);
+  await screen.findByText(row.title);
+  expect(screen.getByRole('searchbox')).toHaveValue('TAC-PROD-OUTILS-20261019-001');
+  expect(api.getOwnTasks).toHaveBeenCalledWith(25, 0, 'TAC-PROD-OUTILS-20261019-001', expect.anything());
+  expect(Object.keys(api)).toEqual(['getOwnTasks']);
+});
 test.each([['FR','Mes tâches','En cours','12-11-26'],['DE','Meine Aufgaben','In Bearbeitung','12.11.26'],['EN','My tasks','In progress','12/11/26']])('reads own tasks with %s labels and dates, without mutations', async (language,title,status,date) => {
   api.getOwnTasks.mockResolvedValue({ ...page, data: [{ ...row, status: 'in_progress' }] });
   render(<OwnTaskRegister language={language}/>);

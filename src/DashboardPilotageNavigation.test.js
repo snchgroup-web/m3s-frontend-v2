@@ -32,6 +32,19 @@ const renderDashboardNavigation = (props = {}, initialEntry = '/') => {
   return render(<DashboardPilotageNavigation language="FR" onNavigate={jest.fn()} {...props} />);
 };
 
+test.each([
+  ['FR', 'Retour aux outils Production'],
+  ['DE', 'Zurück zu den Produktionswerkzeugen'],
+  ['EN', 'Back to Production tools']
+])('Daily reader retains the Production tools return in %s', async (language, label) => {
+  renderDashboardNavigation({ language }, '/?view=intelligence&returnTo=production-tools');
+  await act(async () => {});
+  fireEvent.click(screen.getByRole('button', { name: label }));
+  expect(mockNavigate).toHaveBeenLastCalledWith('/production?tab=manufacturing#production-tools');
+  expect(api.getLatestIntelligence).toHaveBeenCalledTimes(1);
+  expect(api.getLatestIntelligenceArtifact).not.toHaveBeenCalled();
+});
+
 test('shows the four management responsibilities in French', () => {
   renderDashboardNavigation();
 
