@@ -100,3 +100,27 @@ test.each([
   expect(TOOL_FACTS['comparator-avants-fenetres'].dates).toContainEqual(['2026-10-20', 'neutral']);
   expect(TOOL_FACTS.fluxconvert.dates).toContainEqual(['2026-10-20', 'qualified']);
 });
+
+test.each([
+  ['FR', '21-10-26', /configuration partielle, trois secrets manquants/, /configuration incomplète/, /région des fonctions/, /Conservation applicative/],
+  ['DE', '21.10.26', /Konfiguration teilweise, drei Secrets fehlen/, /Konfiguration unvollständig/, /Funktionsregion/, /Anwendungsaufbewahrung/],
+  ['EN', '21/10/26', /partial configuration, three secrets missing/, /configuration incomplete/, /function region/, /Application retention/]
+])('FluxConvert recovery facts in %s retain the missing secrets and exclude private backup material', (language, date, partial, incomplete, functionRegion, retention) => {
+  const { container } = render(<ProductionTools language={language}/>);
+  const row = container.querySelector('#production-tool-fluxconvert');
+  expect(row).toHaveTextContent(partial);
+  expect(row).toHaveTextContent(retention);
+  expect(row).toHaveTextContent(/Francfort|Frankfurt/);
+  expect(row).toHaveTextContent('SQLite');
+  expect(row).toHaveTextContent('PostgreSQL');
+  fireEvent.click(within(row).getByRole('button', { name: new RegExp(`^${TOOL_FACTS_COPY[language].help}`) }));
+  const help = within(row).getByRole('region');
+  expect(help).toHaveTextContent(date);
+  expect(help).toHaveTextContent(incomplete);
+  expect(help).toHaveTextContent(functionRegion);
+  expect(help).toHaveTextContent('PC/USB');
+  expect(help).toHaveTextContent('79');
+  expect(container.querySelectorAll('.production-tool-row')).toHaveLength(8);
+  expect(container.textContent).not.toMatch(/C:\\|D:\/|LOCALAPPDATA|\.tar\.gpg|cloud-values\.json|postgres(?:ql)?:\/\/|prisma\+postgres:\/\//i);
+  expect(TOOL_FACTS.fluxconvert.dates).toContainEqual(['2026-10-21', 'trace']);
+});
