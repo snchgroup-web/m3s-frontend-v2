@@ -12,7 +12,7 @@ test.each([['FR', '22-10-26'], ['DE', '22.10.26'], ['EN', '22/10/26']])('FluxCon
   const { container } = render(<ProductionTools language={language} />);
   const row = container.querySelector('#production-tool-fluxconvert');
   const t = TOOL_FACTS_COPY[language];
-  expect(row).toHaveTextContent('f616e00');
+  expect(row).toHaveTextContent('55f987c');
   expect(row).toHaveTextContent(date);
   expect(row).toHaveTextContent('7e1143b');
   expect(row).toHaveTextContent('SQLite');
@@ -33,7 +33,7 @@ test.each([['FR', '22-10-26'], ['DE', '22.10.26'], ['EN', '22/10/26']])('FluxCon
   expect(within(row).getByRole('link')).toHaveAttribute('href', 'https://fluxconvert-app.vercel.app/fr');
   expect(within(row).getByRole('link')).toHaveAttribute('target', '_blank');
   expect(container.querySelectorAll('.production-tool-row')).toHaveLength(8);
-  expect(TOOL_SOURCE_REFERENCES.fluxconvert).toContain('Git f616e00');
+  expect(TOOL_SOURCE_REFERENCES.fluxconvert).toContain('Git 55f987c');
 });
 
 test.each(['FR', 'DE', 'EN'])('the %s card excludes secrets, private paths and obsolete unqualified claims', language => {
