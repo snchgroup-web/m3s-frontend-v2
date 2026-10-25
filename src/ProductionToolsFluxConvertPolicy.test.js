@@ -20,7 +20,7 @@ test.each([['FR', '22-10-26'], ['DE', '22.10.26'], ['EN', '22/10/26']])('FluxCon
   const help = within(row).getByRole('region');
   for (const field of ['protections', 'limits']) {
     const section = within(help).getByText(t[field], { exact: true }).parentElement;
-    expect(within(section).getAllByRole('listitem')).toHaveLength(field === 'protections' ? 5 : 4);
+    expect(within(section).getAllByRole('listitem')).toHaveLength(field === 'protections' ? 7 : 4);
     for (const text of TOOL_FACTS.fluxconvert[field][language]) expect(section).toHaveTextContent(text);
   }
   expect(help).toHaveTextContent('FRA1');
