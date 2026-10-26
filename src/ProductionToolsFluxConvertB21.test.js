@@ -47,5 +47,5 @@ test.each(['FR', 'DE', 'EN'])('the %s update keeps one tool entry and private ba
   expect(container.querySelectorAll('#production-tool-fluxconvert')).toHaveLength(1);
   expect(row.textContent).not.toMatch(/LOCAL-OUTILS-DOCS-|LOCALAPPDATA|[CD]:|\.tar\.gpg|postgres(?:ql)?:\/\//);
   expect(TOOL_FACTS.fluxconvert.dates).toContainEqual(['2026-10-23', 'backup']);
-  expect(TOOL_FACTS.fluxconvert.dates).toHaveLength(8);
+  expect(TOOL_FACTS.fluxconvert.dates).toHaveLength(10);
 });
