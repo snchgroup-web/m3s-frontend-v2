@@ -6,6 +6,7 @@ import { useAuth } from './AuthContext';
 import { ADMINISTRATION_CORRESPONDENCE_READ_PERMISSION, hasPermission } from './accessControl';
 import { isDemoSession } from './administrationRegistryAdapters';
 import { currentAgendaMonth, groupCorrespondenceAgenda, loadCorrespondenceAgenda, shiftAgendaMonth } from './correspondenceAgendaModel';
+import { capitalizeDateLabel } from './dateLabel';
 
 const COPY = {
   FR: {
@@ -50,7 +51,7 @@ const CorrespondenceAgenda = ({ language = 'FR' }) => {
 
   const current = allowed && result.identity === identity ? result : { status: allowed ? 'loading' : 'forbidden', records: [] };
   const groups = useMemo(() => groupCorrespondenceAgenda(current.records, month, includeClosed), [current.records, month, includeClosed]);
-  const formatDate = date => new Intl.DateTimeFormat(t.locale, { timeZone: 'Europe/Zurich', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${date}T12:00:00Z`));
+  const formatDate = date => capitalizeDateLabel(new Intl.DateTimeFormat(t.locale, { timeZone: 'Europe/Zurich', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${date}T12:00:00Z`)), t.locale);
   const iconButton = 'm3s-secondary-button inline-flex min-h-11 min-w-11 items-center justify-center disabled:opacity-50';
 
   return (
