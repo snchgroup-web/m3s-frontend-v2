@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { AlertCircle, CheckCircle2, Eye, EyeOff, LockKeyhole, LogIn, Mail, Sun, Moon, Eclipse, ArrowLeft } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Eye, EyeOff, LockKeyhole, LogIn, Mail, Monitor, Sun, Moon, Eclipse, ArrowLeft } from 'lucide-react';
 import { useAuth } from './AuthContext';
 import { useLanguage } from './LanguageContext';
 import { useTheme } from './ThemeContext';
@@ -19,7 +19,7 @@ export default function Login() {
   const { login, loginDemo, loading, demoAuthEnabled, demoAccounts = [], isAuthenticated,
     ready, provider, verifyMfa, cancelMfa, recoverPassword, initializationFailure } = useAuth();
   const { language, setLanguage } = useLanguage();
-  const { theme, setTheme } = useTheme();
+  const { theme, themePreference = theme, setTheme } = useTheme();
   const t = loginMessages[language] || loginMessages.FR;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -114,8 +114,8 @@ export default function Login() {
         <select aria-label={t.language} value={loginMessages[language] ? language : 'FR'} onChange={e => setLanguage(e.target.value)}>
           <option value="FR">FR</option><option value="EN">EN</option><option value="DE">DE</option>
         </select>
-        <div role="group" aria-label={t.theme}>{[['light', Sun], ['standard', Moon], ['deep', Eclipse]].map(([key, Icon]) =>
-          <button type="button" key={key} title={t[key]} aria-label={t[key]} aria-pressed={theme === key} onClick={() => setTheme(key)}><Icon size={19} aria-hidden="true"/></button>)}</div>
+        <div role="group" aria-label={t.theme}>{[['auto', Monitor], ['light', Sun], ['standard', Moon], ['deep', Eclipse]].map(([key, Icon]) =>
+          <button type="button" key={key} title={t[key]} aria-label={t[key]} aria-pressed={themePreference === key} onClick={() => setTheme(key)}><Icon size={19} aria-hidden="true"/></button>)}</div>
       </div>
     </header>
     <LoginClock language={language}/>
