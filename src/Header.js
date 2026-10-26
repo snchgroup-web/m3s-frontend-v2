@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Check, ChevronRight, CloudSun, Globe2, LogOut, Menu, Moon, Settings, Sun, SunMedium } from 'lucide-react';
+import { ChevronRight, CloudSun, Globe2, LogOut, Menu, Monitor, Moon, Settings, Sun, SunMedium } from 'lucide-react';
 import { useTheme } from './ThemeContext';
 import { useLanguage } from './LanguageContext';
 import { useAuth } from './AuthContext';
@@ -29,7 +29,7 @@ const Header = ({ onOpenMenu }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { language, setLanguage } = useLanguage();
-  const { theme, setTheme } = useTheme();
+  const { theme, themePreference = theme, setTheme } = useTheme();
   const { user, logout } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [fxResponse, setFxResponse] = useState(null);
@@ -147,15 +147,15 @@ const Header = ({ onOpenMenu }) => {
 
   const translations = {
     FR: {
-      sunny: 'Ensoleillé', cloudy: 'Nuageux', logout: 'Déconnexion', settings: 'Paramètres d’affichage', appearance: 'Apparence', language: 'Langue', light: 'Clair', standard: 'Standard', deep: 'Sombre profond', active: 'Actif',
+      sunny: 'Ensoleillé', cloudy: 'Nuageux', logout: 'Déconnexion', settings: 'Paramètres d’affichage', appearance: 'Apparence', language: 'Langue', auto: 'Auto', light: 'Clair', standard: 'Standard', deep: 'Sombre profond', deepShort: 'Profond',
       languageLoading: 'Chargement de la langue en cours…', logoutConfirmTitle: 'Confirmer la déconnexion', logoutConfirmBody: 'Voulez-vous vraiment vous déconnecter de M3S ?', cancel: 'Annuler', confirmLogout: 'Se déconnecter', profilePhoto: 'Photo de profil'
     },
     EN: {
-      sunny: 'Sunny', cloudy: 'Cloudy', logout: 'Logout', settings: 'Display settings', appearance: 'Appearance', language: 'Language', light: 'Light', standard: 'Standard', deep: 'Deep dark', active: 'Active',
+      sunny: 'Sunny', cloudy: 'Cloudy', logout: 'Logout', settings: 'Display settings', appearance: 'Appearance', language: 'Language', auto: 'Auto', light: 'Light', standard: 'Standard', deep: 'Deep dark', deepShort: 'Deep',
       languageLoading: 'Applying language…', logoutConfirmTitle: 'Confirm logout', logoutConfirmBody: 'Do you really want to log out of M3S?', cancel: 'Cancel', confirmLogout: 'Log out', profilePhoto: 'Profile photo'
     },
     DE: {
-      sunny: 'Sonnig', cloudy: 'Bewölkt', logout: 'Abmelden', settings: 'Anzeigeeinstellungen', appearance: 'Darstellung', language: 'Sprache', light: 'Hell', standard: 'Standard', deep: 'Tiefdunkel', active: 'Aktiv',
+      sunny: 'Sonnig', cloudy: 'Bewölkt', logout: 'Abmelden', settings: 'Anzeigeeinstellungen', appearance: 'Darstellung', language: 'Sprache', auto: 'Auto', light: 'Hell', standard: 'Standard', deep: 'Tiefdunkel', deepShort: 'Tiefdunkel',
       languageLoading: 'Sprache wird geladen…', logoutConfirmTitle: 'Abmeldung bestätigen', logoutConfirmBody: 'Möchten Sie sich wirklich von M3S abmelden?', cancel: 'Abbrechen', confirmLogout: 'Abmelden', profilePhoto: 'Profilfoto'
     }
   };
@@ -240,27 +240,29 @@ const Header = ({ onOpenMenu }) => {
               <Settings size={19} className="text-sky-400" />
             </button>
             {settingsOpen && (
-              <div className="header-settings-panel absolute right-0 top-11 z-50 w-72 max-w-[calc(100vw-1rem)] rounded-md border border-slate-600 bg-slate-800 p-3 text-slate-100 shadow-xl" role="dialog" aria-label={t.settings}>
+              <div className="header-settings-panel fixed right-3 top-20 z-50 w-64 max-w-[calc(100vw-1rem)] rounded-md border border-slate-600 bg-slate-800 p-3 text-slate-100 shadow-xl sm:absolute sm:right-0 sm:top-11" role="dialog" aria-label={t.settings}>
                 <h2 className="text-sm font-semibold text-slate-100">{t.settings}</h2>
                 <div className="mt-3">
                   <p className="text-xs font-semibold uppercase text-slate-400">{t.appearance}</p>
-                  <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
+                  <div className="mt-2 grid grid-cols-2 gap-2">
                     {[
+                      { id: 'auto', label: t.auto, icon: Monitor },
                       { id: 'light', label: t.light, icon: Sun },
                       { id: 'standard', label: t.standard, icon: SunMedium },
-                      { id: 'deep', label: t.deep, icon: Moon }
-                    ].map(({ id, label, icon: ThemeIcon }) => {
-                      const selected = theme === id;
+                      { id: 'deep', label: t.deep, shortLabel: t.deepShort, icon: Moon }
+                    ].map(({ id, label, shortLabel, icon: ThemeIcon }) => {
+                      const selected = themePreference === id;
                       return (
                         <button
                           key={id}
                           type="button"
-                          className={`header-settings-choice flex min-h-11 items-center justify-between gap-2 rounded-md border px-3 py-2 text-sm font-semibold transition ${selected ? 'header-settings-choice--active border-blue-500 bg-blue-700 text-white' : 'border-slate-600 bg-slate-700 text-slate-200 hover:border-blue-400 hover:bg-slate-600'}`}
+                          className={`header-settings-choice flex min-h-11 min-w-0 items-center justify-center gap-1 rounded-md border px-2 py-2 text-sm font-semibold transition ${selected ? 'header-settings-choice--active border-blue-500 bg-blue-700 text-white' : 'border-slate-600 bg-slate-700 text-slate-200 hover:border-blue-400 hover:bg-slate-600'}`}
+                          aria-label={label}
+                          title={label}
                           aria-pressed={selected}
                           onClick={() => handleThemeChange(id)}
                         >
-                          <span className="flex items-center gap-2"><ThemeIcon size={17} aria-hidden="true" />{label}</span>
-                          {selected && <Check size={16} aria-label={t.active} />}
+                          <ThemeIcon size={16} className="shrink-0" aria-hidden="true" />{shortLabel || label}
                         </button>
                       );
                     })}
