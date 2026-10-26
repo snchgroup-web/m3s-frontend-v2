@@ -2057,3 +2057,25 @@ html .m3s-budget input.m3s-currency-cfa { color: var(--m3s-currency-cfa) !import
 .production-tool-facts dd { color: var(--m3s-text-secondary); overflow-wrap: anywhere; }
 .production-tool-facts time { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .production-tools-return { position: sticky; top: 8px; z-index: 15; max-width: 100%; }
+
+.m3s-context-help {
+  width: min(38rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: 1.25rem;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  border: 1px solid var(--m3s-border-strong);
+  border-radius: 8px;
+  background: var(--m3s-surface-panel);
+  color: var(--m3s-text-primary);
+}
+.m3s-context-help::backdrop { background: rgb(0 0 0 / 65%); }
+.m3s-context-help__heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.m3s-context-help__secondary { color: var(--m3s-text-secondary); }
+.m3s-context-help__entry { padding: 1rem 0; border-bottom: 1px solid var(--m3s-border); }
+.m3s-context-help__link { color: var(--m3s-text-primary); text-decoration: underline; text-underline-offset: 3px; }
+.m3s-context-help :focus-visible { outline: 2px solid var(--m3s-border-strong); outline-offset: 3px; }
+.m3s-context-help .text-slate-100 { color: var(--m3s-text-primary); }
+.m3s-context-help .text-slate-300 { color: var(--m3s-text-secondary); }
+.m3s-context-help section dl { grid-template-columns: minmax(0, 1fr); }
