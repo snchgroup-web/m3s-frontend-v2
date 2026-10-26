@@ -6,6 +6,7 @@ import { useAuth } from './AuthContext';
 import { ADMINISTRATION_CORRESPONDENCE_READ_PERMISSION, hasPermission } from './accessControl';
 import { isDemoSession } from './administrationRegistryAdapters';
 import { currentAgendaMonth, groupCorrespondenceAgenda, loadCorrespondenceAgenda, shiftAgendaMonth } from './correspondenceAgendaModel';
+import { capitalizeDateLabel } from './dateLabel';
 
 const COPY = {
   FR: {
@@ -50,7 +51,7 @@ const CorrespondenceAgenda = ({ language = 'FR' }) => {
 
   const current = allowed && result.identity === identity ? result : { status: allowed ? 'loading' : 'forbidden', records: [] };
   const groups = useMemo(() => groupCorrespondenceAgenda(current.records, month, includeClosed), [current.records, month, includeClosed]);
-  const formatDate = date => new Intl.DateTimeFormat(t.locale, { timeZone: 'Europe/Zurich', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${date}T12:00:00Z`));
+  const formatDate = date => capitalizeDateLabel(new Intl.DateTimeFormat(t.locale, { timeZone: 'Europe/Zurich', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${date}T12:00:00Z`)), t.locale);
   const iconButton = 'm3s-secondary-button inline-flex min-h-11 min-w-11 items-center justify-center disabled:opacity-50';
 
   return (
@@ -63,7 +64,7 @@ const CorrespondenceAgenda = ({ language = 'FR' }) => {
         <div className="flex flex-wrap items-center gap-2">
           <button type="button" className={iconButton} title={t.previous} aria-label={t.previous} onClick={() => setMonth(value => shiftAgendaMonth(value, -1))}><ChevronLeft size={20} /></button>
           <label className="sr-only" htmlFor="correspondence-agenda-month">{t.month}</label>
-          <input id="correspondence-agenda-month" className="m3s-field m3s-native-date min-h-11 w-44" type="month" value={month} onChange={event => { if (/^\d{4}-\d{2}$/.test(event.target.value)) setMonth(event.target.value); }} />
+          <input id="correspondence-agenda-month" className="m3s-field m3s-native-date m3s-agenda-month min-h-11" type="month" lang={t.locale} value={month} onChange={event => { if (/^\d{4}-\d{2}$/.test(event.target.value)) setMonth(event.target.value); }} />
           <button type="button" className={iconButton} title={t.next} aria-label={t.next} onClick={() => setMonth(value => shiftAgendaMonth(value, 1))}><ChevronRight size={20} /></button>
           <button type="button" className="m3s-secondary-button min-h-11 px-3 text-sm" onClick={() => setMonth(currentAgendaMonth())}>{t.today}</button>
           <button type="button" className={iconButton} title={t.refresh} aria-label={t.refresh} disabled={!allowed || current.status === 'loading'} onClick={() => setRefresh(value => value + 1)}><RefreshCw size={18} /></button>

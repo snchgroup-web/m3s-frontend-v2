@@ -9,6 +9,7 @@ import menuData from './menuStructure.json';
 import { ModuleIcon, moduleIdFromPath, modulePresentation } from './modulePresentation';
 import { resolveActiveMenuLocation } from './sidebarMenu';
 import HeaderFxRate from './HeaderFxRate';
+import { capitalizeDateLabel } from './dateLabel';
 
 const FlagSenegal = () => (
   <span className="relative inline-grid grid-cols-3 w-8 h-5 overflow-hidden rounded-sm shadow-sm" aria-label="Sénégal">
@@ -162,7 +163,7 @@ const Header = ({ onOpenMenu }) => {
   const locale = language === 'DE' ? 'de-CH' : language === 'EN' ? 'en-GB' : 'fr-CH';
   const dakarTime = currentTime.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Dakar' });
   const zurichTime = currentTime.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Zurich' });
-  const dateFormatted = currentTime.toLocaleDateString(locale, { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+  const dateFormatted = capitalizeDateLabel(currentTime.toLocaleDateString(locale, { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' }), locale);
 
   const requestLogout = () => {
     setSettingsOpen(false);
