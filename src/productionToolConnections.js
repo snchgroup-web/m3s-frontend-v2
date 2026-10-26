@@ -32,7 +32,7 @@ export const TOOL_ENTRY_PATHS = Object.freeze({
 
 // Documentary manufacturing references, not order IDs or recorded acceptances.
 export const TOOL_SOURCE_REFERENCES = Object.freeze({
-  fluxconvert: 'B21 / Git 25872a2 / PR 7 / Git 55f987c / PR 6 / ZIP 0.1.0 / 383f9b6dd8cf3cb6e712258831fa84fe8ecc09893ca346b2ac28579e174d1f92',
+  fluxconvert: 'Git 2adde7e / PR 8 / B21 / Git 25872a2 / PR 7 / Git 55f987c / PR 6 / ZIP 0.1.0 / 383f9b6dd8cf3cb6e712258831fa84fe8ecc09893ca346b2ac28579e174d1f92',
   'comparator-avants-fenetres': 'HTML 24-07-26 / 2b09f9f8ed230162fcd728020a4c5300ee1a691270d6816b1b2033da6fac1028',
   'daily-brief': 'HTML / 6b8975163cd8d7705c2a652e163baef3b31be4629579440dfeada5e5656c88a2',
   'daily-dashboard': 'M3S / intelligence/latest / V4'
