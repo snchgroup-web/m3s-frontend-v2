@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { CalendarDays } from 'lucide-react';
 import { loginMessages } from './messages';
+import { capitalizeDateLabel } from '../dateLabel';
 
 // Retains the trial clock's explicit time zones and midnight date distinction.
 export function createClockFormatter(language = 'FR') {
@@ -14,8 +15,8 @@ export function createClockFormatter(language = 'FR') {
   const dakarTime = formatter('Africa/Dakar', timeOptions);
   const shortDate = formatter('Africa/Dakar', { day: 'numeric', month: 'short' });
   return date => {
-    const dateZurich = zurichDate.format(date);
-    const dateDakar = dakarDate.format(date);
+    const dateZurich = capitalizeDateLabel(zurichDate.format(date), locale);
+    const dateDakar = capitalizeDateLabel(dakarDate.format(date), locale);
     return { iso: date.toISOString(), dateZurich, dateDakar,
       timeZurich: zurichTime.format(date), timeDakar: dakarTime.format(date),
       dakarDay: dateZurich === dateDakar ? '' : shortDate.format(date) };
@@ -29,8 +30,8 @@ export default function LoginClock({ language }) {
   const clock = format(now);
   const t = loginMessages[language] || loginMessages.FR;
   return <div className="access-login-clock" role="group" aria-label={t.localTimes}>
-    <time dateTime={clock.iso} title="Europe/Zurich"><CalendarDays size={16} aria-hidden="true"/>{clock.dateZurich}</time>
     <span>Dakar <time dateTime={clock.iso} title={`${clock.dateDakar} · Africa/Dakar`}>{clock.timeDakar}</time>{clock.dakarDay && <small>({clock.dakarDay})</small>}</span>
+    <time dateTime={clock.iso} title="Europe/Zurich"><CalendarDays size={16} aria-hidden="true"/>{clock.dateZurich}</time>
     <span>{t.zurich} <time dateTime={clock.iso} title={`${clock.dateZurich} · Europe/Zurich`}>{clock.timeZurich}</time></span>
   </div>;
 }
