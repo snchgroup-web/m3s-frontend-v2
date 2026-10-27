@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { CalendarDays } from 'lucide-react';
 import { loginMessages } from './messages';
+import { capitalizeDateLabel } from '../dateLabel';
 
 // Retains the trial clock's explicit time zones and midnight date distinction.
 export function createClockFormatter(language = 'FR') {
@@ -14,8 +15,8 @@ export function createClockFormatter(language = 'FR') {
   const dakarTime = formatter('Africa/Dakar', timeOptions);
   const shortDate = formatter('Africa/Dakar', { day: 'numeric', month: 'short' });
   return date => {
-    const dateZurich = zurichDate.format(date);
-    const dateDakar = dakarDate.format(date);
+    const dateZurich = capitalizeDateLabel(zurichDate.format(date), locale);
+    const dateDakar = capitalizeDateLabel(dakarDate.format(date), locale);
     return { iso: date.toISOString(), dateZurich, dateDakar,
       timeZurich: zurichTime.format(date), timeDakar: dakarTime.format(date),
       dakarDay: dateZurich === dateDakar ? '' : shortDate.format(date) };
