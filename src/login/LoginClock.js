@@ -30,8 +30,8 @@ export default function LoginClock({ language }) {
   const clock = format(now);
   const t = loginMessages[language] || loginMessages.FR;
   return <div className="access-login-clock" role="group" aria-label={t.localTimes}>
-    <time dateTime={clock.iso} title="Europe/Zurich"><CalendarDays size={16} aria-hidden="true"/>{clock.dateZurich}</time>
     <span>Dakar <time dateTime={clock.iso} title={`${clock.dateDakar} · Africa/Dakar`}>{clock.timeDakar}</time>{clock.dakarDay && <small>({clock.dakarDay})</small>}</span>
+    <time dateTime={clock.iso} title="Europe/Zurich"><CalendarDays size={16} aria-hidden="true"/>{clock.dateZurich}</time>
     <span>{t.zurich} <time dateTime={clock.iso} title={`${clock.dateZurich} · Europe/Zurich`}>{clock.timeZurich}</time></span>
   </div>;
 }
