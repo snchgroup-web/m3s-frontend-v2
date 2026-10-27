@@ -40,9 +40,22 @@ const COPY = {
   }
 };
 
-export default function PlanningTaskHelp({ language = 'FR' }) {
+export function PlanningTaskHelpContent({ language = 'FR' }) {
   const t = COPY[language] || COPY.FR;
   const titleId = useId();
+  return <section aria-labelledby={titleId} className="mt-3 min-w-0 border-t border-slate-700 pt-4 text-sm leading-6 text-slate-300">
+    <h4 id={titleId} className="font-semibold text-slate-100">{t.title}</h4>
+    <dl className="mt-3 grid min-w-0 gap-4 lg:grid-cols-3">
+      {t.items.map(([label, body]) => <div key={label} className="min-w-0"><dt className="font-semibold text-slate-100">{label}</dt><dd className="mt-1 break-words">{body}</dd></div>)}
+    </dl>
+    <p className="mt-4 break-words">{t.project}</p>
+    <p className="mt-3 break-words font-medium text-slate-100">{t.flow}</p>
+    <p className="mt-3 break-words">{t.limit}</p>
+  </section>;
+}
+
+export default function PlanningTaskHelp({ language = 'FR' }) {
+  const t = COPY[language] || COPY.FR;
   const summary = useRef(null);
   return <details className="mt-3 min-w-0" onKeyDown={event => {
     if (event.key === 'Escape' && event.currentTarget.open) {
@@ -55,14 +68,6 @@ export default function PlanningTaskHelp({ language = 'FR' }) {
       className="m3s-secondary-button inline-flex h-10 w-10 cursor-pointer list-none items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400 [&::-webkit-details-marker]:hidden">
       <HelpCircle size={19} aria-hidden="true" />
     </summary>
-    <section aria-labelledby={titleId} className="mt-3 min-w-0 border-t border-slate-700 pt-4 text-sm leading-6 text-slate-300">
-      <h4 id={titleId} className="font-semibold text-slate-100">{t.title}</h4>
-      <dl className="mt-3 grid min-w-0 gap-4 lg:grid-cols-3">
-        {t.items.map(([label, body]) => <div key={label} className="min-w-0"><dt className="font-semibold text-slate-100">{label}</dt><dd className="mt-1 break-words">{body}</dd></div>)}
-      </dl>
-      <p className="mt-4 break-words">{t.project}</p>
-      <p className="mt-3 break-words font-medium text-slate-100">{t.flow}</p>
-      <p className="mt-3 break-words">{t.limit}</p>
-    </section>
+    <PlanningTaskHelpContent language={language} />
   </details>;
 }

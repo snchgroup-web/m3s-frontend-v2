@@ -10,6 +10,7 @@ import { ModuleIcon, moduleIdFromPath, modulePresentation } from './modulePresen
 import { resolveActiveMenuLocation } from './sidebarMenu';
 import HeaderFxRate from './HeaderFxRate';
 import { capitalizeDateLabel } from './dateLabel';
+import ContextualHelp from './ContextualHelp';
 
 const FlagSenegal = () => (
   <span className="relative inline-grid grid-cols-3 w-8 h-5 overflow-hidden rounded-sm shadow-sm" aria-label="Sénégal">
@@ -226,6 +227,9 @@ const Header = ({ onOpenMenu }) => {
         </div>
 
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+          <ContextualHelp key={`${location.pathname}${location.search}${location.hash || ''}`}
+            pathname={location.pathname} search={location.search} language={language}
+            pageTitle={childTitle ? `${title} - ${childTitle}` : title} />
           <div ref={settingsRef} className="relative">
             <button
               ref={settingsButtonRef}
