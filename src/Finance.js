@@ -2921,7 +2921,13 @@ const Finance = () => {
         )}
 
         {activeTab === 'resources' && <>
-          <div id="finance-documents" className="own-profile min-h-[calc(100dvh-6rem)] scroll-mt-24" tabIndex="-1"><PrivateGedDocuments scope="finance"/></div>
+          <div id="finance-documents" className="own-profile min-h-[calc(100dvh-6rem)] scroll-mt-24" tabIndex="-1">
+            {new URLSearchParams(location.search).get('returnTo') === 'ged-documents' &&
+              <a className="m3s-secondary-button mb-4 inline-flex min-h-11 items-center px-3 text-sm" href="/ged?tab=documents#ged-documents-register">
+                {{ FR: 'Revenir aux documents GED', EN: 'Return to GED documents', DE: 'Zurück zu den GED-Dokumenten' }[language] || 'Revenir aux documents GED'}
+              </a>}
+            <PrivateGedDocuments scope="finance"/>
+          </div>
           <FunctionResourcesOverview moduleId="finances" language={language} onSelectTab={selectFinanceTab} />
         </>}
 
