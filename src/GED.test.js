@@ -75,6 +75,17 @@ test('offers a contextual return from the GED to the governing document visual',
   expect(screen.getByText('Cette source a été ouverte depuis Administration / Institution.')).toBeInTheDocument();
 });
 
+test.each([
+  ['FR', 'Documents financiers à accès restreint'],
+  ['EN', 'Restricted financial documents'],
+  ['DE', 'Zugriffsgeschützte Finanzdokumente']
+])('offers a generic link to restricted financial documents in %s', async (language, label) => {
+  renderGed('documents', language);
+  expect(await screen.findByRole('link', { name: label })).toHaveAttribute(
+    'href', '/finance?tab=resources&returnTo=ged-documents#finance-documents'
+  );
+});
+
 test('renders searchable knowledge cards with source metadata', async () => {
   renderGed('knowledge');
 

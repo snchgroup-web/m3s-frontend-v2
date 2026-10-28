@@ -44,6 +44,8 @@ const GED = () => {
       subtitle: 'Gestion des Documents et des Dossiers',
       overview: 'Vue d\'ensemble',
       documents: 'Documents',
+      financialDocuments: 'Documents financiers à accès restreint',
+      financialDocumentsInfo: 'Ces documents sont conservés séparément. Leur accès reste soumis aux autorisations existantes.',
       returnToVisual: 'Revenir à la lecture visuelle : {document}',
       returnContext: 'Cette source a été ouverte depuis Administration / Institution.',
       dossiers: 'Dossiers',
@@ -234,6 +236,8 @@ const GED = () => {
       subtitle: 'Documents and Folders Management',
       overview: 'Overview',
       documents: 'Documents',
+      financialDocuments: 'Restricted financial documents',
+      financialDocumentsInfo: 'These documents are stored separately. Existing access permissions still apply.',
       returnToVisual: 'Return to visual reading: {document}',
       returnContext: 'This source was opened from Administration / Institution.',
       dossiers: 'Folders',
@@ -424,6 +428,8 @@ const GED = () => {
       subtitle: 'Verwaltung von Dokumenten und Ordnern',
       overview: 'Übersicht',
       documents: 'Dokumente',
+      financialDocuments: 'Zugriffsgeschützte Finanzdokumente',
+      financialDocumentsInfo: 'Diese Dokumente werden getrennt aufbewahrt. Die bestehenden Zugriffsberechtigungen gelten weiterhin.',
       returnToVisual: 'Zur visuellen Aufbereitung zurückkehren: {document}',
       returnContext: 'Diese Quelle wurde über Administration / Institution geöffnet.',
       dossiers: 'Ordner',
@@ -1242,6 +1248,10 @@ const GED = () => {
         {/* Documents */}
         {activeTab === 'documents' && (
           <div id="ged-documents-register" className="scroll-mt-24" tabIndex="-1">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm text-slate-400">{t.financialDocumentsInfo}</p>
+              <a className="m3s-secondary-button inline-flex min-h-11 items-center px-3 text-sm" href="/finance?tab=resources&returnTo=ged-documents#finance-documents">{t.financialDocuments}</a>
+            </div>
             <div className="flex justify-end mb-4">
               <StandardCreateButton onClick={() => { setEditingId(null); setModalType('document'); setFormData({ nom: '', type: 'PDF', dossier: '', dateCreation: new Date().toISOString().split('T')[0], taille: '', statut: 'Actif' }); setShowModal(true); }}>
                 {t.nouvelDocument}

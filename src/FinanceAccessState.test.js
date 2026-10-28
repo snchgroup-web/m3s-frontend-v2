@@ -32,6 +32,7 @@ jest.mock('./api', () => ({
     getExpenses: jest.fn(),
     getIncome: jest.fn(),
     getFxHistory: jest.fn(),
+    getPrivateGedDocuments: jest.fn(),
     getSocialFinance: jest.fn(),
     getRealEstateFinance: jest.fn()
   }
@@ -59,10 +60,28 @@ beforeEach(() => {
   api.getExpenses.mockResolvedValue({ data: [] });
   api.getIncome.mockResolvedValue({ data: [] });
   api.getFxHistory.mockResolvedValue({ data: [] });
+  api.getPrivateGedDocuments.mockResolvedValue([]);
 });
 
 afterEach(() => {
   jest.restoreAllMocks();
+});
+
+test.each([
+  ['FR', 'Revenir aux documents GED'],
+  ['EN', 'Return to GED documents'],
+  ['DE', 'Zurück zu den GED-Dokumenten']
+])('provides a fixed return to the GED from financial documents in %s', async (language, label) => {
+  mockSearch = '?tab=resources&returnTo=ged-documents';
+  localStorage.setItem('language', language);
+  renderFinance();
+  expect(await screen.findByRole('link', { name: label })).toHaveAttribute('href', '/ged?tab=documents#ged-documents-register');
+});
+
+test('does not render an external return destination supplied in the query', () => {
+  mockSearch = '?tab=resources&returnTo=https://example.org';
+  renderFinance();
+  expect(screen.queryByRole('link', { name: /Revenir aux documents GED/i })).not.toBeInTheDocument();
 });
 
 test('does not turn forbidden social data into zero-valued indicators', async () => {
