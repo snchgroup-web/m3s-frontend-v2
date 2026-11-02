@@ -916,8 +916,8 @@ const Production = () => {
       <div className="m3s-business-module min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-8">
         <div className="mx-auto w-full max-w-[1800px]">
 
-        <div id="production-module-tabs" className="scroll-mt-24">
           <ModulePageTabs
+            id="production-module-tabs"
             moduleId="production"
             language={language}
             activeTab={activeTab}
@@ -930,8 +930,6 @@ const Production = () => {
               { tab: 'glossary', label: t.glossary }
             ]}
           />
-        </div>
-
         <div className={`production-content-stack${activeTab === 'overview' ? '' : ' production-content-stack--detail'}`}>
         {showLocalPilot && <section className="production-pilot-summary mb-6 rounded-lg border border-blue-500/40 bg-blue-950/45 p-5 text-blue-50">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">

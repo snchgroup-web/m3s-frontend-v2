@@ -72,6 +72,14 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
+test('keeps the production tab anchor on the tab bar beside the scrolling content', () => {
+  const { container } = renderProduction('commandes');
+  const tabs = container.querySelector('#production-module-tabs');
+  const content = container.querySelector('.production-content-stack');
+  expect(tabs).toHaveAttribute('role', 'tablist');
+  expect(tabs.parentElement).toBe(content.parentElement);
+});
+
 test('renders the orders pilot as read only', async () => {
   renderProduction('commandes');
 
