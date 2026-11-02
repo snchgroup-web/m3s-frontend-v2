@@ -226,6 +226,35 @@ test('changing phase clears a mismatched activity and operation branch clears al
     phase_id: null, activity_id: null, operational_plan_id: 'plan-test', recurrence_id: 'recurrence-test', occurrence_key: '2026-11' });
 });
 
+test('finance plan, assignment and origin produce a valid operation after confirmation', async () => {
+  const refs = testTaskReferences();
+  refs.choices.operational_plans = [{ id: 'plan-finance-test', label: 'Plan Finances test',
+    portfolio_id: 'PORT-2SG-GLOBAL', function_id: 'finance' }];
+  refs.choices.recurrences = [];
+  refs.choices.assignments.push({ id: 'assignment-finance-test', label: 'Responsable Finances test',
+    assignee_agent_id: 'person-test', team_id: 'team-test', function_id: 'finance', module: 'FINANCES' });
+  refs.source_origins = [{ kind: 'correspondence', reference: 'COR-finance-test', label: 'Source Finances test' }];
+  api.getTaskReferences.mockResolvedValue(refs);
+  show(); await ready();
+  fireEvent.click(screen.getByRole('button', { name: 'Nouvelle tâche' }));
+  change('Référence stable *', 'FIN-TEST-01');
+  change('Tâche *', 'Suivi Finances test');
+  change('Résultat attendu *', 'Résultat vérifiable');
+  change('Cadre d’exécution', 'operation');
+  change('Plan opérationnel', 'plan-finance-test');
+  change('Affectation validée', 'assignment-finance-test');
+  change('Source d’origine unitaire', 'correspondence:COR-finance-test');
+  propose();
+  expect(api.createTask).not.toHaveBeenCalled();
+  confirm();
+  await screen.findByText('Tâche enregistrée sur le serveur.');
+  expect(api.createTask).toHaveBeenCalledTimes(1);
+  expect(api.createTask.mock.calls[0][0]).toMatchObject({ module: 'FINANCES', function_id: 'finance',
+    assignee_agent_id: 'person-test', team_id: 'team-test', source_origin: { kind: 'correspondence', reference: 'COR-finance-test' },
+    execution_context: { execution_kind: 'operation', operational_plan_id: 'plan-finance-test',
+      phase_id: null, activity_id: null, recurrence_id: null, occurrence_key: null } });
+});
+
 test('editing locks the execution context and unit origin while evidence links remain editable', async () => {
   show(); fireEvent.click(await ready());
   expect(screen.getByLabelText('Cadre d’exécution')).toBeDisabled();

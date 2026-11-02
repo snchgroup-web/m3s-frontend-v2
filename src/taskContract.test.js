@@ -1,6 +1,21 @@
 import { emptyTaskFields, isValidTaskFields, isTaskSelectionValid, validTaskReferences, taskFieldsFromRecord } from './taskContract';
 import { testTask, testTaskReferences } from './taskContractFixtures';
 
+test('financial operational references from the server bridge remain usable by the existing task form', () => {
+  const refs = testTaskReferences();
+  refs.choices.operational_plans = [{ id: 'plan-finance-test', label: 'Plan Finances test',
+    portfolio_id: 'PORT-2SG-GLOBAL', function_id: 'finance' }];
+  refs.choices.recurrences = [];
+  refs.choices.assignments.push({ id: 'assignment-finance-test', label: 'Responsable test',
+    assignee_agent_id: 'agent-test', team_id: 'team-test', function_id: 'finance', module: 'FINANCES' });
+  refs.source_origins = [{ kind: 'correspondence', reference: 'COR-test', label: 'Suivi test' }];
+  const task = { ...testTask(), function_id: 'finance', module: 'FINANCES',
+    execution_context: { execution_kind: 'operation', phase_id: null, activity_id: null,
+      operational_plan_id: 'plan-finance-test', recurrence_id: null, occurrence_key: null } };
+  expect(validTaskReferences(refs)).toBe(true);
+  expect(isTaskSelectionValid(task, refs)).toBe(true);
+});
+
 test('unknown progress and dates remain null, independently of status', () => {
   expect(emptyTaskFields().progression).toBeNull();
   for (const status of ['to_do', 'done', 'cancelled']) expect(isValidTaskFields({ ...testTask(), progression: null, status })).toBe(true);
