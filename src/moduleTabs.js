@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import menuData from './menuStructure.json';
 import { filterAuthorizedItems } from './accessControl';
 
@@ -101,6 +101,22 @@ export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs =
   useEffect(() => {
     centerTabHorizontally(tabListRef.current, activeButtonRef.current);
   }, [activeTab, language]);
+
+  useLayoutEffect(() => {
+    const tabs = tabListRef.current;
+    const main = tabs?.closest('main');
+    if (!tabs || !main) return undefined;
+    const measure = () => main.style.setProperty('--m3s-module-tabs-height', `${tabs.getBoundingClientRect().height}px`);
+    measure();
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
+    observer?.observe(tabs);
+    window.addEventListener('resize', measure);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener('resize', measure);
+      main.style.removeProperty('--m3s-module-tabs-height');
+    };
+  }, [mergedTabs.length]);
 
   if (!mergedTabs.length) return null;
 
