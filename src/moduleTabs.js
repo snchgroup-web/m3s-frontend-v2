@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import menuData from './menuStructure.json';
 import { filterAuthorizedItems } from './accessControl';
 
@@ -76,7 +76,7 @@ export const ModuleChildTabs = ({ moduleId, language, activeTab, onSelect }) => 
   );
 };
 
-export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs = [], permissions = [], ariaLabel }) => {
+export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs = [], permissions = [], ariaLabel, id }) => {
   const activeButtonRef = useRef(null);
   const tabListRef = useRef(null);
   const mergedTabs = [];
@@ -102,10 +102,26 @@ export const ModulePageTabs = ({ moduleId, language, activeTab, onSelect, tabs =
     centerTabHorizontally(tabListRef.current, activeButtonRef.current);
   }, [activeTab, language]);
 
+  useLayoutEffect(() => {
+    const tabs = tabListRef.current;
+    const main = tabs?.closest('main');
+    if (!tabs || !main) return undefined;
+    const measure = () => main.style.setProperty('--m3s-module-tabs-height', `${tabs.getBoundingClientRect().height}px`);
+    measure();
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
+    observer?.observe(tabs);
+    window.addEventListener('resize', measure);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener('resize', measure);
+      main.style.removeProperty('--m3s-module-tabs-height');
+    };
+  }, [mergedTabs.length]);
+
   if (!mergedTabs.length) return null;
 
   return (
-    <div ref={tabListRef} data-module-tabs={moduleId} data-active-tab={activeTab} data-tab-values={mergedTabs.map(tab => tab.tab).join(',')} tabIndex={-1} className="m3s-module-tabs flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto" role="tablist" aria-label={ariaLabel}>
+    <div id={id} ref={tabListRef} data-module-tabs={moduleId} data-active-tab={activeTab} data-tab-values={mergedTabs.map(tab => tab.tab).join(',')} tabIndex={-1} className="m3s-module-tabs flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto" role="tablist" aria-label={ariaLabel}>
       {mergedTabs.map(tab => (
         <button
           key={tab.id || tab.tab}
