@@ -115,14 +115,15 @@ main:has(.own-profile) { scrollbar-gutter: stable; }
 .private-ged-toolbar-sticky { position: sticky; top: calc(var(--m3s-subnav-offset, 0px) + var(--m3s-module-tabs-height, 0px)); z-index: 20; padding: 12px 0; background: var(--m3s-surface-panel); border-bottom: 1px solid var(--m3s-border); }
 .private-ged-toolbar-sticky .private-ged-heading { margin-bottom: 10px; }
 .app-shell > div > main { overscroll-behavior-y: contain; }
-.m3s-module-content, .m3s-module-tabs { scroll-margin-top: calc(var(--m3s-subnav-offset, 0px) + 16px); }
+.m3s-module-tabs { scroll-margin-top: calc(var(--m3s-subnav-offset, 0px) + 16px); }
+.m3s-module-content { scroll-margin-top: calc(var(--m3s-subnav-offset, 0px) + var(--m3s-module-tabs-height, 0px) + 16px); }
 .m3s-design-scope { scroll-padding-top: calc(var(--m3s-subnav-offset, 0px) + var(--m3s-module-tabs-height, 0px)); }
 .m3s-module-tabs { position: sticky; top: var(--m3s-subnav-offset, 0px); z-index: 25; background: var(--m3s-surface-panel, var(--m3s-bg-primary)); }
 .m3s-design-scope .internal-section-nav { top: calc(var(--m3s-subnav-offset, 0px) + var(--m3s-module-tabs-height, 0px)); }
 .m3s-module-content:not([data-active-tab="overview"]) { min-height: calc(100dvh - 112px); }
 html:has(.app-shell), body:has(.app-shell) { height: 100%; overflow: clip; }
 html .app-shell { position: fixed; inset: 0; height: 100dvh; overflow: clip; }
-#finance-expense-register, #finance-revenue-register, #finance-documents { scroll-margin-top: calc(var(--m3s-subnav-offset, 0px) + 16px); }
+#finance-expense-register, #finance-revenue-register, #finance-documents { scroll-margin-top: calc(var(--m3s-subnav-offset, 0px) + var(--m3s-module-tabs-height, 0px) + 16px); }
 .private-ged-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .private-ged-actions button:not([aria-label]) { width: auto; height: auto; min-height: 44px; flex: 0 1 auto; gap: 8px; padding: 8px 12px; }
 .private-ged-actions svg { flex-shrink: 0; }
