@@ -16,3 +16,8 @@ test('registered references do not imply write activation', () => {
   render(<PlanningOverview taskReferences={refs(false)} />);
   expect(screen.getByText(/Références enregistrées · Écriture non activée/)).toBeInTheDocument();
 });
+test('finance write availability does not activate the Standardisation project', () => {
+  render(<PlanningOverview taskReferences={{ ...refs(true), standardisation_writes_enabled: false }} />);
+  expect(screen.getByText(/Références enregistrées · Écriture non activée/)).toBeInTheDocument();
+  expect(screen.queryByText('Écriture activée · compte courant')).not.toBeInTheDocument();
+});

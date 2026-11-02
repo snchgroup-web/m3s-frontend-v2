@@ -289,7 +289,8 @@ const PlanningOverview = ({ language = 'FR', tasksTotal = 0, tasksStatus = 'read
   const registered = taskReferences?.execution_catalogue_ready === true && taskReferences?.choices?.phases?.length === 4;
   const r = registeredCopy[language] || registeredCopy.FR;
   const t = { ...(COPY[language] || COPY.FR), ...(registered ? { pilotProjectEyebrow: r.eyebrow,
-    pilotProjectStatus: taskReferences.writes_enabled === true ? r.active : `${r.status} · ${r.pending}`, pilotProjectNextBody: r.next } : {}) };
+    pilotProjectStatus: (taskReferences.standardisation_writes_enabled ?? taskReferences.writes_enabled) === true
+      ? r.active : `${r.status} · ${r.pending}`, pilotProjectNextBody: r.next } : {}) };
   const tasksReady = tasksStatus === 'ready'
     && Number.isFinite(tasksTotal)
     && Number.isFinite(completedTasks);
